@@ -1,0 +1,7 @@
+{
+	"parent": "block/cube_column",
+	"textures": {
+		"side": "crossroads:blocks/fluidTank",
+		"end": "crossroads:blocks/blockBronze"
+	}
+}

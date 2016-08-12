@@ -1,0 +1,16 @@
+[
+{
+"modid": "crossroads",
+"name": "Crossroads",
+"description": "A Tech and Magic mod",
+"version": "1.0.0 BETA",
+"mcversion": "${mcversion}",
+"url": "",
+"updateUrl": "",
+"authorList": ["Da_Technomancer"],
+"credits": "vazkii, aidancbrady",
+"logoFile": "",
+"screenshots": [],
+"dependencies": []
+}
+]

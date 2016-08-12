@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:rotaryPump"},
+		"facing=south": { "model": "crossroads:rotaryPump" },
+		"facing=east": { "model": "crossroads:rotaryPump" },
+		"facing=west": { "model": "crossroads:rotaryPump" },
+		"facing=up": { "model": "crossroads:rotaryPump" },
+		"facing=down": { "model": "crossroads:rotaryPump" }
+	}
+}

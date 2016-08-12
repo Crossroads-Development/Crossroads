@@ -1,0 +1,44 @@
+# General use .gitignore for Minecraft modding.
+
+# Directories
+/.gradle/
+/build/
+/eclipse
+/run/
+/out/
+/asm/
+/bin/
+/build/
+/config/
+crash-reports/
+/.idea/
+/.metadata/
+/libs/
+/saves/
+/resourcepacks/
+/logs/
+/mods/
+/screenshots/
+
+# File Extensions
+*.psd
+*.iml
+*.ipr
+*.iws
+*.classpath
+*.project
+
+# Specific files
+Thumbs.db
+usernamecache.json
+options.txt
+MinecraftForge-License.txt
+MinecraftForge-Credits.txt
+Paulscode*
+README.txt
+LICENSE-fml.txt
+CREDITS-fml.txt
+Crossroads_Client.launch
+Crossroads_Server.launch
+
+usercache.json

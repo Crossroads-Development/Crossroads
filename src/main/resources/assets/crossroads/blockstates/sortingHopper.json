@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "enabled=true,facing=down": { "model": "crossroads:sortingHopper_down" },
+        "enabled=false,facing=down": { "model": "crossroads:sortingHopper_down" },
+        "enabled=true,facing=north": { "model": "crossroads:sortingHopper_side" },
+        "enabled=false,facing=north": { "model": "crossroads:sortingHopper_side" },
+        "enabled=true,facing=south": { "model": "crossroads:sortingHopper_side", "y": 180 },
+        "enabled=false,facing=south": { "model": "crossroads:sortingHopper_side", "y": 180 },
+        "enabled=true,facing=west": { "model": "crossroads:sortingHopper_side", "y": 270 },
+        "enabled=false,facing=west": { "model": "crossroads:sortingHopper_side", "y": 270 },
+        "enabled=true,facing=east": { "model": "crossroads:sortingHopper_side", "y": 90 },
+        "enabled=false,facing=east": { "model": "crossroads:sortingHopper_side", "y": 90 }
+    }
+}
+
+

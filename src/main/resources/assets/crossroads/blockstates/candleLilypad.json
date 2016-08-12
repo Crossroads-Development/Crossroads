@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "normal": [
+            { "model": "crossroads:candleLilypad" },
+            { "model": "crossroads:candleLilypad", "y": 90 },
+            { "model": "crossroads:candleLilypad", "y": 180 },
+            { "model": "crossroads:candleLilypad", "y": 270 }
+        ]
+    }
+}

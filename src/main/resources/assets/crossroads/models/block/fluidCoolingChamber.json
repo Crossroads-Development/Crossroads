@@ -1,0 +1,8 @@
+{
+	"parent": "block/cube_bottom_top",
+	"textures": {
+		"side": "crossroads:blocks/coolingChamber_side",
+		"top": "crossroads:blocks/coolingChamber_top",
+		"bottom": "crossroads:blocks/coolingChamber_bottom"
+	}
+}

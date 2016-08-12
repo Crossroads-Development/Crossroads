@@ -1,0 +1,135 @@
+package com.Da_Technomancer.crossroads.tileentities.heat;
+
+import org.apache.commons.lang3.tuple.Triple;
+
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.common.capabilities.Capability;
+
+public class HeatExchangerTileEntity extends TileEntity implements ITickable{
+
+	private double temp = 0;
+	private boolean init = false;
+	private int ticksExisted = 0;
+	private boolean insul;
+	
+	public HeatExchangerTileEntity(){
+		this(false);
+	}
+	
+	public HeatExchangerTileEntity(boolean insul){
+		this.insul = insul;
+	}
+	
+	@Override
+	public void update() {
+		if(worldObj.isRemote){
+			return;
+		}
+		++ticksExisted;
+		
+		if(!init){
+			temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeGenForCoords(getPos()).getFloatTemperature(getPos());
+			init = true;
+		}
+		
+		if(!insul && ticksExisted % 10 == 0){
+			runLoss(.1D);
+		}
+		
+		
+		if(RecipeHolder.envirHeatSource.containsKey(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())){
+			Triple<IBlockState, Double, Double> trip = RecipeHolder.envirHeatSource.get(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock());
+			if((trip.getMiddle() < 0 && trip.getRight() < temp) || (trip.getMiddle() >= 0 && trip.getRight() > temp)){
+				worldObj.setBlockState(pos.offset(EnumFacing.DOWN), trip.getLeft() == null ? Blocks.AIR.getDefaultState() : trip.getLeft(), 3);
+				handler.addHeat(trip.getMiddle());
+			}
+		}
+	}
+
+	private void runLoss(double rate) {
+		if(rate == 0){
+			return;
+		}
+			
+		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeGenForCoords(getPos()).getFloatTemperature(getPos())));
+		newTemp /= (rate + 1);
+		temp = newTemp;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
+
+		insul = nbt.getBoolean("insul");
+		init = nbt.getBoolean("init");
+        temp = nbt.getDouble("temp");
+    }
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
+
+		nbt.setBoolean("insul", insul);
+		nbt.setBoolean("init", this.init);
+		nbt.setDouble("temp", this.temp);
+        return nbt;
+    }
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing){
+		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing != EnumFacing.DOWN){
+			return true;
+		}
+		
+		return super.hasCapability(capability, facing);
+	}
+
+	private IHeatHandler handler = new HeatHandler();
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
+		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing != EnumFacing.DOWN){
+			return (T) handler;
+		}
+		
+		return super.getCapability(capability, facing);
+	}
+
+	private class HeatHandler implements IHeatHandler{
+		private void init(){
+			if(!init){
+				temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeGenForCoords(getPos()).getFloatTemperature(getPos());
+				init = true;
+			}
+		}
+
+		@Override
+		public double getTemp() {
+			init();
+			return temp;
+		}
+
+		@Override
+		public void setTemp(double tempIn) {
+			init = true;;
+			temp = tempIn;
+		}
+
+		@Override
+		public void addHeat(double heat) {
+			init();
+			temp += heat;
+		}
+	}
+}
