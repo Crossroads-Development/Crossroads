@@ -1,3 +1,3 @@
 # Crossroads
 Currently in early stages, and not released yet. 
-I haven't put in a proper license yet, so until then the liscense is as follows: Don't do anything generally frowned upon with this mod. 
+A WIP tech & magic mod (magic NYI) for Minecraft with the intention of making the player think through their designs instead of just whacking down a pulverizer next to a redstone furnace with a solar panel powering them and thinking they've done a good job automating ore proccesing, and so on.
