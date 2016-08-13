@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -39,8 +40,12 @@ public final class RecipeHolder {
 	protected static final ArrayList<Pair<CraftingStack[], ItemStack>> mashedBoboRecipes = new ArrayList<Pair<CraftingStack[], ItemStack>>();
 	protected static final ArrayList<Pair<CraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<CraftingStack[], ItemStack>>();
 	
+	
 	public static final ArrayList<Object> JEIWrappers = new ArrayList<Object>();
 	
+	/*
+	 * Converts the versions of the recipes used internally into fake recipes for JEI. Not called unless JEI is installed.
+	 */
 	public static void rebind(){
 		for(Entry<String, ItemStack[]> rec : grindRecipes.entrySet()){
 			JEIWrappers.add(new GrindstoneRecipe(rec));
@@ -48,9 +53,10 @@ public final class RecipeHolder {
 		for(Entry<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> rec : fluidCoolingRecipes.entrySet()){
 			JEIWrappers.add(new FluidCoolingRecipe(rec));
 		}
+		JEIWrappers.add(new HeatingCrucibleRecipe(true));
+		JEIWrappers.add(new HeatingCrucibleRecipe(false));
 	}
 	
-	//TODO test
 	public static ItemStack recipeMatch(boolean poisonous, ArrayList<EntityItem> itemEnt){
 		if(itemEnt == null){
 			return null;
