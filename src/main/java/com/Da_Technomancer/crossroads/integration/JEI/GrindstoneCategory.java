@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.client.integration.JEI;
+package com.Da_Technomancer.crossroads.integration.JEI;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +21,7 @@ public class GrindstoneCategory implements IRecipeCategory{
 	private final IDrawable overlay;
 	
 	protected GrindstoneCategory(IGuiHelper guiHelper){
-		back = guiHelper.createBlankDrawable(180, 76);
+		back = guiHelper.createBlankDrawable(180, 50);
 		overlay = guiHelper.createDrawable(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstoneGui.png"), 61, 16, 54, 54);
 	}
 	
@@ -56,8 +56,9 @@ public class GrindstoneCategory implements IRecipeCategory{
 
 	@Override
 	public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull IRecipeWrapper recipeWrapper){
-		if(!(recipeWrapper instanceof GrindstoneRecipeWrapper))
+		if(!(recipeWrapper instanceof GrindstoneRecipeWrapper)){
 			return;
+		}
 		GrindstoneRecipeWrapper wrapper = ((GrindstoneRecipeWrapper) recipeWrapper);
 
 		recipeLayout.getItemStacks().init(0, true, 79, 16);

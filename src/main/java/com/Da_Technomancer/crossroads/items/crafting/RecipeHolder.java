@@ -7,7 +7,8 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.Da_Technomancer.crossroads.client.integration.JEI.GrindstoneRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneRecipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -44,7 +45,9 @@ public final class RecipeHolder {
 		for(Entry<String, ItemStack[]> rec : grindRecipes.entrySet()){
 			JEIWrappers.add(new GrindstoneRecipe(rec));
 		}
-		//TODO
+		for(Entry<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> rec : fluidCoolingRecipes.entrySet()){
+			JEIWrappers.add(new FluidCoolingRecipe(rec));
+		}
 	}
 	
 	//TODO test

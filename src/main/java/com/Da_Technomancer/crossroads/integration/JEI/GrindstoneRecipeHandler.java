@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.client.integration.JEI;
+package com.Da_Technomancer.crossroads.integration.JEI;
 
 import javax.annotation.Nonnull;
 

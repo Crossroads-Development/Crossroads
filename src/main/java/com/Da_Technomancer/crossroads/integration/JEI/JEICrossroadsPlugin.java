@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.client.integration.JEI;
+package com.Da_Technomancer.crossroads.integration.JEI;
 
 import javax.annotation.Nonnull;
 
@@ -17,14 +17,13 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	@Override
 	public void register(@Nonnull IModRegistry registry){
 		
-		registry.addRecipeCategories(new GrindstoneCategory(registry.getJeiHelpers().getGuiHelper()));
-		registry.addRecipeHandlers(new GrindstoneRecipeHandler());
-		registry.addRecipes(RecipeHolder.JEIWrappers);
+		registry.addRecipeCategories(new GrindstoneCategory(registry.getJeiHelpers().getGuiHelper()), new FluidCoolingCategory(registry.getJeiHelpers().getGuiHelper()));
+		registry.addRecipeHandlers(new GrindstoneRecipeHandler(), new FluidCoolingRecipeHandler());
 		
 		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.grindstone, 1), GrindstoneCategory.id);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.fluidCoolingChamber, 1), FluidCoolingCategory.id);
 		
-		// TODO Auto-generated method stub
-		
+		registry.addRecipes(RecipeHolder.JEIWrappers);
 	}
 
 	@Override

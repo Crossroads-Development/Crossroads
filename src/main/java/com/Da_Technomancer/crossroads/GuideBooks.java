@@ -146,6 +146,9 @@ public class GuideBooks{
 		createPages(pages, client, "§r§nSometimes after a long day of working hard and building technology, you just want to relax in a pretty area. A few nice things for decorating with ar- §r§rFew? It's one thing. §r§nI'll come up with more things later! Anyways, the very nice decoration I came up with was the Candle Lilypad. It's a nice looking lilypad with a candle on it, and it gives off light. Just make it like this:", new ShapelessOreRecipe(new ItemStack(ModBlocks.candleLilyPad), Blocks.WATERLILY, "torch"), "§r§lhOI me is BOBO! me know things! l1lyPads is plant and chicken eat plant so chicken + lilypad equal LUMINATI! oH yEah! & m1x dem too things with a bit of cow for da mega thing!");
 		entries.put(new ResourceLocation(Main.MODID, "decorative"), new EntryItemStack(pages, "Decorative Blocks", new ItemStack(ModItems.itemCandleLilypad, 1), true));
 		pages = new ArrayList<IPage>();
+		createPages(pages, client, "§r§rJust a quick note, should you manage to obtain any metal scraps, possibly by blowing up delicate metal devices *cough*gears*cough*, you can still find a use for them. Use them to make axles and save iron. Do that like so:", new ShapedOreRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE_BUTTON, '?', ModItems.metalScrap));
+		entries.put(new ResourceLocation(Main.MODID, "metalScrap"), new EntryItemStack(pages, "Misc Metal Scraps", new ItemStack(ModItems.metalScrap, 1), true));
+		pages = new ArrayList<IPage>();
 		
 		categories.add(new CategoryItemStack(entries, "Miscellaneous", new ItemStack(ModBlocks.brazier, 1)));
 		entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();

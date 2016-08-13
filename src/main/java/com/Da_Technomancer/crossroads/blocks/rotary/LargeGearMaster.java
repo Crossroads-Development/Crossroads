@@ -1,5 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
@@ -60,6 +63,13 @@ public class LargeGearMaster extends BlockContainer{
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
+	}
+	
+	@Override
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
+		List<ItemStack> drops = new ArrayList<ItemStack>();
+		drops.add(new ItemStack(ModItems.metalScrap, 70));
+		return drops;
 	}
 	
 	@Override

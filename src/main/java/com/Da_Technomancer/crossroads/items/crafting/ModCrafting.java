@@ -75,7 +75,8 @@ public final class ModCrafting {
 		}
 		
 		//Axle
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE_BUTTON, '?', "ingotIron"));		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE_BUTTON, '?', "ingotIron"));
+		GameRegistry.addRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE_BUTTON, '?', ModItems.metalScrap);
 		//Bronze
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":ingotBronze"), 1), "###", "#?#", "###", '#', "nuggetCopper", '?', "nuggetTin"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":blockBronze"), 1), "###", "#?#", "###", '#', "ingotCopper", '?', "ingotTin"));
