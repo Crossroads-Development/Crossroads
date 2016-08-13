@@ -56,7 +56,7 @@ public final class RecipeHolder {
 			return null;
 		}
 		
-		final ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 		
 		for(EntityItem it : itemEnt){
 			if(it.getEntityItem() == null || it.getEntityItem().stackSize != 1){
@@ -64,21 +64,24 @@ public final class RecipeHolder {
 			}
 			items.add(it.getEntityItem());
 		}
+
+		if(items.size() != 3){
+			return null;
+		}
 		
 		if(poisonous){
 			for(Pair<CraftingStack[], ItemStack> craft : poisonBoboRecipes){
-				if(items.size() == craft.getLeft().length){
-					ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
-					itemCop.addAll(items);
-					
-					for(CraftingStack cStack : craft.getLeft()){
-						for(ItemStack stack : items){
-							if(itemCop.contains(stack) && cStack.softMatch(stack)){
-								itemCop.remove(stack);
-							}
+				ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
+				itemCop.addAll(items);
+
+				for(CraftingStack cStack : craft.getLeft()){
+					for(ItemStack stack : items){
+						if(itemCop.contains(stack) && cStack.softMatch(stack)){
+							itemCop.remove(stack);
+							break;
 						}
 					}
-					
+
 					if(itemCop.size() == 0){
 						return craft.getRight();
 					}
@@ -86,21 +89,20 @@ public final class RecipeHolder {
 			}
 		}else{
 			for(Pair<CraftingStack[], ItemStack> craft : mashedBoboRecipes){
-				if(items.size() == craft.getLeft().length){
-					ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
-					itemCop.addAll(items);
-					
-					for(CraftingStack cStack : craft.getLeft()){
-						for(ItemStack stack : items){
-							if(itemCop.contains(stack) && cStack.softMatch(stack)){
-								itemCop.remove(stack);
-							}
+				ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
+				itemCop.addAll(items);
+
+				for(CraftingStack cStack : craft.getLeft()){
+					for(ItemStack stack : items){
+						if(itemCop.contains(stack) && cStack.softMatch(stack)){
+							itemCop.remove(stack);
+							break;
 						}
 					}
-					
-					if(itemCop.size() == 0){
-						return craft.getRight();
-					}
+				}
+
+				if(itemCop.size() == 0){
+					return craft.getRight();
 				}
 			}
 		}

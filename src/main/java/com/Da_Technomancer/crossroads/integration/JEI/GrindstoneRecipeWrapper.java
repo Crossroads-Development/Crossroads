@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -12,14 +13,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import scala.actors.threadpool.Arrays;
 
 public class GrindstoneRecipeWrapper implements IRecipeWrapper{
 
 	private List<ItemStack> inputs;
 	private List<ItemStack> outputs;
 	
-	@SuppressWarnings("unchecked")
 	protected GrindstoneRecipeWrapper(@Nonnull GrindstoneRecipe recipe){
 		outputs = Arrays.asList(recipe.getStacks());
 		if(recipe.getString().contains(":")){

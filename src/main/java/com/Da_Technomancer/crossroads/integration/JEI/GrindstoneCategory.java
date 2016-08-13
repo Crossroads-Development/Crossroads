@@ -21,7 +21,7 @@ public class GrindstoneCategory implements IRecipeCategory{
 	private final IDrawable overlay;
 	
 	protected GrindstoneCategory(IGuiHelper guiHelper){
-		back = guiHelper.createBlankDrawable(180, 50);
+		back = guiHelper.createBlankDrawable(180, 100);
 		overlay = guiHelper.createDrawable(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstoneGui.png"), 61, 16, 54, 54);
 	}
 	

@@ -40,7 +40,7 @@ public class OreDictCraftingStack extends CraftingStack{
 		}
 		
 		for(int ID : OreDictionary.getOreIDs(stack)){
-			if(OreDictionary.getOreName(ID) == oreDict){
+			if(OreDictionary.getOreName(ID).equals(oreDict)){
 				return true;
 			}
 		}

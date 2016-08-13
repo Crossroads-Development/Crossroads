@@ -63,7 +63,7 @@ public final class ModCrafting {
 		
 		
 		RecipeHolder.mashedBoboRecipes.add(Pair.of(new CraftingStack[] {new CraftingStack(Blocks.HOPPER, 1, 0), new OreDictCraftingStack("wool", 1), new CraftingStack(ModBlocks.fluidTube, 1, 0)}, getFilledHopper()));
-		RecipeHolder.mashedBoboRecipes.add(Pair.of(new CraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new CraftingStack(Items.DYE, 1, EnumDyeColor.MAGENTA.getDyeDamage()), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
+		RecipeHolder.mashedBoboRecipes.add(Pair.of(new CraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new OreDictCraftingStack("dyeMagenta", 1), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new CraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
 		
 		
