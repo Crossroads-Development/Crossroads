@@ -20,6 +20,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.ItemChutePortTileEntit
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 
 import net.minecraft.tileentity.TileEntity;
@@ -51,6 +52,7 @@ public class ModTileEntity {
 		 register(LargeGearMasterTileEntity.class, "largeGearMaster");
 		 register(ItemChutePortTileEntity.class, "itemChutePort");
 		 register(RadiatorTileEntity.class, "radiator");
+		 register(RotaryDrillTileEntity.class, "rotaryDrill");
 	 }
 	 
 	 private static void register(Class<? extends TileEntity> locat, String ID){

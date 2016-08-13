@@ -23,6 +23,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.ItemChutePort;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
 import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxis;
+import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
@@ -61,6 +62,7 @@ public final class ModBlocks {
 	public static BasicBlock itemChute;
 	public static ItemChutePort itemChutePort;
 	public static Radiator radiator;
+	public static RotaryDrill rotaryDrill;
 	
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 	
@@ -96,6 +98,7 @@ public final class ModBlocks {
         itemChute = new BasicBlock("itemChute");
         blockAddQue(itemChutePort = new ItemChutePort());
         blockAddQue(radiator = new Radiator());
+        blockAddQue(rotaryDrill = new RotaryDrill());
     }
     
     @SideOnly(Side.CLIENT)

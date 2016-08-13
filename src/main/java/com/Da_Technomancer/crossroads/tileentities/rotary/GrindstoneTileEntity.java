@@ -46,13 +46,13 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
     	double efficiency = MiscOperators.findEfficiency(holder, LOWERLIMIT, UPPERLIMIT);
     	
     	if(topGear != null){
-    		holder = Math.floor(Math.abs(topGear.getMotionData()[1] * efficiency));
+    		holder = Math.round(Math.abs(topGear.getMotionData()[1] * efficiency));
     		progress += holder;
     		topGear.addEnergy(-holder, false, false);;
     	}
     	
     	if(bottomGear != null){
-    		holder = Math.floor(Math.abs(bottomGear.getMotionData()[1] * efficiency));
+    		holder = Math.round(Math.abs(bottomGear.getMotionData()[1] * efficiency));
     		progress += holder;
     		bottomGear.addEnergy(-holder, false, false);;
     	}

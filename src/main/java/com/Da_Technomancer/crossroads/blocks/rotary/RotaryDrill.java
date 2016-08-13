@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
@@ -16,35 +15,55 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class MasterAxis extends BlockContainer{
+public class RotaryDrill extends BlockContainer{
 
 	public static final PropertyDirection PROPERTYFACING = PropertyDirection.create("facing");
-
-	public static Property speedTiers;
-
-	public MasterAxis(){
+	
+	public RotaryDrill(){
 		super(Material.IRON);
-		setUnlocalizedName("masterAxis");
-		setRegistryName("masterAxis");
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("masterAxis"));
-		this.setCreativeTab(ModItems.tabCrossroads);
+		String name = "rotaryDrill";
+		setUnlocalizedName(name);
+	    setRegistryName(name);
+	    GameRegistry.register(this);
+        GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+	    this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
-		// as good a place to stick this as any I guess
-		speedTiers = ModConfig.config.get("Rotary", "Speed Tiers", 4, "Higher value means smoother gear rotation, but more packets sent AKA lag. range 1-100 default 4", 1, 100);
 	}
 
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta){
+		return new RotaryDrillTileEntity();
+	}
+	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : BlockPistonBase.getFacingFromEntity(pos, placer);
 		return this.getDefaultState().withProperty(PROPERTYFACING, enumfacing);
+	}
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
+		return side.getOpposite() == state.getValue(PROPERTYFACING);
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+	
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state){
+		return EnumBlockRenderType.MODEL;
 	}
 
 	@Override
@@ -68,35 +87,6 @@ public class MasterAxis extends BlockContainer{
 		EnumFacing facing = state.getValue(PROPERTYFACING);
 		int facingbits = facing.getIndex();
 		return facingbits;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new MasterAxisTileEntity(EnumFacing.getFront(meta));
-
-	}
-
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
-	}
-
-	/**
-	 * Returns the blockstate with the given rotation from the passed
-	 * blockstate. If inapplicable, returns the passed blockstate.
-	 */
-	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot){
-		return state.withProperty(PROPERTYFACING, rot.rotate(state.getValue(PROPERTYFACING)));
-	}
-
-	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If
-	 * inapplicable, returns the passed blockstate.
-	 */
-	@Override
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
-		return state.withRotation(mirrorIn.toRotation(state.getValue(PROPERTYFACING)));
 	}
 
 }

@@ -22,10 +22,10 @@ public class RotaryPump extends BlockContainer{
 		super(Material.IRON);
 		String name = "rotaryPump";
 		setUnlocalizedName(name);
-	    setRegistryName(name);
-	    GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName(name);
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
@@ -33,31 +33,31 @@ public class RotaryPump extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new RotaryPumpTileEntity();
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
-	
-	@Override
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
-        return false;
-    }
-	
 
-    @Override
-    public boolean isFullCube(IBlockState state){
-        return false;
-    }
-    
-    @Override
-    public boolean isOpaqueCube(IBlockState state){
-        return false;
-    }
- 
-    @Override
-    public boolean isSideSolid(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-    	return side == EnumFacing.UP;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
+		return false;
+	}
+
+
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
+		return side == EnumFacing.UP;
+	}
 }

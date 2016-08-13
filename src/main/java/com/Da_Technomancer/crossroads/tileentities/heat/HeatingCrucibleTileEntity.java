@@ -107,7 +107,7 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 	private int ticksExisted = 0;
 
 	private IBlockState getCorrectState(){
-		return ModBlocks.heatingCrucible.getDefaultState().withProperty(HeatingCrucible.PROPERTYFULLNESS, (int) Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + (inventory == null ? 0F : ((float) inventory.stackSize)) * 3F / 16F)).withProperty(HeatingCrucible.TEXTURE, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
+		return ModBlocks.heatingCrucible.getDefaultState().withProperty(HeatingCrucible.PROPERTYFULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + (inventory == null ? 0F : ((float) inventory.stackSize)) * 3F / 16F))).withProperty(HeatingCrucible.TEXTURE, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
 	}
 	
 	@Override

@@ -145,6 +145,8 @@ public final class ModCrafting {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.itemChutePort, 1), ModBlocks.itemChute, Blocks.IRON_TRAPDOOR);
 		//Radiator
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.radiator, 1), "#$#", "#$#", "#$#", '#', ModBlocks.fluidTube, '$', "ingotIron"));
+		//Rotary Drill
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryDrill, 2), " * ", "*#*", '*', "ingotIron", '#', "blockIron"));
 	}
 
 	private static ItemStack getFilledHopper(){
