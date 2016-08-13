@@ -93,6 +93,7 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
     				}
     			}
     		}
+    		markDirty();
     	}
     }
     

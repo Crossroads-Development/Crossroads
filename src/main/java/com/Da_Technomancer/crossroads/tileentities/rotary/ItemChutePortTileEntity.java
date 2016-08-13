@@ -37,6 +37,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 					worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(-.5D, false, false);
 					worldObj.spawnEntityInWorld(new EntityItem(worldObj, getOutput().getX() + (facing == EnumFacing.EAST ? 1.5D : facing == EnumFacing.WEST ? -.5D : facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH ? .5D : 0), getOutput().getY(), getOutput().getZ() + (facing == EnumFacing.SOUTH ? 1.5D : facing == EnumFacing.EAST || facing == EnumFacing.WEST ? .5D : facing == EnumFacing.NORTH ? -.5D : 0), inventory.copy()));
 					inventory = null;
+					markDirty();
 				}
 			}
 		}
@@ -132,6 +133,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 			if(!simulate){
 				inventory = stack.copy();
 				inventory.stackSize = 1;
+				markDirty();
 			}
 
 			ItemStack holder = stack.copy();

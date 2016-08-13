@@ -80,7 +80,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 				inventory.stackSize += limit;
 			}
 		}
-
+		markDirty();
 		temp -= limit * EnergyConverters.DEG_PER_BUCKET_STEAM * (salty ? .2D : .1D);
 	}
 	
@@ -99,7 +99,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		if(index != 0 || inventory == null){
 			return null;
 		}
-		
+		markDirty();
 		int holder = Math.min(inventory.stackSize, count);
 		inventory.stackSize -= holder;
 		ItemStack taken = new ItemStack(inventory.getItem(), holder, inventory.getMetadata());
@@ -114,6 +114,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		if(index != 0){
 			return null;
 		}
+		markDirty();
 		ItemStack output = inventory;
 		inventory = null;
 		return output;

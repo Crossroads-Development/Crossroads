@@ -52,7 +52,7 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 				if((content.amount -= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()) <= 0){
 					content = null;
 				}
-				
+				markDirty();
 				if(inventory == null){
 					inventory = trip.getLeft().copy();
 				}else{
@@ -238,7 +238,7 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 					content.amount += maxFill;
 				}
 			}
-
+			
 			return maxFill;
 		}
 

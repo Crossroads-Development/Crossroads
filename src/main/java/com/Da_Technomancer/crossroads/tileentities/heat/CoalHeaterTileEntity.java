@@ -153,6 +153,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 			if(inventory.stackSize == 0){
 				inventory = null;
 			}
+			markDirty();
 			return stack;
 		}
 		
@@ -163,6 +164,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack stack = inventory;
 		inventory = null;
+		markDirty();
 		return stack;
 	}
 
@@ -170,6 +172,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 	public void setInventorySlotContents(int index, ItemStack stack) {
 		if(index == 0){
 			inventory = stack;
+			markDirty();
 		}
 	}
 
