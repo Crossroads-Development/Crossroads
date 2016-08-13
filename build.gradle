@@ -13,16 +13,20 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.01"
+version = "1.0.0"
 group= "com.Da_Technomancer.crossroads" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "crossroads"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+compileJava.options.encoding = 'UTF-8'
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 
 minecraft {
-    version = "1.10.2-12.18.1.2050"
+    version = "1.10.2-12.18.1.2056"
     runDir = "run"
     
     mappings = "snapshot_20160518"
