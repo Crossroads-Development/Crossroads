@@ -77,6 +77,7 @@ public class RadiatorTileEntity extends TileEntity implements ITickable{
 	private final HeatHandler heatHandler = new HeatHandler();
 	private final SteamHandler steamHandler = new SteamHandler();
 	private final WaterHandler waterHandler = new WaterHandler();
+	private final InnerHandler innerHandler = new InnerHandler();
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
@@ -93,16 +94,25 @@ public class RadiatorTileEntity extends TileEntity implements ITickable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+		
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+			if(side == null){
+				return (T) innerHandler;
+			}
+			
+			if(side == EnumFacing.UP){
+				return (T) waterHandler;
+			}
+			
+			if(side == EnumFacing.DOWN){
+				return (T) steamHandler;
+			}
+		}
+			
+			
 		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && side != EnumFacing.UP && side != EnumFacing.DOWN){
 			return (T) heatHandler;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side == null || side == EnumFacing.DOWN){
-			return (T) steamHandler;
-		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side == EnumFacing.UP){
-			return (T) waterHandler;
-		}
-		
 		
 		return super.getCapability(cap, side);
 	}
@@ -132,6 +142,56 @@ public class RadiatorTileEntity extends TileEntity implements ITickable{
 		public void addHeat(double heat) {
 			init();
 			temp += heat;
+		}
+	}
+	
+	private class InnerHandler implements IFluidHandler{
+		
+		@Override
+		public IFluidTankProperties[] getTankProperties(){
+			return new FluidTankProperties[] {new FluidTankProperties(steam, CAPACITY, true, false), new FluidTankProperties(water, CAPACITY, false, true)};
+		}
+		
+		@Override
+		public int fill(FluidStack resource, boolean doFill){
+			if(resource == null || resource.getFluid() != BlockSteam.getSteam() || resource.amount == 0){
+				return 0;
+			}
+			int filled = Math.min(resource.amount, CAPACITY - (steam == null ? 0 : steam.amount));
+			
+			if(doFill){
+				steam = new FluidStack(BlockSteam.getSteam(), filled + (steam == null ? 0 : steam.amount));
+			}
+			
+			return filled;
+		}
+		
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain){
+			if(resource == null || water == null || resource.amount == 0 || resource.getFluid() != BlockDistilledWater.getDistilledWater()){
+				return null;
+			}
+			int drained = Math.min(water.amount, resource.amount);
+			
+			if(doDrain && (water.amount -= drained) <= 0){
+				water = null;
+			}
+			
+			return new FluidStack(BlockDistilledWater.getDistilledWater(), drained);
+		}
+
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain){
+			if(water == null || maxDrain == 0){
+				return null;
+			}
+			int drained = Math.min(water.amount, maxDrain);
+			
+			if(doDrain && (water.amount -= drained) <= 0){
+				water = null;
+			}
+			
+			return new FluidStack(BlockDistilledWater.getDistilledWater(), drained);
 		}
 	}
 	

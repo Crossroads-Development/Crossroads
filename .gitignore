@@ -40,5 +40,6 @@ LICENSE-fml.txt
 CREDITS-fml.txt
 Crossroads_Client.launch
 Crossroads_Server.launch
+BugList.java
 
 usercache.json

@@ -64,7 +64,7 @@ public final class ModCrafting {
 		
 		RecipeHolder.mashedBoboRecipes.add(Pair.of(new CraftingStack[] {new CraftingStack(Blocks.HOPPER, 1, 0), new OreDictCraftingStack("wool", 1), new CraftingStack(ModBlocks.fluidTube, 1, 0)}, getFilledHopper()));
 		RecipeHolder.mashedBoboRecipes.add(Pair.of(new CraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new CraftingStack(Items.DYE, 1, EnumDyeColor.MAGENTA.getDyeDamage()), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new CraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Item.getByNameOrId(Main.MODID + ":ingotTin"), 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
+		RecipeHolder.poisonBoboRecipes.add(Pair.of(new CraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
 		
 		
 		final String axle = "stickIron";
@@ -95,18 +95,18 @@ public final class ModCrafting {
 				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(HeatCableFactory.cableMap.get(cond).get(insul), 4), "###", "???", "###", '#', insul.getItem(), '?', cond.getItem()));
 			}
 		}
-		//Boiler
+		//Steam Boiler
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.steamBoiler, 1), "#$#", "$?$", "#&#", '#', "ingotBronze", '?', "blockBronze", '$', ModBlocks.fluidTube, '&', "ingotCopper"));
 		//Salt Block
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSalt, 1), "##", "##", '#', "dustSalt"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.dustSalt, 4), "#", '#', "blockSalt"));
 		//Salt
 		GameRegistry.addSmelting(new ItemStack(Items.POTIONITEM, 1, 0), new ItemStack(ModItems.dustSalt, 1), .1F);
-		//Pump
+		//Rotary Pump
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "?%?", "&%&", '#', "ingotBronze", '%', Blocks.IRON_BARS, '?', ModBlocks.fluidTube, '&', "blockGlass", '$', axle));
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.rotaryPump, 1), "#", '#', ModBlocks.steamTurbine);
-		//Turbine
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.steamTurbine, 1), "#", '#', ModBlocks.rotaryPump);
+		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.rotaryPump, 1), ModBlocks.steamTurbine);
+		//Steam Turbine
+		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump);
 		//Brazier
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.brazier, 1), "###", " $ ", " $ ", '$', "stoneAndesitePolished", '#', "stoneAndesite"));
 		//Obsidian cutting kit

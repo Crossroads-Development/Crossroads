@@ -15,8 +15,6 @@
 
 /*This is just a todo, not bugs
  * 
- * poptart tree?
- * 
  * clay scuba helmet
  * 
  * magma cream pants?
