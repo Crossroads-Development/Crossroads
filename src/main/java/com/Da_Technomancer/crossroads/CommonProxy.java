@@ -7,8 +7,9 @@ import com.Da_Technomancer.crossroads.fluids.ModFluids;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
-import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
+import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 import com.Da_Technomancer.crossroads.tileentities.ModTileEntity;
 import com.Da_Technomancer.crossroads.world.ModWorldGen;
@@ -34,10 +35,6 @@ public class CommonProxy {
 		HeatCableFactory.init();
 		ModTileEntity.init();
 		ModPackets.preInit();
-
-		if (Loader.isModLoaded("guideapi")){
-			GuideBooks.mainGuide(e);
-		}
 	}
 
 	protected void init(FMLInitializationEvent e) {
@@ -45,6 +42,10 @@ public class CommonProxy {
 		GameRegistry.registerWorldGenerator(new ModWorldGen(), 0);
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
+		if (Loader.isModLoaded("JEI")){
+			RecipeHolder.rebind();
+		}
+		
 		ModConfig.save();
 	}
 

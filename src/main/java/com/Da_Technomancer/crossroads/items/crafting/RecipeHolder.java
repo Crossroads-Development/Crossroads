@@ -2,9 +2,12 @@ package com.Da_Technomancer.crossroads.items.crafting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+
+import com.Da_Technomancer.crossroads.client.integration.JEI.GrindstoneRecipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -35,6 +38,14 @@ public final class RecipeHolder {
 	protected static final ArrayList<Pair<CraftingStack[], ItemStack>> mashedBoboRecipes = new ArrayList<Pair<CraftingStack[], ItemStack>>();
 	protected static final ArrayList<Pair<CraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<CraftingStack[], ItemStack>>();
 	
+	public static final ArrayList<Object> JEIWrappers = new ArrayList<Object>();
+	
+	public static void rebind(){
+		for(Entry<String, ItemStack[]> rec : grindRecipes.entrySet()){
+			JEIWrappers.add(new GrindstoneRecipe(rec));
+		}
+		//TODO
+	}
 	
 	//TODO test
 	public static ItemStack recipeMatch(boolean poisonous, ArrayList<EntityItem> itemEnt){

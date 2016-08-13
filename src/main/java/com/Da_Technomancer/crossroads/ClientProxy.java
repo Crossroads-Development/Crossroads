@@ -27,6 +27,7 @@ public class ClientProxy extends CommonProxy {
 		ModItems.initModels();
 
 		if (Loader.isModLoaded("guideapi")){
+			GuideBooks.mainGuide(e, true);
 			GuideAPI.setModel(GuideBooks.main);
 		}
 

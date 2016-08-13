@@ -33,13 +33,15 @@ minecraft {
 }
 
 repositories {
-	maven { 
-		url 'http://tehnut.info/maven/' 
-	}
+	maven { url 'http://tehnut.info/maven/' }
+	maven { url "http://dvs1.progwml6.com/files/maven" }
 }
 
 dependencies {
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.9.4-2.0.0-37"
+	deobfCompile "info.amerifrance.guideapi:Guide-API:1.9.4-2.0.0-40"
+	deobfCompile "mezz.jei:jei_1.10.2:3.8.1.242:api"
+	
+	runtime "mezz.jei:jei_1.10.2:3.8.1.242"
 }
 
 processResources

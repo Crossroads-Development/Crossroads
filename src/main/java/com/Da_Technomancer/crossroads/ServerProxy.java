@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -10,8 +11,11 @@ public class ServerProxy extends CommonProxy{
 
 	@Override
 	protected void preInit(FMLPreInitializationEvent e) {
-		// TODO Auto-generated method stub
 		super.preInit(e);
+		
+		if (Loader.isModLoaded("guideapi")){
+			GuideBooks.mainGuide(e, false);
+		}
 	}
 
 	@Override
