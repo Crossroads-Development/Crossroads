@@ -4,6 +4,8 @@ import com.Da_Technomancer.crossroads.Main;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
+import mezz.jei.api.gui.IDrawableAnimated;
+import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -16,12 +18,16 @@ public class HeatingCrucibleCategory implements IRecipeCategory{
 
 	protected static final String id = Main.MODID + ".heatingCrucible";
 	private final IDrawable back;
-	private final IDrawable arrowSlot;
-
-
+	private final IDrawable slot;
+	private final IDrawableAnimated arrow;
+	private final IDrawable arrowStatic;
+	
 	protected HeatingCrucibleCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
-		arrowSlot = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/crafting_table.png"), 65, 34, 47, 18);
+		slot = guiHelper.getSlotDrawable();
+		
+		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
+		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, StartDirection.LEFT, false);
 	}
 
 	@Override
@@ -43,14 +49,19 @@ public class HeatingCrucibleCategory implements IRecipeCategory{
 	public void drawExtras(Minecraft minecraft){
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
-		arrowSlot.draw(minecraft, 40, 50);
+		slot.draw(minecraft, 40, 50);
+		arrowStatic.draw(minecraft, 62, 50);
 		GlStateManager.disableBlend();
 		GlStateManager.disableAlpha();
 	}
 
 	@Override
 	public void drawAnimations(Minecraft minecraft){
-
+		GlStateManager.enableAlpha();
+		GlStateManager.enableBlend();
+		arrow.draw(minecraft, 62, 50);
+		GlStateManager.disableBlend();
+		GlStateManager.disableAlpha();
 	}
 
 	@Override

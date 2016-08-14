@@ -6,6 +6,9 @@ import com.Da_Technomancer.crossroads.Main;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
+import mezz.jei.api.gui.IDrawableAnimated;
+import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
+import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -18,11 +21,15 @@ public class GrindstoneCategory implements IRecipeCategory{
 
 	protected static final String id = Main.MODID + ".grindstone";
 	private final IDrawable back;
-	private final IDrawable overlay;
+	private final IDrawable slot;
+	private final IDrawableAnimated arrow;
+	private final IDrawableStatic arrowStatic;
 	
 	protected GrindstoneCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
-		overlay = guiHelper.createDrawable(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstoneGui.png"), 61, 16, 54, 54);
+		slot = guiHelper.getSlotDrawable();
+		arrowStatic = guiHelper.createDrawable(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstoneGui.png"), 66, 35, 44, 17);
+		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstoneGui.png"), 176, 0, 44, 17), 40, StartDirection.TOP, false);
 	}
 	
 	@Override
@@ -44,14 +51,18 @@ public class GrindstoneCategory implements IRecipeCategory{
 	public void drawExtras(@Nonnull Minecraft minecraft){
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
-		overlay.draw(minecraft, 61, 16);
+		slot.draw(minecraft, 79, 16);
+		slot.draw(minecraft, 61, 52);
+		slot.draw(minecraft, 79, 52);
+		slot.draw(minecraft, 97, 52);
+		arrowStatic.draw(minecraft, 66, 35);
 		GlStateManager.disableBlend();
 		GlStateManager.disableAlpha();
 	}
 
 	@Override
 	public void drawAnimations(Minecraft minecraft){
-		
+		arrow.draw(minecraft, 66, 35);
 	}
 
 	@Override
