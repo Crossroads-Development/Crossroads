@@ -21,8 +21,6 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 	@Override
 	public void renderTileEntityAt(LargeGearMasterTileEntity gear, double x, double y, double z, float partialTicks, int destroyStage) {
 
-		ResourceLocation r = texture;
-
 		if(!gear.getWorld().isBlockLoaded(gear.getPos(), false) || !gear.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, null)){
 			return;
 		}
@@ -52,7 +50,7 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 			GlStateManager.translate(.5F, -.5F, -.5F);
 		}
 		GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(r);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		model.render();
 		GlStateManager.popMatrix();
 

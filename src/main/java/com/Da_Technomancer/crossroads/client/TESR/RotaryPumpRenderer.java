@@ -25,40 +25,38 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 
 	private static final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/pump.png");
 	private static final ModelPump model = new ModelPump();
-	
+
 	@Override
-	public void renderTileEntityAt(RotaryPumpTileEntity pump, double x, double y, double z, float partialTicks, int destroyStage) {
-		
-		ResourceLocation r = texture;
-		
+	public void renderTileEntityAt(RotaryPumpTileEntity pump, double x, double y, double z, float partialTicks, int destroyStage){
+
 		if(pump != null && !pump.getWorld().isBlockLoaded(pump.getPos(), false)){
 			return;
 		}
-		
+
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 		GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
-		
+
 		if(pump == null){
 			GlStateManager.scale(.3D, .3D, .3D);
 			GlStateManager.translate(-1.5F, -2.2F, 1.2F);
 		}else{
 			GlStateManager.translate(-.5F, -1.5F, .5F);
 		}
-		
-		Minecraft.getMinecraft().renderEngine.bindTexture(r);
+
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		model.renderMain();
-		
+
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(pump == null ? 0 : pump.getCompletion() * 360F, 0F, 1F, 0F);
 		model.renderScrew();
 		GlStateManager.popMatrix();
 		GlStateManager.popMatrix();
-		
+
 		if(pump == null){
 			return;
 		}
-		
+
 		if(pump.getCompletion() != 0){
 			IBlockState state = pump.getWorld().getBlockState(pump.getPos().offset(EnumFacing.DOWN));
 			TextureAtlasSprite lText = null;
@@ -68,13 +66,12 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 			}
 
 			if(state.getBlock() instanceof IFluidBlock){
-				lText =  Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(((IFluidBlock) state.getBlock()).getFluid().getStill().toString());
+				lText = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(((IFluidBlock) state.getBlock()).getFluid().getStill().toString());
 			}else if(state.getBlock() instanceof BlockLiquid){
-				lText =  Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry((state.getMaterial() == Material.LAVA ? FluidRegistry.LAVA.getStill() : FluidRegistry.WATER.getStill()).toString());
+				lText = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry((state.getMaterial() == Material.LAVA ? FluidRegistry.LAVA.getStill() : FluidRegistry.WATER.getStill()).toString());
 			}else{
 				return;
 			}
-
 
 			GL11.glPushMatrix();
 			GL11.glTranslated(x, y, z);
@@ -102,7 +99,7 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 			vb.pos(xEn, yEn, zEn).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
 			vb.pos(xSt, yEn, zEn).tex(lText.getInterpolatedU(xSt * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
 			Tessellator.getInstance().draw();
-			
+
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(xEn, ySt, zEn).tex(lText.getInterpolatedU(zEn * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
 			vb.pos(xEn, ySt, zSt).tex(lText.getInterpolatedU(zSt * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
@@ -116,8 +113,7 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 			vb.pos(xSt, yEn, zEn).tex(lText.getInterpolatedU(zEn * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
 			vb.pos(xSt, yEn, zSt).tex(lText.getInterpolatedU(zSt * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
 			Tessellator.getInstance().draw();
-			
-			
+
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(xEn, yEn, zSt).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (zSt * 16))).endVertex();
 			vb.pos(xSt, yEn, zSt).tex(lText.getInterpolatedU(xSt * 16), lText.getInterpolatedV(16 - (zSt * 16))).endVertex();
@@ -126,7 +122,7 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 			Tessellator.getInstance().draw();
 
 			GL11.glPopMatrix();
-			
+
 		}
 	}
 }

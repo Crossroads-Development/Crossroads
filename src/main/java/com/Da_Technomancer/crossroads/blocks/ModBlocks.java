@@ -98,7 +98,7 @@ public final class ModBlocks {
         itemChute = new BasicBlock("itemChute");
         blockAddQue(itemChutePort = new ItemChutePort());
         blockAddQue(radiator = new Radiator());
-        blockAddQue(rotaryDrill = new RotaryDrill());
+        rotaryDrill = new RotaryDrill();
     }
     
     @SideOnly(Side.CLIENT)

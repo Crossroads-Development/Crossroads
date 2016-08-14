@@ -18,11 +18,19 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 	private final double ENERGYUSE = .5D;
 	private final double SPEEDPERHARDNESS = .1D;
 	
+	private float angle = 0;
+	
 	@Override
 	public void update(){
 		if(worldObj.isRemote){
+			EnumFacing facing = worldObj.getBlockState(pos).getValue(RotaryDrill.PROPERTYFACING);
+			if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY,  facing)){
+				angle = (float) worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing).getAngle();
+			}
+			
 			return;
 		}
+		
 		EnumFacing facing = worldObj.getBlockState(pos).getValue(RotaryDrill.PROPERTYFACING);
 		IRotaryHandler handler;
 		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY,  facing) && Math.abs((handler = worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing)).getMotionData()[1]) >= ENERGYUSE){
@@ -39,5 +47,9 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 				}
 			}
 		}
+	}
+	
+	public float getAngle(){
+		return angle;
 	}
 }
