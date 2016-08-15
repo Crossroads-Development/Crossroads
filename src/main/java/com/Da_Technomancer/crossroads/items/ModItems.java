@@ -41,6 +41,7 @@ public final class ModItems {
 	public static MagentaBread magentaBread;
 	public static ChickenBoots chickenBoots;
 	public static ItemCandleLily itemCandleLilypad;
+	public static EdibleBlob edibleBlob;
 	
 	private static ArrayList<Item> modelQue = new ArrayList<Item>();
 	
@@ -68,6 +69,7 @@ public final class ModItems {
 		itemAddQue(magentaBread = new MagentaBread());
 		itemAddQue(chickenBoots = new ChickenBoots());
 		itemAddQue(itemCandleLilypad = new ItemCandleLily());
+		itemAddQue(edibleBlob = new EdibleBlob());
 	}
 
 	@SuppressWarnings("deprecation")

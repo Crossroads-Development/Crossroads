@@ -100,3 +100,6 @@ tile.itemChute.name=Item Chute
 tile.itemChutePort.name=Item Chute Port
 tile.radiator.name=Radiator
 tile.rotaryDrill.name=Rotary Drill
+item.edibleBlob.name=Edible Blob
+tile.fatCollector.name=Fat Collector
+fluid.liquidfat.name=Liquid Fat

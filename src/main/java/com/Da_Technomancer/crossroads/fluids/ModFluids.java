@@ -31,11 +31,15 @@ public final class ModFluids {
 		new BlockDistilledWater();
 		FluidRegistry.addBucketForFluid(BlockDistilledWater.getDistilledWater());
 		
+		FluidRegistry.registerFluid(BlockLiquidFat.getLiquidFat());
+		new BlockLiquidFat();
+		FluidRegistry.addBucketForFluid(BlockLiquidFat.getLiquidFat());
 	}
 	
 	
 	/*
-	 * The code below is heavily based on EnderIO code
+	 * The code below is heavily based on EnderIO code,
+	 * though not an exact copy. 
 	 */
 	public static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition {
 
@@ -81,5 +85,6 @@ public final class ModFluids {
 		registerFluidBlockRendering(BlockSteam.getSteam());
 		registerFluidBlockRendering(BlockMoltenCopper.getMoltenCopper());
 		registerFluidBlockRendering(BlockDistilledWater.getDistilledWater());
+		registerFluidBlockRendering(BlockLiquidFat.getLiquidFat());
 	}
 }

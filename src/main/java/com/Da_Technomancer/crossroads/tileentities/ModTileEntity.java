@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTubeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidVoidTileEntity;
@@ -53,6 +54,7 @@ public class ModTileEntity {
 		 register(ItemChutePortTileEntity.class, "itemChutePort");
 		 register(RadiatorTileEntity.class, "radiator");
 		 register(RotaryDrillTileEntity.class, "rotaryDrill");
+		 register(FatCollectorTileEntity.class, "fatCollector");
 	 }
 	 
 	 private static void register(Class<? extends TileEntity> locat, String ID){

@@ -27,9 +27,9 @@ public class BlockMoltenCopper extends BlockFluidClassic{
 	}
 	
 	
-	public static class FluidMoltenCopper extends Fluid{
+	private static class FluidMoltenCopper extends Fluid{
 
-		public FluidMoltenCopper() {
+		private FluidMoltenCopper() {
 			super("moltencopper", new ResourceLocation(Main.MODID + ":blocks/moltencopper_still"), new ResourceLocation(Main.MODID + ":blocks/moltencopper_flow"));
 			setDensity(3000);
 			setTemperature(6000);

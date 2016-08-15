@@ -12,6 +12,10 @@
     "moltencopper": {
       "model": "forge:fluid",
       "custom": { "fluid": "moltencopper" }
-    }
+    },
+    "liquidfat": {
+        "model": "forge:fluid",
+        "custom": { "fluid": "liquidfat" }
+      }
   }
 }
