@@ -35,7 +35,10 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 				EnumFacing facing = worldObj.getBlockState(getOutput()).getValue(ItemChutePort.FACING);
 				if(Math.abs(worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite()).getMotionData()[0]) > .1D && Math.abs(worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite()).getMotionData()[1]) > .5D){
 					worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(-.5D, false, false);
-					worldObj.spawnEntityInWorld(new EntityItem(worldObj, getOutput().getX() + (facing == EnumFacing.EAST ? 1.5D : facing == EnumFacing.WEST ? -.5D : facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH ? .5D : 0), getOutput().getY(), getOutput().getZ() + (facing == EnumFacing.SOUTH ? 1.5D : facing == EnumFacing.EAST || facing == EnumFacing.WEST ? .5D : facing == EnumFacing.NORTH ? -.5D : 0), inventory.copy()));
+					EntityItem ent = new EntityItem(worldObj, getOutput().getX() + (facing == EnumFacing.EAST ? 1.5D : facing == EnumFacing.WEST ? -.5D : facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH ? .5D : 0), getOutput().getY(), getOutput().getZ() + (facing == EnumFacing.SOUTH ? 1.5D : facing == EnumFacing.EAST || facing == EnumFacing.WEST ? .5D : facing == EnumFacing.NORTH ? -.5D : 0), inventory.copy());
+					ent.motionX = 0;
+					ent.motionZ = 0;
+					worldObj.spawnEntityInWorld(ent);
 					inventory = null;
 					markDirty();
 				}

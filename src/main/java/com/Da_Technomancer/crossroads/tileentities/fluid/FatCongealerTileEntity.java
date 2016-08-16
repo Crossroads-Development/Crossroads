@@ -26,7 +26,7 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 
 	private FluidStack content = null;
 	private final int CAPACITY = EnergyConverters.FAT_PER_VALUE * 40;
-	private final double VALUE_PER_ENERGY = .1D; //TODO balance
+	private final double VALUE_PER_ENERGY = .1D;
 	private final double SAT_UPPER_SPEED_BOUND = 2;
 	
 	@Override
@@ -41,8 +41,8 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 			if(value == 0 || content == null){
 				return;
 			}
-			int sat = (int) (((double) value) * .5D * MiscOperators.findEfficiency(rot.getMotionData()[0], 0, SAT_UPPER_SPEED_BOUND));
-			value = Math.min(value, 20 + sat);
+			int sat = (int) (((double) value) * MiscOperators.findEfficiency(rot.getMotionData()[0], 0, SAT_UPPER_SPEED_BOUND));
+			sat = Math.min(20, sat);
 			if(value * EnergyConverters.FAT_PER_VALUE > content.amount){
 				return;
 			}
@@ -55,7 +55,10 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 			nbt.setInteger("food", value - sat);
 			nbt.setInteger("sat", sat);
 			stack.setTagCompound(nbt);
-			worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.getX(), pos.getY() - 1, pos.getZ(), stack));
+			EntityItem ent = new EntityItem(worldObj, pos.getX() + .5D, pos.getY() - .5D, pos.getZ() + .5D, stack);
+			ent.motionX = 0;
+			ent.motionZ = 0;
+			worldObj.spawnEntityInWorld(ent);
 			markDirty();
 		}
 	}
