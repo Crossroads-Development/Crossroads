@@ -22,14 +22,14 @@ public class FluidCoolingCategory implements IRecipeCategory{
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
 	private final IDrawableStatic arrowStatic;
-	
+
 	protected FluidCoolingCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, StartDirection.LEFT, false);
 	}
-	
+
 	@Override
 	public String getUid(){
 		return id;

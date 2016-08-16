@@ -13,18 +13,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class HandCrank extends Item{
-	
+
 	public HandCrank(){
 		setUnlocalizedName("handCrank");
 		setRegistryName("handCrank");
-	    GameRegistry.register(this);
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		GameRegistry.register(this);
+		this.setCreativeTab(ModItems.tabCrossroads);
 	}
-	
+
 	protected double getEfficiency(){
 		return 10;
 	}
-	
+
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite())){
@@ -38,5 +38,5 @@ public class HandCrank extends Item{
 		}
 		return EnumActionResult.PASS;
 	}
-	
+
 }

@@ -22,7 +22,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int SLOTTEDCHEST_GUI = 3;
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
 		switch(ID){
 			case GRINDSTONE_GUI:
 				return new GrindstoneContainer(player.inventory, ((GrindstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
@@ -38,7 +38,7 @@ public class GuiHandler implements IGuiHandler{
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
 		switch(ID){
 			case GRINDSTONE_GUI:
 				return new GrindstoneGuiContainer(player.inventory, ((GrindstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
@@ -49,7 +49,7 @@ public class GuiHandler implements IGuiHandler{
 			case SLOTTEDCHEST_GUI:
 				return new SlottedChestGuiContainer(player.inventory, ((SlottedChestTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 		}
-		
+
 		return null;
 	}
 

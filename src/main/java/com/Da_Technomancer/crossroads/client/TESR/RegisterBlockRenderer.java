@@ -14,28 +14,28 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
-public class RegisterBlockRenderer {
-	
-	public static void registerBlockRenderer() {
+public class RegisterBlockRenderer{
 
-        reg(ModBlocks.sidedGearHolder);
-        ClientRegistry.bindTileEntitySpecialRenderer(SidedGearHolderTileEntity.class, new SidedGearHolderRenderer());
-    
-        reg(ModBlocks.rotaryPump);
-        ClientRegistry.bindTileEntitySpecialRenderer(RotaryPumpTileEntity.class, new RotaryPumpRenderer());
-	
-        reg(ModBlocks.steamTurbine);
-        ClientRegistry.bindTileEntitySpecialRenderer(SteamTurbineTileEntity.class, new SteamTurbineRenderer());
-        
-        reg(ModBlocks.largeGearMaster);
-        ClientRegistry.bindTileEntitySpecialRenderer(LargeGearMasterTileEntity.class, new LargeGearRenderer());
-        
-        reg(ModBlocks.rotaryDrill);
-        ClientRegistry.bindTileEntitySpecialRenderer(RotaryDrillTileEntity.class, new RotaryDrillRenderer());
+	public static void registerBlockRenderer(){
+
+		reg(ModBlocks.sidedGearHolder);
+		ClientRegistry.bindTileEntitySpecialRenderer(SidedGearHolderTileEntity.class, new SidedGearHolderRenderer());
+
+		reg(ModBlocks.rotaryPump);
+		ClientRegistry.bindTileEntitySpecialRenderer(RotaryPumpTileEntity.class, new RotaryPumpRenderer());
+
+		reg(ModBlocks.steamTurbine);
+		ClientRegistry.bindTileEntitySpecialRenderer(SteamTurbineTileEntity.class, new SteamTurbineRenderer());
+
+		reg(ModBlocks.largeGearMaster);
+		ClientRegistry.bindTileEntitySpecialRenderer(LargeGearMasterTileEntity.class, new LargeGearRenderer());
+
+		reg(ModBlocks.rotaryDrill);
+		ClientRegistry.bindTileEntitySpecialRenderer(RotaryDrillTileEntity.class, new RotaryDrillRenderer());
 	}
 
-    public static void reg(Block block) {
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Main.MODID + ":" + block.getUnlocalizedName().substring(5), "inventory"));
-    }
-	
+	public static void reg(Block block){
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Main.MODID + ":" + block.getUnlocalizedName().substring(5), "inventory"));
+	}
+
 }

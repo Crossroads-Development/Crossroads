@@ -37,7 +37,7 @@ public class SidedGearHolder extends BlockContainer{
 	private static final AxisAlignedBB WEST = new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D);
 	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .875D, 0D, 1D, 1D, 1D);
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
-	
+
 	public SidedGearHolder(){
 		super(Material.IRON);
 		setUnlocalizedName("sidedGearHolder");
@@ -47,31 +47,31 @@ public class SidedGearHolder extends BlockContainer{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new SidedGearHolderTileEntity();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
 		return null;
 	}
-	
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
-    	return false;
-    }
 
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-    	return BB;
-    }
-    
-    @Override
-    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
+		return false;
+	}
 
-    	if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		return BB;
+	}
+
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+
+		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 			addCollisionBoxToList(pos, mask, list, DOWN);
 		}
 		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP)){
@@ -91,35 +91,35 @@ public class SidedGearHolder extends BlockContainer{
 		}
 	}
 
-    @Override
-    public boolean isFullCube(IBlockState state){
-        return false;
-    }
-    
-    @Override
-    public boolean isOpaqueCube(IBlockState state){
-        return false;
-    }
- 
-    @Override
-    public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-    	return false;
-    }
-    
-    @Override
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
+		return false;
+	}
+
+	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
-    
-    @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
-    	if(worldIn.isRemote){
-    		return;
-    	}
-    	
+
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+		if(worldIn.isRemote){
+			return;
+		}
+
 		boolean destroy = false;
-		for(EnumFacing side: EnumFacing.VALUES){
-			if (worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side) && worldIn.getTileEntity(pos).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side).getMember() != null && !worldIn.isSideSolid(pos.offset(side), side.getOpposite(), true)) {
+		for(EnumFacing side : EnumFacing.VALUES){
+			if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side) && worldIn.getTileEntity(pos).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side).getMember() != null && !worldIn.isSideSolid(pos.offset(side), side.getOpposite(), true)){
 				destroy = true;
 			}
 		}
@@ -130,17 +130,17 @@ public class SidedGearHolder extends BlockContainer{
 
 		ServerProxy.masterKey++;
 	}
-	
+
 	@Override
 	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack){
-		
+
 		if(te instanceof SidedGearHolderTileEntity){
 			dropItems(worldIn, pos, (SidedGearHolderTileEntity) te);
 		}else{
 			super.harvestBlock(worldIn, player, pos, state, te, stack);
 		}
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
 		List<ItemStack> drops = new ArrayList<ItemStack>();

@@ -11,31 +11,31 @@ import net.minecraftforge.fml.relauncher.Side;
 @SuppressWarnings("serial")
 public class SendDoubleToClient extends Message<SendDoubleToClient>{
 
-	public SendDoubleToClient() { }
+	public SendDoubleToClient(){
+	}
 
 	public String sContext;
 	public double message;
 	public BlockPos pos;
 
-	public SendDoubleToClient(String context, double message, BlockPos pos) {
-		//This is used to sync the clientQ properly
+	public SendDoubleToClient(String context, double message, BlockPos pos){
+		// This is used to sync the clientQ properly
 		this.sContext = context;
 		this.message = message;
 		this.pos = pos;
 	}
 
 	@Override
-	public IMessage handleMessage(MessageContext context) {
-		if (context.side != Side.CLIENT) {
+	public IMessage handleMessage(MessageContext context){
+		if(context.side != Side.CLIENT){
 			System.err.println("TargetEffectMessageToClient received on wrong side:" + context.side);
 			return null;
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
 		final WorldClient worldClient = minecraft.theWorld;
-		minecraft.addScheduledTask(new Runnable()
-		{
-			public void run() {
+		minecraft.addScheduledTask(new Runnable(){
+			public void run(){
 				processMessage(worldClient, sContext, message, pos);
 			}
 		});

@@ -15,73 +15,72 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public final class ModFluids {
-	
+public final class ModFluids{
+
 	public static void init(){
-		
+
 		FluidRegistry.registerFluid(BlockSteam.getSteam());
 		new BlockSteam();
 		FluidRegistry.addBucketForFluid(BlockSteam.getSteam());
-		
+
 		FluidRegistry.registerFluid(BlockMoltenCopper.getMoltenCopper());
 		new BlockMoltenCopper();
 		FluidRegistry.addBucketForFluid(BlockMoltenCopper.getMoltenCopper());
-		
+
 		FluidRegistry.registerFluid(BlockDistilledWater.getDistilledWater());
 		new BlockDistilledWater();
 		FluidRegistry.addBucketForFluid(BlockDistilledWater.getDistilledWater());
-		
+
 		FluidRegistry.registerFluid(BlockLiquidFat.getLiquidFat());
 		new BlockLiquidFat();
 		FluidRegistry.addBucketForFluid(BlockLiquidFat.getLiquidFat());
 	}
-	
-	
+
 	/*
-	 * The code below is heavily based on EnderIO code,
-	 * though not an exact copy. 
+	 * The code below is heavily based on EnderIO code, though not an exact
+	 * copy.
 	 */
-	public static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition {
+	public static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition{
 
 		public final Fluid fluid;
 		public final ModelResourceLocation location;
 
-		public FluidStateMapper(Fluid fluid) {
+		public FluidStateMapper(Fluid fluid){
 			this.fluid = fluid;
 			location = new ModelResourceLocation(Main.MODID + ":fluids", fluid.getName());
 		}
 
 		@Override
-		protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+		protected ModelResourceLocation getModelResourceLocation(IBlockState state){
 			return location;
 		}
 
 		@Override
-		public ModelResourceLocation getModelLocation(ItemStack stack) {
+		public ModelResourceLocation getModelLocation(ItemStack stack){
 			return location;
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerFluidBlockRendering(Fluid fluid) {
+	public static void registerFluidBlockRendering(Fluid fluid){
 
 		FluidStateMapper mapper = new FluidStateMapper(fluid);
 		Block block = fluid.getBlock();
 		Item item = Item.getItemFromBlock(block);
 
 		// item-model
-		if (item != null) {
+		if(item != null){
 			ModelLoader.registerItemVariants(item);
 			ModelLoader.setCustomMeshDefinition(item, mapper);
 		}
 		// block-model
-		if (block != null) {
+		if(block != null){
 			ModelLoader.setCustomStateMapper(block, mapper);
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerRenderers() {
+	public static void registerRenderers(){
 		registerFluidBlockRendering(BlockSteam.getSteam());
 		registerFluidBlockRendering(BlockMoltenCopper.getMoltenCopper());
 		registerFluidBlockRendering(BlockDistilledWater.getDistilledWater());

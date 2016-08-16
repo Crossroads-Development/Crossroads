@@ -36,12 +36,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class HeatCable extends BlockContainer implements IConduitModel{
-	
+
 	public static final UnlistedPropertyBooleanSixArray CONNECT = Properties.CONNECT;
-	
+
 	private HeatConductors conductor;
 	private HeatInsulators insulator;
-	
+
 	public HeatCable(HeatConductors conductor, HeatInsulators insulator){
 		super(Material.IRON);
 		this.conductor = conductor;
@@ -54,82 +54,82 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setCreativeTab(ModItems.tabCrossroads);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
-    public void initModel() {
-        // To make sure that our ISBM model is chosen for all states we use this custom state mapper:
-        StateMapperBase ignoreState = new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState IBlockState){
-                return ConduitBakedModel.BAKED_MODEL;
-            }
-        };
-        ModelLoader.setCustomStateMapper(this, ignoreState);
+	public void initModel(){
+		// To make sure that our ISBM model is chosen for all states we use this
+		// custom state mapper:
+		StateMapperBase ignoreState = new StateMapperBase(){
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState IBlockState){
+				return ConduitBakedModel.BAKED_MODEL;
+			}
+		};
+		ModelLoader.setCustomStateMapper(this, ignoreState);
 	}
 
 	@Override
 	public ResourceLocation getTexture(){
 		return insulator.getResource();
 	}
-	
+
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		world.markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
 	}
-	
+
 	@Override
 	public boolean isBlockNormalCube(IBlockState state){
 		return false;
 	}
-	
+
 	@Override
 	protected BlockStateContainer createBlockState(){
 		return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] {CONNECT});
 	}
-	
+
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		Boolean[] connect = {false, false, false, false, false, false};
-		
-		for(EnumFacing direction: EnumFacing.values()){
+
+		for(EnumFacing direction : EnumFacing.values()){
 			if(world.getTileEntity(pos.offset(direction)) != null && world.getTileEntity(pos.offset(direction)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite())){
 				connect[direction.getIndex()] = true;
 			}
 		}
-		
+
 		extendedBlockState = extendedBlockState.withProperty(CONNECT, connect);
-		
+
 		return extendedBlockState;
 	}
-	
-	@Override
-    public boolean isOpaqueCube(IBlockState state){
-        return false;
-    }
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new HeatCableTileEntity(conductor, insulator);
 	}
-    
-    public EnumBlockRenderType getRenderType(IBlockState state)
-    {
-        return EnumBlockRenderType.MODEL;
-    }
+
+	public EnumBlockRenderType getRenderType(IBlockState state){
+		return EnumBlockRenderType.MODEL;
+	}
 
 	@Override
-	public double getSize() {
+	public double getSize(){
 		return .2D;
 	}
-	
-    @Override
-    public boolean isFullCube(IBlockState state){
-        return false;
-    }
-    
-    @Override
-    public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-    	return false;
-    }
+
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
+		return false;
+	}
 }

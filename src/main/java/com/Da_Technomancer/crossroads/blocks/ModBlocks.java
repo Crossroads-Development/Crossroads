@@ -37,8 +37,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public final class ModBlocks {
-	
+public final class ModBlocks{
+
 	public static SidedGearHolder sidedGearHolder;
 	public static MasterAxis masterAxis;
 	public static FluidTube fluidTube;
@@ -67,60 +67,60 @@ public final class ModBlocks {
 	public static RotaryDrill rotaryDrill;
 	public static FatCollector fatCollector;
 	public static FatCongealer fatCongealer;
-	
+
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
-	
+
 	public static void blockAddQue(Block block){
 		modelQue.add(block);
 	}
-	
-    public static final void init() {
-        new BasicBlock("oreNativeCopper", Material.ROCK, 1, "pickaxe", 3, Item.getByNameOrId("crossroads:nuggetCopper"), null, true, 3);
-        blockAddQue(masterAxis = new MasterAxis());
-        blockAddQue(grindstone = new Grindstone());
-        sidedGearHolder = new SidedGearHolder();
-        largeGearMaster = new LargeGearMaster();
-        largeGearSlave = new LargeGearSlave();
-        blockAddQue(heatingCrucible = new HeatingCrucible());
-        blockAddQue(fluidTube = new FluidTube());
-        blockAddQue(steamBoiler = new SteamBoiler());
-        rotaryPump = new RotaryPump();
-        steamTurbine = new SteamTurbine();
-        blockAddQue(blockSalt = new BlockSalt());
-        blockAddQue(brazier = new BlockBrazier());
-        blockAddQue(new FluidVoid());
-        blockAddQue(heatExchanger = new HeatExchanger(false));
-        blockAddQue(insulHeatExchanger = new HeatExchanger(true));
-        blockAddQue(fluidTank = new FluidTank());
-        blockAddQue(coalHeater = new CoalHeater());
-        blockAddQue(heatingChamber = new HeatingChamber());
-        blockAddQue(saltReactor = new SaltReactor());
-        blockAddQue(fluidCoolingChamber = new FluidCoolingChamber());
-        blockAddQue(slottedChest = new SlottedChest());
-        blockAddQue(sortingHopper = new SortingHopper());
-        candleLilyPad = new CandleLilyPad();
-        itemChute = new BasicBlock("itemChute");
-        blockAddQue(itemChutePort = new ItemChutePort());
-        blockAddQue(radiator = new Radiator());
-        rotaryDrill = new RotaryDrill();
-        blockAddQue(fatCollector = new FatCollector());
-        blockAddQue(fatCongealer = new FatCongealer());
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public static void preInitModels() {
-    	
-        for(Block modeling: modelQue){
-        	ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(modeling), 0, new ModelResourceLocation(modeling.getRegistryName(), "inventory"));
-        	
-        }
-        
-        for(HashMap<HeatInsulators, HeatCable> map: HeatCableFactory.cableMap.values()){
-    		for(HeatCable cable: map.values()){
-    			cable.initModel();
-    		}
-        }
-    		
-    		fluidTube.initModel();
-    }
+
+	public static final void init(){
+		new BasicBlock("oreNativeCopper", Material.ROCK, 1, "pickaxe", 3, Item.getByNameOrId("crossroads:nuggetCopper"), null, true, 3);
+		blockAddQue(masterAxis = new MasterAxis());
+		blockAddQue(grindstone = new Grindstone());
+		sidedGearHolder = new SidedGearHolder();
+		largeGearMaster = new LargeGearMaster();
+		largeGearSlave = new LargeGearSlave();
+		blockAddQue(heatingCrucible = new HeatingCrucible());
+		blockAddQue(fluidTube = new FluidTube());
+		blockAddQue(steamBoiler = new SteamBoiler());
+		rotaryPump = new RotaryPump();
+		steamTurbine = new SteamTurbine();
+		blockAddQue(blockSalt = new BlockSalt());
+		blockAddQue(brazier = new BlockBrazier());
+		blockAddQue(new FluidVoid());
+		blockAddQue(heatExchanger = new HeatExchanger(false));
+		blockAddQue(insulHeatExchanger = new HeatExchanger(true));
+		blockAddQue(fluidTank = new FluidTank());
+		blockAddQue(coalHeater = new CoalHeater());
+		blockAddQue(heatingChamber = new HeatingChamber());
+		blockAddQue(saltReactor = new SaltReactor());
+		blockAddQue(fluidCoolingChamber = new FluidCoolingChamber());
+		blockAddQue(slottedChest = new SlottedChest());
+		blockAddQue(sortingHopper = new SortingHopper());
+		candleLilyPad = new CandleLilyPad();
+		itemChute = new BasicBlock("itemChute");
+		blockAddQue(itemChutePort = new ItemChutePort());
+		blockAddQue(radiator = new Radiator());
+		rotaryDrill = new RotaryDrill();
+		blockAddQue(fatCollector = new FatCollector());
+		blockAddQue(fatCongealer = new FatCongealer());
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void preInitModels(){
+
+		for(Block modeling : modelQue){
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(modeling), 0, new ModelResourceLocation(modeling.getRegistryName(), "inventory"));
+
+		}
+
+		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.cableMap.values()){
+			for(HeatCable cable : map.values()){
+				cable.initModel();
+			}
+		}
+
+		fluidTube.initModel();
+	}
 }

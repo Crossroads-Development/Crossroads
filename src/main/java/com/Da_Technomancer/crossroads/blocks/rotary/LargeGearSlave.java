@@ -32,9 +32,9 @@ public class LargeGearSlave extends BlockContainer{
 		super(Material.IRON);
 		String name = "largeGearSlave";
 		setUnlocalizedName(name);
-	    setRegistryName(name);
-	    GameRegistry.register(this);
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName(name);
+		GameRegistry.register(this);
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
@@ -55,51 +55,51 @@ public class LargeGearSlave extends BlockContainer{
 		}
 		ServerProxy.masterKey++;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
 		return null;
 	}
-	
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
-    	return false;
-    }
-    
-    @Override
-    public boolean isFullCube(IBlockState state){
-    	return false;
-    }
 
-    @Override
-    public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
-    	return false;
-    }
-    
-    @Override
-    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
-    	return true;
-    }
-    
-    @Override
-    public boolean isOpaqueCube(IBlockState state){
-        return false;
-    }
-    
-    @Override
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
+		return false;
+	}
+
+	@Override
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
+		return true;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+
+	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
-		
+
 		if(worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
 			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak();
 		}
 		super.breakBlock(worldIn, pos, state);
 	}
 
-    @Override
-    @Nullable
-    public Item getItemDropped(IBlockState state, Random rand, int fortune){
-    	return null;
-    }
+	@Override
+	@Nullable
+	public Item getItemDropped(IBlockState state, Random rand, int fortune){
+		return null;
+	}
 }

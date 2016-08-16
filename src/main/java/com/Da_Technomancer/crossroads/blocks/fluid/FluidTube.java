@@ -38,18 +38,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FluidTube extends BlockContainer implements IConduitModel{
 
-	public FluidTube() {
+	public FluidTube(){
 		super(Material.IRON);
 		setUnlocalizedName("fluidTube");
-	    setRegistryName("fluidTube");
-	    GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName("fluidTube"));
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName("fluidTube");
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName("fluidTube"));
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new FluidTubeTileEntity();
 	}
 
@@ -59,65 +59,66 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void initModel() {
-        // To make sure that our ISBM model is chosen for all states we use this custom state mapper:
-        StateMapperBase ignoreState = new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState IBlockState){
-                return ConduitBakedModel.BAKED_MODEL;
-            }
-        };
-        ModelLoader.setCustomStateMapper(this, ignoreState);
-    }
-	
+	public void initModel(){
+		// To make sure that our ISBM model is chosen for all states we use this
+		// custom state mapper:
+		StateMapperBase ignoreState = new StateMapperBase(){
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState IBlockState){
+				return ConduitBakedModel.BAKED_MODEL;
+			}
+		};
+		ModelLoader.setCustomStateMapper(this, ignoreState);
+	}
+
 	@Override
 	public ResourceLocation getTexture(){
 		return new ResourceLocation(Main.MODID + ":blocks/blockBronze");
 	}
-	
+
 	@Override
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
 		return new ItemStack(Item.getByNameOrId(Main.MODID + ":fluidTube"), 1, 0);
 	}
-	
+
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		world.markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
 	}
-	
+
 	@Override
 	public boolean isBlockNormalCube(IBlockState state){
 		return false;
 	}
-	
+
 	@Override
 	protected BlockStateContainer createBlockState(){
 		return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] {Properties.CONNECT});
 	}
-	
+
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		Boolean[] connect = {false, false, false, false, false, false};
-		
-		for(EnumFacing direction: EnumFacing.values()){
+
+		for(EnumFacing direction : EnumFacing.values()){
 			if(world.getTileEntity(pos.offset(direction)) != null && world.getTileEntity(pos.offset(direction)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())){
 				connect[direction.getIndex()] = true;
 			}
 		}
-		
+
 		extendedBlockState = extendedBlockState.withProperty(Properties.CONNECT, connect);
-		
+
 		return extendedBlockState;
 	}
-	
-	@Override
-    public boolean isOpaqueCube(IBlockState state){
-        return false;
-    }
 
 	@Override
-	public double getSize() {
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public double getSize(){
 		return .3125D;
 	}
 }

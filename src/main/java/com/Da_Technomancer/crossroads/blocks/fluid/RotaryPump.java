@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RotaryPump extends BlockContainer{
-	public RotaryPump() {
+	public RotaryPump(){
 		super(Material.IRON);
 		String name = "rotaryPump";
 		setUnlocalizedName(name);
@@ -30,7 +30,7 @@ public class RotaryPump extends BlockContainer{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new RotaryPumpTileEntity();
 	}
 
@@ -44,7 +44,6 @@ public class RotaryPump extends BlockContainer{
 	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
 		return false;
 	}
-
 
 	@Override
 	public boolean isFullCube(IBlockState state){

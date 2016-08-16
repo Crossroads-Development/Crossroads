@@ -26,23 +26,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class SteamTurbine extends BlockContainer{
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing");
-	
-	public SteamTurbine() {
+
+	public SteamTurbine(){
 		super(Material.IRON);
 		String name = "steamTurbine";
 		setUnlocalizedName(name);
-	    setRegistryName(name);
-	    GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName(name);
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new SteamTurbineTileEntity();
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
@@ -55,8 +55,8 @@ public class SteamTurbine extends BlockContainer{
 	}
 
 	/**
-	 * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
+	 * Returns the blockstate with the given rotation from the passed
+	 * blockstate. If inapplicable, returns the passed blockstate.
 	 */
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
@@ -64,8 +64,8 @@ public class SteamTurbine extends BlockContainer{
 	}
 
 	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
+	 * Returns the blockstate with the given mirror of the passed blockstate. If
+	 * inapplicable, returns the passed blockstate.
 	 */
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
@@ -94,26 +94,25 @@ public class SteamTurbine extends BlockContainer{
 		int facingbits = facing.getIndex();
 		return facingbits;
 	}
-	
-	@Override
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
-        return false;
-    }
-	
 
-    @Override
-    public boolean isFullCube(IBlockState state){
-        return false;
-    }
-    
-    @Override
-    public boolean isOpaqueCube(IBlockState state){
-        return false;
-    }
- 
-    @Override
-    public boolean isSideSolid(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-    	return side == EnumFacing.UP;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
+		return side == EnumFacing.UP;
+	}
 }

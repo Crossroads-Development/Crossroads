@@ -100,10 +100,10 @@ public class BlockBrazier extends BlockContainer{
 	}
 
 	@Override
-    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
 		addCollisionBoxToList(pos, mask, list, BB);
 	}
-	
+
 	@Override
 	public boolean isFullCube(IBlockState state){
 		return false;

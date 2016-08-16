@@ -5,7 +5,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelSteamTurbine extends ModelBase{
-	//fields
+	// fields
 	ModelRenderer glassA;
 	ModelRenderer glassB;
 	ModelRenderer glassC;
@@ -39,8 +39,7 @@ public class ModelSteamTurbine extends ModelBase{
 	ModelRenderer connectC;
 	ModelRenderer connectD;
 
-	public ModelSteamTurbine()
-	{
+	public ModelSteamTurbine(){
 		textureWidth = 64;
 		textureHeight = 32;
 
@@ -55,10 +54,9 @@ public class ModelSteamTurbine extends ModelBase{
 		upperSolidA = new ModelRenderer(this, 0, 17);
 		upperSolidA.addBox(0F, 0F, 0F, 10, 8, 1);
 		upperSolidA.setRotationPoint(-5F, 9F, 5F);
-		upperSolidA.setTextureSize(64,  32);
+		upperSolidA.setTextureSize(64, 32);
 		upperSolidA.mirror = true;
 		setRotation(upperSolidA, 0F, 0F, 0F);
-
 
 		glassB = new ModelRenderer(this, 0, 25);
 		glassB.addBox(0F, 0F, 0F, 10, 6, 1);
@@ -70,10 +68,9 @@ public class ModelSteamTurbine extends ModelBase{
 		upperSolidB = new ModelRenderer(this, 0, 17);
 		upperSolidB.addBox(0F, 0F, 0F, 10, 8, 1);
 		upperSolidB.setRotationPoint(-5F, 9F, -6F);
-		upperSolidB.setTextureSize(64,  32);
+		upperSolidB.setTextureSize(64, 32);
 		upperSolidB.mirror = true;
 		setRotation(upperSolidB, 0F, 0F, 0F);
-
 
 		glassC = new ModelRenderer(this, 0, 25);
 		glassC.addBox(0F, 0F, 0F, 10, 6, 1);
@@ -85,10 +82,9 @@ public class ModelSteamTurbine extends ModelBase{
 		upperSolidC = new ModelRenderer(this, 0, 17);
 		upperSolidC.addBox(0F, 0F, 0F, 10, 8, 1);
 		upperSolidC.setRotationPoint(-6F, 9F, 5F);
-		upperSolidC.setTextureSize(64,  32);
+		upperSolidC.setTextureSize(64, 32);
 		upperSolidC.mirror = true;
 		setRotation(upperSolidC, 0F, 1.570796F, 0F);
-
 
 		glassD = new ModelRenderer(this, 0, 25);
 		glassD.addBox(0F, 0F, 0F, 10, 6, 1);
@@ -100,10 +96,9 @@ public class ModelSteamTurbine extends ModelBase{
 		upperSolidD = new ModelRenderer(this, 0, 17);
 		upperSolidD.addBox(0F, 0F, 0F, 10, 8, 1);
 		upperSolidD.setRotationPoint(5F, 9F, 5F);
-		upperSolidD.setTextureSize(64,  32);
+		upperSolidD.setTextureSize(64, 32);
 		upperSolidD.mirror = true;
 		setRotation(upperSolidD, 0F, 1.570796F, 0F);
-
 
 		top = new ModelRenderer(this, 24, 21);
 		top.addBox(0F, 0F, 0F, 10, 1, 10);
@@ -265,13 +260,12 @@ public class ModelSteamTurbine extends ModelBase{
 		sideD.render(f);
 		base.render(f);
 
-
 		upperSolidA.render(f);
 		upperSolidB.render(f);
 		upperSolidC.render(f);
 		upperSolidD.render(f);
 
-		//South
+		// South
 		GlStateManager.color(.4F, 0F, 0F, 1.0F);
 		connectA.render(f);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

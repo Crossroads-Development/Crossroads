@@ -8,7 +8,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 public class FluidCoolingRecipeHandler implements IRecipeHandler<FluidCoolingRecipe>{
 
 	protected static final String id = Main.MODID + ".fluidCooling";
-	
+
 	@Override
 	public Class<FluidCoolingRecipe> getRecipeClass(){
 		return FluidCoolingRecipe.class;

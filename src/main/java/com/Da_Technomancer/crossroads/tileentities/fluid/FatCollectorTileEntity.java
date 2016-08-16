@@ -31,7 +31,11 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 	private FluidStack content = null;
 	private final int CAPACITY = 2_000;
 	private ItemStack inv = null;
-	/**Below the first double the machine does not operate, above the last double all fat is wasted, between the 2nd and 3rd double is the peak efficiency*/
+	/**
+	 * Below the first double the machine does not operate, above the last
+	 * double all fat is wasted, between the 2nd and 3rd double is the peak
+	 * efficiency
+	 */
 	private final double[] BRACKETS = new double[] {100D, 150D, 160D, 200D};
 	private final double USE_PER_VALUE = .8D;
 
@@ -58,7 +62,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 		}
 	}
 
-	/*0: no run, 1: low efficiency, 2: peak efficiency, 3 waste all products*/
+	/* 0: no run, 1: low efficiency, 2: peak efficiency, 3 waste all products */
 	private byte bracket(){
 		if(temp < BRACKETS[0]){
 			return 0;
@@ -71,7 +75,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 		}
 		return 2;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -86,14 +90,14 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 		super.writeToNBT(nbt);
 		nbt.setBoolean("init", init);
 		nbt.setDouble("temp", temp);
-		
+
 		if(content != null){
 			content.writeToNBT(nbt);
 		}
 		if(inv != null){
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
-		
+
 		return nbt;
 	}
 
@@ -139,7 +143,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 				init = true;
 			}
 		}
-		
+
 		@Override
 		public double getTemp(){
 			init();
@@ -157,9 +161,9 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 			init();
 			temp += heat;
 		}
-		
+
 	}
-	
+
 	private class MainHandler implements IFluidHandler{
 
 		@Override
@@ -209,7 +213,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 			return new FluidStack(fluid, amount);
 		}
 	}
-	
+
 	private class FoodHandler implements IItemHandler{
 
 		@Override
@@ -224,14 +228,14 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || stack == null || !(stack.getItem() instanceof ItemFood)  || stack.getItem() == ModItems.edibleBlob){
+			if(slot != 0 || stack == null || !(stack.getItem() instanceof ItemFood) || stack.getItem() == ModItems.edibleBlob){
 				return stack;
 			}
-			
+
 			if(inv != null && !ItemStack.areItemsEqual(stack, inv)){
 				return stack;
 			}
-			
+
 			int limit = Math.min(stack.getMaxStackSize() - (inv == null ? 0 : inv.stackSize), stack.stackSize);
 			if(!simulate){
 				if(inv == null){
@@ -239,9 +243,9 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 				}else{
 					inv.stackSize += limit;
 				}
-				
+
 			}
-			
+
 			return stack.stackSize == limit ? null : new ItemStack(stack.getItem(), stack.stackSize - limit, stack.getMetadata());
 		}
 
@@ -249,6 +253,6 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
 			return null;
 		}
-		
+
 	}
 }

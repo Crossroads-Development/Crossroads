@@ -14,22 +14,22 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class FatCollector extends BlockContainer{
 
-	public FatCollector() {
+	public FatCollector(){
 		super(Material.IRON);
 		String name = "fatCollector";
 		setUnlocalizedName(name);
-	    setRegistryName(name);
-	    GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName(name);
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new FatCollectorTileEntity();
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;

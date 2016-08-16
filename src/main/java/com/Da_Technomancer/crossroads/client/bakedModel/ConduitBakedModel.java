@@ -93,7 +93,7 @@ public class ConduitBakedModel implements IBakedModel{
 		if(extendedBlockState.getValue(Properties.CONNECT) == null){
 			return Collections.emptyList();
 		}
-			
+
 		Boolean north = extendedBlockState.getValue(Properties.CONNECT)[2];
 		Boolean south = extendedBlockState.getValue(Properties.CONNECT)[3];
 		Boolean west = extendedBlockState.getValue(Properties.CONNECT)[4];

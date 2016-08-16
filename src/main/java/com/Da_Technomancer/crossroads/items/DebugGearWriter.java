@@ -13,12 +13,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class DebugGearWriter extends Item{
-	
+
 	public DebugGearWriter(){
 		setUnlocalizedName("debugGearWriter");
 		setRegistryName("debugGearWriter");
-	    GameRegistry.register(this);
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		GameRegistry.register(this);
+		this.setCreativeTab(ModItems.tabCrossroads);
 	}
 
 	protected double getEfficiency(){

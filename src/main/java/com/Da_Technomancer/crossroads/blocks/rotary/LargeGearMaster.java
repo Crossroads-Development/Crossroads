@@ -29,9 +29,9 @@ public class LargeGearMaster extends BlockContainer{
 		super(Material.IRON);
 		String name = "largeGearMaster";
 		setUnlocalizedName(name);
-	    setRegistryName(name);
-	    GameRegistry.register(this);
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName(name);
+		GameRegistry.register(this);
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
@@ -39,7 +39,7 @@ public class LargeGearMaster extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new LargeGearMasterTileEntity();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
@@ -64,14 +64,14 @@ public class LargeGearMaster extends BlockContainer{
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		drops.add(new ItemStack(ModItems.metalScrap, 70));
 		return drops;
 	}
-	
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		if(worldIn.getTileEntity(pos) instanceof LargeGearMasterTileEntity){

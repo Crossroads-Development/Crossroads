@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class FluidGauge extends Item{
-	
+
 	public FluidGauge(){
 		String name = "fluidGauge";
 		setUnlocalizedName(name);
@@ -35,7 +35,7 @@ public class FluidGauge extends Item{
 				IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 
 				playerIn.addChatComponentMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
-				
+
 				for(IFluidTankProperties tank : pipe.getTankProperties()){
 					playerIn.addChatComponentMessage(new TextComponentString("% full: " + (tank.getContents() == null ? 0 : tank.getContents().amount) * 100 / tank.getCapacity()));
 				}

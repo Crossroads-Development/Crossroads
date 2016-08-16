@@ -40,7 +40,7 @@ public class Vacuum extends Item{
 			Vec3d motVec = playerIn.getPositionVector().subtract(ent.getPositionVector()).normalize();
 			ent.addVelocity(motVec.xCoord, motVec.yCoord, motVec.zCoord);
 		}
-		
+
 		stack.damageItem(1, playerIn);
 
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
@@ -55,7 +55,7 @@ public class Vacuum extends Item{
 
 		Vec3d look = player.getLookVec().scale(range);
 		Vec3d playPos = player.getPositionVector();
-		
+
 		for(Entity ent : listIn){
 			Vec3d ePos = ent.getPositionVector().subtract(playPos);
 
@@ -63,7 +63,7 @@ public class Vacuum extends Item{
 				listOut.add(ent);
 			}
 		}
-		
+
 		return listOut;
 	}
 }

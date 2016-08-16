@@ -22,15 +22,15 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class RotaryDrill extends BlockContainer{
 
 	public static final PropertyDirection PROPERTYFACING = PropertyDirection.create("facing");
-	
+
 	public RotaryDrill(){
 		super(Material.IRON);
 		String name = "rotaryDrill";
 		setUnlocalizedName(name);
-	    setRegistryName(name);
-	    GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName(name);
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
@@ -38,13 +38,13 @@ public class RotaryDrill extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new RotaryDrillTileEntity();
 	}
-	
+
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : BlockPistonBase.getFacingFromEntity(pos, placer);
 		return this.getDefaultState().withProperty(PROPERTYFACING, enumfacing);
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;

@@ -13,26 +13,26 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class HeatExchanger extends BlockContainer{
-	
+
 	private boolean insulat;
-	
+
 	public HeatExchanger(boolean insul){
 		super(Material.IRON);
 		insulat = insul;
 		String name = insul ? "insulatedHeatExchanger" : "heatExchanger";
 		setUnlocalizedName(name);
-	    setRegistryName(name);
-	    GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName(name);
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new HeatExchangerTileEntity(insulat);
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;

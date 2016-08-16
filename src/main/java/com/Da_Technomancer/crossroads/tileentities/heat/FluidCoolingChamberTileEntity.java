@@ -23,7 +23,7 @@ import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-public class FluidCoolingChamberTileEntity extends AbstractInventory implements ITickable {
+public class FluidCoolingChamberTileEntity extends AbstractInventory implements ITickable{
 
 	private FluidStack content = null;
 	private static final int CAPACITY = 16000;
@@ -33,18 +33,18 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 	private ItemStack inventory = null;
 	private int ticksExisted = 0;
 	private static final Random rand = new Random();
-	
+
 	@Override
 	public void update(){
 		if(worldObj.isRemote){
 			return;
 		}
-		
+
 		if(!init){
 			temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeGenForCoords(getPos()).getFloatTemperature(getPos());
 			init = true;
 		}
-		
+
 		if(++ticksExisted % 10 == 0 && content != null && RecipeHolder.fluidCoolingRecipes.containsKey(content.getFluid()) && content.amount >= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()){
 			Triple<ItemStack, Double, Double> trip = RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getRight();
 			if((inventory == null || (ItemStack.areItemsEqual(trip.getLeft(), inventory) && getInventoryStackLimit() - inventory.stackSize >= trip.getLeft().stackSize)) && temp < trip.getMiddle() - rand.nextInt(ECAP * trip.getRight().intValue())){
@@ -96,7 +96,7 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.UP && facing != EnumFacing.DOWN) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.UP && facing != EnumFacing.DOWN){
 			return (T) fluidHandler;
 		}
 
@@ -109,7 +109,7 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.DOWN && facing != EnumFacing.UP) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.DOWN && facing != EnumFacing.UP){
 			return true;
 		}
 
@@ -120,17 +120,17 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 	}
 
 	@Override
-	public int getSizeInventory() {
+	public int getSizeInventory(){
 		return 1;
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int index) {
+	public ItemStack getStackInSlot(int index){
 		return (index == 0) ? inventory : null;
 	}
 
 	@Override
-	public ItemStack decrStackSize(int index, int count) {
+	public ItemStack decrStackSize(int index, int count){
 		if(index != 0){
 			return null;
 		}
@@ -145,7 +145,7 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int index) {
+	public ItemStack removeStackFromSlot(int index){
 		if(index != 0){
 			return null;
 		}
@@ -156,8 +156,8 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		if (index != 0){
+	public void setInventorySlotContents(int index, ItemStack stack){
+		if(index != 0){
 			return;
 		}
 
@@ -167,65 +167,64 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getInventoryStackLimit(){
 		return 16;
 	}
 
 	@Override
-	public String getName() {
+	public String getName(){
 		return "container.fluidCoolingChamber";
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
+	public boolean isItemValidForSlot(int index, ItemStack stack){
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
-	{
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
 		return index == 0;
 	}
 
 	@Override
-	public int getField(int id) {
+	public int getField(int id){
 		return 0;
 	}
 
 	@Override
-	public void setField(int id, int value) {
+	public void setField(int id, int value){
 
 	}
 
 	@Override
-	public int getFieldCount() {
+	public int getFieldCount(){
 		return 0;
 	}
 
 	@Override
-	public void clear() {
+	public void clear(){
 		inventory = null;
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
+	public int[] getSlotsForFace(EnumFacing side){
 		return new int[] {0};
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction){
 		return false;
 	}
 
 	private class FluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new FluidTankProperties[] {new FluidTankProperties(content, CAPACITY, true, false)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			if(resource == null || (content != null && !resource.isFluidEqual(content))){
 				return 0;
 			}
@@ -238,21 +237,20 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 					content.amount += maxFill;
 				}
 			}
-			
+
 			return maxFill;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 			return null;
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			return null;
 		}
 	}
-
 
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
@@ -263,19 +261,19 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 		}
 
 		@Override
-		public double getTemp() {
+		public double getTemp(){
 			init();
 			return temp;
 		}
 
 		@Override
-		public void setTemp(double tempIn) {
+		public void setTemp(double tempIn){
 			init = true;
 			temp = tempIn;
 		}
 
 		@Override
-		public void addHeat(double heat) {
+		public void addHeat(double heat){
 			init();
 			temp += heat;
 

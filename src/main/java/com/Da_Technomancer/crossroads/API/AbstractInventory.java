@@ -9,27 +9,27 @@ import net.minecraft.util.text.TextComponentTranslation;
 public abstract class AbstractInventory extends TileEntity implements ISidedInventory{
 
 	@Override
-	public boolean hasCustomName() {
+	public boolean hasCustomName(){
 		return false;
 	}
 
 	@Override
-    public ITextComponent getDisplayName() {
-        return new TextComponentTranslation(this.getName());
-    }
-	
+	public ITextComponent getDisplayName(){
+		return new TextComponentTranslation(this.getName());
+	}
+
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUseableByPlayer(EntityPlayer player){
 		return this.worldObj.getTileEntity(this.getPos()) == this && player.getDistanceSq(this.pos.add(0.5, 0.5, 0.5)) <= 64;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
-		
+	public void openInventory(EntityPlayer player){
+
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
-		
+	public void closeInventory(EntityPlayer player){
+
 	}
 }

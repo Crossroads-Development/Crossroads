@@ -14,21 +14,21 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class SteamBoiler extends BlockContainer{
 
-	public SteamBoiler() {
+	public SteamBoiler(){
 		super(Material.IRON);
 		setUnlocalizedName("steamBoiler");
-	    setRegistryName("steamBoiler");
-	    GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName("steamBoiler"));
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName("steamBoiler");
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName("steamBoiler"));
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new SteamBoilerTileEntity();
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;

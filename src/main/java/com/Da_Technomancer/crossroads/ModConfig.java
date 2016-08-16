@@ -4,7 +4,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-public final class ModConfig {
+public final class ModConfig{
 
 	public static Configuration config;
 
@@ -14,10 +14,14 @@ public final class ModConfig {
 
 		config.load();
 
-		/* In order to add a new config option, somewhere called during pre-initilization or initialization, 
-		 * call variableName = ModConfig.config.get(String catagory name, String label, default, String comment(optional));
+		/*
+		 * In order to add a new config option, somewhere called during
+		 * pre-initilization or initialization, call variableName =
+		 * ModConfig.config.get(String catagory name, String label, default,
+		 * String comment(optional));
 		 * 
-		 * in order to read the config file, call the appropriate method below and pass in the property.
+		 * in order to read the config file, call the appropriate method below
+		 * and pass in the property.
 		 */
 	}
 

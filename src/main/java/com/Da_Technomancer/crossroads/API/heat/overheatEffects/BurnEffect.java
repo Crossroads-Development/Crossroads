@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 public class BurnEffect implements OverheatEffect{
 
 	@Override
-	public void onOverheat(World worldIn, BlockPos pos) {
+	public void onOverheat(World worldIn, BlockPos pos){
 		worldIn.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
 	}
 }

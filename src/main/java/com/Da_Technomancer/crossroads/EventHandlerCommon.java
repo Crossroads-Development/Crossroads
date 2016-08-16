@@ -12,8 +12,7 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public final class EventHandlerCommon {
-
+public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	public void cancelWitchSpawns(LivingSpawnEvent e){
@@ -23,36 +22,36 @@ public final class EventHandlerCommon {
 	}
 
 	@SubscribeEvent
-	public void addSpecialItems(EntityJoinWorldEvent event) {
-		if (!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayer) {
+	public void addSpecialItems(EntityJoinWorldEvent event){
+		if(!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayer){
 			EntityPlayer player = (EntityPlayer) event.getEntity();
-			
+
 			NBTTagCompound tag = getPlayerTag(player);
 			if(!tag.hasKey("starter")){
 				switch(player.getGameProfile().getName()){
-				case "Da_Technomancer":
-					player.inventory.addItemStackToInventory(new ItemStack(ModItems.debugReader, 1));
-					break;
-				default: 
-					break;
+					case "Da_Technomancer":
+						player.inventory.addItemStackToInventory(new ItemStack(ModItems.debugReader, 1));
+						break;
+					default:
+						break;
 				}
-				
+
 				tag.setBoolean("starter", true);
 			}
 		}
 	}
-	
+
 	private static NBTTagCompound getPlayerTag(EntityPlayer playerIn){
 		NBTTagCompound tag = playerIn.getEntityData();
-		if (!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)){
+		if(!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)){
 			tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
 		}
 		tag = tag.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-		
-		if (!tag.hasKey(Main.MODID)) {
+
+		if(!tag.hasKey(Main.MODID)){
 			tag.setTag(Main.MODID, new NBTTagCompound());
 		}
-		
+
 		return tag.getCompoundTag(Main.MODID);
 	}
 }

@@ -28,35 +28,35 @@ public class CoalHeater extends BlockContainer{
 		super(Material.IRON);
 		String name = "coalHeater";
 		setUnlocalizedName(name);
-	    setRegistryName(name);
-	    GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName(name);
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new CoalHeaterTileEntity();
 	}
-	
+
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState blockstate) {
-	    CoalHeaterTileEntity te = (CoalHeaterTileEntity) world.getTileEntity(pos);
-	    InventoryHelper.dropInventoryItems(world, pos, te);
-	    super.breakBlock(world, pos, blockstate);
+	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+		CoalHeaterTileEntity te = (CoalHeaterTileEntity) world.getTileEntity(pos);
+		InventoryHelper.dropInventoryItems(world, pos, te);
+		super.breakBlock(world, pos, blockstate);
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
-	    if (!worldIn.isRemote) {
-	        playerIn.openGui(Main.instance, GuiHandler.COALHEATER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
-	    }
-	    return true;
+		if(!worldIn.isRemote){
+			playerIn.openGui(Main.instance, GuiHandler.COALHEATER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		}
+		return true;
 	}
 }

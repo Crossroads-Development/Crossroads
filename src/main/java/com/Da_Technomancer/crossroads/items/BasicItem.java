@@ -6,8 +6,10 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class BasicItem extends Item{
 
-	/* This class is capable of generating any item with no special properties.
-	 * Either input a name for the item, or specify a name and an oreDict for the item.
+	/*
+	 * This class is capable of generating any item with no special properties.
+	 * Either input a name for the item, or specify a name and an oreDict for
+	 * the item.
 	 */
 
 	public BasicItem(String name){
@@ -19,10 +21,9 @@ public class BasicItem extends Item{
 		setRegistryName(name);
 		GameRegistry.register(this);
 		setCreativeTab(ModItems.tabCrossroads);
-		if(oreDict!=null){
+		if(oreDict != null){
 			OreDictionary.registerOre(oreDict, this);
 		}
 		ModItems.itemAddQue(this);
-	}    
+	}
 }
-

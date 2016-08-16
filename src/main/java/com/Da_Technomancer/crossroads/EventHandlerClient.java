@@ -1,5 +1,5 @@
 package com.Da_Technomancer.crossroads;
 
-public final class EventHandlerClient {
+public final class EventHandlerClient{
 
 }

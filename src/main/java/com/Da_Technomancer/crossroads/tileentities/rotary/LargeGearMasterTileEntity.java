@@ -26,19 +26,21 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class LargeGearMasterTileEntity extends TileEntity implements IDoubleReceiver, ITickable, IStringReceiver{
-	
+public class LargeGearMasterTileEntity extends TileEntity implements IDoubleReceiver, ITickable,
+		IStringReceiver{
+
 	private int ticksExisted = 0;
 	private EnumFacing side;
 	private GearTypes type;
 	private double[] motionData = new double[4];
 	private double[] physData = {1.5, 0, 0};
 	private boolean borken = false;
-	/**0: angle, 1: Q, 2: clientQ
+	/**
+	 * 0: angle, 1: Q, 2: clientQ
 	 */
 	private double[] angleQ = new double[3];
 	private int updateKey;
-	
+
 	public void initSetup(GearTypes typ, EnumFacing sid){
 		side = sid;
 		type = typ;
@@ -58,9 +60,9 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		}
 		worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(GearFactory.largeGears.get(type), 1)));
 	}
-	
+
 	@Override
-	public void update() {
+	public void update(){
 		ticksExisted++;
 
 		if(getWorld().isRemote){
@@ -77,7 +79,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			sendQPacket();
 		}
 
-		//TODO
+		// TODO
 		if(ticksExisted % 200 == 1){
 			handlerMain.updateStates();
 		}
@@ -87,14 +89,14 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 
-		//motionData
+		// motionData
 		NBTTagCompound innerMot = nbt.getCompoundTag("motionData");
-		for (int j = 0; j < 4; j++) {
-			this.motionData[j] = (innerMot.hasKey(j + "motion")) ? innerMot.getDouble(j + "motion"): 0;
+		for(int j = 0; j < 4; j++){
+			this.motionData[j] = (innerMot.hasKey(j + "motion")) ? innerMot.getDouble(j + "motion") : 0;
 		}
-		//member
+		// member
 		this.type = nbt.hasKey("memb") ? GearTypes.valueOf(nbt.getString("memb")) : null;
-		
+
 		this.side = EnumFacing.getFront(nbt.getByte("side"));
 	}
 
@@ -102,26 +104,25 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
-		//motionData
+		// motionData
 		NBTTagCompound motionTags = new NBTTagCompound();
-		for (int j = 0; j < 3; j++) {
+		for(int j = 0; j < 3; j++){
 			if(motionData[j] != 0)
 				motionTags.setDouble(j + "motion", motionData[j]);
 		}
 		nbt.setTag("motionData", motionTags);
 
-		//member
+		// member
 		if(type != null){
 			nbt.setString("memb", type.name());
 		}
 
 		nbt.setByte("side", (byte) side.getIndex());
-		
+
 		return nbt;
 	}
 
 	private final int tiers = ModConfig.getConfigInt(MasterAxis.speedTiers);
-
 
 	@Override
 	public void receiveDouble(String context, double message){
@@ -159,13 +160,13 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 				side = message.equals("") ? null : EnumFacing.valueOf(message);
 				break;
 		}
-			if(context.equals("memb")){
+		if(context.equals("memb")){
 			type = message.equals("") ? null : GearTypes.valueOf(message);
 		}
 	}
-	
+
 	private final GearHandler handlerMain = new GearHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if(capability == Capabilities.ROTARY_HANDLER_CAPABILITY && (facing == null || facing == side)){
@@ -183,9 +184,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		return super.getCapability(capability, facing);
 	}
 
-	
 	private class GearHandler implements IRotaryHandler{
-		
+
 		@Override
 		public double[] getMotionData(){
 			return motionData;
@@ -196,15 +196,14 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			if(type == null || ticksExisted == 0){
 				return;
 			}
-			
+
 			if(key * -1 == updateKey){
 				masterIn.lock();
 				return;
 			}else if(key == updateKey){
 				return;
 			}
-			
-			
+
 			if(masterIn.addToList(handlerMain)){
 				return;
 			}
@@ -216,21 +215,18 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 				updateKey = key;
 			}
 
-
 			if(worldObj.getTileEntity(pos.offset(side)) instanceof ITileMasterAxis){
 				((ITileMasterAxis) worldObj.getTileEntity(pos.offset(side))).trigger(key, masterIn, side.getOpposite());
 			}
 
-
-			
 			for(EnumFacing sideN : EnumFacing.values()){
 				if(sideN != side && sideN != side.getOpposite()){
-					//Adjacent gears
+					// Adjacent gears
 					if(worldObj.getTileEntity(pos.offset(sideN, 2)) != null && worldObj.getTileEntity(pos.offset(sideN, 2)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side)){
 						worldObj.getTileEntity(pos.offset(sideN, 2)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side).propogate(key * -1, masterIn);
 					}
 
-					//Diagonal gears
+					// Diagonal gears
 					if(!worldObj.getBlockState(pos.offset(sideN, 2)).getBlock().isNormalCube(worldObj.getBlockState(pos.offset(sideN, 2)), worldObj, pos.offset(sideN, 2)) && worldObj.getTileEntity(pos.offset(sideN, 2).offset(side)) != null && worldObj.getTileEntity(pos.offset(sideN, 2).offset(side)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, sideN.getOpposite())){
 						worldObj.getTileEntity(pos.offset(sideN, 2).offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, sideN.getOpposite()).propogate(key * -1, masterIn);
 					}
@@ -287,9 +283,12 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 				SendStringToClient msgOther = new SendStringToClient("side", side == null ? "" : side.name(), pos);
 				ModPackets.network.sendToAllAround(msgOther, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 			}
-			
+
 			physData[1] = type == null ? 0 : MiscOperators.betterRound(type.getDensity() * 4.5D, 2);
-			physData[2] = physData[1] * 1.125; /*1.125 because r*r/2 so 1.5*1.5/2 */
+			physData[2] = physData[1] * 1.125; /*
+												 * 1.125 because r*r/2 so
+												 * 1.5*1.5/2
+												 */
 		}
 
 		@Override

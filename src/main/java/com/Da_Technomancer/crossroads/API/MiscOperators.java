@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API;
 
 //This class is for holding operations that I use often and aren't built into java.
-public final class MiscOperators {
+public final class MiscOperators{
 
 	public static double betterRound(double numIn, int decPlac){
 
@@ -9,8 +9,10 @@ public final class MiscOperators {
 		return opOn;
 	}
 
-	/**a version of Math.ceil that factors in negative values better. Instead of hitting ints, it uses the secong arg
-	 * ex. tiers = 1 is like ceil, tiers = 2 means goes to closest .5 value, rounding up
+	/**
+	 * a version of Math.ceil that factors in negative values better. Instead of
+	 * hitting ints, it uses the secong arg ex. tiers = 1 is like ceil, tiers =
+	 * 2 means goes to closest .5 value, rounding up
 	 */
 	public static double centerCeil(double numIn, int tiers){
 		return ((numIn > 0) ? Math.ceil(numIn * tiers) : Math.floor(numIn * tiers)) / tiers;

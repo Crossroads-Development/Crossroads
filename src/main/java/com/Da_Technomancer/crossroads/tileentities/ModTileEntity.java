@@ -28,39 +28,39 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEnt
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class ModTileEntity {
+public class ModTileEntity{
 
-	 public static void init() {
-	     register(HeatCableTileEntity.class, "heatCable");
-		 register(SidedGearHolderTileEntity.class, "sidedGearHolder");
-		 register(MasterAxisTileEntity.class, "masterAxis");
-		 register(GrindstoneTileEntity.class, "grindstone");
-		 register(HeatingCrucibleTileEntity.class, "heatingCrucible");
-		 register(FluidTubeTileEntity.class, "fluidTube");
-		 register(SteamBoilerTileEntity.class, "steamBoiler");
-		 register(RotaryPumpTileEntity.class, "rotaryPump");
-		 register(BrazierTileEntity.class, "brazier");
-		 register(SteamTurbineTileEntity.class, "steamTurbine");
-		 register(FluidVoidTileEntity.class, "fluidVoid");
-		 register(HeatExchangerTileEntity.class, "heatExchanger");
-		 register(FluidTankTileEntity.class, "fluidTank");
-		 register(CoalHeaterTileEntity.class, "coalHeater");
-		 register(HeatingChamberTileEntity.class, "heatingChamber");
-		 register(SaltReactorTileEntity.class, "saltReactor");
-		 register(FluidCoolingChamberTileEntity.class, "fluidCoolingChamber");
-		 register(SlottedChestTileEntity.class, "slottedChest");
-		 register(SortingHopperTileEntity.class, "sortingHopper");
-		 register(LargeGearSlaveTileEntity.class, "largeGearSlave");
-		 register(LargeGearMasterTileEntity.class, "largeGearMaster");
-		 register(ItemChutePortTileEntity.class, "itemChutePort");
-		 register(RadiatorTileEntity.class, "radiator");
-		 register(RotaryDrillTileEntity.class, "rotaryDrill");
-		 register(FatCollectorTileEntity.class, "fatCollector");
-		 register(FatCongealerTileEntity.class, "fatCongealer");
-	 }
-	 
-	 private static void register(Class<? extends TileEntity> locat, String ID){
-		 GameRegistry.registerTileEntity(locat, Main.MODID + "_" + ID);
-	 }
-	 
+	public static void init(){
+		register(HeatCableTileEntity.class, "heatCable");
+		register(SidedGearHolderTileEntity.class, "sidedGearHolder");
+		register(MasterAxisTileEntity.class, "masterAxis");
+		register(GrindstoneTileEntity.class, "grindstone");
+		register(HeatingCrucibleTileEntity.class, "heatingCrucible");
+		register(FluidTubeTileEntity.class, "fluidTube");
+		register(SteamBoilerTileEntity.class, "steamBoiler");
+		register(RotaryPumpTileEntity.class, "rotaryPump");
+		register(BrazierTileEntity.class, "brazier");
+		register(SteamTurbineTileEntity.class, "steamTurbine");
+		register(FluidVoidTileEntity.class, "fluidVoid");
+		register(HeatExchangerTileEntity.class, "heatExchanger");
+		register(FluidTankTileEntity.class, "fluidTank");
+		register(CoalHeaterTileEntity.class, "coalHeater");
+		register(HeatingChamberTileEntity.class, "heatingChamber");
+		register(SaltReactorTileEntity.class, "saltReactor");
+		register(FluidCoolingChamberTileEntity.class, "fluidCoolingChamber");
+		register(SlottedChestTileEntity.class, "slottedChest");
+		register(SortingHopperTileEntity.class, "sortingHopper");
+		register(LargeGearSlaveTileEntity.class, "largeGearSlave");
+		register(LargeGearMasterTileEntity.class, "largeGearMaster");
+		register(ItemChutePortTileEntity.class, "itemChutePort");
+		register(RadiatorTileEntity.class, "radiator");
+		register(RotaryDrillTileEntity.class, "rotaryDrill");
+		register(FatCollectorTileEntity.class, "fatCollector");
+		register(FatCongealerTileEntity.class, "fatCongealer");
+	}
+
+	private static void register(Class<? extends TileEntity> locat, String ID){
+		GameRegistry.registerTileEntity(locat, Main.MODID + "_" + ID);
+	}
+
 }

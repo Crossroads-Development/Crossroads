@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.client.TESR;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 
-public class ModelPump extends ModelBase {
-	//fields
+public class ModelPump extends ModelBase{
+	// fields
 	ModelRenderer glassA;
 	ModelRenderer glassB;
 	ModelRenderer glassC;
@@ -27,83 +27,78 @@ public class ModelPump extends ModelBase {
 	ModelRenderer screwA;
 	ModelRenderer screwB;
 	ModelRenderer screwC;
-	
+
 	ModelRenderer upperSolidA;
 	ModelRenderer upperSolidB;
 	ModelRenderer upperSolidC;
 	ModelRenderer upperSolidD;
-	
+
 	ModelRenderer connectA;
 	ModelRenderer connectB;
 	ModelRenderer connectC;
 	ModelRenderer connectD;
 
-	public ModelPump()
-	{
+	public ModelPump(){
 		textureWidth = 64;
 		textureHeight = 32;
 
 		glassA = new ModelRenderer(this, 0, 25);
 		glassA.addBox(0F, 0F, 0F, 10, 6, 1);
 		glassA.setRotationPoint(-5F, 17F, 5F);
-		
+
 		glassA.setTextureSize(64, 32);
 		glassA.mirror = true;
 		setRotation(glassA, 0F, 0F, 0F);
-		
+
 		upperSolidA = new ModelRenderer(this, 0, 17);
 		upperSolidA.addBox(0F, 0F, 0F, 10, 8, 1);
 		upperSolidA.setRotationPoint(-5F, 9F, 5F);
-		upperSolidA.setTextureSize(64,  32);
+		upperSolidA.setTextureSize(64, 32);
 		upperSolidA.mirror = true;
 		setRotation(upperSolidA, 0F, 0F, 0F);
-		
-		
+
 		glassB = new ModelRenderer(this, 0, 25);
 		glassB.addBox(0F, 0F, 0F, 10, 6, 1);
 		glassB.setRotationPoint(-5F, 17F, -6F);
 		glassB.setTextureSize(64, 32);
 		glassB.mirror = true;
 		setRotation(glassB, 0F, 0F, 0F);
-		
+
 		upperSolidB = new ModelRenderer(this, 0, 17);
 		upperSolidB.addBox(0F, 0F, 0F, 10, 8, 1);
 		upperSolidB.setRotationPoint(-5F, 9F, -6F);
-		upperSolidB.setTextureSize(64,  32);
+		upperSolidB.setTextureSize(64, 32);
 		upperSolidB.mirror = true;
 		setRotation(upperSolidB, 0F, 0F, 0F);
-		
-		
+
 		glassC = new ModelRenderer(this, 0, 25);
 		glassC.addBox(0F, 0F, 0F, 10, 6, 1);
 		glassC.setRotationPoint(-6F, 17F, 5F);
 		glassC.setTextureSize(64, 32);
 		glassC.mirror = true;
 		setRotation(glassC, 0F, 1.570796F, 0F);
-		
+
 		upperSolidC = new ModelRenderer(this, 0, 17);
 		upperSolidC.addBox(0F, 0F, 0F, 10, 8, 1);
 		upperSolidC.setRotationPoint(-6F, 9F, 5F);
-		upperSolidC.setTextureSize(64,  32);
+		upperSolidC.setTextureSize(64, 32);
 		upperSolidC.mirror = true;
 		setRotation(upperSolidC, 0F, 1.570796F, 0F);
-		
-		
+
 		glassD = new ModelRenderer(this, 0, 25);
 		glassD.addBox(0F, 0F, 0F, 10, 6, 1);
 		glassD.setRotationPoint(5F, 17F, 5F);
 		glassD.setTextureSize(64, 32);
 		glassD.mirror = true;
 		setRotation(glassD, 0F, 1.570796F, 0F);
-		
+
 		upperSolidD = new ModelRenderer(this, 0, 17);
 		upperSolidD.addBox(0F, 0F, 0F, 10, 8, 1);
 		upperSolidD.setRotationPoint(5F, 9F, 5F);
-		upperSolidD.setTextureSize(64,  32);
+		upperSolidD.setTextureSize(64, 32);
 		upperSolidD.mirror = true;
 		setRotation(upperSolidD, 0F, 1.570796F, 0F);
-		
-		
+
 		top = new ModelRenderer(this, 24, 21);
 		top.addBox(0F, 0F, 0F, 10, 1, 10);
 		top.setRotationPoint(-5F, 8F, -5F);
@@ -212,35 +207,35 @@ public class ModelPump extends ModelBase {
 		screwC.setTextureSize(64, 32);
 		screwC.mirror = true;
 		setRotation(screwC, 0F, -3.141593F, -0.3926991F);
-		
+
 		connectA = new ModelRenderer(this, 27, 12);
 		connectA.addBox(0F, 0F, 0F, 6, 6, 2);
 		connectA.setRotationPoint(-3F, 13F, 6F);
 		connectA.setTextureSize(64, 32);
 		connectA.mirror = true;
 		setRotation(connectA, 0F, 0F, 0F);
-		
+
 		connectB = new ModelRenderer(this, 27, 12);
 		connectB.addBox(0F, 0F, 0F, 6, 6, 2);
 		connectB.setRotationPoint(-3F, 13F, -8F);
 		connectB.setTextureSize(64, 32);
 		connectB.mirror = true;
 		setRotation(connectB, 0F, 0F, 0F);
-		
+
 		connectC = new ModelRenderer(this, 27, 12);
 		connectC.addBox(0F, 0F, 0F, 6, 6, 2);
 		connectC.setRotationPoint(-8F, 13F, 3F);
 		connectC.setTextureSize(64, 32);
 		connectC.mirror = true;
 		setRotation(connectC, 0F, 1.5707965F, 0F);
-		
+
 		connectD = new ModelRenderer(this, 27, 12);
 		connectD.addBox(0F, 0F, 0F, 6, 6, 2);
 		connectD.setRotationPoint(6F, 13F, 3F);
 		connectD.setTextureSize(64, 32);
 		connectD.mirror = true;
 		setRotation(connectD, 0F, 1.5707965F, 0F);
-	
+
 	}
 
 	protected void renderMain(){
@@ -263,19 +258,18 @@ public class ModelPump extends ModelBase {
 		sideC.render(f);
 		sideD.render(f);
 		base.render(f);
-		
-		
+
 		upperSolidA.render(f);
 		upperSolidB.render(f);
 		upperSolidC.render(f);
 		upperSolidD.render(f);
-		
+
 		connectA.render(f);
 		connectB.render(f);
 		connectC.render(f);
 		connectD.render(f);
 	}
-	
+
 	protected void renderScrew(){
 		float f = 1F / 16F;
 		core.render(f);

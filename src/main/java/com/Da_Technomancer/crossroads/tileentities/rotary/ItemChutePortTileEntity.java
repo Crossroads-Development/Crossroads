@@ -25,7 +25,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 		if(worldObj.isRemote){
 			return;
 		}
-		
+
 		if(isSpotInvalid() && inventory != null){
 			worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.offset(worldObj.getBlockState(pos).getValue(ItemChutePort.FACING)).getX(), pos.getY(), pos.offset(worldObj.getBlockState(pos).getValue(ItemChutePort.FACING)).getZ(), inventory.copy()));
 			inventory = null;
@@ -47,7 +47,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
 		if(inventory != null){
@@ -56,9 +56,8 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 		return nbt;
 	}
 
-
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 
 		if(nbt.hasKey("inv")){
@@ -72,7 +71,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 		}
 		return false;
 	}
-	
+
 	private BlockPos getOutput(){
 
 		boolean contin = true;

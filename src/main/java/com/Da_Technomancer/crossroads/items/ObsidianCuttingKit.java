@@ -12,12 +12,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ObsidianCuttingKit extends Item{
-	
+
 	public ObsidianCuttingKit(){
 		setUnlocalizedName("obsidianCuttingKit");
 		setRegistryName("obsidianCuttingKit");
-	    GameRegistry.register(this);
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		GameRegistry.register(this);
+		this.setCreativeTab(ModItems.tabCrossroads);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class ObsidianCuttingKit extends Item{
 			}
 			return EnumActionResult.SUCCESS;
 		}
-		
+
 		return EnumActionResult.PASS;
 	}
 }

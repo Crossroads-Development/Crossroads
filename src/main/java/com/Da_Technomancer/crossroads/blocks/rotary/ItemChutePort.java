@@ -52,8 +52,8 @@ public class ItemChutePort extends BlockContainer{
 	}
 
 	/**
-	 * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
+	 * Returns the blockstate with the given rotation from the passed
+	 * blockstate. If inapplicable, returns the passed blockstate.
 	 */
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
@@ -61,8 +61,8 @@ public class ItemChutePort extends BlockContainer{
 	}
 
 	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
+	 * Returns the blockstate with the given mirror of the passed blockstate. If
+	 * inapplicable, returns the passed blockstate.
 	 */
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){

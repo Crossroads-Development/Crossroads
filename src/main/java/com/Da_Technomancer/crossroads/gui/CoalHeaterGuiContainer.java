@@ -9,14 +9,14 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
-public class CoalHeaterGuiContainer extends GuiContainer {
+public class CoalHeaterGuiContainer extends GuiContainer{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID + ":textures/gui/container/coalHeaterGui.png");
 
 	private CoalHeaterTileEntity te;
 	private IInventory playerInv;
 
-	public CoalHeaterGuiContainer(IInventory playerInv, CoalHeaterTileEntity te) {
+	public CoalHeaterGuiContainer(IInventory playerInv, CoalHeaterTileEntity te){
 		super(new CoalHeaterContainer(playerInv, te));
 		this.te = te;
 		this.playerInv = playerInv;
@@ -29,8 +29,7 @@ public class CoalHeaterGuiContainer extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(GUI_TEXTURES);
-		
-		
+
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
@@ -40,12 +39,12 @@ public class CoalHeaterGuiContainer extends GuiContainer {
 	}
 
 	@Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-    	String s = this.te.getDisplayName().getUnformattedText();
-        this.fontRendererObj.drawString(s, 136 - this.fontRendererObj.getStringWidth(s) / 2, 42, 4210752);
-        this.fontRendererObj.drawString(this.playerInv.getDisplayName().getUnformattedText(), 8, 42, 4210752);
-    }
-	
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
+		String s = this.te.getDisplayName().getUnformattedText();
+		this.fontRendererObj.drawString(s, 136 - this.fontRendererObj.getStringWidth(s) / 2, 42, 4210752);
+		this.fontRendererObj.drawString(this.playerInv.getDisplayName().getUnformattedText(), 8, 42, 4210752);
+	}
+
 	private int getBurnLeftScaled(int pixels){
 		return this.te.getField(0) * pixels / 1600;
 	}

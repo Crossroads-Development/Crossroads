@@ -20,25 +20,25 @@ public class FluidCoolingChamber extends BlockContainer{
 		super(Material.IRON);
 		String name = "fluidCoolingChamber";
 		setUnlocalizedName(name);
-	    setRegistryName(name);
-	    GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName(name);
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new FluidCoolingChamberTileEntity();
 	}
-	
+
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState blockstate) {
-	    FluidCoolingChamberTileEntity te = (FluidCoolingChamberTileEntity) world.getTileEntity(pos);
-	    InventoryHelper.dropInventoryItems(world, pos, te);
-	    super.breakBlock(world, pos, blockstate);
+	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+		FluidCoolingChamberTileEntity te = (FluidCoolingChamberTileEntity) world.getTileEntity(pos);
+		InventoryHelper.dropInventoryItems(world, pos, te);
+		super.breakBlock(world, pos, blockstate);
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;

@@ -11,14 +11,14 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CandleLilyPad extends BlockLilyPad{
-	
+
 	protected CandleLilyPad(){
 		String name = "candleLilypad";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 	}
-	
+
 	@Override
 	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos){
 		return 14;
@@ -29,9 +29,9 @@ public class CandleLilyPad extends BlockLilyPad{
 		IBlockState soil = worldIn.getBlockState(pos.down());
 		return super.canPlaceBlockAt(worldIn, pos) && soil.getBlock().canSustainPlant(soil, worldIn, pos.down(), net.minecraft.util.EnumFacing.UP, (IPlantable) Blocks.WATERLILY);
 	}
-	
+
 	@Override
-    public EnumPlantType getPlantType(net.minecraft.world.IBlockAccess world, BlockPos pos){
+	public EnumPlantType getPlantType(net.minecraft.world.IBlockAccess world, BlockPos pos){
 		return EnumPlantType.Water;
 	}
 

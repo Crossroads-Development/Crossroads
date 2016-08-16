@@ -15,25 +15,25 @@ public class SlottedChestContainer extends Container{
 
 	private final SlottedChestTileEntity te;
 	private final int numRows;
-	
+
 	public SlottedChestContainer(IInventory playerInventory, SlottedChestTileEntity chest){
 		this.te = chest;
 		this.numRows = chest.iInv.getSizeInventory() / 9;
 		int i = (this.numRows - 4) * 18;
 
-		for (int j = 0; j < this.numRows; ++j){
-			for (int k = 0; k < 9; ++k){
+		for(int j = 0; j < this.numRows; ++j){
+			for(int k = 0; k < 9; ++k){
 				this.addSlotToContainer(new Slot(chest.iInv, k + j * 9, 8 + k * 18, 18 + j * 18));
 			}
 		}
 
-		for (int l = 0; l < 3; ++l){
-			for (int j1 = 0; j1 < 9; ++j1){
+		for(int l = 0; l < 3; ++l){
+			for(int j1 = 0; j1 < 9; ++j1){
 				this.addSlotToContainer(new Slot(playerInventory, j1 + l * 9 + 9, 8 + j1 * 18, 103 + l * 18 + i));
 			}
 		}
 
-		for (int i1 = 0; i1 < 9; ++i1){
+		for(int i1 = 0; i1 < 9; ++i1){
 			this.addSlotToContainer(new Slot(playerInventory, i1, 8 + i1 * 18, 161 + i));
 		}
 	}
@@ -43,19 +43,19 @@ public class SlottedChestContainer extends Container{
 		return te.iInv.isUseableByPlayer(playerIn);
 	}
 
-	//To be clear, empty slot means slot with itemstack of stacksize 0, blank slot means null stack
-	
+	// To be clear, empty slot means slot with itemstack of stacksize 0, blank
+	// slot means null stack
+
 	@Override
 	@Nullable
-    public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player){
+	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player){
 		if(slotId >= 0){
 			Slot slot = inventorySlots.get(slotId);
-			//dragType 0 = left, 1 = right
-			
+			// dragType 0 = left, 1 = right
+
 			if(clickTypeIn == ClickType.PICKUP_ALL){
-				//return player.inventory.getItemStack();
-				
-				
+				// return player.inventory.getItemStack();
+
 				ItemStack[] holder = new ItemStack[54];
 				for(int i = 0; i < 54; ++i){
 					if(inventorySlots.get(i).getStack() != null){
@@ -72,8 +72,8 @@ public class SlottedChestContainer extends Container{
 				this.detectAndSendChanges();
 				return output;
 			}
-			
-			//All shift clicks in chest without blank slot
+
+			// All shift clicks in chest without blank slot
 			if(clickTypeIn == ClickType.QUICK_MOVE && slot.getStack() != null && slotId < 54){
 				if(slot.getStack().stackSize == 0 && player.inventory.getItemStack() == null){
 					te.cleanPreset(slotId);
@@ -85,7 +85,7 @@ public class SlottedChestContainer extends Container{
 				}
 			}
 
-			//All non-shift clicks in chest without blank slot
+			// All non-shift clicks in chest without blank slot
 			if(clickTypeIn == ClickType.PICKUP && slot.getStack() != null && slotId < 54){
 				if(player.inventory.getItemStack() == null){
 					if(slot.getStack().stackSize == 0){
@@ -102,11 +102,11 @@ public class SlottedChestContainer extends Container{
 						}
 					}
 				}
-					
+
 				if(ItemStack.areItemsEqual(slot.getStack(), player.inventory.getItemStack())){
 					return super.slotClick(slotId, dragType, clickTypeIn, player);
 				}
-				
+
 				return null;
 			}
 		}
@@ -121,23 +121,23 @@ public class SlottedChestContainer extends Container{
 	@Nullable
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index){
 		ItemStack itemstack = null;
-		Slot slot = (Slot)this.inventorySlots.get(index);
+		Slot slot = (Slot) this.inventorySlots.get(index);
 
 		if(slot != null && slot.getStack() != null && slot.getStack().stackSize != 0){
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			if (index < this.numRows * 9){
-				if (!this.mergeItemStack(itemstack1, this.numRows * 9, this.inventorySlots.size(), true)){
+			if(index < this.numRows * 9){
+				if(!this.mergeItemStack(itemstack1, this.numRows * 9, this.inventorySlots.size(), true)){
 					return null;
 				}
 			}else if(!this.mergeItemStack(itemstack1, 0, this.numRows * 9, false)){
 				return null;
 			}
 
-			if (itemstack1.stackSize == 0){
+			if(itemstack1.stackSize == 0){
 				if(index >= 54){
-					slot.putStack((ItemStack)null);
+					slot.putStack((ItemStack) null);
 				}
 			}else{
 				slot.onSlotChanged();
@@ -155,24 +155,24 @@ public class SlottedChestContainer extends Container{
 		boolean flag = false;
 		int i = startIndex;
 
-		if (reverseDirection){
+		if(reverseDirection){
 			i = endIndex - 1;
 		}
 
-		if (stack.isStackable()){
-			while (stack.stackSize > 0 && (!reverseDirection && i < endIndex || reverseDirection && i >= startIndex)){
-				Slot slot = (Slot)this.inventorySlots.get(i);
+		if(stack.isStackable()){
+			while(stack.stackSize > 0 && (!reverseDirection && i < endIndex || reverseDirection && i >= startIndex)){
+				Slot slot = (Slot) this.inventorySlots.get(i);
 				ItemStack itemstack = slot.getStack();
 
-				if (itemstack != null && areItemStacksEqual(stack, itemstack)){
+				if(itemstack != null && areItemStacksEqual(stack, itemstack)){
 					int j = itemstack.stackSize + stack.stackSize;
 
-					if (j <= stack.getMaxStackSize()){
+					if(j <= stack.getMaxStackSize()){
 						stack.stackSize = 0;
 						itemstack.stackSize = j;
 						slot.onSlotChanged();
-						flag = true;	
-					}else if (itemstack.stackSize < stack.getMaxStackSize()){
+						flag = true;
+					}else if(itemstack.stackSize < stack.getMaxStackSize()){
 						stack.stackSize -= stack.getMaxStackSize() - itemstack.stackSize;
 						itemstack.stackSize = stack.getMaxStackSize();
 						slot.onSlotChanged();
@@ -196,10 +196,18 @@ public class SlottedChestContainer extends Container{
 			}
 
 			while(!reverseDirection && i < endIndex || reverseDirection && i >= startIndex){
-				Slot slot1 = (Slot)this.inventorySlots.get(i);
+				Slot slot1 = (Slot) this.inventorySlots.get(i);
 				ItemStack itemstack1 = slot1.getStack();
 
-				if (itemstack1 == null && (reverseDirection || (!reverseDirection && te.iInv.isItemValidForSlot(slot1.getSlotIndex(), stack))) && slot1.isItemValid(stack)){ // Forge: Make sure to respect isItemValid in the slot.
+				if(itemstack1 == null && (reverseDirection || (!reverseDirection && te.iInv.isItemValidForSlot(slot1.getSlotIndex(), stack))) && slot1.isItemValid(stack)){ // Forge:
+																																											// Make
+																																											// sure
+																																											// to
+																																											// respect
+																																											// isItemValid
+																																											// in
+																																											// the
+																																											// slot.
 					slot1.putStack(stack.copy());
 					slot1.onSlotChanged();
 					stack.stackSize = 0;
@@ -207,7 +215,7 @@ public class SlottedChestContainer extends Container{
 					break;
 				}
 
-				if (reverseDirection){
+				if(reverseDirection){
 					--i;
 				}else{
 					++i;
@@ -217,8 +225,8 @@ public class SlottedChestContainer extends Container{
 
 		return flag;
 	}
-	
+
 	private static boolean areItemStacksEqual(ItemStack stackA, ItemStack stackB){
-        return stackB.getItem() == stackA.getItem() && (!stackA.getHasSubtypes() || stackA.getMetadata() == stackB.getMetadata()) && ItemStack.areItemStackTagsEqual(stackA, stackB);
-    }
+		return stackB.getItem() == stackA.getItem() && (!stackA.getHasSubtypes() || stackA.getMetadata() == stackB.getMetadata()) && ItemStack.areItemStackTagsEqual(stackA, stackB);
+	}
 }

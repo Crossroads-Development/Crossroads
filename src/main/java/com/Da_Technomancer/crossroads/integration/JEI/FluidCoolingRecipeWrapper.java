@@ -12,19 +12,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidCoolingRecipeWrapper implements IRecipeWrapper{
-	
+
 	private final List<ItemStack> outputs;
 	private final List<FluidStack> input;
 	private final double max;
 	private final double add;
-	
+
 	protected FluidCoolingRecipeWrapper(@Nonnull FluidCoolingRecipe recipe){
 		outputs = ImmutableList.of(recipe.getStack());
 		input = ImmutableList.of(recipe.getFluid());
 		max = recipe.getMax();
 		add = recipe.getAdd();
 	}
-	
+
 	@Override
 	public List<ItemStack> getInputs(){
 		return ImmutableList.of();
@@ -53,7 +53,7 @@ public class FluidCoolingRecipeWrapper implements IRecipeWrapper{
 
 	@Override
 	public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight){
-		
+
 	}
 
 	@Override

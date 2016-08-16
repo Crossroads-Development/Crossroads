@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.items;
 
-
 import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.Main;
@@ -17,14 +16,15 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public final class ModItems {
+public final class ModItems{
 
-	public static final CreativeTabs tabCrossroads = new CreativeTabs(Main.MODID) {
-	    @Override public Item getTabIconItem() {
-	        return GearFactory.basicGears.get(GearTypes.BRONZE);
-	    }
+	public static final CreativeTabs tabCrossroads = new CreativeTabs(Main.MODID){
+		@Override
+		public Item getTabIconItem(){
+			return GearFactory.basicGears.get(GearTypes.BRONZE);
+		}
 	};
-	
+
 	public static Item metalScrap;
 	public static Item dustSalt;
 	public static Item mashedPotato;
@@ -42,15 +42,15 @@ public final class ModItems {
 	public static ChickenBoots chickenBoots;
 	public static ItemCandleLily itemCandleLilypad;
 	public static EdibleBlob edibleBlob;
-	
+
 	private static ArrayList<Item> modelQue = new ArrayList<Item>();
-	
+
 	public static void itemAddQue(Item item){
 		modelQue.add(item);
 	}
 
-	public static final void init() {
-		//anything I need to manually initialize for some reason
+	public static final void init(){
+		// anything I need to manually initialize for some reason
 		metalScrap = new BasicItem("metalScrap");
 		itemAddQue(new DebugGearWriter());
 		itemAddQue(debugReader = new DebugReader());
@@ -74,19 +74,20 @@ public final class ModItems {
 
 	@SuppressWarnings("deprecation")
 	@SideOnly(Side.CLIENT)
-	public static void initModels() {
-		//Any items that need models initialized without metadata other than 0, add it to modelQue. If it has metadata, add it manually.
+	public static void initModels(){
+		// Any items that need models initialized without metadata other than 0,
+		// add it to modelQue. If it has metadata, add it manually.
 
-		for(Item modeling: modelQue){
+		for(Item modeling : modelQue){
 			register(modeling, 0);
 		}
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.rotaryPump), 0, RotaryPumpTileEntity.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.steamTurbine), 0, RotaryPumpTileEntity.class);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
-	private static void register(Item item, int subtype) {
+	private static void register(Item item, int subtype){
 		ModelLoader.setCustomModelResourceLocation(item, subtype, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 }

@@ -20,66 +20,70 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 	private FluidStack content = null;
 
 	@Override
-	public void update() {
+	public void update(){
 		if(worldObj.isRemote){
 			return;
 		}
 
-		for(EnumFacing dir: EnumFacing.values()){
-			if(worldObj.getTileEntity(pos.offset(dir)) != null && worldObj.getTileEntity(pos.offset(dir)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()) ){
+		for(EnumFacing dir : EnumFacing.values()){
+			if(worldObj.getTileEntity(pos.offset(dir)) != null && worldObj.getTileEntity(pos.offset(dir)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())){
 				transfer(worldObj.getTileEntity(pos.offset(dir)).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()));
 			}
 		}
 	}
 
 	private void transfer(IFluidHandler handler){
-			
-		//the FluidTankProperties are completely ignored due to them being unreliable.
-		//Alternate methods of obtaining the information are used
-		
-		//False means either draining in not allowed or the tank is empty
+
+		// the FluidTankProperties are completely ignored due to them being
+		// unreliable.
+		// Alternate methods of obtaining the information are used
+
+		// False means either draining in not allowed or the tank is empty
 		boolean canDrain = handler.drain(10, false) != null;
-		//False means either the tank is full or filling is disallowed with the liquid in this pipe
+		// False means either the tank is full or filling is disallowed with the
+		// liquid in this pipe
 		boolean canFill = handler.fill(content, false) != 0;
-		
+
 		if(!canDrain && !canFill){
 			return;
 		}
-		//if both are false, there is nothing to be done.
-		
-		
-		//content cannot = null
+		// if both are false, there is nothing to be done.
+
+		// content cannot = null
 		if(!canDrain){
 			content.amount -= handler.fill(content, true);
-			
+
 			if(content.amount == 0){
 				content = null;
 			}
-			
+
 			canDrain = handler.drain(10, false) != null;
 		}
-		//content can = null
-		
-		//If this pipe and the tank are full, there is nothing to be done anyways
+		// content can = null
+
+		// If this pipe and the tank are full, there is nothing to be done
+		// anyways
 		if(!canFill && CAPACITY != (content == null ? 0 : content.amount)){
 			if(content == null){
 				content = handler.drain(CAPACITY, true);
 			}else{
 				content.amount += handler.drain(new FluidStack(content.getFluid(), CAPACITY - content.amount), false) == null ? 0 : handler.drain(new FluidStack(content.getFluid(), CAPACITY - content.amount), true).amount;
 			}
-			
+
 			canFill = handler.fill(content, false) != 0;
 		}
-		
-		//content can = null
-		
+
+		// content can = null
+
 		if(canFill && canDrain){
-			
-			//KNOWN: canFill & canDrain tank & pipe, tank and pipe are not BOTH full, tank and pipe are not BOTH empty, capacity and contents of pipe.
-			
+
+			// KNOWN: canFill & canDrain tank & pipe, tank and pipe are not BOTH
+			// full, tank and pipe are not BOTH empty, capacity and contents of
+			// pipe.
+
 			int tankContent = handler.drain(Integer.MAX_VALUE, false) == null ? 0 : handler.drain(Integer.MAX_VALUE, false).amount;
 			int tankCapacity = tankContent + handler.fill(content == null ? new FluidStack(handler.drain(1, false).getFluid(), Integer.MAX_VALUE) : new FluidStack(content.getFluid(), Integer.MAX_VALUE), false);
-			
+
 			int total = (content == null ? 0 : content.amount) + tankContent;
 
 			Fluid fluid = content == null ? handler.drain(1, false).getFluid() : content.getFluid();
@@ -103,7 +107,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 					content = new FluidStack(fluid, contentOne);
 				}
 			}
-			
+
 		}
 	}
 
@@ -129,7 +133,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) mainHandler;
 		}
 
@@ -138,7 +142,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -147,12 +151,12 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 	private class MainFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new IFluidTankProperties[] {new FluidTankProperties(content, CAPACITY)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			if(resource != null && (content == null || resource.isFluidEqual(content))){
 				int change = Math.min(CAPACITY - (content == null ? 0 : content.amount), resource.amount);
 
@@ -167,7 +171,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 
 			if(resource != null && resource.isFluidEqual(content)){
 				int change = Math.min(content.amount, resource.amount);
@@ -187,7 +191,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			if(content == null || maxDrain == 0){
 				return null;
 			}

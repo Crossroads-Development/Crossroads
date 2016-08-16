@@ -33,13 +33,13 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	private int lastProgress = 0;
 
 	@Override
-	public void update() {
+	public void update(){
 		if(worldObj.isRemote){
 			return;
 		}
 
 		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && !(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ISlaveGear) && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			//TODO simplify this if statement
+			// TODO simplify this if statement
 			if(FluidRegistry.lookupFluidForBlock(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()) != null && (worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockFluidClassic && ((BlockFluidClassic) worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()).isSourceBlock(worldObj, pos.offset(EnumFacing.DOWN)) || worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getValue(BlockLiquid.LEVEL) == 0) && (content == null || (CAPACITY - content.amount >= 1000 && content.getFluid() == FluidRegistry.lookupFluidForBlock(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())))){
 				IRotaryHandler te = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN);
 
@@ -74,10 +74,10 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	@Override
 	public void receiveInt(String context, int message){
 		switch(context){
-			case "prog": 
+			case "prog":
 				progress = message;
 				break;
-			default: 
+			default:
 				return;
 		}
 	}
@@ -106,7 +106,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			if(facing == null){
 				return (T) innerHandler;
 			}else{
@@ -119,7 +119,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -128,17 +128,17 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	private class PumpedFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new FluidTankProperties[] {new FluidTankProperties(content, CAPACITY, false, true)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			return 0;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 
 			if(resource != null && resource.isFluidEqual(content)){
 				int change = Math.min(content.amount, resource.amount);
@@ -158,7 +158,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			if(content == null || maxDrain == 0){
 				return null;
 			}
@@ -181,19 +181,19 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	private class InnerFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new FluidTankProperties[] {new FluidTankProperties(content, CAPACITY, true, true)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			if(resource != null && (content == null || resource.isFluidEqual(content))){
 				int change = Math.min(CAPACITY - (content == null ? 0 : content.amount), resource.amount);
 
 				if(doFill){
 					content = new FluidStack(resource.getFluid(), (content == null ? 0 : content.amount) + change);
 				}
-				
+
 				return change;
 			}else{
 				return 0;
@@ -201,19 +201,19 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
-			
+		public FluidStack drain(FluidStack resource, boolean doDrain){
+
 			if(resource != null && resource.isFluidEqual(content)){
 				int change = Math.min(content.amount, resource.amount);
 				Fluid fluid = content.getFluid();
-				
+
 				if(doDrain){
 					content.amount -= change;
 					if(content.amount == 0){
 						content = null;
 					}
 				}
-			
+
 				return new FluidStack(fluid, change);
 			}else{
 				return null;
@@ -221,24 +221,24 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			if(content == null || maxDrain == 0){
 				return null;
 			}
-			
+
 			int change = Math.min(content.amount, maxDrain);
 			Fluid fluid = content.getFluid();
-			
+
 			if(doDrain){
 				content.amount -= change;
 				if(content.amount == 0){
 					content = null;
 				}
 			}
-			
+
 			return new FluidStack(fluid, change);
 		}
-		
+
 	}
-	
+
 }

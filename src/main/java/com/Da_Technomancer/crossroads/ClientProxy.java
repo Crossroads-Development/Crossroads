@@ -14,10 +14,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-public class ClientProxy extends CommonProxy {
+public class ClientProxy extends CommonProxy{
 
 	@Override
-	protected void preInit(FMLPreInitializationEvent e) {
+	protected void preInit(FMLPreInitializationEvent e){
 		super.preInit(e);
 
 		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
@@ -26,7 +26,7 @@ public class ClientProxy extends CommonProxy {
 		ModBlocks.preInitModels();
 		ModItems.initModels();
 
-		if (Loader.isModLoaded("guideapi")){
+		if(Loader.isModLoaded("guideapi")){
 			GuideBooks.mainGuide(e, true);
 			GuideAPI.setModel(GuideBooks.main);
 		}
@@ -41,7 +41,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	protected void postInit(FMLPostInitializationEvent e) {
+	protected void postInit(FMLPostInitializationEvent e){
 		super.postInit(e);
 	}
 

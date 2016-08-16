@@ -36,18 +36,18 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 	private EnumFacing dir = EnumFacing.NORTH;
 	private boolean toFace = true;
 	private static final int LIMIT = 5;
-	
+
 	@Override
-	public void update() {
+	public void update(){
 		if(toFace){
 			dir = worldObj.getBlockState(pos).getValue(SteamTurbine.FACING);
 			toFace = false;
 		}
-		
+
 		if(worldObj.isRemote){
 			return;
 		}
-		
+
 		if(lastCompl != completion){
 			SendIntToClient msg = new SendIntToClient("prog", completion, this.getPos());
 			ModPackets.network.sendToAllAround(msg, new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
@@ -67,32 +67,32 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public void receiveInt(String context, int message){
 		switch(context){
-			case "prog": 
+			case "prog":
 				completion = message;
 				break;
-			default: 
+			default:
 				return;
 		}
 	}
-	
+
 	public float getCompletion(){
 		return .1F * ((float) completion);
 	}
 
 	public int getAngle(){
 		switch(dir){
-		case NORTH: 
-			return 180;
-		case EAST:
-			return 270;
-		case WEST:
-			return 90;
-		default: 
-			return 0;
+			case NORTH:
+				return 180;
+			case EAST:
+				return 270;
+			case WEST:
+				return 90;
+			default:
+				return 0;
 
 		}
 	}
-	
+
 	private IRotaryHandler getGear(){
 		int dis = 0;
 		while(true){
@@ -101,13 +101,13 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 			if(te != null && !(te instanceof ISlaveGear) && te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 				return te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN);
 			}
-			
+
 			if(!(te instanceof SteamTurbineTileEntity)){
 				return null;
 			}
 		}
 	}
-	
+
 	private void runMachine(){
 		if(getGear() == null){
 			return;
@@ -120,7 +120,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		if(limit != 0){
 			getGear().addEnergy(limit * .5D * .1D * EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE, true, true);
 			steamContent.amount -= limit * 100;
-			if(steamContent.amount <= 0 ){
+			if(steamContent.amount <= 0){
 				steamContent = null;
 			}
 			waterContent = new FluidStack(BlockDistilledWater.getDistilledWater(), (waterContent == null ? 0 : waterContent.amount) + (50 * limit));
@@ -137,7 +137,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		steamContent = FluidStack.loadFluidStackFromNBT(nbt);
 
 		waterContent = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("water"));
-		
+
 		steamContentOut = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("waste"));
 	}
 
@@ -153,7 +153,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		if(waterContent != null){
 			waterContent.writeToNBT(waterHolder);
 		}
-		
+
 		NBTTagCompound steamOutHolder = new NBTTagCompound();
 		if(steamContentOut != null){
 			steamContentOut.writeToNBT(steamOutHolder);
@@ -161,14 +161,13 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 
 		nbt.setTag("water", waterHolder);
 		nbt.setTag("waste", steamOutHolder);
-		
+
 		return nbt;
 	}
 
-
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.UP) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.UP){
 			return true;
 		}
 
@@ -183,12 +182,12 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 
 			if(facing == null){
 				return (T) innerHandler;
 			}
-			
+
 			if(facing == dir){
 				return (T) waterHandler;
 			}else if(facing == EnumFacing.DOWN){
@@ -204,17 +203,17 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 	private class WaterFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new IFluidTankProperties[] {new FluidTankProperties(waterContent, CAPACITY, false, true)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			return 0;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 
 			if(resource != null && resource.getFluid() == BlockDistilledWater.getDistilledWater() && waterContent != null){
 				int change = Math.min(waterContent.amount, resource.amount);
@@ -233,7 +232,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			if(waterContent == null || maxDrain == 0){
 				return null;
 			}
@@ -255,12 +254,12 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 	private class SteamFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new IFluidTankProperties[] {new FluidTankProperties(steamContent, CAPACITY, true, false)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			if(resource == null || resource.getFluid() != BlockSteam.getSteam()){
 				return 0;
 			}
@@ -272,12 +271,12 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 			return null;
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			return null;
 		}
 	}
@@ -285,17 +284,17 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 	private class SteamOutFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new IFluidTankProperties[] {new FluidTankProperties(steamContentOut, CAPACITY, false, true)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			return 0;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 			if(resource != null && resource.getFluid() == BlockSteam.getSteam() && steamContentOut != null){
 				int change = Math.min(steamContentOut.amount, resource.amount);
 
@@ -313,7 +312,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			if(steamContentOut == null || maxDrain == 0){
 				return null;
 			}
@@ -330,28 +329,28 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 			return new FluidStack(BlockSteam.getSteam(), change);
 		}
 	}
-	
+
 	private class InnerFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new IFluidTankProperties[] {new FluidTankProperties(waterContent, CAPACITY, false, true), new FluidTankProperties(steamContent, CAPACITY, true, false), new FluidTankProperties(steamContentOut, CAPACITY, false, true)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			return 0;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 			return null;
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			return null;
 		}
-		
+
 	}
 }

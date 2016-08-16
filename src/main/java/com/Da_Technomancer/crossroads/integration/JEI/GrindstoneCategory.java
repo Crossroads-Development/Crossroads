@@ -24,14 +24,14 @@ public class GrindstoneCategory implements IRecipeCategory{
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
 	private final IDrawableStatic arrowStatic;
-	
+
 	protected GrindstoneCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstoneGui.png"), 66, 35, 44, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstoneGui.png"), 176, 0, 44, 17), 40, StartDirection.TOP, false);
 	}
-	
+
 	@Override
 	public String getUid(){
 		return id;
@@ -74,7 +74,7 @@ public class GrindstoneCategory implements IRecipeCategory{
 
 		recipeLayout.getItemStacks().init(0, true, 79, 16);
 		recipeLayout.getItemStacks().set(0, wrapper.getInputs().get(0));
-		
+
 		recipeLayout.getItemStacks().init(1, false, 61, 52);
 		recipeLayout.getItemStacks().init(2, false, 79, 52);
 		recipeLayout.getItemStacks().init(3, false, 97, 52);

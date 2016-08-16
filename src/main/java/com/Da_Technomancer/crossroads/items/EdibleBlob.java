@@ -19,7 +19,7 @@ public class EdibleBlob extends ItemFood{
 		GameRegistry.register(this);
 		setCreativeTab(ModItems.tabCrossroads);
 	}
-	
+
 	@Override
 	public int getHealAmount(ItemStack stack){
 		return stack.hasTagCompound() ? stack.getTagCompound().getInteger("food") : 0;
@@ -29,10 +29,10 @@ public class EdibleBlob extends ItemFood{
 	public float getSaturationModifier(ItemStack stack){
 		return stack.hasTagCompound() ? stack.getTagCompound().getInteger("sat") : 0;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
 		tooltip.add(stack.hasTagCompound() ? "Food value: " + stack.getTagCompound().getInteger("food") : "ERROR");
 		tooltip.add(stack.hasTagCompound() ? "Saturation value: " + stack.getTagCompound().getInteger("sat") : "ERROR");
 	}

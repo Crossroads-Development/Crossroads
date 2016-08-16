@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
-
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.ModConfig;
@@ -24,45 +23,47 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class SidedGearHolderTileEntity extends TileEntity implements ITickable, IStringReceiver, IDoubleReceiver{
+public class SidedGearHolderTileEntity extends TileEntity implements ITickable, IStringReceiver,
+		IDoubleReceiver{
 
-	//D-U-N-S-W-E is the order of the sides
+	// D-U-N-S-W-E is the order of the sides
 	private int[] updateKey = new int[6];
 
 	private double[] clientQ = new double[6];
 
 	private double[] angle = new double[6];
 
-	//D-U-N-S-W-E
-	//[0]=w, [1]=E, [2]=P, [3]=lastE
+	// D-U-N-S-W-E
+	// [0]=w, [1]=E, [2]=P, [3]=lastE
 	private double[][] motionData = new double[6][4];
 
-	//D-U-N-S-W-E
-	//[0]=r, [1]=m, [2]=I
+	// D-U-N-S-W-E
+	// [0]=r, [1]=m, [2]=I
 	private double[][] physData = new double[6][3];
 
-
-	//This is used for storing what type of gear is on each side. It really exists to store what color to render the gears as and what item to return when broken.
-	//In order, down up north south west east.
+	// This is used for storing what type of gear is on each side. It really
+	// exists to store what color to render the gears as and what item to return
+	// when broken.
+	// In order, down up north south west east.
 	private GearTypes[] members = new GearTypes[6];
-	
+
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound){
 		super.writeToNBT(compound);
 
-		//motionData
+		// motionData
 		NBTTagCompound motionTags = new NBTTagCompound();
-		for (int i = 0; i < 6; i++){
-			for (int j = 0; j < 3; j++) {
+		for(int i = 0; i < 6; i++){
+			for(int j = 0; j < 3; j++){
 				if(motionData[i][j] != 0)
 					motionTags.setDouble(i + "," + j + "motion", motionData[i][j]);
-			}	
+			}
 		}
 		compound.setTag("motionData", motionTags);
 
-		//members
+		// members
 		NBTTagCompound membTags = new NBTTagCompound();
-		for (int i = 0; i < 6; i++) {
+		for(int i = 0; i < 6; i++){
 			if(members[i] != null){
 				membTags.setString(i + "memb", members[i].name());
 			}
@@ -73,18 +74,18 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound){
 		super.readFromNBT(compound);
 
-		//motionData
+		// motionData
 		NBTTagCompound innerMot = compound.getCompoundTag("motionData");
-		for (int i = 0; i < 6; i++){
-			for (int j = 0; j < 4; j++) {
-				this.motionData[i][j] = (innerMot.hasKey(i + "," + j + "motion"))? innerMot.getDouble(i + "," + j + "motion"): 0;
+		for(int i = 0; i < 6; i++){
+			for(int j = 0; j < 4; j++){
+				this.motionData[i][j] = (innerMot.hasKey(i + "," + j + "motion")) ? innerMot.getDouble(i + "," + j + "motion") : 0;
 			}
 		}
 
-		//members
+		// members
 		NBTTagCompound innerMemb = compound.getCompoundTag("members");
 		for(int i = 0; i < 6; i++){
 			this.members[i] = innerMemb.hasKey(i + "memb") ? GearTypes.valueOf(innerMemb.getString(i + "memb")) : null;
@@ -122,7 +123,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}
 		}
 	}
-	
+
 	private int ticksExisted = 0;
 
 	private final int tiers = ModConfig.getConfigInt(MasterAxis.speedTiers);
@@ -145,7 +146,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 				SendDoubleToClient msg = new SendDoubleToClient("Q" + i, clientQ[i], this.getPos());
 				ModPackets.network.sendToAllAround(msg, new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 			}
-			
+
 			for(int i = 0; i < 6; i++){
 				if(clientQ[i] == Double.POSITIVE_INFINITY || clientQ[i] == Double.NEGATIVE_INFINITY){
 					clientQ[i] = 0;
@@ -153,7 +154,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}
 		}
 	}
-	
+
 	@Override
 	public void receiveString(String context, String message){
 		if(context.contains("memb")){
@@ -191,9 +192,9 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}
 		}
 	}
-	
+
 	@Override
-	public void update() {
+	public void update(){
 		ticksExisted++;
 
 		if(getWorld().isRemote){
@@ -203,7 +204,9 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 				}else if(clientQ[i] == Double.NEGATIVE_INFINITY){
 					angle[i] = 22.5;
 				}else{
-					//it's 18 / PI instead of 180 / PI because 20 ticks / second, so 9 / PI, then * 2 because this is Q not w (Q = r * w, r = .5).
+					// it's 18 / PI instead of 180 / PI because 20 ticks /
+					// second, so 9 / PI, then * 2 because this is Q not w (Q =
+					// r * w, r = .5).
 					angle[i] += clientQ[i] * 18 / Math.PI;
 				}
 			}
@@ -213,7 +216,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			sendQPacket();
 		}
 
-		//TODO
+		// TODO
 		if(ticksExisted % 200 == 1){
 			for(IRotaryHandler handler : sideHandlers){
 				handler.updateStates();
@@ -222,7 +225,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 	}
 
 	private final IRotaryHandler[] sideHandlers = {new SidedRotaryHandler(EnumFacing.DOWN), new SidedRotaryHandler(EnumFacing.UP), new SidedRotaryHandler(EnumFacing.NORTH), new SidedRotaryHandler(EnumFacing.SOUTH), new SidedRotaryHandler(EnumFacing.WEST), new SidedRotaryHandler(EnumFacing.EAST)};
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if(capability == Capabilities.ROTARY_HANDLER_CAPABILITY && facing != null && members[facing.getIndex()] != null){
@@ -244,8 +247,6 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		return super.getCapability(capability, facing);
 	}
 
-	
-
 	private class SidedRotaryHandler implements IRotaryHandler{
 
 		private final int side;
@@ -255,23 +256,23 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public double[] getMotionData() {
+		public double[] getMotionData(){
 			return motionData[side];
 		}
 
 		@Override
-		public void propogate(int key, ITileMasterAxis masterIn) {
-			
+		public void propogate(int key, ITileMasterAxis masterIn){
+
 			if(members[side] == null || ticksExisted == 0){
 				return;
 			}
 
 			if(key * -1 == updateKey[side]){
-				//If true, then there is a direction conflict.
+				// If true, then there is a direction conflict.
 				masterIn.lock();
 				return;
 			}else if(key == updateKey[side]){
-				//If true, this has already been checked, and should do nothing
+				// If true, this has already been checked, and should do nothing
 				return;
 			}
 			if(masterIn.addToList(this)){
@@ -288,7 +289,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			if(worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))) instanceof ITileMasterAxis){
 				((ITileMasterAxis) worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side)))).trigger(key, masterIn, EnumFacing.getFront(side).getOpposite());
 			}
-			
+
 			for(int i = 0; i < 6; i++){
 				if(i != side && i != EnumFacing.getFront(side).getOpposite().getIndex() && members[i] != null){
 					sideHandlers[i].propogate(key * -1, masterIn);
@@ -298,12 +299,12 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			for(int i = 0; i < 6; ++i){
 				if(i != side && i != EnumFacing.getFront(side).getOpposite().getIndex()){
 					EnumFacing facing = EnumFacing.getFront(i);
-					//Adjacent gears
+					// Adjacent gears
 					if(getWorld().getTileEntity(pos.offset(facing)) != null && getWorld().getTileEntity(pos.offset(facing)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(side))){
 						getWorld().getTileEntity(pos.offset(facing)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(side)).propogate(key * -1, masterIn);
 					}
 
-					//Diagonal gears
+					// Diagonal gears
 					if(!getWorld().getBlockState(pos.offset(facing)).getBlock().isNormalCube(getWorld().getBlockState(pos.offset(facing)), getWorld(), pos.offset(facing)) && getWorld().getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))) != null && getWorld().getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
 						getWorld().getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite()).propogate(key * -1, masterIn);
 					}
@@ -312,34 +313,34 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public void setMotionData(double[] dataIn) {
+		public void setMotionData(double[] dataIn){
 			motionData[side] = dataIn;
 		}
 
 		@Override
-		public double[] getPhysData() {
+		public double[] getPhysData(){
 			return physData[side];
 		}
 
 		@Override
-		public void setPhysData(double[] dataIn) {
+		public void setPhysData(double[] dataIn){
 			physData[side] = dataIn;
 		}
 
 		@Override
-		public double keyType() {
+		public double keyType(){
 			return MiscOperators.posOrNeg(updateKey[side]);
 		}
 
 		@Override
-		public void resetAngle() {
+		public void resetAngle(){
 			if(!worldObj.isRemote){
 				clientQ[side] = (keyType() == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
 			}
 		}
 
 		@Override
-		public void setQ(double QIn, boolean client) {
+		public void setQ(double QIn, boolean client){
 			if(client){
 				clientQ[side] = QIn;
 			}else{
@@ -348,14 +349,15 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public double getAngle() {
+		public double getAngle(){
 			return angle[side];
 		}
 
 		@Override
-		public void updateStates() {
-			//assume each gear is 1/8 of a cubic meter and has a radius of 1/2 meter.
-			//mass is rounded to make things nicer for everyone
+		public void updateStates(){
+			// assume each gear is 1/8 of a cubic meter and has a radius of 1/2
+			// meter.
+			// mass is rounded to make things nicer for everyone
 
 			if(members[side] == null){
 				physData[side][0] = 0;
@@ -368,7 +370,11 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}else{
 				physData[side][1] = MiscOperators.betterRound(members[side].getDensity() / 8, 1);
 				physData[side][0] = .5;
-				physData[side][2] = physData[side][1] * .125; /*.125 because r*r/2 so .5*.5/2 */
+				physData[side][2] = physData[side][1] * .125; /*
+																 * .125 because
+																 * r*r/2 so
+																 * .5*.5/2
+																 */
 			}
 
 			if(!getWorld().isRemote){
@@ -378,7 +384,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public void addEnergy(double energy, boolean allowInvert, boolean absolute) {
+		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
 
 			if(allowInvert && absolute){
 				motionData[side][1] += energy;
@@ -400,15 +406,14 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public void setMember(GearTypes membIn) {
+		public void setMember(GearTypes membIn){
 			members[side] = membIn;
 		}
 
 		@Override
-		public GearTypes getMember() {
+		public GearTypes getMember(){
 			return members[side];
 		}
-
 
 	}
 }

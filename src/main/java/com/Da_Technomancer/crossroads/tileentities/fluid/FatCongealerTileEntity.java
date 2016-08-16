@@ -28,13 +28,13 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 	private final int CAPACITY = EnergyConverters.FAT_PER_VALUE * 40;
 	private final double VALUE_PER_ENERGY = .1D;
 	private final double SAT_UPPER_SPEED_BOUND = 2;
-	
+
 	@Override
 	public void update(){
 		if(worldObj.isRemote){
 			return;
 		}
-		
+
 		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 			IRotaryHandler rot = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN);
 			int value = Math.min((int) (Math.abs(rot.getMotionData()[1]) * VALUE_PER_ENERGY), 40);
@@ -62,9 +62,7 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 			markDirty();
 		}
 	}
-	
-	
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -77,7 +75,7 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 		if(content != null){
 			content.writeToNBT(nbt);
 		}
-		
+
 		return nbt;
 	}
 
@@ -101,7 +99,6 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 		return super.hasCapability(capability, facing);
 	}
 
-	
 	private class MainHandler implements IFluidHandler{
 
 		@Override
@@ -115,11 +112,11 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 				return 0;
 			}
 			int amount = Math.min(CAPACITY - (content == null ? 0 : content.amount), resource.amount);
-			
+
 			if(doFill && amount != 0){
 				content = new FluidStack(BlockLiquidFat.getLiquidFat(), amount + (content == null ? 0 : content.amount));
 			}
-			
+
 			return amount;
 		}
 

@@ -10,22 +10,22 @@ public class ServerProxy extends CommonProxy{
 	public static int masterKey = 0;
 
 	@Override
-	protected void preInit(FMLPreInitializationEvent e) {
+	protected void preInit(FMLPreInitializationEvent e){
 		super.preInit(e);
-		
-		if (Loader.isModLoaded("guideapi")){
+
+		if(Loader.isModLoaded("guideapi")){
 			GuideBooks.mainGuide(e, false);
 		}
 	}
 
 	@Override
-	protected void init(FMLInitializationEvent e) {
+	protected void init(FMLInitializationEvent e){
 		// TODO Auto-generated method stub
 		super.init(e);
 	}
 
 	@Override
-	protected void postInit(FMLPostInitializationEvent e) {
+	protected void postInit(FMLPostInitializationEvent e){
 		// TODO Auto-generated method stub
 		super.postInit(e);
 	}

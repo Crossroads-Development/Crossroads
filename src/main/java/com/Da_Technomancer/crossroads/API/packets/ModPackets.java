@@ -6,13 +6,13 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ModPackets {
-	
+public class ModPackets{
+
 	public static SimpleNetworkWrapper network;
-	
+
 	public static void preInit(){
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(Main.MODID + "." + "chan");
-		
+
 		int packetId = 5;
 		network.registerMessage(SendIntToClient.class, SendIntToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendStringToClient.class, SendStringToClient.class, packetId++, Side.CLIENT);

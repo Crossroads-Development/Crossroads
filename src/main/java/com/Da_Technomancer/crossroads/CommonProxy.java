@@ -22,9 +22,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class CommonProxy {
+public class CommonProxy{
 
-	protected void preInit(FMLPreInitializationEvent e) {
+	protected void preInit(FMLPreInitializationEvent e){
 		Capabilities.register();
 		ModConfig.init(e);
 		OreSetUp.init();
@@ -37,19 +37,19 @@ public class CommonProxy {
 		ModPackets.preInit();
 	}
 
-	protected void init(FMLInitializationEvent e) {
+	protected void init(FMLInitializationEvent e){
 		ModCrafting.initCrafting();
 		GameRegistry.registerWorldGenerator(new ModWorldGen(), 0);
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
-		if (Loader.isModLoaded("JEI")){
+		if(Loader.isModLoaded("JEI")){
 			RecipeHolder.rebind();
 		}
-		
+
 		ModConfig.save();
 	}
 
-	protected void postInit(FMLPostInitializationEvent e) {
-		
+	protected void postInit(FMLPostInitializationEvent e){
+
 	}
 }

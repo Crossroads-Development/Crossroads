@@ -10,17 +10,16 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
 
 public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTileEntity>{
-	
+
 	private final ModelDrill model = new ModelDrill();
 	private final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/drill.png");
-	
+
 	@Override
-	public void renderTileEntityAt(RotaryDrillTileEntity drill, double x, double y, double z, float partialTicks, int destroyStage) {
+	public void renderTileEntityAt(RotaryDrillTileEntity drill, double x, double y, double z, float partialTicks, int destroyStage){
 
 		if(!drill.getWorld().isBlockLoaded(drill.getPos(), false)){
 			return;
 		}
-
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
@@ -48,7 +47,8 @@ public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTi
 				GlStateManager.rotate(270F, 1.0F, 0.0F, 0.0F);
 				GlStateManager.translate(.5F, -1.5F, .5F);
 				break;
-			}case SOUTH:{
+			}
+			case SOUTH:{
 				GlStateManager.rotate(90F, 1.0F, 0.0F, 0.0F);
 				GlStateManager.translate(.5F, -.5F, -.5F);
 				break;

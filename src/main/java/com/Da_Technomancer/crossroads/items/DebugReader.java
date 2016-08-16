@@ -33,7 +33,7 @@ public class DebugReader extends Item{
 
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
-		if(worldIn.isRemote && worldIn.getTileEntity(pos)instanceof SidedGearHolderTileEntity){
+		if(worldIn.isRemote && worldIn.getTileEntity(pos) instanceof SidedGearHolderTileEntity){
 			for(int i = 0; i < 6; i++){
 				SidedGearHolderTileEntity gear = (SidedGearHolderTileEntity) worldIn.getTileEntity(pos);
 				playerIn.addChatComponentMessage(new TextComponentString("Angle=" + (gear.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)) ? gear.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getAngle() : "NONE")));
@@ -45,15 +45,14 @@ public class DebugReader extends Item{
 		}
 
 		TileEntity te = worldIn.getTileEntity(pos);
-		
+
 		for(int i = 0; i < 6; i++){
 			if(te != null && te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i))){
 				double[] gear = te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getMotionData();
-				playerIn.addChatComponentMessage(new TextComponentString("w="+gear[0] + ", E=" + gear[1] + ", P=" + gear[2] + ", lastE=" + gear[3] + " Type " + te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getMember().toString()));
+				playerIn.addChatComponentMessage(new TextComponentString("w=" + gear[0] + ", E=" + gear[1] + ", P=" + gear[2] + ", lastE=" + gear[3] + " Type " + te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getMember().toString()));
 
 			}
 		}
-
 
 		if(te instanceof ITileMasterAxis){
 			playerIn.addChatComponentMessage(new TextComponentString(Boolean.toString(((ITileMasterAxis) te).isLocked())));
@@ -61,8 +60,6 @@ public class DebugReader extends Item{
 		}else{
 			playerIn.addChatComponentMessage(new TextComponentString(Integer.toString(ServerProxy.masterKey)));
 		}
-
-
 
 		if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
 			IHeatHandler cable = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null);
@@ -73,17 +70,15 @@ public class DebugReader extends Item{
 				playerIn.addChatComponentMessage(new TextComponentString("Insul = " + heatCable.getInsulator() + ", Cond = " + heatCable.getConductor()));
 			}
 		}
-		
-		
-		
+
 		if(te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
 			IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-			
+
 			for(IFluidTankProperties tank : pipe.getTankProperties()){
 				playerIn.addChatComponentMessage(new TextComponentString("Amount = " + (tank.getContents() == null ? 0 : tank.getContents().amount) + " Type = " + (tank.getContents() == null ? "None" : tank.getContents().getFluid().getUnlocalizedName()) + " Capacity = " + tank.getCapacity()));
 			}
 		}
-		
+
 		return EnumActionResult.PASS;
 	}
 

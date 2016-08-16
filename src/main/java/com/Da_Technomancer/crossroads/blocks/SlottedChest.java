@@ -36,27 +36,27 @@ public class SlottedChest extends BlockContainer{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new SlottedChestTileEntity();
 	}
-	
+
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState blockstate) {
-	    SlottedChestTileEntity te = (SlottedChestTileEntity) world.getTileEntity(pos);
-	    InventoryHelper.dropInventoryItems(world, pos, te.iInv);
-	    super.breakBlock(world, pos, blockstate);
+	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+		SlottedChestTileEntity te = (SlottedChestTileEntity) world.getTileEntity(pos);
+		InventoryHelper.dropInventoryItems(world, pos, te.iInv);
+		super.breakBlock(world, pos, blockstate);
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
-	    if (!worldIn.isRemote) {
-	        playerIn.openGui(Main.instance, GuiHandler.SLOTTEDCHEST_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
-	    }
-	    return true;
+		if(!worldIn.isRemote){
+			playerIn.openGui(Main.instance, GuiHandler.SLOTTEDCHEST_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		}
+		return true;
 	}
 }

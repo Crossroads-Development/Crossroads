@@ -20,14 +20,14 @@ import net.minecraftforge.common.model.TRSRTransformation;
 public class ConduitModel implements IModel{
 
 	@Override
-	public Collection<ResourceLocation> getDependencies() {
+	public Collection<ResourceLocation> getDependencies(){
 		return Collections.emptySet();
 	}
 
 	@Override
-	public Collection<ResourceLocation> getTextures() {
+	public Collection<ResourceLocation> getTextures(){
 		ArrayList<ResourceLocation> textures = new ArrayList<>();
-		for(HeatInsulators insul: HeatInsulators.values()){
+		for(HeatInsulators insul : HeatInsulators.values()){
 			if(insul != null){
 				textures.add(insul.getResource());
 			}
@@ -37,12 +37,12 @@ public class ConduitModel implements IModel{
 	}
 
 	@Override
-	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter){
 		return new ConduitBakedModel(state, format, bakedTextureGetter);
 	}
 
 	@Override
-	public IModelState getDefaultState() {
+	public IModelState getDefaultState(){
 		return TRSRTransformation.identity();
 	}
 

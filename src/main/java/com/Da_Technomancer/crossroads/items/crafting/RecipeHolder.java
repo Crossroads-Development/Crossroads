@@ -17,34 +17,42 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 
-public final class RecipeHolder {
-	
-	/**For the string, use the item registry name (WITH path, ex. "crossroads:dustCopper") for a specific item, or oreDict name (WITHOUT path, ex. "dustCopper")
+public final class RecipeHolder{
+
+	/**
+	 * For the string, use the item registry name (WITH path, ex.
+	 * "crossroads:dustCopper") for a specific item, or oreDict name (WITHOUT
+	 * path, ex. "dustCopper")
 	 * 
 	 */
 	public static final HashMap<String, ItemStack[]> grindRecipes = new HashMap<String, ItemStack[]>();
-	
-	/**Block is input, blockstate is the created block, Double1 is heat created, Double2 is the limit.
+
+	/**
+	 * Block is input, blockstate is the created block, Double1 is heat created,
+	 * Double2 is the limit.
 	 * 
 	 */
 	public static final HashMap<Block, Triple<IBlockState, Double, Double>> envirHeatSource = new HashMap<Block, Triple<IBlockState, Double, Double>>();
 
-	/**Fluid is input, Integer is the amount required, ItemStack is output, Double1 is maximum temperature, and Double2 is heat added on craft.
+	/**
+	 * Fluid is input, Integer is the amount required, ItemStack is output,
+	 * Double1 is maximum temperature, and Double2 is heat added on craft.
 	 * 
 	 */
 	public static final HashMap<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> fluidCoolingRecipes = new HashMap<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>>();
-	
-	/**A list of all recipes, Item Array are the ingredients, and itemstack is output.
-	 * A list for poisonous potato recipes and mashed potato recipes.
+
+	/**
+	 * A list of all recipes, Item Array are the ingredients, and itemstack is
+	 * output. A list for poisonous potato recipes and mashed potato recipes.
 	 */
 	protected static final ArrayList<Pair<CraftingStack[], ItemStack>> mashedBoboRecipes = new ArrayList<Pair<CraftingStack[], ItemStack>>();
 	protected static final ArrayList<Pair<CraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<CraftingStack[], ItemStack>>();
-	
-	
+
 	public static final ArrayList<Object> JEIWrappers = new ArrayList<Object>();
-	
+
 	/*
-	 * Converts the versions of the recipes used internally into fake recipes for JEI. Not called unless JEI is installed.
+	 * Converts the versions of the recipes used internally into fake recipes
+	 * for JEI. Not called unless JEI is installed.
 	 */
 	public static void rebind(){
 		for(Entry<String, ItemStack[]> rec : grindRecipes.entrySet()){
@@ -56,14 +64,14 @@ public final class RecipeHolder {
 		JEIWrappers.add(new HeatingCrucibleRecipe(true));
 		JEIWrappers.add(new HeatingCrucibleRecipe(false));
 	}
-	
+
 	public static ItemStack recipeMatch(boolean poisonous, ArrayList<EntityItem> itemEnt){
 		if(itemEnt == null){
 			return null;
 		}
-		
+
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-		
+
 		for(EntityItem it : itemEnt){
 			if(it.getEntityItem() == null || it.getEntityItem().stackSize != 1){
 				return null;
@@ -74,7 +82,7 @@ public final class RecipeHolder {
 		if(items.size() != 3){
 			return null;
 		}
-		
+
 		if(poisonous){
 			for(Pair<CraftingStack[], ItemStack> craft : poisonBoboRecipes){
 				ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
@@ -112,7 +120,7 @@ public final class RecipeHolder {
 				}
 			}
 		}
-		
+
 		return null;
 	}
 }

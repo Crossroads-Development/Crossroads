@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ChickenBoots extends ItemArmor{
 
 	private static ArmorMaterial CHICKEN = EnumHelper.addArmorMaterial("CHICKEN", Main.MODID + ":chicken", 0, new int[4], 30, SoundEvents.ENTITY_CHICKEN_HURT, 0F);
-	
+
 	public ChickenBoots(){
 		super(CHICKEN, 1, EntityEquipmentSlot.FEET);
 		this.setMaxStackSize(1);

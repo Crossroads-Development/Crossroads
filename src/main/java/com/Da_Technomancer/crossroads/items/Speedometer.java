@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Speedometer extends Item{
-	
+
 	public Speedometer(){
 		String name = "speedometer";
 		setUnlocalizedName(name);

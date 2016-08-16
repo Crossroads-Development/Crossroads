@@ -24,36 +24,36 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class HeatingChamber extends BlockContainer{
-	
-	public HeatingChamber() {
+
+	public HeatingChamber(){
 		super(Material.IRON);
 		String name = "heatingChamber";
 		setUnlocalizedName(name);
-	    setRegistryName(name);
-	    GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		setRegistryName(name);
+		GameRegistry.register(this);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
-	    if (!worldIn.isRemote) {
-	        playerIn.openGui(Main.instance, GuiHandler.HEATINGCHAMBER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
-	    }
-	    return true;
+		if(!worldIn.isRemote){
+			playerIn.openGui(Main.instance, GuiHandler.HEATINGCHAMBER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		}
+		return true;
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
+
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState blockstate) {
-	    TileEntity te = world.getTileEntity(pos);
-	    InventoryHelper.dropInventoryItems(world, pos, (IInventory) te);
-	    super.breakBlock(world, pos, blockstate);
+	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+		TileEntity te = world.getTileEntity(pos);
+		InventoryHelper.dropInventoryItems(world, pos, (IInventory) te);
+		super.breakBlock(world, pos, blockstate);
 	}
 
 	public TileEntity createNewTileEntity(World worldIn, int meta){

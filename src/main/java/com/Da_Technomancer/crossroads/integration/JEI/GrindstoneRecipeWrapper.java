@@ -18,7 +18,7 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper{
 
 	private List<ItemStack> inputs;
 	private List<ItemStack> outputs;
-	
+
 	protected GrindstoneRecipeWrapper(@Nonnull GrindstoneRecipe recipe){
 		outputs = Arrays.asList(recipe.getStacks());
 		if(recipe.getString().contains(":")){
@@ -27,7 +27,7 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper{
 			inputs = OreDictionary.getOres(recipe.getString());
 		}
 	}
-	
+
 	@Override
 	public List<ItemStack> getInputs(){
 		return inputs;
@@ -50,12 +50,12 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper{
 
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY){
-		
+
 	}
 
 	@Override
 	public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight){
-		
+
 	}
 
 	@Override

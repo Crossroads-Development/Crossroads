@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Thermometer extends Item{
-	
+
 	public Thermometer(){
 		String name = "thermometer";
 		setUnlocalizedName(name);
@@ -22,7 +22,7 @@ public class Thermometer extends Item{
 		GameRegistry.register(this);
 		this.setCreativeTab(ModItems.tabCrossroads);
 	}
-	
+
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		if(worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){

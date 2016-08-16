@@ -47,7 +47,7 @@ public class LargeGear extends Item{
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		pos = pos.offset(side);
-		
+
 		for(BlockPos cPos : section(pos, side)){
 			if(worldIn.getBlockState(cPos) != null && !worldIn.getBlockState(cPos).getBlock().isReplaceable(worldIn, cPos)){
 				return EnumActionResult.PASS;

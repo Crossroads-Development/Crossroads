@@ -18,10 +18,10 @@ public class DebugHeatWriter extends Item{
 	public DebugHeatWriter(){
 		setUnlocalizedName("debugHeatWriter");
 		setRegistryName("debugHeatWriter");
-	    GameRegistry.register(this);
-	    this.setCreativeTab(ModItems.tabCrossroads);
+		GameRegistry.register(this);
+		this.setCreativeTab(ModItems.tabCrossroads);
 	}
-	
+
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){

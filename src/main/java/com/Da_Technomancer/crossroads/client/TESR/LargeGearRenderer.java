@@ -14,12 +14,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMasterTileEntity>{
-	
+
 	private static final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/largeGear.png");
 	private static final ModelLargeGear model = new ModelLargeGear();
-	
+
 	@Override
-	public void renderTileEntityAt(LargeGearMasterTileEntity gear, double x, double y, double z, float partialTicks, int destroyStage) {
+	public void renderTileEntityAt(LargeGearMasterTileEntity gear, double x, double y, double z, float partialTicks, int destroyStage){
 
 		if(!gear.getWorld().isBlockLoaded(gear.getPos(), false) || !gear.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, null)){
 			return;
@@ -29,7 +29,7 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 		Color color = handler.getMember().getColor();
 
 		GlStateManager.pushMatrix();
-		GlStateManager.color(color.getRed()/255F, color.getGreen()/255F, color.getBlue()/255F);
+		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
 		GlStateManager.translate(x, y, z);
 		if(gear.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 			GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);

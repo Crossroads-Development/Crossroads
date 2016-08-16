@@ -8,19 +8,18 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = Main.MODID, name = Main.MODNAME, version = Main.VERSION, dependencies = "required-after:Forge; after:guideapi; after:JEI", useMetadata = true)
-public class Main {
+public class Main{
 
 	public static final String MODID = "crossroads";
 	public static final String MODNAME = "Crossroads";
 	public static final String VERSION = ".1";
 
-	static {
+	static{
 		FluidRegistry.enableUniversalBucket();
 	}
 
-	@SidedProxy(clientSide="com.Da_Technomancer.crossroads.ClientProxy", serverSide="com.Da_Technomancer.crossroads.ServerProxy")
+	@SidedProxy(clientSide = "com.Da_Technomancer.crossroads.ClientProxy", serverSide = "com.Da_Technomancer.crossroads.ServerProxy")
 	public static CommonProxy proxy;
-
 
 	@Mod.Instance
 	public static Main instance;
@@ -31,12 +30,12 @@ public class Main {
 	}
 
 	@Mod.EventHandler
-	public void init(FMLInitializationEvent e) {
+	public void init(FMLInitializationEvent e){
 		proxy.init(e);
 	}
 
 	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent e) {
+	public void postInit(FMLPostInitializationEvent e){
 		proxy.postInit(e);
 	}
 }

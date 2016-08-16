@@ -26,8 +26,6 @@ public class MagentaBread extends ItemFood{
 	public boolean hasEffect(ItemStack stack){
 		return true;
 	}
-	
-	
 
 	@Override
 	protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player){

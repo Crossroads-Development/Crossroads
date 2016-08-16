@@ -14,7 +14,9 @@ public class SlottedChestGuiContainer extends GuiContainer{
 	private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 	private final IInventory playerInventory;
 	private final SlottedChestTileEntity te;
-	/** window height is calculated with these values; the more rows, the heigher */
+	/**
+	 * window height is calculated with these values; the more rows, the heigher
+	 */
 	private final int inventoryRows;
 
 	public SlottedChestGuiContainer(IInventory playerInventory, SlottedChestTileEntity chest){
@@ -27,7 +29,8 @@ public class SlottedChestGuiContainer extends GuiContainer{
 	}
 
 	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
+	 * Draw the foreground layer for the GuiContainer (everything in front of
+	 * the items)
 	 */
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){

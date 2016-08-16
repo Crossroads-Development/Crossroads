@@ -18,11 +18,11 @@ import net.minecraftforge.fluids.FluidStack;
 public class HeatingCrucibleRecipeWrapper implements IRecipeWrapper{
 
 	private final boolean copper;
-	
+
 	protected HeatingCrucibleRecipeWrapper(@Nonnull HeatingCrucibleRecipe recipe){
 		copper = recipe.isCopper();
 	}
-	
+
 	@Override
 	public List<ItemStack> getInputs(){
 		return ImmutableList.of(copper ? new ItemStack(ModItems.dustCopper, 1) : new ItemStack(Blocks.COBBLESTONE, 1));
@@ -50,7 +50,7 @@ public class HeatingCrucibleRecipeWrapper implements IRecipeWrapper{
 
 	@Override
 	public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight){
-		
+
 	}
 
 	@Override

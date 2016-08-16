@@ -29,14 +29,12 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public final class ModCrafting {
-	
+public final class ModCrafting{
+
 	public static void initCrafting(){
-		
+
 		OreDictionary.registerOre("wool", new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE));
-		
-		
-		
+
 		RecipeHolder.grindRecipes.put("oreCopper", new ItemStack[] {new ItemStack(Item.getByNameOrId(Main.MODID + ":dustCopper"), 2), new ItemStack(Blocks.SAND)});
 		RecipeHolder.grindRecipes.put("minecraft:wheat", new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
 		RecipeHolder.grindRecipes.put("minecraft:pumpkin", new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
@@ -46,111 +44,109 @@ public final class ModCrafting {
 		RecipeHolder.grindRecipes.put("minecraft:nether_wart_block", new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
 		RecipeHolder.grindRecipes.put("cropPotato", new ItemStack[] {new ItemStack(ModItems.mashedPotato, 1)});
 		RecipeHolder.grindRecipes.put("gravel", new ItemStack[] {new ItemStack(Items.FLINT)});
-		
-		//Heating, order of decreasing effectiveness
+
+		// Heating, order of decreasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D));
 		RecipeHolder.envirHeatSource.put(Blocks.field_189877_df, Triple.of(Blocks.NETHERRACK.getDefaultState(), 500D, 2000D));
 		RecipeHolder.envirHeatSource.put(Blocks.FIRE, Triple.of(null, 300D, 2000D));
-		//Cooling, order of increasing effectiveness
+		// Cooling, order of increasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.SNOW, Triple.of(Blocks.WATER.getDefaultState(), -50D, -20D));
 		RecipeHolder.envirHeatSource.put(Blocks.ICE, Triple.of(Blocks.WATER.getDefaultState(), -70D, -50D));
 		RecipeHolder.envirHeatSource.put(Blocks.PACKED_ICE, Triple.of(Blocks.WATER.getDefaultState(), -140D, -100D));
-		
+
 		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopper.getMoltenCopper(), Pair.of(200, Triple.of(new ItemStack(Item.getByNameOrId(Main.MODID + ":ingotCopper"), 1), 1000D, 100D)));
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.LAVA, Pair.of(1000, Triple.of(new ItemStack(Blocks.OBSIDIAN, 1), 1000D, 500D)));
 		RecipeHolder.fluidCoolingRecipes.put(BlockDistilledWater.getDistilledWater(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE), -20D, 2D)));
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE), -10D, 1D)));
-		
-		
+
 		RecipeHolder.mashedBoboRecipes.add(Pair.of(new CraftingStack[] {new CraftingStack(Blocks.HOPPER, 1, 0), new OreDictCraftingStack("wool", 1), new CraftingStack(ModBlocks.fluidTube, 1, 0)}, getFilledHopper()));
 		RecipeHolder.mashedBoboRecipes.add(Pair.of(new CraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new OreDictCraftingStack("dyeMagenta", 1), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new CraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
-		
-		
+
 		final String axle = "stickIron";
-		
-		if (Loader.isModLoaded("guideapi")){
-			//Guide book
+
+		if(Loader.isModLoaded("guideapi")){
+			// Guide book
 			GameRegistry.addShapelessRecipe(GuideAPI.getStackFromBook(GuideBooks.main), Items.BOOK, Items.COMPASS);
 		}
-		
-		//Axle
+
+		// Axle
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE_BUTTON, '?', "ingotIron"));
 		GameRegistry.addRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE_BUTTON, '?', ModItems.metalScrap);
-		//Bronze
+		// Bronze
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":ingotBronze"), 1), "###", "#?#", "###", '#', "nuggetCopper", '?', "nuggetTin"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":blockBronze"), 1), "###", "#?#", "###", '#', "ingotCopper", '?', "ingotTin"));
-		//Pipe
+		// Pipe
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fluidTube, 8), "###", "   ", "###", '#', "ingotBronze"));
-		//Hand Crank
+		// Hand Crank
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.handCrank, 1), " ?", "##", "$ ", '?', Blocks.LEVER, '#', "stickWood", '$', "cobblestone"));
-		//Master Axis
+		// Master Axis
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.masterAxis, 1), "###", "#?#", "#$#", '#', "ingotIron", '?', Blocks.DROPPER, '$', axle));
-		//Heating Crucible
+		// Heating Crucible
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.heatingCrucible, 1), "# #", "#?#", "###", '#', Blocks.HARDENED_CLAY, '?', Items.CAULDRON);
-		//Grindstone
+		// Grindstone
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.grindstone, 1), "#$#", "#?#", "#$#", '#', "cobblestone", '?', axle, '$', Blocks.PISTON));
-		//Heat Cable
+		// Heat Cable
 		for(HeatInsulators insul : HeatInsulators.values()){
 			for(HeatConductors cond : HeatConductors.values()){
 				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(HeatCableFactory.cableMap.get(cond).get(insul), 4), "###", "???", "###", '#', insul.getItem(), '?', cond.getItem()));
 			}
 		}
-		//Steam Boiler
+		// Steam Boiler
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.steamBoiler, 1), "#$#", "$?$", "#&#", '#', "ingotBronze", '?', "blockBronze", '$', ModBlocks.fluidTube, '&', "ingotCopper"));
-		//Salt Block
+		// Salt Block
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSalt, 1), "##", "##", '#', "dustSalt"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.dustSalt, 4), "#", '#', "blockSalt"));
-		//Salt
+		// Salt
 		GameRegistry.addSmelting(new ItemStack(Items.POTIONITEM, 1, 0), new ItemStack(ModItems.dustSalt, 1), .1F);
-		//Rotary Pump
+		// Rotary Pump
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "?%?", "&%&", '#', "ingotBronze", '%', Blocks.IRON_BARS, '?', ModBlocks.fluidTube, '&', "blockGlass", '$', axle));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.rotaryPump, 1), ModBlocks.steamTurbine);
-		//Steam Turbine
+		// Steam Turbine
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump);
-		//Brazier
+		// Brazier
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.brazier, 1), "###", " $ ", " $ ", '$', "stoneAndesitePolished", '#', "stoneAndesite"));
-		//Obsidian cutting kit
+		// Obsidian cutting kit
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.obsidianKit, 4), " # ", "#$#", " # ", '$', "obsidian", '#', Items.FLINT));
-		//Thermometer
+		// Thermometer
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', axle, '?', "blockGlass"));
-		//Fluid Gauge
+		// Fluid Gauge
 		GameRegistry.addRecipe(new ItemStack(ModItems.fluidGauge, 1), "#", "$", '#', Items.COMPASS, '$', ModBlocks.fluidTube);
-		//Speedometer
+		// Speedometer
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.speedometer, 1), " #", "#$", '#', "string", '$', "ingotIron"));
-		//OmniMeter
+		// OmniMeter
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.omnimeter, 1), " # ", "&$%", " ? ", '#', ModItems.fluidGauge, '&', ModItems.thermometer, '$', "gemEmerald", '%', ModItems.speedometer, '?', Items.CLOCK));
-		//Fluid Tank
+		// Fluid Tank
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fluidTank, 1), " # ", "#$#", " # ", '#', "ingotGold", '$', "blockBronze"));
-		//Heat Exchanger
+		// Heat Exchanger
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.heatExchanger, 1), "#$#", "$$$", "###", '#', Blocks.IRON_BARS, '$', "ingotCopper"));
-		//Insulated Heat Exchanger
+		// Insulated Heat Exchanger
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.insulHeatExchanger, 1), "###", "#$#", "###", '#', "obsidian", '$', ModBlocks.heatExchanger));
-		//Coal Heater
+		// Coal Heater
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.coalHeater, 1), "#*#", "#$#", "###", '#', "cobblestone", '$', Blocks.FURNACE, '*', "ingotCopper"));
-		//Heating Chamber
+		// Heating Chamber
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.heatingChamber, 1), "#*#", "#$#", "###", '#', "ingotIron", '$', Blocks.FURNACE, '*', "ingotCopper"));
-		//Salt Reactor
+		// Salt Reactor
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotTin", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper"));
-		//Fluid Cooling Chamber
+		// Fluid Cooling Chamber
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fluidCoolingChamber, 1), "###", "# #", "%%%", '#', "ingotTin", '%', "ingotIron"));
-		//Slotted Chest
+		// Slotted Chest
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.slottedChest, 1), "###", "$@$", "###", '#', "slabWood", '$', Blocks.TRAPDOOR, '@', "chestWood"));
-		//Sorting Hopper
+		// Sorting Hopper
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.sortingHopper, 1), "# #", "#&#", " # ", '#', "ingotCopper", '&', "chestWood"));
-		//Candle Lilypad
+		// Candle Lilypad
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.candleLilyPad), Blocks.WATERLILY, "torch"));
-		//Item Chute
+		// Item Chute
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.itemChute, 4), "#$#", "#$#", "#$#", '#', "ingotIron", '$', axle));
-		//Item Chute Port
+		// Item Chute Port
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.itemChutePort, 1), ModBlocks.itemChute, Blocks.IRON_TRAPDOOR);
-		//Radiator
+		// Radiator
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.radiator, 1), "#$#", "#$#", "#$#", '#', ModBlocks.fluidTube, '$', "ingotIron"));
-		//Rotary Drill
+		// Rotary Drill
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryDrill, 2), " * ", "*#*", '*', "ingotIron", '#', "blockIron"));
-		//Fat Collector
+		// Fat Collector
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fatCollector, 1), "***", "# #", "*&*", '*', "ingotBronze", '#', "netherrack", '&', "ingotCopper"));
-		//Fat Congealer
+		// Fat Congealer
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fatCongealer, 1), "*^*", "# #", "* *", '*', "ingotBronze", '#', "netherrack", '^', axle));
 	}
 

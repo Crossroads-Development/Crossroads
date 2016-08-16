@@ -31,11 +31,11 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 	private final int CAPACITY = 10_000;
 
 	@Override
-	public void update() {
+	public void update(){
 		if(worldObj.isRemote){
 			return;
 		}
-		if(init==false){
+		if(init == false){
 			temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeGenForCoords(getPos()).getFloatTemperature(getPos());
 			init = true;
 		}
@@ -66,7 +66,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		if(waterContent.amount == 0){
 			waterContent = null;
 		}
-		
+
 		if(steamContent == null){
 			steamContent = new FluidStack(BlockSteam.getSteam(), limit * 100);
 		}else{
@@ -83,19 +83,19 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		markDirty();
 		temp -= limit * EnergyConverters.DEG_PER_BUCKET_STEAM * (salty ? .2D : .1D);
 	}
-	
+
 	@Override
-	public int getSizeInventory() {
+	public int getSizeInventory(){
 		return 1;
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int index) {
+	public ItemStack getStackInSlot(int index){
 		return index == 0 ? inventory : null;
 	}
 
 	@Override
-	public ItemStack decrStackSize(int index, int count) {
+	public ItemStack decrStackSize(int index, int count){
 		if(index != 0 || inventory == null){
 			return null;
 		}
@@ -110,7 +110,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int index) {
+	public ItemStack removeStackFromSlot(int index){
 		if(index != 0){
 			return null;
 		}
@@ -121,60 +121,60 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		if(index !=0){
+	public void setInventorySlotContents(int index, ItemStack stack){
+		if(index != 0){
 			return;
 		}
 		inventory = stack;
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getInventoryStackLimit(){
 		return 64;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
+	public boolean isItemValidForSlot(int index, ItemStack stack){
 		return false;
 	}
 
 	@Override
-	public int getField(int id) {
+	public int getField(int id){
 		return 0;
 	}
 
 	@Override
-	public void setField(int id, int value) {
+	public void setField(int id, int value){
 
 	}
 
 	@Override
-	public int getFieldCount() {
+	public int getFieldCount(){
 		return 0;
 	}
 
 	@Override
-	public void clear() {
+	public void clear(){
 		inventory = null;
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
+	public int[] getSlotsForFace(EnumFacing side){
 		return new int[] {0};
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction){
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
 		return index == 0;
 	}
 
 	@Override
-	public String getName() {
+	public String getName(){
 		return "container.steamBoiler";
 	}
 
@@ -185,18 +185,18 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		steamContent = FluidStack.loadFluidStackFromNBT(nbt);
-		
+
 		waterContent = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("water"));
 
 		this.init = nbt.getBoolean("init");
-        this.temp = nbt.getDouble("temp");
+		this.temp = nbt.getDouble("temp");
 
-        NBTTagList list = nbt.getTagList("Items", 10);
-	    for (int i = 0; i < list.tagCount(); ++i) {
-	        NBTTagCompound stackTag = list.getCompoundTagAt(i);
-	        int slot = stackTag.getByte("Slot") & 255;
-	        this.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(stackTag));
-	    }
+		NBTTagList list = nbt.getTagList("Items", 10);
+		for(int i = 0; i < list.tagCount(); ++i){
+			NBTTagCompound stackTag = list.getCompoundTagAt(i);
+			int slot = stackTag.getByte("Slot") & 255;
+			this.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(stackTag));
+		}
 	}
 
 	@Override
@@ -205,7 +205,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		if(steamContent != null){
 			steamContent.writeToNBT(nbt);
 		}
-		
+
 		NBTTagCompound waterHolder = new NBTTagCompound();
 		if(waterContent != null){
 			waterContent.writeToNBT(waterHolder);
@@ -213,25 +213,24 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 
 		nbt.setTag("water", waterHolder);
 		nbt.setBoolean("init", this.init);
-        nbt.setDouble("temp", this.temp);
+		nbt.setDouble("temp", this.temp);
 
-        NBTTagList list = new NBTTagList();
-	    for (int i = 0; i < this.getSizeInventory(); ++i) {
-	        if (this.getStackInSlot(i) != null) {
-	            NBTTagCompound stackTag = new NBTTagCompound();
-	            stackTag.setByte("Slot", (byte) i);
-	            this.getStackInSlot(i).writeToNBT(stackTag);
-	            list.appendTag(stackTag);
-	        }
-	    }
-	    nbt.setTag("Items", list);
+		NBTTagList list = new NBTTagList();
+		for(int i = 0; i < this.getSizeInventory(); ++i){
+			if(this.getStackInSlot(i) != null){
+				NBTTagCompound stackTag = new NBTTagCompound();
+				stackTag.setByte("Slot", (byte) i);
+				this.getStackInSlot(i).writeToNBT(stackTag);
+				list.appendTag(stackTag);
+			}
+		}
+		nbt.setTag("Items", list);
 		return nbt;
 	}
 
-
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.DOWN) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.DOWN){
 			return true;
 		}
 
@@ -249,15 +248,15 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 
 			if(facing == null){
 				return (T) innerHandler;
 			}
 			switch(facing){
-				case NORTH: 
+				case NORTH:
 					return (T) waterHandler;
-				case SOUTH: 
+				case SOUTH:
 					return (T) waterHandler;
 				case EAST:
 					return (T) waterHandler;
@@ -279,12 +278,12 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 	private class WaterFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new IFluidTankProperties[] {new FluidTankProperties(waterContent, CAPACITY, true, false)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			if(resource == null || (resource.getFluid() != FluidRegistry.WATER && resource.getFluid() != BlockDistilledWater.getDistilledWater()) || (waterContent != null && !waterContent.isFluidEqual(resource))){
 				return 0;
 			}
@@ -296,12 +295,12 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 			return null;
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			return null;
 		}
 
@@ -310,17 +309,17 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 	private class SteamFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new IFluidTankProperties[] {new FluidTankProperties(steamContent, CAPACITY, false, true)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			return 0;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 
 			if(resource != null && resource.getFluid() == BlockSteam.getSteam() && steamContent != null){
 				int change = Math.min(steamContent.amount, resource.amount);
@@ -339,7 +338,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			if(steamContent == null || maxDrain == 0){
 				return null;
 			}
@@ -361,12 +360,12 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 	private class InnerFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new IFluidTankProperties[] {new FluidTankProperties(steamContent, CAPACITY, true, true), new FluidTankProperties(waterContent, CAPACITY, true, true)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			if(resource != null && (resource.getFluid() == FluidRegistry.WATER || resource.getFluid() == BlockDistilledWater.getDistilledWater()) && (waterContent == null || waterContent.isFluidEqual(resource))){
 				int change = Math.min(CAPACITY - (waterContent == null ? 0 : waterContent.amount), resource.amount);
 
@@ -381,7 +380,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			if(steamContent == null || maxDrain == 0){
 				return null;
 			}
@@ -399,7 +398,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 
 			if(resource != null && resource.getFluid() == BlockSteam.getSteam() && steamContent != null){
 				int change = Math.min(steamContent.amount, resource.amount);
@@ -417,7 +416,6 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 			}
 		}
 
-
 	}
 
 	private class HeatHandler implements IHeatHandler{
@@ -428,21 +426,21 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 				init = true;
 			}
 		}
-		
+
 		@Override
-		public double getTemp() {
+		public double getTemp(){
 			init();
 			return temp;
 		}
 
 		@Override
-		public void setTemp(double tempIn) {
+		public void setTemp(double tempIn){
 			init = true;
 			temp = tempIn;
 		}
 
 		@Override
-		public void addHeat(double heat) {
+		public void addHeat(double heat){
 			init();
 			temp += heat;
 

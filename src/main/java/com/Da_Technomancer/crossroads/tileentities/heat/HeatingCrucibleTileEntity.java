@@ -28,7 +28,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class HeatingCrucibleTileEntity extends AbstractInventory implements ITickable {
+public class HeatingCrucibleTileEntity extends AbstractInventory implements ITickable{
 
 	private FluidStack content = null;
 	private static final int PRODUCED = 200;
@@ -38,19 +38,21 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 	private ItemStack inventory = null;
 
 	/**
-	 * This controls whether the tile entity gets replaced whenever the block state 
-	 * is changed. Normally only want this when block actually is replaced.
+	 * This controls whether the tile entity gets replaced whenever the block
+	 * state is changed. Normally only want this when block actually is
+	 * replaced.
 	 */
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return (oldState.getBlock() != newState.getBlock());
 	}
 
-	/** 0 = not locked, 1 = copper, 2 = cobble
+	/**
+	 * 0 = not locked, 1 = copper, 2 = cobble
 	 * 
 	 */
 	private byte getType(){
-		
+
 		if(inventory != null){
 			for(int ID : OreDictionary.getOreIDs(inventory)){
 				if(ID == OreDictionary.getOreID("dustCopper")){
@@ -59,9 +61,9 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 				if(ID == OreDictionary.getOreID("cobblestone")){
 					return 2;
 				}
-			}	
+			}
 		}
-		
+
 		if(content != null){
 			if(content.getFluid() == FluidRegistry.LAVA){
 				return 2;
@@ -70,10 +72,10 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 				return 1;
 			}
 		}
-		
+
 		return 0;
 	}
-	
+
 	private boolean recipeIsValid(ItemStack stack){
 
 		if(stack == null){
@@ -81,7 +83,7 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 		}
 
 		byte type = 0;
-		
+
 		for(int ID : OreDictionary.getOreIDs(stack)){
 			if(ID == OreDictionary.getOreID("dustCopper")){
 				type = 1;
@@ -90,17 +92,17 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 			if(ID == OreDictionary.getOreID("cobblestone")){
 				type = 2;
 				break;
-			}	
+			}
 		}
-		
+
 		if(type == 0){
 			return false;
 		}
-		
+
 		if(type == getType() || getType() == 0){
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -109,7 +111,7 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 	private IBlockState getCorrectState(){
 		return ModBlocks.heatingCrucible.getDefaultState().withProperty(HeatingCrucible.PROPERTYFULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + (inventory == null ? 0F : ((float) inventory.stackSize)) * 3F / 16F))).withProperty(HeatingCrucible.TEXTURE, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
 	}
-	
+
 	@Override
 	public void update(){
 		if(worldObj.isRemote){
@@ -123,17 +125,17 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 		}
 
 		if(inventory != null && ticksExisted % 10 == 0 && Math.random() < MiscOperators.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= PRODUCED)){
-			
+
 			if(content == null){
 				content = new FluidStack(getType() == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, PRODUCED);
 			}else{
 				content.amount += PRODUCED;
 			}
-			
+
 			if(--inventory.stackSize == 0){
 				inventory = null;
 			}
-			
+
 			temp -= 100D;
 		}
 
@@ -164,21 +166,21 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 
 		nbt.setBoolean("init", this.init);
 		nbt.setDouble("temp", this.temp);
-		
+
 		if(inventory != null){
 			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
 		}
-		
+
 		return nbt;
 	}
-	
+
 	private final IFluidHandler fluidHandler = new FluidHandler();
 	private final IHeatHandler heatHandler = new HeatHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) fluidHandler;
 		}
 
@@ -191,7 +193,7 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return true;
 		}
 
@@ -202,46 +204,46 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 	}
 
 	@Override
-	public int getSizeInventory() {
+	public int getSizeInventory(){
 		return 1;
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int index) {
+	public ItemStack getStackInSlot(int index){
 		return (index == 0) ? inventory : null;
 	}
 
 	@Override
-	public ItemStack decrStackSize(int index, int count) {
+	public ItemStack decrStackSize(int index, int count){
 		if(index != 0){
 			return null;
 		}
-		
+
 		ItemStack stack = inventory.splitStack(count);
-		
+
 		if(inventory.stackSize <= 0){
 			inventory = null;
 		}
-		//Is this even needed?
+		// Is this even needed?
 		markDirty();
 		return stack;
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int index) {
+	public ItemStack removeStackFromSlot(int index){
 		if(index != 0){
 			return null;
 		}
-		
+
 		ItemStack stack = inventory;
 		inventory = null;
 		return stack;
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		if (index != 0){
-				return;
+	public void setInventorySlotContents(int index, ItemStack stack){
+		if(index != 0){
+			return;
 		}
 
 		inventory = stack;
@@ -250,17 +252,17 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getInventoryStackLimit(){
 		return 16;
 	}
 
 	@Override
-	public String getName() {
+	public String getName(){
 		return "container.heatingCrucible";
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
+	public boolean isItemValidForSlot(int index, ItemStack stack){
 		if(index != 0){
 			return false;
 		}
@@ -269,55 +271,54 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
-	{
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
 		return false;
 	}
 
 	@Override
-	public int getField(int id) {
+	public int getField(int id){
 		return 0;
 	}
 
 	@Override
-	public void setField(int id, int value) {
+	public void setField(int id, int value){
 
 	}
 
 	@Override
-	public int getFieldCount() {
+	public int getFieldCount(){
 		return 0;
 	}
 
 	@Override
-	public void clear() {
+	public void clear(){
 		inventory = null;
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
+	public int[] getSlotsForFace(EnumFacing side){
 		return side == EnumFacing.UP ? new int[] {0} : null;
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction){
 		return direction == EnumFacing.UP && this.isItemValidForSlot(index, itemStackIn);
 	}
 
 	private class FluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties() {
+		public IFluidTankProperties[] getTankProperties(){
 			return new IFluidTankProperties[] {new FluidTankProperties(content, CAPACITY, false, true)};
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill) {
+		public int fill(FluidStack resource, boolean doFill){
 			return 0;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
+		public FluidStack drain(FluidStack resource, boolean doDrain){
 
 			if(resource == null || content == null || !resource.isFluidEqual(content)){
 				return null;
@@ -337,11 +338,11 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
+		public FluidStack drain(int maxDrain, boolean doDrain){
 			if(content == null){
 				return null;
 			}
-			
+
 			int change = Math.min(content.amount, maxDrain);
 			Fluid fluid = content.getFluid();
 			if(doDrain){
@@ -363,19 +364,19 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 		}
 
 		@Override
-		public double getTemp() {
+		public double getTemp(){
 			init();
 			return temp;
 		}
 
 		@Override
-		public void setTemp(double tempIn) {
+		public void setTemp(double tempIn){
 			init = true;
 			temp = tempIn;
 		}
 
 		@Override
-		public void addHeat(double heat) {
+		public void addHeat(double heat){
 			init();
 			temp += heat;
 

@@ -11,30 +11,30 @@ import net.minecraftforge.fml.relauncher.Side;
 @SuppressWarnings("serial")
 public class SendPosToClient extends Message<SendPosToClient>{
 
-	public SendPosToClient() { }
+	public SendPosToClient(){
+	}
 
 	public String sContext;
 	public BlockPos message;
 	public BlockPos pos;
 
-	public SendPosToClient(String context, BlockPos message, BlockPos pos) {
+	public SendPosToClient(String context, BlockPos message, BlockPos pos){
 		this.sContext = context;
 		this.message = message;
 		this.pos = pos;
 	}
 
 	@Override
-	public IMessage handleMessage(MessageContext context) {
-		if (context.side != Side.CLIENT) {
+	public IMessage handleMessage(MessageContext context){
+		if(context.side != Side.CLIENT){
 			System.err.println("TargetEffectMessageToClient received on wrong side:" + context.side);
 			return null;
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
 		final WorldClient worldClient = minecraft.theWorld;
-		minecraft.addScheduledTask(new Runnable()
-		{
-			public void run() {
+		minecraft.addScheduledTask(new Runnable(){
+			public void run(){
 				processMessage(worldClient, sContext, message, pos);
 			}
 		});

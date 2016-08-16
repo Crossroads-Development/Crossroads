@@ -22,9 +22,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class BlockSalt extends Block {
+public class BlockSalt extends Block{
 
-	protected BlockSalt() {
+	protected BlockSalt(){
 		super(Material.SAND);
 		String name = "blockSalt";
 		setUnlocalizedName(name);
@@ -37,19 +37,17 @@ public class BlockSalt extends Block {
 	}
 
 	@Override
-	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
-		if (entityIn instanceof EntitySlime) {
+	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn){
+		if(entityIn instanceof EntitySlime){
 			entityIn.setDead();
-			if (!worldIn.isRemote) {
-				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(),
-						new ItemStack(Items.SLIME_BALL));
+			if(!worldIn.isRemote){
+				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.SLIME_BALL));
 				worldIn.spawnEntityInWorld(item);
 			}
-		} else if (entityIn instanceof EntityCreeper) {
+		}else if(entityIn instanceof EntityCreeper){
 			entityIn.setDead();
-			if (!worldIn.isRemote) {
-				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(),
-						new ItemStack(Blocks.DEADBUSH));
+			if(!worldIn.isRemote){
+				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Blocks.DEADBUSH));
 				worldIn.spawnEntityInWorld(item);
 			}
 		}
@@ -62,17 +60,16 @@ public class BlockSalt extends Block {
 		if(worldIn.isRemote){
 			return;
 		}
-		
+
 		for(int i = 0; i < 10; ++i){
 			BlockPos killPos = pos.add(rand.nextInt(5) - 2, rand.nextInt(3) - 1, rand.nextInt(5) - 2);
-			
+
 			if(worldIn.getBlockState(killPos).getMaterial() == Material.PLANTS || ((worldIn.getBlockState(killPos).getMaterial() == Material.VINE && !(worldIn.getBlockState(killPos).getBlock() instanceof BlockVine)))){
 				worldIn.setBlockState(killPos, Blocks.DEADBUSH.getDefaultState());
 			}else if(worldIn.getBlockState(killPos).getBlock() == Blocks.GRASS){
 				worldIn.setBlockState(killPos, Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.COARSE_DIRT));
 			}
 		}
-		
-		
+
 	}
 }
