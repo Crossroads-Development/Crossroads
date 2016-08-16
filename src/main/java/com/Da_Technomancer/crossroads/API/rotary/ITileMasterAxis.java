@@ -16,5 +16,8 @@ public interface ITileMasterAxis{
 	 * 
 	 */
 	public boolean addToList(IRotaryHandler handler);
+	
+	/** For debugging mainly */
+	public double getTotalEnergy();
 
 }

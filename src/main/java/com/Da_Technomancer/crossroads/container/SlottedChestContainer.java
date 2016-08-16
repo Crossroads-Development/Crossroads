@@ -80,7 +80,7 @@ public class SlottedChestContainer extends Container{
 				}else if(slot.getStack().stackSize != 0){
 					ItemStack stack = slot.getStack();
 					ItemStack stack2 = super.slotClick(slotId, dragType, clickTypeIn, player);
-					slot.putStack(new ItemStack(stack.getItem(), 0, stack.getItemDamage(), stack.getTagCompound()));
+					slot.putStack(new ItemStack(stack.getItem(), 0, stack.getItemDamage()));
 					return stack2;
 				}
 			}

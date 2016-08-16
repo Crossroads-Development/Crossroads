@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
@@ -42,10 +43,13 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 			init = true;
 		}
 		
-		if(!insul && ticksExisted % 10 == 0){
-			runLoss(.1D);
+		if(ticksExisted % 10 == 0){
+			transHeat(HeatConductors.COPPER.getRate());
+			if(!insul){
+				runLoss(.1D);
+			}
+			markDirty();
 		}
-		
 		
 		if(RecipeHolder.envirHeatSource.containsKey(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())){
 			Triple<IBlockState, Double, Double> trip = RecipeHolder.envirHeatSource.get(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock());
@@ -55,6 +59,32 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 			}
 		}
 	}
+	
+public void transHeat(double rate) {
+		
+		double reservePool = temp * rate;
+		temp -= reservePool;
+		int members = 1;
+		
+		for(EnumFacing side : EnumFacing.values()){
+			if(side != EnumFacing.DOWN && worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				IHeatHandler handler = worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
+				reservePool += handler.getTemp() * rate;
+				handler.addHeat(- (handler.getTemp() * rate));
+				members++;
+			}
+		}
+		
+		reservePool /= members;
+		
+		for(EnumFacing side: EnumFacing.values()){
+			if(worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
+			}
+		}
+		temp += reservePool;
+	}
+
 
 	private void runLoss(double rate) {
 		if(rate == 0){

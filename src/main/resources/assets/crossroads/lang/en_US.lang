@@ -102,4 +102,5 @@ tile.radiator.name=Radiator
 tile.rotaryDrill.name=Rotary Drill
 item.edibleBlob.name=Edible Blob
 tile.fatCollector.name=Fat Collector
-fluid.liquidfat.name=Liquid Fat
+fluid.liquidfat=Liquid Fat
+tile.fatCongealer.name=Fat Congealer

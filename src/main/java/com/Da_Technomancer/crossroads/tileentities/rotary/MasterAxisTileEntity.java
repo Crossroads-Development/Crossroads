@@ -57,7 +57,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 		}
 	}
 	
-	//For debugging mainly
+	@Override
 	public double getTotalEnergy(){
 		return sumEnergy;
 	}
@@ -76,7 +76,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 			sumMass += gear.getPhysData()[1];
 		}
 		
-		sumEnergy = runLoss(rotaryMembers, 1D);
+		sumEnergy = runLoss(rotaryMembers, 1.001D);
 		if(sumEnergy < 1 && sumEnergy > -1){
 			sumEnergy = 0;
 		}
@@ -112,17 +112,13 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 		}
 	}
 	
-	//The multiplier is badly named, the exact effect it has on loss is actually convoluted, but as a rule, higher multiplier means lower loss
-	//A multiplier of 0 means no power loss
+	//The multiplier is badly named, the exact effect it has on loss is actually exponential, but as a rule, higher multiplier means higher loss.
+	//Multiplier should always be equal or greater than one. 1 means no loss.
 	private static double runLoss(ArrayList<IRotaryHandler> gears, double multiplier){
 		double sumEnergy = 0;
 		
 		for(IRotaryHandler gear: gears){
-			if(multiplier == 0){
-				sumEnergy += gear.keyType() * gear.getMotionData()[1];
-			}else{
-				sumEnergy += gear.keyType() * gear.getMotionData()[1] * (gear.getPhysData()[2] * multiplier/ (Math.abs(gear.getMotionData()[0]) + (multiplier * gear.getPhysData()[2])));
-			}
+			sumEnergy += gear.keyType() * gear.getMotionData()[1] * Math.pow(multiplier, -Math.abs(gear.getMotionData()[0]));
 		}
 		
 		return sumEnergy;

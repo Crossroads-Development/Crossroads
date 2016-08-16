@@ -57,6 +57,7 @@ public class DebugReader extends Item{
 
 		if(te instanceof ITileMasterAxis){
 			playerIn.addChatComponentMessage(new TextComponentString(Boolean.toString(((ITileMasterAxis) te).isLocked())));
+			playerIn.addChatComponentMessage(new TextComponentString(((ITileMasterAxis) te).getTotalEnergy() + " Energy Total"));
 		}else{
 			playerIn.addChatComponentMessage(new TextComponentString(Integer.toString(ServerProxy.masterKey)));
 		}

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
+import com.Da_Technomancer.crossroads.blocks.fluid.FatCongealer;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidTank;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidTube;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidVoid;
@@ -65,6 +66,7 @@ public final class ModBlocks {
 	public static Radiator radiator;
 	public static RotaryDrill rotaryDrill;
 	public static FatCollector fatCollector;
+	public static FatCongealer fatCongealer;
 	
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 	
@@ -102,6 +104,7 @@ public final class ModBlocks {
         blockAddQue(radiator = new Radiator());
         rotaryDrill = new RotaryDrill();
         blockAddQue(fatCollector = new FatCollector());
+        blockAddQue(fatCongealer = new FatCongealer());
     }
     
     @SideOnly(Side.CLIENT)
