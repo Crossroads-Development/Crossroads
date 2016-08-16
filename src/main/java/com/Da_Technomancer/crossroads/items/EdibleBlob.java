@@ -17,7 +17,7 @@ public class EdibleBlob extends ItemFood{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
-		setCreativeTab(ModItems.tabCrossroads);
+		//This is not in a creative tab due to creative giving a version that has no NBT
 	}
 
 	@Override
