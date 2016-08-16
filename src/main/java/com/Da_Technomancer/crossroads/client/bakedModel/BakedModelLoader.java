@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.client.bakedModel;
 
-import com.Da_Technomancer.crossroads.Main;
-
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
@@ -17,7 +15,7 @@ public class BakedModelLoader implements ICustomModelLoader{
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation){
-		return modelLocation.getResourceDomain().equals(Main.MODID) && "heatcable".equals(modelLocation.getResourcePath());
+		return ConduitBakedModel.BAKED_MODEL == modelLocation;
 	}
 
 	@Override
