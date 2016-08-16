@@ -38,7 +38,7 @@ public class ConduitModel implements IModel{
 
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter){
-		return new ConduitBakedModel(state, format, bakedTextureGetter);
+		return new ConduitBakedModel(format, bakedTextureGetter);
 	}
 
 	@Override

@@ -21,19 +21,18 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
-import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
 public class ConduitBakedModel implements IBakedModel{
 
-	private TextureAtlasSprite temp;
+	private TextureAtlasSprite sprite;
 
 	private VertexFormat format;
 	private Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter;
 
 	public static final ModelResourceLocation BAKED_MODEL = new ModelResourceLocation(Main.MODID + ":heatcable");
 
-	public ConduitBakedModel(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter){
+	public ConduitBakedModel(VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter){
 		this.bakedTextureGetter = bakedTextureGetter;
 		this.format = format;
 	}
@@ -85,8 +84,7 @@ public class ConduitBakedModel implements IBakedModel{
 
 		List<BakedQuad> quads = new ArrayList<>();
 
-		TextureAtlasSprite sprite = bakedTextureGetter.apply(((IConduitModel) state.getBlock()).getTexture());
-		temp = sprite;
+		sprite = bakedTextureGetter.apply(((IConduitModel) state.getBlock()).getTexture());
 
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 
@@ -180,7 +178,7 @@ public class ConduitBakedModel implements IBakedModel{
 
 	@Override
 	public TextureAtlasSprite getParticleTexture(){
-		return temp;
+		return sprite;
 	}
 
 	@Override

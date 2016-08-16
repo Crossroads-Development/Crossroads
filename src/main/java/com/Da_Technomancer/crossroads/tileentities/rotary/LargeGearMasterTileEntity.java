@@ -63,8 +63,6 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 	@Override
 	public void update(){
-		ticksExisted++;
-
 		if(getWorld().isRemote){
 			if(angleQ[2] == Double.POSITIVE_INFINITY){
 				angleQ[0] = 0;
@@ -79,7 +77,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			sendQPacket();
 		}
 
-		if(ticksExisted % 200 == 1){
+		if(++ticksExisted % 200 == 1){
 			handlerMain.updateStates();
 		}
 	}
@@ -118,6 +116,16 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 		nbt.setByte("side", (byte) side.getIndex());
 
+		return nbt;
+	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		if(type != null){
+			nbt.setString("memb", type.name());
+		}
+		nbt.setByte("side", (byte) side.getIndex());
 		return nbt;
 	}
 

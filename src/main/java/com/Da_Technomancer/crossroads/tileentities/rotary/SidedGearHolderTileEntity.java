@@ -23,8 +23,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class SidedGearHolderTileEntity extends TileEntity implements ITickable, IStringReceiver,
-		IDoubleReceiver{
+public class SidedGearHolderTileEntity extends TileEntity implements ITickable, IStringReceiver, IDoubleReceiver{
 
 	// D-U-N-S-W-E is the order of the sides
 	private int[] updateKey = new int[6];
@@ -41,10 +40,6 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 	// [0]=r, [1]=m, [2]=I
 	private double[][] physData = new double[6][3];
 
-	// This is used for storing what type of gear is on each side. It really
-	// exists to store what color to render the gears as and what item to return
-	// when broken.
-	// In order, down up north south west east.
 	private GearTypes[] members = new GearTypes[6];
 
 	@Override
@@ -91,7 +86,20 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			this.members[i] = innerMemb.hasKey(i + "memb") ? GearTypes.valueOf(innerMemb.getString(i + "memb")) : null;
 		}
 	}
-
+	
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		NBTTagCompound membTags = new NBTTagCompound();
+		for(int i = 0; i < 6; i++){
+			if(members[i] != null){
+				membTags.setString(i + "memb", members[i].name());
+			}
+		}
+		nbt.setTag("members", membTags);
+		return nbt;
+	}
+	
 	@Override
 	public void receiveDouble(String context, double message){
 		if(context.contains("Q")){
@@ -195,8 +203,6 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 	@Override
 	public void update(){
-		ticksExisted++;
-
 		if(getWorld().isRemote){
 			for(int i = 0; i < 6; i++){
 				if(clientQ[i] == Double.POSITIVE_INFINITY){
@@ -216,7 +222,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			sendQPacket();
 		}
 
-		if(ticksExisted % 200 == 1){
+		if(++ticksExisted % 200 == 1){
 			for(IRotaryHandler handler : sideHandlers){
 				handler.updateStates();
 			}
@@ -369,16 +375,13 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}else{
 				physData[side][1] = MiscOperators.betterRound(members[side].getDensity() / 8, 1);
 				physData[side][0] = .5;
-				physData[side][2] = physData[side][1] * .125; /*
-																 * .125 because
-																 * r*r/2 so
-																 * .5*.5/2
-																 */
+				// .125 because r*r/2 so .5*.5/2
+				physData[side][2] = physData[side][1] * .125;
 			}
 
 			if(!getWorld().isRemote){
 				SendStringToClient msg = new SendStringToClient("memb" + side, members[side] == null ? "" : members[side].name(), pos);
-				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 256));
 			}
 		}
 
