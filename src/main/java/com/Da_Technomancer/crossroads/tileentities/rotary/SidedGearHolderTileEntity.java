@@ -216,7 +216,6 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			sendQPacket();
 		}
 
-		// TODO
 		if(ticksExisted % 200 == 1){
 			for(IRotaryHandler handler : sideHandlers){
 				handler.updateStates();

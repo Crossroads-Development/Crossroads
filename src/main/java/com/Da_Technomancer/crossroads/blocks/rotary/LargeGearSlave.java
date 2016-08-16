@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LargeGearSlave extends BlockContainer{
-
+	
 	public LargeGearSlave(){
 		super(Material.IRON);
 		String name = "largeGearSlave";

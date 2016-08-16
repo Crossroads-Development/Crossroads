@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LargeGearMaster extends BlockContainer{
-
+	
 	public LargeGearMaster(){
 		super(Material.IRON);
 		String name = "largeGearMaster";
@@ -57,6 +57,11 @@ public class LargeGearMaster extends BlockContainer{
 
 	@Override
 	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+	
+	@Override
+	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
 	}
 

@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import java.util.List;
+
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.IConduitModel;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -14,6 +16,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -23,6 +26,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -38,6 +42,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FluidTube extends BlockContainer implements IConduitModel{
 
+	private static final double size = .3125D;
+	private static final AxisAlignedBB BB = new AxisAlignedBB(size, size, size, 1 - size, 1 - size, 1 - size);
+	private static final AxisAlignedBB DOWN = new AxisAlignedBB(size, 0, size, 1 - size, size, 1 - size);
+	private static final AxisAlignedBB UP = new AxisAlignedBB(size, 1, size, 1 - size, 1 - size, 1 - size);
+	private static final AxisAlignedBB NORTH = new AxisAlignedBB(size, size, 0, 1 - size, 1 - size, size);
+	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(size, size, 1, 1 - size, 1 - size, 1 - size);
+	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, size, size, size, 1 - size, 1 - size);
+	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, size, size, 1 - size, 1 - size, 1 - size);
+	
 	public FluidTube(){
 		super(Material.IRON);
 		setUnlocalizedName("fluidTube");
@@ -57,11 +70,39 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		return BB;
+	}
+
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+		addCollisionBoxToList(pos, mask, list, BB);
+		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
+		
+		if(exState.getValue(Properties.CONNECT)[0]){
+			addCollisionBoxToList(pos, mask, list, DOWN);
+		}
+		if(exState.getValue(Properties.CONNECT)[1]){
+			addCollisionBoxToList(pos, mask, list, UP);
+		}
+		if(exState.getValue(Properties.CONNECT)[2]){
+			addCollisionBoxToList(pos, mask, list, NORTH);
+		}
+		if(exState.getValue(Properties.CONNECT)[3]){
+			addCollisionBoxToList(pos, mask, list, SOUTH);
+		}
+		if(exState.getValue(Properties.CONNECT)[4]){
+			addCollisionBoxToList(pos, mask, list, WEST);
+		}
+		if(exState.getValue(Properties.CONNECT)[5]){
+			addCollisionBoxToList(pos, mask, list, EAST);
+		}
+	}
 
 	@SideOnly(Side.CLIENT)
 	public void initModel(){
-		// To make sure that our ISBM model is chosen for all states we use this
-		// custom state mapper:
 		StateMapperBase ignoreState = new StateMapperBase(){
 			@Override
 			protected ModelResourceLocation getModelResourceLocation(IBlockState IBlockState){
@@ -85,9 +126,14 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		world.markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
 	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
 
 	@Override
-	public boolean isBlockNormalCube(IBlockState state){
+	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
 	}
 
@@ -106,10 +152,7 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 				connect[direction.getIndex()] = true;
 			}
 		}
-
-		extendedBlockState = extendedBlockState.withProperty(Properties.CONNECT, connect);
-
-		return extendedBlockState;
+		return extendedBlockState.withProperty(Properties.CONNECT, connect);
 	}
 
 	@Override
@@ -119,6 +162,6 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 
 	@Override
 	public double getSize(){
-		return .3125D;
+		return size;
 	}
 }

@@ -26,7 +26,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 
 public class ConduitBakedModel implements IBakedModel{
 
-	private TextureAtlasSprite temp;// TODO
+	private TextureAtlasSprite temp;
 
 	private VertexFormat format;
 	private Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter;
@@ -101,10 +101,6 @@ public class ConduitBakedModel implements IBakedModel{
 		Boolean up = extendedBlockState.getValue(Properties.CONNECT)[1];
 		Boolean down = extendedBlockState.getValue(Properties.CONNECT)[0];
 		double o = ((IConduitModel) state.getBlock()).getSize();
-
-		// For each side we either cap it off if there is no similar block
-		// adjacent on that side
-		// or else we extend so that we touch the adjacent block:
 
 		if(up){
 			quads.add(createQuad(new Vec3d(1 - o, 1 - o, o), new Vec3d(1 - o, 1, o), new Vec3d(1 - o, 1, 1 - o), new Vec3d(1 - o, 1 - o, 1 - o), sprite));

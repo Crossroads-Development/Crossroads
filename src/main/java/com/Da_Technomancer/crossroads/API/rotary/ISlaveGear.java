@@ -4,5 +4,5 @@ import net.minecraft.util.math.BlockPos;
 
 public interface ISlaveGear{
 
-	public boolean isMasterPos(BlockPos posIn);
+	public BlockPos getMasterPos();
 }

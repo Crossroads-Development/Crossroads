@@ -79,7 +79,6 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			sendQPacket();
 		}
 
-		// TODO
 		if(ticksExisted % 200 == 1){
 			handlerMain.updateStates();
 		}

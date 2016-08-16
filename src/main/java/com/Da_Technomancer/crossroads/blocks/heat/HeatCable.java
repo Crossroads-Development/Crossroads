@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
+import java.util.List;
+
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IConduitModel;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -17,6 +19,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -24,6 +27,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -41,7 +45,15 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 	private HeatConductors conductor;
 	private HeatInsulators insulator;
-
+	private static final double size = .2D;
+	private static final AxisAlignedBB BB = new AxisAlignedBB(size, size, size, 1 - size, 1 - size, 1 - size);
+	private static final AxisAlignedBB DOWN = new AxisAlignedBB(size, 0, size, 1 - size, size, 1 - size);
+	private static final AxisAlignedBB UP = new AxisAlignedBB(size, 1, size, 1 - size, 1 - size, 1 - size);
+	private static final AxisAlignedBB NORTH = new AxisAlignedBB(size, size, 0, 1 - size, 1 - size, size);
+	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(size, size, 1, 1 - size, 1 - size, 1 - size);
+	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, size, size, size, 1 - size, 1 - size);
+	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, size, size, 1 - size, 1 - size, 1 - size);
+	
 	public HeatCable(HeatConductors conductor, HeatInsulators insulator){
 		super(Material.IRON);
 		this.conductor = conductor;
@@ -67,6 +79,36 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		};
 		ModelLoader.setCustomStateMapper(this, ignoreState);
 	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		return BB;
+	}
+
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+		addCollisionBoxToList(pos, mask, list, BB);
+		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
+		
+		if(exState.getValue(Properties.CONNECT)[0]){
+			addCollisionBoxToList(pos, mask, list, DOWN);
+		}
+		if(exState.getValue(Properties.CONNECT)[1]){
+			addCollisionBoxToList(pos, mask, list, UP);
+		}
+		if(exState.getValue(Properties.CONNECT)[2]){
+			addCollisionBoxToList(pos, mask, list, NORTH);
+		}
+		if(exState.getValue(Properties.CONNECT)[3]){
+			addCollisionBoxToList(pos, mask, list, SOUTH);
+		}
+		if(exState.getValue(Properties.CONNECT)[4]){
+			addCollisionBoxToList(pos, mask, list, WEST);
+		}
+		if(exState.getValue(Properties.CONNECT)[5]){
+			addCollisionBoxToList(pos, mask, list, EAST);
+		}
+	}
 
 	@Override
 	public ResourceLocation getTexture(){
@@ -76,11 +118,6 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		world.markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
-	}
-
-	@Override
-	public boolean isBlockNormalCube(IBlockState state){
-		return false;
 	}
 
 	@Override
@@ -120,7 +157,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public double getSize(){
-		return .2D;
+		return size;
 	}
 
 	@Override
