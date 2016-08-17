@@ -8,7 +8,11 @@ public enum GearTypes{
 	// the substance, for gears multiply by the number of cubic meters
 	// it occupies.
 
-	IRON(8000D, new Color(128, 128, 128)), GOLD(20000D, Color.YELLOW), COPPER(9000D, new Color(255, 40, 0)), TIN(7300D, new Color(200, 200, 200)), BRONZE(8800D, new Color(255, 80, 0));
+	IRON(8000D, new Color(128, 128, 128)),
+	GOLD(20000D, Color.YELLOW),
+	COPPER(9000D, new Color(255, 40, 0)),
+	TIN(7300D, new Color(200, 200, 200)),
+	BRONZE(8800D, new Color(255, 80, 0));
 
 	private final double density;
 	private final Color color;

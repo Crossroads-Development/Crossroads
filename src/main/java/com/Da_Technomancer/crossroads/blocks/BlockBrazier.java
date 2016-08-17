@@ -16,6 +16,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -112,6 +113,17 @@ public class BlockBrazier extends BlockContainer{
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
+	}
+	
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+		BrazierTileEntity te = (BrazierTileEntity) world.getTileEntity(pos);
+		if(te.getStackInSlot(0) != null && te.getStackInSlot(0).stackSize > 1){
+			ItemStack stack = te.getStackInSlot(0);
+			--stack.stackSize;
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+		}
+		super.breakBlock(world, pos, blockstate);
 	}
 
 	@Override

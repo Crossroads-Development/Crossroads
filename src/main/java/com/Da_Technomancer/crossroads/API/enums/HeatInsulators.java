@@ -12,7 +12,11 @@ import net.minecraft.util.ResourceLocation;
 
 public enum HeatInsulators{
 
-	WOOL(.01D, 300, new ResourceLocation("blocks/wool_colored_white"), new BurnEffect(), Blocks.WOOL), SLIME(.005D, 500, new ResourceLocation("blocks/slime"), new SlimeEffect(), "slimeball"), DIRT(.1D, 42, new ResourceLocation("blocks/dirt"), new DirtEffect(), "dirt"), ICE(.00005D, 0, new ResourceLocation("blocks/ice_packed"), new MeltWaterEffect(), Blocks.ICE), OBSIDIAN(0.0001D, 2000, new ResourceLocation("blocks/obsidian"), new MeltEffect(), "obsidian");
+	WOOL(.01D, 300, new ResourceLocation("blocks/wool_colored_white"), new BurnEffect(), Blocks.WOOL),
+	SLIME(.005D, 500, new ResourceLocation("blocks/slime"), new SlimeEffect(), "slimeball"),
+	DIRT(.1D, 42, new ResourceLocation("blocks/dirt"), new DirtEffect(), "dirt"),
+	ICE(.00005D, 0, new ResourceLocation("blocks/ice_packed"), new MeltWaterEffect(), Blocks.ICE),
+	OBSIDIAN(0.0001D, 2000, new ResourceLocation("blocks/obsidian"), new MeltEffect(), "obsidian");
 
 	private final double rate;
 	private final double limit;

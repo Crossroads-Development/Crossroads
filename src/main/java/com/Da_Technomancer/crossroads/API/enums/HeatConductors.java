@@ -2,7 +2,10 @@ package com.Da_Technomancer.crossroads.API.enums;
 
 public enum HeatConductors{
 
-	QUARTZ(.05D, "gemQuartz"), IRON(.1D, "ingotIron"), COPPER(.33D, "ingotCopper"), DIAMOND(1D, "wireDiamond");
+	QUARTZ(.05D, "gemQuartz"),
+	IRON(.1D, "ingotIron"),
+	COPPER(.33D, "ingotCopper"),
+	DIAMOND(1D, "wireDiamond");
 
 	private final double rate;
 	private final String item;
