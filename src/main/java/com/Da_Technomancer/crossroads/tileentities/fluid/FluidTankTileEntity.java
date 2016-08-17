@@ -35,6 +35,13 @@ public class FluidTankTileEntity extends TileEntity{
 
 		return nbt;
 	}
+	
+	/*
+	 * For setting the fluidstack on placement.
+	 */
+	public void setContent(FluidStack contentIn){
+		content = contentIn;
+	}
 
 	private final IFluidHandler mainHandler = new MainHandler();
 
