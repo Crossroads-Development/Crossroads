@@ -117,7 +117,7 @@ public final class ModCrafting{
 		// OmniMeter
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.omnimeter, 1), " # ", "&$%", " ? ", '#', ModItems.fluidGauge, '&', ModItems.thermometer, '$', "gemEmerald", '%', ModItems.speedometer, '?', Items.CLOCK));
 		// Fluid Tank
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fluidTank, 1), " # ", "#$#", " # ", '#', "ingotGold", '$', "blockBronze"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fluidTank, 1), " $ ", "$#$", " $ ", '#', "ingotGold", '$', "ingotBronze"));
 		// Heat Exchanger
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.heatExchanger, 1), "#$#", "$$$", "###", '#', Blocks.IRON_BARS, '$', "ingotCopper"));
 		// Insulated Heat Exchanger
