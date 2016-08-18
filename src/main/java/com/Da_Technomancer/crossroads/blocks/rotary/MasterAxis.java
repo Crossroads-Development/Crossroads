@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 
@@ -8,7 +9,6 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,9 +24,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MasterAxis extends BlockContainer{
-
-	public static final PropertyDirection PROPERTYFACING = PropertyDirection.create("facing");
-
+	
 	public static Property speedTiers;
 
 	public MasterAxis(){
@@ -44,7 +42,7 @@ public class MasterAxis extends BlockContainer{
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : BlockPistonBase.getFacingFromEntity(pos, placer);
-		return this.getDefaultState().withProperty(PROPERTYFACING, enumfacing);
+		return this.getDefaultState().withProperty(Properties.FACING, enumfacing);
 	}
 
 	@Override
@@ -54,18 +52,18 @@ public class MasterAxis extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {PROPERTYFACING});
+		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
 		EnumFacing facing = EnumFacing.getFront(meta);
-		return this.getDefaultState().withProperty(PROPERTYFACING, facing);
+		return this.getDefaultState().withProperty(Properties.FACING, facing);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		EnumFacing facing = state.getValue(PROPERTYFACING);
+		EnumFacing facing = state.getValue(Properties.FACING);
 		int facingbits = facing.getIndex();
 		return facingbits;
 	}
@@ -81,22 +79,14 @@ public class MasterAxis extends BlockContainer{
 		return EnumBlockRenderType.MODEL;
 	}
 
-	/**
-	 * Returns the blockstate with the given rotation from the passed
-	 * blockstate. If inapplicable, returns the passed blockstate.
-	 */
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
-		return state.withProperty(PROPERTYFACING, rot.rotate(state.getValue(PROPERTYFACING)));
+		return state.withProperty(Properties.FACING, rot.rotate(state.getValue(Properties.FACING)));
 	}
 
-	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If
-	 * inapplicable, returns the passed blockstate.
-	 */
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
-		return state.withRotation(mirrorIn.toRotation(state.getValue(PROPERTYFACING)));
+		return state.withRotation(mirrorIn.toRotation(state.getValue(Properties.FACING)));
 	}
 
 }

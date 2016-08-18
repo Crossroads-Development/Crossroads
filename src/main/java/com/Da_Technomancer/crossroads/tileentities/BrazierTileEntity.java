@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.Da_Technomancer.crossroads.blocks.BlockBrazier;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
@@ -51,11 +51,11 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 		}
 
 		if(getState() == 0){
-			if(worldObj.getBlockState(pos).getValue(BlockBrazier.LIGHT)){
-				worldObj.setBlockState(pos, ModBlocks.brazier.getDefaultState().withProperty(BlockBrazier.LIGHT, false), 2);
+			if(worldObj.getBlockState(pos).getValue(Properties.LIGHT)){
+				worldObj.setBlockState(pos, ModBlocks.brazier.getDefaultState().withProperty(Properties.LIGHT, false), 2);
 			}
-		}else if(!worldObj.getBlockState(pos).getValue(BlockBrazier.LIGHT)){
-			worldObj.setBlockState(pos, ModBlocks.brazier.getDefaultState().withProperty(BlockBrazier.LIGHT, true), 2);
+		}else if(!worldObj.getBlockState(pos).getValue(Properties.LIGHT)){
+			worldObj.setBlockState(pos, ModBlocks.brazier.getDefaultState().withProperty(Properties.LIGHT, true), 2);
 		}
 
 		WorldServer server = (WorldServer) worldObj;

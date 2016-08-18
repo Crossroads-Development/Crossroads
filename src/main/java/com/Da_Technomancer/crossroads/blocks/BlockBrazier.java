@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -32,7 +32,6 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class BlockBrazier extends BlockContainer{
 
-	public static final PropertyBool LIGHT = PropertyBool.create("light");
 	private static final AxisAlignedBB BB = new AxisAlignedBB(0, 0, 0, 1, .875D, 1);
 
 	protected BlockBrazier(){
@@ -63,7 +62,7 @@ public class BlockBrazier extends BlockContainer{
 		if(other.getBlock() != this){
 			return other.getLightValue(world, pos);
 		}
-		return state.getValue(LIGHT) ? 15 : 0;
+		return state.getValue(Properties.LIGHT) ? 15 : 0;
 	}
 
 	@Override
@@ -77,7 +76,7 @@ public class BlockBrazier extends BlockContainer{
 
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(LIGHT, false);
+		return this.getDefaultState().withProperty(Properties.LIGHT, false);
 	}
 
 	@Override
@@ -87,17 +86,17 @@ public class BlockBrazier extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {LIGHT});
+		return new BlockStateContainer(this, new IProperty[] {Properties.LIGHT});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(LIGHT, meta == 1);
+		return this.getDefaultState().withProperty(Properties.LIGHT, meta == 1);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(LIGHT) ? 1 : 0;
+		return state.getValue(Properties.LIGHT) ? 1 : 0;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.blocks.properties;
+package com.Da_Technomancer.crossroads.API;
 
 import net.minecraftforge.common.property.IUnlistedProperty;
 

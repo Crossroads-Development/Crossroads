@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,8 +24,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SteamTurbine extends BlockContainer{
-
-	public static final PropertyDirection FACING = PropertyDirection.create("facing");
 
 	public SteamTurbine(){
 		super(Material.IRON);
@@ -51,25 +49,17 @@ public class SteamTurbine extends BlockContainer{
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite();
-		return this.getDefaultState().withProperty(FACING, enumfacing);
+		return this.getDefaultState().withProperty(Properties.FACING, enumfacing);
 	}
 
-	/**
-	 * Returns the blockstate with the given rotation from the passed
-	 * blockstate. If inapplicable, returns the passed blockstate.
-	 */
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
-		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
+		return state.withProperty(Properties.FACING, rot.rotate(state.getValue(Properties.FACING)));
 	}
 
-	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If
-	 * inapplicable, returns the passed blockstate.
-	 */
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
-		return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
+		return state.withRotation(mirrorIn.toRotation(state.getValue(Properties.FACING)));
 	}
 
 	@Override
@@ -79,18 +69,18 @@ public class SteamTurbine extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {FACING});
+		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
 		EnumFacing facing = EnumFacing.getFront(meta);
-		return this.getDefaultState().withProperty(FACING, facing);
+		return this.getDefaultState().withProperty(Properties.FACING, facing);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		EnumFacing facing = state.getValue(FACING);
+		EnumFacing facing = state.getValue(Properties.FACING);
 		int facingbits = facing.getIndex();
 		return facingbits;
 	}

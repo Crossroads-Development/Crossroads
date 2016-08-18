@@ -6,9 +6,9 @@ import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.blocks.heat.HeatingCrucible;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
 
 import net.minecraft.block.state.IBlockState;
@@ -109,7 +109,7 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 	private int ticksExisted = 0;
 
 	private IBlockState getCorrectState(){
-		return ModBlocks.heatingCrucible.getDefaultState().withProperty(HeatingCrucible.PROPERTYFULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + (inventory == null ? 0F : ((float) inventory.stackSize)) * 3F / 16F))).withProperty(HeatingCrucible.TEXTURE, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
+		return ModBlocks.heatingCrucible.getDefaultState().withProperty(Properties.FULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + (inventory == null ? 0F : ((float) inventory.stackSize)) * 3F / 16F))).withProperty(Properties.TEXTURE, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
 	}
 
 	@Override
@@ -139,7 +139,7 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 			temp -= 100D;
 		}
 
-		if(getWorld().getBlockState(getPos()).getValue(HeatingCrucible.PROPERTYFULLNESS) != getCorrectState().getValue(HeatingCrucible.PROPERTYFULLNESS) || getWorld().getBlockState(getPos()).getValue(HeatingCrucible.TEXTURE) != getCorrectState().getValue(HeatingCrucible.TEXTURE)){
+		if(getWorld().getBlockState(getPos()).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || getWorld().getBlockState(getPos()).getValue(Properties.TEXTURE) != getCorrectState().getValue(Properties.TEXTURE)){
 			getWorld().setBlockState(getPos(), getCorrectState(), 2);
 		}
 	}

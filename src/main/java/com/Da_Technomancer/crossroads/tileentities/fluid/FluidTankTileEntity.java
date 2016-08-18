@@ -2,9 +2,15 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,6 +24,18 @@ public class FluidTankTileEntity extends TileEntity{
 	private FluidStack content = null;
 	private final int CAPACITY = 20_000;
 
+	private void fixState(){
+		int i = content == null ? 0 : ((int) Math.ceil(15D * content.amount / CAPACITY));
+		if(i != worldObj.getBlockState(pos).getValue(Properties.REDSTONE)){
+			worldObj.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i));
+		}
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return (oldState.getBlock() != newState.getBlock());
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -41,6 +59,7 @@ public class FluidTankTileEntity extends TileEntity{
 	 */
 	public void setContent(FluidStack contentIn){
 		content = contentIn;
+		fixState();
 	}
 
 	private final IFluidHandler mainHandler = new MainHandler();
@@ -77,6 +96,7 @@ public class FluidTankTileEntity extends TileEntity{
 
 				if(doFill && amount != 0){
 					content = new FluidStack(resource.getFluid(), amount + (content == null ? 0 : content.amount));
+					fixState();
 				}
 
 				return amount;
@@ -97,6 +117,7 @@ public class FluidTankTileEntity extends TileEntity{
 				if(content.amount <= 0){
 					content = null;
 				}
+				fixState();
 			}
 
 			return new FluidStack(resource.getFluid(), amount);
@@ -117,6 +138,7 @@ public class FluidTankTileEntity extends TileEntity{
 				if(content.amount <= 0){
 					content = null;
 				}
+				fixState();
 			}
 
 			return new FluidStack(fluid, amount);

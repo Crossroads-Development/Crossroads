@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
-import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
@@ -23,7 +23,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 	@Override
 	public void update(){
 		if(worldObj.isRemote){
-			EnumFacing facing = worldObj.getBlockState(pos).getValue(RotaryDrill.PROPERTYFACING);
+			EnumFacing facing = worldObj.getBlockState(pos).getValue(Properties.FACING);
 			if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing)){
 				angle = (float) worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing).getAngle();
 			}
@@ -31,7 +31,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
-		EnumFacing facing = worldObj.getBlockState(pos).getValue(RotaryDrill.PROPERTYFACING);
+		EnumFacing facing = worldObj.getBlockState(pos).getValue(Properties.FACING);
 		IRotaryHandler handler;
 		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing) && Math.abs((handler = worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing)).getMotionData()[1]) >= ENERGYUSE){
 			handler.addEnergy(-ENERGYUSE, false, false);

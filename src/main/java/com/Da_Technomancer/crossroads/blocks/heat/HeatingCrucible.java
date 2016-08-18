@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,15 +22,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class HeatingCrucible extends BlockContainer{
 
-	public static final PropertyInteger PROPERTYFULLNESS = PropertyInteger.create("fullness", 0, 3);
-	// public static final PropertyBool DISPLAYMOLTEN =
-	// PropertyBool.create("molten");
-	/**
-	 * 0 = copper, 1 = molten copper, 2 = cobble, 3 = lava
-	 * 
-	 */
-	public static final PropertyInteger TEXTURE = PropertyInteger.create("text", 0, 3);
-
 	public HeatingCrucible(){
 		super(Material.ROCK);
 		setUnlocalizedName("heatingCrucible");
@@ -43,7 +34,7 @@ public class HeatingCrucible extends BlockContainer{
 
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(PROPERTYFULLNESS, 0).withProperty(TEXTURE, 0);
+		return this.getDefaultState().withProperty(Properties.FULLNESS, 0).withProperty(Properties.TEXTURE, 0);
 	}
 
 	@Override
@@ -53,17 +44,17 @@ public class HeatingCrucible extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {PROPERTYFULLNESS, TEXTURE});
+		return new BlockStateContainer(this, new IProperty[] {Properties.FULLNESS, Properties.TEXTURE});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(PROPERTYFULLNESS, meta & 3).withProperty(TEXTURE, (meta & 12) / 4);
+		return this.getDefaultState().withProperty(Properties.FULLNESS, meta & 3).withProperty(Properties.TEXTURE, (meta & 12) / 4);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(PROPERTYFULLNESS) + (state.getValue(TEXTURE) * 4);
+		return state.getValue(Properties.FULLNESS) + (state.getValue(Properties.TEXTURE) * 4);
 	}
 
 	@Override

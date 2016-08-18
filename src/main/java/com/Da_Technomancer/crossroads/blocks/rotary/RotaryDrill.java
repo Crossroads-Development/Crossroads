@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 
@@ -9,7 +10,6 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -26,7 +26,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class RotaryDrill extends BlockContainer{
 
-	public static final PropertyDirection PROPERTYFACING = PropertyDirection.create("facing");
 	private static final AxisAlignedBB X = new AxisAlignedBB(0, .375, .375, 1, .625, .625);
 	private static final AxisAlignedBB Y = new AxisAlignedBB(.375, 0, .375, .625, 1, .625);
 	private static final AxisAlignedBB Z = new AxisAlignedBB(.375, .375, 0, .625, .625, 1);
@@ -50,17 +49,17 @@ public class RotaryDrill extends BlockContainer{
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : BlockPistonBase.getFacingFromEntity(pos, placer);
-		return this.getDefaultState().withProperty(PROPERTYFACING, enumfacing);
+		return this.getDefaultState().withProperty(Properties.FACING, enumfacing);
 	}
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return state.getValue(PROPERTYFACING).getAxis() == Axis.X ? X : state.getValue(PROPERTYFACING).getAxis() == Axis.Z ? Z : Y;
+		return state.getValue(Properties.FACING).getAxis() == Axis.X ? X : state.getValue(Properties.FACING).getAxis() == Axis.Z ? Z : Y;
 	}
 
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
-		addCollisionBoxToList(pos, mask, list, state.getValue(PROPERTYFACING).getAxis() == Axis.X ? X : state.getValue(PROPERTYFACING).getAxis() == Axis.Z ? Z : Y);
+		addCollisionBoxToList(pos, mask, list, state.getValue(Properties.FACING).getAxis() == Axis.X ? X : state.getValue(Properties.FACING).getAxis() == Axis.Z ? Z : Y);
 	}
 
 	@Override
@@ -70,7 +69,7 @@ public class RotaryDrill extends BlockContainer{
 
 	@Override
 	public boolean isSideSolid(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-		return side.getOpposite() == state.getValue(PROPERTYFACING);
+		return side.getOpposite() == state.getValue(Properties.FACING);
 	}
 
 	@Override
@@ -85,18 +84,18 @@ public class RotaryDrill extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {PROPERTYFACING});
+		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
 		EnumFacing facing = EnumFacing.getFront(meta);
-		return this.getDefaultState().withProperty(PROPERTYFACING, facing);
+		return this.getDefaultState().withProperty(Properties.FACING, facing);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		EnumFacing facing = state.getValue(PROPERTYFACING);
+		EnumFacing facing = state.getValue(Properties.FACING);
 		int facingbits = facing.getIndex();
 		return facingbits;
 	}

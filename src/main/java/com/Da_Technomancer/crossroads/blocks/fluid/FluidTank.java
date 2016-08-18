@@ -4,11 +4,14 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,7 +33,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FluidTank extends BlockContainer{
-
+	
 	public FluidTank(){
 		super(Material.IRON);
 		String name = "fluidTank";
@@ -46,7 +49,7 @@ public class FluidTank extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new FluidTankTileEntity();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
@@ -81,6 +84,36 @@ public class FluidTank extends BlockContainer{
 		}
 
 		return FluidUtil.getFluidHandler(heldItem) != null;
+	}
+	
+	@Override
+	public int damageDropped(IBlockState state){
+		return 0;
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState(){
+		return new BlockStateContainer(this, new IProperty[] {Properties.REDSTONE});
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta){
+		return this.getDefaultState().withProperty(Properties.REDSTONE, meta);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state){
+		return state.getValue(Properties.REDSTONE);
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		return blockState.getValue(Properties.REDSTONE);
 	}
 
 	@Override

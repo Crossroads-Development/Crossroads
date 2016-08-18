@@ -4,12 +4,12 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveGear;
-import com.Da_Technomancer.crossroads.blocks.fluid.SteamTurbine;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 
@@ -40,7 +40,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public void update(){
 		if(toFace){
-			dir = worldObj.getBlockState(pos).getValue(SteamTurbine.FACING);
+			dir = worldObj.getBlockState(pos).getValue(Properties.FACING);
 			toFace = false;
 		}
 
