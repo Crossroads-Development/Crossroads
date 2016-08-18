@@ -90,6 +90,7 @@ public final class ModCrafting{
 		for(HeatInsulators insul : HeatInsulators.values()){
 			for(HeatConductors cond : HeatConductors.values()){
 				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(HeatCableFactory.cableMap.get(cond).get(insul), 4), "###", "???", "###", '#', insul.getItem(), '?', cond.getItem()));
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(HeatCableFactory.rCableMap.get(cond).get(insul), 1), "###", "#?#", "###", '#', "dustRedstone", '?', HeatCableFactory.cableMap.get(cond).get(insul)));
 			}
 		}
 		// Steam Boiler

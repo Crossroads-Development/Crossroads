@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatExchangerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.SaltReactorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ItemChutePortTileEntity;
@@ -57,6 +58,7 @@ public class ModTileEntity{
 		register(RotaryDrillTileEntity.class, "rotaryDrill");
 		register(FatCollectorTileEntity.class, "fatCollector");
 		register(FatCongealerTileEntity.class, "fatCongealer");
+		register(RedstoneHeatCableTileEntity.class, "redstoneHeatCable");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

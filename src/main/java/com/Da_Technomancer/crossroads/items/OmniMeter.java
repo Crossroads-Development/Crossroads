@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOperators;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
 
 import amerifrance.guideapi.api.util.TextHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,6 +49,10 @@ public class OmniMeter extends Item{
 				if(te instanceof HeatCableTileEntity){
 					HeatCableTileEntity heatCable = (HeatCableTileEntity) te;
 					playerIn.addChatComponentMessage(new TextComponentString("Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
+				}
+				if(te instanceof RedstoneHeatCableTileEntity){
+					RedstoneHeatCableTileEntity heatCable = (RedstoneHeatCableTileEntity) te;
+					playerIn.addChatComponentMessage(new TextComponentString("Redstone, Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
 				}
 				playerIn.addChatComponentMessage(new TextComponentString("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * worldIn.getBiomeGenForCoords(pos).getFloatTemperature(pos) + "*C"));
 			}

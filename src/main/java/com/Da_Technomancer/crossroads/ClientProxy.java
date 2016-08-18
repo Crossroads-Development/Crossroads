@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.RegisterBlockRenderer;
 import com.Da_Technomancer.crossroads.client.bakedModel.BakedModelLoader;
-import com.Da_Technomancer.crossroads.client.bakedModel.CustomModelLocationMapper;
 import com.Da_Technomancer.crossroads.fluids.ModFluids;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import amerifrance.guideapi.api.GuideAPI;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy{
 			GuideAPI.setModel(GuideBooks.main);
 		}
 
-		CustomModelLocationMapper.preInit();
+		HeatCableFactory.clientInit();
 	}
 
 	@Override

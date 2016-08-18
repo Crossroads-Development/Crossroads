@@ -9,8 +9,9 @@ import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.client.bakedModel.ConduitBakedModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -39,7 +40,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class HeatCable extends BlockContainer implements IConduitModel{
+public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	private HeatConductors conductor;
 	private HeatInsulators insulator;
@@ -52,11 +53,11 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, size, size, size, 1 - size, 1 - size);
 	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, size, size, 1 - size, 1 - size, 1 - size);
 	
-	public HeatCable(HeatConductors conductor, HeatInsulators insulator){
+	public RedstoneHeatCable(HeatConductors conductor, HeatInsulators insulator){
 		super(Material.IRON);
 		this.conductor = conductor;
 		this.insulator = insulator;
-		String name = "heatCable" + conductor.toString() + insulator.toString();
+		String name = "redstoneHeatCable" + conductor.toString() + insulator.toString();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		this.setHardness(1);
@@ -118,7 +119,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] {Properties.CONNECT});
+		return new ExtendedBlockState(this, new IProperty[] {Properties.REDSTONE_BOOL}, new IUnlistedProperty[] {Properties.CONNECT});
 	}
 
 	@Override
@@ -126,15 +127,32 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		Boolean[] connect = {false, false, false, false, false, false};
 
-		for(EnumFacing direction : EnumFacing.values()){
-			if(world.getTileEntity(pos.offset(direction)) != null && world.getTileEntity(pos.offset(direction)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite())){
-				connect[direction.getIndex()] = true;
+		if(state.getValue(Properties.REDSTONE_BOOL)){
+			for(EnumFacing direction : EnumFacing.values()){
+				if(world.getTileEntity(pos.offset(direction)) != null && world.getTileEntity(pos.offset(direction)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite())){
+					connect[direction.getIndex()] = true;
+				}
 			}
 		}
 
 		extendedBlockState = extendedBlockState.withProperty(Properties.CONNECT, connect);
 
 		return extendedBlockState;
+	}
+	
+	@Override
+	public int damageDropped(IBlockState state){
+		return 0;
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta){
+		return this.getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state){
+		return state.getValue(Properties.REDSTONE_BOOL) ? 1 : 0;
 	}
 
 	@Override
@@ -143,10 +161,24 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	}
 
 	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+		if(worldIn.isBlockPowered(pos)){
+			if(!state.getValue(Properties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+			}
+		}else{
+			if(state.getValue(Properties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
+			}
+		}
+	}
+	
+	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new HeatCableTileEntity(conductor, insulator);
+		return new RedstoneHeatCableTileEntity(conductor, insulator);
 	}
 
+	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}

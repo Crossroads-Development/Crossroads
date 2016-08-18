@@ -19,6 +19,7 @@ import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatExchanger;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatingChamber;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatingCrucible;
+import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.SaltReactor;
 import com.Da_Technomancer.crossroads.blocks.rotary.Grindstone;
 import com.Da_Technomancer.crossroads.blocks.rotary.ItemChutePort;
@@ -117,6 +118,12 @@ public final class ModBlocks{
 
 		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.cableMap.values()){
 			for(HeatCable cable : map.values()){
+				cable.initModel();
+			}
+		}
+		
+		for(HashMap<HeatInsulators, RedstoneHeatCable> map : HeatCableFactory.rCableMap.values()){
+			for(RedstoneHeatCable cable : map.values()){
 				cable.initModel();
 			}
 		}
