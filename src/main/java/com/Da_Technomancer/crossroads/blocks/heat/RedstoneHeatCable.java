@@ -154,6 +154,23 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(Properties.REDSTONE_BOOL) ? 1 : 0;
 	}
+	
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		RedstoneHeatCableTileEntity te = (RedstoneHeatCableTileEntity) worldIn.getTileEntity(pos);
+		if(!te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
+			return 0;
+		}
+		double holder = (te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + 273) / (te.getInsulator().getLimit() + 273);
+		holder *= 15D;
+		
+		return (int) holder;
+	}
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state){

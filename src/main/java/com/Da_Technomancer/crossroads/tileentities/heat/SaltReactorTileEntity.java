@@ -42,7 +42,7 @@ public class SaltReactorTileEntity extends AbstractInventory implements ITickabl
 			init = true;
 		}
 
-		if(dContent != null && dContent.amount >= WATER_USE && CAPACITY - (content == null ? 0 : content.amount) >= WATER_USE && inventory != null && inventory.getItem() == ModItems.dustSalt){
+		if(temp >= -274 && dContent != null && dContent.amount >= WATER_USE && CAPACITY - (content == null ? 0 : content.amount) >= WATER_USE && inventory != null && inventory.getItem() == ModItems.dustSalt){
 			--temp;
 			if((dContent.amount -= WATER_USE) <= 0){
 				dContent = null;
