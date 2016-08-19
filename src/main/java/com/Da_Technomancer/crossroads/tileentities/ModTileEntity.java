@@ -25,6 +25,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEnti
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -59,6 +60,7 @@ public class ModTileEntity{
 		register(FatCollectorTileEntity.class, "fatCollector");
 		register(FatCongealerTileEntity.class, "fatCongealer");
 		register(RedstoneHeatCableTileEntity.class, "redstoneHeatCable");
+		register(ToggleGearTileEntity.class, "toggleGear");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

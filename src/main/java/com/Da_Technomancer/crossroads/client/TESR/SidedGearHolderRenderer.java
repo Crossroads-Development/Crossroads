@@ -15,13 +15,11 @@ import net.minecraft.util.ResourceLocation;
 
 public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGearHolderTileEntity>{
 
-	private static final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/sidedGear.png");
-	private static final ModelGear model = new ModelGear();
+	private final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/sidedGear.png");
+	private final ModelGear model = new ModelGear();
 
 	@Override
 	public void renderTileEntityAt(SidedGearHolderTileEntity gearHolder, double x, double y, double z, float partialTicks, int destroyStage){
-
-		ResourceLocation r = texture;
 
 		if(!gearHolder.getWorld().isBlockLoaded(gearHolder.getPos(), false)){
 			return;
@@ -40,7 +38,7 @@ public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGear
 			GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
 			GlStateManager.translate(-.5F, -1.5F, .5F);
 			GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
-			Minecraft.getMinecraft().renderEngine.bindTexture(r);
+			Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 			model.render();
 			GlStateManager.popMatrix();
 		}
@@ -54,7 +52,7 @@ public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGear
 			GlStateManager.translate(x, y, z);
 			GlStateManager.translate(.5F, -.5F, .5F);
 			GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
-			Minecraft.getMinecraft().renderEngine.bindTexture(r);
+			Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 			model.render();
 			GlStateManager.popMatrix();
 		}
@@ -69,7 +67,7 @@ public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGear
 			GlStateManager.rotate(270F, 1.0F, 0.0F, 0.0F);
 			GlStateManager.translate(.5F, -1.5F, .5F);
 			GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
-			Minecraft.getMinecraft().renderEngine.bindTexture(r);
+			Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 			model.render();
 			GlStateManager.popMatrix();
 		}
@@ -84,7 +82,7 @@ public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGear
 			GlStateManager.rotate(90F, 1.0F, 0.0F, 0.0F);
 			GlStateManager.translate(.5F, -.5F, -.5F);
 			GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
-			Minecraft.getMinecraft().renderEngine.bindTexture(r);
+			Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 			model.render();
 			GlStateManager.popMatrix();
 		}
@@ -99,7 +97,7 @@ public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGear
 			GlStateManager.rotate(90F, 0.0F, 0.0F, 1.0F);
 			GlStateManager.translate(.5F, -1.5F, .5F);
 			GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
-			Minecraft.getMinecraft().renderEngine.bindTexture(r);
+			Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 			model.render();
 			GlStateManager.popMatrix();
 		}
@@ -114,7 +112,7 @@ public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGear
 			GlStateManager.rotate(270F, 0.0F, 0.0F, 1.0F);
 			GlStateManager.translate(-.5F, -.5F, .5F);
 			GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
-			Minecraft.getMinecraft().renderEngine.bindTexture(r);
+			Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 			model.render();
 			GlStateManager.popMatrix();
 		}

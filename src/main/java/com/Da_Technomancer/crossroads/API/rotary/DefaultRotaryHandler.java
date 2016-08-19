@@ -23,18 +23,8 @@ public class DefaultRotaryHandler implements IRotaryHandler{
 	}
 
 	@Override
-	public void setMotionData(double[] dataIn){
-		motionData = dataIn;
-	}
-
-	@Override
 	public double[] getPhysData(){
 		return physData;
-	}
-
-	@Override
-	public void setPhysData(double[] dataIn){
-		physData = dataIn;
 	}
 
 	@Override
@@ -48,7 +38,7 @@ public class DefaultRotaryHandler implements IRotaryHandler{
 	}
 
 	@Override
-	public void setQ(double QIn, boolean client){
+	public void setQ(double QIn){
 
 	}
 

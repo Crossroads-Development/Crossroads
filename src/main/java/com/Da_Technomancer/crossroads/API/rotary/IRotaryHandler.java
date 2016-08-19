@@ -22,20 +22,16 @@ public interface IRotaryHandler{
 
 	public void propogate(int key, ITileMasterAxis masterIn);
 
-	public void setMotionData(double[] dataIn);
-
 	/**
 	 * [0]=r, [1]=m, [2]=I
 	 */
 	public double[] getPhysData();
-
-	public void setPhysData(double[] dataIn);
-
+	
 	public double keyType();
 
 	public void resetAngle();
 
-	public void setQ(double QIn, boolean client);
+	public void setQ(double QIn);
 
 	public double getAngle();
 

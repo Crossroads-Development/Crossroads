@@ -95,7 +95,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 				// set energy
 				newEnergy = MiscOperators.posOrNeg(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[2] / 2D;
 				gear.getMotionData()[1] = newEnergy;
-				gear.setQ(lastQ, false);
+				gear.setQ(lastQ);
 			}else{
 				// set energy
 				newEnergy = gear.keyType() * sumEnergy * gear.getPhysData()[1] / sumMass;
@@ -106,7 +106,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 				Q = gear.getMotionData()[0] * gear.getPhysData()[0];
 				QFound = true;
 				lastQ = Q;
-				gear.setQ(lastQ, false);
+				gear.setQ(lastQ);
 			}
 			// set power
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;

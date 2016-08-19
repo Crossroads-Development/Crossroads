@@ -1,12 +1,15 @@
 package com.Da_Technomancer.crossroads.client.TESR;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -32,6 +35,11 @@ public class RegisterBlockRenderer{
 
 		reg(ModBlocks.rotaryDrill);
 		ClientRegistry.bindTileEntitySpecialRenderer(RotaryDrillTileEntity.class, new RotaryDrillRenderer());
+		
+		for(GearTypes typ : GearTypes.values()){
+			reg(GearFactory.toggleGears.get(typ));
+		}
+		ClientRegistry.bindTileEntitySpecialRenderer(ToggleGearTileEntity.class, new ToggleGearRenderer());
 	}
 
 	public static void reg(Block block){

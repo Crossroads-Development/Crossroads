@@ -69,7 +69,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			}else if(angleQ[2] == Double.NEGATIVE_INFINITY){
 				angleQ[0] = 22.5;
 			}else{
-				angleQ[0] += angleQ[2] * 9 / (physData[0] * Math.PI);
+				angleQ[0] += angleQ[2] * 9D / (physData[0] * Math.PI);
 			}
 		}
 
@@ -134,7 +134,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	@Override
 	public void receiveDouble(String context, double message){
 		if(context.equals("Q")){
-			handlerMain.setQ(message, true);
+			angleQ[2] = message;
 		}
 	}
 
@@ -242,18 +242,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		}
 
 		@Override
-		public void setMotionData(double[] dataIn){
-			motionData = dataIn;
-		}
-
-		@Override
 		public double[] getPhysData(){
 			return physData;
-		}
-
-		@Override
-		public void setPhysData(double[] dataIn){
-			physData = dataIn;
 		}
 
 		@Override
@@ -269,12 +259,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		}
 
 		@Override
-		public void setQ(double QIn, boolean client){
-			if(client){
-				angleQ[2] = QIn;
-			}else{
-				angleQ[1] = QIn;
-			}
+		public void setQ(double QIn){
+			angleQ[1] = QIn;
 		}
 
 		@Override
@@ -292,7 +278,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			}
 
 			physData[1] = type == null ? 0 : MiscOperators.betterRound(type.getDensity() * 4.5D, 2);
-			physData[2] = physData[1] * 1.125; /*
+			physData[2] = physData[1] * 1.125D; /*
 												 * 1.125 because r*r/2 so
 												 * 1.5*1.5/2
 												 */

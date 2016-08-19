@@ -105,27 +105,27 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		if(context.contains("Q")){
 			switch(context){
 				case "Q0":{
-					sideHandlers[0].setQ(message, true);
+					clientQ[0] = message;
 					break;
 				}
 				case "Q1":{
-					sideHandlers[1].setQ(message, true);
+					clientQ[1] = message;
 					break;
 				}
 				case "Q2":{
-					sideHandlers[2].setQ(message, true);
+					clientQ[2] = message;
 					break;
 				}
 				case "Q3":{
-					sideHandlers[3].setQ(message, true);
+					clientQ[3] = message;
 					break;
 				}
 				case "Q4":{
-					sideHandlers[4].setQ(message, true);
+					clientQ[4] = message;
 					break;
 				}
 				case "Q5":{
-					sideHandlers[5].setQ(message, true);
+					clientQ[5] = message;
 					break;
 				}
 			}
@@ -213,7 +213,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 					// it's 18 / PI instead of 180 / PI because 20 ticks /
 					// second, so 9 / PI, then * 2 because this is Q not w (Q =
 					// r * w, r = .5).
-					angle[i] += clientQ[i] * 18 / Math.PI;
+					angle[i] += clientQ[i] * 18D / Math.PI;
 				}
 			}
 		}
@@ -318,18 +318,8 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public void setMotionData(double[] dataIn){
-			motionData[side] = dataIn;
-		}
-
-		@Override
 		public double[] getPhysData(){
 			return physData[side];
-		}
-
-		@Override
-		public void setPhysData(double[] dataIn){
-			physData[side] = dataIn;
 		}
 
 		@Override
@@ -345,12 +335,8 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public void setQ(double QIn, boolean client){
-			if(client){
-				clientQ[side] = QIn;
-			}else{
-				Q[side] = QIn;
-			}
+		public void setQ(double QIn){
+			Q[side] = QIn;
 		}
 
 		@Override
