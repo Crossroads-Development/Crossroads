@@ -33,12 +33,11 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	private double angle;
 	/**Normal, client*/
 	private double[] Q = new double[2];
+	private int compOut = 0;
 	
 	public ToggleGearTileEntity(){
 		
 	}
-	
-	//TODO sync Q with client, create TESR
 	
 	public ToggleGearTileEntity(GearTypes type){
 		this.type = type;
@@ -70,6 +69,10 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 
 		if(!getWorld().isRemote){
 			sendQPacket();
+			if(compOut != ((int) Math.min((Math.abs(motionData[1] / physData[2])) * 15D, 15))){
+				worldObj.updateComparatorOutputLevel(pos, this.blockType);
+				compOut = ((int) Math.min((Math.abs(motionData[1] / physData[2])) * 15D, 15));
+			}
 		}
 	}
 	

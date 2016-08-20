@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.ServerProxy;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOperators;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -51,13 +52,31 @@ public class ToggleGear extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		tooltip.add("Mass: " + MiscOperators.betterRound(type.getDensity() / 8, 2));
-		tooltip.add("I: " + MiscOperators.betterRound(type.getDensity() / 8, 2) * .125);
+		tooltip.add("Mass: " + MiscOperators.betterRound(type.getDensity() / 8D, 2));
+		tooltip.add("I: " + MiscOperators.betterRound(type.getDensity() / 8D, 2) * .125D);
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new ToggleGearTileEntity(type);
+	}
+	
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(!te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			return 0;
+		}
+		double holder = Math.abs(te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[1]) / te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN).getPhysData()[2];
+		holder *= 15D;
+		holder = Math.min(15, holder);
+		
+		return (int) holder;
 	}
 	
 	@Override
@@ -88,9 +107,6 @@ public class ToggleGear extends BlockContainer{
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
-		if(worldIn.isRemote){
-			return;
-		}
 		if(worldIn.isBlockPowered(pos)){
 			if(!state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
@@ -99,6 +115,9 @@ public class ToggleGear extends BlockContainer{
 			if(state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
 			}
+		}
+		if(worldIn.isRemote){
+			return;
 		}
 		ServerProxy.masterKey++;
 	}

@@ -147,7 +147,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		return super.hasCapability(capability, facing);
 	}
 
-	private final IHeatHandler heatHandler = new HeatHandler();
+	private final HeatHandler heatHandler = new HeatHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
