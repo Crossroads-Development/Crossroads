@@ -36,7 +36,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 	 * double all fat is wasted, between the 2nd and 3rd double is the peak
 	 * efficiency
 	 */
-	private final double[] BRACKETS = new double[] {100D, 150D, 160D, 200D};
+	private final double[] BRACKETS = new double[] {100D, 140D, 160D, 200D};
 	private final double USE_PER_VALUE = .8D;
 
 	@Override
