@@ -139,7 +139,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeGenForCoords(getPos()).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

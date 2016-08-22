@@ -47,7 +47,7 @@ public final class ModCrafting{
 
 		// Heating, order of decreasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D));
-		RecipeHolder.envirHeatSource.put(Blocks.field_189877_df, Triple.of(Blocks.NETHERRACK.getDefaultState(), 500D, 2000D));
+		RecipeHolder.envirHeatSource.put(Blocks.MAGMA, Triple.of(Blocks.NETHERRACK.getDefaultState(), 500D, 2000D));
 		RecipeHolder.envirHeatSource.put(Blocks.FIRE, Triple.of(null, 300D, 2000D));
 		// Cooling, order of increasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.SNOW, Triple.of(Blocks.WATER.getDefaultState(), -50D, -20D));
