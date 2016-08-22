@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
@@ -12,7 +11,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
@@ -22,8 +21,10 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
-public class SteamBoilerTileEntity extends AbstractInventory implements ITickable{
+public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 
 	private FluidStack steamContent;
 	private FluidStack waterContent;
@@ -55,7 +56,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		limit = limit < 0 ? 0 : limit;
 
 		if(salty){
-			limit = Math.min(limit, getInventoryStackLimit() - (inventory == null ? 0 : inventory.stackSize));
+			limit = Math.min(limit, 64 - (inventory == null ? 0 : inventory.stackSize));
 		}
 
 		if(limit == 0){
@@ -84,100 +85,6 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		temp -= limit * EnergyConverters.DEG_PER_BUCKET_STEAM * (salty ? .2D : .1D);
 	}
 
-	@Override
-	public int getSizeInventory(){
-		return 1;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int index){
-		return index == 0 ? inventory : null;
-	}
-
-	@Override
-	public ItemStack decrStackSize(int index, int count){
-		if(index != 0 || inventory == null){
-			return null;
-		}
-		markDirty();
-		int holder = Math.min(inventory.stackSize, count);
-		inventory.stackSize -= holder;
-		ItemStack taken = new ItemStack(inventory.getItem(), holder, inventory.getMetadata());
-		if(inventory.stackSize == 0){
-			inventory = null;
-		}
-		return taken;
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index){
-		if(index != 0){
-			return null;
-		}
-		markDirty();
-		ItemStack output = inventory;
-		inventory = null;
-		return output;
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack){
-		if(index != 0){
-			return;
-		}
-		inventory = stack;
-	}
-
-	@Override
-	public int getInventoryStackLimit(){
-		return 64;
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return false;
-	}
-
-	@Override
-	public int getField(int id){
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value){
-
-	}
-
-	@Override
-	public int getFieldCount(){
-		return 0;
-	}
-
-	@Override
-	public void clear(){
-		inventory = null;
-	}
-
-	@Override
-	public int[] getSlotsForFace(EnumFacing side){
-		return new int[] {0};
-	}
-
-	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction){
-		return false;
-	}
-
-	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
-		return index == 0;
-	}
-
-	@Override
-	public String getName(){
-		return "container.steamBoiler";
-	}
-
 	private boolean init = false;
 	private double temp;
 
@@ -191,12 +98,7 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		this.init = nbt.getBoolean("init");
 		this.temp = nbt.getDouble("temp");
 
-		NBTTagList list = nbt.getTagList("Items", 10);
-		for(int i = 0; i < list.tagCount(); ++i){
-			NBTTagCompound stackTag = list.getCompoundTagAt(i);
-			int slot = stackTag.getByte("Slot") & 255;
-			this.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(stackTag));
-		}
+		inventory = nbt.hasKey("inv") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv")) : null;
 	}
 
 	@Override
@@ -215,16 +117,10 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		nbt.setBoolean("init", this.init);
 		nbt.setDouble("temp", this.temp);
 
-		NBTTagList list = new NBTTagList();
-		for(int i = 0; i < this.getSizeInventory(); ++i){
-			if(this.getStackInSlot(i) != null){
-				NBTTagCompound stackTag = new NBTTagCompound();
-				stackTag.setByte("Slot", (byte) i);
-				this.getStackInSlot(i).writeToNBT(stackTag);
-				list.appendTag(stackTag);
-			}
+		if(inventory != null){
+			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
 		}
-		nbt.setTag("Items", list);
+		
 		return nbt;
 	}
 
@@ -237,6 +133,11 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
 			return true;
 		}
+		
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
+			return true;
+		}
+		
 		return super.hasCapability(capability, facing);
 	}
 
@@ -244,12 +145,13 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 	private final IFluidHandler steamHandler = new SteamFluidHandler();
 	private final IFluidHandler innerHandler = new InnerFluidHandler();
 	private final IHeatHandler heatHandler = new HeatHandler();
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+		
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-
 			if(facing == null){
 				return (T) innerHandler;
 			}
@@ -272,9 +174,50 @@ public class SteamBoilerTileEntity extends AbstractInventory implements ITickabl
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
 			return (T) heatHandler;
 		}
+		
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
+			return (T) itemHandler;
+		}
+		
 		return super.getCapability(capability, facing);
 	}
 
+	private class ItemHandler implements IItemHandler{
+
+		@Override
+		public int getSlots(){
+			return 1;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return slot == 0 ? inventory : null;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			if(slot != 0 || amount <= 0 || inventory == null){
+				return null;
+			}
+			
+			int count = Math.min(inventory.stackSize, amount);
+			
+			if(!simulate){
+				if((inventory.stackSize -= count) <= 0){
+					inventory = null;
+				}
+				markDirty();
+			}
+			
+			return amount > 0 ? new ItemStack(ModItems.dustSalt, count) : null;
+		}
+	}
+	
 	private class WaterFluidHandler implements IFluidHandler{
 
 		@Override
