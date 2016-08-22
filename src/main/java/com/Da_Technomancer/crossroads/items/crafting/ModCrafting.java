@@ -71,8 +71,8 @@ public final class ModCrafting{
 		}
 
 		// Axle
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE_BUTTON, '?', "ingotIron"));
-		GameRegistry.addRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE_BUTTON, '?', ModItems.metalScrap);
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));
+		GameRegistry.addRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', ModItems.metalScrap);
 		// Bronze
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":ingotBronze"), 1), "###", "#?#", "###", '#', "nuggetCopper", '?', "nuggetTin"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":blockBronze"), 1), "###", "#?#", "###", '#', "ingotCopper", '?', "ingotTin"));
@@ -94,14 +94,14 @@ public final class ModCrafting{
 			}
 		}
 		// Steam Boiler
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.steamBoiler, 1), "#$#", "$?$", "#&#", '#', "ingotBronze", '?', "blockBronze", '$', ModBlocks.fluidTube, '&', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.steamBoiler, 1), "###", "#?#", "&&&", '#', "ingotBronze", '?', "blockBronze", '&', "ingotCopper"));
 		// Salt Block
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSalt, 1), "##", "##", '#', "dustSalt"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.dustSalt, 4), "#", '#', "blockSalt"));
 		// Salt
 		GameRegistry.addSmelting(new ItemStack(Items.POTIONITEM, 1, 0), new ItemStack(ModItems.dustSalt, 1), .1F);
 		// Rotary Pump
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "?%?", "&%&", '#', "ingotBronze", '%', Blocks.IRON_BARS, '?', ModBlocks.fluidTube, '&', "blockGlass", '$', axle));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "#$#", "&$&", '#', "ingotBronze", '&', "blockGlass", '$', axle));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.rotaryPump, 1), ModBlocks.steamTurbine);
 		// Steam Turbine
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump);
@@ -124,9 +124,9 @@ public final class ModCrafting{
 		// Insulated Heat Exchanger
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.insulHeatExchanger, 1), "###", "#$#", "###", '#', "obsidian", '$', ModBlocks.heatExchanger));
 		// Coal Heater
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.coalHeater, 1), "#*#", "#$#", "###", '#', "cobblestone", '$', Blocks.FURNACE, '*', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.coalHeater, 1), "#*#", "# #", "###", '#', "cobblestone", '*', "ingotCopper"));
 		// Heating Chamber
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.heatingChamber, 1), "#*#", "#$#", "###", '#', "ingotIron", '$', Blocks.FURNACE, '*', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.heatingChamber, 1), "#*#", "# #", "###", '#', "ingotIron", '*', "ingotCopper"));
 		// Salt Reactor
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotTin", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper"));
 		// Fluid Cooling Chamber
