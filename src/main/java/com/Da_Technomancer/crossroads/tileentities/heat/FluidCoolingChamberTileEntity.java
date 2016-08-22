@@ -163,6 +163,7 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 				if(inventory.stackSize <= 0){
 					inventory = null;
 				}
+				markDirty();
 			}
 			return count == 0 ? null : new ItemStack(holder.getItem(), count, holder.getMetadata());
 		}

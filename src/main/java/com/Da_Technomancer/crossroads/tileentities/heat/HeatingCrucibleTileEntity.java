@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOperators;
@@ -14,6 +13,7 @@ import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -26,9 +26,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class HeatingCrucibleTileEntity extends AbstractInventory implements ITickable{
+public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 
 	private FluidStack content = null;
 	private static final int PRODUCED = 200;
@@ -137,6 +139,7 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 			}
 
 			temp -= 100D;
+			markDirty();
 		}
 
 		if(getWorld().getBlockState(getPos()).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || getWorld().getBlockState(getPos()).getValue(Properties.TEXTURE) != getCorrectState().getValue(Properties.TEXTURE)){
@@ -176,6 +179,7 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 
 	private final IFluidHandler fluidHandler = new FluidHandler();
 	private final IHeatHandler heatHandler = new HeatHandler();
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -186,6 +190,10 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing != EnumFacing.UP){
 			return (T) heatHandler;
+		}
+		
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
+			return (T) itemHandler;
 		}
 
 		return super.getCapability(capability, facing);
@@ -200,109 +208,46 @@ public class HeatingCrucibleTileEntity extends AbstractInventory implements ITic
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing != EnumFacing.UP){
 			return true;
 		}
+		
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
+			return true;
+		}
+		
 		return super.hasCapability(capability, facing);
 	}
 
-	@Override
-	public int getSizeInventory(){
-		return 1;
-	}
+	private class ItemHandler implements IItemHandler{
 
-	@Override
-	public ItemStack getStackInSlot(int index){
-		return (index == 0) ? inventory : null;
-	}
+		@Override
+		public int getSlots(){
+			return 1;
+		}
 
-	@Override
-	public ItemStack decrStackSize(int index, int count){
-		if(index != 0){
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return slot == 0 ? inventory : null;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			if(slot != 0 || !recipeIsValid(stack)){
+				return stack;
+			}
+			
+			int amount = Math.min(16 - (inventory == null ? 0 : inventory.stackSize), stack.stackSize);
+			
+			if(!simulate){
+				inventory = new ItemStack(stack.getItem(), amount + (inventory == null ? 0 : inventory.stackSize), stack.getMetadata());
+				markDirty();
+			}
+			
+			return amount == stack.stackSize ? null : new ItemStack(stack.getItem(), stack.stackSize - amount, stack.getMetadata());
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
 			return null;
 		}
-
-		ItemStack stack = inventory.splitStack(count);
-
-		if(inventory.stackSize <= 0){
-			inventory = null;
-		}
-		// Is this even needed?
-		markDirty();
-		return stack;
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index){
-		if(index != 0){
-			return null;
-		}
-
-		ItemStack stack = inventory;
-		inventory = null;
-		return stack;
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack){
-		if(index != 0){
-			return;
-		}
-
-		inventory = stack;
-		inventory.stackSize = Math.min(inventory.stackSize, getInventoryStackLimit());
-		this.markDirty();
-	}
-
-	@Override
-	public int getInventoryStackLimit(){
-		return 16;
-	}
-
-	@Override
-	public String getName(){
-		return "container.heatingCrucible";
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		if(index != 0){
-			return false;
-		}
-
-		return recipeIsValid(stack);
-	}
-
-	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
-		return false;
-	}
-
-	@Override
-	public int getField(int id){
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value){
-
-	}
-
-	@Override
-	public int getFieldCount(){
-		return 0;
-	}
-
-	@Override
-	public void clear(){
-		inventory = null;
-	}
-
-	@Override
-	public int[] getSlotsForFace(EnumFacing side){
-		return side == EnumFacing.UP ? new int[] {0} : null;
-	}
-
-	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction){
-		return direction == EnumFacing.UP && this.isItemValidForSlot(index, itemStackIn);
 	}
 
 	private class FluidHandler implements IFluidHandler{

@@ -59,6 +59,7 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 			}else{
 				content.amount += WATER_USE;
 			}
+			markDirty();
 		}
 	}
 
@@ -169,6 +170,7 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 			
 			if(!simulate){
 				inventory = new ItemStack(ModItems.dustSalt, amount + (inventory == null ? 0 : inventory.stackSize));
+				markDirty();
 			}
 			
 			return amount == stack.stackSize ? null : new ItemStack(ModItems.dustSalt, stack.stackSize - amount);
