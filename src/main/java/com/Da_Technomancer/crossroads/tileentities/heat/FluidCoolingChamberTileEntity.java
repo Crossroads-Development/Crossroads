@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
@@ -14,6 +13,7 @@ import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
@@ -22,8 +22,10 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
-public class FluidCoolingChamberTileEntity extends AbstractInventory implements ITickable{
+public class FluidCoolingChamberTileEntity extends TileEntity implements ITickable{
 
 	private FluidStack content = null;
 	private static final int CAPACITY = 16000;
@@ -47,7 +49,7 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 
 		if(++ticksExisted % 10 == 0 && content != null && RecipeHolder.fluidCoolingRecipes.containsKey(content.getFluid()) && content.amount >= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()){
 			Triple<ItemStack, Double, Double> trip = RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getRight();
-			if((inventory == null || (ItemStack.areItemsEqual(trip.getLeft(), inventory) && getInventoryStackLimit() - inventory.stackSize >= trip.getLeft().stackSize)) && temp < trip.getMiddle() - rand.nextInt(ECAP * trip.getRight().intValue())){
+			if((inventory == null || (ItemStack.areItemsEqual(trip.getLeft(), inventory) && 16 - inventory.stackSize >= trip.getLeft().stackSize)) && temp < trip.getMiddle() - rand.nextInt(ECAP * trip.getRight().intValue())){
 				temp += trip.getRight();
 				if((content.amount -= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()) <= 0){
 					content = null;
@@ -92,6 +94,7 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 
 	private final IFluidHandler fluidHandler = new FluidHandler();
 	private final IHeatHandler heatHandler = new HeatHandler();
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -100,8 +103,12 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 			return (T) fluidHandler;
 		}
 
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing == EnumFacing.UP || facing == null){
+		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return (T) heatHandler;
+		}
+		
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return (T) itemHandler;
 		}
 
 		return super.getCapability(capability, facing);
@@ -116,104 +123,49 @@ public class FluidCoolingChamberTileEntity extends AbstractInventory implements 
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing == EnumFacing.UP || facing == null){
 			return true;
 		}
+		
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return true;
+		}
+		
 		return super.hasCapability(capability, facing);
 	}
+	
+	private class ItemHandler implements IItemHandler{
 
-	@Override
-	public int getSizeInventory(){
-		return 1;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int index){
-		return (index == 0) ? inventory : null;
-	}
-
-	@Override
-	public ItemStack decrStackSize(int index, int count){
-		if(index != 0){
-			return null;
+		@Override
+		public int getSlots(){
+			return 1;
 		}
 
-		ItemStack stack = inventory.splitStack(count);
-
-		if(inventory.stackSize <= 0){
-			inventory = null;
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return slot == 0 ? inventory : null;
 		}
 
-		return stack;
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index){
-		if(index != 0){
-			return null;
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			return stack;
 		}
 
-		ItemStack stack = inventory;
-		inventory = null;
-		return stack;
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack){
-		if(index != 0){
-			return;
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			if(slot != 0 || inventory == null || amount <= 0){
+				return null;
+			}
+			
+			int count = Math.min(inventory.stackSize, amount);
+			
+			ItemStack holder = inventory.copy();
+			
+			if(!simulate){
+				inventory.splitStack(count);
+				if(inventory.stackSize <= 0){
+					inventory = null;
+				}
+			}
+			return count == 0 ? null : new ItemStack(holder.getItem(), count, holder.getMetadata());
 		}
-
-		inventory = stack;
-		inventory.stackSize = Math.min(inventory.stackSize, getInventoryStackLimit());
-		this.markDirty();
-	}
-
-	@Override
-	public int getInventoryStackLimit(){
-		return 16;
-	}
-
-	@Override
-	public String getName(){
-		return "container.fluidCoolingChamber";
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return false;
-	}
-
-	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
-		return index == 0;
-	}
-
-	@Override
-	public int getField(int id){
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value){
-
-	}
-
-	@Override
-	public int getFieldCount(){
-		return 0;
-	}
-
-	@Override
-	public void clear(){
-		inventory = null;
-	}
-
-	@Override
-	public int[] getSlotsForFace(EnumFacing side){
-		return new int[] {0};
-	}
-
-	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction){
-		return false;
 	}
 
 	private class FluidHandler implements IFluidHandler{
