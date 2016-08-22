@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:drill", "x":90},
-		"facing=south": { "model": "crossroads:drill", "x": 90, "y": 180 },
-		"facing=east": { "model": "crossroads:drill", "x": 90, "y": 90 },
-		"facing=west": { "model": "crossroads:drill", "x": 90, "y": 270 },
+		"facing=north": { "model": "crossroads:drill"},
+		"facing=south": { "model": "crossroads:drill"},
+		"facing=east": { "model": "crossroads:drill"},
+		"facing=west": { "model": "crossroads:drill"},
 		"facing=up": { "model": "crossroads:drill"},
-		"facing=down": { "model": "crossroads:drill", "x": 180 }
+		"facing=down": { "model": "crossroads:drill"}
 	}
 }

@@ -1,9 +1,7 @@
 package com.Da_Technomancer.crossroads.API.enums;
 
-import com.Da_Technomancer.crossroads.API.heat.overheatEffects.BurnEffect;
+import com.Da_Technomancer.crossroads.API.heat.overheatEffects.BlockEffect;
 import com.Da_Technomancer.crossroads.API.heat.overheatEffects.DirtEffect;
-import com.Da_Technomancer.crossroads.API.heat.overheatEffects.MeltEffect;
-import com.Da_Technomancer.crossroads.API.heat.overheatEffects.MeltWaterEffect;
 import com.Da_Technomancer.crossroads.API.heat.overheatEffects.OverheatEffect;
 import com.Da_Technomancer.crossroads.API.heat.overheatEffects.SlimeEffect;
 
@@ -12,11 +10,11 @@ import net.minecraft.util.ResourceLocation;
 
 public enum HeatInsulators{
 
-	WOOL(.01D, 300, new ResourceLocation("blocks/wool_colored_white"), new BurnEffect(), Blocks.WOOL),
+	WOOL(.01D, 300, new ResourceLocation("blocks/wool_colored_white"), new BlockEffect(Blocks.FIRE.getDefaultState()), "wool"),
 	SLIME(.005D, 500, new ResourceLocation("blocks/slime"), new SlimeEffect(), "slimeball"),
 	DIRT(.1D, 42, new ResourceLocation("blocks/dirt"), new DirtEffect(), "dirt"),
-	ICE(.00005D, 0, new ResourceLocation("blocks/ice_packed"), new MeltWaterEffect(), Blocks.ICE),
-	OBSIDIAN(0.0001D, 2000, new ResourceLocation("blocks/obsidian"), new MeltEffect(), "obsidian");
+	ICE(.00005D, 0, new ResourceLocation("blocks/ice_packed"), new BlockEffect(Blocks.WATER.getDefaultState()), Blocks.ICE),
+	OBSIDIAN(0.0001D, 2000, new ResourceLocation("blocks/obsidian"), new BlockEffect(Blocks.LAVA.getDefaultState()), "obsidian");
 
 	private final double rate;
 	private final double limit;
@@ -52,15 +50,13 @@ public enum HeatInsulators{
 		return item;
 	}
 
+	/**This will return the name with all but the first char being lowercase,
+	 * so COPPER becomes Copper, which is good for oreDict and registry
+	 */
 	@Override
 	public String toString(){
-		// This will return the name with all but the first char being
-		// lowercase,
-		// so COPPER becomes Copper, which is good for oreDict and registry
-		// names.
-		String char1;
 		String name = name();
-		char1 = name.substring(0, 1);
+		char char1 = name.charAt(0);
 		name = name.substring(1);
 		name = name.toLowerCase();
 		name = char1 + name;

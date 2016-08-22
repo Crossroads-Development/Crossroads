@@ -32,7 +32,6 @@ public class OreDictCraftingStack extends CraftingStack{
 
 	/**
 	 * Same as match, but ignores item count
-	 * 
 	 */
 	@Override
 	public boolean softMatch(ItemStack stack){

@@ -18,11 +18,6 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IPosReceiver
 
 	private BlockPos masterPos;
 
-	@Override
-	public BlockPos getMasterPos(){
-		return masterPos;
-	}
-
 	public void setInitial(BlockPos masPos){
 
 		masterPos = masPos;

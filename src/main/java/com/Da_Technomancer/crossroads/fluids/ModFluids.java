@@ -37,16 +37,14 @@ public final class ModFluids{
 	}
 
 	/*
-	 * The code below is heavily based on EnderIO code, though not an exact
-	 * copy.
+	 * The code below is based on EnderIO code, though is not an exact
+	 * copy. This is permitted by the EnderIO license.
 	 */
-	public static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition{
+	private static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition{
 
-		public final Fluid fluid;
 		public final ModelResourceLocation location;
 
 		public FluidStateMapper(Fluid fluid){
-			this.fluid = fluid;
 			location = new ModelResourceLocation(Main.MODID + ":fluids", fluid.getName());
 		}
 
@@ -62,7 +60,7 @@ public final class ModFluids{
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerFluidBlockRendering(Fluid fluid){
+	private static void registerFluidBlockRendering(Fluid fluid){
 
 		FluidStateMapper mapper = new FluidStateMapper(fluid);
 		Block block = fluid.getBlock();

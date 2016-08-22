@@ -23,15 +23,13 @@ public enum HeatConductors{
 		return item;
 	}
 
+	/**This will return the name with all but the first char being lowercase,
+	 * so COPPER becomes Copper, which is good for oreDict and registry
+	 */
 	@Override
 	public String toString(){
-		// This will return the name with all but the first char being
-		// lowercase,
-		// so COPPER becomes Copper, which is good for oreDict and registry
-		// names.
-		String char1;
 		String name = name();
-		char1 = name.substring(0, 1);
+		char char1 = name.charAt(0);
 		name = name.substring(1);
 		name = name.toLowerCase();
 		name = char1 + name;

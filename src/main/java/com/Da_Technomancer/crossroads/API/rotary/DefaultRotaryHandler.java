@@ -64,9 +64,7 @@ public class DefaultRotaryHandler implements IRotaryHandler{
 		}else{
 			physData[1] = Math.round((member.getDensity() / 8) * 100D) / 100D;
 			physData[0] = .5;
-			physData[2] = physData[1] * .125; /*
-												 * .125 because r*r/2 so .5*.5/2
-												 */
+			physData[2] = physData[1] * .125D; //.125 because r*r/2 so .5*.5/2
 		}
 	}
 

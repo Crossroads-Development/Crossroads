@@ -14,6 +14,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 
+	private static final DamageSource DRILL = new DamageSource("drill").setDamageBypassesArmor();
+	
 	private int ticksExisted = 0;
 	private final double ENERGYUSE = .5D;
 	private final double SPEEDPERHARDNESS = .1D;
@@ -42,7 +44,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 					}
 				}else if(worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE) != null){
 					for(EntityLivingBase ent : worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE)){
-						ent.attackEntityFrom(DamageSource.cactus, (float) Math.abs(handler.getMotionData()[0] / SPEEDPERHARDNESS));
+						ent.attackEntityFrom(DRILL, (float) Math.abs(handler.getMotionData()[0] / SPEEDPERHARDNESS));
 					}
 				}
 			}
