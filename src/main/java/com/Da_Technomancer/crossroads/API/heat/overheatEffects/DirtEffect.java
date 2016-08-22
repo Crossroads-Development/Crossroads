@@ -15,14 +15,14 @@ import net.minecraft.world.World;
 
 public class DirtEffect implements OverheatEffect{
 
+	private final Random rand = new Random();
+	
 	@Override
 	public void onOverheat(World worldIn, BlockPos pos){
 
 		if(worldIn.isRemote){
 			return;
 		}
-
-		Random rand = new Random();
 
 		int effect = rand.nextInt(8);
 

@@ -12,9 +12,8 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-
-version = "1.0.0"
-group= "com.Da_Technomancer.crossroads" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "1.10.2-0.1.0"
+group = "com.Da_Technomancer.crossroads" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "crossroads"
 
 sourceCompatibility = 1.8
@@ -30,6 +29,10 @@ minecraft {
     runDir = "run"
     
     mappings = "snapshot_20160820"
+	
+	replace 'gradVERSION', project.version
+	replaceIn 'Main.java'
+	
 }
 
 repositories {
@@ -46,10 +49,14 @@ dependencies {
 
 processResources
 {
+	inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+	
+	
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
 	
     from(sourceSets.main.resources.srcDirs) {

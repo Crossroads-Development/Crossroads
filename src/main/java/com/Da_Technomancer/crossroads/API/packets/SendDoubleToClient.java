@@ -19,7 +19,6 @@ public class SendDoubleToClient extends Message<SendDoubleToClient>{
 	public BlockPos pos;
 
 	public SendDoubleToClient(String context, double message, BlockPos pos){
-		// This is used to sync the clientQ properly
 		this.sContext = context;
 		this.message = message;
 		this.pos = pos;

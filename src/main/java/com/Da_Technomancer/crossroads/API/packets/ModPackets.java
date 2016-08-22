@@ -11,7 +11,7 @@ public class ModPackets{
 	public static SimpleNetworkWrapper network;
 
 	public static void preInit(){
-		network = NetworkRegistry.INSTANCE.newSimpleChannel(Main.MODID + "." + "chan");
+		network = NetworkRegistry.INSTANCE.newSimpleChannel(Main.MODID + ".chan");
 
 		int packetId = 5;
 		network.registerMessage(SendIntToClient.class, SendIntToClient.class, packetId++, Side.CLIENT);

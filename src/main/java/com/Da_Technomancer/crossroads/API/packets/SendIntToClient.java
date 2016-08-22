@@ -19,7 +19,6 @@ public class SendIntToClient extends Message<SendIntToClient>{
 	public BlockPos pos;
 
 	public SendIntToClient(String context, int message, BlockPos pos){
-		// This is used to sync the clientQ properly
 		this.sContext = context;
 		this.message = message;
 		this.pos = pos;

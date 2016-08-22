@@ -18,8 +18,8 @@ public final class OreSetUp{
 		addOre("Ruby", false, 3);
 		addOre("Bronze", true, 2, false);
 		// You might notice that oreRuby is never in the US localization, but it
-		// works still. That is because tile.oreRuby.name is built into
-		// minecraft localization, because emeralds were originally going to be
+		// still works. That is because tile.oreRuby.name is built into
+		// minecraft localization because emeralds were originally going to be
 		// rubies, but they never removed the localization.
 
 	}
