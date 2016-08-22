@@ -44,6 +44,7 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 			}
 			int sat = (int) (((double) value) * MiscOperators.findEfficiency(rot.getMotionData()[0], 0, SAT_UPPER_SPEED_BOUND));
 			sat = Math.min(20, sat);
+			value = Math.min(value, 20 + sat);
 			if(value * EnergyConverters.FAT_PER_VALUE > content.amount){
 				return;
 			}

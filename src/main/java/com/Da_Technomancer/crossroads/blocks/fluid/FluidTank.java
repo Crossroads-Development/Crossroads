@@ -53,7 +53,7 @@ public class FluidTank extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		if(stack.hasTagCompound()){
+		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("FluidName")){
 			tooltip.add("Contains: " + FluidStack.loadFluidStackFromNBT(stack.getTagCompound()).amount + "mB of " + FluidStack.loadFluidStackFromNBT(stack.getTagCompound()).getLocalizedName());
 		}
 	}

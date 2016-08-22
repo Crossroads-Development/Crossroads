@@ -26,9 +26,4 @@ public final class EnergyConverters{
 	 * value (value = hunger restored + saturation restored.
 	 */
 	public static final int FAT_PER_VALUE = 100;
-
-	/**
-	 * NYI. Based on game balance
-	 */
-	public static final double RF_PER_JOULE = 30D;
 }
