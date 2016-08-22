@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
@@ -11,6 +10,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
@@ -20,8 +20,10 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
-public class SaltReactorTileEntity extends AbstractInventory implements ITickable{
+public class SaltReactorTileEntity extends TileEntity implements ITickable{
 
 	private FluidStack content = null;
 	private FluidStack dContent = null;
@@ -42,7 +44,7 @@ public class SaltReactorTileEntity extends AbstractInventory implements ITickabl
 			init = true;
 		}
 
-		if(temp >= -274 && dContent != null && dContent.amount >= WATER_USE && CAPACITY - (content == null ? 0 : content.amount) >= WATER_USE && inventory != null && inventory.getItem() == ModItems.dustSalt){
+		if(temp >= -272 && dContent != null && dContent.amount >= WATER_USE && CAPACITY - (content == null ? 0 : content.amount) >= WATER_USE && inventory != null && inventory.getItem() == ModItems.dustSalt){
 			--temp;
 			if((dContent.amount -= WATER_USE) <= 0){
 				dContent = null;
@@ -100,6 +102,7 @@ public class SaltReactorTileEntity extends AbstractInventory implements ITickabl
 	private final IFluidHandler waterFluidHandler = new WaterFluidHandler();
 	private final IFluidHandler dWaterFluidHandler = new DWaterFluidHandler();
 	private final IHeatHandler heatHandler = new HeatHandler();
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -116,8 +119,12 @@ public class SaltReactorTileEntity extends AbstractInventory implements ITickabl
 			return (T) dWaterFluidHandler;
 		}
 
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing == EnumFacing.DOWN || facing == null){
+		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
 			return (T) heatHandler;
+		}
+		
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return (T) itemHandler;
 		}
 
 		return super.getCapability(capability, facing);
@@ -129,114 +136,50 @@ public class SaltReactorTileEntity extends AbstractInventory implements ITickabl
 			return true;
 		}
 
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing == EnumFacing.DOWN || facing == null){
+		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
 			return true;
 		}
+		
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return true;
+		}
+		
 		return super.hasCapability(capability, facing);
 	}
 
-	@Override
-	public int getSizeInventory(){
-		return 1;
-	}
+	private class ItemHandler implements IItemHandler{
 
-	@Override
-	public ItemStack getStackInSlot(int index){
-		return (index == 0) ? inventory : null;
-	}
+		@Override
+		public int getSlots(){
+			return 1;
+		}
 
-	@Override
-	public ItemStack decrStackSize(int index, int count){
-		if(index != 0){
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return slot == 0 ? inventory : null;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			if(slot != 0 || stack == null || stack.getItem() != ModItems.dustSalt){
+				return stack;
+			}
+			
+			int amount = Math.min(16 - (inventory == null ? 0 : inventory.stackSize), stack.stackSize);
+			
+			if(!simulate){
+				inventory = new ItemStack(ModItems.dustSalt, amount + (inventory == null ? 0 : inventory.stackSize));
+			}
+			
+			return amount == stack.stackSize ? null : new ItemStack(ModItems.dustSalt, stack.stackSize - amount);
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
 			return null;
 		}
-
-		ItemStack stack = inventory.splitStack(count);
-
-		if(inventory.stackSize <= 0){
-			inventory = null;
-		}
-		// Is this even needed?
-		markDirty();
-		return stack;
 	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index){
-		if(index != 0){
-			return null;
-		}
-
-		ItemStack stack = inventory;
-		inventory = null;
-		return stack;
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack){
-		if(index != 0){
-			return;
-		}
-
-		inventory = stack;
-		inventory.stackSize = Math.min(inventory.stackSize, getInventoryStackLimit());
-		this.markDirty();
-	}
-
-	@Override
-	public int getInventoryStackLimit(){
-		return 16;
-	}
-
-	@Override
-	public String getName(){
-		return "container.saltReactor";
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		if(index != 0){
-			return false;
-		}
-
-		return stack.getItem() == ModItems.dustSalt;
-	}
-
-	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
-		return false;
-	}
-
-	@Override
-	public int getField(int id){
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value){
-
-	}
-
-	@Override
-	public int getFieldCount(){
-		return 0;
-	}
-
-	@Override
-	public void clear(){
-		inventory = null;
-	}
-
-	@Override
-	public int[] getSlotsForFace(EnumFacing side){
-		return new int[] {0};
-	}
-
-	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction){
-		return this.isItemValidForSlot(index, itemStackIn);
-	}
-
+	
 	private class InnerFluidHandler implements IFluidHandler{
 
 		@Override
