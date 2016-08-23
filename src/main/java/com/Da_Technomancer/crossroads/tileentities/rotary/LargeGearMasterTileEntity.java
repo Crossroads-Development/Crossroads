@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOperators;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -129,7 +128,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		return nbt;
 	}
 
-	private final int tiers = ModConfig.getConfigInt(MasterAxis.speedTiers);
+	private final int tiers = MasterAxis.speedTiers.getInt();
 
 	@Override
 	public void receiveDouble(String context, double message){

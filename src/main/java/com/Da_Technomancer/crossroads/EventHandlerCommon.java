@@ -40,7 +40,7 @@ public final class EventHandlerCommon{
 			}
 		}
 	}
-
+	
 	private static NBTTagCompound getPlayerTag(EntityPlayer playerIn){
 		NBTTagCompound tag = playerIn.getEntityData();
 		if(!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)){

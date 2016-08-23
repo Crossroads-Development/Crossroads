@@ -132,3 +132,4 @@ tile.toggleGearGold.name=Gold Toggle Gear
 tile.toggleGearIron.name=Iron Toggle Gear
 death.attack.drill=%1$s has a great dentist!
 death.attack.drill.player=%2$s forced %1$s to go to the dentist!
+item.rainIdol.name=Rain Idol

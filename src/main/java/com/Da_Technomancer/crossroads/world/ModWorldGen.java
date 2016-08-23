@@ -36,18 +36,18 @@ public class ModWorldGen implements IWorldGenerator{
 
 		switch(world.provider.getDimension()){
 			case 0: // Overworld
-				if(ModConfig.getConfigBool(genCopperOre))
+				if(genCopperOre.getBoolean())
 					this.runGenerator(new WorldGenMinable(Block.getBlockFromName("crossroads:oreCopper").getDefaultState(), 8), world, random, chunkX, chunkZ, 8, 2, 30);
 
-				if(ModConfig.getConfigBool(genTinOre))
+				if(genTinOre.getBoolean())
 					this.runGenerator(new WorldGenMinable(Block.getBlockFromName("crossroads:oreTin").getDefaultState(), 4), world, random, chunkX, chunkZ, 5, 2, 30);
 
-				if(ModConfig.getConfigBool(genNativeCopperOre))
+				if(genNativeCopperOre.getBoolean())
 					this.runGenerator(new WorldGenMinable(Block.getBlockFromName("crossroads:oreNativeCopper").getDefaultState(), 6), world, random, chunkX, chunkZ, 8, 50, 70);
 
 				break;
 			case -1: // Nether
-				if(ModConfig.getConfigBool(genRubyOre))
+				if(genRubyOre.getBoolean())
 					// The reason the spawn attempts is so high for rubies is
 					// that it can only generate in quartz ore. The average
 					// number of quartz ore per chunk divided by the number of

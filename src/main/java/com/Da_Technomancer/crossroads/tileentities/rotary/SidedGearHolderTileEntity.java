@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOperators;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -134,7 +133,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 	private int ticksExisted = 0;
 
-	private final int tiers = ModConfig.getConfigInt(MasterAxis.speedTiers);
+	private final int tiers = MasterAxis.speedTiers.getInt();
 
 	private double[] Q = new double[6];
 

@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOperators;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -45,7 +44,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		physData[2] = type.getDensity() / 64D;
 	}
 	
-	private final int tiers = ModConfig.getConfigInt(MasterAxis.speedTiers);
+	private final int tiers = MasterAxis.speedTiers.getInt();
 	
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){

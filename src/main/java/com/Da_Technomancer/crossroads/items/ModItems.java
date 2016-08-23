@@ -43,6 +43,7 @@ public final class ModItems{
 	public static ItemCandleLily itemCandleLilypad;
 	public static EdibleBlob edibleBlob;
 	public static BasicItem diamondWire;
+	public static RainIdol rainIdol;
 
 	private static ArrayList<Item> modelQue = new ArrayList<Item>();
 
@@ -72,6 +73,7 @@ public final class ModItems{
 		itemAddQue(itemCandleLilypad = new ItemCandleLily());
 		itemAddQue(edibleBlob = new EdibleBlob());
 		itemAddQue(diamondWire = new BasicItem("diamondWire", "wireDiamond"));
+		itemAddQue(rainIdol = new RainIdol());
 	}
 
 	@SuppressWarnings("deprecation")

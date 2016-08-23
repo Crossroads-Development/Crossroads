@@ -46,7 +46,7 @@ public class CommonProxy{
 			RecipeHolder.rebind();
 		}
 
-		ModConfig.save();
+		ModConfig.config.save();
 	}
 
 	protected void postInit(FMLPostInitializationEvent e){
