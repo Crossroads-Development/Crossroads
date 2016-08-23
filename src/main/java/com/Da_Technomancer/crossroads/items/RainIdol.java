@@ -6,9 +6,11 @@ import com.Da_Technomancer.crossroads.ModConfig;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -72,6 +74,7 @@ public class RainIdol extends Item{
 						if(++count >= 9){
 							worldIn.getWorldInfo().setRaining(true);
 							worldIn.getWorldInfo().setThundering(true);
+							worldIn.playSound(null, play.posX, play.posY, play.posZ, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.PLAYERS, 20F, 1F);
 							play.setHeldItem(EnumHand.MAIN_HAND, null);
 							count = 0;
 						}else{
@@ -86,6 +89,7 @@ public class RainIdol extends Item{
 					if(count % 2 == 0){
 						if(--count <= -9){
 							worldIn.getWorldInfo().setRaining(false);
+							worldIn.playSound(null, play.posX, play.posY, play.posZ, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.PLAYERS, 3F, 1F);
 							play.setHeldItem(EnumHand.MAIN_HAND, null);
 							count = 0;
 						}else{

@@ -30,7 +30,7 @@ public class ChickenBoots extends ItemArmor{
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack){
 		if(player.fallDistance > 1){
 			player.fallDistance = 0;
-			world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F, bFull3D);
+			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 		}
 	}
 }
