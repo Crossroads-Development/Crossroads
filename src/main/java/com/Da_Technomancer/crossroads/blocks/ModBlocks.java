@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.blocks.fluid.FluidTank;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidTube;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidVoid;
 import com.Da_Technomancer.crossroads.blocks.fluid.Radiator;
+import com.Da_Technomancer.crossroads.blocks.fluid.RedstoneFluidTube;
 import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPump;
 import com.Da_Technomancer.crossroads.blocks.fluid.SteamBoiler;
 import com.Da_Technomancer.crossroads.blocks.fluid.SteamTurbine;
@@ -68,6 +69,7 @@ public final class ModBlocks{
 	public static RotaryDrill rotaryDrill;
 	public static FatCollector fatCollector;
 	public static FatCongealer fatCongealer;
+	public static RedstoneFluidTube redstoneFluidTube;
 
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 
@@ -106,6 +108,7 @@ public final class ModBlocks{
 		rotaryDrill = new RotaryDrill();
 		blockAddQue(fatCollector = new FatCollector());
 		blockAddQue(fatCongealer = new FatCongealer());
+		blockAddQue(redstoneFluidTube = new RedstoneFluidTube());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -129,5 +132,6 @@ public final class ModBlocks{
 		}
 
 		fluidTube.initModel();
+		redstoneFluidTube.initModel();
 	}
 }

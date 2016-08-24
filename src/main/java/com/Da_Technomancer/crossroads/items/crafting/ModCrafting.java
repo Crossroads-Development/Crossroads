@@ -152,6 +152,8 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fatCongealer, 1), "*^*", "# #", "* *", '*', "ingotBronze", '#', "netherrack", '^', axle));
 		//Diamond wire
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.diamondWire, 3), "*&*", '*', "ingotTin", '&', "gemDiamond"));
+		//Redstone Fluid Tube
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.redstoneFluidTube, 1), "***", "*&*", "***", '*', "dustRedstone", '&', ModBlocks.fluidTube));
 	}
 
 	private static ItemStack getFilledHopper(){

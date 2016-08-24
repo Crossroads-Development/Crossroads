@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTubeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidVoidTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.fluid.RedstoneFluidTubeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
@@ -61,6 +62,7 @@ public class ModTileEntity{
 		register(FatCongealerTileEntity.class, "fatCongealer");
 		register(RedstoneHeatCableTileEntity.class, "redstoneHeatCable");
 		register(ToggleGearTileEntity.class, "toggleGear");
+		register(RedstoneFluidTubeTileEntity.class, "redstoneFluidTube");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"redstone_bool=true": { "model": "crossroads:fluidTube" },
+		"redstone_bool=false": { "model": "crossroads:fluidTube" }
+	}
+}
