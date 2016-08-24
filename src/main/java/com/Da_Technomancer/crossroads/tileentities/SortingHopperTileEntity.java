@@ -30,9 +30,6 @@ import net.minecraft.tileentity.TileEntityLockableLoot;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.datafix.DataFixer;
-import net.minecraft.util.datafix.FixTypes;
-import net.minecraft.util.datafix.walkers.ItemStackDataLists;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -44,7 +41,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class SortingHopperTileEntity extends TileEntityLockableLoot implements IHopper, ITickable{
 
-	public boolean updateHopper(){
+	private void updateHopper(){
 		if(this.worldObj != null && !this.worldObj.isRemote){
 			if(!this.isOnTransferCooldown() && BlockHopper.isEnabled(this.getBlockMetadata())){
 				boolean flag = false;
@@ -60,13 +57,8 @@ public class SortingHopperTileEntity extends TileEntityLockableLoot implements I
 				if(flag){
 					this.setTransferCooldown(8);
 					this.markDirty();
-					return true;
 				}
 			}
-
-			return false;
-		}else{
-			return false;
 		}
 	}
 
@@ -82,10 +74,6 @@ public class SortingHopperTileEntity extends TileEntityLockableLoot implements I
 
 	private ItemStack[] inventory = new ItemStack[5];
 	private int transferCooldown = -1;
-
-	public static void func_189683_a(DataFixer p_189683_0_){
-		p_189683_0_.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists("Hopper", new String[] {"Items"}));
-	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound){
@@ -205,10 +193,12 @@ public class SortingHopperTileEntity extends TileEntityLockableLoot implements I
 
 	@Override
 	public void openInventory(EntityPlayer player){
+		
 	}
 
 	@Override
 	public void closeInventory(EntityPlayer player){
+		
 	}
 
 	/**
