@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/bronze_fluid",
+		"south": "crossroads:blocks/bronze_fluid",
+		"east": "crossroads:blocks/bronze_fluid_red",
+		"west": "crossroads:blocks/bronze_fluid_red",
+		"up": "crossroads:blocks/bronze_axle",
+		"down": "crossroads:blocks/bronze_chute",
+		"particle": "crossroads:blocks/bronze_fluid"
+	}
+}

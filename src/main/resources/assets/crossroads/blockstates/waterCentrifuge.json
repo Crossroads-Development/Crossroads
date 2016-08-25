@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"orient=true": { "model": "crossroads:waterCentrifuge" },
+		"orient=false": { "model": "crossroads:waterCentrifuge", "y":90 }
+	}
+}

@@ -12,10 +12,9 @@ public class Properties{
 	public static final PropertyBool REDSTONE_BOOL = PropertyBool.create("redstone_bool");
 	public static final PropertyDirection FACING = PropertyDirection.create("facing");
 	public static final PropertyInteger FULLNESS = PropertyInteger.create("fullness", 0, 3);
-	/**
-	 * 0 = copper, 1 = molten copper, 2 = cobble, 3 = lava
-	 * 
-	 */
+	/**true means X axis, false means Z axis*/
+	public static final PropertyBool ORIENT = PropertyBool.create("orient");
+	/**0 = copper, 1 = molten copper, 2 = cobble, 3 = lava*/
 	public static final PropertyInteger TEXTURE = PropertyInteger.create("text", 0, 3);
 
 }

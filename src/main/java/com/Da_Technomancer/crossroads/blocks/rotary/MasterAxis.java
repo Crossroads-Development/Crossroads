@@ -63,9 +63,7 @@ public class MasterAxis extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		EnumFacing facing = state.getValue(Properties.FACING);
-		int facingbits = facing.getIndex();
-		return facingbits;
+		return state.getValue(Properties.FACING).getIndex();
 	}
 
 	@Override

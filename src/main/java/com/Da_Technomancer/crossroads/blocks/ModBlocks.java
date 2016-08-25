@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.blocks.fluid.RedstoneFluidTube;
 import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPump;
 import com.Da_Technomancer.crossroads.blocks.fluid.SteamBoiler;
 import com.Da_Technomancer.crossroads.blocks.fluid.SteamTurbine;
+import com.Da_Technomancer.crossroads.blocks.fluid.WaterCentrifuge;
 import com.Da_Technomancer.crossroads.blocks.heat.CoalHeater;
 import com.Da_Technomancer.crossroads.blocks.heat.FluidCoolingChamber;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
@@ -70,6 +71,7 @@ public final class ModBlocks{
 	public static FatCollector fatCollector;
 	public static FatCongealer fatCongealer;
 	public static RedstoneFluidTube redstoneFluidTube;
+	public static WaterCentrifuge waterCentrifuge;
 
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 
@@ -109,6 +111,7 @@ public final class ModBlocks{
 		blockAddQue(fatCollector = new FatCollector());
 		blockAddQue(fatCongealer = new FatCongealer());
 		blockAddQue(redstoneFluidTube = new RedstoneFluidTube());
+		blockAddQue(waterCentrifuge = new WaterCentrifuge());
 	}
 
 	@SideOnly(Side.CLIENT)
