@@ -10,6 +10,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -18,6 +19,7 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class WaterCentrifuge extends BlockContainer{
 	
@@ -65,5 +67,13 @@ public class WaterCentrifuge extends BlockContainer{
 	@Override
 	public int damageDropped(IBlockState state){
 		return 0;
+	}
+	
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+		if(world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0) != null){
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0));
+		}
+		super.breakBlock(world, pos, blockstate);
 	}
 }
