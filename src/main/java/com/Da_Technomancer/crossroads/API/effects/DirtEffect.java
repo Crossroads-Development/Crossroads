@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.heat.overheatEffects;
+package com.Da_Technomancer.crossroads.API.effects;
 
 import java.util.Random;
 
@@ -13,12 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class DirtEffect implements OverheatEffect{
+public class DirtEffect implements IEffect{
 
 	private final Random rand = new Random();
 	
 	@Override
-	public void onOverheat(World worldIn, BlockPos pos){
+	public void doEffect(World worldIn, BlockPos pos){
 
 		if(worldIn.isRemote){
 			return;

@@ -1,8 +1,8 @@
-package com.Da_Technomancer.crossroads.blocks.fluid;
+package com.Da_Technomancer.crossroads.blocks.magic;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -17,17 +17,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SteamTurbine extends BlockContainer{
+public class ArcaneExtractor extends BlockContainer{
 
-	public SteamTurbine(){
+	public ArcaneExtractor(){
 		super(Material.IRON);
-		String name = "steamTurbine";
+		String name = "arcaneExtractor";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -38,14 +35,14 @@ public class SteamTurbine extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new SteamTurbineTileEntity();
+		return new ArcaneExtractorTileEntity();
 	}
-
+	
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+		return EnumBlockRenderType.MODEL;
 	}
-
+	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return this.getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
@@ -82,26 +79,5 @@ public class SteamTurbine extends BlockContainer{
 		EnumFacing facing = state.getValue(Properties.FACING);
 		int facingbits = facing.getIndex();
 		return facingbits;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isSideSolid(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-		return side == EnumFacing.UP;
 	}
 }

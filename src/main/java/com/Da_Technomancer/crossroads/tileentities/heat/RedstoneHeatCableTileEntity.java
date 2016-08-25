@@ -66,7 +66,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		}
 
 		if(temp > insulator.getLimit()){
-			insulator.getEffect().onOverheat(worldObj, pos);
+			insulator.getEffect().doEffect(worldObj, pos);
 		}
 	}
 

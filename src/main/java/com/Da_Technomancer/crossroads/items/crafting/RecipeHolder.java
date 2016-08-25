@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
@@ -14,6 +15,7 @@ import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 
@@ -48,6 +50,11 @@ public final class RecipeHolder{
 	protected static final ArrayList<Pair<CraftingStack[], ItemStack>> mashedBoboRecipes = new ArrayList<Pair<CraftingStack[], ItemStack>>();
 	protected static final ArrayList<Pair<CraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<CraftingStack[], ItemStack>>();
 
+	/**
+	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
+	 */
+	public static final HashMap<Item, MagicUnit> magExtractRecipes = new HashMap<Item, MagicUnit>();
+	
 	public static final ArrayList<Object> JEIWrappers = new ArrayList<Object>();
 
 	/*

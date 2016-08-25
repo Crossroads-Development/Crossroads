@@ -3,6 +3,8 @@ package com.Da_Technomancer.crossroads.API;
 import com.Da_Technomancer.crossroads.API.DefaultStorageHelper.DefaultStorage;
 import com.Da_Technomancer.crossroads.API.heat.DefaultHeatHandler;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.API.magic.DefaultMagicHandler;
+import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultRotaryHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 
@@ -17,9 +19,13 @@ public class Capabilities{
 
 	@CapabilityInject(IRotaryHandler.class)
 	public static Capability<IRotaryHandler> ROTARY_HANDLER_CAPABILITY = null;
+	
+	@CapabilityInject(IMagicHandler.class)
+	public static Capability<IMagicHandler> MAGIC_HANDLER_CAPABILITY = null;
 
 	public static void register(){
 		CapabilityManager.INSTANCE.register(IHeatHandler.class, new DefaultStorage<>(), DefaultHeatHandler.class);
 		CapabilityManager.INSTANCE.register(IRotaryHandler.class, new DefaultStorage<>(), DefaultRotaryHandler.class);
+		CapabilityManager.INSTANCE.register(IMagicHandler.class, new DefaultStorage<>(), DefaultMagicHandler.class);
 	}
 }

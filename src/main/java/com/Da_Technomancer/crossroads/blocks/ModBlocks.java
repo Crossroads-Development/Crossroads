@@ -23,6 +23,7 @@ import com.Da_Technomancer.crossroads.blocks.heat.HeatingChamber;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatingCrucible;
 import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.SaltReactor;
+import com.Da_Technomancer.crossroads.blocks.magic.ArcaneExtractor;
 import com.Da_Technomancer.crossroads.blocks.rotary.Grindstone;
 import com.Da_Technomancer.crossroads.blocks.rotary.ItemChutePort;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
@@ -72,6 +73,7 @@ public final class ModBlocks{
 	public static FatCongealer fatCongealer;
 	public static RedstoneFluidTube redstoneFluidTube;
 	public static WaterCentrifuge waterCentrifuge;
+	public static ArcaneExtractor arcaneExtractor;
 
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 
@@ -112,6 +114,7 @@ public final class ModBlocks{
 		blockAddQue(fatCongealer = new FatCongealer());
 		blockAddQue(redstoneFluidTube = new RedstoneFluidTube());
 		blockAddQue(waterCentrifuge = new WaterCentrifuge());
+		blockAddQue(arcaneExtractor = new ArcaneExtractor());
 	}
 
 	@SideOnly(Side.CLIENT)

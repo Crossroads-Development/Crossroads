@@ -1,13 +1,13 @@
-package com.Da_Technomancer.crossroads.API.heat.overheatEffects;
+package com.Da_Technomancer.crossroads.API.effects;
 
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class SlimeEffect implements OverheatEffect{
+public class SlimeEffect implements IEffect{
 
 	@Override
-	public void onOverheat(World worldIn, BlockPos pos){
+	public void doEffect(World worldIn, BlockPos pos){
 		if(worldIn.isRemote){
 			return;
 		}

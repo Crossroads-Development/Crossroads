@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.API.enums;
 
-import com.Da_Technomancer.crossroads.API.heat.overheatEffects.BlockEffect;
-import com.Da_Technomancer.crossroads.API.heat.overheatEffects.DirtEffect;
-import com.Da_Technomancer.crossroads.API.heat.overheatEffects.OverheatEffect;
-import com.Da_Technomancer.crossroads.API.heat.overheatEffects.SlimeEffect;
+import com.Da_Technomancer.crossroads.API.effects.BlockEffect;
+import com.Da_Technomancer.crossroads.API.effects.DirtEffect;
+import com.Da_Technomancer.crossroads.API.effects.IEffect;
+import com.Da_Technomancer.crossroads.API.effects.SlimeEffect;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
@@ -19,10 +19,10 @@ public enum HeatInsulators{
 	private final double rate;
 	private final double limit;
 	private final ResourceLocation resource;
-	private final OverheatEffect effect;
+	private final IEffect effect;
 	private final Object item;
 
-	HeatInsulators(double rate, double limit, ResourceLocation resource, OverheatEffect effect, Object item){
+	HeatInsulators(double rate, double limit, ResourceLocation resource, IEffect effect, Object item){
 		this.rate = rate;
 		this.limit = limit;
 		this.resource = resource;
@@ -42,7 +42,7 @@ public enum HeatInsulators{
 		return resource;
 	}
 
-	public OverheatEffect getEffect(){
+	public IEffect getEffect(){
 		return effect;
 	}
 
