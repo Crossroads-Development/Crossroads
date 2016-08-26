@@ -2,9 +2,10 @@ package com.Da_Technomancer.crossroads.blocks.magic;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
 
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -18,11 +19,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class ArcaneExtractor extends BlockContainer{
-
-	public ArcaneExtractor(){
+public class QuartzStabilizer extends BlockContainer{
+	
+	private boolean large;
+	
+	public QuartzStabilizer(boolean large){
 		super(Material.ROCK);
-		String name = "arcaneExtractor";
+		this.large = large;
+		String name = (large ? "large" : "small") + "QuartzStabilizer";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -33,7 +37,7 @@ public class ArcaneExtractor extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new ArcaneExtractorTileEntity();
+		return new QuartzStabilizerTileEntity(large);
 	}
 	
 	@Override
@@ -43,7 +47,7 @@ public class ArcaneExtractor extends BlockContainer{
 	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
+		return this.getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : BlockPistonBase.getFacingFromEntity(pos, placer));
 	}
 
 	@Override

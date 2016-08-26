@@ -164,7 +164,13 @@ public class GuideBooks{
 
 		categories.add(new CategoryItemStack(entries, "Miscellaneous", new ItemStack(ModBlocks.brazier, 1)));
 		entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
-
+		
+		//MAGIC
+		
+		
+		categories.add(new CategoryItemStack(entries, "Magic", new ItemStack(ModItems.lensArray, 1)));
+		entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
+		
 		main.setTitle("Main Menu");
 		main.setWelcomeMessage("Welcome to Crossroads");
 		main.setDisplayName("mysteriousJournal");

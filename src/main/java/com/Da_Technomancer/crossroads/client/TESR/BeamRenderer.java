@@ -89,4 +89,9 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
 	}
+	
+	@Override
+	public boolean isGlobalRenderer(BeamRenderTE te){
+		return true;
+	}
 }
