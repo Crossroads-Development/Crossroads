@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMasterTileEntity>{
 
-	private static final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/largeGear.png");
+	protected static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID + ":textures/model/largeGear.png");
 	private static final ModelLargeGear model = new ModelLargeGear();
 
 	@Override
@@ -50,7 +50,7 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 			GlStateManager.translate(.5F, -.5F, -.5F);
 		}
 		GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		model.render();
 		GlStateManager.popMatrix();
 

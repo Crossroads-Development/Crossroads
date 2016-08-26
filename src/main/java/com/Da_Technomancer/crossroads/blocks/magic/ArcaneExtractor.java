@@ -14,8 +14,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -49,16 +47,6 @@ public class ArcaneExtractor extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot){
-		return state.withProperty(Properties.FACING, rot.rotate(state.getValue(Properties.FACING)));
-	}
-
-	@Override
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
-		return state.withRotation(mirrorIn.toRotation(state.getValue(Properties.FACING)));
-	}
-
-	@Override
 	public int damageDropped(IBlockState state){
 		return 0;
 	}
@@ -79,5 +67,10 @@ public class ArcaneExtractor extends BlockContainer{
 		EnumFacing facing = state.getValue(Properties.FACING);
 		int facingbits = facing.getIndex();
 		return facingbits;
+	}
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
 	}
 }

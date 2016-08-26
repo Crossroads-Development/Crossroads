@@ -135,3 +135,7 @@ death.attack.drill.player=%2$s forced %1$s to go to the dentist!
 item.rainIdol.name=Rain Idol
 tile.redstoneFluidTube.name=Redstone Fluid Tube
 tile.waterCentrifuge.name=Water Centrifuge
+tile.arcaneExtractor.name=Arcane Extractor
+item.pureQuartz.name=Pure Quartz
+item.luminescentQuartz.name=Luminescent Quartz
+item.lensArray.name=Crystal Lens Array

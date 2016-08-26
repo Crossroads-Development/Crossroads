@@ -56,7 +56,7 @@ public class MagicUnit{
 			return null;
 		}
 		
-		double mult = getPower() / (getPower() + voi);
+		double mult = ((double) getPower()) / (double) (getPower() + voi);
 		
 		Color col = getTrueRGB();
 		return col == null ? new Color(0, 0, 0) : new Color((int) (col.getRed() * mult), (int) (col.getGreen() * mult), (int) (col.getBlue() * mult));

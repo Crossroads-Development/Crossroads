@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
 public enum MagicElements{
 	
-	TIME(new TimeEffect(), null, new Color(255, 128, 0), 2),
+	TIME(new TimeEffect(), null, new Color(255, 100, 0), 2),
 	//TODO populate
 	//This section needs more elements, and they all (or at least most of them) need an effect and void effect.
 	

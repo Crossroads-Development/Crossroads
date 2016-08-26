@@ -3,14 +3,20 @@ package com.Da_Technomancer.crossroads.client.TESR;
 import java.awt.Color;
 
 import org.apache.commons.lang3.tuple.Triple;
+import org.lwjgl.opengl.GL11;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 
+/** All blocks using BeamRenderer MUST return false to isOpaqueCube */
 public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 	
 	@Override
@@ -18,20 +24,68 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false) || beam.getBeam() == null){
 			return;
 		}
-		
+
 		Triple<Color, Integer, Integer> trip = beam.getBeam();
 		EnumFacing dir = beam.getWorld().getBlockState(beam.getPos()).getValue(Properties.FACING);
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
-		GlStateManager.disableLighting();
 		GlStateManager.translate(x, y, z);
-		
-		for(int i = 1; i <= trip.getMiddle(); i++){
-			GlStateManager.translate(dir == EnumFacing.EAST ? 1 : dir == EnumFacing.WEST ? -1 : 0, dir == EnumFacing.UP ? 1 : dir == EnumFacing.DOWN ? -1 : 0, dir == EnumFacing.SOUTH ? 1 : dir == EnumFacing.NORTH ? -1 : 0);
-			//TODO render
+		GlStateManager.color(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(LargeGearRenderer.TEXTURE);
+		GlStateManager.disableLighting();
+		GlStateManager.disableCull();
+
+		switch(dir){
+			case DOWN:
+				GlStateManager.rotate(180, 1, 0, 0);
+				//TODO
+				break;
+			case UP:
+				//TODO
+				break;
+			case EAST:
+				GlStateManager.rotate(-90, 0, 0, 1);
+				GlStateManager.translate(-1, 0, 0);
+				break;
+			case WEST:
+				GlStateManager.rotate(90, 0, 0, 1);
+				break;
+			case NORTH:
+				GlStateManager.rotate(-90, 1, 0, 0);
+				break;
+			case SOUTH:
+				GlStateManager.rotate(90, 1, 0, 0);
+				GlStateManager.translate(0, 0, -1);
+				break;
 		}
-		
+
+		Tessellator tes = Tessellator.getInstance();
+		VertexBuffer buf = tes.getBuffer();
+
+		final double small = .5D - (trip.getRight().doubleValue() / 16D);
+		final double big = .5D + (trip.getRight().doubleValue() / 16D);
+		final int length = trip.getMiddle().intValue();
+
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		buf.pos(small, length, small).tex(.5D, 0).endVertex();
+		buf.pos(small, 0, small).tex(.5D, 1).endVertex();
+		buf.pos(big, 0, small).tex(0, 1).endVertex();
+		buf.pos(big, length, small).tex(0, 0).endVertex();
+		buf.pos(big, length, big).tex(.5D, 0).endVertex();
+		buf.pos(big, 0, big).tex(.5D, 1).endVertex();
+		buf.pos(small, 0, big).tex(0, 1).endVertex();
+		buf.pos(small, length, big).tex(0, 0).endVertex();
+		buf.pos(big, length, small).tex(.5D, 0).endVertex();
+		buf.pos(big, 0, small).tex(.5D, 1).endVertex();
+		buf.pos(big, 0, big).tex(0, 1).endVertex();
+		buf.pos(big, length, big).tex(0, 0).endVertex();
+		buf.pos(small, length, big).tex(.5D, 0).endVertex();
+		buf.pos(small, 0, big).tex(.5D, 1).endVertex();
+		buf.pos(small, 0, small).tex(0, 1).endVertex();
+		buf.pos(small, length, small).tex(0, 0).endVertex();
+		tes.draw();
+
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
 	}

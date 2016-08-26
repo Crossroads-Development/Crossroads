@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.GuideBooks;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
@@ -44,7 +45,7 @@ public final class ModCrafting{
 		RecipeHolder.grindRecipes.put("minecraft:nether_wart_block", new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
 		RecipeHolder.grindRecipes.put("cropPotato", new ItemStack[] {new ItemStack(ModItems.mashedPotato, 1)});
 		RecipeHolder.grindRecipes.put("gravel", new ItemStack[] {new ItemStack(Items.FLINT)});
-
+		
 		// Heating, order of decreasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D));
 		RecipeHolder.envirHeatSource.put(Blocks.MAGMA, Triple.of(Blocks.NETHERRACK.getDefaultState(), 500D, 2000D));
@@ -63,6 +64,11 @@ public final class ModCrafting{
 		RecipeHolder.mashedBoboRecipes.add(Pair.of(new CraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new OreDictCraftingStack("dyeMagenta", 1), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new CraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new CraftingStack[] {new OreDictCraftingStack("gemLapis", 1), new OreDictCraftingStack("cobblestone", 1), new OreDictCraftingStack("nuggetGold", 1)}, new ItemStack(ModItems.rainIdol, 1)));
+
+		RecipeHolder.magExtractRecipes.put(Items.REDSTONE, new MagicUnit(3, 1, 0, 0));
+		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 2, 4, 0));
+		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(3, 2, 1, 0));
+		RecipeHolder.magExtractRecipes.put(Items.GLOWSTONE_DUST, new MagicUnit(1, 0, 2, 0));
 		
 		final String axle = "stickIron";
 
@@ -154,6 +160,14 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.redstoneFluidTube, 1), "***", "*&*", "***", '*', "dustRedstone", '&', ModBlocks.fluidTube));
 		//Water Centrifuge
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.waterCentrifuge, 1), "*&*", "^%^", "* *", '*', "ingotBronze", '&', "stickIron", '^', ModBlocks.fluidTube, '%', "ingotTin"));
+		//Pure Quartz TODO (Placeholder recipe. A specialized machine will be added)
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.pureQuartz, 1), "***", "*&*", "***", '*', "dustSalt", '&', "gemQuartz"));
+		//Luminescent Quartz
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.luminescentQuartz, 1), "***", "*&*", "***", '*', "dustGlowstone", '&', ModItems.pureQuartz));
+		//Lens array
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.lensArray, 2), "*&*", "@#$", "*#*", '*', ModItems.pureQuartz, '&', "gemEmerald", '@', "gemRuby", '#', ModItems.luminescentQuartz, '$', "gemDiamond"));
+		//Arcane Extractor
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.arcaneExtractor, 1), "***", "*#&", "***", '*', "stone", '#', ModItems.lensArray, '&', ModItems.luminescentQuartz));
 	}
 
 	private static ItemStack getFilledHopper(){

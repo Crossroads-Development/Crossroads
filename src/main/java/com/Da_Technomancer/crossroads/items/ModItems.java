@@ -44,6 +44,9 @@ public final class ModItems{
 	public static EdibleBlob edibleBlob;
 	public static BasicItem diamondWire;
 	public static RainIdol rainIdol;
+	public static BasicItem pureQuartz;
+	public static BasicItem luminescentQuartz;
+	public static BasicItem lensArray;
 
 	private static ArrayList<Item> modelQue = new ArrayList<Item>();
 
@@ -74,6 +77,9 @@ public final class ModItems{
 		itemAddQue(edibleBlob = new EdibleBlob());
 		itemAddQue(diamondWire = new BasicItem("diamondWire", "wireDiamond"));
 		itemAddQue(rainIdol = new RainIdol());
+		pureQuartz = new BasicItem("pureQuartz", "gemQuartz");
+		luminescentQuartz = new BasicItem("luminescentQuartz");
+		lensArray = new BasicItem("lensArray");
 	}
 
 	@SuppressWarnings("deprecation")

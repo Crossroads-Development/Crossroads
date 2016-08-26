@@ -19,6 +19,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
@@ -88,10 +89,27 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		if(context.equals("beam")){
 			int i = message & 16777215;
 			col = Color.decode(Integer.toString(i));
-			reach = 1 + ((message - i) >> 24);
-			size = 1 + ((message - reach) >> 28);
+			reach = ((message & 251658240) >> 24) + 1;
+			size = ((message - reach) >> 28) + 1;
 			
 		}
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
+		
+		if(inv != null){
+			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
+		}
+		return nbt;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
+		
+		inv = nbt.hasKey("inv") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv")) : null;
 	}
 	
 	private final IItemHandler itemHandler = new ItemHandler();
