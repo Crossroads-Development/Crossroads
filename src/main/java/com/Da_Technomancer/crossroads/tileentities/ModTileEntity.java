@@ -21,6 +21,7 @@ import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntit
 import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.SaltReactorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ItemChutePortTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
@@ -67,6 +68,7 @@ public class ModTileEntity{
 		register(RedstoneFluidTubeTileEntity.class, "redstoneFluidTube");
 		register(WaterCentrifugeTileEntity.class, "waterCentrifuge");
 		register(ArcaneExtractorTileEntity.class, "arcaneExtractor");
+		register(QuartzStabilizerTileEntity.class, "quartzStabilizer");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

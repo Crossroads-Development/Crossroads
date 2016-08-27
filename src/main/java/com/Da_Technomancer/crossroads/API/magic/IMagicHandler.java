@@ -4,6 +4,7 @@ package com.Da_Technomancer.crossroads.API.magic;
 public interface IMagicHandler{
 	
 	public final int MAX_DISTANCE = 16;
+	public final int BEAM_TIME = 5;
 	
 	public void recieveMagic(MagicUnit mag);
 

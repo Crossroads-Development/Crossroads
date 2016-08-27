@@ -29,6 +29,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable, IIntReceiver{
 
+	private int ticksExisted;
 	private ItemStack inv;
 	private Color col;
 	private int reach;
@@ -41,8 +42,9 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	
 	@Override
 	public void update(){
+		++ticksExisted;
 		if(worldObj.isRemote){
-			if(col != null || reach != 0 || size != 0){
+			if(ticksExisted % IMagicHandler.BEAM_TIME == 0 && (col != null || reach != 0 || size != 0)){
 				col = null;
 				reach = 0;
 				size = 0;
@@ -51,7 +53,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		}
 		
 				
-		if(inv != null){
+		if(inv != null && ticksExisted % IMagicHandler.BEAM_TIME == 0){
 			if(!RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
 				inv = null;
 				return;
@@ -62,19 +64,45 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 				inv = null;
 			}
 			emit(mag, worldObj.getBlockState(pos).getValue(Properties.FACING));
+		}else{
+			wipeBeam();
+		}
+	}
+	
+	private void wipeBeam(){
+		if(col != null || reach != 0 || size != 0){
+			col = null;
+			reach = 0;
+			size = 0;
+			ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 	
 	private void emit(MagicUnit mag, EnumFacing dir){
+		if(mag == null || mag.getRGB() == null){
+			return;
+		}
 		for(int i = 1; i <= IMagicHandler.MAX_DISTANCE; i++){
 			if(worldObj.getTileEntity(pos.offset(dir, i)) != null && worldObj.getTileEntity(pos.offset(dir, i)).hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite())){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((i - 1) << 24) + (mag.getRGB().getRGB() & 16777215) + ((Math.min((int) Math.sqrt(mag.getPower()) - 1, 8)) << 28), this.getPos()), new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+				int siz = Math.min((int) Math.sqrt(mag.getPower()) - 1, 7);
+				if(col == null || mag.getRGB().getRGB() != col.getRGB() || siz != size || i != reach){
+					ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((i - 1) << 24) + (mag.getRGB().getRGB() & 16777215) + (siz << 28), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					size = siz;
+					col = mag.getRGB();
+					reach = i;
+				}
 				worldObj.getTileEntity(pos.offset(dir, i)).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).recieveMagic(mag);
 				return;
 			}
 			
 			if(i == IMagicHandler.MAX_DISTANCE || (worldObj.getBlockState(pos.offset(dir, i)) != null && worldObj.getBlockState(pos.offset(dir, i)).isOpaqueCube())){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((i - 1) << 24) + (mag.getRGB().getRGB() & 16777215) + ((Math.min((int) Math.sqrt(mag.getPower()) - 1, 8)) << 28), this.getPos()), new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+				int siz = Math.min((int) Math.sqrt(mag.getPower()) - 1, 8);
+				if(col == null || mag.getRGB().getRGB() != col.getRGB() || siz != size || i != reach){
+					ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((i - 1) << 24) + (mag.getRGB().getRGB() & 16777215) + (siz << 28), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					size = siz;
+					col = mag.getRGB();
+					reach = i;
+				}
 				IEffect e = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
 				if(e != null){
 					e.doEffect(worldObj, pos.offset(dir, i));

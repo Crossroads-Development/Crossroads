@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
@@ -44,6 +45,10 @@ public class RegisterBlockRenderer{
 		
 		reg(ModBlocks.arcaneExtractor);
 		ClientRegistry.bindTileEntitySpecialRenderer(ArcaneExtractorTileEntity.class, new BeamRenderer());
+		
+		reg(ModBlocks.smallQuartzStabilizer);
+		reg(ModBlocks.largeQuartzStabilizer);
+		ClientRegistry.bindTileEntitySpecialRenderer(QuartzStabilizerTileEntity.class, new BeamRenderer());
 	}
 
 	public static void reg(Block block){

@@ -43,6 +43,9 @@ public class SendIntToClient extends Message<SendIntToClient>{
 	}
 
 	public void processMessage(WorldClient worldClient, String context, int message, BlockPos pos){
+		if(worldClient == null){
+			return;
+		}
 		TileEntity te = worldClient.getTileEntity(pos);
 
 		if(te instanceof IIntReceiver){

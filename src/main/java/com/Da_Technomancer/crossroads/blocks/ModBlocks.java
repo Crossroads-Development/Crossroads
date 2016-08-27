@@ -24,6 +24,7 @@ import com.Da_Technomancer.crossroads.blocks.heat.HeatingCrucible;
 import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.SaltReactor;
 import com.Da_Technomancer.crossroads.blocks.magic.ArcaneExtractor;
+import com.Da_Technomancer.crossroads.blocks.magic.QuartzStabilizer;
 import com.Da_Technomancer.crossroads.blocks.rotary.Grindstone;
 import com.Da_Technomancer.crossroads.blocks.rotary.ItemChutePort;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
@@ -74,6 +75,8 @@ public final class ModBlocks{
 	public static RedstoneFluidTube redstoneFluidTube;
 	public static WaterCentrifuge waterCentrifuge;
 	public static ArcaneExtractor arcaneExtractor;
+	public static QuartzStabilizer smallQuartzStabilizer;
+	public static QuartzStabilizer largeQuartzStabilizer;
 
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 
@@ -115,6 +118,8 @@ public final class ModBlocks{
 		blockAddQue(redstoneFluidTube = new RedstoneFluidTube());
 		blockAddQue(waterCentrifuge = new WaterCentrifuge());
 		blockAddQue(arcaneExtractor = new ArcaneExtractor());
+		blockAddQue(smallQuartzStabilizer = new QuartzStabilizer(false));
+		blockAddQue(largeQuartzStabilizer = new QuartzStabilizer(true));
 	}
 
 	@SideOnly(Side.CLIENT)

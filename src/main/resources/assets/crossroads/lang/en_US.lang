@@ -139,3 +139,5 @@ tile.arcaneExtractor.name=Arcane Extractor
 item.pureQuartz.name=Pure Quartz
 item.luminescentQuartz.name=Luminescent Quartz
 item.lensArray.name=Crystal Lens Array
+tile.smallQuartzStabilizer.name=Small Quartz Stabilizer
+tile.largeQuartzStabilizer.name=Large Quartz Stabilizer

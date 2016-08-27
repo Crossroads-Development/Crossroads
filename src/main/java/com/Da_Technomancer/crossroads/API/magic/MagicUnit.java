@@ -58,7 +58,7 @@ public class MagicUnit{
 		return col == null ? new Color(0, 0, 0) : new Color((int) Math.round(((double) col.getRed()) * mult), (int) Math.round(((double) col.getGreen()) * mult), (int) Math.round(((double) col.getBlue()) * mult));
 	}
 	
-	/**Returns the MagicUnit with the lowest power with a color that matches the goal. Will decrease power to below count at cost of accuracy, setting count to -1 disables tjis
+	/**Returns the MagicUnit with the lowest power with a color that matches the goal. Will decrease power to below count at cost of accuracy, setting count to -1 disables this
 	 * Please note that this method is not 100% accurate due to taking rounding errors (RGB is stored as int, sometimes rounding occurs) into account.
 	 */
 	public static MagicUnit getClosestMatch(Color goal, int count){
