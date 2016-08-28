@@ -65,15 +65,19 @@ public class ConduitBakedModel implements IBakedModel{
 	}
 
 	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite){
+		return createQuad(v1, v2, v3, v4, sprite, 16, 16);
+	}
+	
+	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int u, int v){
 		Vec3d normal = v1.subtract(v2).crossProduct(v3.subtract(v2));
 
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
 		builder.setTexture(sprite);
 		builder.setApplyDiffuseLighting(false);
 		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, 0, 0, sprite);
-		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, 0, 16, sprite);
-		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, 16, 16, sprite);
-		putVertex(builder, normal, v4.xCoord, v4.yCoord, v4.zCoord, 16, 0, sprite);
+		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, 0, v, sprite);
+		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, u, v, sprite);
+		putVertex(builder, normal, v4.xCoord, v4.yCoord, v4.zCoord, u, 0, sprite);
 		return builder.build();
 	}
 
@@ -101,56 +105,57 @@ public class ConduitBakedModel implements IBakedModel{
 		Boolean up = extendedBlockState.getValue(Properties.CONNECT)[1];
 		Boolean down = extendedBlockState.getValue(Properties.CONNECT)[0];
 		double size = ((IConduitModel) state.getBlock()).getSize();
-
+		int tSize = (int) (16D * size / (1D - (2D * size)));
+		
 		if(up){
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite));
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1, 1 - size), new Vec3d(size, 1, size), new Vec3d(size, 1 - size, size), sprite));
-			quads.add(createQuad(new Vec3d(size, 1, size), new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), sprite));
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(size, 1, 1 - size), sprite));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1, 1 - size), new Vec3d(size, 1, size), new Vec3d(size, 1 - size, size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(size, 1, size), new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), sprite, tSize, 16));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(size, 1, 1 - size), sprite, tSize, 16));
 		}else{
 			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), sprite));
 		}
 
 		if(down){
-			quads.add(createQuad(new Vec3d(1 - size, 0, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 0, 1 - size), sprite));
-			quads.add(createQuad(new Vec3d(size, 0, 1 - size), new Vec3d(size, size, 1 - size), new Vec3d(size, size, size), new Vec3d(size, 0, size), sprite));
-			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, 0, size), new Vec3d(size, 0, size), sprite));
+			quads.add(createQuad(new Vec3d(1 - size, 0, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 0, 1 - size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(size, 0, 1 - size), new Vec3d(size, size, 1 - size), new Vec3d(size, size, size), new Vec3d(size, 0, size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, 0, size), new Vec3d(size, 0, size), sprite, tSize, 16));
 			quads.add(createQuad(new Vec3d(size, 0, 1 - size), new Vec3d(1 - size, 0, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(size, size, 1 - size), sprite));
 		}else{
 			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 1 - size), new Vec3d(size, size, 1 - size), sprite));
 		}
 
 		if(east){
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1, 1 - size, size), new Vec3d(1 - size, 1 - size, size), sprite));
-			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1, size, size), new Vec3d(1, size, 1 - size), new Vec3d(1 - size, size, 1 - size), sprite));
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1, 1 - size, size), new Vec3d(1, size, size), new Vec3d(1 - size, size, size), sprite));
-			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1, size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1, 1 - size, size), new Vec3d(1 - size, 1 - size, size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1, size, size), new Vec3d(1, size, 1 - size), new Vec3d(1 - size, size, 1 - size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1, 1 - size, size), new Vec3d(1, size, size), new Vec3d(1 - size, size, size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1, size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite, 16, tSize));
 		}else{
 			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, size, 1 - size), sprite));
 		}
 
 		if(west){
-			quads.add(createQuad(new Vec3d(0, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, size), new Vec3d(0, 1 - size, size), sprite));
-			quads.add(createQuad(new Vec3d(0, size, size), new Vec3d(size, size, size), new Vec3d(size, size, 1 - size), new Vec3d(0, size, 1 - size), sprite));
-			quads.add(createQuad(new Vec3d(0, 1 - size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, size, size), new Vec3d(0, size, size), sprite));
-			quads.add(createQuad(new Vec3d(0, size, 1 - size), new Vec3d(size, size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(0, 1 - size, 1 - size), sprite));
+			quads.add(createQuad(new Vec3d(0, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, size), new Vec3d(0, 1 - size, size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(0, size, size), new Vec3d(size, size, size), new Vec3d(size, size, 1 - size), new Vec3d(0, size, 1 - size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(0, 1 - size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, size, size), new Vec3d(0, size, size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(0, size, 1 - size), new Vec3d(size, size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(0, 1 - size, 1 - size), sprite, 16, tSize));
 		}else{
 			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, size), new Vec3d(size, size, size), sprite));
 		}
 
 		if(north){
-			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 0), new Vec3d(size, 1 - size, 0), sprite));
-			quads.add(createQuad(new Vec3d(size, size, 0), new Vec3d(1 - size, size, 0), new Vec3d(1 - size, size, size), new Vec3d(size, size, size), sprite));
-			quads.add(createQuad(new Vec3d(1 - size, size, 0), new Vec3d(1 - size, 1 - size, 0), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), sprite));
-			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1 - size, 0), new Vec3d(size, size, 0), sprite));
+			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 0), new Vec3d(size, 1 - size, 0), sprite, tSize, 16));
+			quads.add(createQuad(new Vec3d(size, size, 0), new Vec3d(1 - size, size, 0), new Vec3d(1 - size, size, size), new Vec3d(size, size, size), sprite, tSize, 16));
+			quads.add(createQuad(new Vec3d(1 - size, size, 0), new Vec3d(1 - size, 1 - size, 0), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), sprite, tSize, 16));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1 - size, 0), new Vec3d(size, size, 0), sprite, tSize, 16));
 		}else{
 			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), new Vec3d(size, size, size), sprite));
 		}
 		if(south){
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1), new Vec3d(1 - size, 1 - size, 1), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), sprite));
-			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, size, 1), new Vec3d(size, size, 1), sprite));
-			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1), new Vec3d(1 - size, size, 1), sprite));
-			quads.add(createQuad(new Vec3d(size, size, 1), new Vec3d(size, 1 - size, 1), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, size, 1 - size), sprite));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1), new Vec3d(1 - size, 1 - size, 1), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), sprite, tSize, 16));
+			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, size, 1), new Vec3d(size, size, 1), sprite, tSize, 16));
+			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1), new Vec3d(1 - size, size, 1), sprite, tSize, 16));
+			quads.add(createQuad(new Vec3d(size, size, 1), new Vec3d(size, 1 - size, 1), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, size, 1 - size), sprite, tSize, 16));
 		}else{
 			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), sprite));
 		}

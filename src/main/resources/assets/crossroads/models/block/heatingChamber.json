@@ -6,7 +6,7 @@
 		"east": "crossroads:blocks/heatingChamber_side",
 		"west": "crossroads:blocks/heatingChamber_side",
 		"up": "crossroads:blocks/heatingChamber_top",
-		"down": "blocks/iron_block",
+		"down": "crossroads:blocks/heatingChamber_bottom",
 		"particle": "crossroads:blocks/heatingChamber_side"
 	}
 }
