@@ -34,15 +34,13 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 		GlStateManager.color(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(LargeGearRenderer.TEXTURE);
 		GlStateManager.disableLighting();
-		GlStateManager.disableCull();
 
 		switch(dir){
 			case DOWN:
 				GlStateManager.rotate(180, 1, 0, 0);
-				//TODO
+				GlStateManager.translate(0, 0, -1);
 				break;
 			case UP:
-				//TODO
 				break;
 			case EAST:
 				GlStateManager.rotate(-90, 0, 0, 1);
@@ -68,22 +66,26 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 		final int length = trip.getMiddle().intValue();
 
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		buf.pos(small, length, small).tex(.5D, 0).endVertex();
-		buf.pos(small, 0, small).tex(.5D, 1).endVertex();
-		buf.pos(big, 0, small).tex(0, 1).endVertex();
-		buf.pos(big, length, small).tex(0, 0).endVertex();
-		buf.pos(big, length, big).tex(.5D, 0).endVertex();
-		buf.pos(big, 0, big).tex(.5D, 1).endVertex();
-		buf.pos(small, 0, big).tex(0, 1).endVertex();
-		buf.pos(small, length, big).tex(0, 0).endVertex();
-		buf.pos(big, length, small).tex(.5D, 0).endVertex();
-		buf.pos(big, 0, small).tex(.5D, 1).endVertex();
-		buf.pos(big, 0, big).tex(0, 1).endVertex();
-		buf.pos(big, length, big).tex(0, 0).endVertex();
+		//+Z
 		buf.pos(small, length, big).tex(.5D, 0).endVertex();
 		buf.pos(small, 0, big).tex(.5D, 1).endVertex();
+		buf.pos(big, 0, big).tex(0, 1).endVertex();
+		buf.pos(big, length, big).tex(0, 0).endVertex();
+		//-Z
+		buf.pos(big, length, small).tex(.5D, 0).endVertex();
+		buf.pos(big, 0, small).tex(.5D, 1).endVertex();
 		buf.pos(small, 0, small).tex(0, 1).endVertex();
 		buf.pos(small, length, small).tex(0, 0).endVertex();
+		//-X
+		buf.pos(small, length, small).tex(.5D, 0).endVertex();
+		buf.pos(small, 0, small).tex(.5D, 1).endVertex();
+		buf.pos(small, 0, big).tex(0, 1).endVertex();
+		buf.pos(small, length, big).tex(0, 0).endVertex();
+		//+X
+		buf.pos(big, length, big).tex(.5D, 0).endVertex();
+		buf.pos(big, 0, big).tex(.5D, 1).endVertex();
+		buf.pos(big, 0, small).tex(0, 1).endVertex();
+		buf.pos(big, length, small).tex(0, 0).endVertex();
 		tes.draw();
 
 		GlStateManager.popAttrib();

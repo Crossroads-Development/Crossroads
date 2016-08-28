@@ -30,8 +30,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 @SuppressWarnings({"serial", "rawtypes"})
-public class Message<REQ extends Message> implements Serializable, IMessage,
-		IMessageHandler<REQ, IMessage>{
+public class Message<REQ extends Message> implements Serializable, IMessage, IMessageHandler<REQ, IMessage>{
 	@SuppressWarnings("unchecked")
 	private static final HashMap<Class, Pair<Reader, Writer>> handlers = new HashMap();
 	@SuppressWarnings("unchecked")

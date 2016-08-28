@@ -42,30 +42,21 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	
 	@Override
 	public void update(){
-		++ticksExisted;
 		if(worldObj.isRemote){
-			if(ticksExisted % IMagicHandler.BEAM_TIME == 0 && (col != null || reach != 0 || size != 0)){
-				col = null;
-				reach = 0;
-				size = 0;
-			}
 			return;
 		}
 		
-				
-		if(inv != null && ticksExisted % IMagicHandler.BEAM_TIME == 0){
-			if(!RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
+		if(++ticksExisted % IMagicHandler.BEAM_TIME == 0){
+			if(inv != null && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
+				MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
+				if(--inv.stackSize <= 0){
+					inv = null;
+				}
+				emit(mag, worldObj.getBlockState(pos).getValue(Properties.FACING));
+			}else{
 				inv = null;
-				return;
+				wipeBeam();
 			}
-			
-			MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
-			if(--inv.stackSize <= 0){
-				inv = null;
-			}
-			emit(mag, worldObj.getBlockState(pos).getValue(Properties.FACING));
-		}else{
-			wipeBeam();
 		}
 	}
 	
@@ -96,7 +87,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 			}
 			
 			if(i == IMagicHandler.MAX_DISTANCE || (worldObj.getBlockState(pos.offset(dir, i)) != null && worldObj.getBlockState(pos.offset(dir, i)).isOpaqueCube())){
-				int siz = Math.min((int) Math.sqrt(mag.getPower()) - 1, 8);
+				int siz = Math.min((int) Math.sqrt(mag.getPower()) - 1, 7);
 				if(col == null || mag.getRGB().getRGB() != col.getRGB() || siz != size || i != reach){
 					ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((i - 1) << 24) + (mag.getRGB().getRGB() & 16777215) + (siz << 28), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					size = siz;
@@ -124,12 +115,29 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	}
 	
 	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		if(col != null){
+			nbt.setInteger("col", col.getRGB() & 16777215);
+		}
+		nbt.setInteger("reach", reach);
+		nbt.setInteger("size", size);
+		return nbt;
+	}
+	
+	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		
 		if(inv != null){
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
+		if(col != null){
+			nbt.setInteger("col", col.getRGB() & 16777215);
+		}
+		nbt.setInteger("reach", reach);
+		nbt.setInteger("size", size);
+		
 		return nbt;
 	}
 	
@@ -138,6 +146,9 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		super.readFromNBT(nbt);
 		
 		inv = nbt.hasKey("inv") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv")) : null;
+		col = nbt.hasKey("col") ? Color.decode(Integer.toString(nbt.getInteger("col"))) : null;
+		reach = nbt.getInteger("reach");
+		size = nbt.getInteger("size");
 	}
 	
 	private final IItemHandler itemHandler = new ItemHandler();

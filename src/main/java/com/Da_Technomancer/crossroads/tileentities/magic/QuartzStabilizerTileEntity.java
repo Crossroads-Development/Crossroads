@@ -35,8 +35,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	
 	public QuartzStabilizerTileEntity(){
 		
-	}
-	
+	}	
 	public QuartzStabilizerTileEntity(boolean large){
 		this.large = large;
 	}
@@ -48,29 +47,37 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 
 	@Override
 	public void update(){
-		++ticksExisted;
 		if(worldObj.isRemote){
-			if(ticksExisted % IMagicHandler.BEAM_TIME == 0){
-				col = null;
-				reach = 0;
-				size = 0;
-			}
 			return;
 		}
+		++ticksExisted;
 		
-		if(ticksExisted % IMagicHandler.BEAM_TIME == 0 && (stored[0] != 0 || stored[1] != 0 || stored[2] != 0 || stored[3] != 0)){
-			MagicUnit mag = MagicUnit.getClosestMatch(new MagicUnit(stored[0], stored[1], stored[2], stored[3]).getRGB(), RATE[large ? 1 : 0]);
-			double mult = ((double) RATE[large ? 1 : 0]) / ((double) mag.getPower());
-			mag = new MagicUnit((int) Math.round(((double) mag.getEnergy()) * mult), (int) Math.round(((double) mag.getPotential()) * mult), (int) Math.round(((double) mag.getStability()) * mult), (int) Math.round(((double) mag.getVoid()) * mult));
-			stored[0] -= mag.getEnergy();
-			stored[1] -= mag.getPotential();
-			stored[2] -= mag.getStability();
-			stored[3] -= mag.getVoid();
-			
-			emit(mag, worldObj.getBlockState(pos).getValue(Properties.FACING));
-		}else{
-			wipeBeam();
+		if(ticksExisted % IMagicHandler.BEAM_TIME == 0){
+			if(stored[0] != 0 || stored[1] != 0 || stored[2] != 0 || stored[3] != 0){
+				MagicUnit mag = MagicUnit.getClosestMatch(new MagicUnit(stored[0], stored[1], stored[2], stored[3]).getRGB(), RATE[large ? 1 : 0]);
+				double mult = ((double) RATE[large ? 1 : 0]) / ((double) mag.getPower());
+				mag = new MagicUnit(Math.min((int) Math.round(((double) mag.getEnergy()) * mult), stored[0]), Math.min((int) Math.round(((double) mag.getPotential()) * mult), stored[1]), Math.min((int) Math.round(((double) mag.getStability()) * mult), stored[2]), Math.min((int) Math.round(((double) mag.getVoid()) * mult), stored[3]));
+				stored[0] -= mag.getEnergy();
+				stored[1] -= mag.getPotential();
+				stored[2] -= mag.getStability();
+				stored[3] -= mag.getVoid();
+
+				emit(mag, worldObj.getBlockState(pos).getValue(Properties.FACING));
+			}else{
+				wipeBeam();
+			}
 		}
+	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		if(col != null){
+			nbt.setInteger("col", col.getRGB() & 16777215);
+		}
+		nbt.setInteger("reach", reach);
+		nbt.setInteger("size", size);
+		return nbt;
 	}
 	
 	private void wipeBeam(){
@@ -83,7 +90,6 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	}
 	
 	private void emit(MagicUnit mag, EnumFacing dir){
-		//TODO WARNING! Something in this method causes major issues with large quartz stabilizer
 		if(mag == null || mag.getRGB() == null){
 			return;
 		}
@@ -116,15 +122,20 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 			}
 		}
 	}
-	
+
 	@Override
 	public void receiveInt(String context, int message){
 		if(context.equals("beam")){
-			int i = message & 16777215;
-			reach = ((message & 251658240) >> 24) + 1;
-			size = reach == 0 ? 0 : ((message - reach) >> 28) + 1;
-			col = reach == 0 ? null : Color.decode(Integer.toString(i));
-			
+			if(message == 0){
+				reach = 0;
+				size = 0;
+				col = null;
+			}else{
+				int i = message & 16777215;
+				reach = ((message >> 24) & 15) + 1;
+				size = (message >> 28) + 1;
+				col = Color.decode(Integer.toString(i));
+			}
 		}
 	}
 
@@ -136,6 +147,12 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 		nbt.setInteger("stab", stored[2]);
 		nbt.setInteger("void", stored[3]);
 		
+		if(col != null){
+			nbt.setInteger("col", col.getRGB() & 16777215);
+		}
+		nbt.setInteger("reach", reach);
+		nbt.setInteger("size", size);
+		
 		return nbt;
 	}
 	
@@ -146,6 +163,10 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 		stored[1] = nbt.getInteger("pot");
 		stored[2] = nbt.getInteger("stab");
 		stored[3] = nbt.getInteger("void");
+		
+		col = nbt.hasKey("col") ? Color.decode(Integer.toString(nbt.getInteger("col"))) : null;
+		reach = nbt.getInteger("reach");
+		size = nbt.getInteger("size");
 	}
 	
 	private final IMagicHandler magicHandler = new MagicHandler();
