@@ -9,7 +9,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public abstract class BeamRenderTE extends TileEntity{
 
-	public abstract Triple<Color, Integer, Integer> getBeam();
+	public abstract Triple<Color, Integer, Integer>[] getBeam();
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){

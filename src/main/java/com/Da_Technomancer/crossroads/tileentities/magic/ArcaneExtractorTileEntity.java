@@ -35,9 +35,12 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	private int reach;
 	private int size;
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Triple<Color, Integer, Integer> getBeam(){
-		return col == null ? null : Triple.of(col, reach, size);
+	public Triple<Color, Integer, Integer>[] getBeam(){
+		Triple<Color, Integer, Integer>[] out = new Triple[6];
+		out[worldObj.getBlockState(pos).getValue(Properties.FACING).getIndex()] = col == null ? null : Triple.of(col, reach, size);
+		return out;
 	}
 	
 	@Override

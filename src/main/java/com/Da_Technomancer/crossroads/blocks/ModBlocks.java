@@ -24,6 +24,7 @@ import com.Da_Technomancer.crossroads.blocks.heat.HeatingCrucible;
 import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.SaltReactor;
 import com.Da_Technomancer.crossroads.blocks.magic.ArcaneExtractor;
+import com.Da_Technomancer.crossroads.blocks.magic.CrystallinePrism;
 import com.Da_Technomancer.crossroads.blocks.magic.QuartzStabilizer;
 import com.Da_Technomancer.crossroads.blocks.rotary.Grindstone;
 import com.Da_Technomancer.crossroads.blocks.rotary.ItemChutePort;
@@ -77,6 +78,7 @@ public final class ModBlocks{
 	public static ArcaneExtractor arcaneExtractor;
 	public static QuartzStabilizer smallQuartzStabilizer;
 	public static QuartzStabilizer largeQuartzStabilizer;
+	public static CrystallinePrism crystallinePrism;
 
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 
@@ -120,6 +122,7 @@ public final class ModBlocks{
 		blockAddQue(arcaneExtractor = new ArcaneExtractor());
 		blockAddQue(smallQuartzStabilizer = new QuartzStabilizer(false));
 		blockAddQue(largeQuartzStabilizer = new QuartzStabilizer(true));
+		blockAddQue(crystallinePrism = new CrystallinePrism());
 	}
 
 	@SideOnly(Side.CLIENT)
