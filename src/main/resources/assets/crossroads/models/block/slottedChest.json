@@ -5,8 +5,8 @@
 		"south": "crossroads:blocks/slottedChest",
 		"east": "crossroads:blocks/slottedChest",
 		"west": "crossroads:blocks/slottedChest",
-		"up": "blocks/planks_oak",
-		"down": "blocks/planks_oak",
+		"up": "crossroads:blocks/slottedChestTop",
+		"down": "crossroads:blocks/slottedChestBottom",
 		"particle": "crossroads:blocks/slottedChest"
 	}
 }
