@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
@@ -32,7 +33,7 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 		GlStateManager.pushAttrib();
 		GlStateManager.translate(x, y, z);
 		GlStateManager.color(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(LargeGearRenderer.TEXTURE);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
 		GlStateManager.disableLighting();
 
 		switch(dir){
@@ -67,24 +68,24 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		//+Z
-		buf.pos(small, length, big).tex(.5D, 0).endVertex();
-		buf.pos(small, 0, big).tex(.5D, 1).endVertex();
-		buf.pos(big, 0, big).tex(0, 1).endVertex();
+		buf.pos(small, length, big).tex(1, 0).endVertex();
+		buf.pos(small, 0, big).tex(1, length).endVertex();
+		buf.pos(big, 0, big).tex(0, length).endVertex();
 		buf.pos(big, length, big).tex(0, 0).endVertex();
 		//-Z
-		buf.pos(big, length, small).tex(.5D, 0).endVertex();
-		buf.pos(big, 0, small).tex(.5D, 1).endVertex();
-		buf.pos(small, 0, small).tex(0, 1).endVertex();
+		buf.pos(big, length, small).tex(1, 0).endVertex();
+		buf.pos(big, 0, small).tex(1, length).endVertex();
+		buf.pos(small, 0, small).tex(0, length).endVertex();
 		buf.pos(small, length, small).tex(0, 0).endVertex();
 		//-X
-		buf.pos(small, length, small).tex(.5D, 0).endVertex();
-		buf.pos(small, 0, small).tex(.5D, 1).endVertex();
-		buf.pos(small, 0, big).tex(0, 1).endVertex();
+		buf.pos(small, length, small).tex(1, 0).endVertex();
+		buf.pos(small, 0, small).tex(1, length).endVertex();
+		buf.pos(small, 0, big).tex(0, length).endVertex();
 		buf.pos(small, length, big).tex(0, 0).endVertex();
 		//+X
-		buf.pos(big, length, big).tex(.5D, 0).endVertex();
-		buf.pos(big, 0, big).tex(.5D, 1).endVertex();
-		buf.pos(big, 0, small).tex(0, 1).endVertex();
+		buf.pos(big, length, big).tex(1, 0).endVertex();
+		buf.pos(big, 0, big).tex(1, length).endVertex();
+		buf.pos(big, 0, small).tex(0, length).endVertex();
 		buf.pos(big, length, small).tex(0, 0).endVertex();
 		tes.draw();
 
