@@ -160,18 +160,22 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.redstoneFluidTube, 1), "***", "*&*", "***", '*', "dustRedstone", '&', ModBlocks.fluidTube));
 		//Water Centrifuge
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.waterCentrifuge, 1), "*&*", "^%^", "* *", '*', "ingotBronze", '&', "stickIron", '^', ModBlocks.fluidTube, '%', "ingotTin"));
-		//Pure Quartz TODO (Placeholder recipe. A specialized machine will be added)
+		//Pure Quartz
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.pureQuartz, 1), "***", "*&*", "***", '*', "dustSalt", '&', "gemQuartz"));
-		//Luminescent Quartz
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.luminescentQuartz, 1), "***", "*&*", "***", '*', "dustGlowstone", '&', ModItems.pureQuartz));
 		//Lens array
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.lensArray, 2), "*&*", "@#$", "*#*", '*', ModItems.pureQuartz, '&', "gemEmerald", '@', "gemRuby", '#', ModItems.luminescentQuartz, '$', "gemDiamond"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.lensArray, 2), "*&*", "@#$", "***", '*', ModItems.pureQuartz, '&', "gemEmerald", '@', "gemRuby", '$', "gemDiamond"));
 		//Arcane Extractor
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.arcaneExtractor, 1), "***", "*#&", "***", '*', "stone", '#', ModItems.lensArray, '&', ModItems.luminescentQuartz));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.arcaneExtractor, 1), "***", "*# ", "***", '*', "stone", '#', ModItems.lensArray));
 		//Small Quartz Stabilizer
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.smallQuartzStabilizer, 1), " & ", "***", '&', ModItems.luminescentQuartz, '*', ModItems.pureQuartz));
 		//Large Quartz Stabilizer
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.largeQuartzStabilizer, 1), "***", "*&*", "***", '*', ModItems.pureQuartz, '&', ModBlocks.smallQuartzStabilizer));
+		//Crystalline Prism
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.crystallinePrism, 1), "*^*", "^&^", "*&*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModItems.lensArray));
+		//Arcane Reflector
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.arcaneReflector, 1), "*^*", "^^^", "*^*", '*', "stone", '^', ModItems.pureQuartz));
+		//Lens Holder
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.lensHolder, 1), " * ", "* *", "***", '*', "stone"));
 	}
 
 	private static ItemStack getFilledHopper(){

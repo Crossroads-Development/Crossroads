@@ -97,19 +97,25 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 			return;
 		}
 		for(int i = 1; i <= IMagicHandler.MAX_DISTANCE; i++){
+			boolean skip = false;
 			if(worldObj.getTileEntity(pos.offset(dir, i)) != null && worldObj.getTileEntity(pos.offset(dir, i)).hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite())){
-				int siz = Math.min((int) Math.sqrt(mag.getPower()) - 1, 7);
-				if(col == null || mag.getRGB().getRGB() != col.getRGB() || siz != size || i != reach){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((i - 1) << 24) + (mag.getRGB().getRGB() & 16777215) + (siz << 28), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					size = siz;
-					col = mag.getRGB();
-					reach = i;
+				if(worldObj.getTileEntity(pos.offset(dir, i)).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).canPass(mag) != null){
+					mag = worldObj.getTileEntity(pos.offset(dir, i)).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).canPass(mag);
+					skip = true;
+				}else{
+					int siz = Math.min((int) Math.sqrt(mag.getPower()) - 1, 7);
+					if(col == null || mag.getRGB().getRGB() != col.getRGB() || siz != size || i != reach){
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((i - 1) << 24) + (mag.getRGB().getRGB() & 16777215) + (siz << 28), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						size = siz;
+						col = mag.getRGB();
+						reach = i;
+					}
+					worldObj.getTileEntity(pos.offset(dir, i)).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).recieveMagic(mag);
+					return;
 				}
-				worldObj.getTileEntity(pos.offset(dir, i)).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).recieveMagic(mag);
-				return;
 			}
-			
-			if(i == IMagicHandler.MAX_DISTANCE || (worldObj.getBlockState(pos.offset(dir, i)) != null && !worldObj.getBlockState(pos.offset(dir, i)).getBlock().isAir(worldObj.getBlockState(pos.offset(dir, i)), worldObj, pos.offset(dir, i)))){
+
+			if(i == IMagicHandler.MAX_DISTANCE || (!skip && worldObj.getBlockState(pos.offset(dir, i)) != null && !worldObj.getBlockState(pos.offset(dir, i)).getBlock().isAir(worldObj.getBlockState(pos.offset(dir, i)), worldObj, pos.offset(dir, i)))){
 				int siz = Math.min((int) Math.sqrt(mag.getPower()) - 1, 7);
 				if(col == null || mag.getRGB().getRGB() != col.getRGB() || siz != size || i != reach){
 					ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((i - 1) << 24) + (mag.getRGB().getRGB() & 16777215) + (siz << 28), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
@@ -195,6 +201,11 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	
 	private class MagicHandler implements IMagicHandler{
 
+		@Override
+		public MagicUnit canPass(MagicUnit mag){
+			return null;
+		}
+		
 		@Override
 		public void recieveMagic(MagicUnit mag){
 			double mult = Math.min(1, ((double) (LIMIT[large ? 1 : 0] - (stored[0] + stored[1] + stored[2] + stored[3]))) / (double) mag.getPower());

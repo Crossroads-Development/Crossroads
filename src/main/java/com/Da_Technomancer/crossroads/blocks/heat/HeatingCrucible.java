@@ -36,7 +36,7 @@ public class HeatingCrucible extends BlockContainer{
 
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.FULLNESS, 0).withProperty(Properties.TEXTURE, 0);
+		return this.getDefaultState().withProperty(Properties.FULLNESS, 0).withProperty(Properties.TEXTURE_4, 0);
 	}
 
 	@Override
@@ -46,17 +46,17 @@ public class HeatingCrucible extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FULLNESS, Properties.TEXTURE});
+		return new BlockStateContainer(this, new IProperty[] {Properties.FULLNESS, Properties.TEXTURE_4});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.FULLNESS, meta & 3).withProperty(Properties.TEXTURE, (meta & 12) / 4);
+		return this.getDefaultState().withProperty(Properties.FULLNESS, meta & 3).withProperty(Properties.TEXTURE_4, (meta & 12) / 4);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.FULLNESS) + (state.getValue(Properties.TEXTURE) * 4);
+		return state.getValue(Properties.FULLNESS) + (state.getValue(Properties.TEXTURE_4) * 4);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.CrystallinePrismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
@@ -20,7 +21,8 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
-public class RegisterBlockRenderer{
+/** Before anyone asks, the A at the beginning of the name is so I can easily find it in the list of classes.*/
+public class AModTESR{
 
 	public static void registerBlockRenderer(){
 
@@ -53,6 +55,9 @@ public class RegisterBlockRenderer{
 		
 		reg(ModBlocks.crystallinePrism);
 		ClientRegistry.bindTileEntitySpecialRenderer(CrystallinePrismTileEntity.class, new BeamRenderer());
+		
+		reg(ModBlocks.arcaneReflector);
+		ClientRegistry.bindTileEntitySpecialRenderer(ArcaneReflectorTileEntity.class, new BeamRenderer());
 	}
 
 	public static void reg(Block block){

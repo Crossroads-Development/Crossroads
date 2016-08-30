@@ -111,7 +111,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 	private int ticksExisted = 0;
 
 	private IBlockState getCorrectState(){
-		return ModBlocks.heatingCrucible.getDefaultState().withProperty(Properties.FULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + (inventory == null ? 0F : ((float) inventory.stackSize)) * 3F / 16F))).withProperty(Properties.TEXTURE, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
+		return ModBlocks.heatingCrucible.getDefaultState().withProperty(Properties.FULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + (inventory == null ? 0F : ((float) inventory.stackSize)) * 3F / 16F))).withProperty(Properties.TEXTURE_4, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 			markDirty();
 		}
 
-		if(getWorld().getBlockState(getPos()).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || getWorld().getBlockState(getPos()).getValue(Properties.TEXTURE) != getCorrectState().getValue(Properties.TEXTURE)){
+		if(getWorld().getBlockState(getPos()).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || getWorld().getBlockState(getPos()).getValue(Properties.TEXTURE_4) != getCorrectState().getValue(Properties.TEXTURE_4)){
 			getWorld().setBlockState(getPos(), getCorrectState(), 2);
 		}
 	}

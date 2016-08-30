@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/WIP",
+		"south": "crossroads:blocks/WIP",
+		"east": "#gem",
+		"west": "#gem",
+		"up": "crossroads:blocks/WIP",
+		"down": "crossroads:blocks/WIP",
+		"particle": "crossroads:blocks/WIP"
+	}
+}

@@ -15,6 +15,7 @@ import net.minecraft.init.Blocks;
 public enum MagicElements{
 	
 	TIME(new TimeEffect(), null, new Color(255, 100, 0), 2),
+	LIGHT(null, null, new Color(255, 255, 255), 10),
 	//TODO populate
 	//This section needs more elements, and they all (or at least most of them) need an effect and void effect.
 	

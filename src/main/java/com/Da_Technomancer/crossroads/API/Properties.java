@@ -15,6 +15,7 @@ public class Properties{
 	/**true means X axis, false means Z axis*/
 	public static final PropertyBool ORIENT = PropertyBool.create("orient");
 	/**0 = copper, 1 = molten copper, 2 = cobble, 3 = lava*/
-	public static final PropertyInteger TEXTURE = PropertyInteger.create("text", 0, 3);
-
+	public static final PropertyInteger TEXTURE_4 = PropertyInteger.create("text", 0, 3);
+	/**0 = none, 1 = ruby, 2 = emerald, 3 = diamond, 4 = pure quartz, 5 = luminescent quartz */
+	public static final PropertyInteger TUXTURE_6 = PropertyInteger.create("text_six", 0, 5);
 }
