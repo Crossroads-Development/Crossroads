@@ -3,10 +3,10 @@
 	"variants": {
 		"orient": {
 			true: {
-				"model": "crossroads:lensHolder"
+				"model": "crossroads:lensHolder", "y":90
 			},
 			false: {
-				"model": "crossroads:lensHolder", "y":90
+				"model": "crossroads:lensHolder"
 			}
 		},
 		"text_six": {

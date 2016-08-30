@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.magic;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
@@ -12,6 +14,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -20,13 +23,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LensHolder extends BlockContainer{
 
@@ -49,6 +57,17 @@ public class LensHolder extends BlockContainer{
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer(){
+		return BlockRenderLayer.CUTOUT;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
 	}
 	
 	@Override
@@ -106,5 +125,18 @@ public class LensHolder extends BlockContainer{
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
+	}
+	
+	private static final AxisAlignedBB BB = new AxisAlignedBB(0, 0, .375D, 1, 1, .625D);
+	private static final AxisAlignedBB BBA = new AxisAlignedBB(.375D, 0, 0, .625D, 1, 1);
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		return state.getValue(Properties.ORIENT) ? BBA : BB;
+	}
+
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+		addCollisionBoxToList(pos, mask, list, state.getValue(Properties.ORIENT) ? BBA : BB);
 	}
 }

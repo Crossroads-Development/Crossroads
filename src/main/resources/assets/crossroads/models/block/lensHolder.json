@@ -1,12 +1,64 @@
 {
-	"parent": "block/cube_all",
 	"textures": {
-		"north": "crossroads:blocks/WIP",
-		"south": "crossroads:blocks/WIP",
-		"east": "#gem",
-		"west": "#gem",
-		"up": "crossroads:blocks/WIP",
-		"down": "crossroads:blocks/WIP",
-		"particle": "crossroads:blocks/WIP"
-	}
+		"side": "blocks/stone",
+		"particle": "#side"
+	},
+	"elements": [
+	             {
+	            	 "from": [ 0.0, 0.0, 6.0 ], 
+	            	 "to": [ 16.0, 2.0, 10.0 ], 
+	            	 "faces": {
+	            		 "north": { "texture": "#side", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+	            		 "east": { "texture": "#side", "uv": [ 0.0, 0.0, 4.0, 2.0 ] },
+	            		 "south": { "texture": "#side", "uv": [ 0.0, 0.0, 13.0, 4.0 ] },
+	            		 "west": { "texture": "#side", "uv": [ 0.0, 0.0, 4.0, 2.0 ] },
+	            		 "up": { "texture": "#side", "uv": [ 0.0, 0.0, 16.0, 4.0 ] },
+	            		 "down": { "texture": "#side", "uv": [ 0.0, 0.0, 16.0, 4.0 ], "cullface": "down" }
+	            	 }
+	             },
+	             {
+	            	 "from": [ 0.0, 14.0, 6.0 ], 
+	            	 "to": [ 16.0, 16.0, 10.0 ], 
+	            	 "faces": {
+	            		 "north": { "texture": "#side", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+	            		 "east": { "texture": "#side", "uv": [ 0.0, 0.0, 4.0, 2.0 ] },
+	            		 "south": { "texture": "#side", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+	            		 "west": { "texture": "#side", "uv": [ 0.0, 0.0, 4.0, 2.0 ] },
+	            		 "up": { "texture": "#side", "uv": [ 0.0, 0.0, 16.0, 4.0 ], "cullface": "up" },
+	            		 "down": { "texture": "#side", "uv": [ 0.0, 0.0, 16.0, 4.0 ] }
+	            	 }
+	             },
+	             {
+	            	 "from": [ 0.0, 2.0, 6.0 ], 
+	            	 "to": [ 2.0, 14.0, 10.0 ], 
+	            	 "faces": {
+	            		 "north": { "texture": "#side", "uv": [ 0.0, 0.0, 2.0, 12.0 ] },
+	            		 "east": { "texture": "#side", "uv": [ 0.0, 0.0, 4.0, 12.0 ] },
+	            		 "south": { "texture": "#side", "uv": [ 0.0, 0.0, 2.0, 12.0 ] },
+	            		 "west": { "texture": "#side", "uv": [ 0.0, 0.0, 4.0, 12.0 ], "cullface": "west" },
+	            		 "up": { "texture": "#side", "uv": [ 0.0, 0.0, 2.0, 4.0 ] },
+	            		 "down": { "texture": "#side", "uv": [ 0.0, 0.0, 2.0, 4.0 ] }
+	            	 }
+	             },
+	             {
+	            	 "from": [ 14.0, 2.0, 6.0 ], 
+	            	 "to": [ 16.0, 14.0, 10.0 ], 
+	            	 "faces": {
+	            		 "north": { "texture": "#side", "uv": [ 0.0, 0.0, 2.0, 12.0 ] },
+	            		 "east": { "texture": "#side", "uv": [ 0.0, 0.0, 4.0, 12.0 ], "cullface": "east" },
+	            		 "south": { "texture": "#side", "uv": [ 0.0, 0.0, 2.0, 12.0 ] },
+	            		 "west": { "texture": "#side", "uv": [ 0.0, 0.0, 4.0, 12.0 ] },
+	            		 "up": { "texture": "#side", "uv": [ 0.0, 0.0, 2.0, 4.0 ] },
+	            		 "down": { "texture": "#side", "uv": [ 0.0, 0.0, 2.0, 4.0 ] }
+	            	 }
+	             },
+	             {
+	            	 "from": [ 1.0, 1.0, 7.0 ], 
+	            	 "to": [ 15.0, 15.0, 9.0 ], 
+	            	 "faces": {
+	            		 "north": { "texture": "#gem", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+	            		 "south": { "texture": "#gem", "uv": [ 1.0, 1.0, 15.0, 15.0 ] }
+	            	 }
+	             }
+	             ]
 }

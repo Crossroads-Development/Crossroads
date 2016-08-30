@@ -1,6 +1,6 @@
 {
-	"parent": "item/generated",
+	"parent": "crossroads:block/lensHolder",
 	"textures": {
-		"layer0": "crossroads:blocks/WIP"
+		"gem": "crossroads:items/empty"
 	}
 }
