@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveGear;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
@@ -42,7 +42,7 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 		}
 
 		double holder = (topGear != null ? topGear.getMotionData()[0] : 0D) + (bottomGear != null ? bottomGear.getMotionData()[0] : 0D);
-		double efficiency = MiscOperators.findEfficiency(holder, LOWERLIMIT, UPPERLIMIT);
+		double efficiency = MiscOp.findEfficiency(holder, LOWERLIMIT, UPPERLIMIT);
 
 		if(topGear != null){
 			holder = Math.round(Math.abs(topGear.getMotionData()[1] * efficiency));

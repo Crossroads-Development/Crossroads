@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
@@ -141,9 +141,9 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		boolean flag = false;
 		if(angleQ[2] == Double.POSITIVE_INFINITY || angleQ[2] == Double.NEGATIVE_INFINITY){
 			flag = true;
-		}else if(MiscOperators.centerCeil(angleQ[1], tiers) * handlerMain.keyType() != angleQ[2]){
+		}else if(MiscOp.centerCeil(angleQ[1], tiers) * handlerMain.keyType() != angleQ[2]){
 			flag = true;
-			angleQ[2] = MiscOperators.centerCeil(angleQ[1], tiers) * handlerMain.keyType();
+			angleQ[2] = MiscOp.centerCeil(angleQ[1], tiers) * handlerMain.keyType();
 		}
 
 		if(flag){
@@ -247,7 +247,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 		@Override
 		public double keyType(){
-			return MiscOperators.posOrNeg(updateKey);
+			return MiscOp.posOrNeg(updateKey);
 		}
 
 		@Override
@@ -276,7 +276,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 				ModPackets.network.sendToAllAround(msgOther, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 			}
 
-			physData[1] = type == null ? 0 : MiscOperators.betterRound(type.getDensity() * 4.5D, 2);
+			physData[1] = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D, 2);
 			physData[2] = physData[1] * 1.125D; /*
 												 * 1.125 because r*r/2 so
 												 * 1.5*1.5/2
@@ -288,17 +288,17 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			if(allowInvert && absolute){
 				motionData[1] += energy;
 			}else if(allowInvert){
-				motionData[1] += energy * MiscOperators.posOrNeg(motionData[1]);
+				motionData[1] += energy * MiscOp.posOrNeg(motionData[1]);
 			}else if(absolute){
-				int sign = (int) MiscOperators.posOrNeg(motionData[1]);
+				int sign = (int) MiscOp.posOrNeg(motionData[1]);
 				motionData[1] += energy;
-				if(sign != 0 && MiscOperators.posOrNeg(motionData[1]) != sign){
+				if(sign != 0 && MiscOp.posOrNeg(motionData[1]) != sign){
 					motionData[1] = 0;
 				}
 			}else{
-				int sign = (int) MiscOperators.posOrNeg(motionData[1]);
+				int sign = (int) MiscOp.posOrNeg(motionData[1]);
 				motionData[1] += energy * ((double) sign);
-				if(MiscOperators.posOrNeg(motionData[1]) != sign){
+				if(MiscOp.posOrNeg(motionData[1]) != sign){
 					motionData[1] = 0;
 				}
 			}

@@ -13,6 +13,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -49,15 +50,15 @@ public class ArcaneReflector extends BlockContainer{
 	}
 	
 	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		neighborChanged(null, world, pos, null);
+	}
+	
+	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
-		if(worldIn.isBlockPowered(pos)){
-			if(!state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
-			}
-		}else{
-			if(state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
-			}
+		int i = Math.max(worldIn.getRedstonePower(pos.down(), EnumFacing.DOWN), Math.max(worldIn.getRedstonePower(pos.up(), EnumFacing.UP), Math.max(worldIn.getRedstonePower(pos.east(), EnumFacing.EAST), Math.max(worldIn.getRedstonePower(pos.west(), EnumFacing.WEST), Math.max(worldIn.getRedstonePower(pos.north(), EnumFacing.NORTH), worldIn.getRedstonePower(pos.south(), EnumFacing.SOUTH))))));
+		if(((ArcaneReflectorTileEntity) worldIn.getTileEntity(pos)).redstone != i){
+			((ArcaneReflectorTileEntity) worldIn.getTileEntity(pos)).redstone = i;
 		}
 	}
 
@@ -68,19 +69,17 @@ public class ArcaneReflector extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING, Properties.REDSTONE_BOOL});
+		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta & 7)).withProperty(Properties.REDSTONE_BOOL, (meta & 8) == 8);
+		return this.getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		int facingbits = state.getValue(Properties.FACING).getIndex();
-		facingbits += state.getValue(Properties.REDSTONE_BOOL) ? 8 : 0;
-		return facingbits;
+		return state.getValue(Properties.FACING).getIndex();
 	}
 	
 	@Override

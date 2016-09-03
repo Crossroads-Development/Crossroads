@@ -11,6 +11,10 @@ public abstract class BeamRenderTE extends TileEntity{
 
 	public abstract Triple<Color, Integer, Integer>[] getBeam();
 	
+	public void refresh(){
+		//TODO abstractify
+	}
+	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		return INFINITE_EXTENT_AABB;

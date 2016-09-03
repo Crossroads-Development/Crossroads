@@ -87,7 +87,7 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.ORIENT, (meta & 1) == 1).withProperty(Properties.TUXTURE_6, (meta & 16) >> 1);
+		return this.getDefaultState().withProperty(Properties.ORIENT, (meta & 1) == 1).withProperty(Properties.TUXTURE_6, (meta & 14) >> 1);
 	}
 
 	@Override

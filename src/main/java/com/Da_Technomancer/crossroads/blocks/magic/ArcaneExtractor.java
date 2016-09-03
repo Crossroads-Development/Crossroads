@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.magic;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
 
@@ -37,6 +38,15 @@ public class ArcaneExtractor extends BlockContainer{
 	}
 	
 	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		if(worldIn.getTileEntity(pos) instanceof BeamRenderTE){
+			((BeamRenderTE) worldIn.getTileEntity(pos)).refresh();
+		}
+		
+		super.breakBlock(worldIn, pos, state);
+	}
+	
+	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
@@ -58,15 +68,12 @@ public class ArcaneExtractor extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
-		return this.getDefaultState().withProperty(Properties.FACING, facing);
+		return this.getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta == 0 || meta == 1 ? 2 : meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		EnumFacing facing = state.getValue(Properties.FACING);
-		int facingbits = facing.getIndex();
-		return facingbits;
+		return state.getValue(Properties.FACING).getIndex();
 	}
 	
 	@Override

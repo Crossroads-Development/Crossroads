@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
@@ -43,7 +43,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 			if(FluidRegistry.lookupFluidForBlock(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()) != null && (worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockFluidClassic && ((BlockFluidClassic) worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()).isSourceBlock(worldObj, pos.offset(EnumFacing.DOWN)) || worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getValue(BlockLiquid.LEVEL) == 0) && (content == null || (CAPACITY - content.amount >= 1000 && content.getFluid() == FluidRegistry.lookupFluidForBlock(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())))){
 				IRotaryHandler te = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN);
 
-				double holder = MiscOperators.findEfficiency(te.getMotionData()[0], .2D, 8) * Math.abs(te.getMotionData()[1]);
+				double holder = MiscOp.findEfficiency(te.getMotionData()[0], .2D, 8) * Math.abs(te.getMotionData()[1]);
 				te.addEnergy(-holder, false, false);
 				progress += Math.round(holder);
 			}else{

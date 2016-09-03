@@ -8,14 +8,8 @@ public interface IMagicHandler{
 	public final int MAX_DISTANCE = 16;
 	public final int BEAM_TIME = 5;
 	
-	public void recieveMagic(MagicUnit mag);
-	
-	/** Beam senders should check canPass of any magicHandlers the beam meets, 
-	 * and if the result != null then pretend the tile entity doesn't exist and continue checking with the RETURNED Magic Unit. 
-	 * If result == null, then run recieveMagic with the MagicUnit. NOT with null.
-	 * 
+	/**
+	 * This should be implemented based on a toggle system: handlers should assume that they receive the last magic unit sent with this method continuously
 	 */
-	@Nullable
-	public MagicUnit canPass(MagicUnit mag);
-
+	public void setMagic(@Nullable MagicUnit mag);
 }

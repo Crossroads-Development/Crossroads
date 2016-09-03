@@ -5,13 +5,7 @@ import javax.annotation.Nullable;
 public class DefaultMagicHandler implements IMagicHandler{
 
 	@Override
-	public void recieveMagic(MagicUnit mag){
+	public void setMagic(@Nullable MagicUnit mag){
 		
-	}
-	
-	@Nullable
-	@Override
-	public MagicUnit canPass(MagicUnit mag){
-		return null;
 	}
 }

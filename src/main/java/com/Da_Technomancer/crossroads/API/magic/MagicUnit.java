@@ -2,6 +2,12 @@ package com.Da_Technomancer.crossroads.API.magic;
 
 import java.awt.Color;
 
+import javax.annotation.Nullable;
+
+import com.Da_Technomancer.crossroads.API.MiscOp;
+
+import net.minecraft.nbt.NBTTagCompound;
+
 public class MagicUnit{
 	
 	private final int energy;
@@ -58,6 +64,36 @@ public class MagicUnit{
 		return col == null ? new Color(0, 0, 0) : new Color((int) Math.round(((double) col.getRed()) * mult), (int) Math.round(((double) col.getGreen()) * mult), (int) Math.round(((double) col.getBlue()) * mult));
 	}
 	
+	public MagicUnit mult(double multiplier){
+		return mult(multiplier, multiplier, multiplier, multiplier);
+	}
+	
+	public MagicUnit mult(double e, double p, double s, double v){
+		return new MagicUnit(MiscOp.safeRound(e * (double) energy), MiscOp.safeRound(p * (double) potential), MiscOp.safeRound(s * (double) stability), MiscOp.safeRound(v * (double) voi));
+	}
+	
+	public NBTTagCompound setNBT(NBTTagCompound nbt, @Nullable String key){
+		NBTTagCompound holder = key == null ? nbt : new NBTTagCompound();
+		holder.setInteger("en", energy);
+		holder.setInteger("po", potential);
+		holder.setInteger("st", stability);
+		holder.setInteger("vo", voi);
+		
+		if(key != null){
+			nbt.setTag(key, holder);
+		}
+		return nbt;
+	}
+	
+	@Nullable
+	public static MagicUnit loadNBT(NBTTagCompound nbt, @Nullable String key){
+		if(!nbt.hasKey("en") && (key == null || !nbt.hasKey(key))){
+			return null;
+		}
+		NBTTagCompound holder = key == null ? nbt : nbt.getCompoundTag(key);
+		return new MagicUnit(holder.getInteger("en"), holder.getInteger("po"), holder.getInteger("st"), holder.getInteger("vo"));
+	}
+	
 	/**Returns the MagicUnit with the lowest power with a color that matches the goal. Will decrease power to below count at cost of accuracy, setting count to -1 disables this
 	 * Please note that this method is not 100% accurate due to taking rounding errors (RGB is stored as int, sometimes rounding occurs) into account.
 	 */
@@ -85,10 +121,10 @@ public class MagicUnit{
 		
 		if(count != -1 && partR + partG + partB + partVoid > count){
 			double holder = count / (partR + partG + partB + partVoid);
-			partR = Math.round(partR * holder);
-			partG = Math.round(partG * holder);
-			partB = Math.round(partB * holder);
-			partVoid = Math.round(partVoid * holder);
+			partR = MiscOp.safeRound(partR * holder);
+			partG = MiscOp.safeRound(partG * holder);
+			partB = MiscOp.safeRound(partB * holder);
+			partVoid = MiscOp.safeRound(partVoid * holder);
 		}
 		
 		return new MagicUnit((int) partR, (int) partG, (int) partB, (int) partVoid);
@@ -97,5 +133,10 @@ public class MagicUnit{
 	@Override
 	public String toString(){
 		return "Energy: " + energy + ", Potential: " + potential + ", Stability: " + stability + ", Void: " + voi;
+	}
+	
+	@Override
+	public boolean equals(Object other){
+		return other == this || (other instanceof MagicUnit && ((MagicUnit) other).getEnergy() == energy && ((MagicUnit) other).getStability() == stability && ((MagicUnit) other).getPotential() == potential && ((MagicUnit) other).getVoid() == voi);
 	}
 }

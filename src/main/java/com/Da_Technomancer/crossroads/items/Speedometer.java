@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,7 +35,7 @@ public class Speedometer extends Item{
 
 				IRotaryHandler gear = te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite());
 
-				playerIn.addChatComponentMessage(new TextComponentString("Speed: " + MiscOperators.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOperators.betterRound(gear.getMotionData()[1], 3)));
+				playerIn.addChatComponentMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3)));
 			}
 			return EnumActionResult.SUCCESS;
 		}

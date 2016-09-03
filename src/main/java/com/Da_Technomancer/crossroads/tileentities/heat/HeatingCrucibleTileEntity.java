@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -126,7 +126,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 			init = true;
 		}
 
-		if(inventory != null && ticksExisted % 10 == 0 && Math.random() < MiscOperators.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= PRODUCED)){
+		if(inventory != null && ticksExisted % 10 == 0 && Math.random() < MiscOp.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= PRODUCED)){
 
 			if(content == null){
 				content = new FluidStack(getType() == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, PRODUCED);

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
@@ -142,9 +142,9 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		for(int i = 0; i < 6; i++){
 			if(clientQ[i] == Double.POSITIVE_INFINITY || clientQ[i] == Double.NEGATIVE_INFINITY){
 				flag = true;
-			}else if(MiscOperators.centerCeil(Q[i], tiers) * sideHandlers[i].keyType() != clientQ[i]){
+			}else if(MiscOp.centerCeil(Q[i], tiers) * sideHandlers[i].keyType() != clientQ[i]){
 				flag = true;
-				clientQ[i] = MiscOperators.centerCeil(Q[i], tiers) * sideHandlers[i].keyType();
+				clientQ[i] = MiscOp.centerCeil(Q[i], tiers) * sideHandlers[i].keyType();
 			}
 		}
 
@@ -323,7 +323,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 		@Override
 		public double keyType(){
-			return MiscOperators.posOrNeg(updateKey[side]);
+			return MiscOp.posOrNeg(updateKey[side]);
 		}
 
 		@Override
@@ -358,7 +358,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 				motionData[side][2] = 0;
 				motionData[side][3] = 0;
 			}else{
-				physData[side][1] = MiscOperators.betterRound(members[side].getDensity() / 8, 1);
+				physData[side][1] = MiscOp.betterRound(members[side].getDensity() / 8, 1);
 				physData[side][0] = .5;
 				// .125 because r*r/2 so .5*.5/2
 				physData[side][2] = physData[side][1] * .125;
@@ -376,17 +376,17 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			if(allowInvert && absolute){
 				motionData[side][1] += energy;
 			}else if(allowInvert){
-				motionData[side][1] += energy * MiscOperators.posOrNeg(motionData[side][1]);
+				motionData[side][1] += energy * MiscOp.posOrNeg(motionData[side][1]);
 			}else if(absolute){
-				int sign = (int) MiscOperators.posOrNeg(motionData[side][1]);
+				int sign = (int) MiscOp.posOrNeg(motionData[side][1]);
 				motionData[side][1] += energy;
-				if(sign != 0 && MiscOperators.posOrNeg(motionData[side][1]) != sign){
+				if(sign != 0 && MiscOp.posOrNeg(motionData[side][1]) != sign){
 					motionData[side][1] = 0;
 				}
 			}else{
-				int sign = (int) MiscOperators.posOrNeg(motionData[side][1]);
+				int sign = (int) MiscOp.posOrNeg(motionData[side][1]);
 				motionData[side][1] += energy * ((double) sign);
-				if(MiscOperators.posOrNeg(motionData[side][1]) != sign){
+				if(MiscOp.posOrNeg(motionData[side][1]) != sign){
 					motionData[side][1] = 0;
 				}
 			}

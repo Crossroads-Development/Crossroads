@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.API;
 
-//This class is for holding operations that I use often and aren't built into java.
-public final class MiscOperators{
+/**This class is for holding mathematical operations that I use often.*/
+public final class MiscOp{
 
 	public static double betterRound(double numIn, int decPlac){
-
 		double opOn = Math.round(numIn * Math.pow(10, decPlac)) / Math.pow(10D, decPlac);
 		return opOn;
 	}
@@ -29,5 +28,21 @@ public final class MiscOperators{
 
 	public static double posOrNeg(double in){
 		return in == 0 ? 0 : (in < 0 ? -1D : 1D);
+	}
+	
+	/**
+	 * The same as Math.round except if the decimal
+	 * is exactly .5 then it rounds down.
+	 * 
+	 * This is for systems that require rounding and
+	 * NEED the distribution of output to not be higher than
+	 * the input to prevent dupe bugs.
+	 */
+	public static int safeRound(double in){
+		if(in % 1 <= .5D){
+			return (int) Math.floor(in);
+		}else{
+			return (int) Math.ceil(in);
+		}
 	}
 }

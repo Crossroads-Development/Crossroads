@@ -6,10 +6,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.effects.IEffect;
-import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -29,17 +27,19 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable, IIntReceiver{
 
-	private int ticksExisted;
 	private ItemStack inv;
-	private Color col;
-	private int reach;
-	private int size;
+	private Triple<Color, Integer, Integer> visual;
+	
+	@Override
+	public void refresh(){
+		beamer.emit(null);
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
 		Triple<Color, Integer, Integer>[] out = new Triple[6];
-		out[worldObj.getBlockState(pos).getValue(Properties.FACING).getIndex()] = col == null ? null : Triple.of(col, reach, size);
+		out[worldObj.getBlockState(pos).getValue(Properties.FACING).getIndex()] = visual;
 		return out;
 	}
 	
@@ -48,90 +48,40 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		if(worldObj.isRemote){
 			return;
 		}
+		if(beamer == null){
+			beamer = new BeamManager(worldObj.getBlockState(pos).getValue(Properties.FACING), pos, worldObj);
+		}
 		
-		if(++ticksExisted % IMagicHandler.BEAM_TIME == 0){
+		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 			if(inv != null && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
 				MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
 				if(--inv.stackSize <= 0){
 					inv = null;
 				}
-				emit(mag, worldObj.getBlockState(pos).getValue(Properties.FACING));
+				if(beamer.emit(mag)){
+					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				}
 			}else{
 				inv = null;
-				wipeBeam();
+				if(beamer.emit(null)){
+					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				}
 			}
 		}
 	}
 	
-	private void wipeBeam(){
-		if(col != null || reach != 0 || size != 0){
-			col = null;
-			reach = 0;
-			size = 0;
-			ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		}
-	}
-	
-	private void emit(MagicUnit mag, EnumFacing dir){
-		if(mag == null || mag.getRGB() == null){
-			return;
-		}
-		for(int i = 1; i <= IMagicHandler.MAX_DISTANCE; i++){
-			boolean skip = false;
-			if(worldObj.getTileEntity(pos.offset(dir, i)) != null && worldObj.getTileEntity(pos.offset(dir, i)).hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite())){
-				if(worldObj.getTileEntity(pos.offset(dir, i)).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).canPass(mag) != null){
-					mag = worldObj.getTileEntity(pos.offset(dir, i)).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).canPass(mag);
-					skip = true;
-				}else{
-					int siz = Math.min((int) Math.sqrt(mag.getPower()) - 1, 7);
-					if(col == null || mag.getRGB().getRGB() != col.getRGB() || siz != size || i != reach){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((i - 1) << 24) + (mag.getRGB().getRGB() & 16777215) + (siz << 28), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-						size = siz;
-						col = mag.getRGB();
-						reach = i;
-					}
-					worldObj.getTileEntity(pos.offset(dir, i)).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).recieveMagic(mag);
-					return;
-				}
-			}
-
-			if(i == IMagicHandler.MAX_DISTANCE || (!skip && worldObj.getBlockState(pos.offset(dir, i)) != null && !worldObj.getBlockState(pos.offset(dir, i)).getBlock().isAir(worldObj.getBlockState(pos.offset(dir, i)), worldObj, pos.offset(dir, i)))){
-				int siz = Math.min((int) Math.sqrt(mag.getPower()) - 1, 7);
-				if(col == null || mag.getRGB().getRGB() != col.getRGB() || siz != size || i != reach){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((i - 1) << 24) + (mag.getRGB().getRGB() & 16777215) + (siz << 28), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					size = siz;
-					col = mag.getRGB();
-					reach = i;
-				}
-				IEffect e = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
-				if(e != null){
-					e.doEffect(worldObj, pos.offset(dir, i));
-				}
-				return;
-			}
-		}
-	}
+	private BeamManager beamer;
 	
 	@Override
 	public void receiveInt(String context, int message){
 		if(context.equals("beam")){
-			int i = message & 16777215;
-			col = Color.decode(Integer.toString(i));
-			reach = ((message & 251658240) >> 24) + 1;
-			size = ((message - reach) >> 28) + 1;
-			
+			visual = BeamManager.getTriple(message);
 		}
 	}
 	
 	@Override
 	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
-		if(col != null){
-			nbt.setInteger("col", col.getRGB() & 16777215);
-		}
-		nbt.setInteger("reach", reach);
-		nbt.setInteger("size", size + 1);
-		return nbt;
+		return beamer.setNBT(super.getUpdateTag(), null);
 	}
 	
 	@Override
@@ -141,13 +91,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		if(inv != null){
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
-		if(col != null){
-			nbt.setInteger("col", col.getRGB() & 16777215);
-		}
-		nbt.setInteger("reach", reach);
-		nbt.setInteger("size", size);
-		
-		return nbt;
+		return beamer.setNBT(nbt, null);
 	}
 	
 	@Override
@@ -155,9 +99,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		super.readFromNBT(nbt);
 		
 		inv = nbt.hasKey("inv") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv")) : null;
-		col = nbt.hasKey("col") ? Color.decode(Integer.toString(nbt.getInteger("col"))) : null;
-		reach = nbt.getInteger("reach");
-		size = nbt.getInteger("size");
+		beamer = BeamManager.loadNBT(nbt, worldObj.getBlockState(pos).getValue(Properties.FACING), pos, worldObj, null);
 	}
 	
 	private final IItemHandler itemHandler = new ItemHandler();

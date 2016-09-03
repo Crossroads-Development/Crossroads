@@ -1,16 +1,10 @@
 {
 	"variants": {
-		"facing=north,redstone_bool=false": { "model": "crossroads:arcaneReflector"},
-		"facing=north,redstone_bool=true": { "model": "crossroads:arcaneReflector"},
-		"facing=south,redstone_bool=false": { "model": "crossroads:arcaneReflector", "y": 180 },
-		"facing=south,redstone_bool=true": { "model": "crossroads:arcaneReflector", "y": 180 },
-		"facing=east,redstone_bool=false": { "model": "crossroads:arcaneReflector", "y": 90 },
-		"facing=east,redstone_bool=true": { "model": "crossroads:arcaneReflector", "y": 90 },
-		"facing=west,redstone_bool=false": { "model": "crossroads:arcaneReflector", "y": 270 },
-		"facing=west,redstone_bool=true": { "model": "crossroads:arcaneReflector", "y": 270 },
-		"facing=up,redstone_bool=false": { "model": "crossroads:arcaneReflector", "x": 90},
-		"facing=up,redstone_bool=true": { "model": "crossroads:arcaneReflector", "x": 90},
-		"facing=down,redstone_bool=false": { "model": "crossroads:arcaneReflector", "x": 270},
-		"facing=down,redstone_bool=true": { "model": "crossroads:arcaneReflector", "x": 270}
+		"facing=north": { "model": "crossroads:arcaneReflector"},
+		"facing=south": { "model": "crossroads:arcaneReflector", "y": 180 },
+		"facing=east": { "model": "crossroads:arcaneReflector", "y": 90 },
+		"facing=west": { "model": "crossroads:arcaneReflector", "y": 270 },
+		"facing=up": { "model": "crossroads:arcaneReflector", "x": 270},
+		"facing=down": { "model": "crossroads:arcaneReflector", "x": 90}
 	}
 }

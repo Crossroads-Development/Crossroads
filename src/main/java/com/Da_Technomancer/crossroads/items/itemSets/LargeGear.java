@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.ServerProxy;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -40,8 +40,8 @@ public class LargeGear extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		tooltip.add("Mass: " + MiscOperators.betterRound(4.5D * type.getDensity(), 2));
-		tooltip.add("I: " + MiscOperators.betterRound(4.5D * type.getDensity(), 2) * 1.125D);
+		tooltip.add("Mass: " + MiscOp.betterRound(4.5D * type.getDensity(), 2));
+		tooltip.add("I: " + MiscOp.betterRound(4.5D * type.getDensity(), 2) * 1.125D);
 	}
 
 	@Override

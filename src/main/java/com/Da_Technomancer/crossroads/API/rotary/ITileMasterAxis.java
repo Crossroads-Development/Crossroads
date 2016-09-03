@@ -1,10 +1,12 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.util.EnumFacing;
 
 public interface ITileMasterAxis{
 
-	public void trigger(int key, ITileMasterAxis masterIn, EnumFacing side);
+	public void trigger(int key, @Nonnull ITileMasterAxis masterIn, EnumFacing side);
 
 	public void requestUpdate();
 
@@ -16,7 +18,7 @@ public interface ITileMasterAxis{
 	 * returns true if master is locked
 	 * 
 	 */
-	public boolean addToList(IRotaryHandler handler);
+	public boolean addToList(@Nonnull IRotaryHandler handler);
 
 	/** For debugging mainly */
 	public double getTotalEnergy();

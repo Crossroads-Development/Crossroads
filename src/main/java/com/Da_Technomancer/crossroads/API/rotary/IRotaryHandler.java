@@ -1,5 +1,8 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 
 /**
@@ -20,7 +23,7 @@ public interface IRotaryHandler{
 	 */
 	public double[] getMotionData();
 
-	public void propogate(int key, ITileMasterAxis masterIn);
+	public void propogate(int key, @Nonnull ITileMasterAxis masterIn);
 
 	/**
 	 * [0]=r, [1]=m, [2]=I
@@ -44,8 +47,9 @@ public interface IRotaryHandler{
 	 */
 	public void addEnergy(double energy, boolean allowInvert, boolean absolute);
 
-	public void setMember(GearTypes membIn);
+	public void setMember(@Nullable GearTypes membIn);
 
+	@Nullable
 	public GearTypes getMember();
 
 }

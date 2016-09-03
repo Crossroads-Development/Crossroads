@@ -5,7 +5,7 @@ import java.util.Random;
 
 import com.Da_Technomancer.crossroads.ServerProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
 
@@ -93,7 +93,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 				// set w
 				gear.getMotionData()[0] = gear.keyType() * Q / gear.getPhysData()[0];
 				// set energy
-				newEnergy = MiscOperators.posOrNeg(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[2] / 2D;
+				newEnergy = MiscOp.posOrNeg(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[2] / 2D;
 				gear.getMotionData()[1] = newEnergy;
 				gear.setQ(lastQ);
 			}else{
@@ -101,7 +101,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 				newEnergy = gear.keyType() * sumEnergy * gear.getPhysData()[1] / sumMass;
 				gear.getMotionData()[1] = newEnergy;
 				// set w
-				gear.getMotionData()[0] = MiscOperators.posOrNeg(newEnergy) * Math.sqrt(Math.abs(newEnergy * 2D / gear.getPhysData()[2]));
+				gear.getMotionData()[0] = MiscOp.posOrNeg(newEnergy) * Math.sqrt(Math.abs(newEnergy * 2D / gear.getPhysData()[2]));
 				// set Q
 				Q = gear.getMotionData()[0] * gear.getPhysData()[0];
 				QFound = true;

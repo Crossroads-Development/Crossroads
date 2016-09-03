@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.Da_Technomancer.crossroads.ServerProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -52,8 +52,8 @@ public class ToggleGear extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		tooltip.add("Mass: " + MiscOperators.betterRound(type.getDensity() / 8D, 2));
-		tooltip.add("I: " + MiscOperators.betterRound(type.getDensity() / 8D, 2) * .125D);
+		tooltip.add("Mass: " + MiscOp.betterRound(type.getDensity() / 8D, 2));
+		tooltip.add("I: " + MiscOp.betterRound(type.getDensity() / 8D, 2) * .125D);
 	}
 	
 	@Override

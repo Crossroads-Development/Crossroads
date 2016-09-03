@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
@@ -79,9 +79,9 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		boolean flag = false;
 		if(Q[1] == Double.POSITIVE_INFINITY || Q[1] == Double.NEGATIVE_INFINITY){
 			flag = true;
-		}else if(MiscOperators.centerCeil(Q[0], tiers) * handler.keyType() != Q[1]){
+		}else if(MiscOp.centerCeil(Q[0], tiers) * handler.keyType() != Q[1]){
 			flag = true;
-			Q[1] = MiscOperators.centerCeil(Q[0], tiers) * handler.keyType();
+			Q[1] = MiscOp.centerCeil(Q[0], tiers) * handler.keyType();
 		}
 
 		if(flag){
@@ -221,7 +221,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 
 		@Override
 		public double keyType(){
-			return MiscOperators.posOrNeg(key);
+			return MiscOp.posOrNeg(key);
 		}
 
 		@Override
@@ -252,17 +252,17 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			if(allowInvert && absolute){
 				motionData[1] += energy;
 			}else if(allowInvert){
-				motionData[1] += energy * MiscOperators.posOrNeg(motionData[1]);
+				motionData[1] += energy * MiscOp.posOrNeg(motionData[1]);
 			}else if(absolute){
-				int sign = (int) MiscOperators.posOrNeg(motionData[1]);
+				int sign = (int) MiscOp.posOrNeg(motionData[1]);
 				motionData[1] += energy;
-				if(sign != 0 && MiscOperators.posOrNeg(motionData[1]) != sign){
+				if(sign != 0 && MiscOp.posOrNeg(motionData[1]) != sign){
 					motionData[1] = 0;
 				}
 			}else{
-				int sign = (int) MiscOperators.posOrNeg(motionData[1]);
+				int sign = (int) MiscOp.posOrNeg(motionData[1]);
 				motionData[1] += energy * ((double) sign);
-				if(MiscOperators.posOrNeg(motionData[1]) != sign){
+				if(MiscOp.posOrNeg(motionData[1]) != sign){
 					motionData[1] = 0;
 				}
 			}

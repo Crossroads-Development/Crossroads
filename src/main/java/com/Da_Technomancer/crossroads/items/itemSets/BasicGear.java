@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.Da_Technomancer.crossroads.ServerProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -43,8 +43,8 @@ public class BasicGear extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		tooltip.add("Mass: " + MiscOperators.betterRound(type.getDensity() / 8, 2));
-		tooltip.add("I: " + MiscOperators.betterRound(type.getDensity() / 8, 2) * .125);
+		tooltip.add("Mass: " + MiscOp.betterRound(type.getDensity() / 8, 2));
+		tooltip.add("I: " + MiscOp.betterRound(type.getDensity() / 8, 2) * .125);
 	}
 
 	@Override
