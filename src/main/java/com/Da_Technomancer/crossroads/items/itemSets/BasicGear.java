@@ -38,6 +38,8 @@ public class BasicGear extends Item{
 		type = typeIn;
 		ModItems.itemAddQue(this);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 9), " ? ", "?#?", " ? ", '#', "block" + typeIn.toString(), '?', "ingot" + typeIn.toString()));
+		//TODO
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), " ? ", "?#?", " ? ", '#', "ingot" + typeIn.toString(), '?', "nugget" + typeIn.toString()));
 	}
 
 	@Override
