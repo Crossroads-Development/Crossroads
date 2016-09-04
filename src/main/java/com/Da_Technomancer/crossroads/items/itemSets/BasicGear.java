@@ -37,7 +37,7 @@ public class BasicGear extends Item{
 		OreDictionary.registerOre("gear" + typeIn.toString(), this);
 		type = typeIn;
 		ModItems.itemAddQue(this);
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 8), " ? ", "?#?", " ? ", '#', "block" + typeIn.toString(), '?', "ingot" + typeIn.toString()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 9), " ? ", "?#?", " ? ", '#', "block" + typeIn.toString(), '?', "ingot" + typeIn.toString()));
 	}
 
 	@Override

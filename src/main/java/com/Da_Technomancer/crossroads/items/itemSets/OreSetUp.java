@@ -1,79 +1,96 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import com.Da_Technomancer.crossroads.Main;
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.items.BasicItem;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public final class OreSetUp{
+public final class OreSetup{
+
+	public static BasicItem ingotTin;
+	public static BasicItem nuggetTin;
+	public static BasicBlock blockTin;
+	public static BasicBlock oreTin;
+
+	public static BasicItem ingotCopper;
+	public static BasicItem nuggetCopper;
+	public static BasicBlock blockCopper;
+	public static BasicBlock oreCopper;
+	public static BasicBlock oreNativeCopper;
+
+	public static BasicItem ingotBronze;
+	public static BasicItem nuggetBronze;
+	public static BasicBlock blockBronze;
+
+	public static BasicItem gemRuby;
+	public static BasicBlock blockRuby;
+	public static BasicBlock oreRuby;
 
 	public static void init(){
+		ingotTin = new BasicItem("ingotTin", "ingotTin");
+		blockTin = new BasicBlock("blockTin", Material.IRON, 2, "pickaxe", 5, "blockTin");
+		nuggetTin = new BasicItem("nuggetTin", "nuggetTin");
+		oreTin = new BasicBlock("oreTin", Material.ROCK, 2, "pickaxe", 3, "oreTin");
 
-		addOre("Copper", true, 2, true, false);
-		addOre("Tin", true, 2);
-		addOre("Ruby", false, 3);
-		addOre("Bronze", true, 2, false);
-		// You might notice that oreRuby is never in the US localization, but it
-		// still works. That is because tile.oreRuby.name is built into
-		// minecraft localization because emeralds were originally going to be
-		// rubies, but they never removed the localization.
-
-	}
-
-	public static void addOre(String name, boolean metal, int miningLevel){
-		addOre(name, metal, miningLevel, true);
-	}
-
-	public static void addOre(String name, boolean metal, int miningLevel, boolean makeOre){
-		addOre(name, metal, miningLevel, makeOre, makeOre);
-	}
-
-	public static void addOre(String name, boolean metal, int miningLevel, boolean makeOre, boolean smeltable){
-
-		if(metal){
-
-			// creates an ore block, metal block, ingot and nugget, and adds
-			// conversion recipes.
-
-			new BasicBlock("block" + name, Material.ROCK, miningLevel, "pickaxe", 5, null, "block" + name, false);
-
-			new BasicItem("ingot" + name, "ingot" + name);
-			new BasicItem("nugget" + name, "nugget" + name);
-
-			GameRegistry.addRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":nugget" + name), 9), "#", '#', Item.getByNameOrId(Main.MODID + ":ingot" + name));
-			GameRegistry.addRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":ingot" + name), 9), "#", '#', Item.getByNameOrId(Main.MODID + ":block" + name));
-
-			GameRegistry.addRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":block" + name), 1), "###", "###", "###", '#', Item.getByNameOrId(Main.MODID + ":ingot" + name));
-			GameRegistry.addRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":ingot" + name), 1), "###", "###", "###", '#', Item.getByNameOrId(Main.MODID + ":nugget" + name));
-
-			if(makeOre){
-				new BasicBlock("ore" + name, Material.ROCK, miningLevel, "pickaxe", 3, null, "ore" + name, false);
-				if(smeltable){
-					GameRegistry.addSmelting(new ItemStack(Item.getByNameOrId(Main.MODID + ":ore" + name), 1), new ItemStack(Item.getByNameOrId(Main.MODID + ":ingot" + name), 1), .7F);
-				}
+		ingotCopper = new BasicItem("ingotCopper", "ingotCopper");
+		blockCopper = new BasicBlock("blockCopper", Material.IRON, 2, "pickaxe", 5, "blockCopper");
+		nuggetCopper = new BasicItem("nuggetCopper", "nuggetCopper");
+		oreCopper = new BasicBlock("oreCopper", Material.ROCK, 2, "pickaxe", 3, "oreCopper");
+		oreNativeCopper = new BasicBlock("oreNativeCopper", Material.ROCK, 1, "pickaxe", 3){
+			@Override
+			public int quantityDropped(Random random){
+				return 3;
 			}
-		}else{
 
-			// creates ore block, gem block, and gem, and adds conversion
-			// recipes.
-
-			new BasicItem("gem" + name, "gem" + name);
-			new BasicBlock("block" + name, Material.ROCK, miningLevel, "pickaxe", 5, null, "block" + name, false);
-
-			GameRegistry.addRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":gem" + name), 9), "#", '#', Item.getByNameOrId(Main.MODID + ":block" + name));
-			GameRegistry.addRecipe(new ItemStack(Item.getByNameOrId(Main.MODID + ":block" + name), 1), "###", "###", "###", '#', Item.getByNameOrId(Main.MODID + ":gem" + name));
-			if(makeOre){
-				new BasicBlock("ore" + name, Material.ROCK, miningLevel, "pickaxe", 3, Item.getByNameOrId(Main.MODID + ":gem" + name), "ore" + name, true);
-				if(smeltable){
-					GameRegistry.addSmelting(new ItemStack(Item.getByNameOrId(Main.MODID + ":ore" + name), 1), new ItemStack(Item.getByNameOrId(Main.MODID + ":gem" + name), 1), 1F);
-				}
+			@Override
+			@Nullable
+			public Item getItemDropped(IBlockState state, Random rand, int fortune){
+				return nuggetCopper;
 			}
-		}
+		};
 
+		ingotBronze = new BasicItem("ingotBronze", "ingotBronze");
+		blockBronze = new BasicBlock("blockBronze", Material.IRON, 2, "pickaxe", 5, "blockBronze");
+		nuggetBronze = new BasicItem("nuggetBronze", "nuggetBronze");
+
+		gemRuby = new BasicItem("gemRuby", "gemRuby");
+		blockRuby = new BasicBlock("blockRuby", Material.ROCK, 3, "pickaxe", 5, "blockRuby");
+		oreRuby = new BasicBlock("oreRuby", Material.ROCK, 3, "pickaxe", 3, "oreRuby"){
+			@Override
+			@Nullable
+			public Item getItemDropped(IBlockState state, Random rand, int fortune){
+				return gemRuby;
+			}
+		};
+
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetTin, 9), "ingotTin"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotTin, 9), "blockTin"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotTin, 1), "***", "***", "***", '*', "nuggetTin"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTin, 1), "***", "***", "***", '*', "ingotTin"));
+		GameRegistry.addSmelting(new ItemStack(oreTin, 1), new ItemStack(ingotTin, 1), .7F);
+
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetCopper, 9), "ingotCopper"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotCopper, 9), "blockCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotCopper, 1), "***", "***", "***", '*', "nuggetCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCopper, 1), "***", "***", "***", '*', "ingotCopper"));
+
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetBronze, 9), "ingotBronze"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotBronze, 9), "blockBronze"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotBronze, 1), "***", "***", "***", '*', "nuggetBronze"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBronze, 1), "***", "***", "***", '*', "ingotBronze"));
+
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(gemRuby, 4), "blockRuby"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockRuby, 1), "**", "**", '*', "gemRuby"));
+		GameRegistry.addSmelting(new ItemStack(oreRuby, 1), new ItemStack(gemRuby, 1), 1F);
 	}
-
 }

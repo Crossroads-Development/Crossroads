@@ -83,6 +83,7 @@ public final class ModBlocks{
 	public static CrystallinePrism crystallinePrism;
 	public static ArcaneReflector arcaneReflector;
 	public static LensHolder lensHolder;
+	public static BasicBlock blockPureQuartz;
 
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 
@@ -91,7 +92,6 @@ public final class ModBlocks{
 	}
 
 	public static final void init(){
-		new BasicBlock("oreNativeCopper", Material.ROCK, 1, "pickaxe", 3, Item.getByNameOrId("crossroads:nuggetCopper"), null, true, 3);
 		blockAddQue(masterAxis = new MasterAxis());
 		blockAddQue(grindstone = new Grindstone());
 		sidedGearHolder = new SidedGearHolder();
@@ -129,6 +129,7 @@ public final class ModBlocks{
 		blockAddQue(crystallinePrism = new CrystallinePrism());
 		blockAddQue(arcaneReflector = new ArcaneReflector());
 		blockAddQue(lensHolder = new LensHolder());
+		blockPureQuartz = new BasicBlock("blockPureQuartz", Material.ROCK, 1, "pickaxe", 4, "blockQuartz");
 	}
 
 	@SideOnly(Side.CLIENT)
