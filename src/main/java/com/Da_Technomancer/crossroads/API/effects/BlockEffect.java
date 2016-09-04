@@ -13,7 +13,7 @@ public class BlockEffect implements IEffect{
 	}
 	
 	@Override
-	public void doEffect(World worldIn, BlockPos pos){
+	public void doEffect(World worldIn, BlockPos pos, double mult){
 		worldIn.setBlockState(pos, block, 3);
 	}
 

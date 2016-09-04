@@ -53,7 +53,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	
 	@Override
 	public void update(){
-		if(getWorld().isRemote){
+		if(worldObj.isRemote){
 			if(Q[1] == Double.POSITIVE_INFINITY){
 				angle = 0;
 			}else if(Q[1] == Double.NEGATIVE_INFINITY){
@@ -66,7 +66,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			}
 		}
 
-		if(!getWorld().isRemote){
+		if(!worldObj.isRemote){
 			sendQPacket();
 			if(compOut != ((int) Math.min((Math.abs(motionData[1] / physData[2])) * 15D, 15))){
 				worldObj.updateComparatorOutputLevel(pos, this.blockType);
@@ -86,7 +86,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 
 		if(flag){
 			SendDoubleToClient msg = new SendDoubleToClient("Q", Q[1], this.getPos());
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 
 			if(Q[1] == Double.POSITIVE_INFINITY || Q[1] == Double.NEGATIVE_INFINITY){
 				Q[1] = 0;
@@ -203,13 +203,13 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			for(int i = 2; i < 6; ++i){
 				EnumFacing facing = EnumFacing.getFront(i);
 				// Adjacent gears
-				if(getWorld().getTileEntity(pos.offset(facing)) != null && getWorld().getTileEntity(pos.offset(facing)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-					getWorld().getTileEntity(pos.offset(facing)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN).propogate(keyIn * -1, masterIn);
+				if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+					worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN).propogate(keyIn * -1, masterIn);
 				}
 
 				// Diagonal gears
-				if(!getWorld().getBlockState(pos.offset(facing)).getBlock().isNormalCube(getWorld().getBlockState(pos.offset(facing)), getWorld(), pos.offset(facing)) && getWorld().getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)) != null && getWorld().getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
-					getWorld().getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite()).propogate(keyIn * -1, masterIn);
+				if(!worldObj.getBlockState(pos.offset(facing)).getBlock().isNormalCube(worldObj.getBlockState(pos.offset(facing)), worldObj, pos.offset(facing)) && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
+					worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite()).propogate(keyIn * -1, masterIn);
 				}
 			}
 		}

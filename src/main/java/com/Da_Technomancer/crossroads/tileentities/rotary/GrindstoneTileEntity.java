@@ -142,7 +142,7 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 	@Override
 	public void update(){
 
-		if(!getWorld().isRemote){
+		if(!worldObj.isRemote){
 			if(inventory[0] != null && (RecipeHolder.grindRecipes.containsKey(inventory[0].getItem().getRegistryName().toString()) || foundMatch(inventory[0]) != null)){
 				runMachine();
 			}else{

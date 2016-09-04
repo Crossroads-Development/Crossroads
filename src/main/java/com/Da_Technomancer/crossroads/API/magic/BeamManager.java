@@ -10,7 +10,6 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -35,14 +34,6 @@ public class BeamManager{
 		this.pos = pos.toImmutable();
 	}
 	
-	private BeamManager(EnumFacing dir, BlockPos pos, World world, MagicUnit mag, int dist){
-		this.dir = dir;
-		this.world = world;
-		this.pos = pos.toImmutable();
-		this.lastSent = mag;
-		this.dist = dist;
-	}
-	
 	public boolean emit(@Nullable MagicUnit mag){
 		for(int i = 1; i <= IMagicHandler.MAX_DISTANCE; i++){
 			if(world.getTileEntity(pos.offset(dir, i)) != null && world.getTileEntity(pos.offset(dir, i)).hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite())){
@@ -61,17 +52,16 @@ public class BeamManager{
 				}
 			}
 			
-			//TODO add block collision
-			if(i == IMagicHandler.MAX_DISTANCE){
+			if(i == IMagicHandler.MAX_DISTANCE || !world.getBlockState(pos.offset(dir, i)).getBlock().isAir(world.getBlockState(pos.offset(dir, i)), world, pos.offset(dir, i))){
 				wipe();
 				if(mag != null && mag.getRGB() != null){
 					IEffect e = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
 					if(e != null){
-						e.doEffect(world, pos.offset(dir, i));
+						e.doEffect(world, pos.offset(dir, i), mag.getPower());
 					}
 				}
-				boolean holder = dist != IMagicHandler.MAX_DISTANCE || (mag == null ? lastSent != null : !mag.equals(lastSent));
-				dist = IMagicHandler.MAX_DISTANCE;
+				boolean holder = dist != i || (mag == null ? lastSent != null : !mag.equals(lastSent));
+				dist = i;
 				lastSent = mag;
 				return holder;
 			}
@@ -88,23 +78,6 @@ public class BeamManager{
 	
 	public int getPacket(){
 		return lastSent == null || lastSent.getRGB() == null ? 0 : ((dist - 1) << 24) + (lastSent.getRGB().getRGB() & 16777215) + (Math.min((int) Math.sqrt(lastSent.getPower()) - 1, 7) << 28);
-	}
-	
-	public NBTTagCompound setNBT(NBTTagCompound nbt, @Nullable String key){
-		NBTTagCompound holder = key == null ? nbt : new NBTTagCompound();
-		if(lastSent != null){
-			lastSent.setNBT(holder, null);
-		}
-		holder.setInteger("dist", dist);
-		if(key != null){
-			nbt.setTag(key, holder);
-		}
-		return nbt;
-	}
-	
-	public static BeamManager loadNBT(NBTTagCompound nbt, EnumFacing dir, BlockPos pos, World world, @Nullable String key){
-		NBTTagCompound holder = key == null ? nbt : nbt.getCompoundTag(key);
-		return new BeamManager(dir, pos, world, MagicUnit.loadNBT(holder, null), holder.getInteger("dist"));
 	}
 
 	@Nullable

@@ -45,15 +45,15 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 
 	@Override
 	public void requestUpdate(){
-		if(getWorld().isRemote){
+		if(worldObj.isRemote){
 			return;
 		}
 		rotaryMembers.clear();
 		locked = false;
 		Random rand = new Random();
-		if(getWorld().getTileEntity(getPos().offset(facing)) != null && getWorld().getTileEntity(getPos().offset(facing)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
+		if(worldObj.getTileEntity(getPos().offset(facing)) != null && worldObj.getTileEntity(getPos().offset(facing)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
 			key = rand.nextInt(100) + 1;
-			getWorld().getTileEntity(getPos().offset(facing)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite()).propogate(key, this);
+			worldObj.getTileEntity(getPos().offset(facing)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite()).propogate(key, this);
 		}
 	}
 
@@ -178,7 +178,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 
 	@Override
 	public void update(){
-		if(getWorld().isRemote){
+		if(worldObj.isRemote){
 			return;
 		}
 

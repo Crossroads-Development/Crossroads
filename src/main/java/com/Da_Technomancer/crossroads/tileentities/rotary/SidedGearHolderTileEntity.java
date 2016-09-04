@@ -151,7 +151,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		if(flag){
 			for(int i = 0; i < 6; ++i){
 				SendDoubleToClient msg = new SendDoubleToClient("Q" + i, clientQ[i], this.getPos());
-				ModPackets.network.sendToAllAround(msg, new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 			}
 
 			for(int i = 0; i < 6; i++){
@@ -202,7 +202,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 	@Override
 	public void update(){
-		if(getWorld().isRemote){
+		if(worldObj.isRemote){
 			for(int i = 0; i < 6; i++){
 				if(clientQ[i] == Double.POSITIVE_INFINITY){
 					angle[i] = 0;
@@ -217,7 +217,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}
 		}
 
-		if(!getWorld().isRemote){
+		if(!worldObj.isRemote){
 			sendQPacket();
 		}
 
@@ -304,13 +304,13 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 				if(i != side && i != EnumFacing.getFront(side).getOpposite().getIndex()){
 					EnumFacing facing = EnumFacing.getFront(i);
 					// Adjacent gears
-					if(getWorld().getTileEntity(pos.offset(facing)) != null && getWorld().getTileEntity(pos.offset(facing)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(side))){
-						getWorld().getTileEntity(pos.offset(facing)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(side)).propogate(key * -1, masterIn);
+					if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(side))){
+						worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(side)).propogate(key * -1, masterIn);
 					}
 
 					// Diagonal gears
-					if(!getWorld().getBlockState(pos.offset(facing)).getBlock().isNormalCube(getWorld().getBlockState(pos.offset(facing)), getWorld(), pos.offset(facing)) && getWorld().getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))) != null && getWorld().getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
-						getWorld().getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite()).propogate(key * -1, masterIn);
+					if(!worldObj.getBlockState(pos.offset(facing)).getBlock().isNormalCube(worldObj.getBlockState(pos.offset(facing)), worldObj, pos.offset(facing)) && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))) != null && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
+						worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite()).propogate(key * -1, masterIn);
 					}
 				}
 			}
@@ -364,7 +364,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 				physData[side][2] = physData[side][1] * .125;
 			}
 
-			if(!getWorld().isRemote){
+			if(!worldObj.isRemote){
 				SendStringToClient msg = new SendStringToClient("memb" + side, members[side] == null ? "" : members[side].name(), pos);
 				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 256));
 			}

@@ -28,7 +28,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
@@ -36,7 +36,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 			double reservePool = temp * HeatConductors.COPPER.getRate();
 			temp -= reservePool;
 
-			IHeatHandler handler = getWorld().getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN);
+			IHeatHandler handler = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN);
 			reservePool += handler.getTemp() * HeatConductors.COPPER.getRate();
 			handler.addHeat(-(handler.getTemp() * HeatConductors.COPPER.getRate()));
 			reservePool /= 2;
@@ -112,7 +112,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

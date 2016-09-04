@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
 
@@ -113,6 +114,9 @@ public class LensHolder extends BlockContainer{
 		if(state.getValue(Properties.TUXTURE_6) != 0){
 			int i = state.getValue(Properties.TUXTURE_6);
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(i == 1 ? Item.getByNameOrId(Main.MODID + ":gemRuby") : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : ModItems.luminescentQuartz, 1));
+		}
+		if(world.getTileEntity(pos) instanceof BeamRenderTE){
+			((BeamRenderTE) world.getTileEntity(pos)).refresh();
 		}
 		super.breakBlock(world, pos, state);
 	}

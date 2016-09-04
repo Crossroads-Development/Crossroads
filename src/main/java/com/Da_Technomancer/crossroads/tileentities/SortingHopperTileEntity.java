@@ -564,7 +564,7 @@ public class SortingHopperTileEntity extends TileEntityLockableLoot implements I
 		 * Returns the IInventory (if applicable) of the TileEntity at the
 		 * specified position
 		 */
-		return getInventoryAtPosition(this.getWorld(), this.getXPos() + enumfacing.getFrontOffsetX(), this.getYPos() + enumfacing.getFrontOffsetY(), this.getZPos() + enumfacing.getFrontOffsetZ());
+		return getInventoryAtPosition(worldObj, this.getXPos() + enumfacing.getFrontOffsetX(), this.getYPos() + enumfacing.getFrontOffsetY(), this.getZPos() + enumfacing.getFrontOffsetZ());
 	}
 
 	/**

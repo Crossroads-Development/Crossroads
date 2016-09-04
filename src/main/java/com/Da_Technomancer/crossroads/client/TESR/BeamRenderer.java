@@ -35,35 +35,40 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 				GlStateManager.color(trip[dir].getLeft().getRed() / 255F, trip[dir].getLeft().getGreen() / 255F, trip[dir].getLeft().getBlue() / 255F);
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
-
+				
 				switch(dir){
 					case 0:
 						GlStateManager.rotate(180, 1, 0, 0);
-						GlStateManager.translate(0, 0, -1);
+						GlStateManager.translate(.5D, -.5D, -.5D);
 						break;
 					case 1:
+						GlStateManager.translate(.5D, .5D, .5D);
 						break;
 					case 5:
 						GlStateManager.rotate(-90, 0, 0, 1);
-						GlStateManager.translate(-1, 0, 0);
+						GlStateManager.translate(-.5D, .5D, .5D);
 						break;
 					case 4:
 						GlStateManager.rotate(90, 0, 0, 1);
+						GlStateManager.translate(.5D, -.5D, .5D);
 						break;
 					case 2:
 						GlStateManager.rotate(-90, 1, 0, 0);
+						GlStateManager.translate(.5D, -.5D, .5D);
 						break;
 					case 3:
 						GlStateManager.rotate(90, 1, 0, 0);
-						GlStateManager.translate(0, 0, -1);
+						GlStateManager.translate(.5D, .5D, -.5D);
 						break;
 				}
 
+				GlStateManager.rotate(beam.getWorld().getTotalWorldTime(), 0, 1, 0);
+				
 				Tessellator tes = Tessellator.getInstance();
 				VertexBuffer buf = tes.getBuffer();
 
-				final double small = .5D - (trip[dir].getRight().doubleValue() / 16D);
-				final double big = .5D + (trip[dir].getRight().doubleValue() / 16D);
+				final double small = 0 - (trip[dir].getRight().doubleValue() / 16D);
+				final double big = 0 + (trip[dir].getRight().doubleValue() / 16D);
 				final int length = trip[dir].getMiddle().intValue();
 
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -88,7 +93,7 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 				buf.pos(big, 0, small).tex(0, length).endVertex();
 				buf.pos(big, length, small).tex(0, 0).endVertex();
 				tes.draw();
-
+				
 				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();
 			}

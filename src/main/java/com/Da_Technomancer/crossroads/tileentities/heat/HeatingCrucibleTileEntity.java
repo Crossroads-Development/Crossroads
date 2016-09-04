@@ -122,7 +122,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		ticksExisted++;
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
@@ -142,8 +142,8 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 			markDirty();
 		}
 
-		if(getWorld().getBlockState(getPos()).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || getWorld().getBlockState(getPos()).getValue(Properties.TEXTURE_4) != getCorrectState().getValue(Properties.TEXTURE_4)){
-			getWorld().setBlockState(getPos(), getCorrectState(), 2);
+		if(worldObj.getBlockState(getPos()).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || worldObj.getBlockState(getPos()).getValue(Properties.TEXTURE_4) != getCorrectState().getValue(Properties.TEXTURE_4)){
+			worldObj.setBlockState(getPos(), getCorrectState(), 2);
 		}
 	}
 
@@ -303,7 +303,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

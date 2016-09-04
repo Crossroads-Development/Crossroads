@@ -24,16 +24,17 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickable, IIntReceiver{
 
 	private boolean large;
-	private MagicUnit[] recieved = new MagicUnit[6];
-	private final int[] LIMIT = new int[] {30, 90};
-	private final int[] RATE = new int[] {3, 9};
+	private static final int[] LIMIT = new int[] {30, 90};
+	private static final int[] RATE = new int[] {3, 9};
 	private int[] stored = new int[4];
 	
 	private Triple<Color, Integer, Integer> trip;
 	
 	@Override
 	public void refresh(){
-		beamer.emit(null);
+		if(beamer != null){
+			beamer.emit(null);
+		}
 	}
 	
 	public QuartzStabilizerTileEntity(){
@@ -52,10 +53,17 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 		return out;
 	}
 
+	private int ticksExisted;
+	
 	@Override
 	public void update(){
 		if(worldObj.isRemote){
 			return;
+		}
+
+		//This exists to prevent a case where the first stabilizer in a chain will have an invisible beam on relog if it has a constant output. 
+		if(++ticksExisted == 10){
+			ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 		
 		if(beamer == null){
@@ -82,11 +90,6 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	}
 	
 	private BeamManager beamer;
-	
-	@Override
-	public NBTTagCompound getUpdateTag(){
-		return beamer.setNBT(super.getUpdateTag(), null);
-	}
 
 	@Override
 	public void receiveInt(String context, int message){
@@ -98,26 +101,15 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("large", large);
-		for(int i = 0; i < 6; i++){
-			if(recieved[i] != null){
-				recieved[i].setNBT(nbt, i + "mag");
-			}
-		}
-		
-		return beamer.setNBT(nbt, null);
+		return nbt;
 	}
 	
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		large = nbt.getBoolean("large");
-		for(int i = 0; i < 6; i++){
-			recieved[i] = MagicUnit.loadNBT(nbt, i + "mag");
-		}
-		
-		beamer = BeamManager.loadNBT(nbt, worldObj.getBlockState(pos).getValue(Properties.FACING), pos, worldObj, null);
 	}
 	
-	private final IMagicHandler[] magicHandler = {new MagicHandler(0), new MagicHandler(1), new MagicHandler(2), new MagicHandler(3), new MagicHandler(4), new MagicHandler(5)};
+	private final IMagicHandler[] magicHandler = {new MagicHandler(), new MagicHandler(), new MagicHandler(), new MagicHandler(), new MagicHandler(), new MagicHandler()};
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
@@ -140,15 +132,8 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	
 	private class MagicHandler implements IMagicHandler{
 		
-		private final int index;
-		
-		private MagicHandler(int index){
-			this.index = index;
-		}
-		
 		@Override
 		public void setMagic(MagicUnit mag){
-			recieved[index] = mag;
 			if(mag == null){
 				return;
 			}

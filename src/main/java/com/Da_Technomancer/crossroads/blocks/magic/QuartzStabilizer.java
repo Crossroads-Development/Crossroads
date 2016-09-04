@@ -72,15 +72,12 @@ public class QuartzStabilizer extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
-		return this.getDefaultState().withProperty(Properties.FACING, facing);
+		return this.getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		EnumFacing facing = state.getValue(Properties.FACING);
-		int facingbits = facing.getIndex();
-		return facingbits;
+		return state.getValue(Properties.FACING).getIndex();
 	}
 	
 	@Override

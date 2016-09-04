@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 public class SlimeEffect implements IEffect{
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos){
+	public void doEffect(World worldIn, BlockPos pos, double mult){
 		if(worldIn.isRemote){
 			return;
 		}

@@ -62,7 +62,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 	@Override
 	public void update(){
-		if(getWorld().isRemote){
+		if(worldObj.isRemote){
 			if(angleQ[2] == Double.POSITIVE_INFINITY){
 				angleQ[0] = 0;
 			}else if(angleQ[2] == Double.NEGATIVE_INFINITY){
@@ -72,7 +72,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			}
 		}
 
-		if(!getWorld().isRemote){
+		if(!worldObj.isRemote){
 			sendQPacket();
 		}
 
@@ -148,7 +148,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 		if(flag){
 			SendDoubleToClient msg = new SendDoubleToClient("Q", angleQ[2], this.getPos());
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 
 			if(angleQ[2] == Double.POSITIVE_INFINITY || angleQ[2] == Double.NEGATIVE_INFINITY){
 				angleQ[2] = 0;
@@ -269,7 +269,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 		@Override
 		public void updateStates(){
-			if(!getWorld().isRemote){
+			if(!worldObj.isRemote){
 				SendStringToClient msg = new SendStringToClient("memb", type == null ? "" : type.name(), pos);
 				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 				SendStringToClient msgOther = new SendStringToClient("side", side == null ? "" : side.name(), pos);

@@ -29,7 +29,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
@@ -212,7 +212,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

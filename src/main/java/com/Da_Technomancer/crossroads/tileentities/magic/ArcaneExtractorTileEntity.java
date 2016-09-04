@@ -32,7 +32,9 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	
 	@Override
 	public void refresh(){
-		beamer.emit(null);
+		if(beamer != null){
+			beamer.emit(null);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -48,6 +50,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		if(worldObj.isRemote){
 			return;
 		}
+		
 		if(beamer == null){
 			beamer = new BeamManager(worldObj.getBlockState(pos).getValue(Properties.FACING), pos, worldObj);
 		}
@@ -80,18 +83,13 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	}
 	
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		return beamer.setNBT(super.getUpdateTag(), null);
-	}
-	
-	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		
 		if(inv != null){
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
-		return beamer.setNBT(nbt, null);
+		return nbt;
 	}
 	
 	@Override
@@ -99,7 +97,6 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		super.readFromNBT(nbt);
 		
 		inv = nbt.hasKey("inv") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv")) : null;
-		beamer = BeamManager.loadNBT(nbt, worldObj.getBlockState(pos).getValue(Properties.FACING), pos, worldObj, null);
 	}
 	
 	private final IItemHandler itemHandler = new ItemHandler();

@@ -50,7 +50,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 
 		if(lastCompl != completion){
 			SendIntToClient msg = new SendIntToClient("prog", completion, this.getPos());
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 			lastCompl = completion;
 		}
 

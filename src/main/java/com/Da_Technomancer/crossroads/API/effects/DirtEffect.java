@@ -18,7 +18,7 @@ public class DirtEffect implements IEffect{
 	private final Random rand = new Random();
 	
 	@Override
-	public void doEffect(World worldIn, BlockPos pos){
+	public void doEffect(World worldIn, BlockPos pos, double mult){
 
 		if(worldIn.isRemote){
 			return;

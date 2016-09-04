@@ -59,7 +59,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 
 		if(lastProgress != progress){
 			SendIntToClient msg = new SendIntToClient("prog", progress, this.getPos());
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 			lastProgress = progress;
 		}
 	}

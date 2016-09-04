@@ -66,7 +66,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		}
 
 		if(temp > insulator.getLimit()){
-			insulator.getEffect().doEffect(worldObj, pos);
+			insulator.getEffect().doEffect(worldObj, pos, 1);
 		}
 	}
 
@@ -134,7 +134,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 			return;
 		}
 
-		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
+		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
 		newTemp /= (rate + 1);
 		temp = newTemp;
 	}
