@@ -34,15 +34,18 @@ public class BeamManager{
 		this.pos = pos.toImmutable();
 	}
 	
-	public boolean emit(@Nullable MagicUnit mag){
+	public boolean emit(@Nullable MagicUnit mag, int steps){
+		if(steps >= IMagicHandler.MAX_STEPS){
+			return false;
+		}
 		for(int i = 1; i <= IMagicHandler.MAX_DISTANCE; i++){
 			if(world.getTileEntity(pos.offset(dir, i)) != null && world.getTileEntity(pos.offset(dir, i)).hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite())){
 				if(!pos.offset(dir, i).equals(end)){
-					wipe();
+					wipe(steps);
 					end = pos.offset(dir, i);
 				}
 				
-				world.getTileEntity(end).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).setMagic(mag);
+				world.getTileEntity(end).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).setMagic(mag, steps + 1);
 				if(dist != i || (mag == null ? lastSent != null : !mag.equals(lastSent))){
 					dist = i;
 					lastSent = mag;
@@ -53,7 +56,7 @@ public class BeamManager{
 			}
 			
 			if(i == IMagicHandler.MAX_DISTANCE || !world.getBlockState(pos.offset(dir, i)).getBlock().isAir(world.getBlockState(pos.offset(dir, i)), world, pos.offset(dir, i))){
-				wipe();
+				wipe(steps);
 				if(mag != null && mag.getRGB() != null){
 					IEffect e = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
 					if(e != null){
@@ -70,9 +73,9 @@ public class BeamManager{
 		return false;
 	}
 	
-	private void wipe(){
+	private void wipe(int steps){
 		if(end != null && world.getTileEntity(end) != null && world.getTileEntity(end).hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite())){
-			world.getTileEntity(end).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).setMagic(null);
+			world.getTileEntity(end).getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).setMagic(null, steps + 1);
 		}
 	}
 	

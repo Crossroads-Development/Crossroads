@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.magic;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEntity;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
@@ -13,7 +13,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -48,20 +47,16 @@ public class ArcaneReflector extends BlockContainer{
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return this.getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : BlockPistonBase.getFacingFromEntity(pos, placer));
 	}
-	
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
-		neighborChanged(null, world, pos, null);
-	}
-	
-	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
-		int i = Math.max(worldIn.getRedstonePower(pos.down(), EnumFacing.DOWN), Math.max(worldIn.getRedstonePower(pos.up(), EnumFacing.UP), Math.max(worldIn.getRedstonePower(pos.east(), EnumFacing.EAST), Math.max(worldIn.getRedstonePower(pos.west(), EnumFacing.WEST), Math.max(worldIn.getRedstonePower(pos.north(), EnumFacing.NORTH), worldIn.getRedstonePower(pos.south(), EnumFacing.SOUTH))))));
-		if(((ArcaneReflectorTileEntity) worldIn.getTileEntity(pos)).redstone != i){
-			((ArcaneReflectorTileEntity) worldIn.getTileEntity(pos)).redstone = i;
-		}
-	}
 
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		if(worldIn.getTileEntity(pos) instanceof BeamRenderTE){
+			((BeamRenderTE) worldIn.getTileEntity(pos)).refresh();
+		}
+		
+		super.breakBlock(worldIn, pos, state);
+	}
+	
 	@Override
 	public int damageDropped(IBlockState state){
 		return 0;

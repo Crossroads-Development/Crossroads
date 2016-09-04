@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -11,7 +12,6 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
-import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxis;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,7 +44,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		physData[2] = type.getDensity() / 64D;
 	}
 	
-	private final int tiers = MasterAxis.speedTiers.getInt();
+	private final int tiers = ModConfig.speedTiers.getInt();
 	
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){

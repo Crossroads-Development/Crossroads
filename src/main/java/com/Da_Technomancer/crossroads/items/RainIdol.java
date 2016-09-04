@@ -12,14 +12,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RainIdol extends Item{
 	
-	private Property weatherControl = ModConfig.config.get("Misc", "Enable rain idol? (default true)", true);
 	
 	protected RainIdol(){
 		String name = "rainIdol";
@@ -33,14 +31,14 @@ public class RainIdol extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		if(!weatherControl.getBoolean()){
+		if(!ModConfig.weatherControl.getBoolean()){
 			tooltip.add("This item has been disabled in the config. It will do nothing until re-enabled.");
 		}
 	}
 	
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected){
-		if(worldIn.isRemote || !weatherControl.getBoolean()){
+		if(worldIn.isRemote || !ModConfig.weatherControl.getBoolean()){
 			return;
 		}
 		

@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ITickable;
@@ -33,13 +34,13 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	@Override
 	public void refresh(){
 		if(beamerR != null){
-			beamerR.emit(null);
+			beamerR.emit(null, 0);
 		}
 		if(beamerG != null){
-			beamerG.emit(null);
+			beamerG.emit(null, 0);
 		}
 		if(beamerB != null){
-			beamerB.emit(null);
+			beamerB.emit(null, 0);
 		}
 	}
 	
@@ -87,6 +88,41 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 		}
 	}
 	
+	private int memTripR;
+	private int memTripG;
+	private int memTripB;
+	
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setInteger("beamR", memTripR);
+		nbt.setInteger("beamG", memTripG);
+		nbt.setInteger("beamB", memTripB);
+		return nbt;
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
+		nbt.setInteger("memTripR", beamerR == null ? 0 : beamerR.getPacket());
+		nbt.setInteger("memTripG", beamerG == null ? 0 : beamerG.getPacket());
+		nbt.setInteger("memTripB", beamerB == null ? 0 : beamerB.getPacket());
+		return nbt;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
+		memTripR = nbt.getInteger("memTripR");
+		memTripG = nbt.getInteger("memTripG");
+		memTripB = nbt.getInteger("memTripB");
+		if(nbt.hasKey("beamR")){
+			tripR = BeamManager.getTriple(nbt.getInteger("beamR"));
+			tripG = BeamManager.getTriple(nbt.getInteger("beamG"));
+			tripB = BeamManager.getTriple(nbt.getInteger("beamB"));
+		}
+	}
+	
 	private final IMagicHandler magicHandler = new MagicHandler();
 	
 	@Override
@@ -111,17 +147,17 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	private class MagicHandler implements IMagicHandler{
 		
 		@Override
-		public void setMagic(MagicUnit mag){
+		public void setMagic(MagicUnit mag, int steps){
 			if(beamerR == null || beamerG == null || beamerB == null){
 				return;
 			}
-			if(beamerR.emit(mag == null || mag.getEnergy() == 0 ? null : mag.mult(1, 0, 0, 0))){
+			if(beamerR.emit(mag == null || mag.getEnergy() == 0 ? null : mag.mult(1, 0, 0, 0), steps)){
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamR", beamerR.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
-			if(beamerG.emit(mag == null || mag.getPotential() == 0 ? null : mag.mult(0, 1, 0, 0))){
+			if(beamerG.emit(mag == null || mag.getPotential() == 0 ? null : mag.mult(0, 1, 0, 0), steps)){
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamG", beamerG.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
-			if(beamerB.emit(mag == null || mag.getStability() == 0 ? null : mag.mult(0, 0, 1, 0))){
+			if(beamerB.emit(mag == null || mag.getStability() == 0 ? null : mag.mult(0, 0, 1, 0), steps)){
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamB", beamerB.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}

@@ -5,6 +5,7 @@ import java.awt.Color;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 
 import net.minecraft.client.Minecraft;
@@ -62,8 +63,9 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 						break;
 				}
 
-				GlStateManager.rotate(beam.getWorld().getTotalWorldTime(), 0, 1, 0);
-				
+				if(ModConfig.rotateBeam.getBoolean()){
+					GlStateManager.rotate(beam.getWorld().getTotalWorldTime() * 2, 0, 1, 0);
+				}
 				Tessellator tes = Tessellator.getInstance();
 				VertexBuffer buf = tes.getBuffer();
 

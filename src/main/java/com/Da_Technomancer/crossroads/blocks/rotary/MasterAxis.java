@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
@@ -20,13 +19,10 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MasterAxis extends BlockContainer{
 	
-	public static Property speedTiers;
-
 	public MasterAxis(){
 		super(Material.IRON);
 		setUnlocalizedName("masterAxis");
@@ -35,8 +31,6 @@ public class MasterAxis extends BlockContainer{
 		GameRegistry.register(new ItemBlock(this).setRegistryName("masterAxis"));
 		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
-		// as good a place to stick this as any I guess
-		speedTiers = ModConfig.config.get("Rotary", "Speed Tiers", 4, "Higher value means smoother gear rotation, but more packets sent AKA lag. range 1-100 default 4", 1, 100);
 	}
 
 	@Override

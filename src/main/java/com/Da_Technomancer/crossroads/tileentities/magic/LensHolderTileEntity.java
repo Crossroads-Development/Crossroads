@@ -38,8 +38,6 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	
 	private Triple<Color, Integer, Integer> trip;
 	private Triple<Color, Integer, Integer> tripUp;
-	private MagicUnit recieved;
-	private MagicUnit recievedUp;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -53,10 +51,10 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	@Override
 	public void refresh(){
 		if(beamer != null){
-			beamer.emit(null);
+			beamer.emit(null, 0);
 		}
 		if(beamerUp != null){
-			beamerUp.emit(null);
+			beamerUp.emit(null, 0);
 		}
 	}
 	
@@ -86,21 +84,36 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		}
 	}
 	
+	private int memTrip;
+	private int memTripUp;
+
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setInteger("beam", memTrip);
+		nbt.setInteger("beamUp", memTripUp);
+		return nbt;
+	}
+	
+	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		if(recieved != null){
-			recieved.setNBT(nbt, "mag");
-		}
-		if(recievedUp != null){
-			recievedUp.setNBT(nbt, "magUp");
-		}
+		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
+		nbt.setInteger("memTripUp", beamerUp == null ? 0 : beamerUp.getPacket());
 		return nbt;
 	}
 
+	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		recieved = MagicUnit.loadNBT(nbt, "mag");
-		recieved = MagicUnit.loadNBT(nbt, "magUp");
+		memTrip = nbt.getInteger("memTrip");
+		memTripUp = nbt.getInteger("memTripUp");
+		if(nbt.hasKey("beam")){
+			trip = BeamManager.getTriple(nbt.getInteger("beam"));
+		}
+		if(nbt.hasKey("beamUp")){
+			tripUp = BeamManager.getTriple(nbt.getInteger("beamUp"));
+		}
 	}
 	
 	@Override
@@ -147,34 +160,34 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		}
 
 		@Override
-		public void setMagic(MagicUnit mag){
+		public void setMagic(MagicUnit mag, int steps){
 			if(beamer == null || beamerUp == null){
 				return;
 			}
 			if(mag != null && mag.getVoid() != 0){
 				worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TUXTURE_6, 0));
-				(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag);
+				(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, steps);
 				return;
 			}
 			
 			switch(worldObj.getBlockState(pos).getValue(Properties.TUXTURE_6)){
 				case 0:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag)){
+					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, steps)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 				case 1:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getEnergy() == 0 ? null : new MagicUnit(mag.getEnergy(), 0, 0, 0))){
+					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getEnergy() == 0 ? null : new MagicUnit(mag.getEnergy(), 0, 0, 0), steps)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 				case 2:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getPotential() == 0 ? null : new MagicUnit(0, mag.getPotential(), 0, 0))){
+					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getPotential() == 0 ? null : new MagicUnit(0, mag.getPotential(), 0, 0), steps)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 				case 3:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getStability() == 0 ? null : new MagicUnit(0, 0, mag.getStability(), 0))){
+					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getStability() == 0 ? null : new MagicUnit(0, 0, mag.getStability(), 0), steps)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
@@ -182,12 +195,12 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 					if(MagicElements.getElement(mag) == MagicElements.LIGHT){
 						worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TUXTURE_6, 5));
 					}
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag)){
+					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, steps)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 				case 5:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag)){
+					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, steps)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 			}

@@ -33,7 +33,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	@Override
 	public void refresh(){
 		if(beamer != null){
-			beamer.emit(null);
+			beamer.emit(null, 0);
 		}
 	}
 	
@@ -61,12 +61,12 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 				if(--inv.stackSize <= 0){
 					inv = null;
 				}
-				if(beamer.emit(mag)){
+				if(beamer.emit(mag, 0)){
 					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}else{
 				inv = null;
-				if(beamer.emit(null)){
+				if(beamer.emit(null, 0)){
 					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}
