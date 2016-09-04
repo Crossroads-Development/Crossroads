@@ -114,6 +114,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 		super.writeToNBT(nbt);
 		nbt.setBoolean("large", large);
 		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
+		nbt.setIntArray("store", stored);
 		return nbt;
 	}
 	
@@ -125,6 +126,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 		if(nbt.hasKey("beam")){
 			trip = BeamManager.getTriple(nbt.getInteger("beam"));
 		}
+		stored = nbt.hasKey("store") ? nbt.getIntArray("store") : new int[4];
 	}
 	
 	private final IMagicHandler[] magicHandler = {new MagicHandler(), new MagicHandler(), new MagicHandler(), new MagicHandler(), new MagicHandler(), new MagicHandler()};
