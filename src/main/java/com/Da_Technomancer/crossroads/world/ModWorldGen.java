@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.world;
 import java.util.Random;
 
 import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -23,13 +23,13 @@ public class ModWorldGen implements IWorldGenerator{
 		switch(world.provider.getDimension()){
 			case 0: // Overworld
 				if(ModConfig.genCopperOre.getBoolean())
-					this.runGenerator(new WorldGenMinable(Block.getBlockFromName("crossroads:oreCopper").getDefaultState(), 8), world, random, chunkX, chunkZ, 8, 2, 30);
+					this.runGenerator(new WorldGenMinable(OreSetup.oreCopper.getDefaultState(), 8), world, random, chunkX, chunkZ, 8, 2, 30);
 
 				if(ModConfig.genTinOre.getBoolean())
-					this.runGenerator(new WorldGenMinable(Block.getBlockFromName("crossroads:oreTin").getDefaultState(), 4), world, random, chunkX, chunkZ, 5, 2, 30);
+					this.runGenerator(new WorldGenMinable(OreSetup.oreTin.getDefaultState(), 4), world, random, chunkX, chunkZ, 5, 2, 30);
 
 				if(ModConfig.genNativeCopperOre.getBoolean())
-					this.runGenerator(new WorldGenMinable(Block.getBlockFromName("crossroads:oreNativeCopper").getDefaultState(), 6), world, random, chunkX, chunkZ, 8, 50, 70);
+					this.runGenerator(new WorldGenMinable(OreSetup.oreNativeCopper.getDefaultState(), 6), world, random, chunkX, chunkZ, 8, 50, 70);
 
 				break;
 			case -1: // Nether
@@ -40,7 +40,7 @@ public class ModWorldGen implements IWorldGenerator{
 					// blockspaces in the given height range (heights nether
 					// quartz spawns at) is about 1/350, so 1000 tries will give
 					// an average of about 1 ruby per chunk. Happy Mining!
-					this.runGenerator(new SingleBlockGen(Block.getBlockFromName("crossroads:oreRuby").getDefaultState(), BlockMatcher.forBlock(Blocks.QUARTZ_ORE)), world, random, chunkX, chunkZ, 1000, 8, 116);
+					this.runGenerator(new SingleBlockGen(OreSetup.oreRuby.getDefaultState(), BlockMatcher.forBlock(Blocks.QUARTZ_ORE)), world, random, chunkX, chunkZ, 1000, 8, 116);
 
 				break;
 			case 1: // End

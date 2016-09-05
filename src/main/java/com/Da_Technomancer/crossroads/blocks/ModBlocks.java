@@ -25,6 +25,7 @@ import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.SaltReactor;
 import com.Da_Technomancer.crossroads.blocks.magic.ArcaneExtractor;
 import com.Da_Technomancer.crossroads.blocks.magic.ArcaneReflector;
+import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitter;
 import com.Da_Technomancer.crossroads.blocks.magic.CrystallinePrism;
 import com.Da_Technomancer.crossroads.blocks.magic.LensHolder;
 import com.Da_Technomancer.crossroads.blocks.magic.QuartzStabilizer;
@@ -84,6 +85,7 @@ public final class ModBlocks{
 	public static ArcaneReflector arcaneReflector;
 	public static LensHolder lensHolder;
 	public static BasicBlock blockPureQuartz;
+	public static BeamSplitter beamSplitter;
 
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 
@@ -130,6 +132,7 @@ public final class ModBlocks{
 		blockAddQue(arcaneReflector = new ArcaneReflector());
 		blockAddQue(lensHolder = new LensHolder());
 		blockPureQuartz = new BasicBlock("blockPureQuartz", Material.ROCK, 1, "pickaxe", 4, "blockQuartz");
+		blockAddQue(beamSplitter = new BeamSplitter());
 	}
 
 	@SideOnly(Side.CLIENT)

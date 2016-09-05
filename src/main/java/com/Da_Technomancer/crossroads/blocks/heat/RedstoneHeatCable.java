@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IConduitModel;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -109,7 +110,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public ResourceLocation getTexture(){
-		return insulator.getResource();
+		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + '-' + conductor.name().toLowerCase() + "-redstone");
 	}
 
 	@Override

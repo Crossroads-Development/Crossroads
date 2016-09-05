@@ -6,6 +6,7 @@ import java.util.Random;
 import com.Da_Technomancer.crossroads.API.effects.BlockEffect;
 import com.Da_Technomancer.crossroads.API.effects.EnergizeEffect;
 import com.Da_Technomancer.crossroads.API.effects.ExplodeEffect;
+import com.Da_Technomancer.crossroads.API.effects.GrowEffect;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
 import com.Da_Technomancer.crossroads.API.effects.TimeEffect;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -14,14 +15,14 @@ import net.minecraft.init.Blocks;
 
 public enum MagicElements{
 	
-	TIME(new TimeEffect(), null, new Color(255, 100, 0), 2),
+	TIME(new TimeEffect(), new TimeEffect.VoidTimeEffect(), new Color(255, 100, 0), 2),
 	LIGHT(null, null, new Color(255, 255, 255), 10),
 	//TODO populate
 	//This section needs more elements, and they all (or at least most of them) need an effect and void effect.
 	
 	//These MUST be declared last so they have bottom priority.
 	ENERGY(new EnergizeEffect(), new EnergizeEffect.VoidEnergizeEffect(), new Color(255, 0, 0), 128),
-	POTENTIAL(null, null, new Color(0, 255, 0), 128),
+	POTENTIAL(new GrowEffect(), new GrowEffect.VoidGrowEffect(), new Color(0, 255, 0), 128),
 	STABILITY(null, new ExplodeEffect(), new Color(0, 0, 255), 128),
 	VOID(new BlockEffect(Blocks.AIR.getDefaultState()), new BlockEffect(Blocks.AIR.getDefaultState()), new Color(0, 0, 0), 0),
 	NO_MATCH(null, null, new Color(255, 255, 255), 255);

@@ -96,6 +96,7 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 				buf.pos(big, length, small).tex(0, 0).endVertex();
 				tes.draw();
 				
+				GlStateManager.enableLighting();
 				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();
 			}

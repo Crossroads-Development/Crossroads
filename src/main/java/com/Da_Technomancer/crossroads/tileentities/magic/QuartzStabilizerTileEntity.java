@@ -25,8 +25,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickable, IIntReceiver{
 
 	private boolean large;
-	private static final int[] LIMIT = new int[] {30, 90};
-	private static final int[] RATE = new int[] {3, 9};
+	private static final int[] LIMIT = new int[] {30, 150};
+	private static final int[] RATE = new int[] {6, 15};
 	private int[] stored = new int[4];
 	private EnumFacing facing;
 	

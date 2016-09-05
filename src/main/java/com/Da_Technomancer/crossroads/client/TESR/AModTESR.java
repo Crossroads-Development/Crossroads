@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.CrystallinePrismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
@@ -62,6 +63,9 @@ public class AModTESR{
 		
 		reg(ModBlocks.lensHolder);
 		ClientRegistry.bindTileEntitySpecialRenderer(LensHolderTileEntity.class, new BeamRenderer());
+		
+		reg(ModBlocks.beamSplitter);
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamSplitterTileEntity.class, new BeamRenderer());
 	}
 
 	public static void reg(Block block){

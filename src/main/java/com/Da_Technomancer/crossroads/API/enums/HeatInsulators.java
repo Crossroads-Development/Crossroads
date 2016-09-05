@@ -6,26 +6,23 @@ import com.Da_Technomancer.crossroads.API.effects.IEffect;
 import com.Da_Technomancer.crossroads.API.effects.SlimeEffect;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.util.ResourceLocation;
 
 public enum HeatInsulators{
 
-	WOOL(.01D, 300, new ResourceLocation("blocks/wool_colored_white"), new BlockEffect(Blocks.FIRE.getDefaultState()), "wool"),
-	SLIME(.005D, 500, new ResourceLocation("blocks/slime"), new SlimeEffect(), "slimeball"),
-	DIRT(.1D, 42, new ResourceLocation("blocks/dirt"), new DirtEffect(), "dirt"),
-	ICE(.00005D, 0, new ResourceLocation("blocks/ice_packed"), new BlockEffect(Blocks.WATER.getDefaultState()), Blocks.ICE),
-	OBSIDIAN(0.0001D, 2000, new ResourceLocation("blocks/obsidian"), new BlockEffect(Blocks.LAVA.getDefaultState()), "obsidian");
+	WOOL(.01D, 300, new BlockEffect(Blocks.FIRE.getDefaultState()), "wool"),
+	SLIME(.005D, 500, new SlimeEffect(), "slimeball"),
+	DIRT(.1D, 42, new DirtEffect(), "dirt"),
+	ICE(.00005D, 0, new BlockEffect(Blocks.WATER.getDefaultState()), Blocks.ICE),
+	OBSIDIAN(0.0001D, 2000, new BlockEffect(Blocks.LAVA.getDefaultState()), "obsidian");
 
 	private final double rate;
 	private final double limit;
-	private final ResourceLocation resource;
 	private final IEffect effect;
 	private final Object item;
 
-	HeatInsulators(double rate, double limit, ResourceLocation resource, IEffect effect, Object item){
+	HeatInsulators(double rate, double limit, IEffect effect, Object item){
 		this.rate = rate;
 		this.limit = limit;
-		this.resource = resource;
 		this.effect = effect;
 		this.item = item;
 	}
@@ -36,10 +33,6 @@ public enum HeatInsulators{
 
 	public double getLimit(){
 		return limit;
-	}
-
-	public ResourceLocation getResource(){
-		return resource;
 	}
 
 	public IEffect getEffect(){

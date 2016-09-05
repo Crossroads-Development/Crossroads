@@ -24,4 +24,12 @@ public class TimeEffect implements IEffect{
 			}
 		}
 	}
+	
+	public static class VoidTimeEffect implements IEffect{
+
+		@Override
+		public void doEffect(World worldIn, BlockPos pos, double mult){
+			//TODO causes a chunk reset
+		}
+	}
 }
