@@ -80,7 +80,7 @@ public class BeamManager{
 	}
 	
 	public int getPacket(){
-		return lastSent == null || lastSent.getRGB() == null ? 0 : ((dist - 1) << 24) + (lastSent.getRGB().getRGB() & 16777215) + (Math.min((int) Math.sqrt(lastSent.getPower()) - 1, 7) << 28);
+		return lastSent == null || lastSent.getRGB() == null ? 0 : ((dist - 1) << 24) + (lastSent.getRGB().getRGB() & 16777215) + (Math.min((int) Math.pow((lastSent.getPower()) - 1, 1D / 3D), 7) << 28);
 	}
 
 	@Nullable
