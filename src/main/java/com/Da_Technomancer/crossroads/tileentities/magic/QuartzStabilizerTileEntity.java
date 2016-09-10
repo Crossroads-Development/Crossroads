@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities.magic;
 
 import java.awt.Color;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
@@ -29,6 +31,12 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	private static final int[] RATE = new int[] {6, 15};
 	private int[] stored = new int[4];
 	private EnumFacing facing;
+	
+	@Override
+	@Nullable
+	public MagicUnit[] getLastSent(){
+		return beamer == null || beamer.getLastSent() == null ? null : new MagicUnit[] {beamer.getLastSent()};
+	}
 	
 	private Triple<Color, Integer, Integer> trip;
 	

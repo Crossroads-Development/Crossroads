@@ -87,4 +87,8 @@ public class BeamManager{
 	public static Triple<Color, Integer, Integer> getTriple(int packet){
 		return packet == 0 ? null : Triple.of(Color.decode(Integer.toString(packet & 16777215)), ((packet >> 24) & 15) + 1, (packet >> 28) + 1);
 	}
+	
+	public MagicUnit getLastSent(){
+		return lastSent;
+	}
 }

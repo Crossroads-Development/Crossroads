@@ -3,6 +3,9 @@ package com.Da_Technomancer.crossroads.items;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
@@ -11,12 +14,14 @@ import amerifrance.guideapi.api.util.TextHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -76,6 +81,31 @@ public class OmniMeter extends Item{
 				IRotaryHandler gear = te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite());
 
 				playerIn.addChatComponentMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[1] + ", I: " + gear.getPhysData()[2] + ", Radius: " + gear.getPhysData()[0]));
+			}
+		}
+		
+		if(te instanceof BeamRenderTE){
+			pass = false;
+			if(!worldIn.isRemote){
+				MagicUnit[] mag = ((BeamRenderTE) te).getLastSent();
+				if(mag != null){
+					for(MagicUnit check : mag){
+						if(check != null){
+							NBTTagCompound nbt = MiscOp.getPlayerTag(playerIn);
+							if(!nbt.hasKey("elements")){
+								nbt.setTag("elements", new NBTTagCompound());
+							}
+							nbt = nbt.getCompoundTag("elements");
+							
+							if(!nbt.hasKey(MagicElements.getElement(check).name())){
+								nbt.setBoolean(MagicElements.getElement(check).name(), true);
+								playerIn.addChatComponentMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
+							}
+							
+							playerIn.addChatComponentMessage(new TextComponentString(check.toString()));
+						}
+					}
+				}
 			}
 		}
 

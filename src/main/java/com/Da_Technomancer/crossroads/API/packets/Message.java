@@ -23,6 +23,7 @@ import java.util.HashMap;
 import org.apache.commons.lang3.tuple.Pair;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -46,9 +47,8 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		map(boolean.class, Message::readBoolean, Message::writeBoolean);
 		// map(char.class, Message::readChar, Message::writeChar);
 		map(String.class, Message::readString, Message::writeString);
-		// map(NBTTagCompound.class, Message::readNBT, Message::writeNBT);
-		// map(ItemStack.class, Message::readItemStack,
-		// Message::writeItemStack);
+		map(NBTTagCompound.class, Message::readNBT, Message::writeNBT);
+		// map(ItemStack.class, Message::readItemStack, Message::writeItemStack);
 		map(BlockPos.class, Message::readBlockPos, Message::writeBlockPos);
 	}
 
@@ -202,13 +202,13 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		ByteBufUtils.writeUTF8String(buf, s);
 	}
 
-	/*
-	 * private static NBTTagCompound readNBT(ByteBuf buf) { return
-	 * ByteBufUtils.readTag(buf); }
-	 * 
-	 * private static void writeNBT(NBTTagCompound cmp, ByteBuf buf) {
-	 * ByteBufUtils.writeTag(buf, cmp); }
-	 */
+	private static NBTTagCompound readNBT(ByteBuf buf) { return
+			ByteBufUtils.readTag(buf);
+	}
+
+	private static void writeNBT(NBTTagCompound cmp, ByteBuf buf) {
+		ByteBufUtils.writeTag(buf, cmp);
+	}
 
 	/*
 	 * private static ItemStack readItemStack(ByteBuf buf) { return

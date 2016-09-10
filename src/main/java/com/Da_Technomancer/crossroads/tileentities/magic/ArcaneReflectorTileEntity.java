@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities.magic;
 
 import java.awt.Color;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
@@ -25,6 +27,12 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 
 	private Triple<Color, Integer, Integer> trip;
 	private BeamManager beamer;
+	
+	@Override
+	@Nullable
+	public MagicUnit[] getLastSent(){
+		return beamer == null || beamer.getLastSent() == null ? null : new MagicUnit[] {beamer.getLastSent()};
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override

@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
 
@@ -26,7 +27,7 @@ public final class EventHandlerCommon{
 		if(!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayer){
 			EntityPlayer player = (EntityPlayer) event.getEntity();
 
-			NBTTagCompound tag = getPlayerTag(player);
+			NBTTagCompound tag = MiscOp.getPlayerTag(player);
 			if(!tag.hasKey("starter")){
 				switch(player.getGameProfile().getName()){
 					case "Da_Technomancer":
@@ -39,19 +40,5 @@ public final class EventHandlerCommon{
 				tag.setBoolean("starter", true);
 			}
 		}
-	}
-	
-	private static NBTTagCompound getPlayerTag(EntityPlayer playerIn){
-		NBTTagCompound tag = playerIn.getEntityData();
-		if(!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)){
-			tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
-		}
-		tag = tag.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-
-		if(!tag.hasKey(Main.MODID)){
-			tag.setTag(Main.MODID, new NBTTagCompound());
-		}
-
-		return tag.getCompoundTag(Main.MODID);
 	}
 }

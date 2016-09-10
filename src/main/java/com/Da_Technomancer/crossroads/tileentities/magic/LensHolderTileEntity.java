@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities.magic;
 
 import java.awt.Color;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.Main;
@@ -38,6 +40,12 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	
 	private Triple<Color, Integer, Integer> trip;
 	private Triple<Color, Integer, Integer> tripUp;
+	
+	@Override
+	@Nullable
+	public MagicUnit[] getLastSent(){
+		return new MagicUnit[] {beamer == null ? null : beamer.getLastSent(), beamerUp == null ? null : beamerUp.getLastSent()};
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override

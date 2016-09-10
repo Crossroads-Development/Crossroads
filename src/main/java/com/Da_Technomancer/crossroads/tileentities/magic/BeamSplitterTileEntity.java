@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities.magic;
 
 import java.awt.Color;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
@@ -27,6 +29,12 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 	private BeamManager beamerUp;
 	
 	public int redstone;
+	
+	@Override
+	@Nullable
+	public MagicUnit[] getLastSent(){
+		return new MagicUnit[] {beamer == null ? null : beamer.getLastSent(), beamerUp == null ? null : beamerUp.getLastSent()};
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override

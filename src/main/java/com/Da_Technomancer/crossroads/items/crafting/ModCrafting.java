@@ -195,8 +195,8 @@ public final class ModCrafting{
 		new ItemStack(ModItems.vacuum).writeToNBT(nbttagcompound);
 		nbttag.appendTag(nbttagcompound);
 		nbt.setTag("Items", nbttag);
-
 		stack.setTagInfo("BlockEntityTag", nbt);
+		
 		NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 		NBTTagList nbttaglist = new NBTTagList();
 		nbttaglist.appendTag(new NBTTagString("(+NBT)"));

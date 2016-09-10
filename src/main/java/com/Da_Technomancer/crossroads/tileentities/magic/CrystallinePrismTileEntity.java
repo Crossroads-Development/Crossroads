@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities.magic;
 
 import java.awt.Color;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
@@ -30,6 +32,12 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	private BeamManager beamerR;
 	private BeamManager beamerG;
 	private BeamManager beamerB;
+	
+	@Override
+	@Nullable
+	public MagicUnit[] getLastSent(){
+		return new MagicUnit[] {beamerR == null ? null : beamerR.getLastSent(), beamerG == null ? null : beamerG.getLastSent(), beamerB == null ? null : beamerB.getLastSent()};
+	}
 	
 	@Override
 	public void refresh(){

@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -132,7 +133,7 @@ public class MagicUnit{
 	
 	@Override
 	public String toString(){
-		return "Energy: " + energy + ", Potential: " + potential + ", Stability: " + stability + ", Void: " + voi;
+		return "Color: " + getRGB().toString() + ", Element: " + MagicElements.getElement(this).toString() + ", Energy: " + energy + ", Potential: " + potential + ", Stability: " + stability + ", Void: " + voi;
 	}
 	
 	@Override

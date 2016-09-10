@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
@@ -26,6 +27,7 @@ import com.Da_Technomancer.crossroads.blocks.heat.SaltReactor;
 import com.Da_Technomancer.crossroads.blocks.magic.ArcaneExtractor;
 import com.Da_Technomancer.crossroads.blocks.magic.ArcaneReflector;
 import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitter;
+import com.Da_Technomancer.crossroads.blocks.magic.ColorChart;
 import com.Da_Technomancer.crossroads.blocks.magic.CrystallinePrism;
 import com.Da_Technomancer.crossroads.blocks.magic.LensHolder;
 import com.Da_Technomancer.crossroads.blocks.magic.QuartzStabilizer;
@@ -41,7 +43,9 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -86,6 +90,7 @@ public final class ModBlocks{
 	public static LensHolder lensHolder;
 	public static BasicBlock blockPureQuartz;
 	public static BeamSplitter beamSplitter;
+	public static ColorChart colorChart;
 
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 
@@ -117,7 +122,13 @@ public final class ModBlocks{
 		blockAddQue(slottedChest = new SlottedChest());
 		blockAddQue(sortingHopper = new SortingHopper());
 		candleLilyPad = new CandleLilyPad();
-		itemChute = new BasicBlock("itemChute");
+		itemChute = new BasicBlock("itemChute"){
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+				tooltip.add("Safe for decoration");
+			}
+		};
 		blockAddQue(itemChutePort = new ItemChutePort());
 		blockAddQue(radiator = new Radiator());
 		rotaryDrill = new RotaryDrill();
@@ -133,6 +144,7 @@ public final class ModBlocks{
 		blockAddQue(lensHolder = new LensHolder());
 		blockPureQuartz = new BasicBlock("blockPureQuartz", Material.ROCK, 1, "pickaxe", 4, "blockQuartz");
 		blockAddQue(beamSplitter = new BeamSplitter());
+		blockAddQue(colorChart = new ColorChart());
 	}
 
 	@SideOnly(Side.CLIENT)

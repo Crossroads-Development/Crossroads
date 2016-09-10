@@ -146,3 +146,5 @@ tile.arcaneReflector.name=Arcane Reflector
 tile.lensHolder.name=Lens Holder
 tile.blockPureQuartz.name=Block of Pure Quartz
 tile.beamSplitter.name=Beam Splitter
+item.invisItem.name=Invisible Item
+tile.colorChart.name=Color Chart

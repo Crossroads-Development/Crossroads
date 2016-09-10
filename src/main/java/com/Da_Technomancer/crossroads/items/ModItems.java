@@ -25,13 +25,13 @@ public final class ModItems{
 		}
 	};
 
-	public static Item metalScrap;
-	public static Item dustSalt;
-	public static Item mashedPotato;
+	public static BasicItem metalScrap;
+	public static BasicItem dustSalt;
+	public static BasicItem mashedPotato;
 	public static HandCrank handCrank;
-	public static Item axle;
+	public static BasicItem axle;
 	public static ObsidianCuttingKit obsidianKit;
-	public static Item dustCopper;
+	public static BasicItem dustCopper;
 	public static Thermometer thermometer;
 	public static FluidGauge fluidGauge;
 	public static Speedometer speedometer;
@@ -47,6 +47,7 @@ public final class ModItems{
 	public static BasicItem pureQuartz;
 	public static BasicItem luminescentQuartz;
 	public static BasicItem lensArray;
+	public static BasicItem invisItem;
 
 	private static ArrayList<Item> modelQue = new ArrayList<Item>();
 
@@ -80,6 +81,7 @@ public final class ModItems{
 		pureQuartz = new BasicItem("pureQuartz", "gemQuartz");
 		luminescentQuartz = new BasicItem("luminescentQuartz");
 		lensArray = new BasicItem("lensArray");
+		invisItem = new BasicItem("invisItem", null, false);
 	}
 
 	@SuppressWarnings("deprecation")

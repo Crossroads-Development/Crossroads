@@ -1,5 +1,10 @@
 package com.Da_Technomancer.crossroads.API;
 
+import com.Da_Technomancer.crossroads.Main;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+
 /**This class is for holding mathematical operations that I use often.*/
 public final class MiscOp{
 
@@ -44,5 +49,19 @@ public final class MiscOp{
 		}else{
 			return (int) Math.ceil(in);
 		}
+	}
+
+	public static NBTTagCompound getPlayerTag(EntityPlayer playerIn){
+		NBTTagCompound tag = playerIn.getEntityData();
+		if(!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)){
+			tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+		}
+		tag = tag.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+	
+		if(!tag.hasKey(Main.MODID)){
+			tag.setTag(Main.MODID, new NBTTagCompound());
+		}
+	
+		return tag.getCompoundTag(Main.MODID);
 	}
 }
