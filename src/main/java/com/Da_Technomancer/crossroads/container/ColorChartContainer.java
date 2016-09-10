@@ -29,8 +29,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 public class ColorChartContainer extends Container{
 
 	private int index = 0;
-	private static final int xCENTER = 130;
-	private static final int yCENTER = 130;
+	private static final int xCENTER = 142;
+	private static final int yCENTER = 142;
 	private static final int VAR_PER_ITEM = 2;
 	private static final int RADIUS = 256 / VAR_PER_ITEM;
 	private final World world;

@@ -12,13 +12,12 @@ import net.minecraft.world.World;
 
 public class ColorChartGuiContainer extends GuiContainer{
 
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/colorChartGui");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/colorChartGui.png");
 	
 	public ColorChartGuiContainer(EntityPlayer player, World world, BlockPos pos){
 		super(new ColorChartContainer(player, world, pos));
 		xSize = 300;
 		ySize = 300;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -27,7 +26,7 @@ public class ColorChartGuiContainer extends GuiContainer{
 	        this.mc.getTextureManager().bindTexture(BACKGROUND);
 	        int i = (this.width - this.xSize) / 2;
 	        int j = (this.height - this.ySize) / 2;
-	        this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
+	        drawModalRectWithCustomSizedTexture(i, j, 0, 0, xSize, ySize, 300, 300);
 	}
 
 }
