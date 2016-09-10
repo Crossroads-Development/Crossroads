@@ -8,6 +8,8 @@ import com.Da_Technomancer.crossroads.API.effects.EnergizeEffect;
 import com.Da_Technomancer.crossroads.API.effects.ExplodeEffect;
 import com.Da_Technomancer.crossroads.API.effects.GrowEffect;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
+import com.Da_Technomancer.crossroads.API.effects.LightEffect;
+import com.Da_Technomancer.crossroads.API.effects.PlaceEffect;
 import com.Da_Technomancer.crossroads.API.effects.TimeEffect;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
@@ -16,7 +18,8 @@ import net.minecraft.init.Blocks;
 public enum MagicElements{
 	
 	TIME(new TimeEffect(), new TimeEffect.VoidTimeEffect(), new Color(255, 100, 0), 16),
-	LIGHT(null, null, new Color(255, 255, 255), 32),
+	LIGHT(new LightEffect(), new LightEffect.VoidLightEffect(), new Color(255, 255, 255), 32),
+	EXPANSION(new PlaceEffect(), new PlaceEffect.BreakEffect(), new Color(255, 0, 255), 72),
 	//TODO populate
 	//This section needs more elements, and they all (or at least most of them) need an effect and void effect.
 	
@@ -54,7 +57,7 @@ public enum MagicElements{
 		}
 		int top = Math.max(col.getBlue(), Math.max(col.getRed(), col.getGreen()));
 		
-		if(top < rand.nextInt(256)){
+		if(top < rand.nextInt(128) + 128){
 			return voidEffect;
 		}
 		return effect;

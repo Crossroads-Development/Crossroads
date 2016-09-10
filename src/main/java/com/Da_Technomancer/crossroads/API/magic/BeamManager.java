@@ -28,6 +28,8 @@ public class BeamManager{
 	private int dist;
 	private MagicUnit lastSent;
 	
+	private MagicUnit lastFullSent;
+	
 	public BeamManager(EnumFacing dir, BlockPos pos, World world){
 		this.dir = dir;
 		this.world = world;
@@ -49,6 +51,9 @@ public class BeamManager{
 				if(dist != i || (mag == null ? lastSent != null : !mag.equals(lastSent))){
 					dist = i;
 					lastSent = mag;
+					if(lastSent != null){
+						lastFullSent = lastSent;
+					}
 					return true;
 				}else{
 					return false;
@@ -66,6 +71,9 @@ public class BeamManager{
 				boolean holder = dist != i || (mag == null ? lastSent != null : !mag.equals(lastSent));
 				dist = i;
 				lastSent = mag;
+				if(lastSent != null){
+					lastFullSent = lastSent;
+				}
 				return holder;
 			}
 		}
@@ -89,6 +97,6 @@ public class BeamManager{
 	}
 	
 	public MagicUnit getLastSent(){
-		return lastSent;
+		return lastFullSent;
 	}
 }

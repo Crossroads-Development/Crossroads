@@ -91,6 +91,7 @@ public final class ModBlocks{
 	public static BasicBlock blockPureQuartz;
 	public static BeamSplitter beamSplitter;
 	public static ColorChart colorChart;
+	public static GlowGlass glowGlass;
 
 	private static ArrayList<Block> modelQue = new ArrayList<Block>();
 
@@ -145,6 +146,7 @@ public final class ModBlocks{
 		blockPureQuartz = new BasicBlock("blockPureQuartz", Material.ROCK, 1, "pickaxe", 4, "blockQuartz");
 		blockAddQue(beamSplitter = new BeamSplitter());
 		blockAddQue(colorChart = new ColorChart());
+		blockAddQue(glowGlass = new GlowGlass());
 	}
 
 	@SideOnly(Side.CLIENT)

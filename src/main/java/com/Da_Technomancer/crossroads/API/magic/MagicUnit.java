@@ -133,7 +133,8 @@ public class MagicUnit{
 	
 	@Override
 	public String toString(){
-		return "Color: " + getRGB().toString() + ", Element: " + MagicElements.getElement(this).toString() + ", Energy: " + energy + ", Potential: " + potential + ", Stability: " + stability + ", Void: " + voi;
+		Color col = getRGB();
+		return "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue() + ", Element: " + MagicElements.getElement(this).toString() + ", Energy: " + energy + ", Potential: " + potential + ", Stability: " + stability + ", Void: " + voi;
 	}
 	
 	@Override

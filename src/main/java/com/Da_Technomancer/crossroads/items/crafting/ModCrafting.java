@@ -66,10 +66,10 @@ public final class ModCrafting{
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new CraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new CraftingStack[] {new OreDictCraftingStack("gemLapis", 1), new OreDictCraftingStack("cobblestone", 1), new OreDictCraftingStack("nuggetGold", 1)}, new ItemStack(ModItems.rainIdol, 1)));
 
-		RecipeHolder.magExtractRecipes.put(Items.REDSTONE, new MagicUnit(18, 12, 0, 0));
+		RecipeHolder.magExtractRecipes.put(Items.REDSTONE, new MagicUnit(24, 36, 0, 0));
 		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));
 		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(36, 24, 0, 0));
-		RecipeHolder.magExtractRecipes.put(Items.GLOWSTONE_DUST, new MagicUnit(12, 0, 18, 0));
+		RecipeHolder.magExtractRecipes.put(Items.GLOWSTONE_DUST, new MagicUnit(1, 1, 1, 0));
 		
 		final String axle = "stickIron";
 
@@ -183,6 +183,8 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.lensHolder, 1), " * ", "*&*", "***", '*', "stone", '&', ModItems.pureQuartz));
 		//Beam Splitter
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.beamSplitter, 1), "*^*", "*&*", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModItems.lensArray));
+		//Color Chart
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
 	}
 
 	private static ItemStack getFilledHopper(){
