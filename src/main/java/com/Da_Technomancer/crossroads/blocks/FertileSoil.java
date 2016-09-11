@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.google.common.base.Function;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBeetroot;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockSapling;
@@ -89,7 +90,7 @@ public class FertileSoil extends Block{
 					worldIn.setBlockState(pos.offset(EnumFacing.UP), Blocks.CARROTS.getDefaultState().withProperty(BlockCrops.AGE, 0));
 					break;
 				case 3:
-					worldIn.setBlockState(pos.offset(EnumFacing.UP), Blocks.BEETROOTS.getDefaultState().withProperty(BlockCrops.AGE, 0));
+					worldIn.setBlockState(pos.offset(EnumFacing.UP), Blocks.BEETROOTS.getDefaultState().withProperty(BlockBeetroot.BEETROOT_AGE, 0));
 					break;
 				case 4:
 					worldIn.setBlockState(pos.offset(EnumFacing.UP), Blocks.SAPLING.getDefaultState().withProperty(BlockSapling.TYPE, BlockPlanks.EnumType.OAK));

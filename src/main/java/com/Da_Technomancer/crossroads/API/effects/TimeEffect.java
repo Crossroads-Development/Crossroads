@@ -30,6 +30,9 @@ public class TimeEffect implements IEffect{
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, double mult){
 			//TODO causes a chunk reset
+			//I don't mean I deleted the code because it was causing a chunk reset,
+			//I mean I want this to CAUSE a chunk reset. 
+			//But I don't know how.
 		}
 	}
 }

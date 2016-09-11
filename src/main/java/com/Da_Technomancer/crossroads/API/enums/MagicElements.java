@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.util.Random;
 
 import com.Da_Technomancer.crossroads.API.effects.BlockEffect;
+import com.Da_Technomancer.crossroads.API.effects.EnchantEffect;
 import com.Da_Technomancer.crossroads.API.effects.EnergizeEffect;
 import com.Da_Technomancer.crossroads.API.effects.ExplodeEffect;
+import com.Da_Technomancer.crossroads.API.effects.FusionEffect;
 import com.Da_Technomancer.crossroads.API.effects.GrowEffect;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
 import com.Da_Technomancer.crossroads.API.effects.LightEffect;
@@ -18,16 +20,22 @@ import net.minecraft.init.Blocks;
 public enum MagicElements{
 	
 	TIME(new TimeEffect(), new TimeEffect.VoidTimeEffect(), new Color(255, 100, 0), 16),
-	LIGHT(new LightEffect(), new LightEffect.VoidLightEffect(), new Color(255, 255, 255), 32),
+	ENCHANTMENT(new EnchantEffect(), new EnchantEffect.DisenchantEffect(), new Color(251, 255, 184), 16),
+	LIGHT(new LightEffect(), new LightEffect.VoidLightEffect(), new Color(255, 255, 255), 68),
 	EXPANSION(new PlaceEffect(), new PlaceEffect.BreakEffect(), new Color(255, 0, 255), 72),
-	//TODO populate
-	//This section needs more elements, and they all (or at least most of them) need an effect and void effect.
+	//TODO XXX and NNN are placeholders
+	XXX(null, null, new Color(255, 255, 0), 72),
+	NNN(null, null, new Color(0, 255, 255), 72),
+	FUSION(new FusionEffect(), new FusionEffect.VoidFusionEffect(), new Color(132, 255, 255), 60),
+	
+	
 	
 	//These MUST be declared last so they have bottom priority.
 	ENERGY(new EnergizeEffect(), new EnergizeEffect.VoidEnergizeEffect(), new Color(255, 0, 0), 250),
-	POTENTIAL(new GrowEffect(), new GrowEffect.VoidGrowEffect(), new Color(0, 255, 0), 250),
+	POTENTIAL(new GrowEffect(), new GrowEffect.PlantKillEffect(), new Color(0, 255, 0), 250),
 	STABILITY(null, new ExplodeEffect(), new Color(0, 0, 255), 250),
 	VOID(new BlockEffect(Blocks.AIR.getDefaultState()), new BlockEffect(Blocks.AIR.getDefaultState()), new Color(0, 0, 0), 0),
+	//If there are any combinations that result in NO_MATCH, then another element should be made to fill that spot
 	NO_MATCH(null, null, new Color(255, 255, 255), 255);
 	
 	private final IEffect effect;
