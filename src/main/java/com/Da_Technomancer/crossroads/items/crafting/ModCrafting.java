@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 
 import amerifrance.guideapi.api.GuideAPI;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -185,6 +186,17 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.beamSplitter, 1), "*^*", "*&*", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModItems.lensArray));
 		//Color Chart
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
+		//Fertile Soil
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 1, 0), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.ROTTEN_FLESH, '^', "dirt", '*', "cropWheat"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 1, 1), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.ROTTEN_FLESH, '^', "dirt", '*', "cropPotato"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 1, 2), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.ROTTEN_FLESH, '^', "dirt", '*', "cropCarrot"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 1, 3), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.ROTTEN_FLESH, '^', "dirt", '*', Items.BEETROOT));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 1, 4), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.ROTTEN_FLESH, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.OAK.getMetadata())));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 1, 5), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.ROTTEN_FLESH, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.BIRCH.getMetadata())));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 1, 6), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.ROTTEN_FLESH, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.SPRUCE.getMetadata())));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 1, 7), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.ROTTEN_FLESH, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.JUNGLE.getMetadata())));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 1, 8), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.ROTTEN_FLESH, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.ACACIA.getMetadata())));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 1, 9), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.ROTTEN_FLESH, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.DARK_OAK.getMetadata())));
 	}
 
 	private static ItemStack getFilledHopper(){

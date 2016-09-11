@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -43,5 +44,9 @@ public class BasicBlock extends Block{
 			OreDictionary.registerOre(oreDict, this);
 		}
 		ModBlocks.blockAddQue(this);
+	}
+
+	public BasicBlock setSoundType(SoundType sound){
+		return (BasicBlock) super.setSoundType(sound);
 	}
 }

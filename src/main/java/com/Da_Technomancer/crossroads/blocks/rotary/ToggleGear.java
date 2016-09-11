@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -47,6 +48,7 @@ public class ToggleGear extends BlockContainer{
 		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(this, 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.basicGears.get(type)));
+		setSoundType(SoundType.METAL);
 	}
 
 	@Override

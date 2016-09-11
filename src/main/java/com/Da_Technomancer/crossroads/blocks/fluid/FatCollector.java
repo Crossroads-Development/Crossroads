@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
 
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.InventoryHelper;
@@ -20,6 +21,7 @@ public class FatCollector extends BlockContainer{
 	public FatCollector(){
 		super(Material.IRON);
 		String name = "fatCollector";
+		setSoundType(SoundType.METAL);
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

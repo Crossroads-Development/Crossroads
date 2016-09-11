@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.items.BasicItem;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -38,12 +39,12 @@ public final class OreSetup{
 
 	public static void init(){
 		ingotTin = new BasicItem("ingotTin", "ingotTin");
-		blockTin = new BasicBlock("blockTin", Material.IRON, 2, "pickaxe", 5, "blockTin");
+		blockTin = new BasicBlock("blockTin", Material.IRON, 2, "pickaxe", 5, "blockTin").setSoundType(SoundType.METAL);
 		nuggetTin = new BasicItem("nuggetTin", "nuggetTin");
 		oreTin = new BasicBlock("oreTin", Material.ROCK, 2, "pickaxe", 3, "oreTin");
 
 		ingotCopper = new BasicItem("ingotCopper", "ingotCopper");
-		blockCopper = new BasicBlock("blockCopper", Material.IRON, 2, "pickaxe", 5, "blockCopper");
+		blockCopper = new BasicBlock("blockCopper", Material.IRON, 2, "pickaxe", 5, "blockCopper").setSoundType(SoundType.METAL);
 		nuggetCopper = new BasicItem("nuggetCopper", "nuggetCopper");
 		oreCopper = new BasicBlock("oreCopper", Material.ROCK, 2, "pickaxe", 3, "oreCopper");
 		oreNativeCopper = new BasicBlock("oreNativeCopper", Material.ROCK, 1, "pickaxe", 3){
@@ -60,7 +61,7 @@ public final class OreSetup{
 		};
 
 		ingotBronze = new BasicItem("ingotBronze", "ingotBronze");
-		blockBronze = new BasicBlock("blockBronze", Material.IRON, 2, "pickaxe", 5, "blockBronze");
+		blockBronze = new BasicBlock("blockBronze", Material.IRON, 2, "pickaxe", 5, "blockBronze").setSoundType(SoundType.METAL);
 		nuggetBronze = new BasicItem("nuggetBronze", "nuggetBronze");
 
 		gemRuby = new BasicItem("gemRuby", "gemRuby");

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -31,6 +32,7 @@ public class MasterAxis extends BlockContainer{
 		GameRegistry.register(new ItemBlock(this).setRegistryName("masterAxis"));
 		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
+		setSoundType(SoundType.METAL);
 	}
 
 	@Override

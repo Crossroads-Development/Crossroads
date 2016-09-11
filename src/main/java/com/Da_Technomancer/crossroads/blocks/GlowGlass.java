@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.block.BlockBreakable;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;
@@ -18,6 +19,7 @@ public class GlowGlass extends BlockBreakable{
 
 	protected GlowGlass(){
 		super(Material.GLASS, false);
+		setSoundType(SoundType.GLASS);
 		String name = "glowGlass";
 		setUnlocalizedName(name);
 		setRegistryName(name);

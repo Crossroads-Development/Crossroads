@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class CoalHeater extends BlockContainer{
 
 	public CoalHeater(){
-		super(Material.IRON);
+		super(Material.ROCK);
 		String name = "coalHeater";
 		setUnlocalizedName(name);
 		setRegistryName(name);

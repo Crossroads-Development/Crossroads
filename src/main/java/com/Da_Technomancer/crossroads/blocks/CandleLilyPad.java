@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import net.minecraft.block.BlockLilyPad;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -17,6 +18,7 @@ public class CandleLilyPad extends BlockLilyPad{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
+		setSoundType(SoundType.PLANT);
 	}
 
 	@Override
