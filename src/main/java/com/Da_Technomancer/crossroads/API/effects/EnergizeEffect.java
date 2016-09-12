@@ -18,7 +18,11 @@ public class EnergizeEffect implements IEffect{
 			}
 			for(EnumFacing dir : EnumFacing.values()){
 				if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, dir)){
-					te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, dir).addEnergy(mult, true, false);
+					if(te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, dir).getMotionData()[1] == 0){
+						te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, dir).addEnergy(mult, true, true);
+					}else{
+						te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, dir).addEnergy(mult, true, false);
+					}
 					break;
 				}
 			}
