@@ -22,5 +22,7 @@ public interface ITileMasterAxis{
 
 	/** For debugging mainly */
 	public double getTotalEnergy();
+	
+	public void addTimer(int ticks);
 
 }

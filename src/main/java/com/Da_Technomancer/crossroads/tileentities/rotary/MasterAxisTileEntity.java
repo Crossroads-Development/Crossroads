@@ -79,7 +79,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 			sumMass += gear.getPhysData()[1];
 		}
 
-		sumEnergy = runLoss(rotaryMembers, 1.001D);
+		sumEnergy = runLoss(rotaryMembers, timer < 0 ? 1.5D : timer > 0 ? 1 : 1.001D);
 		if(sumEnergy < 1 && sumEnergy > -1){
 			sumEnergy = 0;
 		}
@@ -160,17 +160,19 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound){
-		super.writeToNBT(compound);
-		compound.setInteger("facing", this.facing.getIndex());
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
+		nbt.setInteger("facing", this.facing.getIndex());
+		nbt.setInteger("time", timer);
 
-		return compound;
+		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound){
-		super.readFromNBT(compound);
-		this.facing = EnumFacing.getFront(compound.getInteger("facing"));
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
+		this.facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		timer = nbt.getInteger("time");
 
 	}
 
@@ -194,11 +196,24 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 				gear.resetAngle();
 			}
 		}
-
+		
 		lastKey = ServerProxy.masterKey;
 
 		if(!locked){
 			runCalc();
 		}
+		
+		if(timer < 0){
+			++timer;
+		}else if(timer > 0){
+			--timer;
+		}
+	}
+
+	private int timer;
+	
+	@Override
+	public void addTimer(int ticks){
+		timer += ticks;
 	}
 }

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLightningToClient;
 
-import net.minecraft.block.BlockStone;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -17,7 +17,7 @@ public class ChargeEffect implements IEffect{
 		worldIn.spawnEntityInWorld(new EntityLightningBolt(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
 		ModPackets.network.sendToAllAround(new SendLightningToClient(pos), new TargetPoint(worldIn.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		
-		if(worldIn.getBlockState(pos).getBlock() == Blocks.STONE && worldIn.getBlockState(pos).getValue(BlockStone.VARIANT) == BlockStone.EnumType.STONE){
+		if(worldIn.getBlockState(pos).getMaterial() == Material.ROCK){
 			worldIn.setBlockState(pos, Blocks.REDSTONE_BLOCK.getDefaultState());
 		}
 	}

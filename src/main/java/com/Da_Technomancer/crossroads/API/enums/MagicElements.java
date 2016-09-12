@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.effects.BlockEffect;
 import com.Da_Technomancer.crossroads.API.effects.ChargeEffect;
 import com.Da_Technomancer.crossroads.API.effects.EnchantEffect;
 import com.Da_Technomancer.crossroads.API.effects.EnergizeEffect;
+import com.Da_Technomancer.crossroads.API.effects.EqualibriumEffect;
 import com.Da_Technomancer.crossroads.API.effects.ExplodeEffect;
 import com.Da_Technomancer.crossroads.API.effects.FusionEffect;
 import com.Da_Technomancer.crossroads.API.effects.GrowEffect;
@@ -23,12 +24,10 @@ public enum MagicElements{
 	TIME(new TimeEffect(), new TimeEffect.VoidTimeEffect(), new Color(255, 100, 0), 16),
 	ENCHANTMENT(new EnchantEffect(), new EnchantEffect.DisenchantEffect(), new Color(251, 255, 184), 16),
 	LIGHT(new LightEffect(), new LightEffect.VoidLightEffect(), new Color(255, 255, 255), 68),
-	//TODO Equilibrium effects
-	EQUALIBRIUM(null, null, new Color(255, 0, 255), 72),
+	EQUALIBRIUM(new EqualibriumEffect(), new EqualibriumEffect.VoidEqualibriumEffect(), new Color(255, 0, 255), 72),
 	CHARGE(new ChargeEffect(), new ChargeEffect.VoidChargeEffect(), new Color(255, 255, 0), 72),
 	EXPANSION(new PlaceEffect(), new PlaceEffect.BreakEffect(), new Color(0, 255, 255), 72),
 	FUSION(new FusionEffect(), new FusionEffect.VoidFusionEffect(), new Color(132, 255, 255), 60),
-	
 	
 	
 	//These MUST be declared last so they have bottom priority.
