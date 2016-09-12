@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendLightningToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
@@ -26,6 +28,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class BrazierTileEntity extends TileEntity implements ISidedInventory, ITickable{
 
@@ -90,7 +93,8 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 							item.setDead();
 						}
 
-						worldObj.spawnEntityInWorld(new EntityLightningBolt(worldObj, pos.getX() + 1, pos.getY(), pos.getZ(), true));
+						worldObj.spawnEntityInWorld(new EntityLightningBolt(worldObj, pos.getX(), pos.getY() + 1, pos.getZ(), true));
+						ModPackets.network.sendToAllAround(new SendLightningToClient(pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY() + 1, pos.getZ(), 512));
 						worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.getX(), pos.getY() + 1, pos.getZ(), out.copy()));
 					}
 

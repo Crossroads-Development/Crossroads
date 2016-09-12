@@ -19,5 +19,6 @@ public class ModPackets{
 		network.registerMessage(SendPosToClient.class, SendPosToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendDoubleToClient.class, SendDoubleToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendElementNBTToClient.class, SendElementNBTToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendLightningToClient.class, SendLightningToClient.class, packetId++, Side.CLIENT);
 	}
 }

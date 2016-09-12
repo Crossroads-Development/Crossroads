@@ -2,6 +2,9 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import java.util.Random;
 
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendLightningToClient;
+
 import net.minecraft.block.BlockSponge;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
@@ -12,6 +15,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class DirtEffect implements IEffect{
 
@@ -61,6 +65,7 @@ public class DirtEffect implements IEffect{
 			case 7:
 				worldIn.setBlockToAir(pos);
 				worldIn.spawnEntityInWorld(new EntityLightningBolt(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
+				ModPackets.network.sendToAllAround(new SendLightningToClient(pos), new TargetPoint(worldIn.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				break;
 		}
 

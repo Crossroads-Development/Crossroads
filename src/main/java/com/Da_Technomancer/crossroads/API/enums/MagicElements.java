@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Random;
 
 import com.Da_Technomancer.crossroads.API.effects.BlockEffect;
+import com.Da_Technomancer.crossroads.API.effects.ChargeEffect;
 import com.Da_Technomancer.crossroads.API.effects.EnchantEffect;
 import com.Da_Technomancer.crossroads.API.effects.EnergizeEffect;
 import com.Da_Technomancer.crossroads.API.effects.ExplodeEffect;
@@ -22,10 +23,10 @@ public enum MagicElements{
 	TIME(new TimeEffect(), new TimeEffect.VoidTimeEffect(), new Color(255, 100, 0), 16),
 	ENCHANTMENT(new EnchantEffect(), new EnchantEffect.DisenchantEffect(), new Color(251, 255, 184), 16),
 	LIGHT(new LightEffect(), new LightEffect.VoidLightEffect(), new Color(255, 255, 255), 68),
-	EXPANSION(new PlaceEffect(), new PlaceEffect.BreakEffect(), new Color(255, 0, 255), 72),
-	//TODO XXX and NNN are placeholders
-	XXX(null, null, new Color(255, 255, 0), 72),
-	NNN(null, null, new Color(0, 255, 255), 72),
+	//TODO Equilibrium effects
+	EQUALIBRIUM(null, null, new Color(255, 0, 255), 72),
+	CHARGE(new ChargeEffect(), new ChargeEffect.VoidChargeEffect(), new Color(255, 255, 0), 72),
+	EXPANSION(new PlaceEffect(), new PlaceEffect.BreakEffect(), new Color(0, 255, 255), 72),
 	FUSION(new FusionEffect(), new FusionEffect.VoidFusionEffect(), new Color(132, 255, 255), 60),
 	
 	
