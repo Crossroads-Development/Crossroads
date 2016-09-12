@@ -43,9 +43,14 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	
 	@Override
 	@Nullable
-	public MagicUnit[] getLastSent(){
-		return new MagicUnit[] {beamer == null ? null : beamer.getLastSent(), beamerUp == null ? null : beamerUp.getLastSent()};
+	public MagicUnit[] getLastFullSent(){
+		return new MagicUnit[] {beamer == null ? null : beamer.getLastFullSent(), beamerUp == null ? null : beamerUp.getLastFullSent()};
 	}
+	
+	public int getRedstone(){
+		return lastRedstone;
+	}
+	private int lastRedstone;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -71,6 +76,12 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		if(worldObj.isRemote){
 			return;
 		}
+		
+		int holder = Math.max(beamer == null || beamer.getLastSent() == null ? 0 : beamer.getLastSent().getPower() / 3, beamerUp == null || beamerUp.getLastSent() == null ? 0 : beamerUp.getLastSent().getPower() / 3);
+		if(holder != lastRedstone){
+			lastRedstone = holder;
+			worldObj.updateComparatorOutputLevel(pos, ModBlocks.lensHolder);
+		}
 
 		if(beamer == null){
 			beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, worldObj.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, worldObj);
@@ -78,6 +89,8 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		if(beamerUp == null){
 			beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, worldObj.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, worldObj);
 		}
+		
+		
 	}
 	
 	private BeamManager beamer;

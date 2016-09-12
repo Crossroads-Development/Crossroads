@@ -87,7 +87,7 @@ public class OmniMeter extends Item{
 		if(te instanceof BeamRenderTE){
 			pass = false;
 			if(!worldIn.isRemote){
-				MagicUnit[] mag = ((BeamRenderTE) te).getLastSent();
+				MagicUnit[] mag = ((BeamRenderTE) te).getLastFullSent();
 				if(mag != null){
 					for(MagicUnit check : mag){
 						if(check != null){

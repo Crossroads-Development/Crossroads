@@ -16,7 +16,7 @@ public abstract class BeamRenderTE extends TileEntity{
 	public abstract void refresh();
 	
 	@Nullable
-	public abstract MagicUnit[] getLastSent();
+	public abstract MagicUnit[] getLastFullSent();
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){

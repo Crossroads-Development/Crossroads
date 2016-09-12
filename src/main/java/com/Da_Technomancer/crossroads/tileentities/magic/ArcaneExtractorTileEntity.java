@@ -39,8 +39,8 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	
 	@Override
 	@Nullable
-	public MagicUnit[] getLastSent(){
-		return beamer == null || beamer.getLastSent() == null ? null : new MagicUnit[] {beamer.getLastSent()};
+	public MagicUnit[] getLastFullSent(){
+		return beamer == null || beamer.getLastFullSent() == null ? null : new MagicUnit[] {beamer.getLastFullSent()};
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -27,8 +27,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -53,6 +53,16 @@ public class LensHolder extends BlockContainer{
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new LensHolderTileEntity();
+	}
+	
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		return ((LensHolderTileEntity) worldIn.getTileEntity(pos)).getRedstone();
 	}
 	
 	@Override

@@ -32,8 +32,8 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 	
 	@Override
 	@Nullable
-	public MagicUnit[] getLastSent(){
-		return new MagicUnit[] {beamer == null ? null : beamer.getLastSent(), beamerUp == null ? null : beamerUp.getLastSent()};
+	public MagicUnit[] getLastFullSent(){
+		return new MagicUnit[] {beamer == null ? null : beamer.getLastFullSent(), beamerUp == null ? null : beamerUp.getLastFullSent()};
 	}
 	
 	@SuppressWarnings("unchecked")

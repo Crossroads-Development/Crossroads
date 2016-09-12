@@ -35,8 +35,8 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	
 	@Override
 	@Nullable
-	public MagicUnit[] getLastSent(){
-		return new MagicUnit[] {beamerR == null ? null : beamerR.getLastSent(), beamerG == null ? null : beamerG.getLastSent(), beamerB == null ? null : beamerB.getLastSent()};
+	public MagicUnit[] getLastFullSent(){
+		return new MagicUnit[] {beamerR == null ? null : beamerR.getLastFullSent(), beamerG == null ? null : beamerG.getLastFullSent(), beamerB == null ? null : beamerB.getLastFullSent()};
 	}
 	
 	@Override

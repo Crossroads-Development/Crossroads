@@ -34,8 +34,8 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	
 	@Override
 	@Nullable
-	public MagicUnit[] getLastSent(){
-		return beamer == null || beamer.getLastSent() == null ? null : new MagicUnit[] {beamer.getLastSent()};
+	public MagicUnit[] getLastFullSent(){
+		return beamer == null || beamer.getLastFullSent() == null ? null : new MagicUnit[] {beamer.getLastFullSent()};
 	}
 	
 	private Triple<Color, Integer, Integer> trip;
