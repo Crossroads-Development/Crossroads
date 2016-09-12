@@ -105,18 +105,15 @@ public class SortingHopper extends BlockContainer{
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(worldIn.isRemote){
-			return true;
-		}else{
+		if(!worldIn.isRemote){
 			TileEntity tileentity = worldIn.getTileEntity(pos);
 
 			if(tileentity instanceof SortingHopperTileEntity){
 				playerIn.displayGUIChest((SortingHopperTileEntity) tileentity);
 				playerIn.addStat(StatList.HOPPER_INSPECTED);
 			}
-
-			return true;
 		}
+		return true;
 	}
 
 	@Override
@@ -135,12 +132,10 @@ public class SortingHopper extends BlockContainer{
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		TileEntity tileentity = worldIn.getTileEntity(pos);
-
 		if(tileentity instanceof SortingHopperTileEntity){
 			InventoryHelper.dropInventoryItems(worldIn, pos, (SortingHopperTileEntity) tileentity);
 			worldIn.updateComparatorOutputLevel(pos, this);
 		}
-
 		super.breakBlock(worldIn, pos, state);
 	}
 
@@ -165,10 +160,6 @@ public class SortingHopper extends BlockContainer{
 		return true;
 	}
 
-	public static EnumFacing getFacing(int meta){
-		return EnumFacing.getFront(meta & 7);
-	}
-
 	public static boolean isEnabled(int meta){
 		return (meta & 8) != 8;
 	}
@@ -191,19 +182,12 @@ public class SortingHopper extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(ENABLED, Boolean.valueOf(isEnabled(meta)));
+		return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7)).withProperty(ENABLED, Boolean.valueOf(isEnabled(meta)));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		int i = 0;
-		i = i | state.getValue(FACING).getIndex();
-
-		if(!state.getValue(ENABLED).booleanValue()){
-			i |= 8;
-		}
-
-		return i;
+		return state.getValue(FACING).getIndex() + (state.getValue(ENABLED) ? 0 : 8);
 	}
 
 	@Override

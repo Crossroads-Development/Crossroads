@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.blocks.SortingHopper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
@@ -282,7 +280,7 @@ public class SortingHopperTileEntity extends TileEntityLockableLoot implements I
 	 * A version of the forge hook that takes this tile entity
 	 */
 	private static boolean insertHook(SortingHopperTileEntity hopper){
-		return insertHook(hopper, SortingHopper.getFacing(hopper.getBlockMetadata()));
+		return insertHook(hopper, EnumFacing.getFront(hopper.getBlockMetadata() & 7));
 	}
 
 	private static boolean insertHook(IHopper hopper, EnumFacing facing){
@@ -370,7 +368,7 @@ public class SortingHopperTileEntity extends TileEntityLockableLoot implements I
 		return true;
 	}
 
-	public static boolean captureDroppedItems(IHopper hopper){
+	private static boolean captureDroppedItems(IHopper hopper){
 		Boolean ret = net.minecraftforge.items.VanillaInventoryCodeHooks.extractHook(hopper);
 		if(ret != null)
 			return ret;
