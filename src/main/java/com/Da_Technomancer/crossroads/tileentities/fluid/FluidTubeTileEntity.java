@@ -40,9 +40,13 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 
 		// False means either draining in not allowed or the tank is empty
 		boolean canDrain = handler.drain(10, false) != null;
+		
+		if(!canDrain && content == null){
+			return;
+		}
 		// False means either the tank is full or filling is disallowed with the
 		// liquid in this pipe
-		boolean canFill = handler.fill(content, false) != 0;
+		boolean canFill = handler.fill(content == null ? handler.drain(10, false) : content, false) != 0;
 
 		if(!canDrain && !canFill){
 			return;
