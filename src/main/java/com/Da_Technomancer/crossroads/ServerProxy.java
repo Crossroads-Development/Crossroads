@@ -14,7 +14,8 @@ public class ServerProxy extends CommonProxy{
 		super.preInit(e);
 
 		if(Loader.isModLoaded("guideapi")){
-			GuideBooks.mainGuide(e, false);
+			GuideBooks.mainGuide(false);
+			GuideBooks.infoGuide(false);
 		}
 	}
 

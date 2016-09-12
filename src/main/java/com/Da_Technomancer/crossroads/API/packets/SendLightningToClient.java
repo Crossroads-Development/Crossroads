@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.API.packets;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -29,17 +28,14 @@ public class SendLightningToClient extends Message<SendLightningToClient>{
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
-		final WorldClient client = (WorldClient) minecraft.theWorld;
+		final WorldClient client = minecraft.theWorld;
 		minecraft.addScheduledTask(new Runnable(){
+			@Override
 			public void run(){
-				processMessage(client, pos);
+				SafeCallable.summonLightning(client, pos);
 			}
 		});
 
 		return null;
-	}
-
-	public void processMessage(WorldClient client, BlockPos pos){
-		client.spawnEntityInWorld(new EntityLightningBolt(client, pos.getX(), pos.getY(), pos.getZ(), true));
 	}
 }

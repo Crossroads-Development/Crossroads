@@ -27,8 +27,10 @@ public class ClientProxy extends CommonProxy{
 		ModItems.initModels();
 
 		if(Loader.isModLoaded("guideapi")){
-			GuideBooks.mainGuide(e, true);
-			GuideAPI.setModel(GuideBooks.main);
+			GuideBooks.mainGuide(true);
+			GuideAPI.setModel(GuideBooks.MAIN);
+			GuideBooks.infoGuide(true);
+			GuideAPI.setModel(GuideBooks.INFO);
 		}
 
 		HeatCableFactory.clientInit();

@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.items;
 
-import java.util.List;
-
 import com.Da_Technomancer.crossroads.ModConfig;
 
 import net.minecraft.entity.Entity;
@@ -13,8 +11,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RainIdol extends Item{
 	
@@ -24,16 +20,8 @@ public class RainIdol extends Item{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.maxStackSize = 1;
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		if(!ModConfig.weatherControl.getBoolean()){
-			tooltip.add("This item has been disabled in the config. It will do nothing until re-enabled.");
-		}
+		setCreativeTab(ModItems.tabCrossroads);
+		maxStackSize = 1;
 	}
 	
 	@Override

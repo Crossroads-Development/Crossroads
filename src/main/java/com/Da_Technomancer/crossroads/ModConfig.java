@@ -15,6 +15,7 @@ public final class ModConfig{
 	public static Property speedTiers;
 	public static Property weatherControl;
 	public static Property rotateBeam;
+	public static Property smallText;
 	
 	private static final String CAT_OPTIM = "Optimization";
 	private static final String CAT_ORES = "Ores";
@@ -32,15 +33,6 @@ public final class ModConfig{
 		speedTiers = config.get(CAT_OPTIM, "Speed Tiers", 4, "Higher value means smoother gear rotation, but more packets sent AKA lag. range 1-100 Default 4", 1, 100);
 		weatherControl = config.get(CAT_MISC, "Enable rain idol? (Default true)", true);
 		rotateBeam = config.get(CAT_OPTIM, "Rotate Beams", true, "Should magic beams rotate? (Default true)");
-		
-
-		/*
-		 * In order to add a new config option, somewhere called during
-		 * pre-initilization or initialization, call variableName =
-		 * ModConfig.config.get(String catagory name, String label, default,
-		 * String comment(optional));
-		 * 
-		 * in order to read the config file, call property.readFoo();
-		 */
+		smallText = config.get(CAT_MISC, "Use small text in the guide book? (Default true)", true);
 	}
 }

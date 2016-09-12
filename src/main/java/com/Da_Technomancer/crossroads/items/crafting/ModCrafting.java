@@ -76,7 +76,9 @@ public final class ModCrafting{
 
 		if(Loader.isModLoaded("guideapi")){
 			// Guide book
-			GameRegistry.addShapelessRecipe(GuideAPI.getStackFromBook(GuideBooks.main), Items.BOOK, Items.COMPASS);
+			GameRegistry.addShapelessRecipe(GuideAPI.getStackFromBook(GuideBooks.MAIN), Items.BOOK, Items.COMPASS);
+			GameRegistry.addShapelessRecipe(GuideAPI.getStackFromBook(GuideBooks.MAIN), GuideAPI.getStackFromBook(GuideBooks.INFO));
+			GameRegistry.addShapelessRecipe(GuideAPI.getStackFromBook(GuideBooks.INFO), GuideAPI.getStackFromBook(GuideBooks.MAIN));
 		}
 
 		// Axle

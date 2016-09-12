@@ -57,7 +57,7 @@ public class OmniMeter extends Item{
 				}
 				if(te instanceof RedstoneHeatCableTileEntity){
 					RedstoneHeatCableTileEntity heatCable = (RedstoneHeatCableTileEntity) te;
-					playerIn.addChatComponentMessage(new TextComponentString("Redstone, Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
+					playerIn.addChatComponentMessage(new TextComponentString("Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
 				}
 				playerIn.addChatComponentMessage(new TextComponentString("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * worldIn.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "*C"));
 			}
