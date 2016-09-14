@@ -160,3 +160,6 @@ tile.fertileSoil.jungle.name=Jungle Sapling Fertile Soil
 tile.fertileSoil.acacia.name=Acacia Sapling Fertile Soil
 tile.fertileSoil.dark.name=Dark Oak Sapling Fertile Soil
 technicianManual=Technician's Manual
+item.squidHelmet.name=Squid Helmet
+item.pigZombieChestplate.name=Zombie Pigman Chestplate
+item.cowLeggings.name=Cow Leggings

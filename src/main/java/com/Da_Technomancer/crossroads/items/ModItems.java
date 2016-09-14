@@ -39,7 +39,6 @@ public final class ModItems{
 	public static DebugReader debugReader;
 	public static Vacuum vacuum;
 	public static MagentaBread magentaBread;
-	public static ChickenBoots chickenBoots;
 	public static ItemCandleLily itemCandleLilypad;
 	public static EdibleBlob edibleBlob;
 	public static BasicItem diamondWire;
@@ -48,6 +47,10 @@ public final class ModItems{
 	public static BasicItem luminescentQuartz;
 	public static BasicItem lensArray;
 	public static BasicItem invisItem;
+	public static SquidHelmet squidHelmet;
+	public static PigZombieChestsplate pigZombieChestplate;
+	public static CowLeggings cowLeggings;
+	public static ChickenBoots chickenBoots;
 
 	private static ArrayList<Item> modelQue = new ArrayList<Item>();
 
@@ -56,7 +59,6 @@ public final class ModItems{
 	}
 
 	public static final void init(){
-		// anything I need to manually initialize for some reason
 		metalScrap = new BasicItem("metalScrap");
 		itemAddQue(new DebugGearWriter());
 		itemAddQue(debugReader = new DebugReader());
@@ -73,7 +75,6 @@ public final class ModItems{
 		itemAddQue(omnimeter = new OmniMeter());
 		itemAddQue(vacuum = new Vacuum());
 		itemAddQue(magentaBread = new MagentaBread());
-		itemAddQue(chickenBoots = new ChickenBoots());
 		itemAddQue(itemCandleLilypad = new ItemCandleLily());
 		itemAddQue(edibleBlob = new EdibleBlob());
 		itemAddQue(diamondWire = new BasicItem("diamondWire", "wireDiamond"));
@@ -82,6 +83,10 @@ public final class ModItems{
 		luminescentQuartz = new BasicItem("luminescentQuartz");
 		lensArray = new BasicItem("lensArray");
 		invisItem = new BasicItem("invisItem", null, false);
+		itemAddQue(squidHelmet = new SquidHelmet());
+		itemAddQue(pigZombieChestplate = new PigZombieChestsplate());
+		itemAddQue(cowLeggings = new CowLeggings());
+		itemAddQue(chickenBoots = new ChickenBoots());
 	}
 
 	@SuppressWarnings("deprecation")
