@@ -96,6 +96,10 @@ public final class ModBlocks{
 	public static ColorChart colorChart;
 	public static GlowGlass glowGlass;
 	public static FertileSoil fertileSoil;
+	public static MultiPistonExtend multiPistonExtend;
+	public static MultiPistonExtend multiPistonExtendSticky;
+	public static MultiPistonBase multiPiston;
+	public static MultiPistonBase multiPistonSticky;
 
 	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
 	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
@@ -158,6 +162,10 @@ public final class ModBlocks{
 		blockAddQue(colorChart = new ColorChart());
 		blockAddQue(glowGlass = new GlowGlass());
 		blockAddQueRange(Pair.of(fertileSoil = new FertileSoil(), 9));
+		blockAddQue(multiPistonExtend = new MultiPistonExtend(false));
+		blockAddQue(multiPistonExtendSticky = new MultiPistonExtend(true));
+		blockAddQue(multiPiston = new MultiPistonBase(false));
+		blockAddQue(multiPistonSticky = new MultiPistonBase(true));
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class SlottedChest extends BlockContainer{
 
-	public SlottedChest(){
+	protected SlottedChest(){
 		super(Material.WOOD);
 		String name = "slottedChest";
 		setSoundType(SoundType.WOOD);
