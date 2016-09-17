@@ -36,12 +36,12 @@ public class MultiPistonExtend extends Block{
 		if(world.isRemote){
 			return;
 		}
-		if(!state.getValue(Properties.HEAD)){
-			if(world.getBlockState(pos.offset(state.getValue(Properties.FACING))).getBlock() == this){
-				world.setBlockState(pos.offset(state.getValue(Properties.FACING)), Blocks.AIR.getDefaultState());
-			}
+
+		if(world.getBlockState(pos.offset(state.getValue(Properties.FACING))).getBlock() == this && world.getBlockState(pos.offset(state.getValue(Properties.FACING))).getValue(Properties.FACING) == state.getValue(Properties.FACING)){
+			world.setBlockState(pos.offset(state.getValue(Properties.FACING)), Blocks.AIR.getDefaultState());
 		}
-		if(world.getBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite())).getBlock() == this){
+
+		if(world.getBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite())).getBlock() == this && world.getBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite())).getValue(Properties.FACING) == state.getValue(Properties.FACING)){
 			world.setBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite()), Blocks.AIR.getDefaultState());
 		}else if(world.getBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite())).getBlock() == (sticky ? ModBlocks.multiPistonSticky : ModBlocks.multiPiston)){
 			((MultiPistonBase) world.getBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite())).getBlock()).safeBreak(world, pos.offset(state.getValue(Properties.FACING).getOpposite()));
@@ -66,6 +66,11 @@ public class MultiPistonExtend extends Block{
 	@Override
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(Properties.FACING).getIndex() + (state.getValue(Properties.HEAD) ? 8 : 0);
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
 	}
 	
 	@Override

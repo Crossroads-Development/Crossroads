@@ -49,7 +49,7 @@ public class LargeGear extends Item{
 		pos = pos.offset(side);
 
 		for(BlockPos cPos : section(pos, side)){
-			if(worldIn.getBlockState(cPos) != null && !worldIn.getBlockState(cPos).getBlock().isReplaceable(worldIn, cPos)){
+			if(!worldIn.getBlockState(cPos).getBlock().isReplaceable(worldIn, cPos)){
 				return EnumActionResult.PASS;
 			}
 		}

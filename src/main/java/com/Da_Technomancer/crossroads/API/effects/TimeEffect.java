@@ -17,14 +17,12 @@ public class TimeEffect implements IEffect{
 				((ITickable) worldIn.getTileEntity(pos)).update();
 			}
 		}
-		
-		if(worldIn.getBlockState(pos) != null){
-			for(int i = rand.nextInt((int) mult); i < mult; i++){
-				worldIn.getBlockState(pos).getBlock().randomTick(worldIn, pos, worldIn.getBlockState(pos), rand);
-			}
+
+		for(int i = rand.nextInt((int) mult); i < mult; i++){
+			worldIn.getBlockState(pos).getBlock().randomTick(worldIn, pos, worldIn.getBlockState(pos), rand);
 		}
 	}
-	
+
 	public static class VoidTimeEffect implements IEffect{
 
 		@Override

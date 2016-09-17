@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 import net.minecraft.block.state.IBlockState;
@@ -10,11 +10,13 @@ import net.minecraft.world.World;
 /** This class is for holding a list of changes being made to a world, but that haven't actually happened yet. 
  * It is able to return the blockstate for a given position as if these changes actually happened. Finally it can do all the saved changes. 
  * This is for making large changes to the world step by step without a huge number of unnecessary block updates.
+ * 
+ * Note that the changes are saved in a LinkedHashMap, so the last change set will be performed last when doChanges() is called
  */
 public class WorldBuffer{
 	
 	private final World worldObj;
-	private final HashMap<BlockPos, IBlockState> memory = new HashMap<BlockPos, IBlockState>();
+	private final LinkedHashMap<BlockPos, IBlockState> memory = new LinkedHashMap<BlockPos, IBlockState>();
 	
 	public WorldBuffer(World worldObj){
 		this.worldObj = worldObj;

@@ -83,8 +83,6 @@ public class MultiPistonBase extends Block{
 		for(int i = 1; i <= 15; i++){
 			if(worldIn.getBlockState(pos.offset(dir, i)).getBlock() != GOAL || worldIn.getBlockState(pos.offset(dir, i)).getValue(Properties.FACING) != dir){
 				return i - 1;
-			}else if(worldIn.getBlockState(pos.offset(dir, i)).getValue(Properties.HEAD)){
-				return i;
 			}
 		}
 		return 15;
@@ -99,12 +97,25 @@ public class MultiPistonBase extends Block{
 		final WorldBuffer world = new WorldBuffer(worldIn);
 		final Block GOAL = sticky ? ModBlocks.multiPistonExtendSticky : ModBlocks.multiPistonExtend;
 		for(int i = 1; i <= prev; i++){
-			if(world.getBlockState(pos.offset(dir, i)).getBlock() == GOAL && worldIn.getBlockState(pos.offset(dir, i)).getValue(Properties.FACING) == dir){
-				world.addChange(pos, Blocks.AIR.getDefaultState());
+			if(world.getBlockState(pos.offset(dir, i)).getBlock() == GOAL && world.getBlockState(pos.offset(dir, i)).getValue(Properties.FACING) == dir){
+				world.addChange(pos.offset(dir, i), Blocks.AIR.getDefaultState());
 			}
-			if(sticky && i == prev && canPush(world.getBlockState(pos.offset(dir, prev + 1)), false)){
-				world.addChange(pos.offset(dir, 1), world.getBlockState(pos.offset(dir, prev + 1)));
-				world.addChange(pos.offset(dir, prev + 1), Blocks.AIR.getDefaultState());
+		}
+
+		if(sticky && prev != 0){
+			//TODO recursive retraction
+			ArrayList<BlockPos> list = new ArrayList<BlockPos>();
+
+			if(canPush(world.getBlockState(pos.offset(dir, prev + 1)), false) && !propogate(list, world, pos.offset(dir, prev + 1), dir.getOpposite(), null)){
+				for(int index = list.size() - 1; index >= 0; --index){
+					BlockPos moving = list.get(index);
+
+					if(world.getBlockState(moving.offset(dir.getOpposite())).getMobilityFlag() == EnumPushReaction.DESTROY){
+						world.getBlockState(moving.offset(dir.getOpposite())).getBlock().dropBlockAsItem(worldIn, moving.offset(dir.getOpposite()), world.getBlockState(moving.offset(dir.getOpposite())), 0);
+					}
+					world.addChange(moving.offset(dir.getOpposite()), world.getBlockState(moving));
+					world.addChange(moving, Blocks.AIR.getDefaultState());
+				}
 			}
 		}
 
@@ -130,33 +141,28 @@ public class MultiPistonBase extends Block{
 				BlockPos moving = list.get(index);
 				
 				if(world.getBlockState(moving.offset(dir)).getMobilityFlag() == EnumPushReaction.DESTROY){
-					worldIn.destroyBlock(moving.offset(dir), true);
+					world.getBlockState(moving.offset(dir)).getBlock().dropBlockAsItem(worldIn, moving.offset(dir), world.getBlockState(moving.offset(dir)), 0);
 				}
 				world.addChange(moving.offset(dir), world.getBlockState(moving));
 				world.addChange(moving, Blocks.AIR.getDefaultState());
 			}
 			
-			for(int j = 1; j <= i; j++){
-				world.addChange(pos.offset(dir, j), sticky ? ModBlocks.multiPistonExtendSticky.getDefaultState().withProperty(Properties.FACING, dir).withProperty(Properties.HEAD, i == j) : ModBlocks.multiPistonExtend.getDefaultState().withProperty(Properties.FACING, dir).withProperty(Properties.HEAD, i == j));
-			}
-			
-			if(i == distance){
-				world.doChanges();
+			for(int j = i; j >= 1; j--){
+				if(world.getBlockState(pos.offset(dir, j)).getMobilityFlag() == EnumPushReaction.DESTROY){
+					world.getBlockState(pos.offset(dir, j)).getBlock().dropBlockAsItem(worldIn, pos.offset(dir, j), world.getBlockState(pos.offset(dir, j)), 0);
+				}
+				world.addChange(pos.offset(dir, j), GOAL.getDefaultState().withProperty(Properties.FACING, dir).withProperty(Properties.HEAD, i == j));
 			}
 		}
+		world.doChanges();
 	}
 	
 	private static boolean canPush(IBlockState state, boolean blocking){
-		//TODO
-		
 		if(blocking){
-			//TODO
-			return (state.getBlock() == Blocks.PISTON || state.getBlock() == Blocks.STICKY_PISTON) ? !state.getValue(BlockPistonBase.EXTENDED) : state.getMobilityFlag() == EnumPushReaction.NORMAL && state.getMaterial() != Material.AIR && !state.getBlock().hasTileEntity(state) && state.getBlock() != Blocks.OBSIDIAN && state.getBlockHardness(null, null) >= 0;
+			return (state.getBlock() == Blocks.PISTON || state.getBlock() == Blocks.STICKY_PISTON) ? !state.getValue(BlockPistonBase.EXTENDED) : state.getMobilityFlag() != EnumPushReaction.BLOCK && !state.getBlock().hasTileEntity(state) && state.getBlock() != Blocks.OBSIDIAN && state.getBlockHardness(null, null) >= 0;
 		}else{
 			return (state.getBlock() == Blocks.PISTON || state.getBlock() == Blocks.STICKY_PISTON) ? !state.getValue(BlockPistonBase.EXTENDED) : state.getMobilityFlag() == EnumPushReaction.NORMAL && state.getMaterial() != Material.AIR && !state.getBlock().hasTileEntity(state) && state.getBlock() != Blocks.OBSIDIAN && state.getBlockHardness(null, null) >= 0;
 		}
-		
-		return state.getMobilityFlag() == EnumPushReaction.NORMAL && state.getMaterial() != Material.AIR;
 	}
 	
 	//TODO NOTE THERE ARE STILL SEVERAL BUGS!
@@ -170,7 +176,7 @@ public class MultiPistonBase extends Block{
 		if(list.contains(pos)){
 			return false;
 		}
-		if(buf.getBlockState(pos.offset(dir)).getMobilityFlag() == EnumPushReaction.BLOCK){
+		if(!canPush(buf.getBlockState(pos.offset(dir)), true)){
 			return true;
 		}
 		if(forward == null){
@@ -179,15 +185,11 @@ public class MultiPistonBase extends Block{
 			list.add(list.indexOf(forward), pos);
 		}
 		
-		if(canPush(buf.getBlockState(pos.offset(dir)), false)){
-			if(list.size() >= PUSH_LIMIT || propogate(list, buf, pos.offset(dir), dir, null)){
-				return true;
-			}
-		}
-		
 		if(buf.getBlockState(pos).getBlock() == Blocks.SLIME_BLOCK){
+			//The back has to be checked before the sides or the list ordering gets messed up.
+			//Likewise, the sides have to be sent before the front
 			if(canPush(buf.getBlockState(pos.offset(dir.getOpposite())), false)){
-				if(list.size() >= PUSH_LIMIT || propogate(list, buf, pos.offset(dir), dir, pos)){
+				if(propogate(list, buf, pos.offset(dir.getOpposite()), dir, pos) || list.size() > PUSH_LIMIT){
 					return true;
 				}
 			}
@@ -195,11 +197,17 @@ public class MultiPistonBase extends Block{
 			for(EnumFacing checkDir : EnumFacing.VALUES){
 				if(checkDir != dir && checkDir != dir.getOpposite()){
 					if(canPush(buf.getBlockState(pos.offset(checkDir)), false)){
-						if(list.size() >= PUSH_LIMIT || propogate(list, buf, pos.offset(checkDir), dir, null)){
+						if(propogate(list, buf, pos.offset(checkDir), dir, pos) || list.size() > PUSH_LIMIT){
 							return true;
 						}
 					}
 				}
+			}
+		}
+		
+		if(canPush(buf.getBlockState(pos.offset(dir)), false)){
+			if(propogate(list, buf, pos.offset(dir), dir, null) || list.size() > PUSH_LIMIT){
+				return true;
 			}
 		}
 		

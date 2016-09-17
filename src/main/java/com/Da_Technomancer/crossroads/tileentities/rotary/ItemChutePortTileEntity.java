@@ -66,7 +66,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 	}
 
 	private boolean isSpotInvalid(){
-		if(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)) != null && (worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) instanceof ItemChutePortTileEntity || worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == ModBlocks.itemChute)){
+		if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) instanceof ItemChutePortTileEntity || worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == ModBlocks.itemChute){
 			return true;
 		}
 		return false;
@@ -83,7 +83,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 				return pos.offset(EnumFacing.UP, height);
 			}
 
-			if(worldObj.getBlockState(pos.offset(EnumFacing.UP, height)) == null || (worldObj.getBlockState(pos.offset(EnumFacing.UP, height)).getBlock() != ModBlocks.itemChute)){
+			if(worldObj.getBlockState(pos.offset(EnumFacing.UP, height)).getBlock() != ModBlocks.itemChute){
 				return null;
 			}
 			if(++height > 255){
