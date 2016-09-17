@@ -68,6 +68,14 @@ public final class OreSetup{
 		blockRuby = new BasicBlock("blockRuby", Material.ROCK, 3, "pickaxe", 5, "blockRuby");
 		oreRuby = new BasicBlock("oreRuby", Material.ROCK, 3, "pickaxe", 3, "oreRuby"){
 			@Override
+			public int quantityDroppedWithBonus(int fortune, Random random){
+				if(fortune > 0){
+					return Math.max(random.nextInt(fortune + 2) - 1, 0) + 1;
+				}
+				return 1;
+			}
+
+			@Override
 			@Nullable
 			public Item getItemDropped(IBlockState state, Random rand, int fortune){
 				return gemRuby;
