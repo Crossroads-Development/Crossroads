@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 import net.minecraft.block.state.IBlockState;
@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class WorldBuffer{
 	
 	private final World worldObj;
-	private final LinkedHashMap<BlockPos, IBlockState> memory = new LinkedHashMap<BlockPos, IBlockState>();
+	private final HashMap<BlockPos, IBlockState> memory = new HashMap<BlockPos, IBlockState>();
 	
 	public WorldBuffer(World worldObj){
 		this.worldObj = worldObj;
@@ -35,10 +35,12 @@ public class WorldBuffer{
 		
 		return worldObj.getBlockState(pos);
 	}
-	
+
 	public void doChanges(){
 		for(Entry<BlockPos, IBlockState> ent : memory.entrySet()){
-			worldObj.setBlockState(ent.getKey(), ent.getValue());
+			if(worldObj.getBlockState(ent.getKey()) != ent.getValue()){
+				worldObj.setBlockState(ent.getKey(), ent.getValue());
+			}
 		}
 		memory.clear();
 	}

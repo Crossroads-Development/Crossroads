@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -43,7 +44,7 @@ public class MultiPistonExtend extends Block{
 		if(world.getBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite())).getBlock() == this){
 			world.setBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite()), Blocks.AIR.getDefaultState());
 		}else if(world.getBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite())).getBlock() == (sticky ? ModBlocks.multiPistonSticky : ModBlocks.multiPiston)){
-			world.setBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite()), Blocks.AIR.getDefaultState());
+			((MultiPistonBase) world.getBlockState(pos.offset(state.getValue(Properties.FACING).getOpposite())).getBlock()).safeBreak(world, pos.offset(state.getValue(Properties.FACING).getOpposite()));
 		}
 	}
 	
@@ -54,16 +55,21 @@ public class MultiPistonExtend extends Block{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING, Properties.REDSTONE_BOOL});
+		return new BlockStateContainer(this, new IProperty[] {Properties.FACING, Properties.HEAD});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.REDSTONE_BOOL, (meta & 8) == 8).withProperty(Properties.FACING, EnumFacing.getFront(meta & 7));
+		return this.getDefaultState().withProperty(Properties.HEAD, (meta & 8) == 8).withProperty(Properties.FACING, EnumFacing.getFront(meta & 7));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.FACING).getIndex() + (state.getValue(Properties.REDSTONE_BOOL) ? 8 : 0);
+		return state.getValue(Properties.FACING).getIndex() + (state.getValue(Properties.HEAD) ? 8 : 0);
+	}
+	
+	@Override
+	public EnumPushReaction getMobilityFlag(IBlockState state){
+		return EnumPushReaction.BLOCK;
 	}
 }

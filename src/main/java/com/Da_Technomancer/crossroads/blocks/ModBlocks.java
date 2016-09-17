@@ -162,8 +162,8 @@ public final class ModBlocks{
 		blockAddQue(colorChart = new ColorChart());
 		blockAddQue(glowGlass = new GlowGlass());
 		blockAddQueRange(Pair.of(fertileSoil = new FertileSoil(), 9));
-		blockAddQue(multiPistonExtend = new MultiPistonExtend(false));
-		blockAddQue(multiPistonExtendSticky = new MultiPistonExtend(true));
+		multiPistonExtend = new MultiPistonExtend(false);
+		multiPistonExtendSticky = new MultiPistonExtend(true);
 		blockAddQue(multiPiston = new MultiPistonBase(false));
 		blockAddQue(multiPistonSticky = new MultiPistonBase(true));
 	}
