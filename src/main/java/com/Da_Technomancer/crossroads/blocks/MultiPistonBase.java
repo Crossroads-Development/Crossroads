@@ -89,8 +89,8 @@ public class MultiPistonBase extends Block{
 	}
 	
 	private void setExtension(World worldIn, BlockPos pos, EnumFacing dir, int distance){
-		int prev;
-		if((prev = getExtension(worldIn, pos, dir)) == distance){
+		int prev = getExtension(worldIn, pos, dir);
+		if(prev == distance){
 			return;
 		}
 		
@@ -102,19 +102,24 @@ public class MultiPistonBase extends Block{
 			}
 		}
 
-		if(sticky && prev != 0){
-			//TODO recursive retraction
-			ArrayList<BlockPos> list = new ArrayList<BlockPos>();
+		if(sticky && prev > distance){
+			for(int i = prev + 1; i > distance + 1; i--){
+				ArrayList<BlockPos> list = new ArrayList<BlockPos>();
 
-			if(canPush(world.getBlockState(pos.offset(dir, prev + 1)), false) && !propogate(list, world, pos.offset(dir, prev + 1), dir.getOpposite(), null)){
-				for(int index = list.size() - 1; index >= 0; --index){
-					BlockPos moving = list.get(index);
+				if(canPush(world.getBlockState(pos.offset(dir, i)), false)){
+					if(propogate(list, world, pos.offset(dir, i), dir.getOpposite(), null)){
+						break;
+					}else{
+						for(int index = list.size() - 1; index >= 0; --index){
+							BlockPos moving = list.get(index);
 
-					if(world.getBlockState(moving.offset(dir.getOpposite())).getMobilityFlag() == EnumPushReaction.DESTROY){
-						world.getBlockState(moving.offset(dir.getOpposite())).getBlock().dropBlockAsItem(worldIn, moving.offset(dir.getOpposite()), world.getBlockState(moving.offset(dir.getOpposite())), 0);
+							if(world.getBlockState(moving.offset(dir.getOpposite())).getMobilityFlag() == EnumPushReaction.DESTROY){
+								world.getBlockState(moving.offset(dir.getOpposite())).getBlock().dropBlockAsItem(worldIn, moving.offset(dir.getOpposite()), world.getBlockState(moving.offset(dir.getOpposite())), 0);
+							}
+							world.addChange(moving.offset(dir.getOpposite()), world.getBlockState(moving));
+							world.addChange(moving, Blocks.AIR.getDefaultState());
+						}
 					}
-					world.addChange(moving.offset(dir.getOpposite()), world.getBlockState(moving));
-					world.addChange(moving, Blocks.AIR.getDefaultState());
 				}
 			}
 		}
