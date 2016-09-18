@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -10,7 +11,9 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,6 +28,7 @@ public final class ModItems{
 		}
 	};
 
+	@Deprecated
 	public static BasicItem metalScrap;
 	public static BasicItem dustSalt;
 	public static BasicItem mashedPotato;
@@ -59,7 +63,13 @@ public final class ModItems{
 	}
 
 	public static final void init(){
-		metalScrap = new BasicItem("metalScrap");
+		metalScrap = new BasicItem("metalScrap"){
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+				tooltip.add("THIS ITEM IS BEING REMOVED! PLEASE USE IT UP!");
+			}
+		};
 		itemAddQue(new DebugGearWriter());
 		itemAddQue(debugReader = new DebugReader());
 		itemAddQue(handCrank = new HandCrank());

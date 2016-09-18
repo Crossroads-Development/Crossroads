@@ -1,0 +1,16 @@
+{
+	"variants": {
+		"facing=north,head=false": { "model": "crossroads:multiPistonExtend" },
+		"facing=north,head=true": { "model": "crossroads:multiPistonExtendHead" },
+		"facing=south,head=false": { "model": "crossroads:multiPistonExtend", "y": 180 },
+		"facing=south,head=true": { "model": "crossroads:multiPistonExtendHead", "y": 180 },
+		"facing=east,head=false": { "model": "crossroads:multiPistonExtend", "y": 90 },
+		"facing=east,head=true": { "model": "crossroads:multiPistonExtendHead", "y": 90 },
+		"facing=west,head=false": { "model": "crossroads:multiPistonExtend", "y": 270 },
+		"facing=west,head=true": { "model": "crossroads:multiPistonExtendHead", "y": 270 },
+		"facing=up,head=false": { "model": "crossroads:multiPistonExtend", "x": 270},
+		"facing=up,head=true": { "model": "crossroads:multiPistonExtendHead", "x": 270},
+		"facing=down,head=false": { "model": "crossroads:multiPistonExtend", "x": 90},
+		"facing=down,head=true": { "model": "crossroads:multiPistonExtendHead", "x": 90}
+	}
+}

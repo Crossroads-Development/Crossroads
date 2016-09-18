@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 import com.Da_Technomancer.crossroads.tileentities.ModTileEntity;
 import com.Da_Technomancer.crossroads.world.ModWorldGen;
 
@@ -27,7 +27,7 @@ public class CommonProxy{
 	protected void preInit(FMLPreInitializationEvent e){
 		Capabilities.register();
 		ModConfig.init(e);
-		OreSetup.init();
+		OreSetUp.init();
 		ModBlocks.init();
 		ModItems.init();
 		ModFluids.init();

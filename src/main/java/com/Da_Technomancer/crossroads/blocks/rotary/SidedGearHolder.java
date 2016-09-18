@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.Da_Technomancer.crossroads.ServerProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 
@@ -146,7 +145,12 @@ public class SidedGearHolder extends BlockContainer{
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(new ItemStack(ModItems.metalScrap, 3));
+		TileEntity te = world.getTileEntity(pos);
+		for(EnumFacing checker : EnumFacing.values()){
+			if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, checker)){
+				drops.add(new ItemStack(GearFactory.basicGears.get(te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, checker).getMember()), 1));
+			}
+		}
 		return drops;
 	}
 

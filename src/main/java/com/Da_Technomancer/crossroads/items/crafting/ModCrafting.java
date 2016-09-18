@@ -13,7 +13,7 @@ import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 
 import amerifrance.guideapi.api.GuideAPI;
 import net.minecraft.block.BlockPlanks;
@@ -34,6 +34,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public final class ModCrafting{
 
+	@SuppressWarnings("deprecation")
 	public static void initCrafting(){
 
 		OreDictionary.registerOre("wool", new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE));
@@ -57,7 +58,7 @@ public final class ModCrafting{
 		RecipeHolder.envirHeatSource.put(Blocks.ICE, Triple.of(Blocks.WATER.getDefaultState(), -70D, -50D));
 		RecipeHolder.envirHeatSource.put(Blocks.PACKED_ICE, Triple.of(Blocks.WATER.getDefaultState(), -140D, -100D));
 
-		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopper.getMoltenCopper(), Pair.of(200, Triple.of(new ItemStack(OreSetup.ingotCopper, 1), 1000D, 100D)));
+		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopper.getMoltenCopper(), Pair.of(200, Triple.of(new ItemStack(OreSetUp.ingotCopper, 1), 1000D, 100D)));
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.LAVA, Pair.of(1000, Triple.of(new ItemStack(Blocks.OBSIDIAN, 1), 1000D, 500D)));
 		RecipeHolder.fluidCoolingRecipes.put(BlockDistilledWater.getDistilledWater(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE, 1), -20D, 2D)));
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE, 1), -10D, 1D)));
@@ -86,10 +87,11 @@ public final class ModCrafting{
 
 		// Axle
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));
+		//TODO THIS RECIPE WILL BE REMOVED
 		GameRegistry.addRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', ModItems.metalScrap);
 		// Bronze
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(OreSetup.ingotBronze, 1), "###", "#?#", "###", '#', "nuggetCopper", '?', "nuggetTin"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(OreSetup.blockBronze, 1), "###", "#?#", "###", '#', "ingotCopper", '?', "ingotTin"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(OreSetUp.ingotBronze, 1), "###", "#?#", "###", '#', "nuggetCopper", '?', "nuggetTin"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(OreSetUp.blockBronze, 1), "###", "#?#", "###", '#', "ingotCopper", '?', "ingotTin"));
 		// Pipe
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fluidTube, 8), "###", "   ", "###", '#', "ingotBronze"));
 		// Hand Crank
@@ -202,6 +204,13 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 3, 7), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.JUNGLE.getMetadata())));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 3, 8), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.ACACIA.getMetadata())));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fertileSoil, 3, 9), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.DARK_OAK.getMetadata())));
+		//Piston
+		GameRegistry.addRecipe(new ShapelessOreRecipe(Blocks.PISTON, "cobblestone", "ingotIron", "dustRedstone", "logWood"));
+		//Multi-Piston
+		GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.multiPiston, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.PISTON));
+		//Sticky Multi-Piston
+		GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.multiPistonSticky, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.STICKY_PISTON));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.multiPistonSticky, ModBlocks.multiPiston, "slimeball"));
 	}
 
 	private static ItemStack getFilledHopper(){

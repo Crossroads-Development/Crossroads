@@ -163,3 +163,7 @@ technicianManual=Technician's Manual
 item.squidHelmet.name=Squid Helmet
 item.pigZombieChestplate.name=Zombie Pigman Chestplate
 item.cowLeggings.name=Cow Leggings
+tile.multiPistonSticky.name=Sticky Multi-Piston
+tile.multiPiston.name=Multi-Piston
+tile.multiPistonExtendSticky.name=Sticky Multi-Piston Extension
+tile.multiPistonExtend.name=Multi-Piston Extension

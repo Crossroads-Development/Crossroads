@@ -75,7 +75,10 @@ public class LargeGearMaster extends BlockContainer{
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(new ItemStack(ModItems.metalScrap, 70));
+		TileEntity te = world.getTileEntity(pos);
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, null)){
+			drops.add(new ItemStack(GearFactory.largeGears.get(te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, null).getMember())));
+		}
 		return drops;
 	}
 

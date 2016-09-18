@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public final class OreSetup{
+public final class OreSetUp{
 
 	public static BasicItem ingotTin;
 	public static BasicItem nuggetTin;

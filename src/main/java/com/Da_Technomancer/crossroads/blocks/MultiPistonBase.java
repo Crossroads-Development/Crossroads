@@ -18,6 +18,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -29,6 +30,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
  * Redstone can be placed on top of the piston,
  * Hit box does not change when extended,
  * Piston extension and retraction is instant, no 2-tick delay or rendering of block movement.
+ * Can move up to 64 blocks at a time instead of 12
  */
 public class MultiPistonBase extends Block{
 	
@@ -170,9 +172,7 @@ public class MultiPistonBase extends Block{
 		}
 	}
 	
-	//TODO NOTE THERE ARE STILL SEVERAL BUGS!
-	
-	private static final int PUSH_LIMIT = 12;
+	private static final int PUSH_LIMIT = 64;
 	
 	/**
 	 * Used recursively to fill a list with the blocks to be moved. Returns true if there is a problem that stops the movement.
@@ -222,6 +222,11 @@ public class MultiPistonBase extends Block{
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
 		setExtension(world, pos, state.getValue(Properties.FACING), 0);
+	}
+	
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		neighborChanged(world.getBlockState(pos), world, pos, null);
 	}
 	
 	@Override
