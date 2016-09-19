@@ -48,6 +48,7 @@ public final class ModCrafting{
 		RecipeHolder.grindRecipes.put("minecraft:nether_wart_block", new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
 		RecipeHolder.grindRecipes.put("cropPotato", new ItemStack[] {new ItemStack(ModItems.mashedPotato, 1)});
 		RecipeHolder.grindRecipes.put("gravel", new ItemStack[] {new ItemStack(Items.FLINT, 1)});
+		RecipeHolder.grindRecipes.put("blockRedstone", new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
 		
 		// Heating, order of decreasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D));
