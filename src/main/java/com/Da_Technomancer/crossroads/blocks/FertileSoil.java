@@ -65,13 +65,31 @@ public class FertileSoil extends Block{
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
 		if(state.getValue(Properties.PLANT) >= 4){
 			updateTick(worldIn, pos, state, new Random());
+		}else{
+			for(EnumFacing side : EnumFacing.values()){
+				if(side != EnumFacing.UP && worldIn.getBlockState(pos.offset(side)).getBlock() != this){
+					worldIn.getBlockState(pos.offset(side)).getBlock().neighborChanged(worldIn.getBlockState(pos.offset(side)), worldIn, pos.offset(side), this);
+				}
+			}
 		}
 	}
 	
+	@Override
+	public int getWeakPower(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
+		return state.getValue(Properties.PLANT) >= 4 ? 0 : worldIn.getBlockState(pos.offset(EnumFacing.UP)).getBlock() instanceof IPlantable ? 15 : 0;
+
+	}
+
+	@Override
+	public boolean canProvidePower(IBlockState state){
+		return state.getValue(Properties.PLANT) < 4;
+	}
+
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
 		if(worldIn.isRemote){

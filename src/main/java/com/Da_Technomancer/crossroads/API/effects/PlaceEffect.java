@@ -17,7 +17,7 @@ public class PlaceEffect implements IEffect{
 		ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
 		if(items != null && items.size() != 0){
 			for(EntityItem ent : items){
-				if(ent.getEntityItem() != null && ent.getEntityItem().getItem() instanceof ItemBlock && worldIn.isAirBlock(ent.getPosition())){
+				if(ent.getEntityItem() != null && ent.getEntityItem().getItem() instanceof ItemBlock && worldIn.getBlockState(ent.getPosition()).getBlock().isReplaceable(worldIn, ent.getPosition())){
 					worldIn.setBlockState(ent.getPosition(), ((ItemBlock) ent.getEntityItem().getItem()).getBlock().getStateFromMeta(ent.getEntityItem().getMetadata()));
 					if(--ent.getEntityItem().stackSize <= 0){
 						ent.setDead();
