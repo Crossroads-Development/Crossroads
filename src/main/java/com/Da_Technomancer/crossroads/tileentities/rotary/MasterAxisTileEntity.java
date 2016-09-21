@@ -48,12 +48,19 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 		if(worldObj.isRemote){
 			return;
 		}
+		ArrayList<IRotaryHandler> memberCopy = new ArrayList<IRotaryHandler>();
+		memberCopy.addAll(rotaryMembers);
 		rotaryMembers.clear();
 		locked = false;
 		Random rand = new Random();
-		if(worldObj.getTileEntity(getPos().offset(facing)) != null && worldObj.getTileEntity(getPos().offset(facing)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
+		if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
 			key = rand.nextInt(100) + 1;
-			worldObj.getTileEntity(getPos().offset(facing)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite()).propogate(key, this);
+			worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite()).propogate(key, this);
+		}
+		if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
+			for(IRotaryHandler gear : rotaryMembers){
+				gear.resetAngle();
+			}
 		}
 	}
 
@@ -186,12 +193,12 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 
 		ticksExisted++;
 
-		if(ticksExisted % 100 == 0 || ServerProxy.masterKey != lastKey){
+		if(ticksExisted % 300 == 0 || ServerProxy.masterKey != lastKey){
 			requestUpdate();
 
 		}
 
-		if(ticksExisted % 300 == 0 || ServerProxy.masterKey != lastKey){
+		if(ticksExisted % 300 == 0){
 			for(IRotaryHandler gear : rotaryMembers){
 				gear.resetAngle();
 			}

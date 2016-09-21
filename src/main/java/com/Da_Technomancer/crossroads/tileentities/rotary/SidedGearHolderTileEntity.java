@@ -150,8 +150,8 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 		if(flag){
 			for(int i = 0; i < 6; ++i){
-				SendDoubleToClient msg = new SendDoubleToClient("Q" + i, clientQ[i], this.getPos());
-				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+				SendDoubleToClient msg = new SendDoubleToClient("Q" + i, clientQ[i], pos);
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 
 			for(int i = 0; i < 6; i++){
