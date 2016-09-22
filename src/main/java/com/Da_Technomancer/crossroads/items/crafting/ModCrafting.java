@@ -49,6 +49,7 @@ public final class ModCrafting{
 		RecipeHolder.grindRecipes.put("cropPotato", new ItemStack[] {new ItemStack(ModItems.mashedPotato, 1)});
 		RecipeHolder.grindRecipes.put("gravel", new ItemStack[] {new ItemStack(Items.FLINT, 1)});
 		RecipeHolder.grindRecipes.put("blockRedstone", new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
+		RecipeHolder.grindRecipes.put("cobblestone", new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
 		
 		// Heating, order of decreasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D));
@@ -98,7 +99,7 @@ public final class ModCrafting{
 		// Hand Crank
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.handCrank, 1), " ?", "##", "$ ", '?', Blocks.LEVER, '#', "stickWood", '$', "cobblestone"));
 		// Master Axis
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.masterAxis, 1), "###", "#?#", "#$#", '#', "ingotIron", '?', Blocks.DROPPER, '$', axle));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.masterAxis, 1), "###", "# #", "#$#", '#', "ingotIron", '$', axle));
 		// Heating Crucible
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.heatingCrucible, 1), "# #", "#?#", "###", '#', Blocks.HARDENED_CLAY, '?', Items.CAULDRON);
 		// Grindstone
@@ -122,7 +123,7 @@ public final class ModCrafting{
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump);
 		// Brazier
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.brazier, 1), "###", " $ ", " $ ", '$', "stoneAndesitePolished", '#', "stoneAndesite"));
-		// Obsidian cutting kit
+		// Obsidian Cutting Kit
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.obsidianKit, 4), " # ", "#$#", " # ", '$', "obsidian", '#', Items.FLINT));
 		// Thermometer
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', axle, '?', "blockGlass"));
