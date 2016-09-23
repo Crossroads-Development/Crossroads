@@ -40,9 +40,9 @@ public class FertileSoil extends Block{
 		String name = "fertileSoil";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setHardness(2);
+		setHardness(.5F);
 		setSoundType(SoundType.GROUND);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemMultiTexture(this, this, new Function<ItemStack, String>(){
 			@Override
@@ -51,10 +51,16 @@ public class FertileSoil extends Block{
 				return (stack.getMetadata() == 0 ? "wheat" : stack.getMetadata() == 1 ? "potato" : stack.getMetadata() == 2 ? "carrot" : stack.getMetadata() == 3 ? "beet" : stack.getMetadata() == 4 ? "oak" : stack.getMetadata() == 5 ? "birch" : stack.getMetadata() == 6 ? "spruce" : stack.getMetadata() == 7 ? "jungle" : stack.getMetadata() == 8 ? "acacia" : "dark");
 			}
 		}).setRegistryName(name));
-		this.setTickRandomly(true);
+		setTickRandomly(true);
 		setDefaultState(blockState.getBaseState().withProperty(Properties.PLANT, 0));
 	}
-	
+
+	@Override
+	public boolean isToolEffective(String type, IBlockState state){
+		return "shovel".equals(type);
+
+	}
+
 	@Override
 	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable){
 		return true;
