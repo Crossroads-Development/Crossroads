@@ -5,6 +5,8 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.fluids.ModFluids;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
+import com.Da_Technomancer.crossroads.integration.ModIntegration;
+import com.Da_Technomancer.crossroads.integration.minetweaker.MineTweakerIntegration;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
@@ -42,9 +44,8 @@ public class CommonProxy{
 		GameRegistry.registerWorldGenerator(new ModWorldGen(), 0);
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
-		if(Loader.isModLoaded("JEI")){
-			RecipeHolder.rebind();
-		}
+
+		ModIntegration.init();
 
 		ModConfig.config.save();
 	}
