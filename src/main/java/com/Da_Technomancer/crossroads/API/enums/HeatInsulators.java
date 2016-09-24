@@ -12,7 +12,7 @@ public enum HeatInsulators{
 	WOOL(.01D, 300, new BlockEffect(Blocks.FIRE.getDefaultState()), "wool"),
 	SLIME(.005D, 500, new SlimeEffect(), "slimeball"),
 	DIRT(.1D, 42, new DirtEffect(), "dirt"),
-	ICE(.00005D, 0, new BlockEffect(Blocks.WATER.getDefaultState()), Blocks.ICE),
+	ICE(.00005D, 0, new BlockEffect(Blocks.WATER.getDefaultState()), Blocks.PACKED_ICE),
 	OBSIDIAN(0.0001D, 2000, new BlockEffect(Blocks.LAVA.getDefaultState()), "obsidian");
 
 	private final double rate;
