@@ -14,7 +14,10 @@ import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public class GrindstoneCategory implements IRecipeCategory{
@@ -72,8 +75,14 @@ public class GrindstoneCategory implements IRecipeCategory{
 		}
 		GrindstoneRecipeWrapper wrapper = ((GrindstoneRecipeWrapper) recipeWrapper);
 
+		List<ItemStack> inputs = wrapper.getInputs();
+		if (inputs.size() != 1) {
+			// Might happen if MineTweaker added a wrong recipe
+			return;
+		}
+
 		recipeLayout.getItemStacks().init(0, true, 79, 16);
-		recipeLayout.getItemStacks().set(0, wrapper.getInputs().get(0));
+		recipeLayout.getItemStacks().set(0, inputs.get(0));
 
 		recipeLayout.getItemStacks().init(1, false, 61, 52);
 		recipeLayout.getItemStacks().init(2, false, 79, 52);
