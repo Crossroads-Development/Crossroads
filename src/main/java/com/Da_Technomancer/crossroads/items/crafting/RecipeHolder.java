@@ -57,7 +57,7 @@ public final class RecipeHolder{
 	
 	public static final ArrayList<Object> JEIWrappers = new ArrayList<Object>();
 
-	/*
+	/**
 	 * Converts the versions of the recipes used internally into fake recipes
 	 * for JEI. Not called unless JEI is installed.
 	 */

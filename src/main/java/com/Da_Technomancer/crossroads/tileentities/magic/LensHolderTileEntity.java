@@ -213,7 +213,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 					}
 					break;
 				case 4:
-					if(MagicElements.getElement(mag) == MagicElements.LIGHT && mag.getPower() >= 6){
+					if(MagicElements.getElement(mag) == MagicElements.LIGHT){
 						worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TUXTURE_6, 5));
 					}
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, steps)){

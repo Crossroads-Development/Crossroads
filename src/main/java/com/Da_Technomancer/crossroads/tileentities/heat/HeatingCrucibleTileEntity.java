@@ -142,8 +142,8 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 			markDirty();
 		}
 
-		if(worldObj.getBlockState(getPos()).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || worldObj.getBlockState(getPos()).getValue(Properties.TEXTURE_4) != getCorrectState().getValue(Properties.TEXTURE_4)){
-			worldObj.setBlockState(getPos(), getCorrectState(), 2);
+		if(worldObj.getBlockState(pos).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || worldObj.getBlockState(pos).getValue(Properties.TEXTURE_4) != getCorrectState().getValue(Properties.TEXTURE_4)){
+			worldObj.setBlockState(pos, getCorrectState(), 2);
 		}
 	}
 
