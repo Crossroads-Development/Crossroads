@@ -9,16 +9,16 @@ import net.minecraftforge.fml.common.Loader;
  */
 public class ModIntegration {
 
-    public static boolean isJEIAvailable = false;
+	public static boolean isJEIAvailable = false;
 
-    public static void init() {
-        if(Loader.isModLoaded("JEI")){
-            RecipeHolder.rebind();
-            isJEIAvailable = true;
-        }
+	public static void init() {
+		if(Loader.isModLoaded("JEI")){
+			RecipeHolder.rebind();
+			isJEIAvailable = true;
+		}
 
-        if (Loader.isModLoaded("MineTweaker3")) {
-            MineTweakerIntegration.init();
-        }
-    }
+		if (Loader.isModLoaded("MineTweaker3")) {
+			MineTweakerIntegration.init();
+		}
+	}
 }
