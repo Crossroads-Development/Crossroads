@@ -42,15 +42,14 @@ public class GuideBooks{
 	public static final Book INFO = new Book();
 	private static boolean smallText;
 	
-	
 	@SuppressWarnings("deprecation")
 	protected static void mainGuide(boolean client){
 		
 		smallText = ModConfig.smallText.getBoolean();
 		
-		// Techno = normal (§r§r) use the double §r to make createPages() work
+		// Technomancer = normal (§r§r) use the double §r to make createPages() work
 		// Witch = underline (§r§n)
-		// Alchem = italic (§r§o)
+		// Alchemist = italic (§r§o)
 		// Bobo = normal (§r§l)
 		// The § symbol can be typed by holding alt and typing 0167 on the
 		// numpad, then release alt.
@@ -438,7 +437,7 @@ public class GuideBooks{
 			}else if(obj instanceof IRecipe){
 				pages.add(new PageIRecipe((IRecipe) obj));
 			}else{
-				System.err.println("CROSSROADS: ERROR WRITING TO THE JOURNAL, REPORT TO MOD AUTHOR");
+				throw new IllegalArgumentException("INVALID OBJECT FOR PAGE BUILDING!");
 			}
 		}
 	}

@@ -24,7 +24,7 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	public void addSpecialItems(EntityJoinWorldEvent event){
-		if(!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayer){
+		if(event.getEntity() instanceof EntityPlayer && !event.getEntity().worldObj.isRemote){
 			EntityPlayer player = (EntityPlayer) event.getEntity();
 
 			NBTTagCompound tag = MiscOp.getPlayerTag(player);

@@ -26,7 +26,7 @@ public class PigZombieChestsplate extends ItemArmor{
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack){
 		if(player.isBurning() && player.getActivePotionEffect(MobEffects.FIRE_RESISTANCE) == null){
-			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 5, 1, false, false));
+			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 5, 0, false, false));
 			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ZOMBIE_PIG_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 		}
 	}
