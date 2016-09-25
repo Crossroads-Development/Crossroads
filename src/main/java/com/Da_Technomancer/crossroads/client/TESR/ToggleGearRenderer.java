@@ -51,7 +51,7 @@ public class ToggleGearRenderer extends TileEntitySpecialRenderer<ToggleGearTile
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
-		GlStateManager.translate(.4375F, 0, .4375D);
+		GlStateManager.translate(.4375F, 0, .4375F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(textureAx);
 		modelAx.render();
 		GlStateManager.popMatrix();

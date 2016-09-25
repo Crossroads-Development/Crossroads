@@ -77,8 +77,6 @@ public final class ModCrafting{
 		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));
 		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(36, 24, 0, 0));
 		RecipeHolder.magExtractRecipes.put(Items.GLOWSTONE_DUST, new MagicUnit(1, 1, 1, 0));
-		
-		final String axle = "stickIron";
 
 		if(Loader.isModLoaded("guideapi")){
 			// Guide book
@@ -99,11 +97,11 @@ public final class ModCrafting{
 		// Hand Crank
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.handCrank, 1), " ?", "##", "$ ", '?', Blocks.LEVER, '#', "stickWood", '$', "cobblestone"));
 		// Master Axis
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.masterAxis, 1), "###", "# #", "#$#", '#', "ingotIron", '$', axle));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.masterAxis, 1), "###", "# #", "#$#", '#', "ingotIron", '$', "stickIron"));
 		// Heating Crucible
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.heatingCrucible, 1), "# #", "#?#", "###", '#', Blocks.HARDENED_CLAY, '?', Items.CAULDRON);
 		// Grindstone
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.grindstone, 1), "#$#", "#?#", "#$#", '#', "cobblestone", '?', axle, '$', Blocks.PISTON));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.grindstone, 1), "#$#", "#?#", "#$#", '#', "cobblestone", '?', "stickIron", '$', Blocks.PISTON));
 		// Heat Cable
 		for(HeatInsulators insul : HeatInsulators.values()){
 			for(HeatConductors cond : HeatConductors.values()){
@@ -117,7 +115,7 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSalt, 1), "##", "##", '#', "dustSalt"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.dustSalt, 4), "#", '#', "blockSalt"));
 		// Rotary Pump
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "#$#", "&$&", '#', "ingotBronze", '&', "blockGlass", '$', axle));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "#$#", "&$&", '#', "ingotBronze", '&', "blockGlass", '$', "stickIron"));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.rotaryPump, 1), ModBlocks.steamTurbine);
 		// Steam Turbine
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump);
@@ -126,15 +124,16 @@ public final class ModCrafting{
 		// Obsidian Cutting Kit
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.obsidianKit, 4), " # ", "#$#", " # ", '$', "obsidian", '#', Items.FLINT));
 		// Thermometer
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', axle, '?', "blockGlass"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', "stickIron", '?', "blockGlass"));
 		// Fluid Gauge
 		GameRegistry.addRecipe(new ItemStack(ModItems.fluidGauge, 1), "#", "$", '#', Items.COMPASS, '$', ModBlocks.fluidTube);
 		// Speedometer
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.speedometer, 1), " #", "#$", '#', "string", '$', "ingotIron"));
 		// OmniMeter
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.omnimeter, 1), " # ", "&$%", " ? ", '#', ModItems.fluidGauge, '&', ModItems.thermometer, '$', "gemEmerald", '%', ModItems.speedometer, '?', Items.CLOCK));
-		// Fluid Tank
+		// Fluid Tank (second recipe is for clearing contents)
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fluidTank, 1), " $ ", "$#$", " $ ", '#', "ingotGold", '$', "ingotBronze"));
+		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.fluidTank, 1), ModBlocks.fluidTank);
 		// Heat Exchanger
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.heatExchanger, 1), "#$#", "$$$", "###", '#', Blocks.IRON_BARS, '$', "ingotCopper"));
 		// Insulated Heat Exchanger
@@ -154,7 +153,7 @@ public final class ModCrafting{
 		// Candle Lilypad
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.candleLilyPad), Blocks.WATERLILY, "torch"));
 		// Item Chute
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.itemChute, 4), "#$#", "#$#", "#$#", '#', "ingotIron", '$', axle));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.itemChute, 4), "#$#", "#$#", "#$#", '#', "ingotIron", '$', "stickIron"));
 		// Item Chute Port
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.itemChutePort, 1), ModBlocks.itemChute, Blocks.IRON_TRAPDOOR);
 		// Radiator
@@ -164,7 +163,7 @@ public final class ModCrafting{
 		// Fat Collector
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fatCollector, 1), "***", "# #", "*&*", '*', "ingotBronze", '#', "netherrack", '&', "ingotCopper"));
 		// Fat Congealer
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fatCongealer, 1), "*^*", "# #", "* *", '*', "ingotBronze", '#', "netherrack", '^', axle));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fatCongealer, 1), "*^*", "# #", "* *", '*', "ingotBronze", '#', "netherrack", '^', "stickIron"));
 		//Diamond wire
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.diamondWire, 3), "*&*", '*', "ingotTin", '&', "gemDiamond"));
 		//Redstone Fluid Tube

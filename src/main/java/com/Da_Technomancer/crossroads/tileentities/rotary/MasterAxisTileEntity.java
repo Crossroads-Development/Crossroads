@@ -75,10 +75,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 		// The standard variable is V, not Q. I like Q because reasons.
 		double Q = 0;
 		// I should mention that I use I = mr*r/2 in the code because I don't
-		// want to code
-		// calculus, also, no user wants to do calculus. This isn't perfect, but
-		// it's pretty close for a simple gear shape, FYI.
-
+		// want to code calculus, also, no user wants to do calculus. 
+		// This isn't perfect, but it's pretty close for a simple gear shape.
+		
 		// Also, IRL you wouldn't say a gear spinning a different direction has
 		// negative energy, but it makes the code easier.
 
@@ -122,9 +121,10 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 		}
 	}
 
-	// The multiplier is badly named, the exact effect it has on loss is
-	// actually exponential, but as a rule, higher multiplier means higher loss.
-	// Multiplier should always be equal or greater than one. 1 means no loss.
+	/**The multiplier is badly named, the exact effect it has on loss is
+	* actually exponential, but as a rule, higher multiplier means higher loss.
+	* Multiplier should always be equal or greater than one. 1 means no loss. 
+	*/
 	private static double runLoss(ArrayList<IRotaryHandler> gears, double multiplier){
 		double sumEnergy = 0;
 
