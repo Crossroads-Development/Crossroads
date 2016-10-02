@@ -45,6 +45,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -142,6 +143,11 @@ public final class ModBlocks{
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
 				tooltip.add("Safe for decoration");
+			}
+
+			@Override
+			public boolean isOpaqueCube(IBlockState state){
+				return false;
 			}
 		}.setSoundType(SoundType.METAL);
 		blockAddQue(itemChutePort = new ItemChutePort());
