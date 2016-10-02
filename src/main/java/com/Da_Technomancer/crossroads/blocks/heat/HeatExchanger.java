@@ -40,4 +40,8 @@ public class HeatExchanger extends BlockContainer{
 		return EnumBlockRenderType.MODEL;
 	}
 
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
 }
