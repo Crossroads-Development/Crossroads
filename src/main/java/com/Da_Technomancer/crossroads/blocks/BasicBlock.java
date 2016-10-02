@@ -77,4 +77,8 @@ public class BasicBlock extends Block{
 		return (allowFort) ? (dropCount + random.nextInt(fortune + 1)) : dropCount;
 	}
 
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+    		return false;
+	}
 }
