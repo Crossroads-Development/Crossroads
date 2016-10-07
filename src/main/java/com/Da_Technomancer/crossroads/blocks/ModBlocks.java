@@ -29,6 +29,7 @@ import com.Da_Technomancer.crossroads.blocks.heat.SaltReactor;
 import com.Da_Technomancer.crossroads.blocks.magic.ArcaneExtractor;
 import com.Da_Technomancer.crossroads.blocks.magic.ArcaneReflector;
 import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitter;
+import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitterBasic;
 import com.Da_Technomancer.crossroads.blocks.magic.ColorChart;
 import com.Da_Technomancer.crossroads.blocks.magic.CrystallinePrism;
 import com.Da_Technomancer.crossroads.blocks.magic.LensHolder;
@@ -101,6 +102,7 @@ public final class ModBlocks{
 	public static MultiPistonExtend multiPistonExtendSticky;
 	public static MultiPistonBase multiPiston;
 	public static MultiPistonBase multiPistonSticky;
+	public static BeamSplitterBasic beamSplitterBasic;
 
 	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
 	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
@@ -172,6 +174,7 @@ public final class ModBlocks{
 		multiPistonExtendSticky = new MultiPistonExtend(true);
 		blockAddQue(multiPiston = new MultiPistonBase(false));
 		blockAddQue(multiPistonSticky = new MultiPistonBase(true));
+		blockAddQue(beamSplitterBasic = new BeamSplitterBasic());
 	}
 
 	@SideOnly(Side.CLIENT)

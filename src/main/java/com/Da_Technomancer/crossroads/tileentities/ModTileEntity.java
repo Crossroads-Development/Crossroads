@@ -22,6 +22,7 @@ import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEnt
 import com.Da_Technomancer.crossroads.tileentities.heat.SaltReactorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterBasicTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.CrystallinePrismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
@@ -77,6 +78,7 @@ public class ModTileEntity{
 		register(ArcaneReflectorTileEntity.class, "arcaneReflector");
 		register(LensHolderTileEntity.class, "lensHolder");
 		register(BeamSplitterTileEntity.class, "beamSplitter");
+		register(BeamSplitterBasicTileEntity.class, "beamSplitterBasic");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

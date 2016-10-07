@@ -150,6 +150,7 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.slottedChest, 1), "###", "$@$", "###", '#', "slabWood", '$', Blocks.TRAPDOOR, '@', "chestWood"));
 		// Sorting Hopper
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.sortingHopper, 1), "# #", "#&#", " # ", '#', "ingotCopper", '&', "chestWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.sortingHopper, 1), "#&#", "###", '#', "ingotCopper", '&', "chestWood"));
 		// Candle Lilypad
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.candleLilyPad), Blocks.WATERLILY, "torch"));
 		// Item Chute
@@ -189,9 +190,11 @@ public final class ModCrafting{
 		//Arcane Reflector
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.arcaneReflector, 1), "*^*", "^^^", "*^*", '*', "stone", '^', ModItems.pureQuartz));
 		//Lens Holder
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.lensHolder, 1), " * ", "*&*", "***", '*', "stone", '&', ModItems.pureQuartz));
-		//Beam Splitter
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.beamSplitter, 1), "*^*", "*&*", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModItems.lensArray));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.lensHolder, 1), "***", "*&*", "***", '*', "stone", '&', ModItems.pureQuartz));
+		//Basic Beam Splitter
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.beamSplitterBasic, 1), "*^*", "*&*", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModItems.lensArray));
+		//Redstone Beam Splitter
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.beamSplitter, 1), ModBlocks.beamSplitterBasic, "dustRedstone", "dustRedstone", "dustRedstone"));
 		//Color Chart
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
 		//Fertile Soil
