@@ -1,5 +1,5 @@
 #
-#Sat Aug 27 16:15:16 EDT 2016
+#Fri Oct 07 21:02:50 EDT 2016
 org.eclipse.jdt.core.formatter.insert_space_before_comma_in_for_inits=do not insert
 org.eclipse.jdt.core.formatter.brace_position_for_block=end_of_line
 org.eclipse.jdt.core.formatter.insert_space_after_at_in_annotation_type_declaration=do not insert
@@ -267,9 +267,9 @@ org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_try=do not i
 org.eclipse.jdt.core.formatter.continuation_indentation_for_array_initializer=2
 org.eclipse.jdt.core.formatter.lineSplit=100
 org.eclipse.jdt.core.compiler.source=1.8
-org.eclipse.jdt.core.formatter.tabulation.size=4
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_anonymous_type_declaration=insert
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_method_body=insert
+org.eclipse.jdt.core.formatter.tabulation.size=4
 org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
 org.eclipse.jdt.core.formatter.brace_position_for_array_initializer=end_of_line
 org.eclipse.jdt.core.formatter.insert_space_before_comma_in_explicitconstructorcall_arguments=do not insert

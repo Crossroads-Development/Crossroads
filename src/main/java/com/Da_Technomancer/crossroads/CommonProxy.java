@@ -12,15 +12,19 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 import com.Da_Technomancer.crossroads.tileentities.ModTileEntity;
+import com.Da_Technomancer.crossroads.world.ModWorldGen;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy{
 
+	protected static final ModWorldGen WORLD_GEN = new ModWorldGen();
+	
 	protected void preInit(FMLPreInitializationEvent e){
 		Capabilities.register();
 		ModConfig.init(e);
@@ -38,7 +42,11 @@ public class CommonProxy{
 		ModCrafting.initCrafting();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
-
+		
+		if(ModConfig.retrogen.getString().isEmpty()){
+			GameRegistry.registerWorldGenerator(WORLD_GEN, 0);
+		}
+		
 		ModIntegration.init();
 
 		ModConfig.config.save();

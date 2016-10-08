@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.world;
 
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 
@@ -17,8 +19,10 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 
 public class ModWorldGen implements IWorldGenerator{
 
+	/**Two arguments are marked nullable not due to being null in normal use, but because they are null when called during retrogen
+	 */
 	@Override
-	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider){
+	public void generate(Random random, int chunkX, int chunkZ, World world, @Nullable IChunkGenerator chunkGenerator, @Nullable IChunkProvider chunkProvider){
 
 		switch(world.provider.getDimension()){
 			case 0: // Overworld

@@ -1,12 +1,9 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.world.ModWorldGen;
-
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ServerProxy extends CommonProxy{
 
@@ -25,7 +22,7 @@ public class ServerProxy extends CommonProxy{
 	@Override
 	protected void init(FMLInitializationEvent e){
 		super.init(e);
-		GameRegistry.registerWorldGenerator(new ModWorldGen(), 0);
+		
 	}
 
 	@Override
