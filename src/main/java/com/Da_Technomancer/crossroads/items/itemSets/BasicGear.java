@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.ServerProxy;
+import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -62,7 +62,7 @@ public class BasicGear extends Item{
 			IRotaryHandler handler = worldIn.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite());
 			handler.setMember(type);
 			handler.updateStates();
-			ServerProxy.masterKey++;
+			CommonProxy.masterKey++;
 		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && worldIn.isSideSolid(pos, side)){
 			if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
 				playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, (ItemStack) null);
@@ -71,7 +71,7 @@ public class BasicGear extends Item{
 			worldIn.setBlockState(pos.offset(side), ModBlocks.sidedGearHolder.getDefaultState(), 3);
 			IRotaryHandler te = worldIn.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite());
 			te.setMember(type);
-			ServerProxy.masterKey++;
+			CommonProxy.masterKey++;
 		}
 
 		return EnumActionResult.PASS;

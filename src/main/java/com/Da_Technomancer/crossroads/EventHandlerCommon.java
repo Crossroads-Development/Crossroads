@@ -64,11 +64,7 @@ public final class EventHandlerCommon{
 	public void buildRetrogenList(ChunkDataEvent.Load e) {
 		if (!ModConfig.retrogen.getString().isEmpty()) {
 			NBTTagCompound tag = e.getData().getCompoundTag(Main.MODID);
-
-			if(tag == null){
-				tag = new NBTTagCompound();
-				e.getData().setTag(Main.MODID, tag);
-			}
+			e.getData().setTag(Main.MODID, tag);
 
 			if (!tag.hasKey(ModConfig.retrogen.getString())) {
 				tag.setBoolean(ModConfig.retrogen.getString(), true);

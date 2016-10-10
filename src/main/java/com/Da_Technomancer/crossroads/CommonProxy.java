@@ -25,6 +25,8 @@ public class CommonProxy{
 
 	protected static final ModWorldGen WORLD_GEN = new ModWorldGen();
 	
+	public static int masterKey = 0;
+	
 	protected void preInit(FMLPreInitializationEvent e){
 		Capabilities.register();
 		ModConfig.init(e);

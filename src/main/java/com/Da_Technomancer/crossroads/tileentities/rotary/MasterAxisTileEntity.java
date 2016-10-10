@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.Da_Technomancer.crossroads.ServerProxy;
+import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
@@ -193,7 +193,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 
 		ticksExisted++;
 
-		if(ticksExisted % 300 == 0 || ServerProxy.masterKey != lastKey){
+		if(ticksExisted % 300 == 0 || CommonProxy.masterKey != lastKey){
 			requestUpdate();
 
 		}
@@ -204,7 +204,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 			}
 		}
 		
-		lastKey = ServerProxy.masterKey;
+		lastKey = CommonProxy.masterKey;
 
 		if(!locked){
 			runCalc();

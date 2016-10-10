@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.ServerProxy;
+import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
@@ -64,7 +64,7 @@ public class DebugReader extends Item{
 			playerIn.addChatComponentMessage(new TextComponentString(Boolean.toString(((ITileMasterAxis) te).isLocked())));
 			playerIn.addChatComponentMessage(new TextComponentString(((ITileMasterAxis) te).getTotalEnergy() + " Energy Total"));
 		}else{
-			playerIn.addChatComponentMessage(new TextComponentString(Integer.toString(ServerProxy.masterKey)));
+			playerIn.addChatComponentMessage(new TextComponentString(Integer.toString(CommonProxy.masterKey)));
 		}
 
 		if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){

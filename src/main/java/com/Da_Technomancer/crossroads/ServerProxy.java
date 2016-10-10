@@ -7,8 +7,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ServerProxy extends CommonProxy{
 
-	public static int masterKey = 0;
-
 	@Override
 	protected void preInit(FMLPreInitializationEvent e){
 		super.preInit(e);

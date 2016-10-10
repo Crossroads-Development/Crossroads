@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.ServerProxy;
+import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
@@ -129,7 +129,7 @@ public class SidedGearHolder extends BlockContainer{
 			worldIn.destroyBlock(pos, false);
 		}
 
-		ServerProxy.masterKey++;
+		CommonProxy.masterKey++;
 	}
 
 	@Override

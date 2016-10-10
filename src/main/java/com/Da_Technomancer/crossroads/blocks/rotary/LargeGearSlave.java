@@ -4,7 +4,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.ServerProxy;
+import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 
@@ -55,7 +55,7 @@ public class LargeGearSlave extends BlockContainer{
 		if(worldIn.isRemote){
 			return;
 		}
-		ServerProxy.masterKey++;
+		CommonProxy.masterKey++;
 	}
 
 	@Override

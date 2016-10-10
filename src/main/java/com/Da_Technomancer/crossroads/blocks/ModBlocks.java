@@ -154,7 +154,7 @@ public final class ModBlocks{
 		}.setSoundType(SoundType.METAL);
 		blockAddQue(itemChutePort = new ItemChutePort());
 		blockAddQue(radiator = new Radiator());
-		rotaryDrill = new RotaryDrill();
+		blockAddQue(rotaryDrill = new RotaryDrill());
 		blockAddQue(fatCollector = new FatCollector());
 		blockAddQue(fatCongealer = new FatCongealer());
 		blockAddQue(redstoneFluidTube = new RedstoneFluidTube());

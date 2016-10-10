@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.ServerProxy;
+import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -121,7 +121,7 @@ public class ToggleGear extends BlockContainer{
 		if(worldIn.isRemote){
 			return;
 		}
-		ServerProxy.masterKey++;
+		CommonProxy.masterKey++;
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.ServerProxy;
+import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -67,7 +67,7 @@ public class LargeGear extends Item{
 				((LargeGearSlaveTileEntity) worldIn.getTileEntity(cPos)).setInitial(pos);
 			}
 		}
-		++ServerProxy.masterKey;
+		++CommonProxy.masterKey;
 
 		return EnumActionResult.PASS;
 	}

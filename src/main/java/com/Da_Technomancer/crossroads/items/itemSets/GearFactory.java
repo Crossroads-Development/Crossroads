@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 import java.util.HashMap;
 
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.ToggleGear;
 
 public class GearFactory{
@@ -16,6 +17,7 @@ public class GearFactory{
 			basicGears.put(typ, new BasicGear(typ));
 			largeGears.put(typ, new LargeGear(typ));
 			toggleGears.put(typ, new ToggleGear(typ));
+			ModBlocks.blockAddQue(toggleGears.get(typ));
 		}
 	}
 }
