@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -60,9 +61,8 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 
 		if(temp > insulator.getLimit()){
 			if(ModConfig.overheatEffects.getBoolean() == false){
-				worldObj.setBlockToAir(pos);
-				worldObj.spawnEntityInWorld(new EntityLightningBolt(worldObj, pos.getX(), pos.getY(), pos.getZ(), false));
-			}else{
+				worldObj.setBlockState(pos, Blocks.FIRE.getDefaultState(), 11);
+				}else{
 				insulator.getEffect().onOverheat(worldObj, pos);
 			}
 		}
