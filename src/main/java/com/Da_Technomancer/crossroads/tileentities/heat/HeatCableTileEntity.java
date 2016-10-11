@@ -2,12 +2,15 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -57,7 +60,11 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 		}
 
 		if(temp > insulator.getLimit()){
-			insulator.getEffect().onOverheat(worldObj, pos);
+			if(ModConfig.overheatEffects.getBoolean() == false){
+				worldObj.setBlockState(pos, Blocks.FIRE.getDefaultState(), 11);
+				}else{
+				insulator.getEffect().onOverheat(worldObj, pos);
+			}
 		}
 	}
 

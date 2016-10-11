@@ -15,6 +15,7 @@ import com.Da_Technomancer.crossroads.tileentities.ModTileEntity;
 import com.Da_Technomancer.crossroads.world.ModWorldGen;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -26,6 +27,7 @@ public class CommonProxy{
 	protected void preInit(FMLPreInitializationEvent e){
 		Capabilities.register();
 		ModConfig.init(e);
+		ModConfig.additionalConfigs();
 		OreSetUp.init();
 		ModBlocks.init();
 		ModItems.init();

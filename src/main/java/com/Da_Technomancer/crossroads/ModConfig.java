@@ -1,11 +1,15 @@
 package com.Da_Technomancer.crossroads;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public final class ModConfig{
 
 	public static Configuration config;
+	
+	public static Property overheatEffects;
+
 
 	protected static void init(FMLPreInitializationEvent e){
 
@@ -21,5 +25,14 @@ public final class ModConfig{
 		 * 
 		 * in order to read the config file, call property.readFoo();
 		 */
+	}
+	
+	
+	protected static void additionalConfigs(){
+		
+		overheatEffects = ModConfig.config.get
+				("heat cables", "Enable all heat cable overheating effects.(default true)", true,
+				("True enables all effects (obsidian, sponge, villager, explosion,etc) on overheat, while "
+						+ "false only enables the fire effect"));
 	}
 }
