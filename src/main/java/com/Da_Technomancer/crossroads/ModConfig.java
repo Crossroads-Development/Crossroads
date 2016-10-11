@@ -17,6 +17,7 @@ public final class ModConfig{
 	public static Property rotateBeam;
 	public static Property smallText;
 	public static Property retrogen;
+	public static Property heatEffects;
 	
 	private static final String CAT_OPTIM = "Optimization";
 	private static final String CAT_ORES = "Ores";
@@ -32,9 +33,10 @@ public final class ModConfig{
 		genRubyOre = config.get(CAT_ORES, "Generate Ruby Ore?", true);
 		genNativeCopperOre = config.get(CAT_ORES, "Generate Native Copper Ore?", true);
 		retrogen = config.get(CAT_ORES, "Retrogen Key", "", "Changing this value will cause retrogen. Leaving it blank disables retrogen. TURN THIS OFF WHEN YOU ARE DONE!");
-		speedTiers = config.get(CAT_OPTIM, "Speed Tiers", 4, "Higher value means smoother gear rotation, but more packets sent AKA lag. range 1-100 Default 4", 1, 100);
+		speedTiers = config.get(CAT_OPTIM, "Speed Tiers", 4, "Higher value means smoother gear rotation, but more packets sent AKA lag. (Range 1-100, Default 4)", 1, 100);
 		weatherControl = config.get(CAT_MISC, "Enable rain idol? (Default true)", true);
 		rotateBeam = config.get(CAT_OPTIM, "Rotate Beams", true, "Should magic beams rotate? (Default true)");
 		smallText = config.get(CAT_MISC, "Use small text in the guide book? (Default true)", true);
+		heatEffects = config.get(CAT_MISC, "Cable Overheat Effects", true, "If false, all heat cable overheating effects are replaced with burning (Default true)");
 	}
 }
