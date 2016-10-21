@@ -33,6 +33,7 @@ public class GrindstoneHandler {
 		if (key == null) {
 			return;
 		}
+
 		MineTweakerAPI.apply(new Add(key, MineTweakerIntegration.toItemStack(output1, output2, output3)));
 	}
 
