@@ -1,51 +1,88 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class CraftingStack{
+public class CraftingStack implements ICraftingStack{
 
 	private final Item item;
 	private final int count;
 	private final int meta;
 
+	/** A metadata of -1 means ignore metadata
+	 * 
+	 */
 	public CraftingStack(Block block, int count, int meta){
 		this(Item.getItemFromBlock(block), count, meta);
 	}
 
+	/** A metadata of -1 means ignore metadata
+	 * 
+	 */
 	public CraftingStack(Item item, int count, int meta){
 		this.item = item;
 		this.count = count;
 		this.meta = meta;
 	}
 
+	@Override
 	public boolean match(ItemStack stack){
 		if(stack == null){
 			return false;
 		}
 
-		if(stack.getItem() == item && stack.stackSize == count && stack.getMetadata() == meta){
+		if(stack.getItem() == item && stack.stackSize == count && (meta == -1 || stack.getMetadata() == meta)){
 			return true;
 		}
 
 		return false;
 	}
 
-	/**
-	 * Same as match, but ignores item count
-	 * 
-	 */
+	@Override
 	public boolean softMatch(ItemStack stack){
 		if(stack == null){
 			return false;
 		}
 
-		if(stack.getItem() == item && stack.getMetadata() == meta){
+		if(stack.getItem() == item && (meta == -1 || stack.getMetadata() == meta)){
 			return true;
 		}
 
 		return false;
 	}
 
+	@Override
+	public List<ItemStack> getMatchingList(){
+		return ImmutableList.of(new ItemStack(item, count, meta));
+	}
+	
+	protected Item getItem(){
+		return item;
+	}
+	
+	protected int getCount(){
+		return count;
+	}
+	
+	protected int getMeta(){
+		return meta;
+	}
+	
+	@Override
+	public boolean equals(Object other){
+		if(other == this){
+			return true;
+		}
+		if(other instanceof CraftingStack){
+			CraftingStack otherStack = (CraftingStack) other;
+			return item == otherStack.getItem() && meta == otherStack.getMeta() && count == otherStack.getCount();
+		}
+		
+		return false;
+	}
 }

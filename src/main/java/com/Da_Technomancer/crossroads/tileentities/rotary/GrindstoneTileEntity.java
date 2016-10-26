@@ -1,12 +1,14 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import java.util.ArrayList;
+import java.util.Map.Entry;
 
 import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveGear;
+import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraft.item.ItemStack;
@@ -14,7 +16,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class GrindstoneTileEntity extends AbstractInventory implements ITickable{
 
@@ -48,14 +49,12 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 			holder = Math.round(Math.abs(topGear.getMotionData()[1] * efficiency));
 			progress += holder;
 			topGear.addEnergy(-holder, false, false);
-			;
 		}
 
 		if(bottomGear != null){
 			holder = Math.round(Math.abs(bottomGear.getMotionData()[1] * efficiency));
 			progress += holder;
 			bottomGear.addEnergy(-holder, false, false);
-			;
 		}
 
 		if(progress > REQUIRED){
@@ -64,7 +63,7 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 	}
 
 	private void createOutput(){
-		ItemStack[] outputs = RecipeHolder.grindRecipes.get(foundMatch(inventory[0]) == null ? inventory[0].getItem().getRegistryName().toString() : foundMatch(inventory[0]));
+		ItemStack[] outputs = getOutput();
 
 		if(canFit(outputs)){
 			progress = 0;
@@ -128,22 +127,10 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 		return viable;
 	}
 
-	private String foundMatch(ItemStack stack){
-
-		for(int ID : OreDictionary.getOreIDs(inventory[0])){
-			if(RecipeHolder.grindRecipes.containsKey(OreDictionary.getOreName(ID))){
-				return OreDictionary.getOreName(ID);
-			}
-		}
-
-		return null;
-	}
-
 	@Override
 	public void update(){
-
 		if(!worldObj.isRemote){
-			if(inventory[0] != null && (RecipeHolder.grindRecipes.containsKey(inventory[0].getItem().getRegistryName().toString()) || foundMatch(inventory[0]) != null)){
+			if(inventory[0] != null && getOutput() != null){
 				runMachine();
 			}else{
 				progress = 0;
@@ -153,7 +140,18 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 				createOutput();
 			}
 		}
-
+	}
+	
+	private ItemStack[] getOutput(){
+		if(inventory[0] == null){
+			return null;
+		}
+		for(Entry<ICraftingStack, ItemStack[]> recipe: RecipeHolder.grindRecipes.entrySet()){
+			if(recipe.getKey().softMatch(inventory[0])){
+				return recipe.getValue();
+			}
+		}
+		return null;
 	}
 
 	@Override

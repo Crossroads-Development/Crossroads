@@ -22,12 +22,10 @@ import net.minecraftforge.fluids.Fluid;
 public final class RecipeHolder{
 
 	/**
-	 * For the string, use the item registry name (WITH path, ex.
-	 * "crossroads:dustCopper") for a specific item, or oreDict name (WITHOUT
-	 * path, ex. "dustCopper")
+	 * CraftingStack is input, the array is the outputs. HAVE NO MORE THAN 3 ITEMSTACKS IN THE ARRAY.
 	 * 
 	 */
-	public static final HashMap<String, ItemStack[]> grindRecipes = new HashMap<String, ItemStack[]>();
+	public static final HashMap<ICraftingStack, ItemStack[]> grindRecipes = new HashMap<ICraftingStack, ItemStack[]>();
 
 	/**
 	 * Block is input, blockstate is the created block, Double1 is heat created,
@@ -47,8 +45,8 @@ public final class RecipeHolder{
 	 * A list of all recipes, Item Array are the ingredients, and itemstack is
 	 * output. A list for poisonous potato recipes and mashed potato recipes.
 	 */
-	protected static final ArrayList<Pair<CraftingStack[], ItemStack>> mashedBoboRecipes = new ArrayList<Pair<CraftingStack[], ItemStack>>();
-	protected static final ArrayList<Pair<CraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<CraftingStack[], ItemStack>>();
+	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> mashedBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
+	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
 
 	/**
 	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
@@ -62,7 +60,7 @@ public final class RecipeHolder{
 	 * for JEI. Not called unless JEI is installed.
 	 */
 	public static void rebind(){
-		for(Entry<String, ItemStack[]> rec : grindRecipes.entrySet()){
+		for(Entry<ICraftingStack, ItemStack[]> rec : grindRecipes.entrySet()){
 			JEIWrappers.add(new GrindstoneRecipe(rec));
 		}
 		for(Entry<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> rec : fluidCoolingRecipes.entrySet()){
@@ -91,11 +89,11 @@ public final class RecipeHolder{
 		}
 
 		if(poisonous){
-			for(Pair<CraftingStack[], ItemStack> craft : poisonBoboRecipes){
+			for(Pair<ICraftingStack[], ItemStack> craft : poisonBoboRecipes){
 				ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
 				itemCop.addAll(items);
 
-				for(CraftingStack cStack : craft.getLeft()){
+				for(ICraftingStack cStack : craft.getLeft()){
 					for(ItemStack stack : items){
 						if(itemCop.contains(stack) && cStack.softMatch(stack)){
 							itemCop.remove(stack);
@@ -109,11 +107,11 @@ public final class RecipeHolder{
 				}
 			}
 		}else{
-			for(Pair<CraftingStack[], ItemStack> craft : mashedBoboRecipes){
+			for(Pair<ICraftingStack[], ItemStack> craft : mashedBoboRecipes){
 				ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
 				itemCop.addAll(items);
 
-				for(CraftingStack cStack : craft.getLeft()){
+				for(ICraftingStack cStack : craft.getLeft()){
 					for(ItemStack stack : items){
 						if(itemCop.contains(stack) && cStack.softMatch(stack)){
 							itemCop.remove(stack);
