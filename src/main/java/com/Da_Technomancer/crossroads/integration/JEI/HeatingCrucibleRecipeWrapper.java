@@ -8,12 +8,14 @@ import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.google.common.collect.ImmutableList;
 
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class HeatingCrucibleRecipeWrapper implements IRecipeWrapper{
 
@@ -24,21 +26,25 @@ public class HeatingCrucibleRecipeWrapper implements IRecipeWrapper{
 	}
 
 	@Override
+	@Deprecated
 	public List<ItemStack> getInputs(){
 		return ImmutableList.of(copper ? new ItemStack(ModItems.dustCopper, 1) : new ItemStack(Blocks.COBBLESTONE, 1));
 	}
 
 	@Override
+	@Deprecated
 	public List<ItemStack> getOutputs(){
 		return ImmutableList.of();
 	}
 
 	@Override
+	@Deprecated
 	public List<FluidStack> getFluidInputs(){
 		return ImmutableList.of();
 	}
 
 	@Override
+	@Deprecated
 	public List<FluidStack> getFluidOutputs(){
 		return ImmutableList.of(new FluidStack(copper ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, 200));
 	}
@@ -61,6 +67,12 @@ public class HeatingCrucibleRecipeWrapper implements IRecipeWrapper{
 	@Override
 	public boolean handleClick(Minecraft minecraft, int mouseX, int mouseY, int mouseButton){
 		return false;
+	}
+
+	@Override
+	public void getIngredients(IIngredients ingredients){
+		ingredients.setInputLists(ItemStack.class, ImmutableList.of(OreDictionary.getOres(copper ? "dustCopper" : "cobblestone", false)));
+		ingredients.setOutput(FluidStack.class, new FluidStack(copper ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, 200));
 	}
 
 }

@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -22,21 +23,25 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper{
 		inputs = recipe.getInput().getMatchingList();
 	}
 
+	@Deprecated
 	@Override
 	public List<ItemStack> getInputs(){
 		return inputs;
 	}
 
+	@Deprecated
 	@Override
 	public List<ItemStack> getOutputs(){
 		return outputs;
 	}
 
+	@Deprecated
 	@Override
 	public List<FluidStack> getFluidInputs(){
 		return ImmutableList.of();
 	}
 
+	@Deprecated
 	@Override
 	public List<FluidStack> getFluidOutputs(){
 		return ImmutableList.of();
@@ -60,6 +65,12 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper{
 	@Override
 	public boolean handleClick(Minecraft minecraft, int mouseX, int mouseY, int mouseButton){
 		return false;
+	}
+
+	@Override
+	public void getIngredients(IIngredients ingredients){
+		ingredients.setInputLists(ItemStack.class, ImmutableList.of(inputs));
+		ingredients.setOutputs(ItemStack.class, outputs);
 	}
 
 }

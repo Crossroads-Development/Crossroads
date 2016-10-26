@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -13,34 +14,38 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class FluidCoolingRecipeWrapper implements IRecipeWrapper{
 
-	private final List<ItemStack> outputs;
-	private final List<FluidStack> input;
+	private final ItemStack output;
+	private final FluidStack input;
 	private final double max;
 	private final double add;
 
 	protected FluidCoolingRecipeWrapper(@Nonnull FluidCoolingRecipe recipe){
-		outputs = ImmutableList.of(recipe.getStack());
-		input = ImmutableList.of(recipe.getFluid());
+		output = recipe.getStack();
+		input = recipe.getFluid();
 		max = recipe.getMax();
 		add = recipe.getAdd();
 	}
 
 	@Override
+	@Deprecated
 	public List<ItemStack> getInputs(){
 		return ImmutableList.of();
 	}
 
 	@Override
+	@Deprecated
 	public List<ItemStack> getOutputs(){
-		return outputs;
+		return ImmutableList.of(output);
 	}
 
 	@Override
+	@Deprecated
 	public List<FluidStack> getFluidInputs(){
-		return input;
+		return ImmutableList.of(input);
 	}
 
 	@Override
+	@Deprecated
 	public List<FluidStack> getFluidOutputs(){
 		return ImmutableList.of();
 	}
@@ -64,6 +69,12 @@ public class FluidCoolingRecipeWrapper implements IRecipeWrapper{
 	@Override
 	public boolean handleClick(Minecraft minecraft, int mouseX, int mouseY, int mouseButton){
 		return false;
+	}
+
+	@Override
+	public void getIngredients(IIngredients ingredients){
+		ingredients.setOutput(ItemStack.class, output);
+		ingredients.setInput(FluidStack.class, input);
 	}
 
 }

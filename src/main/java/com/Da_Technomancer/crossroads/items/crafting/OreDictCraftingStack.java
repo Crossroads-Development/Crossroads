@@ -3,6 +3,8 @@ package com.Da_Technomancer.crossroads.items.crafting;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class OreDictCraftingStack implements ICraftingStack{
@@ -48,6 +50,7 @@ public class OreDictCraftingStack implements ICraftingStack{
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public List<ItemStack> getMatchingList(){
 		return OreDictionary.getOres(oreDict, false);

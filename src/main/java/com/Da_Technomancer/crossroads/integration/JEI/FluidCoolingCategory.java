@@ -5,17 +5,18 @@ import com.Da_Technomancer.crossroads.Main;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableAnimated;
+import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
 import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 
-@SuppressWarnings("rawtypes")
-public class FluidCoolingCategory implements IRecipeCategory{
+public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipeWrapper>{
 
 	protected static final String id = Main.MODID + ".fluidCooling";
 	private final IDrawable back;
@@ -60,8 +61,9 @@ public class FluidCoolingCategory implements IRecipeCategory{
 		arrow.draw(minecraft, 45, 56);
 	}
 
+	@Deprecated
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper){
+	public void setRecipe(IRecipeLayout recipeLayout, FluidCoolingRecipeWrapper recipeWrapper){
 		if(!(recipeWrapper instanceof FluidCoolingRecipeWrapper)){
 			return;
 		}
@@ -70,6 +72,17 @@ public class FluidCoolingCategory implements IRecipeCategory{
 		recipeLayout.getFluidStacks().set(0, wrapper.getFluidInputs());
 		recipeLayout.getItemStacks().init(0, false, 80, 55);
 		recipeLayout.getItemStacks().set(0, wrapper.getOutputs());
+	}
+
+	@Override
+	public void setRecipe(IRecipeLayout recipeLayout, FluidCoolingRecipeWrapper recipeWrapper, IIngredients ingredients){
+		if(!(recipeWrapper instanceof FluidCoolingRecipeWrapper)){
+			return;
+		}
+		recipeLayout.getFluidStacks().init(0, true, 21, 30, 16, 64, 1000, true, null);
+		recipeLayout.getFluidStacks().set(0, ingredients.getInputs(FluidStack.class).get(0));
+		recipeLayout.getItemStacks().init(0, false, 80, 55);
+		recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class));
 	}
 
 }

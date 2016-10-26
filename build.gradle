@@ -12,7 +12,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.10.2-1.1.7"
+version = "1.10.2-1.1.8"
 group = "com.Da_Technomancer.crossroads" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "crossroads"
 
@@ -42,7 +42,7 @@ repositories {
 
 dependencies {
 	deobfCompile "info.amerifrance.guideapi:Guide-API:1.10.2-2.0.2-45"
-	deobfCompile "mezz.jei:jei_1.10.2:3.8.1.242:api"
+	deobfCompile "mezz.jei:jei_1.10.2:3.13.0.332:api"
 }
 
 processResources
