@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import com.Da_Technomancer.crossroads.Main;
@@ -10,17 +12,14 @@ import mezz.jei.api.gui.IDrawableAnimated;
 import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
 import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.List;
-
-@SuppressWarnings("rawtypes")
-public class GrindstoneCategory implements IRecipeCategory{
+public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipeWrapper>{
 
 	protected static final String id = Main.MODID + ".grindstone";
 	private final IDrawable back;
@@ -68,8 +67,9 @@ public class GrindstoneCategory implements IRecipeCategory{
 		arrow.draw(minecraft, 66, 35);
 	}
 
+	@Deprecated
 	@Override
-	public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull IRecipeWrapper recipeWrapper){
+	public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull GrindstoneRecipeWrapper recipeWrapper){
 		if(!(recipeWrapper instanceof GrindstoneRecipeWrapper)){
 			return;
 		}
@@ -90,6 +90,28 @@ public class GrindstoneCategory implements IRecipeCategory{
 		recipeLayout.getItemStacks().set(1, wrapper.getOutputs().size() >= 1 ? wrapper.getOutputs().get(0) : null);
 		recipeLayout.getItemStacks().set(2, wrapper.getOutputs().size() >= 2 ? wrapper.getOutputs().get(1) : null);
 		recipeLayout.getItemStacks().set(3, wrapper.getOutputs().size() == 3 ? wrapper.getOutputs().get(2) : null);
+	}
+
+	@Override
+	public void setRecipe(IRecipeLayout recipeLayout, GrindstoneRecipeWrapper recipeWrapper, IIngredients ingredients){
+		if(!(recipeWrapper instanceof GrindstoneRecipeWrapper)){
+			return;
+		}
+
+		if (ingredients.getInputs(ItemStack.class).get(0).isEmpty()) {
+			// Might happen if MineTweaker added a wrong recipe
+			return;
+		}
+
+		recipeLayout.getItemStacks().init(0, true, 79, 16);
+		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
+
+		recipeLayout.getItemStacks().init(1, false, 61, 52);
+		recipeLayout.getItemStacks().init(2, false, 79, 52);
+		recipeLayout.getItemStacks().init(3, false, 97, 52);
+		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(ItemStack.class).size() >= 1 ? ingredients.getOutputs(ItemStack.class).get(0) : null);
+		recipeLayout.getItemStacks().set(2, ingredients.getOutputs(ItemStack.class).size() >= 2 ? ingredients.getOutputs(ItemStack.class).get(1) : null);
+		recipeLayout.getItemStacks().set(3, ingredients.getOutputs(ItemStack.class).size() == 3 ? ingredients.getOutputs(ItemStack.class).get(2) : null);
 	}
 
 }

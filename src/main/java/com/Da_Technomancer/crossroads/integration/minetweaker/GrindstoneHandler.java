@@ -36,7 +36,6 @@ public class GrindstoneHandler {
 		if(in == null){
 			return;
 		}
-		//TODO verify wildcard metadata works
 		MineTweakerAPI.apply(new Add(new CraftingStack(in.getItem(), in.stackSize, OreDictionary.WILDCARD_VALUE == input.getDamage() ? -1 : in.getMetadata()), MineTweakerIntegration.toItemStack(output1, output2, output3)));
 	}
 
@@ -155,7 +154,6 @@ public class GrindstoneHandler {
 	 */
 	@ZenMethod
 	public static void removeRecipe(IItemStack input) {
-		//TODO verify wildcard meta works
 		ItemStack in = MineTweakerMC.getItemStack(input);
 		if(in == null){
 			return;
