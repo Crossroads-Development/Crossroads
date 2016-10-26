@@ -2,20 +2,22 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import java.util.Map.Entry;
 
+import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
+
 import net.minecraft.item.ItemStack;
 
 public class GrindstoneRecipe{
 
-	private final String string;
+	private final ICraftingStack input;
 	private final ItemStack[] stacks;
 
-	public GrindstoneRecipe(Entry<String, ItemStack[]> in){
-		string = in.getKey();
+	public GrindstoneRecipe(Entry<ICraftingStack, ItemStack[]> in){
+		input = in.getKey();
 		stacks = in.getValue();
 	}
 
-	public String getString(){
-		return string;
+	public ICraftingStack getInput(){
+		return input;
 	}
 
 	public ItemStack[] getStacks(){

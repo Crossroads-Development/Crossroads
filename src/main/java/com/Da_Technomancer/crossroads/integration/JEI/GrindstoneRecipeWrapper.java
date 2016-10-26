@@ -9,10 +9,8 @@ import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class GrindstoneRecipeWrapper implements IRecipeWrapper{
 
@@ -21,11 +19,7 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper{
 
 	protected GrindstoneRecipeWrapper(@Nonnull GrindstoneRecipe recipe){
 		outputs = Arrays.asList(recipe.getStacks());
-		if(recipe.getString().contains(":")){
-			inputs = ImmutableList.of(new ItemStack(Item.getByNameOrId(recipe.getString()), 1));
-		}else{
-			inputs = OreDictionary.getOres(recipe.getString());
-		}
+		inputs = recipe.getInput().getMatchingList();
 	}
 
 	@Override

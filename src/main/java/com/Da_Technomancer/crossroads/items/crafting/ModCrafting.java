@@ -35,15 +35,15 @@ public final class ModCrafting{
 
 		OreDictionary.registerOre("wool", new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE));
 
-		RecipeHolder.grindRecipes.put("oreCopper", new ItemStack[] {new ItemStack(Item.getByNameOrId(Main.MODID + ":dustCopper"), 2), new ItemStack(Blocks.SAND)});
-		RecipeHolder.grindRecipes.put("minecraft:wheat", new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
-		RecipeHolder.grindRecipes.put("minecraft:pumpkin", new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
-		RecipeHolder.grindRecipes.put("minecraft:melon", new ItemStack[] {new ItemStack(Items.MELON_SEEDS, 3)});
-		RecipeHolder.grindRecipes.put("minecraft:bone", new ItemStack[] {new ItemStack(Items.DYE, 5, EnumDyeColor.WHITE.getDyeDamage())});
-		RecipeHolder.grindRecipes.put("blockCoal", new ItemStack[] {new ItemStack(Items.GUNPOWDER, 1)});
-		RecipeHolder.grindRecipes.put("minecraft:nether_wart_block", new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
-		RecipeHolder.grindRecipes.put("cropPotato", new ItemStack[] {new ItemStack(ModItems.mashedPotato, 1)});
-		RecipeHolder.grindRecipes.put("gravel", new ItemStack[] {new ItemStack(Items.FLINT)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("oreCopper", 1), new ItemStack[] {new ItemStack(Item.getByNameOrId(Main.MODID + ":dustCopper"), 2), new ItemStack(Blocks.SAND)});
+		RecipeHolder.grindRecipes.put(new CraftingStack(Items.WHEAT, 1, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
+		RecipeHolder.grindRecipes.put(new CraftingStack(Blocks.PUMPKIN, 1, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
+		RecipeHolder.grindRecipes.put(new CraftingStack(Items.MELON, 1, 0), new ItemStack[] {new ItemStack(Items.MELON_SEEDS, 3)});
+		RecipeHolder.grindRecipes.put(new CraftingStack(Items.BONE, 1, 0), new ItemStack[] {new ItemStack(Items.DYE, 5, EnumDyeColor.WHITE.getDyeDamage())});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("blockCoal", 1), new ItemStack[] {new ItemStack(Items.GUNPOWDER, 1)});
+		RecipeHolder.grindRecipes.put(new CraftingStack(Blocks.NETHER_WART_BLOCK, 1, 0), new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("cropPotato", 1), new ItemStack[] {new ItemStack(ModItems.mashedPotato, 1)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("gravel", 1), new ItemStack[] {new ItemStack(Items.FLINT)});
 
 		// Heating, order of decreasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D));
@@ -59,10 +59,10 @@ public final class ModCrafting{
 		RecipeHolder.fluidCoolingRecipes.put(BlockDistilledWater.getDistilledWater(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE), -20D, 2D)));
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE), -10D, 1D)));
 
-		RecipeHolder.mashedBoboRecipes.add(Pair.of(new CraftingStack[] {new CraftingStack(Blocks.HOPPER, 1, 0), new OreDictCraftingStack("wool", 1), new CraftingStack(ModBlocks.fluidTube, 1, 0)}, getFilledHopper()));
-		RecipeHolder.mashedBoboRecipes.add(Pair.of(new CraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new OreDictCraftingStack("dyeMagenta", 1), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new CraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new CraftingStack[] {new OreDictCraftingStack("gemLapis", 1), new OreDictCraftingStack("cobblestone", 1), new OreDictCraftingStack("nuggetGold", 1)}, new ItemStack(ModItems.rainIdol, 1)));
+		RecipeHolder.mashedBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Blocks.HOPPER, 1, 0), new OreDictCraftingStack("wool", 1), new CraftingStack(ModBlocks.fluidTube, 1, 0)}, getFilledHopper()));
+		RecipeHolder.mashedBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new OreDictCraftingStack("dyeMagenta", 1), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
+		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
+		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("gemLapis", 1), new OreDictCraftingStack("cobblestone", 1), new OreDictCraftingStack("nuggetGold", 1)}, new ItemStack(ModItems.rainIdol, 1)));
 		
 		final String axle = "stickIron";
 

@@ -1,5 +1,8 @@
 package com.Da_Technomancer.crossroads.integration.minetweaker;
 
+import com.Da_Technomancer.crossroads.items.crafting.CraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import minetweaker.IUndoableAction;
@@ -8,8 +11,8 @@ import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.oredict.IOreDictEntry;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -29,28 +32,12 @@ public class GrindstoneHandler {
 	 */
 	@ZenMethod
 	public static void addRecipe(IItemStack input, IIngredient output1, @Optional IIngredient output2, @Optional IIngredient output3) {
-		String key = getItemStackKey(input);
-		if (key == null) {
+		ItemStack in = MineTweakerMC.getItemStack(input);
+		if(in == null){
 			return;
 		}
-
-		MineTweakerAPI.apply(new Add(key, MineTweakerIntegration.toItemStack(output1, output2, output3)));
-	}
-
-	/**
-	 * Calculate the key for the recipe map from the item stack.
-	 *
-	 * @param input the input item stack
-	 * @return the key for the recipe map
-	 */
-	private static String getItemStackKey(IItemStack input) {
-		String key = null;
-		ItemStack itemStack = MineTweakerMC.getItemStack(input);
-		if (itemStack != null) {
-			Item item = itemStack.getItem();
-			key = item.getRegistryName().toString();
-		}
-		return key;
+		//TODO verify wildcard metadata works
+		MineTweakerAPI.apply(new Add(new CraftingStack(in.getItem(), in.stackSize, OreDictionary.WILDCARD_VALUE == input.getDamage() ? -1 : in.getMetadata()), MineTweakerIntegration.toItemStack(output1, output2, output3)));
 	}
 
 	/**
@@ -67,7 +54,7 @@ public class GrindstoneHandler {
 		if (key == null) {
 			return;
 		}
-		MineTweakerAPI.apply(new Add(key, MineTweakerIntegration.toItemStack(output1, output2, output3)));
+		MineTweakerAPI.apply(new Add(new OreDictCraftingStack(key, 1), MineTweakerIntegration.toItemStack(output1, output2, output3)));
 	}
 
 	/**
@@ -76,7 +63,7 @@ public class GrindstoneHandler {
 	 * @param input   the key that represents the input item
 	 * @param outputs the results of the grindstone operation
 	 */
-	private static ItemStack[] addGrindstoneRecipe(String input, ItemStack[] outputs) {
+	private static ItemStack[] addGrindstoneRecipe(ICraftingStack input, ItemStack[] outputs) {
 		return RecipeHolder.grindRecipes.put(input, outputs);
 	}
 
@@ -89,7 +76,7 @@ public class GrindstoneHandler {
 	 * @param overwritten the previously registered output for the input, that will be added again
 	 * @return the output stack that was registered for the input key
 	 */
-	private static ItemStack[] replaceGrindstoneRecipe(String input, ItemStack[] outputs, ItemStack[] overwritten) {
+	private static ItemStack[] replaceGrindstoneRecipe(ICraftingStack input, ItemStack[] outputs, ItemStack[] overwritten) {
 		if (outputs != null) {
 			// remove only if the exact output is registered
 			if (RecipeHolder.grindRecipes.remove(input, outputs)) {
@@ -114,13 +101,13 @@ public class GrindstoneHandler {
 	 * Operation to add a new recipe.
 	 */
 	private static class Add implements IUndoableAction {
-		private final String input;
+		private final ICraftingStack input;
 		private final ItemStack[] outputs;
 		private ItemStack[] overwritten;
 
 		private boolean success = false;
 
-		private Add(String input, ItemStack[] outputs) {
+		private Add(ICraftingStack input, ItemStack[] outputs) {
 			this.input = input;
 			this.outputs = outputs;
 		}
@@ -168,11 +155,13 @@ public class GrindstoneHandler {
 	 */
 	@ZenMethod
 	public static void removeRecipe(IItemStack input) {
-		String key = getItemStackKey(input);
-		if (key == null)
+		//TODO verify wildcard meta works
+		ItemStack in = MineTweakerMC.getItemStack(input);
+		if(in == null){
 			return;
-
-		MineTweakerAPI.apply(new Remove(key));
+		}
+		
+		MineTweakerAPI.apply(new Remove(new CraftingStack(in.getItem(), in.stackSize, input.getDamage() == OreDictionary.WILDCARD_VALUE ? -1 : in.getMetadata())));
 	}
 
 	/**
@@ -186,18 +175,18 @@ public class GrindstoneHandler {
 		if (key == null)
 			return;
 
-		MineTweakerAPI.apply(new Remove(key));
+		MineTweakerAPI.apply(new Remove(new OreDictCraftingStack(key, 1)));
 	}
 
 	/**
 	 * Operation to remove a grindstone recipe.
 	 */
 	private static class Remove implements IUndoableAction {
-		String input;
+		ICraftingStack input;
 		ItemStack[] outputs;
 		boolean success = false;
 
-		Remove(String input) {
+		Remove(ICraftingStack input) {
 			this.input = input;
 		}
 

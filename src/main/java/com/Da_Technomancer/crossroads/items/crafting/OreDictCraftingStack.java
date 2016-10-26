@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import net.minecraft.item.Item;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class OreDictCraftingStack extends CraftingStack{
+public class OreDictCraftingStack implements ICraftingStack{
 
 	private final String oreDict;
 	private final int count;
 
 	public OreDictCraftingStack(String oreDict, int count){
-		super((Item) null, 1, 0);
 		this.oreDict = oreDict;
 		this.count = count;
 	}
@@ -48,4 +48,29 @@ public class OreDictCraftingStack extends CraftingStack{
 		return false;
 	}
 
+	@Override
+	public List<ItemStack> getMatchingList(){
+		return OreDictionary.getOres(oreDict, false);
+	}
+	
+	protected String getOreDict(){
+		return oreDict;
+	}
+	
+	protected int getCount(){
+		return count;
+	}
+
+	@Override
+	public boolean equals(Object other){
+		if(this == other){
+			return true;
+		}
+		if(other instanceof OreDictCraftingStack){
+			OreDictCraftingStack otherStack = (OreDictCraftingStack) other;
+			return oreDict.equals(otherStack.getOreDict()) && count == otherStack.getCount();
+		}
+		
+		return false;
+	}
 }
