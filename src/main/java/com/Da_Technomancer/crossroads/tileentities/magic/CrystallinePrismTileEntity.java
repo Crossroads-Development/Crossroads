@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
@@ -42,13 +43,13 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	@Override
 	public void refresh(){
 		if(beamerR != null){
-			beamerR.emit(null, 0);
+			beamerR.emit(null);
 		}
 		if(beamerG != null){
-			beamerG.emit(null, 0);
+			beamerG.emit(null);
 		}
 		if(beamerB != null){
-			beamerB.emit(null, 0);
+			beamerB.emit(null);
 		}
 	}
 	
@@ -76,6 +77,25 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 		}
 		if(beamerB == null){
 			beamerB = new BeamManager(worldObj.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y), pos, worldObj);
+		}
+
+		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+
+			MagicUnit out = toSend.getOutput();
+			
+			if(beamerR.emit(out == null || out.getEnergy() == 0 ? null : out.mult(1, 0, 0, 0))){
+				ModPackets.network.sendToAllAround(new SendIntToClient("beamR", beamerR.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}
+			if(beamerG.emit(out == null || out.getPotential() == 0 ? null : out.mult(0, 1, 0, 0))){
+				ModPackets.network.sendToAllAround(new SendIntToClient("beamG", beamerG.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}
+			if(beamerB.emit(out == null || out.getStability() == 0 ? null : out.mult(0, 0, 1, 0))){
+				ModPackets.network.sendToAllAround(new SendIntToClient("beamB", beamerB.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}
+			toSend.clear();
+		}else if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+			toSend.addMagic(recieved.getOutput());
+			recieved.clear();
 		}
 	}
 
@@ -112,6 +132,8 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
+		recieved.writeToNBT("rec", nbt);
+		toSend.writeToNBT("sen", nbt);
 		nbt.setInteger("memTripR", beamerR == null ? 0 : beamerR.getPacket());
 		nbt.setInteger("memTripG", beamerG == null ? 0 : beamerG.getPacket());
 		nbt.setInteger("memTripB", beamerB == null ? 0 : beamerB.getPacket());
@@ -121,6 +143,8 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
+		recieved = MagicUnitStorage.readFromNBT("rec", nbt);
+		toSend = MagicUnitStorage.readFromNBT("sen", nbt);
 		memTripR = nbt.getInteger("memTripR");
 		memTripG = nbt.getInteger("memTripG");
 		memTripB = nbt.getInteger("memTripB");
@@ -152,22 +176,14 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 		return super.getCapability(cap, side);
 	}
 	
+	private MagicUnitStorage recieved = new MagicUnitStorage();
+	private MagicUnitStorage toSend = new MagicUnitStorage();
+	
 	private class MagicHandler implements IMagicHandler{
 		
 		@Override
-		public void setMagic(MagicUnit mag, int steps){
-			if(beamerR == null || beamerG == null || beamerB == null){
-				return;
-			}
-			if(beamerR.emit(mag == null || mag.getEnergy() == 0 ? null : mag.mult(1, 0, 0, 0), steps)){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamR", beamerR.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			}
-			if(beamerG.emit(mag == null || mag.getPotential() == 0 ? null : mag.mult(0, 1, 0, 0), steps)){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamG", beamerG.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			}
-			if(beamerB.emit(mag == null || mag.getStability() == 0 ? null : mag.mult(0, 0, 1, 0), steps)){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamB", beamerB.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			}
+		public void setMagic(MagicUnit mag){
+			recieved.addMagic(mag);
 		}
 	}
 } 

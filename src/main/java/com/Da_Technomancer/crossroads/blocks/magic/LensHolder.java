@@ -83,7 +83,7 @@ public class LensHolder extends BlockContainer{
 	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.ORIENT, (placer == null) ? true : placer.getHorizontalFacing().getAxis() == Axis.X).withProperty(Properties.TUXTURE_6, 0);
+		return this.getDefaultState().withProperty(Properties.ORIENT, (placer == null) ? true : placer.getHorizontalFacing().getAxis() == Axis.X).withProperty(Properties.TEXTURE_6, 0);
 	}
 
 	@Override
@@ -93,24 +93,24 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.ORIENT, Properties.TUXTURE_6});
+		return new BlockStateContainer(this, new IProperty[] {Properties.ORIENT, Properties.TEXTURE_6});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.ORIENT, (meta & 1) == 1).withProperty(Properties.TUXTURE_6, (meta & 14) >> 1);
+		return this.getDefaultState().withProperty(Properties.ORIENT, (meta & 1) == 1).withProperty(Properties.TEXTURE_6, (meta & 14) >> 1);
 	}
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			if(stack == null && state.getValue(Properties.TUXTURE_6) != 0){
-				int i = state.getValue(Properties.TUXTURE_6);
+			if(stack == null && state.getValue(Properties.TEXTURE_6) != 0){
+				int i = state.getValue(Properties.TEXTURE_6);
 				playerIn.setHeldItem(hand, new ItemStack(i == 1 ? Item.getByNameOrId(Main.MODID + ":gemRuby") : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : ModItems.luminescentQuartz, 1));
-				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TUXTURE_6, 0));
-			}else if(stack != null && state.getValue(Properties.TUXTURE_6) == 0){
+				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_6, 0));
+			}else if(stack != null && state.getValue(Properties.TEXTURE_6) == 0){
 				int i = stack.getItem() == Items.DIAMOND ? 3 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == Item.getByNameOrId(Main.MODID + ":gemRuby") ? 1 : 0;
-				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TUXTURE_6, i));
+				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_6, i));
 				if(i != 0 && --stack.stackSize <= 0){
 					playerIn.setHeldItem(hand, null);
 				}
@@ -121,8 +121,8 @@ public class LensHolder extends BlockContainer{
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
-		if(state.getValue(Properties.TUXTURE_6) != 0){
-			int i = state.getValue(Properties.TUXTURE_6);
+		if(state.getValue(Properties.TEXTURE_6) != 0){
+			int i = state.getValue(Properties.TEXTURE_6);
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(i == 1 ? Item.getByNameOrId(Main.MODID + ":gemRuby") : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : ModItems.luminescentQuartz, 1));
 		}
 		if(world.getTileEntity(pos) instanceof BeamRenderTE){
@@ -133,7 +133,7 @@ public class LensHolder extends BlockContainer{
 	
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.ORIENT) ? 1 : 0) + (state.getValue(Properties.TUXTURE_6) << 1);
+		return (state.getValue(Properties.ORIENT) ? 1 : 0) + (state.getValue(Properties.TEXTURE_6) << 1);
 	}
 	
 	@Override

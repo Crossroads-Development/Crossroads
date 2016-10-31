@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
@@ -48,7 +49,7 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 	@Override
 	public void refresh(){
 		if(beamer != null){
-			beamer.emit(null, 0);
+			beamer.emit(null);
 		}
 	}
 
@@ -64,9 +65,18 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 			return;
 		}
 		
-		sent = false;
 		if(beamer == null){
 			beamer = new BeamManager(facing, pos, worldObj);
+		}
+
+		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+			if(beamer.emit(toSend.getOutput())){
+				ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}
+			toSend.clear();
+		}else if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+			toSend.addMagic(recieved.getOutput());
+			recieved.clear();
 		}
 	}
 	
@@ -77,7 +87,7 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 		}
 	}
 	
-	private final IMagicHandler[] magicHandler = new MagicHandler[] {new MagicHandler(0), new MagicHandler(1), new MagicHandler(2), new MagicHandler(3), new MagicHandler(4), new MagicHandler(5)};
+	private final IMagicHandler magicHandler = new MagicHandler();
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
@@ -92,7 +102,7 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != facing){
-			return side == null ? (T) magicHandler[0] : (T) magicHandler[side.getIndex()];
+			return (T) magicHandler;
 		}
 		
 		return super.getCapability(cap, side);
@@ -110,12 +120,8 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		for(int i = 0; i < 6; i++){
-			if(recieved[i] != null){
-				recieved[i].setNBT(nbt, "rec" + i);
-			}
-		}
-		nbt.setIntArray("steps", steps);
+		recieved.writeToNBT("rec", nbt);
+		toSend.writeToNBT("sen", nbt);
 		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
 		return nbt;
 	}
@@ -123,43 +129,21 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		steps = nbt.hasKey("steps") ? nbt.getIntArray("steps") : new int[6];
-		for(int i = 0; i < 6; i++){
-			recieved[i] = nbt.hasKey("rec" + i) ? MagicUnit.loadNBT(nbt, "rec" + i) : null;
-		}
+		recieved = MagicUnitStorage.readFromNBT("rec", nbt);
+		toSend = MagicUnitStorage.readFromNBT("sen", nbt);
 		memTrip = nbt.getInteger("memTrip");
 		if(nbt.hasKey("beam")){
 			trip = BeamManager.getTriple(nbt.getInteger("beam"));
 		}
 	}
 	
-	private boolean sent;
-	private final MagicUnit[] recieved = new MagicUnit[6];
-	private int[] steps = new int[6];
+	private MagicUnitStorage recieved = new MagicUnitStorage();
+	private MagicUnitStorage toSend = new MagicUnitStorage();
 	
 	private class MagicHandler implements IMagicHandler{
-
-		private final int index;
-		
-		private MagicHandler(int index){
-			this.index = index;
-		}
-		
 		@Override
-		public void setMagic(MagicUnit mag, int step){
-			if(beamer == null){
-				return;
-			}
-			
-			steps[index] = step;
-			recieved[index] = mag;
-			
-			if(!sent || (recieved[0] == null && recieved[1] == null && recieved[2] == null && recieved[3] == null && recieved[4] == null && recieved[5] == null)){
-				if(beamer.emit(recieved[0] == null && recieved[1] == null && recieved[2] == null && recieved[3] == null && recieved[4] == null && recieved[5] == null ? null : new MagicUnit((recieved[0] == null ? 0 : recieved[0].getEnergy()) + (recieved[1] == null ? 0 : recieved[1].getEnergy()) + (recieved[2] == null ? 0 : recieved[2].getEnergy()) + (recieved[3] == null ? 0 : recieved[3].getEnergy()) + (recieved[4] == null ? 0 : recieved[4].getEnergy()) + (recieved[5] == null ? 0 : recieved[5].getEnergy()), (recieved[0] == null ? 0 : recieved[0].getPotential()) + (recieved[1] == null ? 0 : recieved[1].getPotential()) + (recieved[2] == null ? 0 : recieved[2].getPotential()) + (recieved[3] == null ? 0 : recieved[3].getPotential()) + (recieved[4] == null ? 0 : recieved[4].getPotential()) + (recieved[5] == null ? 0 : recieved[5].getPotential()), (recieved[0] == null ? 0 : recieved[0].getStability()) + (recieved[1] == null ? 0 : recieved[1].getStability()) + (recieved[2] == null ? 0 : recieved[2].getStability()) + (recieved[3] == null ? 0 : recieved[3].getStability()) + (recieved[4] == null ? 0 : recieved[4].getStability()) + (recieved[5] == null ? 0 : recieved[5].getStability()), (recieved[0] == null ? 0 : recieved[0].getVoid()) + (recieved[1] == null ? 0 : recieved[1].getVoid()) + (recieved[2] == null ? 0 : recieved[2].getVoid()) + (recieved[3] == null ? 0 : recieved[3].getVoid()) + (recieved[4] == null ? 0 : recieved[4].getVoid()) + (recieved[5] == null ? 0 : recieved[5].getVoid())), Math.max(steps[0], Math.max(steps[1], Math.max(steps[2], Math.max(steps[3], Math.max(steps[4], steps[5]))))))){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-				}
-				sent = true;
-			}
+		public void setMagic(MagicUnit mag){
+			recieved.addMagic(mag);
 		}
 	}
 } 

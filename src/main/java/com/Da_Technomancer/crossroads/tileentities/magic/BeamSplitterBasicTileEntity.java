@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
@@ -46,28 +47,51 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 	@Override
 	public void refresh(){
 		if(beamer != null){
-			beamer.emit(null, 0);
+			beamer.emit(null);
 		}
 		if(beamerUp != null){
-			beamerUp.emit(null, 0);
+			beamerUp.emit(null);
 		}
 	}
-	
+
 	@Override
 	public void update(){
 		if(worldObj.isRemote){
 			return;
 		}
-		
-		sent = false;
+
 		if(beamer == null){
 			beamer = new BeamManager(EnumFacing.DOWN, pos, worldObj);
 		}
 		if(beamerUp == null){
 			beamerUp = new BeamManager(EnumFacing.UP, pos, worldObj);
 		}
+
+		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+			MagicUnit out = toSend.getOutput();
+			MagicUnit outMult = out == null ? null : out.mult(.5D);
+			if(outMult == null || outMult.getPower() == 0){
+				outMult = null;
+			}
+			if(out != null && outMult != null){
+				out = new MagicUnit(out.getEnergy() - outMult.getEnergy(), out.getPotential() - outMult.getPotential(), out.getStability() - outMult.getStability(), out.getVoid() - outMult.getVoid());
+				if(out.getPower() == 0){
+					out = null;
+				}
+			}
+			if(beamer.emit(outMult)){
+				ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}
+			if(beamerUp.emit(out)){
+				ModPackets.network.sendToAllAround(new SendIntToClient("beamUp", beamerUp.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}
+			toSend.clear();
+		}else if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+			toSend.addMagic(recieved.getOutput());
+			recieved.clear();
+		}
 	}
-	
+
 	@Override
 	public void receiveInt(String context, int message){
 		if(context.equals("beam")){
@@ -77,7 +101,7 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 		}
 	}
 	
-	private final IMagicHandler[] magicHandler = new MagicHandler[] {new MagicHandler(0), new MagicHandler(1), new MagicHandler(2), new MagicHandler(3)};
+	private final IMagicHandler magicHandler = new MagicHandler();
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
@@ -92,7 +116,7 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != EnumFacing.UP && side != EnumFacing.DOWN){
-			return side == null ? (T) magicHandler[0] : (T) magicHandler[side.getIndex() - 2];
+			return (T) magicHandler;
 		}
 		
 		return super.getCapability(cap, side);
@@ -112,12 +136,8 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		for(int i = 0; i < 4; i++){
-			if(recieved[i] != null){
-				recieved[i].setNBT(nbt, "rec" + i);
-			}
-		}
-		nbt.setIntArray("steps", steps);
+		recieved.writeToNBT("rec", nbt);
+		toSend.writeToNBT("sen", nbt);
 		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
 		nbt.setInteger("memTripUp", beamerUp == null ? 0 : beamerUp.getPacket());
 		return nbt;
@@ -126,10 +146,8 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		steps = nbt.hasKey("steps") ? nbt.getIntArray("steps") : new int[6];
-		for(int i = 0; i < 4; i++){
-			recieved[i] = nbt.hasKey("rec" + i) ? MagicUnit.loadNBT(nbt, "rec" + i) : null;
-		}
+		recieved = MagicUnitStorage.readFromNBT("rec", nbt);
+		toSend = MagicUnitStorage.readFromNBT("sen", nbt);
 		memTrip = nbt.getInteger("memTrip");
 		memTripUp = nbt.getInteger("memTripUp");
 		if(nbt.hasKey("beam")){
@@ -138,47 +156,14 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 		}
 	}
 	
-	private boolean sent;
-	private final MagicUnit[] recieved = new MagicUnit[4];
-	private int[] steps = new int[4];
+	private MagicUnitStorage recieved = new MagicUnitStorage();
+	private MagicUnitStorage toSend = new MagicUnitStorage();
 	
 	private class MagicHandler implements IMagicHandler{
-
-		private final int index;
-		
-		private MagicHandler(int index){
-			this.index = index;
-		}
 		
 		@Override
-		public void setMagic(MagicUnit mag, int step){
-			if(beamer == null){
-				return;
-			}
-			
-			steps[index] = step;
-			recieved[index] = mag;
-			
-			if(!sent || (recieved[0] == null && recieved[1] == null && recieved[2] == null && recieved[3] == null)){
-				MagicUnit out = recieved[0] == null && recieved[1] == null && recieved[2] == null && recieved[3] == null ? null : new MagicUnit((recieved[0] == null ? 0 : recieved[0].getEnergy()) + (recieved[1] == null ? 0 : recieved[1].getEnergy()) + (recieved[2] == null ? 0 : recieved[2].getEnergy()) + (recieved[3] == null ? 0 : recieved[3].getEnergy()), (recieved[0] == null ? 0 : recieved[0].getPotential()) + (recieved[1] == null ? 0 : recieved[1].getPotential()) + (recieved[2] == null ? 0 : recieved[2].getPotential()) + (recieved[3] == null ? 0 : recieved[3].getPotential()), (recieved[0] == null ? 0 : recieved[0].getStability()) + (recieved[1] == null ? 0 : recieved[1].getStability()) + (recieved[2] == null ? 0 : recieved[2].getStability()) + (recieved[3] == null ? 0 : recieved[3].getStability()), (recieved[0] == null ? 0 : recieved[0].getVoid()) + (recieved[1] == null ? 0 : recieved[1].getVoid()) + (recieved[2] == null ? 0 : recieved[2].getVoid()) + (recieved[3] == null ? 0 : recieved[3].getVoid()));
-				MagicUnit outMult = out == null ? null : out.mult(.5D);
-				if(outMult == null || outMult.getPower() == 0){
-					outMult = null;
-				}
-				if(out != null && outMult != null){
-					out = new MagicUnit(out.getEnergy() - outMult.getEnergy(), out.getPotential() - outMult.getPotential(), out.getStability() - outMult.getStability(), out.getVoid() - outMult.getVoid());
-					if(out.getPower() == 0){
-						out = null;
-					}
-				}
-				if(beamer.emit(outMult, Math.max(steps[0], Math.max(steps[1], Math.max(steps[2], steps[3]))))){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-				}
-				if(beamerUp.emit(out, Math.max(steps[0], Math.max(steps[1], Math.max(steps[2], steps[3]))))){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beamUp", beamerUp.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-				}
-				sent = true;
-			}
+		public void setMagic(MagicUnit mag){
+			recieved.addMagic(mag);
 		}
 	}
 } 
