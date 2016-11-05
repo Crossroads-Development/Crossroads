@@ -55,7 +55,7 @@ public class LargeGear extends Item{
 		}
 
 		if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
-			playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, (ItemStack) null);
+			playerIn.setHeldItem(hand, null);
 		}
 
 		for(BlockPos cPos : section(pos, side)){
