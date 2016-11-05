@@ -55,7 +55,7 @@ public class BasicGear extends Item{
 
 		if(worldIn.getTileEntity(pos.offset(side)) instanceof SidedGearHolderTileEntity && !worldIn.getTileEntity(pos.offset(side)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite()) && worldIn.isSideSolid(pos, side)){
 			if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
-				playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, (ItemStack) null);
+				playerIn.setHeldItem(hand, null);
 			}
 
 			IRotaryHandler handler = worldIn.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite());
@@ -64,7 +64,7 @@ public class BasicGear extends Item{
 			ServerProxy.masterKey++;
 		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && worldIn.isSideSolid(pos, side)){
 			if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
-				playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, (ItemStack) null);
+				playerIn.setHeldItem(hand, null);
 			}
 
 			worldIn.setBlockState(pos.offset(side), ModBlocks.sidedGearHolder.getDefaultState(), 3);
