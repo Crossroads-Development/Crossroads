@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "iron_block" }
+		"normal": { "model": "crossroads:item_chute" }
 	}
 }

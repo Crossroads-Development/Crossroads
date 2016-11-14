@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -44,13 +43,9 @@ import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -79,7 +74,7 @@ public final class ModBlocks{
 	public static LargeGearMaster largeGearMaster;
 	public static LargeGearSlave largeGearSlave;
 	public static CandleLilyPad candleLilyPad;
-	public static BasicBlock itemChute;
+	public static ItemChute itemChute;
 	public static ItemChutePort itemChutePort;
 	public static Radiator radiator;
 	public static RotaryDrill rotaryDrill;
@@ -140,18 +135,7 @@ public final class ModBlocks{
 		blockAddQue(slottedChest = new SlottedChest());
 		blockAddQue(sortingHopper = new SortingHopper());
 		candleLilyPad = new CandleLilyPad();
-		itemChute = new BasicBlock("itemChute"){
-			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-				tooltip.add("Safe for decoration");
-			}
-
-			@Override
-			public boolean isOpaqueCube(IBlockState state){
-				return false;
-			}
-		}.setSoundType(SoundType.METAL);
+		blockAddQue(itemChute = new ItemChute());
 		blockAddQue(itemChutePort = new ItemChutePort());
 		blockAddQue(radiator = new Radiator());
 		blockAddQue(rotaryDrill = new RotaryDrill());

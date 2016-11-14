@@ -50,6 +50,11 @@ public class BlockBrazier extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new BrazierTileEntity();
 	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		return BB;
+	}
 
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
