@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:smallQuartzStabilizer"},
-		"facing=south": { "model": "crossroads:smallQuartzStabilizer", "y": 180 },
-		"facing=east": { "model": "crossroads:smallQuartzStabilizer", "y": 90 },
-		"facing=west": { "model": "crossroads:smallQuartzStabilizer", "y": 270 },
-		"facing=up": { "model": "crossroads:smallQuartzStabilizer", "x": 270},
-		"facing=down": { "model": "crossroads:smallQuartzStabilizer", "x": 90}
+		"facing=north": { "model": "crossroads:smallQuartzStabilizer", "x": 90},
+		"facing=south": { "model": "crossroads:smallQuartzStabilizer", "x": 270 },
+		"facing=east": { "model": "crossroads:smallQuartzStabilizer", "x": 90, "y": 90 },
+		"facing=west": { "model": "crossroads:smallQuartzStabilizer", "x": 90, "y": 270 },
+		"facing=up": { "model": "crossroads:smallQuartzStabilizer"},
+		"facing=down": { "model": "crossroads:smallQuartzStabilizer", "x": 180}
 	}
 }
