@@ -3,8 +3,11 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 
@@ -13,6 +16,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,6 +26,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -63,10 +68,76 @@ public class SidedGearHolder extends BlockContainer{
 	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
 		return false;
 	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			list.add(DOWN);
+		}
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP)){
+			list.add(UP);
+		}
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.NORTH)){
+			list.add(NORTH);
+		}
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
+			list.add(SOUTH);
+		}
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.WEST)){
+			list.add(WEST);
+		}
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.EAST)){
+			list.add(EAST);
+		}
+		if(list.isEmpty()){
+			return BB;
+		}
+		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
+		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
+		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
+		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
+		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
+		return (out == null ? list.get(0) : out).offset(pos);
+	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return BB;
+	@Nullable
+	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
+		TileEntity te = worldIn.getTileEntity(pos);
+		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			list.add(DOWN);
+		}
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP)){
+			list.add(UP);
+		}
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.NORTH)){
+			list.add(NORTH);
+		}
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
+			list.add(SOUTH);
+		}
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.WEST)){
+			list.add(WEST);
+		}
+		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.EAST)){
+			list.add(EAST);
+		}
+		if(list.isEmpty()){
+			list.add(BB);
+		}
+		start = start.subtract(pos.getX(), pos.getY(), pos.getZ());
+		end = end.subtract(pos.getX(), pos.getY(), pos.getZ());
+		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
+		if(out == null){
+			return null;
+		}else{
+			RayTraceResult untransformed = out.calculateIntercept(start, end);
+			return new RayTraceResult(untransformed.hitVec.addVector((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
+		}
 	}
 
 	@Override

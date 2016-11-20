@@ -1,9 +1,16 @@
 package com.Da_Technomancer.crossroads.API;
 
+import java.util.ArrayList;
+
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.Main;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 
 /**This class is for holding mathematical operations that I use often.*/
 public final class MiscOp{
@@ -63,5 +70,25 @@ public final class MiscOp{
 		}
 	
 		return tag.getCompoundTag(Main.MODID);
+	}
+	
+	@Nullable
+	public static AxisAlignedBB rayTraceMulti(ArrayList<AxisAlignedBB> boxes, Vec3d start, Vec3d end){
+		if(boxes == null || boxes.size() == 0){
+			return null;
+		}
+		
+		float dist = 0;
+		AxisAlignedBB closest = null;
+		
+		for(AxisAlignedBB box : boxes){
+			RayTraceResult raytraceresult = box.calculateIntercept(start, end);
+			if(raytraceresult != null && dist < raytraceresult.hitVec.lengthSquared()){
+				dist = (float) raytraceresult.hitVec.lengthSquared();
+				closest = box;
+			}
+		}
+		
+		return closest;
 	}
 }

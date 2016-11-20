@@ -35,6 +35,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 public class ToggleGear extends BlockContainer{
 
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
+	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .5625D, 0D, 1D, .625D, 1D);
 	private GearTypes type;
 	
 	public ToggleGear(GearTypes type){
@@ -104,7 +105,7 @@ public class ToggleGear extends BlockContainer{
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return DOWN;
+		return state.getValue(Properties.REDSTONE_BOOL) ? DOWN : UP;
 	}
 	
 	@Override
