@@ -110,7 +110,7 @@ public final class ModCrafting{
 			}
 		}
 		// Steam Boiler
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.steamBoiler, 1), "###", "#?#", "&&&", '#', "ingotBronze", '?', "blockBronze", '&', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.steamBoiler, 1), "###", "# #", "&&&", '#', "ingotBronze", '&', "ingotCopper"));
 		// Salt Block
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSalt, 1), "##", "##", '#', "dustSalt"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.dustSalt, 4), "#", '#', "blockSalt"));
