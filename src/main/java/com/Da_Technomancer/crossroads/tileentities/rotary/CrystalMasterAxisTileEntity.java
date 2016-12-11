@@ -6,6 +6,9 @@ import java.util.Random;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
 
@@ -13,8 +16,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.common.capabilities.Capability;
 
-public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis, ITickable{
+public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMasterAxis, ITickable{
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
 
@@ -24,7 +28,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 	private EnumFacing facing;
 	private byte key;
 
-	public MasterAxisTileEntity(){
+	public CrystalMasterAxisTileEntity(){
 		this(EnumFacing.NORTH);
 	}
 
@@ -33,7 +37,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 		return locked;
 	}
 
-	public MasterAxisTileEntity(EnumFacing facingIn){
+	public CrystalMasterAxisTileEntity(EnumFacing facingIn){
 		facing = facingIn;
 	}
 
@@ -83,7 +87,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 			return;
 		}
 		
-		sumEnergy = runLoss(rotaryMembers, 1.001D);
+		sumEnergy = runLoss(rotaryMembers, currentElement == MagicElements.EQUALIBRIUM ? (voi ? 1.5D : 1D) : 1.001D);
+		sumEnergy += MiscOp.posOrNeg(sumEnergy) * (currentElement == MagicElements.ENERGY ? (voi ? -10 : 10) : 0);
 		if(sumEnergy < 1 && sumEnergy > -1){
 			sumEnergy = 0;
 		}
@@ -150,7 +155,11 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("facing", this.facing.getIndex());
-		
+		nbt.setInteger("time", time);
+		nbt.setBoolean("voi", voi);
+		if(currentElement != null){
+			nbt.setString("elem", currentElement.name());
+		}
 		return nbt;
 	}
 
@@ -158,6 +167,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		time = nbt.getInteger("time");
+		voi = nbt.getBoolean("voi");
+		currentElement = nbt.hasKey("elem") ? MagicElements.valueOf(nbt.getString("elem")) : null;
 	}
 
 	private int lastKey = 0;
@@ -170,7 +182,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 		}
 
 		ticksExisted++;
-
+		
 		if(ticksExisted % 300 == 20 || forceUpdate){
 			requestUpdate();
 		}
@@ -185,8 +197,56 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 		
 		lastKey = CommonProxy.masterKey;
 
+		if(currentElement != null && time-- <= 0){
+			currentElement = null;
+			time = 0;
+			voi = false;
+		}
+		
 		if(!locked && !rotaryMembers.isEmpty()){
 			runCalc();
+		}
+	}
+	
+	private final IMagicHandler magicHandler = new MagicHandler();
+	
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != facing){
+			return true;
+		}
+		
+		return super.hasCapability(cap, side);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != facing){
+			return (T) magicHandler;
+		}
+
+		return super.getCapability(cap, side);
+	}
+	
+	private MagicElements currentElement;
+	private boolean voi;
+	private int time;
+	
+	private class MagicHandler implements IMagicHandler{
+
+		@Override
+		public void setMagic(MagicUnit mag){
+			if(mag != null){
+				MagicElements newElem = MagicElements.getElement(mag);
+				if(newElem != currentElement || voi != (mag.getVoid() != 0)){
+					currentElement = newElem;
+					voi = mag.getVoid() != 0;
+					time = mag.getPower() * IMagicHandler.BEAM_TIME;
+				}else{
+					time += mag.getPower() * IMagicHandler.BEAM_TIME;
+				}
+			}
 		}
 	}
 }

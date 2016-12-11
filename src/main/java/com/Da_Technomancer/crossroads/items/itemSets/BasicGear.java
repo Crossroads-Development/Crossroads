@@ -6,10 +6,10 @@ import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity.SidedAxleHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -54,13 +54,13 @@ public class BasicGear extends Item{
 			return EnumActionResult.PASS;
 		}
 
-		if(worldIn.getTileEntity(pos.offset(side)) instanceof SidedGearHolderTileEntity && !worldIn.getTileEntity(pos.offset(side)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite()) && worldIn.isSideSolid(pos, side)){
+		if(worldIn.getTileEntity(pos.offset(side)) instanceof SidedGearHolderTileEntity && !worldIn.getTileEntity(pos.offset(side)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()) && worldIn.isSideSolid(pos, side)){
 			if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
 				playerIn.setHeldItem(hand, null);
 			}
 
-			IRotaryHandler handler = worldIn.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite());
-			handler.setMember(type);
+			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).getMembers()[side.getOpposite().getIndex()] = type;
+			SidedAxleHandler handler = (SidedAxleHandler) worldIn.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite());
 			handler.updateStates();
 			CommonProxy.masterKey++;
 		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && worldIn.isSideSolid(pos, side)){
@@ -69,8 +69,7 @@ public class BasicGear extends Item{
 			}
 
 			worldIn.setBlockState(pos.offset(side), ModBlocks.sidedGearHolder.getDefaultState(), 3);
-			IRotaryHandler te = worldIn.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite());
-			te.setMember(type);
+			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).getMembers()[side.getOpposite().getIndex()] = type;
 			CommonProxy.masterKey++;
 		}
 

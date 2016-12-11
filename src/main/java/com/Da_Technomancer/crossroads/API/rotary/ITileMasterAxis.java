@@ -6,7 +6,7 @@ import net.minecraft.util.EnumFacing;
 
 public interface ITileMasterAxis{
 
-	public void trigger(int key, @Nonnull ITileMasterAxis masterIn, EnumFacing side);
+	public void trigger(byte key, @Nonnull ITileMasterAxis masterIn, EnumFacing side);
 
 	public void requestUpdate();
 
@@ -18,11 +18,8 @@ public interface ITileMasterAxis{
 	 * returns true if master is locked
 	 * 
 	 */
-	public boolean addToList(@Nonnull IRotaryHandler handler);
+	public boolean addToList(@Nonnull IAxleHandler handler);
 
 	/** For debugging mainly */
 	public double getTotalEnergy();
-	
-	public void addTimer(int ticks);
-
 }

@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.enums;
 
 import java.awt.Color;
-import java.util.Random;
 
 import com.Da_Technomancer.crossroads.API.effects.BlockEffect;
 import com.Da_Technomancer.crossroads.API.effects.ChargeEffect;
@@ -58,14 +57,13 @@ public enum MagicElements{
 		return voidEffect;
 	}
 	
-	private static final Random rand = new Random();
 	public IEffect getMixEffect(Color col){
 		if(col == null){
 			return effect;
 		}
 		int top = Math.max(col.getBlue(), Math.max(col.getRed(), col.getGreen()));
 		
-		if(top < rand.nextInt(128) + 128){
+		if(top != 255){
 			return voidEffect;
 		}
 		return effect;

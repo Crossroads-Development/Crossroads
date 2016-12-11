@@ -26,7 +26,7 @@ public final class MiscOp{
 	 * 2 means goes to closest .5 value, rounding up
 	 */
 	public static double centerCeil(double numIn, int tiers){
-		return ((numIn > 0) ? Math.ceil(numIn * tiers) : Math.floor(numIn * tiers)) / tiers;
+		return ((numIn > 0) ? Math.ceil(numIn * (double) tiers) : Math.floor(numIn * (double) tiers)) / (double) tiers;
 	}
 
 	public static double findEfficiency(double speedIn, double lowerLimit, double upperLimit){

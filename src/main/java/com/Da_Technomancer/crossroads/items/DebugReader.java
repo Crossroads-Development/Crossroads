@@ -42,7 +42,8 @@ public class DebugReader extends Item{
 		if(worldIn.isRemote && worldIn.getTileEntity(pos) instanceof SidedGearHolderTileEntity){
 			for(int i = 0; i < 6; i++){
 				SidedGearHolderTileEntity gear = (SidedGearHolderTileEntity) worldIn.getTileEntity(pos);
-				playerIn.addChatComponentMessage(new TextComponentString("Angle=" + (gear.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)) ? gear.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getAngle() : "NONE")));
+				playerIn.addChatComponentMessage(new TextComponentString("Angle=" + (gear.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)) ? gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getAngle() : "NONE")));
+				playerIn.addChatComponentMessage(new TextComponentString("Member=" + (gear.getMembers()[i] == null ? "NONE" : gear.getMembers()[i].toString())));
 			}
 		}
 
@@ -53,9 +54,9 @@ public class DebugReader extends Item{
 		TileEntity te = worldIn.getTileEntity(pos);
 
 		for(int i = 0; i < 6; i++){
-			if(te != null && te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i))){
-				double[] gear = te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getMotionData();
-				playerIn.addChatComponentMessage(new TextComponentString("w=" + gear[0] + ", E=" + gear[1] + ", P=" + gear[2] + ", lastE=" + gear[3] + " Type " + te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getMember().toString()));
+			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i))){
+				double[] gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getMotionData();
+				playerIn.addChatComponentMessage(new TextComponentString("w=" + gear[0] + ", E=" + gear[1] + ", P=" + gear[2] + ", lastE=" + gear[3]));
 
 			}
 		}

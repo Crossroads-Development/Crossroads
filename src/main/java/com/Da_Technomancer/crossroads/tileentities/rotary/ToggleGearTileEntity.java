@@ -10,7 +10,8 @@ import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
 
 import net.minecraft.block.state.IBlockState;
@@ -27,11 +28,9 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	
 	private GearTypes type;
 	private double[] motionData = new double[4];
-	private double[] physData = new double[] {.5D, 0, 0};
-	private int key;
+	private double[] physData = new double[2];
 	private double angle;
-	/**Normal, client*/
-	private double[] Q = new double[2];
+	private double clientW;
 	private int compOut = 0;
 	
 	public ToggleGearTileEntity(){
@@ -40,8 +39,12 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	
 	public ToggleGearTileEntity(GearTypes type){
 		this.type = type;
-		physData[1] = type.getDensity() / 8D;
-		physData[2] = type.getDensity() / 64D;
+		physData[0] = type.getDensity() / 8D;
+		physData[1] = type.getDensity() / 64D;
+	}
+	
+	public GearTypes getMember(){
+		return type;
 	}
 	
 	private final int tiers = ModConfig.speedTiers.getInt();
@@ -54,42 +57,40 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	@Override
 	public void update(){
 		if(worldObj.isRemote){
-			if(Q[1] == Double.POSITIVE_INFINITY){
+			if(clientW == Double.POSITIVE_INFINITY){
 				angle = 0;
-			}else if(Q[1] == Double.NEGATIVE_INFINITY){
+			}else if(clientW == Double.NEGATIVE_INFINITY){
 				angle = 22.5;
 			}else{
-				// it's 18 / PI instead of 180 / PI because 20 ticks /
-				// second, so 9 / PI, then * 2 because this is Q not w (Q =
-				// r * w, r = .5).
-				angle += Q[1] * 18D / Math.PI;
+				// it's 9 / PI instead of 180 / PI because 20 ticks/second
+				angle += clientW * 9D / Math.PI;
 			}
 		}
 
 		if(!worldObj.isRemote){
-			sendQPacket();
-			if(compOut != ((int) Math.min((Math.abs(motionData[1] / physData[2])) * 15D, 15))){
+			sendWPacket();
+			if(compOut != ((int) Math.min((Math.abs(motionData[1] / physData[1])) * 15D, 15))){
 				worldObj.updateComparatorOutputLevel(pos, this.blockType);
-				compOut = ((int) Math.min((Math.abs(motionData[1] / physData[2])) * 15D, 15));
+				compOut = ((int) Math.min((Math.abs(motionData[1] / physData[1])) * 15D, 15));
 			}
 		}
 	}
 	
-	private void sendQPacket(){
+	private void sendWPacket(){
 		boolean flag = false;
-		if(Q[1] == Double.POSITIVE_INFINITY || Q[1] == Double.NEGATIVE_INFINITY){
+		if(clientW == Double.POSITIVE_INFINITY || clientW == Double.NEGATIVE_INFINITY){
 			flag = true;
-		}else if(MiscOp.centerCeil(Q[0], tiers) * handler.keyType() != Q[1]){
+		}else if(MiscOp.centerCeil(motionData[0], tiers) != clientW){
 			flag = true;
-			Q[1] = MiscOp.centerCeil(Q[0], tiers) * handler.keyType();
+			clientW = MiscOp.centerCeil(motionData[0], tiers);
 		}
 
 		if(flag){
-			SendDoubleToClient msg = new SendDoubleToClient("Q", Q[1], this.getPos());
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+			SendDoubleToClient msg = new SendDoubleToClient("w", clientW, pos);
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 
-			if(Q[1] == Double.POSITIVE_INFINITY || Q[1] == Double.NEGATIVE_INFINITY){
-				Q[1] = 0;
+			if(clientW == Double.POSITIVE_INFINITY || clientW == Double.NEGATIVE_INFINITY){
+				clientW = 0;
 			}
 		}
 	}
@@ -127,8 +128,8 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		//type
 		this.type = compound.hasKey("type") ? GearTypes.valueOf(compound.getString("type")) : null;
 		if(type != null){
-			physData[1] = type.getDensity() / 8D;
-			physData[2] = type.getDensity() / 64D;
+			physData[0] = type.getDensity() / 8D;
+			physData[1] = type.getDensity() / 64D;
 		}
 	}
 	
@@ -143,16 +144,20 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	
 	@Override
 	public void receiveDouble(String context, double message){
-		if(context.equals("Q")){
-			Q[1] = message;
+		if(context.equals("w")){
+			clientW = message;
 		}
 	}
 	
-	private final Handler handler = new Handler();
+	private final IAxleHandler axleHandler = new AxleHandler();
+	private final ICogHandler cogHandler = new CogHandler();
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.ROTARY_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.DOWN) && worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.DOWN){
+			return true;
+		}
+		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -161,90 +166,104 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.ROTARY_HANDLER_CAPABILITY && (facing == null || (facing == EnumFacing.DOWN && worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)))){
-			return (T) handler;
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.DOWN){
+			return (T) axleHandler;
+		}
+		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+			return (T) cogHandler;
 		}
 		
 		return super.getCapability(capability, facing);
 	}
 	
-	private class Handler implements IRotaryHandler{
+	private class CogHandler implements ICogHandler{
 
+		@Override
+		public void connect(ITileMasterAxis masterIn, byte key, double rotationRatioIn, double lastRadius){
+			axleHandler.propogate(masterIn, key, rotationRatioIn, lastRadius);
+		}
+
+		@Override
+		public IAxleHandler getAxle(){
+			return axleHandler;
+		}
+	}
+	
+	private class AxleHandler implements IAxleHandler{
+
+		private byte key;
+		private double rotRatio;
+		
 		@Override
 		public double[] getMotionData(){
 			return motionData;
 		}
 
 		@Override
-		public void propogate(int keyIn, ITileMasterAxis masterIn){
-			if(key * -1 == keyIn){
-				// If true, then there is a direction conflict.
-				masterIn.lock();
-				return;
-			}else if(key == keyIn){
-				// If true, this has already been checked, and should do nothing
+		public void propogate(ITileMasterAxis masterIn, byte keyIn, double rotRatioIn, double lastRadius){
+			if(lastRadius != 0){
+				rotRatioIn *= -lastRadius / .5D;
+			}
+			
+			//If true, this has already been checked.
+			if(key == keyIn){
+				//If true, there is rotation conflict.
+				if(rotRatio != rotRatioIn){
+					masterIn.lock();
+				}
 				return;
 			}
+			
 			if(masterIn.addToList(this)){
 				return;
 			}
 
+			rotRatio = rotRatioIn;
+			
 			if(key == 0){
-				key = keyIn;
 				resetAngle();
-			}else{
-				key = keyIn;
 			}
-
+			key = keyIn;
+			
 			if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) instanceof ITileMasterAxis){
-				((ITileMasterAxis) worldObj.getTileEntity(pos.offset(EnumFacing.DOWN))).trigger(keyIn, masterIn, EnumFacing.UP);
+				((ITileMasterAxis) worldObj.getTileEntity(pos.offset(EnumFacing.DOWN))).trigger(key, masterIn, EnumFacing.UP);
 			}
 
-			for(int i = 2; i < 6; ++i){
-				EnumFacing facing = EnumFacing.getFront(i);
-				// Adjacent gears
-				if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-					worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN).propogate(keyIn * -1, masterIn);
-				}
+			if(worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+				for(int i = 2; i < 6; ++i){
+					EnumFacing facing = EnumFacing.getFront(i);
+					// Adjacent gears
+					if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+						worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.DOWN).connect(masterIn, key, rotRatio, .5D);
+					}
 
-				// Diagonal gears
-				if(!worldObj.getBlockState(pos.offset(facing)).getBlock().isNormalCube(worldObj.getBlockState(pos.offset(facing)), worldObj, pos.offset(facing)) && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
-					worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite()).propogate(keyIn * -1, masterIn);
+					// Diagonal gears
+					if(!worldObj.getBlockState(pos.offset(facing)).getBlock().isNormalCube(worldObj.getBlockState(pos.offset(facing)), worldObj, pos.offset(facing)) && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+						worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, rotRatio, .5D);
+					}
 				}
+			}
+
+			if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
+				worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).propogate(masterIn, key, rotRatio, 0);
 			}
 		}
-
+		
 		@Override
 		public double[] getPhysData(){
 			return physData;
 		}
 
 		@Override
-		public double keyType(){
-			return MiscOp.posOrNeg(key);
-		}
-
-		@Override
 		public void resetAngle(){
 			if(!worldObj.isRemote){
-				Q[1] = (keyType() == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
+				clientW = (MiscOp.posOrNeg(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
 			}
-		}
-
-		@Override
-		public void setQ(double QIn){
-			Q[0] = QIn;
 		}
 
 		@Override
 		public double getAngle(){
 			return angle;
-		}
-
-		/**This should never be called for this TileEntity*/
-		@Override
-		public void updateStates(){
-			
 		}
 
 		@Override
@@ -268,18 +287,9 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			}
 		}
 
-		/**
-		 * This shouldn't be called at all for this TileEntity
-		 */
 		@Override
-		public void setMember(GearTypes membIn){
-			
+		public double getRotationRatio(){
+			return rotRatio;
 		}
-
-		@Override
-		public GearTypes getMember(){
-			return type;
-		}
-		
 	}
 }

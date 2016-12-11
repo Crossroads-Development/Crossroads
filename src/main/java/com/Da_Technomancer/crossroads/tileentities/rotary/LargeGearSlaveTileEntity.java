@@ -2,10 +2,13 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.IPosReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPosToClient;
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveGear;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
+import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -14,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class LargeGearSlaveTileEntity extends TileEntity implements IPosReceiver, ISlaveGear{
+public class LargeGearSlaveTileEntity extends TileEntity implements IPosReceiver{
 
 	private BlockPos masterPos;
 
@@ -58,21 +61,37 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IPosReceiver
 		return nbt;
 	}
 
+	private final ICogHandler handler = new CogHandler();
+	
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(isEdge() && worldObj.getTileEntity(masterPos) instanceof LargeGearMasterTileEntity){
-			return worldObj.getTileEntity(masterPos).hasCapability(capability, facing);
+		if(capability == Capabilities.COG_HANDLER_CAPABILITY && isEdge() && worldObj.getTileEntity(masterPos) instanceof LargeGearMasterTileEntity && ((LargeGearMasterTileEntity) worldObj.getTileEntity(masterPos)).getSide() == facing){
+			return true;
 		}else{
 			return super.hasCapability(capability, facing);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(isEdge() && worldObj.getTileEntity(masterPos) instanceof LargeGearMasterTileEntity){
-			return worldObj.getTileEntity(masterPos).getCapability(capability, facing);
+		if(capability == Capabilities.COG_HANDLER_CAPABILITY && isEdge() && worldObj.getTileEntity(masterPos) instanceof LargeGearMasterTileEntity && ((LargeGearMasterTileEntity) worldObj.getTileEntity(masterPos)).getSide() == facing){
+			return (T) handler;
 		}else{
 			return super.getCapability(capability, facing);
+		}
+	}
+	
+	private class CogHandler implements ICogHandler{
+
+		@Override
+		public void connect(ITileMasterAxis masterIn, byte key, double rotationRatioIn, double lastRadius){
+			getAxle().propogate(masterIn, key, rotationRatioIn, lastRadius);
+		}
+
+		@Override
+		public IAxleHandler getAxle(){
+			return worldObj.getTileEntity(masterPos) != null ? worldObj.getTileEntity(masterPos).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ((LargeGearMasterTileEntity) worldObj.getTileEntity(masterPos)).getSide()) : null;
 		}
 	}
 }

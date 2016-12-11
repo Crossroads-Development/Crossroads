@@ -215,6 +215,8 @@ public final class ModCrafting{
 		//Sticky Multi-Piston
 		GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.multiPistonSticky, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.STICKY_PISTON));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.multiPistonSticky, ModBlocks.multiPiston, "slimeball"));
+		//Crystalline Master Axis
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.crystalMasterAxis, 1), "***", "*#*", "***", '*', ModItems.pureQuartz, '#', ModBlocks.masterAxis);
 	}
 
 	private static ItemStack getFilledHopper(){

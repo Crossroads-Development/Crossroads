@@ -74,22 +74,22 @@ public class SidedGearHolder extends BlockContainer{
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos){
 		TileEntity te = worldIn.getTileEntity(pos);
 		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 			list.add(DOWN);
 		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
 			list.add(UP);
 		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.NORTH)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH)){
 			list.add(NORTH);
 		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
 			list.add(SOUTH);
 		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.WEST)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST)){
 			list.add(WEST);
 		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.EAST)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST)){
 			list.add(EAST);
 		}
 		if(list.isEmpty()){
@@ -108,22 +108,22 @@ public class SidedGearHolder extends BlockContainer{
 	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
 		TileEntity te = worldIn.getTileEntity(pos);
 		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 			list.add(DOWN);
 		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
 			list.add(UP);
 		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.NORTH)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH)){
 			list.add(NORTH);
 		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
 			list.add(SOUTH);
 		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.WEST)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST)){
 			list.add(WEST);
 		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.EAST)){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST)){
 			list.add(EAST);
 		}
 		if(list.isEmpty()){
@@ -143,22 +143,22 @@ public class SidedGearHolder extends BlockContainer{
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
 
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 			addCollisionBoxToList(pos, mask, list, DOWN);
 		}
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP)){
+		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
 			addCollisionBoxToList(pos, mask, list, UP);
 		}
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.NORTH)){
+		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH)){
 			addCollisionBoxToList(pos, mask, list, NORTH);
 		}
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
+		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
 			addCollisionBoxToList(pos, mask, list, SOUTH);
 		}
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.WEST)){
+		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST)){
 			addCollisionBoxToList(pos, mask, list, WEST);
 		}
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.EAST)){
+		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST)){
 			addCollisionBoxToList(pos, mask, list, EAST);
 		}
 	}
@@ -191,7 +191,7 @@ public class SidedGearHolder extends BlockContainer{
 
 		boolean destroy = false;
 		for(EnumFacing side : EnumFacing.VALUES){
-			if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side) && worldIn.getTileEntity(pos).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side).getMember() != null && !worldIn.isSideSolid(pos.offset(side), side.getOpposite(), true)){
+			if(((SidedGearHolderTileEntity) worldIn.getTileEntity(pos)).getMembers()[side.getIndex()] != null && !worldIn.isSideSolid(pos.offset(side), side.getOpposite(), true)){
 				destroy = true;
 			}
 		}
@@ -216,19 +216,19 @@ public class SidedGearHolder extends BlockContainer{
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		TileEntity te = world.getTileEntity(pos);
-		for(EnumFacing checker : EnumFacing.values()){
-			if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, checker)){
-				drops.add(new ItemStack(GearFactory.basicGears.get(te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, checker).getMember()), 1));
+		SidedGearHolderTileEntity te = (SidedGearHolderTileEntity) world.getTileEntity(pos);
+		for(int i = 0; i < 6; i++){
+			if(te.getMembers()[i] != null){
+				drops.add(new ItemStack(GearFactory.basicGears.get(te.getMembers()[i]), 1));
 			}
 		}
 		return drops;
 	}
 
 	private void dropItems(World worldIn, BlockPos pos, SidedGearHolderTileEntity te){
-		for(EnumFacing checker : EnumFacing.values()){
-			if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, checker)){
-				spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, checker).getMember()), 1));
+		for(int i = 0; i < 6; i++){
+			if(te.getMembers()[i] != null){
+				spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(te.getMembers()[i]), 1));
 			}
 		}
 	}

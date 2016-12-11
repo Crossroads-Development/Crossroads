@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
@@ -46,7 +45,7 @@ public class LargeGearMaster extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
 		if(world.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
-			return new ItemStack(GearFactory.largeGears.get(world.getTileEntity(pos).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, null).getMember()), 1);
+			return new ItemStack(GearFactory.largeGears.get(((LargeGearMasterTileEntity) world.getTileEntity(pos)).getMember()), 1);
 		}
 		return null;
 	}
@@ -63,8 +62,8 @@ public class LargeGearMaster extends BlockContainer{
 	}
 	
 	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-		return false;
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
+		return true;
 	}
 
 	@Override
@@ -75,9 +74,9 @@ public class LargeGearMaster extends BlockContainer{
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		TileEntity te = world.getTileEntity(pos);
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, null)){
-			drops.add(new ItemStack(GearFactory.largeGears.get(te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, null).getMember())));
+		LargeGearMasterTileEntity te = (LargeGearMasterTileEntity) world.getTileEntity(pos);
+		if(te.getMember() != null){
+			drops.add(new ItemStack(GearFactory.largeGears.get(te.getMember())));
 		}
 		return drops;
 	}
