@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity.SidedAxleHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -59,9 +58,7 @@ public class BasicGear extends Item{
 				playerIn.setHeldItem(hand, null);
 			}
 
-			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).getMembers()[side.getOpposite().getIndex()] = type;
-			SidedAxleHandler handler = (SidedAxleHandler) worldIn.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite());
-			handler.updateStates();
+			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).setMembers(type, side.getOpposite().getIndex());
 			CommonProxy.masterKey++;
 		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && worldIn.isSideSolid(pos, side)){
 			if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){

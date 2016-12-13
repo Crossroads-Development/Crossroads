@@ -44,6 +44,11 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		return members;
 	}
 	
+	public void setMembers(GearTypes type, int side){
+		members[side] = type;
+		axleHandlers[side].updateStates();
+	}
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
 		super.writeToNBT(compound);
@@ -277,7 +282,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 	}
 	
-	public class SidedAxleHandler implements IAxleHandler{
+	private class SidedAxleHandler implements IAxleHandler{
 
 		private final int side;
 		private byte updateKey;
@@ -391,7 +396,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 			if(!worldObj.isRemote){
 				SendStringToClient msg = new SendStringToClient("memb" + side, members[side] == null ? "" : members[side].name(), pos);
-				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 256));
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 256));
 			}
 		}
 
