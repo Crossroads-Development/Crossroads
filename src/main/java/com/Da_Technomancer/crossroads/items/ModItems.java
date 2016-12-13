@@ -33,7 +33,6 @@ public final class ModItems{
 	public static BasicItem dustSalt;
 	public static BasicItem mashedPotato;
 	public static HandCrank handCrank;
-	public static BasicItem axle;
 	public static ObsidianCuttingKit obsidianKit;
 	public static BasicItem dustCopper;
 	public static Thermometer thermometer;
@@ -76,7 +75,6 @@ public final class ModItems{
 		itemAddQue(new DebugHeatWriter());
 		dustCopper = new BasicItem("dustCopper", "dustCopper");
 		dustSalt = new BasicItem("dustSalt", "dustSalt");
-		axle = new BasicItem("axle", "stickIron");
 		itemAddQue(obsidianKit = new ObsidianCuttingKit());
 		mashedPotato = new BasicItem("mashedPotato");
 		itemAddQue(thermometer = new Thermometer());

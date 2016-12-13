@@ -48,7 +48,8 @@ public class ToggleGearRenderer extends TileEntitySpecialRenderer<ToggleGearTile
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
-		GlStateManager.translate(.5F, 0, .5F);
+		GlStateManager.translate(.5F, .5D, .5F);
+		GlStateManager.scale(1D, .75D, 1D);
 		GlStateManager.rotate((float) -gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getAngle(), 0F, 1F, 0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(textureAx);
 		modelAx.render();

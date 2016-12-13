@@ -2,7 +2,9 @@ package com.Da_Technomancer.crossroads.API;
 
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.util.EnumFacing;
 
 public class Properties{
 
@@ -21,4 +23,5 @@ public class Properties{
 	/**0 = wheat, 1 = potato, 2 = carrots, 3 = beetroot, 4 = oak, 5 = birch, 6 = spruce, 7 = jungle, 8 = acacia, 9 = dark oak*/
 	public static final PropertyInteger PLANT = PropertyInteger.create("plant", 0, 9);
 	public static final PropertyBool HEAD = PropertyBool.create("head");
+	public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
 }

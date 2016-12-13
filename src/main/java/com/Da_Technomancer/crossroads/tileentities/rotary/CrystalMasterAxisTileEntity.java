@@ -82,8 +82,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
 		}
 		
-		//Currently not necessary, but it will be in the future.
-		if(sumIRot == 0){
+		if(sumIRot == 0 || sumIRot != sumIRot){
 			return;
 		}
 		

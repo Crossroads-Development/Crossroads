@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
@@ -10,11 +11,14 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEnt
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -24,6 +28,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LargeGearMaster extends BlockContainer{
+	
+	private static final AxisAlignedBB NORTH = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .5D);
+	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(0D, 0D, .5D, 1D, 1D, 1D);
+	private static final AxisAlignedBB EAST = new AxisAlignedBB(.5D, 0D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB WEST = new AxisAlignedBB(0D, 0D, 0D, .5D, 1D, 1D);
+	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .5D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .5D, 1D);
 	
 	public LargeGearMaster(){
 		super(Material.IRON);
@@ -48,6 +59,39 @@ public class LargeGearMaster extends BlockContainer{
 			return new ItemStack(GearFactory.largeGears.get(((LargeGearMasterTileEntity) world.getTileEntity(pos)).getMember()), 1);
 		}
 		return null;
+	}
+	
+	@Override
+	protected BlockStateContainer createBlockState(){
+		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
+	}
+	
+	@Override
+	public IBlockState getStateFromMeta(int meta){
+		return this.getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state){
+		return state.getValue(Properties.FACING).getIndex();
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		switch(state.getValue(Properties.FACING)){
+			case UP:
+				return UP;
+			case DOWN:
+				return DOWN;
+			case NORTH:
+				return NORTH;
+			case SOUTH:
+				return SOUTH;
+			case EAST:
+				return EAST;
+			default:
+				return WEST;
+		}
 	}
 
 	@Override
@@ -84,7 +128,7 @@ public class LargeGearMaster extends BlockContainer{
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		if(worldIn.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
-			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup();
+			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(Properties.FACING));
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

@@ -27,6 +27,7 @@ import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.CrystallinePrismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.AxleTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ItemChutePortTileEntity;
@@ -81,6 +82,7 @@ public class ModTileEntity{
 		register(BeamSplitterTileEntity.class, "beamSplitter");
 		register(BeamSplitterBasicTileEntity.class, "beamSplitterBasic");
 		register(CrystalMasterAxisTileEntity.class, "crystalMasterAxis");
+		register(AxleTileEntity.class, "axle");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

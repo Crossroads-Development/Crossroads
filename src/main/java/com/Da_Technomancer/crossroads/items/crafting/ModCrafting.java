@@ -86,9 +86,9 @@ public final class ModCrafting{
 		}
 
 		// Axle
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));
 		//TODO THIS RECIPE WILL BE REMOVED
-		GameRegistry.addRecipe(new ItemStack(ModItems.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', ModItems.metalScrap);
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', ModItems.metalScrap);
 		// Bronze
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(OreSetUp.ingotBronze, 1), "###", "#?#", "###", '#', "nuggetCopper", '?', "nuggetTin"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(OreSetUp.blockBronze, 1), "###", "#?#", "###", '#', "ingotCopper", '?', "ingotTin"));
@@ -216,7 +216,7 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.multiPistonSticky, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.STICKY_PISTON));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.multiPistonSticky, ModBlocks.multiPiston, "slimeball"));
 		//Crystalline Master Axis
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.crystalMasterAxis, 1), "***", "*#*", "***", '*', ModItems.pureQuartz, '#', ModBlocks.masterAxis);
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.crystalMasterAxis, 1), "*&*", "*#*", "***", '*', ModItems.pureQuartz, '#', ModBlocks.masterAxis, '&', ModItems.lensArray);
 	}
 
 	private static ItemStack getFilledHopper(){

@@ -143,9 +143,9 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		for(int i = 0; i < 6; i++){
 			if(clientW[i] == Double.POSITIVE_INFINITY || clientW[i] == Double.NEGATIVE_INFINITY){
 				flag = true;
-			}else if(MiscOp.centerCeil(motionData[i][0], tiers) != clientW[i]){
+			}else if(MiscOp.tiersRound(motionData[i][0], tiers) != clientW[i]){
 				flag = true;
-				clientW[i] = MiscOp.centerCeil(motionData[i][0], tiers);
+				clientW[i] = MiscOp.tiersRound(motionData[i][0], tiers);
 			}
 		}
 

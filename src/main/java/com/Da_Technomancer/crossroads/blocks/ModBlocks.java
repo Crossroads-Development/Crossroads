@@ -33,6 +33,7 @@ import com.Da_Technomancer.crossroads.blocks.magic.ColorChart;
 import com.Da_Technomancer.crossroads.blocks.magic.CrystallinePrism;
 import com.Da_Technomancer.crossroads.blocks.magic.LensHolder;
 import com.Da_Technomancer.crossroads.blocks.magic.QuartzStabilizer;
+import com.Da_Technomancer.crossroads.blocks.rotary.Axle;
 import com.Da_Technomancer.crossroads.blocks.rotary.CrystalMasterAxis;
 import com.Da_Technomancer.crossroads.blocks.rotary.Grindstone;
 import com.Da_Technomancer.crossroads.blocks.rotary.ItemChutePort;
@@ -100,6 +101,7 @@ public final class ModBlocks{
 	public static MultiPistonBase multiPistonSticky;
 	public static BeamSplitterBasic beamSplitterBasic;
 	public static CrystalMasterAxis crystalMasterAxis;
+	public static Axle axle;
 
 	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
 	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
@@ -162,6 +164,7 @@ public final class ModBlocks{
 		blockAddQue(multiPistonSticky = new MultiPistonBase(true));
 		blockAddQue(beamSplitterBasic = new BeamSplitterBasic());
 		blockAddQue(crystalMasterAxis = new CrystalMasterAxis());
+		blockAddQue(axle = new Axle());
 	}
 
 	@SideOnly(Side.CLIENT)
