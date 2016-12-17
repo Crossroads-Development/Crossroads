@@ -18,8 +18,8 @@ public class Properties{
 	public static final PropertyBool ORIENT = PropertyBool.create("orient");
 	/**0 = copper, 1 = molten copper, 2 = cobble, 3 = lava*/
 	public static final PropertyInteger TEXTURE_4 = PropertyInteger.create("text", 0, 3);
-	/**0 = none, 1 = ruby, 2 = emerald, 3 = diamond, 4 = pure quartz, 5 = luminescent quartz */
-	public static final PropertyInteger TEXTURE_6 = PropertyInteger.create("text_six", 0, 5);
+	/**0 = none, 1 = ruby, 2 = emerald, 3 = diamond, 4 = pure quartz, 5 = luminescent quartz, 5 = void crystal */
+	public static final PropertyInteger TEXTURE_7 = PropertyInteger.create("text_seven", 0, 6);
 	/**0 = wheat, 1 = potato, 2 = carrots, 3 = beetroot, 4 = oak, 5 = birch, 6 = spruce, 7 = jungle, 8 = acacia, 9 = dark oak*/
 	public static final PropertyInteger PLANT = PropertyInteger.create("plant", 0, 9);
 	public static final PropertyBool HEAD = PropertyBool.create("head");

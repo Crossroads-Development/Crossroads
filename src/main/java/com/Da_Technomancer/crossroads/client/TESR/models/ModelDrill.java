@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.client.TESR;
+package com.Da_Technomancer.crossroads.client.TESR.models;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

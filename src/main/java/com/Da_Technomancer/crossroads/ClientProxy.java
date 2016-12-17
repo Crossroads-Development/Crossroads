@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.AModTESR;
 import com.Da_Technomancer.crossroads.client.bakedModel.BakedModelLoader;
 import com.Da_Technomancer.crossroads.fluids.ModFluids;
+import com.Da_Technomancer.crossroads.integration.GuideAPI.GuideBooks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 

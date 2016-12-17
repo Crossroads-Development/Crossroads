@@ -54,6 +54,8 @@ public final class ModItems{
 	public static PigZombieChestsplate pigZombieChestplate;
 	public static CowLeggings cowLeggings;
 	public static ChickenBoots chickenBoots;
+	public static ChaosRod chaosRod;
+	public static BasicItem voidCrystal;
 
 	private static ArrayList<Item> modelQue = new ArrayList<Item>();
 
@@ -95,6 +97,8 @@ public final class ModItems{
 		itemAddQue(pigZombieChestplate = new PigZombieChestsplate());
 		itemAddQue(cowLeggings = new CowLeggings());
 		itemAddQue(chickenBoots = new ChickenBoots());
+		itemAddQue(chaosRod = new ChaosRod());
+		voidCrystal = new BasicItem("voidCrystal");
 	}
 
 	@SuppressWarnings("deprecation")

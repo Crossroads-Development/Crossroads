@@ -34,7 +34,6 @@ public class SendElementNBTToClient extends Message<SendElementNBTToClient>{
 				processMessage(nbt);
 			}
 		});
-
 		return null;
 	}
 

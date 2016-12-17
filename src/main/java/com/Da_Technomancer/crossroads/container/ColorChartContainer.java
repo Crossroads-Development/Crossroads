@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -24,7 +25,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class ColorChartContainer extends Container{
 
@@ -37,7 +37,7 @@ public class ColorChartContainer extends Container{
 	
 	public ColorChartContainer(EntityPlayer player, World world, BlockPos pos){
 		if(!world.isRemote){
-			ModPackets.network.sendToAllAround(new SendElementNBTToClient(MiscOp.getPlayerTag(player).getCompoundTag("elements")), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 32));
+			ModPackets.network.sendTo(new SendElementNBTToClient(MiscOp.getPlayerTag(player).getCompoundTag("elements")), (EntityPlayerMP) player);
 		}
 		this.world = world;
 		ChartInventory inv = new ChartInventory();

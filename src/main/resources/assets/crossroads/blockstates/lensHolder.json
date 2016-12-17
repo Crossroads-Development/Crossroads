@@ -9,7 +9,7 @@
 				"model": "crossroads:lensHolder"
 			}
 		},
-		"text_six": {
+		"text_seven": {
 			0: {
 				"textures": {
 					"gem": "crossroads:items/empty"
@@ -38,6 +38,11 @@
 			5: {
 				"textures": {
 					"gem": "crossroads:items/glowQuartz"
+				}
+			},
+			6: {
+				"textures": {
+					"gem": "crossroads:items/voidCrystal"
 				}
 			}
 		}

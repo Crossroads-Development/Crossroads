@@ -7,11 +7,15 @@ import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -101,6 +105,7 @@ public class DebugReader extends Item{
 							if(!nbt.hasKey(MagicElements.getElement(check).name())){
 								nbt.setBoolean(MagicElements.getElement(check).name(), true);
 								playerIn.addChatComponentMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
+								ModPackets.network.sendTo(new SendElementNBTToClient(nbt), (EntityPlayerMP) playerIn);
 							}
 							
 							playerIn.addChatComponentMessage(new TextComponentString(check.toString()));
@@ -108,6 +113,10 @@ public class DebugReader extends Item{
 					}
 				}
 			}
+		}
+		
+		if(te instanceof CrystalMasterAxisTileEntity){
+			playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((CrystalMasterAxisTileEntity) te).getElement() == null ? "NONE" : ((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime()));
 		}
 
 		return EnumActionResult.PASS;

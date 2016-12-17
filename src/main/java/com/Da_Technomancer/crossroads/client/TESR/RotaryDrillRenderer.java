@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.client.TESR;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.client.TESR.models.ModelDrill;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 
 import net.minecraft.client.Minecraft;

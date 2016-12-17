@@ -169,3 +169,5 @@ tile.multiPiston.name=Multi-Piston
 tile.multiPistonExtendSticky.name=Sticky Multi-Piston Extension
 tile.multiPistonExtend.name=Multi-Piston Extension
 tile.masterAxisCrystal.name=Crystalline Master Axis
+item.chaosRod.name=Rod of Discord
+item.voidCrystal.name=Void Crystal

@@ -32,6 +32,18 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 		this(EnumFacing.NORTH);
 	}
 
+	public MagicElements getElement(){
+		return currentElement;
+	}
+	
+	public boolean isVoid(){
+		return voi;
+	}
+	
+	public int getTime(){
+		return time;
+	}
+	
 	@Override
 	public boolean isLocked(){
 		return locked;
@@ -72,6 +84,8 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 		return sumEnergy;
 	}
 
+	private double lastSumEnergy;
+	
 	private void runCalc(){
 		double sumIRot = 0;
 		sumEnergy = 0;
@@ -86,11 +100,16 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 			return;
 		}
 		
-		sumEnergy = runLoss(rotaryMembers, currentElement == MagicElements.EQUALIBRIUM ? (voi ? 1.5D : 1D) : 1.001D);
+		sumEnergy = runLoss(rotaryMembers, currentElement == MagicElements.STABILITY ? (voi ? 1.5D : 1D) : 1.001D);
 		sumEnergy += MiscOp.posOrNeg(sumEnergy) * (currentElement == MagicElements.ENERGY ? (voi ? -10 : 10) : 0);
+		sumEnergy += currentElement == MagicElements.CHARGE ? (voi ? -10 : 10) : 0;
+		sumEnergy = currentElement == MagicElements.EQUALIBRIUM ? (voi ? ((7D * sumEnergy) - (3D * lastSumEnergy)) / 4D : (sumEnergy + (3D * lastSumEnergy)) / 4D) : sumEnergy;
+		
 		if(sumEnergy < 1 && sumEnergy > -1){
 			sumEnergy = 0;
 		}
+		
+		lastSumEnergy = sumEnergy;
 		
 		for(IAxleHandler gear : rotaryMembers){
 			double newEnergy = 0;

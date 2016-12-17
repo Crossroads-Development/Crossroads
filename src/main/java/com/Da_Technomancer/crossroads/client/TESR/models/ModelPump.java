@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.client.TESR;
+package com.Da_Technomancer.crossroads.client.TESR.models;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -238,7 +238,7 @@ public class ModelPump extends ModelBase{
 
 	}
 
-	protected void renderMain(){
+	public void renderMain(){
 		float f = 1F / 16F;
 		glassA.render(f);
 		glassB.render(f);
@@ -270,7 +270,7 @@ public class ModelPump extends ModelBase{
 		connectD.render(f);
 	}
 
-	protected void renderScrew(){
+	public void renderScrew(){
 		float f = 1F / 16F;
 		core.render(f);
 		screwA.render(f);

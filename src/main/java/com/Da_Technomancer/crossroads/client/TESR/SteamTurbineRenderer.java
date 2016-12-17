@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.client.TESR;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.client.TESR.models.ModelSteamTurbine;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 
 import net.minecraft.client.Minecraft;

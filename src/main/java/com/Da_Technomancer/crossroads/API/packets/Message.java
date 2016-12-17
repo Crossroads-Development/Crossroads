@@ -41,7 +41,7 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		map(byte.class, Message::readByte, Message::writeByte);
 		// map(short.class, Message::readShort, Message::writeShort);
 		map(int.class, Message::readInt, Message::writeInt);
-		// map(long.class, Message::readLong, Message::writeLong);
+		//map(long.class, Message::readLong, Message::writeLong);
 		map(float.class, Message::readFloat, Message::writeFloat);
 		map(double.class, Message::readDouble, Message::writeDouble);
 		map(boolean.class, Message::readBoolean, Message::writeBoolean);
@@ -158,11 +158,14 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		buf.writeInt(i);
 	}
 
-	/*
-	 * private static long readLong(ByteBuf buf) { return buf.readLong(); }
-	 * 
-	 * private static void writeLong(long l, ByteBuf buf) { buf.writeLong(l); }
-	 */
+	/*private static long readLong(ByteBuf buf) { 
+		return buf.readLong(); 
+	}
+
+	private static void writeLong(long l, ByteBuf buf) {
+		buf.writeLong(l); 
+	}*/
+
 
 	private static float readFloat(ByteBuf buf){
 		return buf.readFloat();

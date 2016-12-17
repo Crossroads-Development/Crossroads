@@ -2,8 +2,11 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import java.util.Random;
 
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 public class TimeEffect implements IEffect{
@@ -31,6 +34,11 @@ public class TimeEffect implements IEffect{
 			//I don't mean I deleted the code because it was causing a chunk reset,
 			//I mean I want this to CAUSE a chunk reset. 
 			//But I don't know how.
+			
+			worldIn.setBlockState(pos, Blocks.STANDING_SIGN.getDefaultState());
+			ITextComponent[] text = ((TileEntitySign) worldIn.getTileEntity(pos)).signText;
+			text[0].appendText("NYI");
+			text[1].appendText("Be glad of that");
 		}
 	}
 }
