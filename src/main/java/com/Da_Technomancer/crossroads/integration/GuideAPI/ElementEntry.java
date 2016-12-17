@@ -36,7 +36,7 @@ public class ElementEntry extends EntryItemStack{
 		for(MagicElements elem : MagicElements.values()){
 			if(SendElementNBTToClient.elementNBT.hasKey(elem.name())){
 				//Reverse order, because for the most part the more basic elements are at the bottom of the list.
-				pageList.add(0, lore ? getPage(elem) : getPageNoLore(elem));
+				pageList.add(1, lore ? getPage(elem) : getPageNoLore(elem));
 				if(GuideBooks.smallText){
 					((PageText) pageList.get(0)).setUnicodeFlag(true);
 				}
