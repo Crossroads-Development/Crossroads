@@ -22,6 +22,10 @@ public class WorldBuffer{
 		this.worldObj = worldObj;
 	}
 	
+	public World getWorld(){
+		return worldObj;
+	}
+	
 	public void addChange(BlockPos pos, IBlockState state){
 		pos = pos.toImmutable();
 		if(memory.containsKey(pos)){

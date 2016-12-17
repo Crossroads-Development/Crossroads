@@ -15,11 +15,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -148,15 +150,32 @@ public class MultiPistonBase extends Block{
 				BlockPos moving = list.get(index);
 				
 				if(world.getBlockState(moving.offset(dir)).getMobilityFlag() == EnumPushReaction.DESTROY){
-					world.getBlockState(moving.offset(dir)).getBlock().dropBlockAsItem(worldIn, moving.offset(dir), world.getBlockState(moving.offset(dir)), 0);
+					worldIn.destroyBlock(moving.offset(dir), true);
 				}
 				world.addChange(moving.offset(dir), world.getBlockState(moving));
 				world.addChange(moving, Blocks.AIR.getDefaultState());
+				AxisAlignedBB box;
+				//Due to the fact that the block isn't actually at that position (WorldBuffer), exceptions have to be caught.
+				try{
+					box = world.getBlockState(moving.offset(dir)).getCollisionBoundingBox(worldIn, pos);
+				}catch(Exception e){
+					box = FULL_BLOCK_AABB;
+				}
+				box = box.offset(moving.offset(dir));
+				for(Entity ent : worldIn.getEntitiesWithinAABBExcludingEntity(null, box)){
+					if(ent.getPushReaction() != EnumPushReaction.IGNORE){
+						ent.setPositionAndUpdate(ent.posX + dir.getFrontOffsetX(), ent.posY + dir.getFrontOffsetY(), ent.posZ + dir.getFrontOffsetZ());
+						if(world.getBlockState(moving.offset(dir)).getBlock() == Blocks.SLIME_BLOCK){
+							ent.addVelocity(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
+							ent.velocityChanged = true;
+						}
+					}
+				}
 			}
-			
+
 			for(int j = i; j >= 1; j--){
 				if(world.getBlockState(pos.offset(dir, j)).getMobilityFlag() == EnumPushReaction.DESTROY){
-					world.getBlockState(pos.offset(dir, j)).getBlock().dropBlockAsItem(worldIn, pos.offset(dir, j), world.getBlockState(pos.offset(dir, j)), 0);
+					worldIn.destroyBlock(pos.offset(dir, j), true);
 				}
 				world.addChange(pos.offset(dir, j), GOAL.getDefaultState().withProperty(Properties.FACING, dir).withProperty(Properties.HEAD, i == j));
 			}
