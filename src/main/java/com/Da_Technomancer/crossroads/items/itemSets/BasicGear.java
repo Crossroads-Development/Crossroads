@@ -66,7 +66,7 @@ public class BasicGear extends Item{
 			}
 
 			worldIn.setBlockState(pos.offset(side), ModBlocks.sidedGearHolder.getDefaultState(), 3);
-			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).getMembers()[side.getOpposite().getIndex()] = type;
+			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).setMembers(type, side.getOpposite().getIndex());
 			CommonProxy.masterKey++;
 		}
 

@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraft.item.ItemStack;
@@ -47,6 +48,9 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
 		Triple<Color, Integer, Integer>[] out = new Triple[6];
+		if(worldObj.getBlockState(pos).getBlock() != ModBlocks.arcaneExtractor){
+			return null;
+		}
 		out[worldObj.getBlockState(pos).getValue(Properties.FACING).getIndex()] = visual;
 		return out;
 	}

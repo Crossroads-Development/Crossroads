@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -57,6 +58,9 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
 		Triple<Color, Integer, Integer>[] out = new Triple[6];
+		if(worldObj.getBlockState(pos).getBlock() != ModBlocks.crystallinePrism){
+			return null;
+		}
 		out[worldObj.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y).getOpposite().getIndex()] = tripR;
 		out[worldObj.getBlockState(pos).getValue(Properties.FACING).getIndex()] = tripG;
 		out[worldObj.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y).getIndex()] = tripB;

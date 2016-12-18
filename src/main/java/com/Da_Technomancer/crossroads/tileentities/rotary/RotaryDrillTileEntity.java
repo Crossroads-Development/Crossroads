@@ -28,7 +28,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 	public void update(){
 		if(worldObj.isRemote){
 			EnumFacing facing = worldObj.getBlockState(pos).getValue(Properties.FACING);
-			if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
+			if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) && (facing.getOpposite() != EnumFacing.UP || !(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ToggleGearTileEntity) || worldObj.getBlockState(pos.offset(EnumFacing.UP)).getValue(Properties.REDSTONE_BOOL))){
 				angle = (float) worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getAngle();
 			}
 
@@ -37,7 +37,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 
 		EnumFacing facing = worldObj.getBlockState(pos).getValue(Properties.FACING);
 		IAxleHandler handler;
-		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) && Math.abs((handler = worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)).getMotionData()[1]) >= ENERGYUSE){
+		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) && (facing.getOpposite() != EnumFacing.UP || !(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ToggleGearTileEntity) || worldObj.getBlockState(pos.offset(EnumFacing.UP)).getValue(Properties.REDSTONE_BOOL)) && Math.abs((handler = worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)).getMotionData()[1]) >= ENERGYUSE){
 			handler.addEnergy(-ENERGYUSE, false, false);
 			if(++ticksExisted % 10 == 0){
 				worldObj.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.BLOCKS, .2F, .5F);
