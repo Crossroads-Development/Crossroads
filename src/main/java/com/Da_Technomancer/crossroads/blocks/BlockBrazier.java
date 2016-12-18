@@ -28,7 +28,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class BlockBrazier extends BlockContainer{
 
@@ -43,7 +42,6 @@ public class BlockBrazier extends BlockContainer{
 		this.setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		OreDictionary.registerOre(name, this);
 	}
 
 	@Override

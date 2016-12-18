@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
@@ -119,6 +120,10 @@ public class OmniMeter extends Item{
 			if(!worldIn.isRemote){
 				playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((CrystalMasterAxisTileEntity) te).getElement() == null ? "NONE" : (((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime())));
 			}
+		}
+		
+		if(te instanceof RatiatorTileEntity && !worldIn.isRemote){
+			playerIn.addChatComponentMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
 		}
 
 		return pass ? EnumActionResult.PASS : EnumActionResult.SUCCESS;

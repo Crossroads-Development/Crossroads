@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
+import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
@@ -117,6 +118,10 @@ public class DebugReader extends Item{
 		
 		if(te instanceof CrystalMasterAxisTileEntity){
 			playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((CrystalMasterAxisTileEntity) te).getElement() == null ? "NONE" : ((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime()));
+		}
+		
+		if(te instanceof RatiatorTileEntity){
+			playerIn.addChatComponentMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
 		}
 
 		return EnumActionResult.PASS;

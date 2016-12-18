@@ -173,7 +173,7 @@ public final class ModCrafting{
 		//Water Centrifuge
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.waterCentrifuge, 1), "*&*", "^%^", "* *", '*', "ingotBronze", '&', "stickIron", '^', ModBlocks.fluidTube, '%', "ingotTin"));
 		//Pure Quartz
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.pureQuartz, 1), "*&*", '*', "dustSalt", '&', "gemQuartz"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.pureQuartz, 1), "dustSalt", "dustSalt", "gemQuartz"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.pureQuartz, 4), ModBlocks.blockPureQuartz));
 		//Pure Quartz Block
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockPureQuartz, 1), "**", "**", '*', ModItems.pureQuartz));
@@ -220,6 +220,8 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.crystalMasterAxis, 1), "*&*", "*#*", "***", '*', ModItems.pureQuartz, '#', ModBlocks.masterAxis, '&', ModItems.lensArray);
 		//Void Crystal
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.voidCrystal, 1), "*#*", "###", "*#*", '*', Items.DRAGON_BREATH, '#', ModItems.pureQuartz));
+		//Ratiator
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', ModItems.luminescentQuartz, '#', ModItems.pureQuartz, '^', "stone"));
 	}
 
 	private static ItemStack getFilledHopper(){

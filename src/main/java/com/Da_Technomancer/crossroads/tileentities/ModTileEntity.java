@@ -83,6 +83,7 @@ public class ModTileEntity{
 		register(BeamSplitterBasicTileEntity.class, "beamSplitterBasic");
 		register(CrystalMasterAxisTileEntity.class, "crystalMasterAxis");
 		register(AxleTileEntity.class, "axle");
+		register(RatiatorTileEntity.class, "ratiator");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){
