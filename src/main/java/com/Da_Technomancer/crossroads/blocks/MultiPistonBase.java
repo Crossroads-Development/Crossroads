@@ -18,9 +18,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -129,6 +131,9 @@ public class MultiPistonBase extends Block{
 		}
 
 		if(distance == 0){
+			if(world.hasChanges()){
+				worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 1, 1);
+			}
 			world.doChanges();
 			return;
 		}
@@ -138,36 +143,54 @@ public class MultiPistonBase extends Block{
 
 			if(canPush(world.getBlockState(pos.offset(dir, i)), false)){
 				if(propogate(list, world, pos.offset(dir, i), dir, null)){
+					if(world.hasChanges()){
+						worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
+					}
 					world.doChanges();
 					return;
 				}
 			}else if(!canPush(world.getBlockState(pos.offset(dir, i)), true)){
+				if(world.hasChanges()){
+					worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
+				}
 				world.doChanges();
 				return;
 			}
 			
-			for(int index = list.size() - 1; index >= 0; --index){
-				BlockPos moving = list.get(index);
-				
-				if(world.getBlockState(moving.offset(dir)).getMobilityFlag() == EnumPushReaction.DESTROY){
-					worldIn.destroyBlock(moving.offset(dir), true);
-				}
-				world.addChange(moving.offset(dir), world.getBlockState(moving));
-				world.addChange(moving, Blocks.AIR.getDefaultState());
-				AxisAlignedBB box;
-				//Due to the fact that the block isn't actually at that position (WorldBuffer), exceptions have to be caught.
-				try{
-					box = world.getBlockState(moving.offset(dir)).getCollisionBoundingBox(worldIn, pos);
-				}catch(Exception e){
-					box = FULL_BLOCK_AABB;
-				}
-				box = box.offset(moving.offset(dir));
-				for(Entity ent : worldIn.getEntitiesWithinAABBExcludingEntity(null, box)){
+			if(list.isEmpty()){
+				for(Entity ent : worldIn.getEntitiesWithinAABBExcludingEntity(null, FULL_BLOCK_AABB.offset(pos.offset(dir, i)))){
 					if(ent.getPushReaction() != EnumPushReaction.IGNORE){
 						ent.setPositionAndUpdate(ent.posX + dir.getFrontOffsetX(), ent.posY + dir.getFrontOffsetY(), ent.posZ + dir.getFrontOffsetZ());
-						if(world.getBlockState(moving.offset(dir)).getBlock() == Blocks.SLIME_BLOCK){
+						if(sticky){
 							ent.addVelocity(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
 							ent.velocityChanged = true;
+						}
+					}
+				}
+			}else{
+				for(int index = list.size() - 1; index >= 0; --index){
+					BlockPos moving = list.get(index);
+
+					if(world.getBlockState(moving.offset(dir)).getMobilityFlag() == EnumPushReaction.DESTROY){
+						worldIn.destroyBlock(moving.offset(dir), true);
+					}
+					world.addChange(moving.offset(dir), world.getBlockState(moving));
+					world.addChange(moving, Blocks.AIR.getDefaultState());
+					AxisAlignedBB box;
+					//Due to the fact that the block isn't actually at that position (WorldBuffer), exceptions have to be caught.
+					try{
+						box = world.getBlockState(moving.offset(dir)).getCollisionBoundingBox(worldIn, pos);
+					}catch(Exception e){
+						box = FULL_BLOCK_AABB;
+					}
+					box = box.offset(moving.offset(dir));
+					for(Entity ent : worldIn.getEntitiesWithinAABBExcludingEntity(null, box)){
+						if(ent.getPushReaction() != EnumPushReaction.IGNORE){
+							ent.setPositionAndUpdate(ent.posX + dir.getFrontOffsetX(), ent.posY + dir.getFrontOffsetY(), ent.posZ + dir.getFrontOffsetZ());
+							if(world.getBlockState(moving.offset(dir)).getBlock() == Blocks.SLIME_BLOCK){
+								ent.addVelocity(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
+								ent.velocityChanged = true;
+							}
 						}
 					}
 				}
@@ -179,6 +202,9 @@ public class MultiPistonBase extends Block{
 				}
 				world.addChange(pos.offset(dir, j), GOAL.getDefaultState().withProperty(Properties.FACING, dir).withProperty(Properties.HEAD, i == j));
 			}
+		}
+		if(world.hasChanges()){
+			worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
 		}
 		world.doChanges();
 	}

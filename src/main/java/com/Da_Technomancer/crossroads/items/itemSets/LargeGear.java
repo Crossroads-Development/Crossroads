@@ -51,7 +51,7 @@ public class LargeGear extends Item{
 
 		for(BlockPos cPos : section(pos, side)){
 			if(!worldIn.getBlockState(cPos).getBlock().isReplaceable(worldIn, cPos)){
-				return EnumActionResult.PASS;
+				return EnumActionResult.SUCCESS;
 			}
 		}
 
@@ -70,7 +70,7 @@ public class LargeGear extends Item{
 		}
 		++CommonProxy.masterKey;
 
-		return EnumActionResult.PASS;
+		return EnumActionResult.SUCCESS;
 	}
 
 	private static BlockPos[] section(BlockPos pos, EnumFacing side){

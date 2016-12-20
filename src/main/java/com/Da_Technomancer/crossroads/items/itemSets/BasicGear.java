@@ -50,7 +50,7 @@ public class BasicGear extends Item{
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(worldIn.isRemote){
-			return EnumActionResult.PASS;
+			return EnumActionResult.SUCCESS;
 		}
 
 		if(worldIn.getTileEntity(pos.offset(side)) instanceof SidedGearHolderTileEntity && !worldIn.getTileEntity(pos.offset(side)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()) && worldIn.isSideSolid(pos, side)){
@@ -70,6 +70,6 @@ public class BasicGear extends Item{
 			CommonProxy.masterKey++;
 		}
 
-		return EnumActionResult.PASS;
+		return EnumActionResult.SUCCESS;
 	}
 }
