@@ -77,14 +77,19 @@ public class MultiPistonBase extends Block{
 				worldIn.setBlockState(pos, worldIn.getBlockState(pos).withProperty(Properties.REDSTONE_BOOL, false));
 			}
 		}
-		if(getExtension(worldIn, pos, dir) != i){
+		
+		int prev = getExtension(worldIn, pos, dir);
+		if(prev != i && prev != -1){
 			safeToBreak = false;
-			setExtension(worldIn, pos, dir, i);
+			setExtension(worldIn, pos, dir, i, prev);
 			safeToBreak = true;
 		}
 	}
 	
 	private int getExtension(World worldIn, BlockPos pos, EnumFacing dir){
+		if(!safeToBreak){
+			return -1;
+		}
 		final Block GOAL = sticky ? ModBlocks.multiPistonExtendSticky : ModBlocks.multiPistonExtend;
 		for(int i = 1; i <= 15; i++){
 			if(worldIn.getBlockState(pos.offset(dir, i)).getBlock() != GOAL || worldIn.getBlockState(pos.offset(dir, i)).getValue(Properties.FACING) != dir){
@@ -94,8 +99,7 @@ public class MultiPistonBase extends Block{
 		return 15;
 	}
 	
-	private void setExtension(World worldIn, BlockPos pos, EnumFacing dir, int distance){
-		int prev = getExtension(worldIn, pos, dir);
+	private void setExtension(World worldIn, BlockPos pos, EnumFacing dir, int distance, int prev){
 		if(prev == distance){
 			return;
 		}
@@ -156,11 +160,11 @@ public class MultiPistonBase extends Block{
 				world.doChanges();
 				return;
 			}
-			
+
 			if(list.isEmpty()){
 				for(Entity ent : worldIn.getEntitiesWithinAABBExcludingEntity(null, FULL_BLOCK_AABB.offset(pos.offset(dir, i)))){
 					if(ent.getPushReaction() != EnumPushReaction.IGNORE){
-						ent.setPositionAndUpdate(ent.posX + dir.getFrontOffsetX(), ent.posY + dir.getFrontOffsetY(), ent.posZ + dir.getFrontOffsetZ());
+						ent.setPositionAndUpdate(ent.posX + (double) dir.getFrontOffsetX(), ent.posY + (double) dir.getFrontOffsetY(), ent.posZ + (double) dir.getFrontOffsetZ());
 						if(sticky){
 							ent.addVelocity(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
 							ent.velocityChanged = true;
@@ -186,7 +190,7 @@ public class MultiPistonBase extends Block{
 					box = box.offset(moving.offset(dir));
 					for(Entity ent : worldIn.getEntitiesWithinAABBExcludingEntity(null, box)){
 						if(ent.getPushReaction() != EnumPushReaction.IGNORE){
-							ent.setPositionAndUpdate(ent.posX + dir.getFrontOffsetX(), ent.posY + dir.getFrontOffsetY(), ent.posZ + dir.getFrontOffsetZ());
+							ent.setPositionAndUpdate(ent.posX + (double) dir.getFrontOffsetX(), ent.posY + (double) dir.getFrontOffsetY(), ent.posZ + (double) dir.getFrontOffsetZ());
 							if(world.getBlockState(moving.offset(dir)).getBlock() == Blocks.SLIME_BLOCK){
 								ent.addVelocity(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
 								ent.velocityChanged = true;
@@ -266,7 +270,7 @@ public class MultiPistonBase extends Block{
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
-		setExtension(world, pos, state.getValue(Properties.FACING), 0);
+		setExtension(world, pos, state.getValue(Properties.FACING), 0, getExtension(world, pos, state.getValue(Properties.FACING)));
 	}
 	
 	@Override
