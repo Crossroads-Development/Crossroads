@@ -25,7 +25,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**Notable differences from a normal piston include:
@@ -162,7 +165,8 @@ public class MultiPistonBase extends Block{
 			}
 
 			if(list.isEmpty()){
-				for(Entity ent : worldIn.getEntitiesWithinAABBExcludingEntity(null, FULL_BLOCK_AABB.offset(pos.offset(dir, i)))){
+				//TODO
+				for(Entity ent : getEntitiesMultiChunk(FULL_BLOCK_AABB.offset(pos.offset(dir, i)), worldIn)){
 					if(ent.getPushReaction() != EnumPushReaction.IGNORE){
 						ent.setPositionAndUpdate(ent.posX + (double) dir.getFrontOffsetX(), ent.posY + (double) dir.getFrontOffsetY(), ent.posZ + (double) dir.getFrontOffsetZ());
 						if(sticky){
@@ -188,7 +192,8 @@ public class MultiPistonBase extends Block{
 						box = FULL_BLOCK_AABB;
 					}
 					box = box.offset(moving.offset(dir));
-					for(Entity ent : worldIn.getEntitiesWithinAABBExcludingEntity(null, box)){
+					//TODO
+					for(Entity ent : getEntitiesMultiChunk(box, worldIn)){
 						if(ent.getPushReaction() != EnumPushReaction.IGNORE){
 							ent.setPositionAndUpdate(ent.posX + (double) dir.getFrontOffsetX(), ent.posY + (double) dir.getFrontOffsetY(), ent.posZ + (double) dir.getFrontOffsetZ());
 							if(world.getBlockState(moving.offset(dir)).getBlock() == Blocks.SLIME_BLOCK){
@@ -309,5 +314,41 @@ public class MultiPistonBase extends Block{
 	@Override
 	public EnumPushReaction getMobilityFlag(IBlockState state){
 		return state.getValue(Properties.REDSTONE_BOOL) ? EnumPushReaction.BLOCK : EnumPushReaction.NORMAL;
+	}
+	
+
+	/**
+	 * An alternate version of World#getEntitiesWithinAABBExcludingEntity that checks a 3x3x3 cube of mini chunks (16x16x16 cubes within chunks) for entities.
+	 * This is less efficient than the standard method, but necessary to fix a bug.
+	 */
+	private static ArrayList<Entity> getEntitiesMultiChunk(AxisAlignedBB checkBox, World worldIn){
+		ArrayList<Entity> found = new ArrayList<Entity>();
+
+		int i = MathHelper.floor_double((checkBox.minX - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
+		int j = MathHelper.floor_double((checkBox.maxX + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
+		int k = MathHelper.floor_double((checkBox.minZ - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
+		int l = MathHelper.floor_double((checkBox.maxZ + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
+
+		int yMin = MathHelper.clamp_int(MathHelper.floor_double((checkBox.minY - World.MAX_ENTITY_RADIUS) / 16.0D) - 1, 0, 15);
+		int yMax = MathHelper.clamp_int(MathHelper.floor_double((checkBox.maxY + World.MAX_ENTITY_RADIUS) / 16.0D) + 1, 0, 15);
+
+		for(int iLoop = i; iLoop <= j; ++iLoop){
+			for(int kLoop = k; kLoop <= l; ++kLoop){
+				if(((ChunkProviderServer) worldIn.getChunkProvider()).chunkExists(iLoop, kLoop)){
+					Chunk chunk = worldIn.getChunkFromChunkCoords(iLoop, kLoop);
+					for(int yLoop = yMin; yLoop <= yMax; ++yLoop){
+						if(!chunk.getEntityLists()[yLoop].isEmpty()){
+							for(Entity entity : chunk.getEntityLists()[yLoop]){
+								if(entity.getEntityBoundingBox().intersectsWith(checkBox)){
+									found.add(entity);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return found;
 	}
 }

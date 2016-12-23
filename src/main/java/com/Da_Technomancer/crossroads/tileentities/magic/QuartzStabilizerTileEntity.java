@@ -83,7 +83,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 		
 		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 			if(!toSend.isEmpty()){
-				double mult = ((double) RATE[large ? 1 : 0]) / ((double) (toSend.getOutput().getPower()));
+				double mult = Math.min(1D, ((double) RATE[large ? 1 : 0]) / ((double) (toSend.getOutput().getPower())));
 				MagicUnit mag = toSend.getOutput().mult(mult);
 				toSend.subtractMagic(mag);
 				if(beamer.emit(mag)){
