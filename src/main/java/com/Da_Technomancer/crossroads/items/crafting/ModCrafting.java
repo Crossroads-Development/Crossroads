@@ -67,8 +67,8 @@ public final class ModCrafting{
 
 		RecipeHolder.mashedBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Blocks.HOPPER, 1, 0), new OreDictCraftingStack("wool", 1), new CraftingStack(ModBlocks.fluidTube, 1, 0)}, getFilledHopper()));
 		RecipeHolder.mashedBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new OreDictCraftingStack("dyeMagenta", 1), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
+		RecipeHolder.mashedBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("gemLapis", 1), new OreDictCraftingStack("cobblestone", 1), new OreDictCraftingStack("nuggetGold", 1)}, new ItemStack(ModItems.rainIdol, 1)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("gemLapis", 1), new OreDictCraftingStack("cobblestone", 1), new OreDictCraftingStack("nuggetGold", 1)}, new ItemStack(ModItems.rainIdol, 1)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.DYE, 1, EnumDyeColor.BLACK.getDyeDamage()), new CraftingStack(Items.FISH, 1, 3), new OreDictCraftingStack("leather", 1)}, new ItemStack(ModItems.squidHelmet, 1)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BLAZE_POWDER, 1, 0), new OreDictCraftingStack("leather", 1), new CraftingStack(Items.PORKCHOP, 1, 0)}, new ItemStack(ModItems.pigZombieChestplate, 1)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.MILK_BUCKET, 1, 0), new OreDictCraftingStack("leather", 1), new CraftingStack(Items.BEEF, 1, 0)}, new ItemStack(ModItems.cowLeggings, 1)));

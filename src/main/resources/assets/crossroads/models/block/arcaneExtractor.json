@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"north": "crossroads:blocks/masterAxisFront",
-		"south": "crossroads:blocks/WIP",
-		"east": "crossroads:blocks/WIP",
-		"west": "crossroads:blocks/WIP",
-		"up": "crossroads:blocks/WIP",
-		"down": "crossroads:blocks/WIP",
-		"particle": "crossroads:blocks/WIP"
+		"north": "crossroads:blocks/arcaneExtractorOut",
+		"south": "crossroads:blocks/arcaneExtractorSide",
+		"east": "crossroads:blocks/arcaneExtractorSide",
+		"west": "crossroads:blocks/arcaneExtractorSide",
+		"up": "crossroads:blocks/arcaneExtractorSide",
+		"down": "crossroads:blocks/arcaneExtractorSide",
+		"particle": "crossroads:blocks/arcaneExtractorSide"
 	}
 }
