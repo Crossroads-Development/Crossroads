@@ -47,10 +47,10 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		return new MagicUnit[] {beamer == null ? null : beamer.getLastFullSent(), beamerUp == null ? null : beamerUp.getLastFullSent()};
 	}
 	
-	public int getRedstone(){
+	public double getRedstone(){
 		return lastRedstone;
 	}
-	private int lastRedstone;
+	private double lastRedstone;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -80,10 +80,11 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			return;
 		}
 		
-		int holder = Math.max(beamer == null || beamer.getLastSent() == null ? 0 : beamer.getLastSent().getPower() / 3, beamerUp == null || beamerUp.getLastSent() == null ? 0 : beamerUp.getLastSent().getPower() / 3);
+		double holder = Math.max(beamer == null || beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()) / 3D, beamerUp == null || beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()) / 3D);
 		if(holder != lastRedstone){
 			lastRedstone = holder;
 			worldObj.updateComparatorOutputLevel(pos, ModBlocks.lensHolder);
+			worldObj.notifyNeighborsOfStateExcept(pos, ModBlocks.lensHolder, null);
 		}
 
 		if(beamer == null){

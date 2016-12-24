@@ -31,7 +31,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	private double[] physData = new double[2];
 	private double angle;
 	private double clientW;
-	private int compOut = 0;
+	private double compOut = 0;
 	
 	public ToggleGearTileEntity(){
 		
@@ -69,9 +69,10 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 
 		if(!worldObj.isRemote){
 			sendWPacket();
-			if(compOut != ((int) Math.min((Math.abs(motionData[1] / physData[1])) * 15D, 15))){
+			if(compOut != (Math.abs(motionData[1] / physData[1])) * 15D){
 				worldObj.updateComparatorOutputLevel(pos, this.blockType);
-				compOut = ((int) Math.min((Math.abs(motionData[1] / physData[1])) * 15D, 15));
+				worldObj.notifyNeighborsOfStateExcept(pos, null, null);
+				compOut = Math.abs(motionData[1] / physData[1]) * 15D;
 			}
 		}
 	}

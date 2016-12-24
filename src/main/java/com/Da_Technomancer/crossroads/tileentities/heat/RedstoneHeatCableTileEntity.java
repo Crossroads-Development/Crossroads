@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -174,6 +175,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 				}else{
 					temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 				}
+				worldObj.notifyNeighborsOfStateExcept(pos, ModBlocks.fluidTank, null);
 			}
 		}
 
@@ -187,12 +189,14 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		public void setTemp(double tempIn){
 			init = true;
 			temp = tempIn;
+			worldObj.notifyNeighborsOfStateExcept(pos, null, null);
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
 			temp += heat;
+			worldObj.notifyNeighborsOfStateExcept(pos, null, null);
 		}
 
 	}

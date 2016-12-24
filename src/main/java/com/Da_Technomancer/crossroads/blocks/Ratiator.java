@@ -4,6 +4,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
@@ -119,6 +120,14 @@ public class Ratiator extends BlockContainer{
 	private double getPowerOnSide(World worldIn, BlockPos pos, EnumFacing side, boolean allowAll){
 		IBlockState state = worldIn.getBlockState(pos.offset(side));
 		Block block = state.getBlock();
+		if(allowAll){
+			if(block instanceof IBlockCompare){
+				return ((IBlockCompare) block).getOutput(worldIn, pos.offset(side));
+			}
+			if(state.hasComparatorInputOverride()){
+				return state.getComparatorInputOverride(worldIn, pos.offset(side));
+			}
+		}
 		return allowAll ? block == this ? getPowerOut(worldIn, pos.offset(side)) : Math.max(worldIn.getRedstonePower(pos.offset(side), side), block == Blocks.REDSTONE_WIRE ? state.getValue(BlockRedstoneWire.POWER) : 0) : block == this ? getPowerOut(worldIn, pos.offset(side)) : block == Blocks.REDSTONE_BLOCK ? 15 : (block == Blocks.REDSTONE_WIRE ? (int) state.getValue(BlockRedstoneWire.POWER) : worldIn.getStrongPower(pos.offset(side), side));
 	}
 

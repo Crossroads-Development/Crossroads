@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -32,7 +33,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public class ToggleGear extends BlockContainer{
+public class ToggleGear extends BlockContainer implements IBlockCompare{
 
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
 	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .5625D, 0D, 1D, .625D, 1D);
@@ -75,7 +76,7 @@ public class ToggleGear extends BlockContainer{
 		if(!te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 			return 0;
 		}
-		double holder = Math.abs(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[1]) / te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getPhysData()[1];
+		double holder = Math.pow(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0], 2) / 2D;
 		holder *= 15D;
 		holder = Math.min(15, holder);
 		
@@ -138,6 +139,18 @@ public class ToggleGear extends BlockContainer{
 	@Override
 	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
+	}
+
+	@Override
+	public double getOutput(World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(!te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			return 0;
+		}
+		double holder = Math.pow(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0], 2) / 2D;
+		holder *= 15D;
+		
+		return holder;
 	}
 
 }
