@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
 
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.chunk.Chunk;
@@ -29,11 +32,14 @@ public final class EventHandlerCommon{
 	}
 
 	@SubscribeEvent
-	public void addSpecialItems(EntityJoinWorldEvent event){
+	public void addItemsAndUpdateData(EntityJoinWorldEvent event){
 		if(event.getEntity() instanceof EntityPlayer && !event.getEntity().worldObj.isRemote){
 			EntityPlayer player = (EntityPlayer) event.getEntity();
 
 			NBTTagCompound tag = MiscOp.getPlayerTag(player);
+			ModPackets.network.sendTo(new SendElementNBTToClient(tag.getCompoundTag("elements")), (EntityPlayerMP) event.getEntity());
+			
+			//A convenience feature to start with a debug tool.
 			if(!tag.hasKey("starter")){
 				switch(player.getGameProfile().getName()){
 					case "Da_Technomancer":

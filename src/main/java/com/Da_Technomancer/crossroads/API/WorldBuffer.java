@@ -22,8 +22,15 @@ public class WorldBuffer{
 		this.worldObj = worldObj;
 	}
 	
+	public World getWorld(){
+		return worldObj;
+	}
+	
 	public void addChange(BlockPos pos, IBlockState state){
 		pos = pos.toImmutable();
+		if(getBlockState(pos) == state){
+			return;
+		}
 		if(memory.containsKey(pos)){
 			memory.remove(pos);
 		}
@@ -45,5 +52,9 @@ public class WorldBuffer{
 			}
 		}
 		memory.clear();
+	}
+	
+	public boolean hasChanges(){
+		return !memory.isEmpty();
 	}
 }

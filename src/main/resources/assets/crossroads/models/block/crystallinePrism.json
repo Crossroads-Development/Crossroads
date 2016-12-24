@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"north": "crossroads:blocks/masterAxisFront",
-		"south": "crossroads:blocks/WIP",
-		"east": "crossroads:blocks/WIP",
-		"west": "crossroads:blocks/WIP",
-		"up": "crossroads:blocks/WIP",
-		"down": "crossroads:blocks/WIP",
-		"particle": "crossroads:blocks/WIP"
+		"north": "crossroads:blocks/prismEmerald",
+		"south": "crossroads:blocks/prismIn",
+		"east": "crossroads:blocks/prismDiamond",
+		"west": "crossroads:blocks/prismRuby",
+		"up": "crossroads:blocks/blockPureQuartz",
+		"down": "crossroads:blocks/blockPureQuartz",
+		"particle": "crossroads:blocks/blockPureQuartz"
 	}
 }

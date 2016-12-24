@@ -7,11 +7,16 @@ import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
+import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,7 +47,8 @@ public class DebugReader extends Item{
 		if(worldIn.isRemote && worldIn.getTileEntity(pos) instanceof SidedGearHolderTileEntity){
 			for(int i = 0; i < 6; i++){
 				SidedGearHolderTileEntity gear = (SidedGearHolderTileEntity) worldIn.getTileEntity(pos);
-				playerIn.addChatComponentMessage(new TextComponentString("Angle=" + (gear.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)) ? gear.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getAngle() : "NONE")));
+				playerIn.addChatComponentMessage(new TextComponentString("Angle=" + (gear.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)) ? gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getAngle() : "NONE")));
+				playerIn.addChatComponentMessage(new TextComponentString("Member=" + (gear.getMembers()[i] == null ? "NONE" : gear.getMembers()[i].toString())));
 			}
 		}
 
@@ -53,9 +59,9 @@ public class DebugReader extends Item{
 		TileEntity te = worldIn.getTileEntity(pos);
 
 		for(int i = 0; i < 6; i++){
-			if(te != null && te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i))){
-				double[] gear = te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getMotionData();
-				playerIn.addChatComponentMessage(new TextComponentString("w=" + gear[0] + ", E=" + gear[1] + ", P=" + gear[2] + ", lastE=" + gear[3] + " Type " + te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getMember().toString()));
+			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i))){
+				double[] gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getMotionData();
+				playerIn.addChatComponentMessage(new TextComponentString("w=" + gear[0] + ", E=" + gear[1] + ", P=" + gear[2] + ", lastE=" + gear[3]));
 
 			}
 		}
@@ -100,6 +106,7 @@ public class DebugReader extends Item{
 							if(!nbt.hasKey(MagicElements.getElement(check).name())){
 								nbt.setBoolean(MagicElements.getElement(check).name(), true);
 								playerIn.addChatComponentMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
+								ModPackets.network.sendTo(new SendElementNBTToClient(nbt), (EntityPlayerMP) playerIn);
 							}
 							
 							playerIn.addChatComponentMessage(new TextComponentString(check.toString()));
@@ -107,6 +114,14 @@ public class DebugReader extends Item{
 					}
 				}
 			}
+		}
+		
+		if(te instanceof CrystalMasterAxisTileEntity){
+			playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((CrystalMasterAxisTileEntity) te).getElement() == null ? "NONE" : ((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime()));
+		}
+		
+		if(te instanceof RatiatorTileEntity){
+			playerIn.addChatComponentMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
 		}
 
 		return EnumActionResult.PASS;

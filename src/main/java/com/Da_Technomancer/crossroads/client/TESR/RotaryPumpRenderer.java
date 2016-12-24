@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.client.TESR;
 import org.lwjgl.opengl.GL11;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.client.TESR.models.ModelPump;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 
 import net.minecraft.block.BlockLiquid;
@@ -73,8 +74,8 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 				return;
 			}
 
-			GL11.glPushMatrix();
-			GL11.glTranslated(x, y, z);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x, y, z);
 
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 			VertexBuffer vb = Tessellator.getInstance().getBuffer();
@@ -121,7 +122,7 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 			vb.pos(xEn, yEn, zEn).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (zEn * 16))).endVertex();
 			Tessellator.getInstance().draw();
 
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 
 		}
 	}

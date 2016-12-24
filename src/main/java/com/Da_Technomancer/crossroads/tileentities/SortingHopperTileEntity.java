@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHopper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,6 +40,11 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class SortingHopperTileEntity extends TileEntityLockableLoot implements IHopper, ITickable{
 
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return (oldState.getBlock() != newState.getBlock());
+	}
+	
 	private void updateHopper(){
 		if(this.worldObj != null && !this.worldObj.isRemote){
 			if(!this.isOnTransferCooldown() && BlockHopper.isEnabled(this.getBlockMetadata())){

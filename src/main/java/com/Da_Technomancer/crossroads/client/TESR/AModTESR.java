@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.CrystallinePrismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.AxleTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
@@ -51,6 +52,8 @@ public class AModTESR{
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(BeamSplitterTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(BeamSplitterBasicTileEntity.class, new BeamRenderer());
+		
+		ClientRegistry.bindTileEntitySpecialRenderer(AxleTileEntity.class, new AxleRenderer());
 	}
 
 	public static void reg(Block block){

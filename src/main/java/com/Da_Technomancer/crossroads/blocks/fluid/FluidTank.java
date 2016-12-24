@@ -65,6 +65,7 @@ public class FluidTank extends BlockContainer{
 		if(!(te instanceof FluidTankTileEntity) || te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents() == null){
 			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
 		}else{
+			player.addExhaustion(0.025F);
 			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
 			stack.setTagCompound(te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents().writeToNBT(new NBTTagCompound()));
 			spawnAsEntity(worldIn, pos, stack);

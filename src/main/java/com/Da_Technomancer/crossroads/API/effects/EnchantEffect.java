@@ -20,6 +20,7 @@ public class EnchantEffect implements IEffect{
 	
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
+		mult = Math.min(mult, 45);
 		ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
 		if(items != null && items.size() != 0){
 			for(EntityItem ent : items){

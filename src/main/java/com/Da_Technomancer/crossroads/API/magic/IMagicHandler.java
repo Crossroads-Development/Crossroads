@@ -7,11 +7,9 @@ public interface IMagicHandler{
 	
 	public final int MAX_DISTANCE = 16;
 	public final int BEAM_TIME = 5;
-	@Deprecated
-	public final int MAX_STEPS = 31;
 	
 	/**
-	 * This should be implemented based on a toggle system: handlers should assume that they receive the last magic unit sent with this method continuously
+	 * Handlers should assume that they receive the last magic unit sent with this method continuously for the next BEAM_TIME ticks.
 	 */
 	public void setMagic(@Nullable MagicUnit mag);
 }

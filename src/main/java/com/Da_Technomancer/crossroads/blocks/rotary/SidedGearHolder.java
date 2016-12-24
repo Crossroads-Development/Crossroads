@@ -35,13 +35,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SidedGearHolder extends BlockContainer{
 
-	private static final AxisAlignedBB BB = new AxisAlignedBB(.25D, .25D, .25D, .75D, .75D, .75D);
-	private static final AxisAlignedBB NORTH = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D);
-	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(0D, 0D, .875D, 1D, 1D, 1D);
-	private static final AxisAlignedBB EAST = new AxisAlignedBB(.875D, 0D, 0D, 1D, 1D, 1D);
-	private static final AxisAlignedBB WEST = new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D);
-	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .875D, 0D, 1D, 1D, 1D);
-	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
+	private static final ArrayList<AxisAlignedBB> BOUNDING_BOXES = new ArrayList<AxisAlignedBB>();
+
+	static{
+		BOUNDING_BOXES.add(new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D));//DOWN
+		BOUNDING_BOXES.add(new AxisAlignedBB(0D, .875D, 0D, 1D, 1D, 1D));//UP
+		BOUNDING_BOXES.add(new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D));//NORTH
+		BOUNDING_BOXES.add(new AxisAlignedBB(0D, 0D, .875D, 1D, 1D, 1D));//SOUTH
+		BOUNDING_BOXES.add(new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D));//WEST
+		BOUNDING_BOXES.add(new AxisAlignedBB(.875D, 0D, 0D, 1D, 1D, 1D));//EAST
+		BOUNDING_BOXES.add(new AxisAlignedBB(.25D, .25D, .25D, .75D, .75D, .75D));//Center
+	}
 
 	public SidedGearHolder(){
 		super(Material.IRON);
@@ -68,70 +72,26 @@ public class SidedGearHolder extends BlockContainer{
 	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos){
 		TileEntity te = worldIn.getTileEntity(pos);
-		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			list.add(DOWN);
-		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP)){
-			list.add(UP);
-		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.NORTH)){
-			list.add(NORTH);
-		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
-			list.add(SOUTH);
-		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.WEST)){
-			list.add(WEST);
-		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.EAST)){
-			list.add(EAST);
-		}
-		if(list.isEmpty()){
-			return BB;
-		}
 		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
-		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
-		return (out == null ? list.get(0) : out).offset(pos);
+		AxisAlignedBB out = getAimedSide(te, start, end, true);
+		return (out == null ? BOUNDING_BOXES.get(6) : out).offset(pos);
 	}
 
 	@Override
 	@Nullable
 	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
 		TileEntity te = worldIn.getTileEntity(pos);
-		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			list.add(DOWN);
-		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP)){
-			list.add(UP);
-		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.NORTH)){
-			list.add(NORTH);
-		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
-			list.add(SOUTH);
-		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.WEST)){
-			list.add(WEST);
-		}
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.EAST)){
-			list.add(EAST);
-		}
-		if(list.isEmpty()){
-			list.add(BB);
-		}
 		start = start.subtract(pos.getX(), pos.getY(), pos.getZ());
 		end = end.subtract(pos.getX(), pos.getY(), pos.getZ());
-		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
+		AxisAlignedBB out = getAimedSide(te, start, end, true);
 		if(out == null){
 			return null;
 		}else{
@@ -142,24 +102,10 @@ public class SidedGearHolder extends BlockContainer{
 
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
-
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			addCollisionBoxToList(pos, mask, list, DOWN);
-		}
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP)){
-			addCollisionBoxToList(pos, mask, list, UP);
-		}
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.NORTH)){
-			addCollisionBoxToList(pos, mask, list, NORTH);
-		}
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
-			addCollisionBoxToList(pos, mask, list, SOUTH);
-		}
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.WEST)){
-			addCollisionBoxToList(pos, mask, list, WEST);
-		}
-		if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.EAST)){
-			addCollisionBoxToList(pos, mask, list, EAST);
+		for(EnumFacing side : EnumFacing.values()){
+			if(worldIn.getTileEntity(pos).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side)){
+				addCollisionBoxToList(pos, mask, list, BOUNDING_BOXES.get(side.getIndex()));
+			}
 		}
 	}
 
@@ -189,14 +135,15 @@ public class SidedGearHolder extends BlockContainer{
 			return;
 		}
 
-		boolean destroy = false;
+		SidedGearHolderTileEntity te = (SidedGearHolderTileEntity) worldIn.getTileEntity(pos);
+
 		for(EnumFacing side : EnumFacing.VALUES){
-			if(worldIn.getTileEntity(pos).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side) && worldIn.getTileEntity(pos).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side).getMember() != null && !worldIn.isSideSolid(pos.offset(side), side.getOpposite(), true)){
-				destroy = true;
+			if(te.getMembers()[side.getIndex()] != null && !worldIn.isSideSolid(pos.offset(side), side.getOpposite(), false)){
+				spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(te.getMembers()[side.getIndex()]), 1));
+				te.setMembers(null, side.getIndex());
 			}
 		}
-		if(destroy){
-			dropItems(worldIn, pos, (SidedGearHolderTileEntity) worldIn.getTileEntity(pos));
+		if(te.getMembers()[0] == null && te.getMembers()[1] == null && te.getMembers()[2] == null && te.getMembers()[3] == null && te.getMembers()[4] == null && te.getMembers()[5] == null){
 			worldIn.destroyBlock(pos, false);
 		}
 
@@ -204,32 +151,77 @@ public class SidedGearHolder extends BlockContainer{
 	}
 
 	@Override
-	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack){
-
+	public boolean removedByPlayer(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, boolean canHarvest){
+		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof SidedGearHolderTileEntity){
-			dropItems(worldIn, pos, (SidedGearHolderTileEntity) te);
+			float reDist = player.isCreative() ? 5F : 4.5F;
+			Vec3d start = new Vec3d(player.prevPosX, player.prevPosY + (double) player.getEyeHeight(), player.prevPosZ).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
+			Vec3d end = start.addVector(player.getLook(0F).xCoord * reDist, player.getLook(0F).yCoord * reDist, player.getLook(0F).zCoord * reDist);
+			int out = BOUNDING_BOXES.indexOf(getAimedSide(te, start, end, true));
+
+			SidedGearHolderTileEntity gear = (SidedGearHolderTileEntity) te;
+			if(out == -1){
+				return false;
+			}else if(out == 6){
+				if(canHarvest){
+					for(int i = 0; i < 6; i++){
+						if(gear.getMembers()[i] != null){
+							spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(gear.getMembers()[i]), 1));
+						}
+					}
+				}
+				worldIn.destroyBlock(pos, false);
+				return true;
+			}else{
+				if(canHarvest){
+					spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(gear.getMembers()[out]), 1));
+				}
+				gear.setMembers(null, out);
+				
+				if(gear.getMembers()[0] == null && gear.getMembers()[1] == null && gear.getMembers()[2] == null && gear.getMembers()[3] == null && gear.getMembers()[4] == null && gear.getMembers()[5] == null){
+					worldIn.destroyBlock(pos, false);
+					return true;
+				}
+
+				return false;
+			}
 		}else{
-			super.harvestBlock(worldIn, player, pos, state, te, stack);
+			return super.removedByPlayer(state, worldIn, pos, player, canHarvest);
 		}
 	}
 
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		TileEntity te = world.getTileEntity(pos);
-		for(EnumFacing checker : EnumFacing.values()){
-			if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, checker)){
-				drops.add(new ItemStack(GearFactory.basicGears.get(te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, checker).getMember()), 1));
+		SidedGearHolderTileEntity te = (SidedGearHolderTileEntity) world.getTileEntity(pos);
+		if(te != null){
+			for(int i = 0; i < 6; i++){
+				if(te.getMembers()[i] != null){
+					drops.add(new ItemStack(GearFactory.basicGears.get(te.getMembers()[i]), 1));
+				}
 			}
 		}
 		return drops;
 	}
 
-	private void dropItems(World worldIn, BlockPos pos, SidedGearHolderTileEntity te){
-		for(EnumFacing checker : EnumFacing.values()){
-			if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, checker)){
-				spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, checker).getMember()), 1));
+	/**
+	 * 
+	 * @param te
+	 * @param start Start vector, subtract position first
+	 * @param end End vector, subtract position first
+	 * @param useCenter whether or not to include center when raytracing
+	 * @return 
+	 */
+	private AxisAlignedBB getAimedSide(TileEntity te, Vec3d start, Vec3d end, boolean useCenter){
+		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
+		for(int i = 0; i < 6; i++){
+			if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i))){
+				list.add(BOUNDING_BOXES.get(i));
 			}
 		}
+		if(useCenter){
+			list.add(BOUNDING_BOXES.get(6));
+		}
+		return MiscOp.rayTraceMulti(list, start, end);
 	}
 }

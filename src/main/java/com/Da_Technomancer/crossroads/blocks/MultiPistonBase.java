@@ -15,13 +15,20 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**Notable differences from a normal piston include:
@@ -73,14 +80,19 @@ public class MultiPistonBase extends Block{
 				worldIn.setBlockState(pos, worldIn.getBlockState(pos).withProperty(Properties.REDSTONE_BOOL, false));
 			}
 		}
-		if(getExtension(worldIn, pos, dir) != i){
+		
+		int prev = getExtension(worldIn, pos, dir);
+		if(prev != i && prev != -1){
 			safeToBreak = false;
-			setExtension(worldIn, pos, dir, i);
+			setExtension(worldIn, pos, dir, i, prev);
 			safeToBreak = true;
 		}
 	}
 	
 	private int getExtension(World worldIn, BlockPos pos, EnumFacing dir){
+		if(!safeToBreak){
+			return -1;
+		}
 		final Block GOAL = sticky ? ModBlocks.multiPistonExtendSticky : ModBlocks.multiPistonExtend;
 		for(int i = 1; i <= 15; i++){
 			if(worldIn.getBlockState(pos.offset(dir, i)).getBlock() != GOAL || worldIn.getBlockState(pos.offset(dir, i)).getValue(Properties.FACING) != dir){
@@ -90,8 +102,7 @@ public class MultiPistonBase extends Block{
 		return 15;
 	}
 	
-	private void setExtension(World worldIn, BlockPos pos, EnumFacing dir, int distance){
-		int prev = getExtension(worldIn, pos, dir);
+	private void setExtension(World worldIn, BlockPos pos, EnumFacing dir, int distance, int prev){
 		if(prev == distance){
 			return;
 		}
@@ -127,6 +138,9 @@ public class MultiPistonBase extends Block{
 		}
 
 		if(distance == 0){
+			if(world.hasChanges()){
+				worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 1, 1);
+			}
 			world.doChanges();
 			return;
 		}
@@ -136,30 +150,70 @@ public class MultiPistonBase extends Block{
 
 			if(canPush(world.getBlockState(pos.offset(dir, i)), false)){
 				if(propogate(list, world, pos.offset(dir, i), dir, null)){
+					if(world.hasChanges()){
+						worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
+					}
 					world.doChanges();
 					return;
 				}
 			}else if(!canPush(world.getBlockState(pos.offset(dir, i)), true)){
+				if(world.hasChanges()){
+					worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
+				}
 				world.doChanges();
 				return;
 			}
-			
-			for(int index = list.size() - 1; index >= 0; --index){
-				BlockPos moving = list.get(index);
-				
-				if(world.getBlockState(moving.offset(dir)).getMobilityFlag() == EnumPushReaction.DESTROY){
-					world.getBlockState(moving.offset(dir)).getBlock().dropBlockAsItem(worldIn, moving.offset(dir), world.getBlockState(moving.offset(dir)), 0);
+
+			if(list.isEmpty()){
+				//TODO
+				for(Entity ent : getEntitiesMultiChunk(FULL_BLOCK_AABB.offset(pos.offset(dir, i)), worldIn)){
+					if(ent.getPushReaction() != EnumPushReaction.IGNORE){
+						ent.setPositionAndUpdate(ent.posX + (double) dir.getFrontOffsetX(), ent.posY + (double) dir.getFrontOffsetY(), ent.posZ + (double) dir.getFrontOffsetZ());
+						if(sticky){
+							ent.addVelocity(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
+							ent.velocityChanged = true;
+						}
+					}
 				}
-				world.addChange(moving.offset(dir), world.getBlockState(moving));
-				world.addChange(moving, Blocks.AIR.getDefaultState());
+			}else{
+				for(int index = list.size() - 1; index >= 0; --index){
+					BlockPos moving = list.get(index);
+
+					if(world.getBlockState(moving.offset(dir)).getMobilityFlag() == EnumPushReaction.DESTROY){
+						worldIn.destroyBlock(moving.offset(dir), true);
+					}
+					world.addChange(moving.offset(dir), world.getBlockState(moving));
+					world.addChange(moving, Blocks.AIR.getDefaultState());
+					AxisAlignedBB box;
+					//Due to the fact that the block isn't actually at that position (WorldBuffer), exceptions have to be caught.
+					try{
+						box = world.getBlockState(moving.offset(dir)).getCollisionBoundingBox(worldIn, pos);
+					}catch(Exception e){
+						box = FULL_BLOCK_AABB;
+					}
+					box = box.offset(moving.offset(dir));
+					//TODO
+					for(Entity ent : getEntitiesMultiChunk(box, worldIn)){
+						if(ent.getPushReaction() != EnumPushReaction.IGNORE){
+							ent.setPositionAndUpdate(ent.posX + (double) dir.getFrontOffsetX(), ent.posY + (double) dir.getFrontOffsetY(), ent.posZ + (double) dir.getFrontOffsetZ());
+							if(world.getBlockState(moving.offset(dir)).getBlock() == Blocks.SLIME_BLOCK){
+								ent.addVelocity(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
+								ent.velocityChanged = true;
+							}
+						}
+					}
+				}
 			}
-			
+
 			for(int j = i; j >= 1; j--){
 				if(world.getBlockState(pos.offset(dir, j)).getMobilityFlag() == EnumPushReaction.DESTROY){
-					world.getBlockState(pos.offset(dir, j)).getBlock().dropBlockAsItem(worldIn, pos.offset(dir, j), world.getBlockState(pos.offset(dir, j)), 0);
+					worldIn.destroyBlock(pos.offset(dir, j), true);
 				}
 				world.addChange(pos.offset(dir, j), GOAL.getDefaultState().withProperty(Properties.FACING, dir).withProperty(Properties.HEAD, i == j));
 			}
+		}
+		if(world.hasChanges()){
+			worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
 		}
 		world.doChanges();
 	}
@@ -221,7 +275,7 @@ public class MultiPistonBase extends Block{
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
-		setExtension(world, pos, state.getValue(Properties.FACING), 0);
+		setExtension(world, pos, state.getValue(Properties.FACING), 0, getExtension(world, pos, state.getValue(Properties.FACING)));
 	}
 	
 	@Override
@@ -260,5 +314,41 @@ public class MultiPistonBase extends Block{
 	@Override
 	public EnumPushReaction getMobilityFlag(IBlockState state){
 		return state.getValue(Properties.REDSTONE_BOOL) ? EnumPushReaction.BLOCK : EnumPushReaction.NORMAL;
+	}
+	
+
+	/**
+	 * An alternate version of World#getEntitiesWithinAABBExcludingEntity that checks a 3x3x3 cube of mini chunks (16x16x16 cubes within chunks) for entities.
+	 * This is less efficient than the standard method, but necessary to fix a bug.
+	 */
+	private static ArrayList<Entity> getEntitiesMultiChunk(AxisAlignedBB checkBox, World worldIn){
+		ArrayList<Entity> found = new ArrayList<Entity>();
+
+		int i = MathHelper.floor_double((checkBox.minX - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
+		int j = MathHelper.floor_double((checkBox.maxX + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
+		int k = MathHelper.floor_double((checkBox.minZ - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
+		int l = MathHelper.floor_double((checkBox.maxZ + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
+
+		int yMin = MathHelper.clamp_int(MathHelper.floor_double((checkBox.minY - World.MAX_ENTITY_RADIUS) / 16.0D) - 1, 0, 15);
+		int yMax = MathHelper.clamp_int(MathHelper.floor_double((checkBox.maxY + World.MAX_ENTITY_RADIUS) / 16.0D) + 1, 0, 15);
+
+		for(int iLoop = i; iLoop <= j; ++iLoop){
+			for(int kLoop = k; kLoop <= l; ++kLoop){
+				if(((ChunkProviderServer) worldIn.getChunkProvider()).chunkExists(iLoop, kLoop)){
+					Chunk chunk = worldIn.getChunkFromChunkCoords(iLoop, kLoop);
+					for(int yLoop = yMin; yLoop <= yMax; ++yLoop){
+						if(!chunk.getEntityLists()[yLoop].isEmpty()){
+							for(Entity entity : chunk.getEntityLists()[yLoop]){
+								if(entity.getEntityBoundingBox().intersectsWith(checkBox)){
+									found.add(entity);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return found;
 	}
 }

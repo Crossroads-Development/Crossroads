@@ -185,13 +185,13 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			if(beamer == null || beamerUp == null){
 				return;
 			}
-			if(mag != null && mag.getVoid() != 0){
-				worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_6, 0));
+			if(mag != null && mag.getVoid() != 0 && worldObj.getBlockState(pos).getValue(Properties.TEXTURE_7) != 0){
+				worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
 				(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag);
 				return;
 			}
 			
-			switch(worldObj.getBlockState(pos).getValue(Properties.TEXTURE_6)){
+			switch(worldObj.getBlockState(pos).getValue(Properties.TEXTURE_7)){
 				case 0:
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
@@ -214,7 +214,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 					break;
 				case 4:
 					if(MagicElements.getElement(mag) == MagicElements.LIGHT){
-						worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_6, 5));
+						worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 5));
 					}
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
@@ -224,6 +224,12 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
+					break;
+				case 6:
+					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || MagicElements.getElement(mag) != MagicElements.RIFT ? null : new MagicUnit(0, 0, 0, mag.getPower()))){
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					}
+					break;
 			}
 		}
 	}
@@ -231,7 +237,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	private class LensHandler implements IItemHandler{
 
 		private ItemStack getLens(){
-			switch(worldObj.getBlockState(pos).getValue(Properties.TEXTURE_6)){
+			switch(worldObj.getBlockState(pos).getValue(Properties.TEXTURE_7)){
 				case 0:
 					return null;
 				case 1:
@@ -266,7 +272,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			}
 			
 			if(!simulate){
-				worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_6, stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == Items.DIAMOND ? 3 : 1));
+				worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == Items.DIAMOND ? 3 : 1));
 			}
 			
 			return stack.stackSize - 1 <= 0 ? null : new ItemStack(stack.getItem(), stack.stackSize - 1);
@@ -279,7 +285,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			}
 			ItemStack holder = getLens();
 			if(!simulate){
-				worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_6, 0));
+				worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
 			}
 			return holder;
 		}

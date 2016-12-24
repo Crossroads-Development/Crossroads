@@ -6,12 +6,17 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
 
 import amerifrance.guideapi.api.util.TextHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -75,12 +80,12 @@ public class OmniMeter extends Item{
 			}
 		}
 
-		if(te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
+		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 			pass = false;
 			if(!worldIn.isRemote){
-				IRotaryHandler gear = te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite());
+				IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
 
-				playerIn.addChatComponentMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[1] + ", I: " + gear.getPhysData()[2] + ", Radius: " + gear.getPhysData()[0]));
+				playerIn.addChatComponentMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]));
 			}
 		}
 		
@@ -100,6 +105,7 @@ public class OmniMeter extends Item{
 							if(!nbt.hasKey(MagicElements.getElement(check).name())){
 								nbt.setBoolean(MagicElements.getElement(check).name(), true);
 								playerIn.addChatComponentMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
+								ModPackets.network.sendTo(new SendElementNBTToClient(nbt), (EntityPlayerMP) playerIn);
 							}
 							
 							playerIn.addChatComponentMessage(new TextComponentString(check.toString()));
@@ -107,6 +113,17 @@ public class OmniMeter extends Item{
 					}
 				}
 			}
+		}
+
+		if(te instanceof CrystalMasterAxisTileEntity){
+			pass = false;
+			if(!worldIn.isRemote){
+				playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((CrystalMasterAxisTileEntity) te).getElement() == null ? "NONE" : (((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime())));
+			}
+		}
+		
+		if(te instanceof RatiatorTileEntity && !worldIn.isRemote){
+			playerIn.addChatComponentMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
 		}
 
 		return pass ? EnumActionResult.PASS : EnumActionResult.SUCCESS;

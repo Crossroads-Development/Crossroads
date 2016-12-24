@@ -33,7 +33,6 @@ public final class ModItems{
 	public static BasicItem dustSalt;
 	public static BasicItem mashedPotato;
 	public static HandCrank handCrank;
-	public static BasicItem axle;
 	public static ObsidianCuttingKit obsidianKit;
 	public static BasicItem dustCopper;
 	public static Thermometer thermometer;
@@ -55,6 +54,8 @@ public final class ModItems{
 	public static PigZombieChestsplate pigZombieChestplate;
 	public static CowLeggings cowLeggings;
 	public static ChickenBoots chickenBoots;
+	public static ChaosRod chaosRod;
+	public static BasicItem voidCrystal;
 
 	private static ArrayList<Item> modelQue = new ArrayList<Item>();
 
@@ -76,7 +77,6 @@ public final class ModItems{
 		itemAddQue(new DebugHeatWriter());
 		dustCopper = new BasicItem("dustCopper", "dustCopper");
 		dustSalt = new BasicItem("dustSalt", "dustSalt");
-		axle = new BasicItem("axle", "stickIron");
 		itemAddQue(obsidianKit = new ObsidianCuttingKit());
 		mashedPotato = new BasicItem("mashedPotato");
 		itemAddQue(thermometer = new Thermometer());
@@ -97,6 +97,8 @@ public final class ModItems{
 		itemAddQue(pigZombieChestplate = new PigZombieChestsplate());
 		itemAddQue(cowLeggings = new CowLeggings());
 		itemAddQue(chickenBoots = new ChickenBoots());
+		itemAddQue(chaosRod = new ChaosRod());
+		voidCrystal = new BasicItem("voidCrystal");
 	}
 
 	@SuppressWarnings("deprecation")

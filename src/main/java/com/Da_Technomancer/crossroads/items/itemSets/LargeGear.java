@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -50,7 +51,7 @@ public class LargeGear extends Item{
 
 		for(BlockPos cPos : section(pos, side)){
 			if(!worldIn.getBlockState(cPos).getBlock().isReplaceable(worldIn, cPos)){
-				return EnumActionResult.PASS;
+				return EnumActionResult.SUCCESS;
 			}
 		}
 
@@ -60,16 +61,16 @@ public class LargeGear extends Item{
 
 		for(BlockPos cPos : section(pos, side)){
 			if(pos.equals(cPos)){
-				worldIn.setBlockState(pos, ModBlocks.largeGearMaster.getDefaultState(), 3);
-				((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).initSetup(type, side.getOpposite());
+				worldIn.setBlockState(pos, ModBlocks.largeGearMaster.getDefaultState().withProperty(Properties.FACING, side.getOpposite()), 3);
+				((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).initSetup(type);
 			}else{
-				worldIn.setBlockState(cPos, ModBlocks.largeGearSlave.getDefaultState(), 3);
+				worldIn.setBlockState(cPos, ModBlocks.largeGearSlave.getDefaultState().withProperty(Properties.FACING, side.getOpposite()), 3);
 				((LargeGearSlaveTileEntity) worldIn.getTileEntity(cPos)).setInitial(pos);
 			}
 		}
 		++CommonProxy.masterKey;
 
-		return EnumActionResult.PASS;
+		return EnumActionResult.SUCCESS;
 	}
 
 	private static BlockPos[] section(BlockPos pos, EnumFacing side){

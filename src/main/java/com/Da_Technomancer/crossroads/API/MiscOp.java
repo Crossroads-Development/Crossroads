@@ -21,12 +21,12 @@ public final class MiscOp{
 	}
 
 	/**
-	 * a version of Math.ceil that factors in negative values better. Instead of
-	 * hitting ints, it uses the secong arg ex. tiers = 1 is like ceil, tiers =
-	 * 2 means goes to closest .5 value, rounding up
+	 * An alternate version of Math.round. Instead of
+	 * hitting ints, it uses the secong arg ex. tiers = 1 is like round, tiers =
+	 * 2 means goes to closest .5 value, etc.
 	 */
-	public static double centerCeil(double numIn, int tiers){
-		return ((numIn > 0) ? Math.ceil(numIn * tiers) : Math.floor(numIn * tiers)) / tiers;
+	public static double tiersRound(double numIn, int tiers){
+		return ((double) Math.round(numIn * (double) tiers)) / (double) tiers;
 	}
 
 	public static double findEfficiency(double speedIn, double lowerLimit, double upperLimit){
@@ -83,7 +83,7 @@ public final class MiscOp{
 		
 		for(AxisAlignedBB box : boxes){
 			RayTraceResult raytraceresult = box.calculateIntercept(start, end);
-			if(raytraceresult != null && dist < raytraceresult.hitVec.lengthSquared()){
+			if(raytraceresult != null && (dist > raytraceresult.hitVec.lengthSquared() || dist == 0)){
 				dist = (float) raytraceresult.hitVec.lengthSquared();
 				closest = box;
 			}

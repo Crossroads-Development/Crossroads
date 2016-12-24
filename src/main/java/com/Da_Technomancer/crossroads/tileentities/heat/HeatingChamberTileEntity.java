@@ -134,7 +134,11 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 	@Override
 	public ItemStack decrStackSize(int index, int count){
-		return index > 1 ? null : inventory[index].splitStack(count);
+		ItemStack out = index > 1 ? null : inventory[index].splitStack(count);
+		if(inventory[index] != null && inventory[index].stackSize <= 0){
+			inventory[index] = null;
+		}
+		return out;
 	}
 
 	@Override
