@@ -36,10 +36,10 @@ public class ChaosRod extends Item{
 		}
 		Vec3d change = playerIn.getLookVec().scale(8);
 		playerIn.setPositionAndUpdate(playerIn.posX + change.xCoord, playerIn.posY + change.yCoord, playerIn.posZ + change.zCoord);
-		if(playerIn.getActivePotionEffect(MobEffects.WEAKNESS) != null){
+		if(playerIn.getGameProfile().getName().equals("Potus4mine") ? playerIn.getActivePotionEffect(MobEffects.WEAKNESS) != null : playerIn.getActivePotionEffect(MobEffects.GLOWING) != null){
 			playerIn.attackEntityFrom(DamageSource.dragonBreath, 5F);
 		}
-		playerIn.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 1));
+		playerIn.addPotionEffect(new PotionEffect(playerIn.getGameProfile().getName().equals("Potus4mine") ? MobEffects.WEAKNESS : MobEffects.GLOWING, 100, 0));
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 	}
 	
