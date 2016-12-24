@@ -65,12 +65,12 @@ public class MagicUnit{
 		return col == null ? new Color(0, 0, 0) : new Color((int) Math.round(((double) col.getRed()) * mult), (int) Math.round(((double) col.getGreen()) * mult), (int) Math.round(((double) col.getBlue()) * mult));
 	}
 	
-	public MagicUnit mult(double multiplier){
-		return mult(multiplier, multiplier, multiplier, multiplier);
+	public MagicUnit mult(double multiplier, boolean floor){
+		return mult(multiplier, multiplier, multiplier, multiplier, floor);
 	}
 	
-	public MagicUnit mult(double e, double p, double s, double v){
-		return new MagicUnit(MiscOp.safeRound(e * (double) energy), MiscOp.safeRound(p * (double) potential), MiscOp.safeRound(s * (double) stability), MiscOp.safeRound(v * (double) voi));
+	public MagicUnit mult(double e, double p, double s, double v, boolean floor){
+		return floor ? new MagicUnit((int) Math.floor(e * (double) energy), (int) Math.floor(p * (double) potential), (int) Math.floor(s * (double) stability), (int) Math.floor(v * (double) voi)) : new MagicUnit(MiscOp.safeRound(e * (double) energy), MiscOp.safeRound(p * (double) potential), MiscOp.safeRound(s * (double) stability), MiscOp.safeRound(v * (double) voi));
 	}
 	
 	public NBTTagCompound setNBT(NBTTagCompound nbt, @Nullable String key){

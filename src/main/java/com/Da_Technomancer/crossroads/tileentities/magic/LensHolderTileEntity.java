@@ -55,6 +55,9 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
+		if(worldObj.getBlockState(pos).getBlock() != ModBlocks.lensHolder){
+			return null;
+		}
 		Triple<Color, Integer, Integer>[] out = new Triple[6];
 		out[EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, worldObj.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z).getIndex()] = tripUp;
 		out[EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, worldObj.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z).getIndex()] = trip;

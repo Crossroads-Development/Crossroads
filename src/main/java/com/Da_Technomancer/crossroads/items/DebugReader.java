@@ -95,7 +95,8 @@ public class DebugReader extends Item{
 			if(!worldIn.isRemote){
 				MagicUnit[] mag = ((BeamRenderTE) te).getLastFullSent();
 				if(mag != null){
-					for(MagicUnit check : mag){
+					for(int i = 0; i < 6; i++){
+						MagicUnit check = mag[i];
 						if(check != null){
 							NBTTagCompound nbt = MiscOp.getPlayerTag(playerIn);
 							if(!nbt.hasKey("elements")){
@@ -109,7 +110,7 @@ public class DebugReader extends Item{
 								ModPackets.network.sendTo(new SendElementNBTToClient(nbt), (EntityPlayerMP) playerIn);
 							}
 							
-							playerIn.addChatComponentMessage(new TextComponentString(check.toString()));
+							playerIn.addChatComponentMessage(new TextComponentString(EnumFacing.getFront(i).toString() + ": " + check.toString()));
 						}
 					}
 				}

@@ -87,13 +87,13 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 
 			MagicUnit out = toSend.getOutput();
 			
-			if(beamerR.emit(out == null || out.getEnergy() == 0 ? null : out.mult(1, 0, 0, 0))){
+			if(beamerR.emit(out == null || out.getEnergy() == 0 ? null : out.mult(1, 0, 0, 0, false))){
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamR", beamerR.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
-			if(beamerG.emit(out == null || out.getPotential() == 0 ? null : out.mult(0, 1, 0, 0))){
+			if(beamerG.emit(out == null || out.getPotential() == 0 ? null : out.mult(0, 1, 0, 0, false))){
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamG", beamerG.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
-			if(beamerB.emit(out == null || out.getStability() == 0 ? null : out.mult(0, 0, 1, 0))){
+			if(beamerB.emit(out == null || out.getStability() == 0 ? null : out.mult(0, 0, 1, 0, false))){
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamB", beamerB.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();

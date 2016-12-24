@@ -114,7 +114,6 @@ public class Ratiator extends BlockContainer{
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		neighborChanged(state, worldIn, pos, null);
-		//worldIn.updateBlockTick(pos, this, 2, -1);
 	}
 	
 	private double getPowerOnSide(World worldIn, BlockPos pos, EnumFacing side, boolean allowAll){
@@ -134,6 +133,7 @@ public class Ratiator extends BlockContainer{
 		((RatiatorTileEntity) worldIn.getTileEntity(pos)).setOutput(state.getValue(Properties.REDSTONE_BOOL) ? getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).getOpposite(), true) / (sidePower == 0 ? 1D : sidePower) : getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).getOpposite(), true) * sidePower);
 		if(lastOut != ((RatiatorTileEntity) worldIn.getTileEntity(pos)).getOutput()){
 			worldIn.notifyBlockOfStateChange(pos.offset(state.getValue(Properties.FACING)), this);
+	        worldIn.notifyNeighborsOfStateExcept(pos.offset(state.getValue(Properties.FACING)), this, state.getValue(Properties.FACING).getOpposite());
 		}
 	}
 	
@@ -150,7 +150,7 @@ public class Ratiator extends BlockContainer{
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side){
 		return side != null && side.getAxis() != EnumFacing.Axis.Y;
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer(){
 		return BlockRenderLayer.CUTOUT;

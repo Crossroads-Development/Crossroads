@@ -69,7 +69,7 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 
 		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 			MagicUnit out = toSend.getOutput();
-			MagicUnit outMult = out == null ? null : out.mult(.5D);
+			MagicUnit outMult = out == null ? null : out.mult(.5D, false);
 			if(outMult == null || outMult.getPower() == 0){
 				outMult = null;
 			}

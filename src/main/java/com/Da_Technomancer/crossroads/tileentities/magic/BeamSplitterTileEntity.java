@@ -71,7 +71,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 
 		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 			MagicUnit out = toSend.getOutput();
-			MagicUnit outMult = out == null ? null : out.mult(((double) redstone) / 15D);
+			MagicUnit outMult = out == null ? null : out.mult(((double) redstone) / 15D, false);
 			if(outMult == null || outMult.getPower() == 0){
 				outMult = null;
 			}

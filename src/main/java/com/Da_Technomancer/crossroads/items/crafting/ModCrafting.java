@@ -127,9 +127,9 @@ public final class ModCrafting{
 		// Thermometer
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', "stickIron", '?', "blockGlass"));
 		// Fluid Gauge
-		GameRegistry.addRecipe(new ItemStack(ModItems.fluidGauge, 1), "#", "$", '#', Items.COMPASS, '$', ModBlocks.fluidTube);
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.fluidGauge, 1), " * ", "*#*", " *$", '#', "blockGlass", '*', "ingotIron", '$', ModBlocks.fluidTube));
 		// Speedometer
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.speedometer, 1), " #", "#$", '#', "string", '$', "ingotIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.speedometer, 1), "#", "$", '#', "string", '$', Items.COMPASS));
 		// OmniMeter
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.omnimeter, 1), " # ", "&$%", " ? ", '#', ModItems.fluidGauge, '&', ModItems.thermometer, '$', "gemEmerald", '%', ModItems.speedometer, '?', Items.CLOCK));
 		// Fluid Tank (second recipe is for clearing contents)
