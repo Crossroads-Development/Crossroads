@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"north": "crossroads:blocks/masterAxisFront",
-		"south": "crossroads:blocks/WIP",
-		"east": "crossroads:blocks/WIP",
-		"west": "crossroads:blocks/WIP",
-		"up": "crossroads:blocks/WIP",
-		"down": "crossroads:blocks/WIP",
-		"particle": "crossroads:blocks/WIP"
+		"north": "crossroads:blocks/multiPistonSide",
+		"south": "crossroads:blocks/multiPistonSide",
+		"east": "crossroads:blocks/multiPistonSide",
+		"west": "crossroads:blocks/multiPistonSide",
+		"up": "crossroads:blocks/blockTin",
+		"down": "crossroads:blocks/blockBronze",
+		"particle": "crossroads:blocks/multiPistonSide"
 	}
 }

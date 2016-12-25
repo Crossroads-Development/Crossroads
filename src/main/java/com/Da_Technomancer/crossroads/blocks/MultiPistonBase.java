@@ -165,7 +165,6 @@ public class MultiPistonBase extends Block{
 			}
 
 			if(list.isEmpty()){
-				//TODO
 				for(Entity ent : getEntitiesMultiChunk(FULL_BLOCK_AABB.offset(pos.offset(dir, i)), worldIn)){
 					if(ent.getPushReaction() != EnumPushReaction.IGNORE){
 						ent.setPositionAndUpdate(ent.posX + (double) dir.getFrontOffsetX(), ent.posY + (double) dir.getFrontOffsetY(), ent.posZ + (double) dir.getFrontOffsetZ());
@@ -192,7 +191,6 @@ public class MultiPistonBase extends Block{
 						box = FULL_BLOCK_AABB;
 					}
 					box = box.offset(moving.offset(dir));
-					//TODO
 					for(Entity ent : getEntitiesMultiChunk(box, worldIn)){
 						if(ent.getPushReaction() != EnumPushReaction.IGNORE){
 							ent.setPositionAndUpdate(ent.posX + (double) dir.getFrontOffsetX(), ent.posY + (double) dir.getFrontOffsetY(), ent.posZ + (double) dir.getFrontOffsetZ());

@@ -65,7 +65,7 @@ public class ElementEntry extends EntryItemStack{
 			case POTENTIAL:
 				return new PageText(elem.toString() + ": Brings out the potential in living things, growing crops faster based on power.");
 			case RIFT:
-				return new PageText(elem.toString() + ": A form of energy that makes things more stable. Such a thing is not possible in our universe, so it opens a rift into a neighboring universe where such a thing is possible. This universe is where mobs come from. Spawns hostile mobs (Up to mob cap) at a rate based on (power). When power >= 128, spawns 1 mob every 5 ticks. Converts purpur blocks->shulkers, skulls->wither skeleton skulls, & stone->silverfish stone.");
+				return new PageText(elem.toString() + ": A form of energy that makes things more stable. Such a thing is not possible in our universe, so it opens a rift into a neighboring universe where such a thing is possible. This universe is where mobs come from. Spawns hostile mobs (up to cap) at a rate based on (power). When power >= 128, spawns 1 mob every 5 ticks. Converts purpur blocks->shulkers, skulls->wither skeleton skulls, & stone->silverfish stone.");
 			case STABILITY:
 				return new PageText(elem.toString() + ": Does nothing on its own. In a Crystalline Master Axis it prevents power loss.");
 			case TIME:
@@ -98,7 +98,7 @@ public class ElementEntry extends EntryItemStack{
 			case POTENTIAL:
 				return new PageText(elem.toString() + ": Grows crops faster based on power.");
 			case RIFT:
-				return new PageText(elem.toString() + ": Spawns hostile mobs (Up to mob cap). Converts purpur blocks to shulkers, skeleton skulls to wither skeleton skulls, and stone to silverfish stone.");
+				return new PageText(elem.toString() + ": Spawns hostile mobs (Up to 3 * mob limit total). Converts purpur blocks to shulkers, skeleton skulls to wither skeleton skulls, and stone to silverfish stone.");
 			case STABILITY:
 				return new PageText(elem.toString() + ": Does nothing on its own. In a Crystalline Master Axis it prevents power loss.");
 			case TIME:

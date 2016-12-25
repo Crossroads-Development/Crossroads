@@ -1,16 +1,16 @@
 {
 	"variants": {
-		"facing=north,redstone_bool=false": { "model": "crossroads:multiPistonSticky" },
-		"facing=north,redstone_bool=true": { "model": "crossroads:multiPistonSticky" },
-		"facing=south,redstone_bool=false": { "model": "crossroads:multiPistonSticky", "y": 180 },
-		"facing=south,redstone_bool=true": { "model": "crossroads:multiPistonSticky", "y": 180 },
-		"facing=east,redstone_bool=false": { "model": "crossroads:multiPistonSticky", "y": 90 },
-		"facing=east,redstone_bool=true": { "model": "crossroads:multiPistonSticky", "y": 90 },
-		"facing=west,redstone_bool=false": { "model": "crossroads:multiPistonSticky", "y": 270 },
-		"facing=west,redstone_bool=true": { "model": "crossroads:multiPistonSticky", "y": 270 },
-		"facing=up,redstone_bool=false": { "model": "crossroads:multiPistonSticky", "x": 270},
-		"facing=up,redstone_bool=true": { "model": "crossroads:multiPistonSticky", "x": 270},
-		"facing=down,redstone_bool=false": { "model": "crossroads:multiPistonSticky", "x": 90},
-		"facing=down,redstone_bool=true": { "model": "crossroads:multiPistonSticky", "x": 90}
+		"facing=north,redstone_bool=false": { "model": "crossroads:multiPistonSticky", "x": 90 },
+		"facing=north,redstone_bool=true": { "model": "crossroads:multiPistonSticky", "x": 90 },
+		"facing=south,redstone_bool=false": { "model": "crossroads:multiPistonSticky", "x": 90, "y": 180 },
+		"facing=south,redstone_bool=true": { "model": "crossroads:multiPistonSticky", "x": 90, "y": 180 },
+		"facing=east,redstone_bool=false": { "model": "crossroads:multiPistonSticky", "x": 90, "y": 90 },
+		"facing=east,redstone_bool=true": { "model": "crossroads:multiPistonSticky", "x": 90, "y": 90 },
+		"facing=west,redstone_bool=false": { "model": "crossroads:multiPistonSticky", "x": 90, "y": 270 },
+		"facing=west,redstone_bool=true": { "model": "crossroads:multiPistonSticky", "x": 90, "y": 270 },
+		"facing=up,redstone_bool=false": { "model": "crossroads:multiPistonSticky"},
+		"facing=up,redstone_bool=true": { "model": "crossroads:multiPistonSticky"},
+		"facing=down,redstone_bool=false": { "model": "crossroads:multiPistonSticky", "x": 180},
+		"facing=down,redstone_bool=true": { "model": "crossroads:multiPistonSticky", "x": 180}
 	}
 }

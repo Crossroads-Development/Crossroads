@@ -11,7 +11,9 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -62,6 +64,29 @@ public class MultiPistonExtend extends Block{
 	public IBlockState getStateFromMeta(int meta){
 		return this.getDefaultState().withProperty(Properties.HEAD, (meta & 8) == 8).withProperty(Properties.FACING, EnumFacing.getFront(meta & 7));
 	}
+	
+
+	private static final AxisAlignedBB XBOX = new AxisAlignedBB(0, .375D, .375D, 1, .625D, .625D);
+	private static final AxisAlignedBB YBOX = new AxisAlignedBB(.375D, 0, .375D, .625D, 1, .625D);
+	private static final AxisAlignedBB ZBOX = new AxisAlignedBB(.375D, .375D, 0, .625D, .625D, 1);
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		if(state.getValue(Properties.HEAD)){
+			return FULL_BLOCK_AABB;
+		}
+		switch(state.getValue(Properties.FACING).getAxis()){
+			case X:
+				return XBOX;
+			case Y:
+				return YBOX;
+			case Z:
+				return ZBOX;
+			default:
+				return null;
+			
+		}
+	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
@@ -70,6 +95,11 @@ public class MultiPistonExtend extends Block{
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state){
 		return false;
 	}
 	

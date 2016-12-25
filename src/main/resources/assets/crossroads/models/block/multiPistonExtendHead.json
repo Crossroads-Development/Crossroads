@@ -1,12 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"north": "crossroads:blocks/masterAxisFront",
-		"south": "crossroads:blocks/WIP",
-		"east": "crossroads:blocks/WIP",
-		"west": "crossroads:blocks/WIP",
-		"up": "crossroads:blocks/WIP",
-		"down": "crossroads:blocks/WIP",
-		"particle": "crossroads:blocks/WIP"
+		"all": "crossroads:blocks/blockTin"
 	}
 }
