@@ -30,34 +30,21 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 	@Override
 	public void renderTileEntityAt(RotaryPumpTileEntity pump, double x, double y, double z, float partialTicks, int destroyStage){
 
-		if(pump != null && !pump.getWorld().isBlockLoaded(pump.getPos(), false)){
+		if(pump == null || !pump.getWorld().isBlockLoaded(pump.getPos(), false)){
 			return;
 		}
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 		GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
-
-		if(pump == null){
-			GlStateManager.scale(.3D, .3D, .3D);
-			GlStateManager.translate(-1.5F, -2.2F, 1.2F);
-		}else{
-			GlStateManager.translate(-.5F, -1.5F, .5F);
-		}
-
+		GlStateManager.translate(-.5F, -1.5F, .5F);
+		GlStateManager.rotate(pump.getCompletion() * 360F, 0F, 1F, 0F);
+		
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-		model.renderMain();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.rotate(pump == null ? 0 : pump.getCompletion() * 360F, 0F, 1F, 0F);
 		model.renderScrew();
+		
 		GlStateManager.popMatrix();
-		GlStateManager.popMatrix();
-
-		if(pump == null){
-			return;
-		}
-
+		
 		if(pump.getCompletion() != 0){
 			IBlockState state = pump.getWorld().getBlockState(pump.getPos().offset(EnumFacing.DOWN));
 			TextureAtlasSprite lText = null;

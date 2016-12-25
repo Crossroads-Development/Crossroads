@@ -94,7 +94,7 @@ public class OmniMeter extends Item{
 			if(!worldIn.isRemote){
 				MagicUnit[] mag = ((BeamRenderTE) te).getLastFullSent();
 				if(mag != null){
-					for(int i = 0; i < 6; i++){
+					for(int i = 0; i < mag.length; i++){
 						MagicUnit check = mag[i];
 						if(check != null){
 							NBTTagCompound nbt = MiscOp.getPlayerTag(playerIn);

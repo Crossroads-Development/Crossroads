@@ -5,16 +5,13 @@ import java.util.List;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -101,7 +98,6 @@ public final class ModItems{
 		voidCrystal = new BasicItem("voidCrystal");
 	}
 
-	@SuppressWarnings("deprecation")
 	@SideOnly(Side.CLIENT)
 	public static void initModels(){
 		// Any items that need models initialized without metadata other than 0,
@@ -110,9 +106,6 @@ public final class ModItems{
 		for(Item modeling : modelQue){
 			register(modeling, 0);
 		}
-
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.rotaryPump), 0, RotaryPumpTileEntity.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.steamTurbine), 0, RotaryPumpTileEntity.class);
 	}
 
 	@SideOnly(Side.CLIENT)
