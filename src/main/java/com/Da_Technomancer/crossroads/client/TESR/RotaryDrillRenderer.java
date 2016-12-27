@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.client.TESR;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelDrill;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 
@@ -18,7 +19,7 @@ public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTi
 	@Override
 	public void renderTileEntityAt(RotaryDrillTileEntity drill, double x, double y, double z, float partialTicks, int destroyStage){
 
-		if(!drill.getWorld().isBlockLoaded(drill.getPos(), false)){
+		if(drill.getWorld().getBlockState(drill.getPos()).getBlock() != ModBlocks.rotaryDrill || !drill.getWorld().isBlockLoaded(drill.getPos(), false)){
 			return;
 		}
 
