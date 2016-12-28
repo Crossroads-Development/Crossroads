@@ -75,20 +75,9 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * rand.nextDouble()), pos.getY() + 1 + (rand.nextDouble() * .25D), pos.getZ() + .25 + (.5 * rand.nextDouble()), 0, -1, 1, 1, 1, new int[0]);
 					break;
 				case 3:
-					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * rand.nextDouble()), pos.getY() + 1 + (rand.nextDouble() * .25D), pos.getZ() + .25 + (.5 * rand.nextDouble()), 0, 0, .4, .4, 1, new int[0]);
-					if((out = RecipeHolder.recipeMatch(false, (ArrayList<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE))) != null){
-						for(EntityItem item : worldObj.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
-							item.setDead();
-						}
-
-						worldObj.createExplosion(null, pos.getX(), pos.getY() + 1, pos.getZ(), 0, true);
-						worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.getX(), pos.getY() + 1, pos.getZ(), out.copy()));
-					}
-					break;
-				case 4:
 					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * rand.nextDouble()), pos.getY() + 1 + (rand.nextDouble() * .25D), pos.getZ() + .25 + (.5 * rand.nextDouble()), 0, -1, 0, 1, 1, new int[0]);
 					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * rand.nextDouble()), pos.getY() + 1 + (rand.nextDouble() * .25D), pos.getZ() + .25 + (.5 * rand.nextDouble()), 0, 0, 1, 0, 1, new int[0]);
-					if((out = RecipeHolder.recipeMatch(true, (ArrayList<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE))) != null){
+					if((out = RecipeHolder.recipeMatch((ArrayList<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE))) != null){
 						for(EntityItem item : worldObj.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
 							item.setDead();
 						}
@@ -97,7 +86,6 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 						ModPackets.network.sendToAllAround(new SendLightningToClient(pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY() + 1, pos.getZ(), 512));
 						worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.getX(), pos.getY() + 1, pos.getZ(), out.copy()));
 					}
-
 					break;
 			}
 		}
@@ -121,7 +109,7 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 	private ItemStack inventory;
 
 	// 0 means not lit, 1 means lit normally, 2 means lit with salt, 3 means lit
-	// with mashed potato, 4 means lit with poisonous potato.
+	// with poisonous potato.
 	private byte getState(){
 		if(inventory == null){
 			return 0;
@@ -135,19 +123,15 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 			return 1;
 		}
 
-		if(inventory.getItem() == ModItems.mashedPotato){
-			return 3;
-		}
-
 		if(inventory.getItem() == Items.POISONOUS_POTATO){
-			return 4;
+			return 3;
 		}
 
 		return 0;
 	}
 
 	public ItemStack addFuel(ItemStack stack){
-		if((stack.getItem() == Items.COAL && stack.getMetadata() == 1) || stack.getItem() == ModItems.dustSalt || stack.getItem() == Items.POISONOUS_POTATO || stack.getItem() == ModItems.mashedPotato){
+		if((stack.getItem() == Items.COAL && stack.getMetadata() == 1) || stack.getItem() == ModItems.dustSalt || stack.getItem() == Items.POISONOUS_POTATO){
 			if(inventory == null || (stack.getItem() == inventory.getItem() && inventory.stackSize != getInventoryStackLimit())){
 
 				stack.stackSize--;
@@ -226,7 +210,7 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && (stack.getItem() == ModItems.dustSalt || (stack.getItem() == Items.COAL && stack.getMetadata() == 1) || stack.getItem() == ModItems.mashedPotato || stack.getItem() == Items.POISONOUS_POTATO);
+		return index == 0 && (stack.getItem() == ModItems.dustSalt || (stack.getItem() == Items.COAL && stack.getMetadata() == 1) || stack.getItem() == Items.POISONOUS_POTATO);
 	}
 
 	@Override

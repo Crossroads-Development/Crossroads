@@ -28,7 +28,7 @@ public final class ModItems{
 	@Deprecated
 	public static BasicItem metalScrap;
 	public static BasicItem dustSalt;
-	public static BasicItem mashedPotato;
+	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
 	public static ObsidianCuttingKit obsidianKit;
 	public static BasicItem dustCopper;
@@ -75,7 +75,7 @@ public final class ModItems{
 		dustCopper = new BasicItem("dustCopper", "dustCopper");
 		dustSalt = new BasicItem("dustSalt", "dustSalt");
 		itemAddQue(obsidianKit = new ObsidianCuttingKit());
-		mashedPotato = new BasicItem("mashedPotato");
+		mashedPotato = new MashedPotato();
 		itemAddQue(thermometer = new Thermometer());
 		itemAddQue(fluidGauge = new FluidGauge());
 		itemAddQue(speedometer = new Speedometer());

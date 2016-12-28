@@ -45,7 +45,6 @@ public final class RecipeHolder{
 	 * A list of all recipes, Item Array are the ingredients, and itemstack is
 	 * output. A list for poisonous potato recipes and mashed potato recipes.
 	 */
-	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> mashedBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
 	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
 
 	/**
@@ -70,7 +69,7 @@ public final class RecipeHolder{
 		JEIWrappers.add(new HeatingCrucibleRecipe(false));
 	}
 
-	public static ItemStack recipeMatch(boolean poisonous, ArrayList<EntityItem> itemEnt){
+	public static ItemStack recipeMatch(ArrayList<EntityItem> itemEnt){
 		if(itemEnt == null){
 			return null;
 		}
@@ -88,35 +87,15 @@ public final class RecipeHolder{
 			return null;
 		}
 
-		if(poisonous){
-			for(Pair<ICraftingStack[], ItemStack> craft : poisonBoboRecipes){
-				ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
-				itemCop.addAll(items);
+		for(Pair<ICraftingStack[], ItemStack> craft : poisonBoboRecipes){
+			ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
+			itemCop.addAll(items);
 
-				for(ICraftingStack cStack : craft.getLeft()){
-					for(ItemStack stack : items){
-						if(itemCop.contains(stack) && cStack.softMatch(stack)){
-							itemCop.remove(stack);
-							break;
-						}
-					}
-
-					if(itemCop.size() == 0){
-						return craft.getRight();
-					}
-				}
-			}
-		}else{
-			for(Pair<ICraftingStack[], ItemStack> craft : mashedBoboRecipes){
-				ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
-				itemCop.addAll(items);
-
-				for(ICraftingStack cStack : craft.getLeft()){
-					for(ItemStack stack : items){
-						if(itemCop.contains(stack) && cStack.softMatch(stack)){
-							itemCop.remove(stack);
-							break;
-						}
+			for(ICraftingStack cStack : craft.getLeft()){
+				for(ItemStack stack : items){
+					if(itemCop.contains(stack) && cStack.softMatch(stack)){
+						itemCop.remove(stack);
+						break;
 					}
 				}
 
