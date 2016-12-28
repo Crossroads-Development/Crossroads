@@ -163,7 +163,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 	@Override
 	public void trigger(byte keyIn, ITileMasterAxis masterIn, EnumFacing side){
 		if(!locked && side == facing && keyIn != key){
-			masterIn.lock();
+			locked = true;
 			requestUpdate();
 		}
 
