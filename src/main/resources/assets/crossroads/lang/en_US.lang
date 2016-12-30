@@ -56,6 +56,7 @@ fluid.moltencopper=Molten Copper
 tile.blockMoltenCopper.name=Molten Copper Source
 tile.blockDistilledWater.name=Distilled Water Source
 tile.blockSteam.name=Steam Source
+tile.blockLiquidFat.name=Liquid Fat Source
 item.debugReader.name=Analytical Lens
 item.debugHeatWriter.name=Debug Heat Writer
 item.debugGearWriter.name=Debug Gear Writer

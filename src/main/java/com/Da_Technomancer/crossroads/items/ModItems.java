@@ -75,7 +75,7 @@ public final class ModItems{
 		dustCopper = new BasicItem("dustCopper", "dustCopper");
 		dustSalt = new BasicItem("dustSalt", "dustSalt");
 		itemAddQue(obsidianKit = new ObsidianCuttingKit());
-		mashedPotato = new MashedPotato();
+		itemAddQue(mashedPotato = new MashedPotato());
 		itemAddQue(thermometer = new Thermometer());
 		itemAddQue(fluidGauge = new FluidGauge());
 		itemAddQue(speedometer = new Speedometer());
