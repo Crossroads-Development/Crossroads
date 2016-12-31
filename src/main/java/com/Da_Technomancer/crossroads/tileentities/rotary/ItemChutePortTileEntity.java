@@ -31,10 +31,10 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 			inventory = null;
 		}else{
 			EnumFacing side = worldObj.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y);
-			if(inventory != null && getOutput() != null && worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite())){
+			if(inventory != null && getOutput() != null && worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
 				EnumFacing facing = worldObj.getBlockState(getOutput()).getValue(Properties.FACING);
-				if(Math.abs(worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite()).getMotionData()[0]) > .1D && Math.abs(worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite()).getMotionData()[1]) > .5D){
-					worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(-.5D, false, false);
+				if(Math.abs(worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).getMotionData()[0]) > .1D && Math.abs(worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).getMotionData()[1]) > .5D){
+					worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(-.5D, false, false);
 					EntityItem ent = new EntityItem(worldObj, getOutput().getX() + (facing == EnumFacing.EAST ? 1.5D : facing == EnumFacing.WEST ? -.5D : facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH ? .5D : 0), getOutput().getY(), getOutput().getZ() + (facing == EnumFacing.SOUTH ? 1.5D : facing == EnumFacing.EAST || facing == EnumFacing.WEST ? .5D : facing == EnumFacing.NORTH ? -.5D : 0), inventory.copy());
 					ent.motionX = 0;
 					ent.motionZ = 0;
@@ -66,7 +66,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 	}
 
 	private boolean isSpotInvalid(){
-		if(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)) != null && (worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) instanceof ItemChutePortTileEntity || worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == ModBlocks.itemChute)){
+		if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) instanceof ItemChutePortTileEntity || worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == ModBlocks.itemChute){
 			return true;
 		}
 		return false;
@@ -83,7 +83,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 				return pos.offset(EnumFacing.UP, height);
 			}
 
-			if(worldObj.getBlockState(pos.offset(EnumFacing.UP, height)) == null || (worldObj.getBlockState(pos.offset(EnumFacing.UP, height)).getBlock() != ModBlocks.itemChute)){
+			if(worldObj.getBlockState(pos.offset(EnumFacing.UP, height)).getBlock() != ModBlocks.itemChute){
 				return null;
 			}
 			if(++height > 255){

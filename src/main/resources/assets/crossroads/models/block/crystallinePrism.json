@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/prismEmerald",
+		"south": "crossroads:blocks/prismIn",
+		"east": "crossroads:blocks/prismDiamond",
+		"west": "crossroads:blocks/prismRuby",
+		"up": "crossroads:blocks/blockPureQuartz",
+		"down": "crossroads:blocks/blockPureQuartz",
+		"particle": "crossroads:blocks/blockPureQuartz"
+	}
+}

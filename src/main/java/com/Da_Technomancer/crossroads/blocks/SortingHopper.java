@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.tileentities.SortingHopperTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHopper;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -49,12 +50,13 @@ public class SortingHopper extends BlockContainer{
 	private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.875D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
 	private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.125D, 1.0D, 1.0D);
 
-	public SortingHopper(){
+	protected SortingHopper(){
 		super(Material.IRON);
 		String name = "sortingHopper";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(2);
+		setSoundType(SoundType.METAL);
 		this.setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
@@ -75,10 +77,6 @@ public class SortingHopper extends BlockContainer{
 		addCollisionBoxToList(pos, entityBox, collidingBoxes, NORTH_AABB);
 	}
 
-	/**
-	 * Called by ItemBlocks just before a block is actually set in the world, to
-	 * allow for adjustments to the IBlockstate
-	 */
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = facing.getOpposite();
@@ -90,19 +88,11 @@ public class SortingHopper extends BlockContainer{
 		return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(ENABLED, Boolean.valueOf(true));
 	}
 
-	/**
-	 * Returns a new instance of a block's tile entity class. Called on placing
-	 * the block.
-	 */
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new SortingHopperTileEntity();
 	}
 
-	/**
-	 * Checks if an IBlockState represents a block that is opaque and a full
-	 * cube.
-	 */
 	@Override
 	public boolean isFullyOpaque(IBlockState state){
 		return true;
@@ -115,26 +105,17 @@ public class SortingHopper extends BlockContainer{
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(worldIn.isRemote){
-			return true;
-		}else{
+		if(!worldIn.isRemote){
 			TileEntity tileentity = worldIn.getTileEntity(pos);
 
 			if(tileentity instanceof SortingHopperTileEntity){
 				playerIn.displayGUIChest((SortingHopperTileEntity) tileentity);
 				playerIn.addStat(StatList.HOPPER_INSPECTED);
 			}
-
-			return true;
 		}
+		return true;
 	}
 
-	/**
-	 * Called when a neighboring block was changed and marks that this state
-	 * should perform any checks during a neighbor change. Cases may include
-	 * when redstone power is updated, cactus blocks popping off due to a
-	 * neighboring solid block, etc.
-	 */
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
 		this.updateState(worldIn, pos, state);
@@ -151,19 +132,13 @@ public class SortingHopper extends BlockContainer{
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		TileEntity tileentity = worldIn.getTileEntity(pos);
-
 		if(tileentity instanceof SortingHopperTileEntity){
 			InventoryHelper.dropInventoryItems(worldIn, pos, (SortingHopperTileEntity) tileentity);
 			worldIn.updateComparatorOutputLevel(pos, this);
 		}
-
 		super.breakBlock(worldIn, pos, state);
 	}
 
-	/**
-	 * The type of render function called. 3 for standard block models, 2 for
-	 * TESR's, 1 for liquids, -1 is no render
-	 */
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
@@ -174,10 +149,6 @@ public class SortingHopper extends BlockContainer{
 		return false;
 	}
 
-	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks
-	 * for render
-	 */
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
@@ -189,15 +160,6 @@ public class SortingHopper extends BlockContainer{
 		return true;
 	}
 
-	public static EnumFacing getFacing(int meta){
-		return EnumFacing.getFront(meta & 7);
-	}
-
-	/**
-	 * Get's the hopper's active status from the 8-bit of the metadata. Note
-	 * that the metadata stores whether the block is powered, so this returns
-	 * true when that bit is 0.
-	 */
 	public static boolean isEnabled(int meta){
 		return (meta & 8) != 8;
 	}
@@ -218,42 +180,21 @@ public class SortingHopper extends BlockContainer{
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
-	/**
-	 * Convert the given metadata into a BlockState for this Block
-	 */
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(ENABLED, Boolean.valueOf(isEnabled(meta)));
+		return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7)).withProperty(ENABLED, Boolean.valueOf(isEnabled(meta)));
 	}
 
-	/**
-	 * Convert the BlockState into the correct metadata value
-	 */
 	@Override
 	public int getMetaFromState(IBlockState state){
-		int i = 0;
-		i = i | state.getValue(FACING).getIndex();
-
-		if(!state.getValue(ENABLED).booleanValue()){
-			i |= 8;
-		}
-
-		return i;
+		return state.getValue(FACING).getIndex() + (state.getValue(ENABLED) ? 0 : 8);
 	}
 
-	/**
-	 * Returns the blockstate with the given rotation from the passed
-	 * blockstate. If inapplicable, returns the passed blockstate.
-	 */
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
 		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
-	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If
-	 * inapplicable, returns the passed blockstate.
-	 */
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
 		return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));

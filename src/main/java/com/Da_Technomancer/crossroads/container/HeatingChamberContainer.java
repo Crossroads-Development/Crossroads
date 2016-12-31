@@ -22,7 +22,6 @@ public class HeatingChamberContainer extends Container{
 		this.te = te;
 
 		// Input slot, ID 0
-		// TODO adjust position on all slots
 		addSlotToContainer(new Slot(te, 0, 56, 35));
 
 		// Output slot, ID 1

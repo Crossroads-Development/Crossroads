@@ -3,6 +3,8 @@ package com.Da_Technomancer.crossroads.blocks;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCongealer;
@@ -23,6 +25,16 @@ import com.Da_Technomancer.crossroads.blocks.heat.HeatingChamber;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatingCrucible;
 import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.SaltReactor;
+import com.Da_Technomancer.crossroads.blocks.magic.ArcaneExtractor;
+import com.Da_Technomancer.crossroads.blocks.magic.ArcaneReflector;
+import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitter;
+import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitterBasic;
+import com.Da_Technomancer.crossroads.blocks.magic.ColorChart;
+import com.Da_Technomancer.crossroads.blocks.magic.CrystallinePrism;
+import com.Da_Technomancer.crossroads.blocks.magic.LensHolder;
+import com.Da_Technomancer.crossroads.blocks.magic.QuartzStabilizer;
+import com.Da_Technomancer.crossroads.blocks.rotary.Axle;
+import com.Da_Technomancer.crossroads.blocks.rotary.CrystalMasterAxis;
 import com.Da_Technomancer.crossroads.blocks.rotary.Grindstone;
 import com.Da_Technomancer.crossroads.blocks.rotary.ItemChutePort;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
@@ -64,7 +76,7 @@ public final class ModBlocks{
 	public static LargeGearMaster largeGearMaster;
 	public static LargeGearSlave largeGearSlave;
 	public static CandleLilyPad candleLilyPad;
-	public static BasicBlock itemChute;
+	public static ItemChute itemChute;
 	public static ItemChutePort itemChutePort;
 	public static Radiator radiator;
 	public static RotaryDrill rotaryDrill;
@@ -72,15 +84,39 @@ public final class ModBlocks{
 	public static FatCongealer fatCongealer;
 	public static RedstoneFluidTube redstoneFluidTube;
 	public static WaterCentrifuge waterCentrifuge;
+	public static ArcaneExtractor arcaneExtractor;
+	public static QuartzStabilizer smallQuartzStabilizer;
+	public static QuartzStabilizer largeQuartzStabilizer;
+	public static CrystallinePrism crystallinePrism;
+	public static ArcaneReflector arcaneReflector;
+	public static LensHolder lensHolder;
+	public static BasicBlock blockPureQuartz;
+	public static BeamSplitter beamSplitter;
+	public static ColorChart colorChart;
+	public static GlowGlass glowGlass;
+	public static FertileSoil fertileSoil;
+	public static MultiPistonExtend multiPistonExtend;
+	public static MultiPistonExtend multiPistonExtendSticky;
+	public static MultiPistonBase multiPiston;
+	public static MultiPistonBase multiPistonSticky;
+	public static BeamSplitterBasic beamSplitterBasic;
+	public static CrystalMasterAxis crystalMasterAxis;
+	public static Axle axle;
+	public static Ratiator ratiator;
 
-	private static ArrayList<Block> modelQue = new ArrayList<Block>();
+	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
+	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
 
 	public static void blockAddQue(Block block){
 		modelQue.add(block);
 	}
+	
+	/** The integer is the end metadata value*/
+	public static void blockAddQueRange(Pair<Block, Integer> block){
+		modelQuePair.add(block);
+	}
 
 	public static final void init(){
-		new BasicBlock("oreNativeCopper", Material.ROCK, 1, "pickaxe", 3, Item.getByNameOrId("crossroads:nuggetCopper"), null, true, 3);
 		blockAddQue(masterAxis = new MasterAxis());
 		blockAddQue(grindstone = new Grindstone());
 		sidedGearHolder = new SidedGearHolder();
@@ -104,14 +140,33 @@ public final class ModBlocks{
 		blockAddQue(slottedChest = new SlottedChest());
 		blockAddQue(sortingHopper = new SortingHopper());
 		candleLilyPad = new CandleLilyPad();
-		itemChute = new BasicBlock("itemChute");
+		blockAddQue(itemChute = new ItemChute());
 		blockAddQue(itemChutePort = new ItemChutePort());
 		blockAddQue(radiator = new Radiator());
-		rotaryDrill = new RotaryDrill();
+		blockAddQue(rotaryDrill = new RotaryDrill());
 		blockAddQue(fatCollector = new FatCollector());
 		blockAddQue(fatCongealer = new FatCongealer());
 		blockAddQue(redstoneFluidTube = new RedstoneFluidTube());
 		blockAddQue(waterCentrifuge = new WaterCentrifuge());
+		blockAddQue(arcaneExtractor = new ArcaneExtractor());
+		blockAddQue(smallQuartzStabilizer = new QuartzStabilizer(false));
+		blockAddQue(largeQuartzStabilizer = new QuartzStabilizer(true));
+		blockAddQue(crystallinePrism = new CrystallinePrism());
+		blockAddQue(arcaneReflector = new ArcaneReflector());
+		blockAddQue(lensHolder = new LensHolder());
+		blockPureQuartz = new BasicBlock("blockPureQuartz", Material.ROCK, 1, "pickaxe", 4, "blockQuartz");
+		blockAddQue(beamSplitter = new BeamSplitter());
+		blockAddQue(colorChart = new ColorChart());
+		blockAddQue(glowGlass = new GlowGlass());
+		blockAddQueRange(Pair.of(fertileSoil = new FertileSoil(), 9));
+		multiPistonExtend = new MultiPistonExtend(false);
+		multiPistonExtendSticky = new MultiPistonExtend(true);
+		blockAddQue(multiPiston = new MultiPistonBase(false));
+		blockAddQue(multiPistonSticky = new MultiPistonBase(true));
+		blockAddQue(beamSplitterBasic = new BeamSplitterBasic());
+		blockAddQue(crystalMasterAxis = new CrystalMasterAxis());
+		blockAddQue(axle = new Axle());
+		blockAddQue(ratiator = new Ratiator());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -120,6 +175,12 @@ public final class ModBlocks{
 		for(Block modeling : modelQue){
 			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(modeling), 0, new ModelResourceLocation(modeling.getRegistryName(), "inventory"));
 
+		}
+		
+		for(Pair<Block, Integer> modeling : modelQuePair){
+			for(int i = 0; i <= modeling.getRight(); i++){
+				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(modeling.getLeft()), i, new ModelResourceLocation(modeling.getLeft().getRegistryName(), "inventory"));
+			}
 		}
 
 		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.cableMap.values()){

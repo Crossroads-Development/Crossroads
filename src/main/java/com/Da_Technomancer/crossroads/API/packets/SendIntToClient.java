@@ -27,7 +27,7 @@ public class SendIntToClient extends Message<SendIntToClient>{
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.CLIENT){
-			System.err.println("TargetEffectMessageToClient received on wrong side:" + context.side);
+			System.err.println("MessageToClient received on wrong side:" + context.side);
 			return null;
 		}
 
@@ -43,6 +43,9 @@ public class SendIntToClient extends Message<SendIntToClient>{
 	}
 
 	public void processMessage(WorldClient worldClient, String context, int message, BlockPos pos){
+		if(worldClient == null){
+			return;
+		}
 		TileEntity te = worldClient.getTileEntity(pos);
 
 		if(te instanceof IIntReceiver){

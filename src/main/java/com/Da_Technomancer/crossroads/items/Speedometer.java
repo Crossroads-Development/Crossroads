@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
+import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -30,12 +30,12 @@ public class Speedometer extends Item{
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		TileEntity te = worldIn.getTileEntity(pos);
 
-		if(te != null && te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite())){
+		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 			if(!worldIn.isRemote){
 
-				IRotaryHandler gear = te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing.getOpposite());
+				IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
 
-				playerIn.addChatComponentMessage(new TextComponentString("Speed: " + MiscOperators.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOperators.betterRound(gear.getMotionData()[1], 3)));
+				playerIn.addChatComponentMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3)));
 			}
 			return EnumActionResult.SUCCESS;
 		}

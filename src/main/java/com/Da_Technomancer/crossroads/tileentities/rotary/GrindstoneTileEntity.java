@@ -5,9 +5,8 @@ import java.util.Map.Entry;
 
 import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveGear;
+import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
@@ -31,19 +30,19 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 			return;
 		}
 
-		IRotaryHandler topGear = null;
-		IRotaryHandler bottomGear = null;
+		IAxleHandler topGear = null;
+		IAxleHandler bottomGear = null;
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && !(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ISlaveGear) && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			topGear = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN);
+		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			topGear = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
 		}
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && !(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) instanceof ISlaveGear) && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP)){
-			bottomGear = worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.UP);
+		if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
+			bottomGear = worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP);
 		}
 
 		double holder = (topGear != null ? topGear.getMotionData()[0] : 0D) + (bottomGear != null ? bottomGear.getMotionData()[0] : 0D);
-		double efficiency = MiscOperators.findEfficiency(holder, LOWERLIMIT, UPPERLIMIT);
+		double efficiency = MiscOp.findEfficiency(holder, LOWERLIMIT, UPPERLIMIT);
 
 		if(topGear != null){
 			holder = Math.round(Math.abs(topGear.getMotionData()[1] * efficiency));

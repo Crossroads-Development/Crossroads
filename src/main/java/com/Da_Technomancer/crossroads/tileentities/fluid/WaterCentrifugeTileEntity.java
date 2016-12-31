@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
@@ -38,9 +38,9 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 		
-		IRotaryHandler gear;
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && (gear = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)) != null){
-			if(Math.abs(gear.getMotionData()[0]) >= TIP_POINT && (MiscOperators.posOrNeg(gear.getMotionData()[0]) == -1) == neg){
+		IAxleHandler gear;
+		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && (gear = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)) != null){
+			if(Math.abs(gear.getMotionData()[0]) >= TIP_POINT && (MiscOp.posOrNeg(gear.getMotionData()[0]) == -1) == neg){
 				neg = !neg;
 				if(water != null && water.amount >= 100){
 					if((water.amount -= 100) == 0){

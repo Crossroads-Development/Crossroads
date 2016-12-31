@@ -1,16 +1,26 @@
 package com.Da_Technomancer.crossroads;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
 
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 public final class EventHandlerCommon{
 
@@ -22,11 +32,14 @@ public final class EventHandlerCommon{
 	}
 
 	@SubscribeEvent
-	public void addSpecialItems(EntityJoinWorldEvent event){
-		if(!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayer){
+	public void addItemsAndUpdateData(EntityJoinWorldEvent event){
+		if(event.getEntity() instanceof EntityPlayer && !event.getEntity().worldObj.isRemote){
 			EntityPlayer player = (EntityPlayer) event.getEntity();
 
-			NBTTagCompound tag = getPlayerTag(player);
+			NBTTagCompound tag = MiscOp.getPlayerTag(player);
+			ModPackets.network.sendTo(new SendElementNBTToClient(tag.getCompoundTag("elements")), (EntityPlayerMP) event.getEntity());
+			
+			//A convenience feature to start with a debug tool.
 			if(!tag.hasKey("starter")){
 				switch(player.getGameProfile().getName()){
 					case "Da_Technomancer":
@@ -40,18 +53,29 @@ public final class EventHandlerCommon{
 			}
 		}
 	}
+
+	private static final Random RAND = new Random();
+	private static final ArrayList<Chunk> TO_RETROGEN = new ArrayList<Chunk>();
 	
-	private static NBTTagCompound getPlayerTag(EntityPlayer playerIn){
-		NBTTagCompound tag = playerIn.getEntityData();
-		if(!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)){
-			tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+	@SubscribeEvent
+	public void worldTick(WorldTickEvent e){
+		if(TO_RETROGEN.size() != 0){
+			Chunk chunk = TO_RETROGEN.get(0);
+			CommonProxy.WORLD_GEN.generate(RAND, chunk.xPosition, chunk.zPosition, chunk.getWorld(), null, null);
+			TO_RETROGEN.remove(0);
 		}
-		tag = tag.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+	}
+	
+	@SubscribeEvent
+	public void buildRetrogenList(ChunkDataEvent.Load e) {
+		if (!ModConfig.retrogen.getString().isEmpty()) {
+			NBTTagCompound tag = e.getData().getCompoundTag(Main.MODID);
+			e.getData().setTag(Main.MODID, tag);
 
-		if(!tag.hasKey(Main.MODID)){
-			tag.setTag(Main.MODID, new NBTTagCompound());
+			if (!tag.hasKey(ModConfig.retrogen.getString())) {
+				tag.setBoolean(ModConfig.retrogen.getString(), true);
+				TO_RETROGEN.add(e.getChunk());
+			}
 		}
-
-		return tag.getCompoundTag(Main.MODID);
 	}
 }

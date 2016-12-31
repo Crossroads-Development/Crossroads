@@ -2,9 +2,10 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.ServerProxy;
+import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.IBlockCompare;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -13,6 +14,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -31,9 +33,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public class ToggleGear extends BlockContainer{
+public class ToggleGear extends BlockContainer implements IBlockCompare{
 
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
+	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .5625D, 0D, 1D, .625D, 1D);
 	private GearTypes type;
 	
 	public ToggleGear(GearTypes type){
@@ -47,13 +50,14 @@ public class ToggleGear extends BlockContainer{
 		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(this, 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.basicGears.get(type)));
+		setSoundType(SoundType.METAL);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		tooltip.add("Mass: " + MiscOperators.betterRound(type.getDensity() / 8D, 2));
-		tooltip.add("I: " + MiscOperators.betterRound(type.getDensity() / 8D, 2) * .125D);
+		tooltip.add("Mass: " + MiscOp.betterRound(type.getDensity() / 8D, 2));
+		tooltip.add("I: " + MiscOp.betterRound(type.getDensity() / 8D, 2) * .125D);
 	}
 	
 	@Override
@@ -69,10 +73,10 @@ public class ToggleGear extends BlockContainer{
 	@Override
 	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
 		TileEntity te = worldIn.getTileEntity(pos);
-		if(!te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+		if(!te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 			return 0;
 		}
-		double holder = Math.abs(te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[1]) / te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN).getPhysData()[2];
+		double holder = Math.pow(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0], 2) / 2D;
 		holder *= 15D;
 		holder = Math.min(15, holder);
 		
@@ -102,7 +106,7 @@ public class ToggleGear extends BlockContainer{
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return DOWN;
+		return state.getValue(Properties.REDSTONE_BOOL) ? DOWN : UP;
 	}
 	
 	@Override
@@ -119,7 +123,7 @@ public class ToggleGear extends BlockContainer{
 		if(worldIn.isRemote){
 			return;
 		}
-		ServerProxy.masterKey++;
+		CommonProxy.masterKey++;
 	}
 
 	@Override
@@ -135,6 +139,18 @@ public class ToggleGear extends BlockContainer{
 	@Override
 	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
+	}
+
+	@Override
+	public double getOutput(World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(!te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			return 0;
+		}
+		double holder = Math.pow(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0], 2) / 2D;
+		holder *= 15D;
+		
+		return holder;
 	}
 
 }

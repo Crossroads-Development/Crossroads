@@ -1,0 +1,6 @@
+{
+	"parent": "crossroads:block/lensHolder",
+	"textures": {
+		"gem": "crossroads:items/empty"
+	}
+}

@@ -1,5 +1,10 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:sidedGearHolder" }
+		"facing=north": { "model": "crossroads:sidedGearHolder" },
+		"facing=south": { "model": "crossroads:sidedGearHolder" },
+		"facing=down": { "model": "crossroads:sidedGearHolder" },
+		"facing=up": { "model": "crossroads:sidedGearHolder" },
+		"facing=east": { "model": "crossroads:sidedGearHolder" },
+		"facing=west": { "model": "crossroads:sidedGearHolder" }
 	}
 }

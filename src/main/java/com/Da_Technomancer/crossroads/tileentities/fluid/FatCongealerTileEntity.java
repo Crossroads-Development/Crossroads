@@ -4,9 +4,8 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveGear;
+import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
@@ -36,13 +35,13 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN) && !(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ISlaveGear)){
-			IRotaryHandler rot = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN);
+		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			IAxleHandler rot = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
 			int value = Math.min((int) (Math.abs(rot.getMotionData()[1]) * VALUE_PER_ENERGY), 40);
 			if(value == 0 || content == null){
 				return;
 			}
-			int sat = (int) (((double) value) * MiscOperators.findEfficiency(rot.getMotionData()[0], 0, SAT_UPPER_SPEED_BOUND));
+			int sat = (int) (((double) value) * MiscOp.findEfficiency(rot.getMotionData()[0], 0, SAT_UPPER_SPEED_BOUND));
 			sat = Math.min(20, sat);
 			value = Math.min(value, 20 + sat);
 			if(value * EnergyConverters.FAT_PER_VALUE > content.amount){

@@ -1,17 +1,17 @@
 package com.Da_Technomancer.crossroads.items;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,13 +25,13 @@ public final class ModItems{
 		}
 	};
 
-	public static Item metalScrap;
-	public static Item dustSalt;
-	public static Item mashedPotato;
+	@Deprecated
+	public static BasicItem metalScrap;
+	public static BasicItem dustSalt;
+	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
-	public static Item axle;
 	public static ObsidianCuttingKit obsidianKit;
-	public static Item dustCopper;
+	public static BasicItem dustCopper;
 	public static Thermometer thermometer;
 	public static FluidGauge fluidGauge;
 	public static Speedometer speedometer;
@@ -39,11 +39,20 @@ public final class ModItems{
 	public static DebugReader debugReader;
 	public static Vacuum vacuum;
 	public static MagentaBread magentaBread;
-	public static ChickenBoots chickenBoots;
 	public static ItemCandleLily itemCandleLilypad;
 	public static EdibleBlob edibleBlob;
 	public static BasicItem diamondWire;
 	public static RainIdol rainIdol;
+	public static BasicItem pureQuartz;
+	public static BasicItem luminescentQuartz;
+	public static BasicItem lensArray;
+	public static BasicItem invisItem;
+	public static SquidHelmet squidHelmet;
+	public static PigZombieChestsplate pigZombieChestplate;
+	public static CowLeggings cowLeggings;
+	public static ChickenBoots chickenBoots;
+	public static ChaosRod chaosRod;
+	public static BasicItem voidCrystal;
 
 	private static ArrayList<Item> modelQue = new ArrayList<Item>();
 
@@ -52,31 +61,43 @@ public final class ModItems{
 	}
 
 	public static final void init(){
-		// anything I need to manually initialize for some reason
-		metalScrap = new BasicItem("metalScrap");
+		metalScrap = new BasicItem("metalScrap"){
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+				tooltip.add("THIS ITEM IS BEING REMOVED! PLEASE USE IT UP!");
+			}
+		};
 		itemAddQue(new DebugGearWriter());
 		itemAddQue(debugReader = new DebugReader());
 		itemAddQue(handCrank = new HandCrank());
 		itemAddQue(new DebugHeatWriter());
 		dustCopper = new BasicItem("dustCopper", "dustCopper");
 		dustSalt = new BasicItem("dustSalt", "dustSalt");
-		axle = new BasicItem("axle", "stickIron");
 		itemAddQue(obsidianKit = new ObsidianCuttingKit());
-		mashedPotato = new BasicItem("mashedPotato");
+		itemAddQue(mashedPotato = new MashedPotato());
 		itemAddQue(thermometer = new Thermometer());
 		itemAddQue(fluidGauge = new FluidGauge());
 		itemAddQue(speedometer = new Speedometer());
 		itemAddQue(omnimeter = new OmniMeter());
 		itemAddQue(vacuum = new Vacuum());
 		itemAddQue(magentaBread = new MagentaBread());
-		itemAddQue(chickenBoots = new ChickenBoots());
 		itemAddQue(itemCandleLilypad = new ItemCandleLily());
 		itemAddQue(edibleBlob = new EdibleBlob());
 		itemAddQue(diamondWire = new BasicItem("diamondWire", "wireDiamond"));
 		itemAddQue(rainIdol = new RainIdol());
+		pureQuartz = new BasicItem("pureQuartz", "gemQuartz");
+		luminescentQuartz = new BasicItem("luminescentQuartz");
+		lensArray = new BasicItem("lensArray");
+		invisItem = new BasicItem("invisItem", null, false);
+		itemAddQue(squidHelmet = new SquidHelmet());
+		itemAddQue(pigZombieChestplate = new PigZombieChestsplate());
+		itemAddQue(cowLeggings = new CowLeggings());
+		itemAddQue(chickenBoots = new ChickenBoots());
+		itemAddQue(chaosRod = new ChaosRod());
+		voidCrystal = new BasicItem("voidCrystal");
 	}
 
-	@SuppressWarnings("deprecation")
 	@SideOnly(Side.CLIENT)
 	public static void initModels(){
 		// Any items that need models initialized without metadata other than 0,
@@ -85,9 +106,6 @@ public final class ModItems{
 		for(Item modeling : modelQue){
 			register(modeling, 0);
 		}
-
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.rotaryPump), 0, RotaryPumpTileEntity.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.steamTurbine), 0, RotaryPumpTileEntity.class);
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -4,11 +4,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -28,17 +30,19 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class FluidTank extends BlockContainer{
+public class FluidTank extends BlockContainer implements IBlockCompare{
 	
 	public FluidTank(){
 		super(Material.IRON);
 		String name = "fluidTank";
 		setUnlocalizedName(name);
 		setRegistryName(name);
+		setSoundType(SoundType.METAL);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		this.setCreativeTab(ModItems.tabCrossroads);
@@ -63,6 +67,7 @@ public class FluidTank extends BlockContainer{
 		if(!(te instanceof FluidTankTileEntity) || te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents() == null){
 			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
 		}else{
+			player.addExhaustion(0.025F);
 			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
 			stack.setTagCompound(te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents().writeToNBT(new NBTTagCompound()));
 			spawnAsEntity(worldIn, pos, stack);
@@ -119,5 +124,11 @@ public class FluidTank extends BlockContainer{
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
+	}
+
+	@Override
+	public double getOutput(World worldIn, BlockPos pos){
+		IFluidTankProperties fluid = worldIn.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0];
+		return fluid.getContents() == null ? 0 : 15D * (double) fluid.getContents().amount / (double) fluid.getCapacity();
 	}
 }

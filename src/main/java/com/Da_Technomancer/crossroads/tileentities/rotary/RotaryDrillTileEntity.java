@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -28,16 +28,16 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 	public void update(){
 		if(worldObj.isRemote){
 			EnumFacing facing = worldObj.getBlockState(pos).getValue(Properties.FACING);
-			if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing)){
-				angle = (float) worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing).getAngle();
+			if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) && (facing.getOpposite() != EnumFacing.UP || !(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ToggleGearTileEntity) || worldObj.getBlockState(pos.offset(EnumFacing.UP)).getValue(Properties.REDSTONE_BOOL))){
+				angle = (float) worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getAngle();
 			}
 
 			return;
 		}
 
 		EnumFacing facing = worldObj.getBlockState(pos).getValue(Properties.FACING);
-		IRotaryHandler handler;
-		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing) && Math.abs((handler = worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, facing)).getMotionData()[1]) >= ENERGYUSE){
+		IAxleHandler handler;
+		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) && (facing.getOpposite() != EnumFacing.UP || !(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ToggleGearTileEntity) || worldObj.getBlockState(pos.offset(EnumFacing.UP)).getValue(Properties.REDSTONE_BOOL)) && Math.abs((handler = worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)).getMotionData()[1]) >= ENERGYUSE){
 			handler.addEnergy(-ENERGYUSE, false, false);
 			if(++ticksExisted % 10 == 0){
 				worldObj.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.BLOCKS, .2F, .5F);

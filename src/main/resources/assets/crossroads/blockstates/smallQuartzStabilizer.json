@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:smallQuartzStabilizer", "x": 90},
+		"facing=south": { "model": "crossroads:smallQuartzStabilizer", "x": 270 },
+		"facing=east": { "model": "crossroads:smallQuartzStabilizer", "x": 90, "y": 90 },
+		"facing=west": { "model": "crossroads:smallQuartzStabilizer", "x": 90, "y": 270 },
+		"facing=up": { "model": "crossroads:smallQuartzStabilizer"},
+		"facing=down": { "model": "crossroads:smallQuartzStabilizer", "x": 180}
+	}
+}

@@ -2,11 +2,10 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.ServerProxy;
+import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
@@ -37,42 +36,40 @@ public class BasicGear extends Item{
 		OreDictionary.registerOre("gear" + typeIn.toString(), this);
 		type = typeIn;
 		ModItems.itemAddQue(this);
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 8), " ? ", "?#?", " ? ", '#', "block" + typeIn.toString(), '?', "ingot" + typeIn.toString()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 9), " ? ", "?#?", " ? ", '#', "block" + typeIn.toString(), '?', "ingot" + typeIn.toString()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), " ? ", "?#?", " ? ", '#', "ingot" + typeIn.toString(), '?', "nugget" + typeIn.toString()));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		tooltip.add("Mass: " + MiscOperators.betterRound(type.getDensity() / 8, 2));
-		tooltip.add("I: " + MiscOperators.betterRound(type.getDensity() / 8, 2) * .125);
+		tooltip.add("Mass: " + MiscOp.betterRound(type.getDensity() / 8, 2));
+		tooltip.add("I: " + MiscOp.betterRound(type.getDensity() / 8, 2) * .125);
 	}
 
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(worldIn.isRemote){
-			return EnumActionResult.PASS;
+			return EnumActionResult.SUCCESS;
 		}
 
-		if(worldIn.getTileEntity(pos.offset(side)) instanceof SidedGearHolderTileEntity && !worldIn.getTileEntity(pos.offset(side)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite()) && worldIn.isSideSolid(pos, side)){
+		if(worldIn.getTileEntity(pos.offset(side)) instanceof SidedGearHolderTileEntity && !worldIn.getTileEntity(pos.offset(side)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()) && worldIn.isSideSolid(pos, side)){
 			if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
 				playerIn.setHeldItem(hand, null);
 			}
 
-			IRotaryHandler handler = worldIn.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite());
-			handler.setMember(type);
-			handler.updateStates();
-			ServerProxy.masterKey++;
+			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).setMembers(type, side.getOpposite().getIndex());
+			CommonProxy.masterKey++;
 		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && worldIn.isSideSolid(pos, side)){
 			if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
 				playerIn.setHeldItem(hand, null);
 			}
 
 			worldIn.setBlockState(pos.offset(side), ModBlocks.sidedGearHolder.getDefaultState(), 3);
-			IRotaryHandler te = worldIn.getTileEntity(pos.offset(side)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, side.getOpposite());
-			te.setMember(type);
-			ServerProxy.masterKey++;
+			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).setMembers(type, side.getOpposite().getIndex());
+			CommonProxy.masterKey++;
 		}
 
-		return EnumActionResult.PASS;
+		return EnumActionResult.SUCCESS;
 	}
 }

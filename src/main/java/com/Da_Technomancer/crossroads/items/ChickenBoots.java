@@ -14,10 +14,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ChickenBoots extends ItemArmor{
 
-	private static ArmorMaterial CHICKEN = EnumHelper.addArmorMaterial("CHICKEN", Main.MODID + ":chicken", 0, new int[4], 30, SoundEvents.ENTITY_CHICKEN_HURT, 0F);
+	protected static ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 0, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F);
 
 	public ChickenBoots(){
-		super(CHICKEN, 1, EntityEquipmentSlot.FEET);
+		super(BOBO, 1, EntityEquipmentSlot.FEET);
 		this.setMaxStackSize(1);
 		String name = "chickenBoots";
 		setUnlocalizedName(name);

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import org.apache.commons.lang3.tuple.Pair;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -30,8 +31,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 @SuppressWarnings({"serial", "rawtypes"})
-public class Message<REQ extends Message> implements Serializable, IMessage,
-		IMessageHandler<REQ, IMessage>{
+public class Message<REQ extends Message> implements Serializable, IMessage, IMessageHandler<REQ, IMessage>{
 	@SuppressWarnings("unchecked")
 	private static final HashMap<Class, Pair<Reader, Writer>> handlers = new HashMap();
 	@SuppressWarnings("unchecked")
@@ -41,15 +41,14 @@ public class Message<REQ extends Message> implements Serializable, IMessage,
 		map(byte.class, Message::readByte, Message::writeByte);
 		// map(short.class, Message::readShort, Message::writeShort);
 		map(int.class, Message::readInt, Message::writeInt);
-		// map(long.class, Message::readLong, Message::writeLong);
+		//map(long.class, Message::readLong, Message::writeLong);
 		map(float.class, Message::readFloat, Message::writeFloat);
 		map(double.class, Message::readDouble, Message::writeDouble);
 		map(boolean.class, Message::readBoolean, Message::writeBoolean);
 		// map(char.class, Message::readChar, Message::writeChar);
 		map(String.class, Message::readString, Message::writeString);
-		// map(NBTTagCompound.class, Message::readNBT, Message::writeNBT);
-		// map(ItemStack.class, Message::readItemStack,
-		// Message::writeItemStack);
+		map(NBTTagCompound.class, Message::readNBT, Message::writeNBT);
+		// map(ItemStack.class, Message::readItemStack, Message::writeItemStack);
 		map(BlockPos.class, Message::readBlockPos, Message::writeBlockPos);
 	}
 
@@ -159,11 +158,14 @@ public class Message<REQ extends Message> implements Serializable, IMessage,
 		buf.writeInt(i);
 	}
 
-	/*
-	 * private static long readLong(ByteBuf buf) { return buf.readLong(); }
-	 * 
-	 * private static void writeLong(long l, ByteBuf buf) { buf.writeLong(l); }
-	 */
+	/*private static long readLong(ByteBuf buf) { 
+		return buf.readLong(); 
+	}
+
+	private static void writeLong(long l, ByteBuf buf) {
+		buf.writeLong(l); 
+	}*/
+
 
 	private static float readFloat(ByteBuf buf){
 		return buf.readFloat();
@@ -203,13 +205,13 @@ public class Message<REQ extends Message> implements Serializable, IMessage,
 		ByteBufUtils.writeUTF8String(buf, s);
 	}
 
-	/*
-	 * private static NBTTagCompound readNBT(ByteBuf buf) { return
-	 * ByteBufUtils.readTag(buf); }
-	 * 
-	 * private static void writeNBT(NBTTagCompound cmp, ByteBuf buf) {
-	 * ByteBufUtils.writeTag(buf, cmp); }
-	 */
+	private static NBTTagCompound readNBT(ByteBuf buf) { return
+			ByteBufUtils.readTag(buf);
+	}
+
+	private static void writeNBT(NBTTagCompound cmp, ByteBuf buf) {
+		ByteBufUtils.writeTag(buf, cmp);
+	}
 
 	/*
 	 * private static ItemStack readItemStack(ByteBuf buf) { return

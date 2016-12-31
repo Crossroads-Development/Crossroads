@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/beamSplitterSideRedstone",
+		"south": "crossroads:blocks/beamSplitterSideRedstone",
+		"east": "crossroads:blocks/beamSplitterSideRedstone",
+		"west": "crossroads:blocks/beamSplitterSideRedstone",
+		"up": "crossroads:blocks/beamSplitterOut",
+		"down": "crossroads:blocks/beamSplitterOut",
+		"particle": "crossroads:blocks/beamSplitterSideRedstone"
+	}
+}

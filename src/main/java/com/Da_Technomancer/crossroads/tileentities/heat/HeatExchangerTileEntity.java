@@ -39,7 +39,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 		++ticksExisted;
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
@@ -90,7 +90,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
-		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
+		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
 		newTemp /= (rate + 1);
 		temp = newTemp;
 	}
@@ -138,7 +138,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

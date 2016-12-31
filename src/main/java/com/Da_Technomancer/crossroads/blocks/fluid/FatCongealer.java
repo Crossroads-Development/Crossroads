@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
 
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;
@@ -18,6 +19,7 @@ public class FatCongealer extends BlockContainer{
 		super(Material.IRON);
 		String name = "fatCongealer";
 		setUnlocalizedName(name);
+		setSoundType(SoundType.METAL);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));

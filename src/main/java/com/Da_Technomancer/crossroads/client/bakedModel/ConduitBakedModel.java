@@ -64,14 +64,15 @@ public class ConduitBakedModel implements IBakedModel{
 		}
 	}
 
-	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite){
-		return createQuad(v1, v2, v3, v4, sprite, 16, 16);
+	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, EnumFacing side){
+		return createQuad(v1, v2, v3, v4, sprite, 16, 16, side);
 	}
 	
-	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int u, int v){
+	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int u, int v, EnumFacing side){
 		Vec3d normal = v1.subtract(v2).crossProduct(v3.subtract(v2));
 
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
+		builder.setQuadOrientation(side);
 		builder.setTexture(sprite);
 		builder.setApplyDiffuseLighting(false);
 		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, 0, 0, sprite);
@@ -108,56 +109,56 @@ public class ConduitBakedModel implements IBakedModel{
 		int tSize = (int) (16D * size / (1D - (2D * size)));
 		
 		if(up){
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite, 16, tSize));
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1, 1 - size), new Vec3d(size, 1, size), new Vec3d(size, 1 - size, size), sprite, 16, tSize));
-			quads.add(createQuad(new Vec3d(size, 1, size), new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), sprite, tSize, 16));
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(size, 1, 1 - size), sprite, tSize, 16));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite, 16, tSize, EnumFacing.EAST));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1, 1 - size), new Vec3d(size, 1, size), new Vec3d(size, 1 - size, size), sprite, 16, tSize, EnumFacing.WEST));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1, size), new Vec3d(1 - size, 1, size), sprite, tSize, 16, EnumFacing.NORTH));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(size, 1, 1 - size), sprite, tSize, 16, EnumFacing.SOUTH));
 		}else{
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), sprite));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), sprite, EnumFacing.UP));
 		}
 
 		if(down){
-			quads.add(createQuad(new Vec3d(1 - size, 0, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 0, 1 - size), sprite, 16, tSize));
-			quads.add(createQuad(new Vec3d(size, 0, 1 - size), new Vec3d(size, size, 1 - size), new Vec3d(size, size, size), new Vec3d(size, 0, size), sprite, 16, tSize));
-			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, 0, size), new Vec3d(size, 0, size), sprite, tSize, 16));
-			quads.add(createQuad(new Vec3d(size, 0, 1 - size), new Vec3d(1 - size, 0, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(size, size, 1 - size), sprite));
+			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 0, 1 - size), new Vec3d(1 - size, 0, size), new Vec3d(1 - size, size, size), sprite, 16, tSize, EnumFacing.EAST));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, 0, size), new Vec3d(size, 0, 1 - size), new Vec3d(size, size, 1 - size), sprite, 16, tSize, EnumFacing.WEST));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, 0, size), new Vec3d(size, 0, size), sprite, tSize, 16, EnumFacing.NORTH));
+			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(size, size, 1 - size), new Vec3d(size, 0, 1 - size), new Vec3d(1 - size, 0, 1 - size), sprite, tSize, 16, EnumFacing.SOUTH));
 		}else{
-			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 1 - size), new Vec3d(size, size, 1 - size), sprite));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 1 - size), new Vec3d(size, size, 1 - size), sprite, EnumFacing.DOWN));
 		}
 
 		if(east){
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1, 1 - size, size), new Vec3d(1 - size, 1 - size, size), sprite, 16, tSize));
-			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1, size, size), new Vec3d(1, size, 1 - size), new Vec3d(1 - size, size, 1 - size), sprite, 16, tSize));
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1, 1 - size, size), new Vec3d(1, size, size), new Vec3d(1 - size, size, size), sprite, 16, tSize));
-			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1, size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1, 1 - size, size), new Vec3d(1 - size, 1 - size, size), sprite, 16, tSize, EnumFacing.UP));
+			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1, size, size), new Vec3d(1, size, 1 - size), new Vec3d(1 - size, size, 1 - size), sprite, 16, tSize, EnumFacing.DOWN));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1, 1 - size, size), new Vec3d(1, size, size), new Vec3d(1 - size, size, size), sprite, 16, tSize, EnumFacing.NORTH));
+			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1, size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite, 16, tSize, EnumFacing.SOUTH));
 		}else{
-			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, size, 1 - size), sprite));
+			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, size, 1 - size), sprite, EnumFacing.EAST));
 		}
 
 		if(west){
-			quads.add(createQuad(new Vec3d(0, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, size), new Vec3d(0, 1 - size, size), sprite, 16, tSize));
-			quads.add(createQuad(new Vec3d(0, size, size), new Vec3d(size, size, size), new Vec3d(size, size, 1 - size), new Vec3d(0, size, 1 - size), sprite, 16, tSize));
-			quads.add(createQuad(new Vec3d(0, 1 - size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, size, size), new Vec3d(0, size, size), sprite, 16, tSize));
-			quads.add(createQuad(new Vec3d(0, size, 1 - size), new Vec3d(size, size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(0, 1 - size, 1 - size), sprite, 16, tSize));
+			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(0, 1 - size, size), new Vec3d(0, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), sprite, 16, tSize, EnumFacing.UP));
+			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(0, size, 1 - size), new Vec3d(0, size, size), new Vec3d(size, size, size), sprite, 16, tSize, EnumFacing.DOWN));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(0, size, size), new Vec3d(0, 1 - size, size), new Vec3d(size, 1 - size, size), sprite, 16, tSize, EnumFacing.NORTH));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(0, 1 - size, 1 - size), new Vec3d(0, size, 1 - size), new Vec3d(size, size, 1 - size), sprite, 16, tSize, EnumFacing.SOUTH));
 		}else{
-			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, size), new Vec3d(size, size, size), sprite));
+			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, size), new Vec3d(size, size, size), sprite, EnumFacing.WEST));
 		}
 
 		if(north){
-			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 0), new Vec3d(size, 1 - size, 0), sprite, tSize, 16));
-			quads.add(createQuad(new Vec3d(size, size, 0), new Vec3d(1 - size, size, 0), new Vec3d(1 - size, size, size), new Vec3d(size, size, size), sprite, tSize, 16));
-			quads.add(createQuad(new Vec3d(1 - size, size, 0), new Vec3d(1 - size, 1 - size, 0), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), sprite, tSize, 16));
-			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1 - size, 0), new Vec3d(size, size, 0), sprite, tSize, 16));
+			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 0), new Vec3d(size, 1 - size, 0), sprite, tSize, 16, EnumFacing.UP));
+			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(size, size, size), new Vec3d(size, size, 0), new Vec3d(1 - size, size, 0), sprite, tSize, 16, EnumFacing.DOWN));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 0), new Vec3d(1 - size, 1 - size, 0), sprite, tSize, 16, EnumFacing.EAST));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1 - size, 0), new Vec3d(size, size, 0), sprite, tSize, 16, EnumFacing.WEST));
 		}else{
-			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), new Vec3d(size, size, size), sprite));
+			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), new Vec3d(size, size, size), sprite, EnumFacing.NORTH));
 		}
 		if(south){
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1), new Vec3d(1 - size, 1 - size, 1), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), sprite, tSize, 16));
-			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, size, 1), new Vec3d(size, size, 1), sprite, tSize, 16));
-			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1), new Vec3d(1 - size, size, 1), sprite, tSize, 16));
-			quads.add(createQuad(new Vec3d(size, size, 1), new Vec3d(size, 1 - size, 1), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, size, 1 - size), sprite, tSize, 16));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1), new Vec3d(1 - size, 1 - size, 1), sprite, tSize, 16, EnumFacing.UP));
+			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, size, 1), new Vec3d(size, size, 1), sprite, tSize, 16, EnumFacing.DOWN));
+			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1), new Vec3d(1 - size, size, 1), sprite, tSize, 16, EnumFacing.EAST));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, size, 1 - size), new Vec3d(size, size, 1), new Vec3d(size, 1 - size, 1), sprite, tSize, 16, EnumFacing.WEST));
 		}else{
-			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), sprite));
+			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), sprite, EnumFacing.SOUTH));
 		}
 
 		return quads;

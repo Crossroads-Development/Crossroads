@@ -1,9 +1,10 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.client.TESR.RegisterBlockRenderer;
+import com.Da_Technomancer.crossroads.client.TESR.AModTESR;
 import com.Da_Technomancer.crossroads.client.bakedModel.BakedModelLoader;
 import com.Da_Technomancer.crossroads.fluids.ModFluids;
+import com.Da_Technomancer.crossroads.integration.GuideAPI.GuideBooks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
@@ -27,8 +28,10 @@ public class ClientProxy extends CommonProxy{
 		ModItems.initModels();
 
 		if(Loader.isModLoaded("guideapi")){
-			GuideBooks.mainGuide(e, true);
-			GuideAPI.setModel(GuideBooks.main);
+			GuideBooks.mainGuide(true);
+			GuideAPI.setModel(GuideBooks.MAIN);
+			GuideBooks.infoGuide(true);
+			GuideAPI.setModel(GuideBooks.INFO);
 		}
 
 		HeatCableFactory.clientInit();
@@ -37,7 +40,7 @@ public class ClientProxy extends CommonProxy{
 	@Override
 	protected void init(FMLInitializationEvent e){
 		super.init(e);
-		RegisterBlockRenderer.registerBlockRenderer();
+		AModTESR.registerBlockRenderer();
 	}
 
 	@Override

@@ -23,6 +23,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy{
 
+	protected static final ModWorldGen WORLD_GEN = new ModWorldGen();
+	
+	public static int masterKey = 0;
+	
 	protected void preInit(FMLPreInitializationEvent e){
 		Capabilities.register();
 		ModConfig.init(e);
@@ -38,10 +42,13 @@ public class CommonProxy{
 
 	protected void init(FMLInitializationEvent e){
 		ModCrafting.initCrafting();
-		GameRegistry.registerWorldGenerator(new ModWorldGen(), 0);
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
-
+		
+		if(ModConfig.retrogen.getString().isEmpty()){
+			GameRegistry.registerWorldGenerator(WORLD_GEN, 0);
+		}
+		
 		ModIntegration.init();
 
 		ModConfig.config.save();

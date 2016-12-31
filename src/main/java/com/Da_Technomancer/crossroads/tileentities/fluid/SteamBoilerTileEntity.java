@@ -37,7 +37,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 		if(init == false){
-			temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
 			init = true;
 		}
 
@@ -365,7 +365,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

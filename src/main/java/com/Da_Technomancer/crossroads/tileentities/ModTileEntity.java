@@ -20,6 +20,15 @@ import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.SaltReactorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterBasicTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.CrystallinePrismTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.AxleTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ItemChutePortTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
@@ -65,6 +74,16 @@ public class ModTileEntity{
 		register(ToggleGearTileEntity.class, "toggleGear");
 		register(RedstoneFluidTubeTileEntity.class, "redstoneFluidTube");
 		register(WaterCentrifugeTileEntity.class, "waterCentrifuge");
+		register(ArcaneExtractorTileEntity.class, "arcaneExtractor");
+		register(QuartzStabilizerTileEntity.class, "quartzStabilizer");
+		register(CrystallinePrismTileEntity.class, "crystalPrism");
+		register(ArcaneReflectorTileEntity.class, "arcaneReflector");
+		register(LensHolderTileEntity.class, "lensHolder");
+		register(BeamSplitterTileEntity.class, "beamSplitter");
+		register(BeamSplitterBasicTileEntity.class, "beamSplitterBasic");
+		register(CrystalMasterAxisTileEntity.class, "crystalMasterAxis");
+		register(AxleTileEntity.class, "axle");
+		register(RatiatorTileEntity.class, "ratiator");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

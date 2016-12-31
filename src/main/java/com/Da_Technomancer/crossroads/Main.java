@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = Main.MODID, name = Main.MODNAME, version = Main.VERSION, dependencies = "required-after:Forge; after:guideapi; after:JEI", useMetadata = true)
-public class Main{
+public final class Main{
 
 	public static final String MODID = "crossroads";
 	public static final String MODNAME = "Crossroads";

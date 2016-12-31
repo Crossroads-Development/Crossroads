@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -111,7 +111,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 	private int ticksExisted = 0;
 
 	private IBlockState getCorrectState(){
-		return ModBlocks.heatingCrucible.getDefaultState().withProperty(Properties.FULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + (inventory == null ? 0F : ((float) inventory.stackSize)) * 3F / 16F))).withProperty(Properties.TEXTURE, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
+		return ModBlocks.heatingCrucible.getDefaultState().withProperty(Properties.FULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + (inventory == null ? 0F : ((float) inventory.stackSize)) * 3F / 16F))).withProperty(Properties.TEXTURE_4, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
 	}
 
 	@Override
@@ -122,11 +122,11 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		ticksExisted++;
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
-		if(inventory != null && ticksExisted % 10 == 0 && Math.random() < MiscOperators.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= PRODUCED)){
+		if(inventory != null && ticksExisted % 10 == 0 && Math.random() < MiscOp.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= PRODUCED)){
 
 			if(content == null){
 				content = new FluidStack(getType() == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, PRODUCED);
@@ -142,8 +142,8 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 			markDirty();
 		}
 
-		if(getWorld().getBlockState(getPos()).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || getWorld().getBlockState(getPos()).getValue(Properties.TEXTURE) != getCorrectState().getValue(Properties.TEXTURE)){
-			getWorld().setBlockState(getPos(), getCorrectState(), 2);
+		if(worldObj.getBlockState(pos).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || worldObj.getBlockState(pos).getValue(Properties.TEXTURE_4) != getCorrectState().getValue(Properties.TEXTURE_4)){
+			worldObj.setBlockState(pos, getCorrectState(), 2);
 		}
 	}
 
@@ -303,7 +303,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

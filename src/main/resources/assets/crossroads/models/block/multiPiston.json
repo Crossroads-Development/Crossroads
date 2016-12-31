@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/multiPistonSide",
+		"south": "crossroads:blocks/multiPistonSide",
+		"east": "crossroads:blocks/multiPistonSide",
+		"west": "crossroads:blocks/multiPistonSide",
+		"up": "crossroads:blocks/blockTin",
+		"down": "crossroads:blocks/blockBronze",
+		"particle": "crossroads:blocks/multiPistonSide"
+	}
+}

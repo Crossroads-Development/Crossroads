@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.SaltReactorTileEntity;
 
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.InventoryHelper;
@@ -27,6 +28,7 @@ public class SaltReactor extends BlockContainer{
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
+		setSoundType(SoundType.METAL);
 	}
 
 	@Override

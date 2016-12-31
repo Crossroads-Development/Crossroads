@@ -17,22 +17,27 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class ModFluids{
 
+	public static BlockDistilledWater distilledWater;
+	public static BlockSteam steam;
+	public static BlockMoltenCopper moltenCopper;
+	public static BlockLiquidFat liquidFat;
+	
 	public static void init(){
 
 		FluidRegistry.registerFluid(BlockSteam.getSteam());
-		new BlockSteam();
+		steam = new BlockSteam();
 		FluidRegistry.addBucketForFluid(BlockSteam.getSteam());
 
 		FluidRegistry.registerFluid(BlockMoltenCopper.getMoltenCopper());
-		new BlockMoltenCopper();
+		moltenCopper = new BlockMoltenCopper();
 		FluidRegistry.addBucketForFluid(BlockMoltenCopper.getMoltenCopper());
 
 		FluidRegistry.registerFluid(BlockDistilledWater.getDistilledWater());
-		new BlockDistilledWater();
+		distilledWater = new BlockDistilledWater();
 		FluidRegistry.addBucketForFluid(BlockDistilledWater.getDistilledWater());
 
 		FluidRegistry.registerFluid(BlockLiquidFat.getLiquidFat());
-		new BlockLiquidFat();
+		liquidFat = new BlockLiquidFat();
 		FluidRegistry.addBucketForFluid(BlockLiquidFat.getLiquidFat());
 	}
 

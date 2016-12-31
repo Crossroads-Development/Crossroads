@@ -1,9 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IConduitModel;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
@@ -16,6 +21,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.entity.Entity;
@@ -29,6 +35,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -108,7 +116,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public ResourceLocation getTexture(){
-		return insulator.getResource();
+		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + '-' + conductor.name().toLowerCase());
 	}
 
 	@Override
@@ -172,5 +180,72 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	@Override
 	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World source, BlockPos pos){
+		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, source, pos);
+		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
+		if(exState.getValue(Properties.CONNECT)[0]){
+			list.add(DOWN);
+		}
+		if(exState.getValue(Properties.CONNECT)[1]){
+			list.add(UP);
+		}
+		if(exState.getValue(Properties.CONNECT)[2]){
+			list.add(NORTH);
+		}
+		if(exState.getValue(Properties.CONNECT)[3]){
+			list.add(SOUTH);
+		}
+		if(exState.getValue(Properties.CONNECT)[4]){
+			list.add(WEST);
+		}
+		if(exState.getValue(Properties.CONNECT)[5]){
+			list.add(EAST);
+		}
+		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
+		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
+		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
+		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
+		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
+		return (out == null ? BB : out).offset(pos);
+	}
+
+	@Override
+	@Nullable
+	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
+		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
+		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
+		list.add(BB);
+		if(exState.getValue(Properties.CONNECT)[0]){
+			list.add(DOWN);
+		}
+		if(exState.getValue(Properties.CONNECT)[1]){
+			list.add(UP);
+		}
+		if(exState.getValue(Properties.CONNECT)[2]){
+			list.add(NORTH);
+		}
+		if(exState.getValue(Properties.CONNECT)[3]){
+			list.add(SOUTH);
+		}
+		if(exState.getValue(Properties.CONNECT)[4]){
+			list.add(WEST);
+		}
+		if(exState.getValue(Properties.CONNECT)[5]){
+			list.add(EAST);
+		}
+		
+		start = start.subtract(pos.getX(), pos.getY(), pos.getZ());
+		end = end.subtract(pos.getX(), pos.getY(), pos.getZ());
+		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
+		if(out == null){
+			return null;
+		}else{
+			RayTraceResult untransformed = out.calculateIntercept(start, end);
+			return new RayTraceResult(untransformed.hitVec.addVector((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
+		}
 	}
 }

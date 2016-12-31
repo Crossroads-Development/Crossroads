@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
@@ -14,6 +15,7 @@ import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 
@@ -43,12 +45,16 @@ public final class RecipeHolder{
 	 * A list of all recipes, Item Array are the ingredients, and itemstack is
 	 * output. A list for poisonous potato recipes and mashed potato recipes.
 	 */
-	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> mashedBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
 	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
 
+	/**
+	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
+	 */
+	public static final HashMap<Item, MagicUnit> magExtractRecipes = new HashMap<Item, MagicUnit>();
+	
 	public static final ArrayList<Object> JEIWrappers = new ArrayList<Object>();
 
-	/*
+	/**
 	 * Converts the versions of the recipes used internally into fake recipes
 	 * for JEI. Not called unless JEI is installed.
 	 */
@@ -63,7 +69,7 @@ public final class RecipeHolder{
 		JEIWrappers.add(new HeatingCrucibleRecipe(false));
 	}
 
-	public static ItemStack recipeMatch(boolean poisonous, ArrayList<EntityItem> itemEnt){
+	public static ItemStack recipeMatch(ArrayList<EntityItem> itemEnt){
 		if(itemEnt == null){
 			return null;
 		}
@@ -81,35 +87,15 @@ public final class RecipeHolder{
 			return null;
 		}
 
-		if(poisonous){
-			for(Pair<ICraftingStack[], ItemStack> craft : poisonBoboRecipes){
-				ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
-				itemCop.addAll(items);
+		for(Pair<ICraftingStack[], ItemStack> craft : poisonBoboRecipes){
+			ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
+			itemCop.addAll(items);
 
-				for(ICraftingStack cStack : craft.getLeft()){
-					for(ItemStack stack : items){
-						if(itemCop.contains(stack) && cStack.softMatch(stack)){
-							itemCop.remove(stack);
-							break;
-						}
-					}
-
-					if(itemCop.size() == 0){
-						return craft.getRight();
-					}
-				}
-			}
-		}else{
-			for(Pair<ICraftingStack[], ItemStack> craft : mashedBoboRecipes){
-				ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
-				itemCop.addAll(items);
-
-				for(ICraftingStack cStack : craft.getLeft()){
-					for(ItemStack stack : items){
-						if(itemCop.contains(stack) && cStack.softMatch(stack)){
-							itemCop.remove(stack);
-							break;
-						}
+			for(ICraftingStack cStack : craft.getLeft()){
+				for(ItemStack stack : items){
+					if(itemCop.contains(stack) && cStack.softMatch(stack)){
+						itemCop.remove(stack);
+						break;
 					}
 				}
 

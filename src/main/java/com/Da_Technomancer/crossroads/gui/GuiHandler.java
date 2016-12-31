@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.container.CoalHeaterContainer;
+import com.Da_Technomancer.crossroads.container.ColorChartContainer;
 import com.Da_Technomancer.crossroads.container.GrindstoneContainer;
 import com.Da_Technomancer.crossroads.container.HeatingChamberContainer;
 import com.Da_Technomancer.crossroads.container.SlottedChestContainer;
@@ -20,6 +21,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int COALHEATER_GUI = 1;
 	public static final int HEATINGCHAMBER_GUI = 2;
 	public static final int SLOTTEDCHEST_GUI = 3;
+	public static final int COLORCHART_GUI = 4;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -32,6 +34,8 @@ public class GuiHandler implements IGuiHandler{
 				return new HeatingChamberContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case SLOTTEDCHEST_GUI:
 				return new SlottedChestContainer(player.inventory, ((SlottedChestTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case COLORCHART_GUI:
+				return new ColorChartContainer(player, world, new BlockPos(x, y, z));
 		}
 
 		return null;
@@ -48,6 +52,8 @@ public class GuiHandler implements IGuiHandler{
 				return new HeatingChamberGuiContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case SLOTTEDCHEST_GUI:
 				return new SlottedChestGuiContainer(player.inventory, ((SlottedChestTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case COLORCHART_GUI:
+				return new ColorChartGuiContainer(player, world, new BlockPos(x, y, z));
 		}
 
 		return null;

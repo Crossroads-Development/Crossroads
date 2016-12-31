@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
@@ -28,11 +29,12 @@ public class ConduitModel implements IModel{
 	public Collection<ResourceLocation> getTextures(){
 		ArrayList<ResourceLocation> textures = new ArrayList<>();
 		for(HeatInsulators insul : HeatInsulators.values()){
-			if(insul != null){
-				textures.add(insul.getResource());
+			for(HeatConductors cond : HeatConductors.values()){
+				textures.add(new ResourceLocation(Main.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + cond.name().toLowerCase()));
+				textures.add(new ResourceLocation(Main.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + cond.name().toLowerCase() + "-redstone"));
 			}
 		}
-		textures.add(new ResourceLocation(Main.MODID + ":blocks/blockBronze"));
+		textures.add(new ResourceLocation(Main.MODID, "blocks/blockBronze"));
 		return ImmutableSet.copyOf(textures);
 	}
 

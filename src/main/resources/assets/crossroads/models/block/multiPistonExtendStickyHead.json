@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/blockTin",
+		"south": "crossroads:blocks/blockTin",
+		"east": "crossroads:blocks/blockTin",
+		"west": "crossroads:blocks/blockTin",
+		"up": "blocks/slime",
+		"down": "crossroads:blocks/blockTin",
+		"particle": "crossroads:blocks/blockTin"
+	}
+}

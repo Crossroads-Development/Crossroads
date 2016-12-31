@@ -59,8 +59,8 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 		}
 
 		if(temp > insulator.getLimit()){
-			if(ModConfig.overheatEffects.getBoolean()){
-				insulator.getEffect().onOverheat(worldObj, pos);
+			if(ModConfig.heatEffects.getBoolean()){
+				insulator.getEffect().doEffect(worldObj, pos, 1);
 			}else{
 				worldObj.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
 			}
@@ -129,7 +129,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
-		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * getWorld().getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
+		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
 		newTemp /= (rate + 1);
 		temp = newTemp;
 	}

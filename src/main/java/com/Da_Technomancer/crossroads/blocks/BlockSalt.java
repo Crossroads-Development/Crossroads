@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockVine;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,8 @@ public class BlockSalt extends Block{
 		setRegistryName(name);
 		this.setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
+		setHardness(2);
+		setSoundType(SoundType.SAND);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		OreDictionary.registerOre(name, this);
 		this.setTickRandomly(true);

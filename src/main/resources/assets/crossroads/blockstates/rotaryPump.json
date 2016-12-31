@@ -1,5 +1,12 @@
 {
+	"forge_marker": 1,
+	"defaults": {
+		"model": "crossroads:rotaryPump",
+		"textures": {
+			"valve": "crossroads:blocks/valve"
+		}
+	},
 	"variants": {
-		"normal": { "model": "crossroads:rotaryPump" }
+		"normal": [{}]
 	}
 }

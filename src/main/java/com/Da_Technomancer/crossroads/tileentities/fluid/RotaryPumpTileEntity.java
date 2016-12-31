@@ -3,12 +3,11 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOperators;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveGear;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,12 +37,12 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 			return;
 		}
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && !(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ISlaveGear) && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 			// TODO simplify this if statement
 			if(FluidRegistry.lookupFluidForBlock(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()) != null && (worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockFluidClassic && ((BlockFluidClassic) worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()).isSourceBlock(worldObj, pos.offset(EnumFacing.DOWN)) || worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getValue(BlockLiquid.LEVEL) == 0) && (content == null || (CAPACITY - content.amount >= 1000 && content.getFluid() == FluidRegistry.lookupFluidForBlock(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())))){
-				IRotaryHandler te = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN);
+				IAxleHandler te = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
 
-				double holder = MiscOperators.findEfficiency(te.getMotionData()[0], .2D, 8) * Math.abs(te.getMotionData()[1]);
+				double holder = MiscOp.findEfficiency(te.getMotionData()[0], .2D, 8) * Math.abs(te.getMotionData()[1]);
 				te.addEnergy(-holder, false, false);
 				progress += Math.round(holder);
 			}else{
@@ -59,7 +58,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 
 		if(lastProgress != progress){
 			SendIntToClient msg = new SendIntToClient("prog", progress, this.getPos());
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 			lastProgress = progress;
 		}
 	}

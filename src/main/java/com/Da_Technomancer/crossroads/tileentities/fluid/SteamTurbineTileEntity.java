@@ -8,8 +8,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.API.rotary.IRotaryHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveGear;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 
@@ -50,7 +49,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 
 		if(lastCompl != completion){
 			SendIntToClient msg = new SendIntToClient("prog", completion, this.getPos());
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 			lastCompl = completion;
 		}
 
@@ -93,13 +92,13 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		}
 	}
 
-	private IRotaryHandler getGear(){
+	private IAxleHandler getGear(){
 		int dis = 0;
 		while(true){
 			++dis;
 			TileEntity te = worldObj.getTileEntity(pos.offset(EnumFacing.UP, dis));
-			if(te != null && !(te instanceof ISlaveGear) && te.hasCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-				return te.getCapability(Capabilities.ROTARY_HANDLER_CAPABILITY, EnumFacing.DOWN);
+			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+				return te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
 			}
 
 			if(!(te instanceof SteamTurbineTileEntity)){
