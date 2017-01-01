@@ -84,7 +84,6 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		if(holder != lastRedstone){
 			lastRedstone = holder;
 			worldObj.updateComparatorOutputLevel(pos, ModBlocks.lensHolder);
-			worldObj.notifyNeighborsOfStateExcept(pos, ModBlocks.lensHolder, null);
 		}
 
 		if(beamer == null){

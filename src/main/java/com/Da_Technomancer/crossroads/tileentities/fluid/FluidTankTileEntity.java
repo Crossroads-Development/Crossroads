@@ -29,7 +29,6 @@ public class FluidTankTileEntity extends TileEntity{
 		if(i != worldObj.getBlockState(pos).getValue(Properties.REDSTONE)){
 			worldObj.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i));
 		}
-		worldObj.notifyNeighborsOfStateExcept(pos, ModBlocks.fluidTank, null);
 	}
 	
 	@Override
