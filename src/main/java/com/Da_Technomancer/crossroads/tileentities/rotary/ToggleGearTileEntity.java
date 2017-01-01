@@ -71,7 +71,6 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			sendWPacket();
 			if(compOut != (Math.abs(motionData[1] / physData[1])) * 15D){
 				worldObj.updateComparatorOutputLevel(pos, this.blockType);
-				worldObj.notifyNeighborsOfStateExcept(pos, null, null);
 				compOut = Math.abs(motionData[1] / physData[1]) * 15D;
 			}
 		}
