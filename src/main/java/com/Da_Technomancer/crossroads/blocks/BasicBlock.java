@@ -29,10 +29,14 @@ public class BasicBlock extends Block{
 		this(unlocName, mat, mineLevel, tool, hardness, null);
 	}
 
-	public BasicBlock(String unlocName, Material mat, int mineLevel, String tool, float hardness, String oreDict){
+	public BasicBlock(String unlocName, Material mat, int mineLevel, String tool, float hardness, SoundType sound){
+		this(unlocName, mat, mineLevel, tool, hardness, sound, null);
+	}
+	
+	public BasicBlock(String unlocName, Material mat, int mineLevel, String tool, float hardness, SoundType sound, String oreDict){
 		super(mat);
 		if(tool != null && mineLevel != -2){
-			this.setHarvestLevel(tool, mineLevel);
+			setHarvestLevel(tool, mineLevel);
 		}
 		setUnlocalizedName(unlocName);
 		setRegistryName(unlocName);
@@ -40,6 +44,9 @@ public class BasicBlock extends Block{
 		this.setHardness(hardness);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(unlocName));
+		if(sound != null){
+			setSoundType(sound);
+		}
 		if(oreDict != null){
 			OreDictionary.registerOre(oreDict, this);
 		}

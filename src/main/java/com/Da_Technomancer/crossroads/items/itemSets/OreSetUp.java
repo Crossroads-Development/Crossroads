@@ -39,14 +39,14 @@ public final class OreSetUp{
 
 	public static void init(){
 		ingotTin = new BasicItem("ingotTin", "ingotTin");
-		blockTin = new BasicBlock("blockTin", Material.IRON, 2, "pickaxe", 5, "blockTin").setSoundType(SoundType.METAL);
+		blockTin = new BasicBlock("blockTin", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockTin");
 		nuggetTin = new BasicItem("nuggetTin", "nuggetTin");
-		oreTin = new BasicBlock("oreTin", Material.ROCK, 2, "pickaxe", 3, "oreTin");
+		oreTin = new BasicBlock("oreTin", Material.ROCK, 2, "pickaxe", 3, null, "oreTin");
 
 		ingotCopper = new BasicItem("ingotCopper", "ingotCopper");
-		blockCopper = new BasicBlock("blockCopper", Material.IRON, 2, "pickaxe", 5, "blockCopper").setSoundType(SoundType.METAL);
+		blockCopper = new BasicBlock("blockCopper", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockCopper");
 		nuggetCopper = new BasicItem("nuggetCopper", "nuggetCopper");
-		oreCopper = new BasicBlock("oreCopper", Material.ROCK, 2, "pickaxe", 3, "oreCopper");
+		oreCopper = new BasicBlock("oreCopper", Material.ROCK, 2, "pickaxe", 3, null, "oreCopper");
 		oreNativeCopper = new BasicBlock("oreNativeCopper", Material.ROCK, 1, "pickaxe", 3){
 			@Override
 			public int quantityDropped(Random random){
@@ -61,12 +61,12 @@ public final class OreSetUp{
 		};
 
 		ingotBronze = new BasicItem("ingotBronze", "ingotBronze");
-		blockBronze = new BasicBlock("blockBronze", Material.IRON, 2, "pickaxe", 5, "blockBronze").setSoundType(SoundType.METAL);
+		blockBronze = new BasicBlock("blockBronze", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockBronze");
 		nuggetBronze = new BasicItem("nuggetBronze", "nuggetBronze");
 
 		gemRuby = new BasicItem("gemRuby", "gemRuby");
-		blockRuby = new BasicBlock("blockRuby", Material.ROCK, 3, "pickaxe", 5, "blockRuby");
-		oreRuby = new BasicBlock("oreRuby", Material.ROCK, 3, "pickaxe", 3, "oreRuby"){
+		blockRuby = new BasicBlock("blockRuby", Material.ROCK, 3, "pickaxe", 5, null, "blockRuby");
+		oreRuby = new BasicBlock("oreRuby", Material.ROCK, 3, "pickaxe", 3, null, "oreRuby"){
 			@Override
 			public int quantityDroppedWithBonus(int fortune, Random random){
 				if(fortune > 0){

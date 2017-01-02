@@ -96,6 +96,7 @@ public final class ModCrafting{
 		// Bronze
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(OreSetUp.ingotBronze, 1), "###", "#?#", "###", '#', "nuggetCopper", '?', "nuggetTin"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(OreSetUp.blockBronze, 1), "###", "#?#", "###", '#', "ingotCopper", '?', "ingotTin"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(OreSetUp.blockBronze, 9), "###", "#?#", "###", '#', "blockCopper", '?', "blockTin"));
 		// Pipe
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fluidTube, 8), "###", "   ", "###", '#', "ingotBronze"));
 		// Hand Crank
@@ -118,6 +119,7 @@ public final class ModCrafting{
 		// Salt Block
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSalt, 1), "##", "##", '#', "dustSalt"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.dustSalt, 4), "#", '#', "blockSalt"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSaltTile, 4), "##", "##", '#', "blockSalt"));
 		// Rotary Pump
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "#$#", "&$&", '#', "ingotBronze", '&', "blockGlass", '$', "stickIron"));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.rotaryPump, 1), ModBlocks.steamTurbine);

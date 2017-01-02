@@ -27,12 +27,13 @@ public class BlockSalt extends Block{
 
 	protected BlockSalt(){
 		super(Material.SAND);
+		setHarvestLevel("shovel", 0);
 		String name = "blockSalt";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		this.setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
-		setHardness(2);
+		setHardness(.5F);
 		setSoundType(SoundType.SAND);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		OreDictionary.registerOre(name, this);

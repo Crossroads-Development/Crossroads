@@ -4,7 +4,7 @@
 		"text": {
 			0: {
 				"textures": {
-					"filling": "crossroads:blocks/oreCopper"
+					"filling": "crossroads:blocks/oreNativeCopper"
 				}
 			},
 			1: {

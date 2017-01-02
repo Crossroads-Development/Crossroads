@@ -45,6 +45,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -103,6 +104,7 @@ public final class ModBlocks{
 	public static CrystalMasterAxis crystalMasterAxis;
 	public static Axle axle;
 	public static Ratiator ratiator;
+	public static BasicBlock blockSaltTile;
 
 	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
 	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
@@ -154,7 +156,7 @@ public final class ModBlocks{
 		blockAddQue(crystallinePrism = new CrystallinePrism());
 		blockAddQue(arcaneReflector = new ArcaneReflector());
 		blockAddQue(lensHolder = new LensHolder());
-		blockPureQuartz = new BasicBlock("blockPureQuartz", Material.ROCK, 1, "pickaxe", 4, "blockQuartz");
+		blockPureQuartz = new BasicBlock("blockPureQuartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz");
 		blockAddQue(beamSplitter = new BeamSplitter());
 		blockAddQue(colorChart = new ColorChart());
 		blockAddQue(glowGlass = new GlowGlass());
@@ -167,6 +169,7 @@ public final class ModBlocks{
 		blockAddQue(crystalMasterAxis = new CrystalMasterAxis());
 		blockAddQue(axle = new Axle());
 		blockAddQue(ratiator = new Ratiator());
+		blockSaltTile = new BasicBlock("blockSaltTile", Material.SAND, 0, "shovel", .5F, SoundType.SAND, "blockSalt");
 	}
 
 	@SideOnly(Side.CLIENT)
