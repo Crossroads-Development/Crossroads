@@ -118,7 +118,7 @@ public class DebugReader extends Item{
 		}
 		
 		if(te instanceof CrystalMasterAxisTileEntity){
-			playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((CrystalMasterAxisTileEntity) te).getElement() == null ? "NONE" : ((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime()));
+			playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((((CrystalMasterAxisTileEntity) te).getElement() == null) ? "NONE" : ((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime())));
 		}
 		
 		if(te instanceof RatiatorTileEntity){

@@ -65,6 +65,8 @@ public class RainIdol extends Item{
 					if(++count >= 9){
 						worldIn.getWorldInfo().setRaining(true);
 						worldIn.getWorldInfo().setThundering(true);
+						worldIn.getWorldInfo().setCleanWeatherTime(0);
+						worldIn.getWorldInfo().setRainTime(24000);
 						worldIn.playSound(null, play.posX, play.posY, play.posZ, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.PLAYERS, 20F, 1F);
 						play.setHeldItem(EnumHand.MAIN_HAND, null);
 						count = 0;
@@ -80,6 +82,8 @@ public class RainIdol extends Item{
 				if(count % 2 == 0){
 					if(--count <= -9){
 						worldIn.getWorldInfo().setRaining(false);
+						worldIn.getWorldInfo().setCleanWeatherTime(24000);
+						worldIn.getWorldInfo().setRainTime(0);
 						worldIn.playSound(null, play.posX, play.posY, play.posZ, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.PLAYERS, 3F, 1F);
 						play.setHeldItem(EnumHand.MAIN_HAND, null);
 						count = 0;

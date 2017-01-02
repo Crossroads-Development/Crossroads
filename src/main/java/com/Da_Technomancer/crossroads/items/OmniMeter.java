@@ -119,12 +119,15 @@ public class OmniMeter extends Item{
 		if(te instanceof CrystalMasterAxisTileEntity){
 			pass = false;
 			if(!worldIn.isRemote){
-				playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((CrystalMasterAxisTileEntity) te).getElement() == null ? "NONE" : (((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime())));
+				playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((((CrystalMasterAxisTileEntity) te).getElement() == null) ? "NONE" : (((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime()))));
 			}
 		}
-		
-		if(te instanceof RatiatorTileEntity && !worldIn.isRemote){
-			playerIn.addChatComponentMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
+
+		if(te instanceof RatiatorTileEntity){
+			pass = false;
+			if(!worldIn.isRemote){
+				playerIn.addChatComponentMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
+			}
 		}
 
 		return pass ? EnumActionResult.PASS : EnumActionResult.SUCCESS;

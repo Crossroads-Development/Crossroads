@@ -140,9 +140,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 	public void trigger(byte keyIn, ITileMasterAxis masterIn, EnumFacing side){
 		if(!locked && side == facing && keyIn != key){
 			locked = true;
-			requestUpdate();
 		}
-
 	}
 
 	@Override
