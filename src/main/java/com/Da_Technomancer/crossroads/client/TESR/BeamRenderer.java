@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
@@ -26,7 +27,9 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 		}
 
 		Triple<Color, Integer, Integer>[] trip = beam.getBeam();
-
+		float brightX = OpenGlHelper.lastBrightnessX;
+		float brightY = OpenGlHelper.lastBrightnessY;
+		
 		for(int dir = 0; dir < 6; ++dir){
 
 			if(trip[dir] != null){
@@ -36,6 +39,7 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 				GlStateManager.color(trip[dir].getLeft().getRed() / 255F, trip[dir].getLeft().getGreen() / 255F, trip[dir].getLeft().getBlue() / 255F);
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 				
 				switch(dir){
 					case 0:
@@ -96,6 +100,7 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 				buf.pos(big, length, small).tex(0, 0).endVertex();
 				tes.draw();
 				
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 				GlStateManager.enableLighting();
 				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();
