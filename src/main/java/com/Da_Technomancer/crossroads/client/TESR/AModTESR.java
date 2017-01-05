@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.BeaconHarnessTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterBasicTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.CrystallinePrismTileEntity;
@@ -28,32 +29,22 @@ public class AModTESR{
 	public static void registerBlockRenderer(){
 
 		ClientRegistry.bindTileEntitySpecialRenderer(SidedGearHolderTileEntity.class, new SidedGearHolderRenderer());
-
 		reg(ModBlocks.rotaryPump);
 		ClientRegistry.bindTileEntitySpecialRenderer(RotaryPumpTileEntity.class, new RotaryPumpRenderer());
 		reg(ModBlocks.steamTurbine);
 		ClientRegistry.bindTileEntitySpecialRenderer(SteamTurbineTileEntity.class, new SteamTurbineRenderer());
-
 		ClientRegistry.bindTileEntitySpecialRenderer(LargeGearMasterTileEntity.class, new LargeGearRenderer());
-
 		ClientRegistry.bindTileEntitySpecialRenderer(RotaryDrillTileEntity.class, new RotaryDrillRenderer());
-		
 		ClientRegistry.bindTileEntitySpecialRenderer(ToggleGearTileEntity.class, new ToggleGearRenderer());
-		
 		ClientRegistry.bindTileEntitySpecialRenderer(ArcaneExtractorTileEntity.class, new BeamRenderer());
-		
 		ClientRegistry.bindTileEntitySpecialRenderer(QuartzStabilizerTileEntity.class, new BeamRenderer());
-		
 		ClientRegistry.bindTileEntitySpecialRenderer(CrystallinePrismTileEntity.class, new BeamRenderer());
-		
 		ClientRegistry.bindTileEntitySpecialRenderer(ArcaneReflectorTileEntity.class, new BeamRenderer());
-		
 		ClientRegistry.bindTileEntitySpecialRenderer(LensHolderTileEntity.class, new BeamRenderer());
-		
 		ClientRegistry.bindTileEntitySpecialRenderer(BeamSplitterTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(BeamSplitterBasicTileEntity.class, new BeamRenderer());
-		
 		ClientRegistry.bindTileEntitySpecialRenderer(AxleTileEntity.class, new AxleRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeaconHarnessTileEntity.class, new BeaconHarnessRenderer());
 	}
 
 	public static void reg(Block block){

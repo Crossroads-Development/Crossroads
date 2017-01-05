@@ -93,6 +93,10 @@ public class BeamManager{
 		return packet == 0 ? null : Triple.of(Color.decode(Integer.toString(packet & 16777215)), ((packet >> 24) & 15) + 1, (packet >> 28) + 1);
 	}
 	
+	public int getDist(){
+		return dist;
+	}
+	
 	@Nullable
 	public MagicUnit getLastFullSent(){
 		return lastFullSent;

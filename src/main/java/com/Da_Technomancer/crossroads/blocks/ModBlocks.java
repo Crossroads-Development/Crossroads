@@ -27,6 +27,7 @@ import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.SaltReactor;
 import com.Da_Technomancer.crossroads.blocks.magic.ArcaneExtractor;
 import com.Da_Technomancer.crossroads.blocks.magic.ArcaneReflector;
+import com.Da_Technomancer.crossroads.blocks.magic.BeaconHarness;
 import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitter;
 import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitterBasic;
 import com.Da_Technomancer.crossroads.blocks.magic.ColorChart;
@@ -105,6 +106,7 @@ public final class ModBlocks{
 	public static Axle axle;
 	public static Ratiator ratiator;
 	public static BasicBlock blockSaltTile;
+	public static BeaconHarness beaconHarness;
 
 	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
 	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
@@ -170,6 +172,7 @@ public final class ModBlocks{
 		blockAddQue(axle = new Axle());
 		blockAddQue(ratiator = new Ratiator());
 		blockSaltTile = new BasicBlock("blockSaltTile", Material.SAND, 0, "shovel", .5F, SoundType.SAND, "blockSalt");
+		blockAddQue(beaconHarness = new BeaconHarness());
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -95,7 +95,7 @@ public class MagicUnit{
 		return new MagicUnit(holder.getInteger("en"), holder.getInteger("po"), holder.getInteger("st"), holder.getInteger("vo"));
 	}
 	
-	/**Returns the MagicUnit with the lowest power with a color that matches the goal. Will decrease power to below count at cost of accuracy, setting count to -1 disables this
+	/**Returns the MagicUnit with the lowest power with a color that matches the goal. Will decrease power to below count at cost of accuracy, setting count to -1 disables this.
 	 * Please note that this method is not 100% accurate due to taking rounding errors (RGB is stored as int, sometimes rounding occurs) into account.
 	 */
 	public static MagicUnit getClosestMatch(Color goal, int count){
