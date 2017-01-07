@@ -5,7 +5,10 @@ import java.util.List;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
+import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
+import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,6 +25,12 @@ public final class ModItems{
 		@Override
 		public Item getTabIconItem(){
 			return GearFactory.basicGears.get(GearTypes.BRONZE);
+		}
+	};
+	public static final CreativeTabs tabHeatCable = new CreativeTabs("heatCable"){
+		@Override
+		public Item getTabIconItem(){
+			return Item.getItemFromBlock(HeatCableFactory.cableMap.get(HeatConductors.COPPER).get(HeatInsulators.WOOL));
 		}
 	};
 

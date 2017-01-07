@@ -175,3 +175,4 @@ item.voidCrystal.name=Void Crystal
 tile.ratiator.name=Ratiator
 tile.blockSaltTile.name=Tiled Block of Salt
 tile.beaconHarness.name=Beacon Harness
+itemGroup.heatCable=Crossroads Heat Cables

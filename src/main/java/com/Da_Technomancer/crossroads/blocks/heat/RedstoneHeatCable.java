@@ -72,7 +72,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel, 
 		this.setHardness(1);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabHeatCable);
 	}
 
 	@SideOnly(Side.CLIENT)
