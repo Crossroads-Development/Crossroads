@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import java.util.HashMap;
 
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
@@ -31,16 +30,16 @@ public final class HeatCableFactory{
 	}
 	
 	public static void clientInit(){
-		ModelResourceLocation cableModel = new ModelResourceLocation(Main.MODID + ":heatCable");
+		//TODO ModelResourceLocation cableModel = new ModelResourceLocation(Main.MODID + ":heatCable");
 		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.cableMap.values()){
 			for(HeatCable cable : map.values()){
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cable), 0, cableModel);
+				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cable), 0, new ModelResourceLocation(cable.getTexture().toString().replaceFirst("blocks/", "")));
 			}
 		}
 		
 		for(HashMap<HeatInsulators, RedstoneHeatCable> map : HeatCableFactory.rCableMap.values()){
 			for(RedstoneHeatCable cable : map.values()){
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cable), 0, cableModel);
+				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cable), 0, new ModelResourceLocation(cable.getTexture().toString().replaceFirst("blocks/", "")));
 			}
 		}
 	}
