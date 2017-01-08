@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class MagentaBread extends ItemFood{
 
 	public MagentaBread(){
-		super(20, 20, false);
+		super(20, .5F, false);
 		String name = "magentaBread";
 		setUnlocalizedName(name);
 		setRegistryName(name);

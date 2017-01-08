@@ -47,7 +47,14 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	public void initSetup(GearTypes typ){
 		type = typ;
 
-		handlerMain.updateStates();
+		if(!worldObj.isRemote){
+			SendStringToClient msg = new SendStringToClient("memb", type == null ? "" : type.name(), pos);
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		}
+
+		physData[0] = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D, 2);
+		physData[1] = physData[0] * 1.125D;
+		//1.125 because r*r/2 so 1.5*1.5/2
 	}
 
 	public GearTypes getMember(){
@@ -126,6 +133,9 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		// member
 		this.type = nbt.hasKey("memb") ? GearTypes.valueOf(nbt.getString("memb")) : null;
 		valid = true;
+		physData[0] = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D, 2);
+		physData[1] = physData[0] * 1.125D;
+		//1.125 because r*r/2 so 1.5*1.5/2
 		
 		//This is in order to convert old large gears to the new system which uses metadata to store the side.
 		if(!nbt.hasKey("new") && nbt.hasKey("side")){
@@ -302,17 +312,6 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		@Override
 		public double getAngle(){
 			return angleW[0];
-		}
-
-		private void updateStates(){
-			if(!worldObj.isRemote){
-				SendStringToClient msg = new SendStringToClient("memb", type == null ? "" : type.name(), pos);
-				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
-			}
-
-			physData[0] = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D, 2);
-			physData[1] = physData[0] * 1.125D;
-			//1.125 because r*r/2 so 1.5*1.5/2
 		}
 
 		@Override

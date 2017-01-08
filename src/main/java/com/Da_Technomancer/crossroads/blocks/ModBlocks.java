@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCongealer;
+import com.Da_Technomancer.crossroads.blocks.fluid.FatFeeder;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidTank;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidTube;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidVoid;
@@ -107,6 +108,7 @@ public final class ModBlocks{
 	public static Ratiator ratiator;
 	public static BasicBlock blockSaltTile;
 	public static BeaconHarness beaconHarness;
+	public static FatFeeder fatFeeder;
 
 	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
 	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
@@ -173,6 +175,7 @@ public final class ModBlocks{
 		blockAddQue(ratiator = new Ratiator());
 		blockSaltTile = new BasicBlock("blockSaltTile", Material.SAND, 0, "shovel", .5F, SoundType.SAND, "blockSalt");
 		blockAddQue(beaconHarness = new BeaconHarness());
+		blockAddQue(fatFeeder = new FatFeeder());
 	}
 
 	@SideOnly(Side.CLIENT)

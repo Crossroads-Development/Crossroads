@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.fluid.FatFeederTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTubeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidVoidTileEntity;
@@ -86,6 +87,7 @@ public class ModTileEntity{
 		register(AxleTileEntity.class, "axle");
 		register(RatiatorTileEntity.class, "ratiator");
 		register(BeaconHarnessTileEntity.class, "beaconHarness");
+		register(FatFeederTileEntity.class, "fatFeeder");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){
