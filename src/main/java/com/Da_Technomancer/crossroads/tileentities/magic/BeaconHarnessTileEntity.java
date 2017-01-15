@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
 import com.Da_Technomancer.crossroads.API.packets.IBoolReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -59,6 +60,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 	
 	private boolean invalid(Color col, boolean colorSafe){
 		if(!colorSafe){
+			MagicUnit last = magStor.getOutput();
 			if(last == null || last.getVoid() != 0 || (col.getRed() != 0 && last.getEnergy() != 0) || (col.getGreen() != 0 && last.getPotential() != 0) || (col.getBlue() != 0 && last.getStability() != 0)){
 				return true;
 			}
@@ -93,16 +95,18 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 				++cycles;
 				cycles %= 120;
 				Color col = Color.getHSBColor(((float) cycles) / 120F, 1, 1);
-				if(invalid(col, cycles < 0 || cycles % 40 < 4)){
+				if(invalid(col, cycles < 0 || cycles % 40 < 8)){
 					running = false;
 					ModPackets.network.sendToAllAround(new SendBoolToClient("light", false, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					cycles = -5;
+					cycles = -9;
 					
 					if(beamer.emit(null)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
+					magStor.clear();
 					return;
 				}
+				magStor.clear();
 				if(cycles >= 0){
 					MagicUnit out = new MagicUnit(col.getRed(), col.getGreen(), col.getBlue(), 0);
 					out = out.mult(512D / ((double) out.getPower()), false);
@@ -142,8 +146,8 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 		super.writeToNBT(nbt);
 		nbt.setBoolean("run", running);
 		nbt.setInteger("cycle", cycles);
-		if(last != null){
-			last.setNBT(nbt, null);
+		if(magStor != null){
+			magStor.writeToNBT(null, nbt);
 		}
 		return nbt;
 	}
@@ -153,7 +157,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 		super.readFromNBT(nbt);
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInteger("cycle");
-		last = MagicUnit.loadNBT(nbt, null);
+		magStor = MagicUnitStorage.readFromNBT(null, nbt);
 		inBeam = nbt.getBoolean("runC") ? Triple.of(Color.WHITE, 2, 1) : null;
 	}
 	
@@ -177,13 +181,13 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 		return super.hasCapability(capability, facing);
 	}
 
-	private MagicUnit last;
+	private MagicUnitStorage magStor = new MagicUnitStorage();
 	
 	private class MagicHandler implements IMagicHandler{
 
 		@Override
 		public void setMagic(MagicUnit mag){
-			last = mag;
+			magStor.addMagic(mag);
 		}
 	}
 }

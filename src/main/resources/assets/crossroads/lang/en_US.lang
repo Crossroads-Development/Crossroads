@@ -14,6 +14,7 @@ item.nuggetBronze.name=Bronze Nugget
 item.ingotBronze.name=Bronze Ingot
 tile.blockBronze.name=Block of Bronze
 item.metalScrap.name=Misc Metal Scrap
+tile.sidedGearHolder.name=Small Gear Block
 item.gearCopper.name=Copper Gear
 item.gearTin.name=Tin Gear
 item.gearBronze.name=Bronze Gear
