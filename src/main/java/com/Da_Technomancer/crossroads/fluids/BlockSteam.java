@@ -7,24 +7,28 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockSteam extends BlockFluidClassic{
 
-	private static FluidSteam steam = new FluidSteam();
+	protected static final FluidSteam STEAM = new FluidSteam();
 
 	public BlockSteam(){
-		super(steam, Material.WATER);
-		steam.setBlock(this);
+		super(STEAM, Material.WATER);
+		STEAM.setBlock(this);
 		setUnlocalizedName("blockSteam");
 		this.setRegistryName("blockSteam");
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName("blockSteam"));
 
 	}
-
-	public static FluidSteam getSteam(){
-		return steam;
+	
+	/**
+	 * For normal use.
+	 */
+	public static Fluid getSteam(){
+		return FluidRegistry.getFluid("steam");
 	}
 
 	private static class FluidSteam extends Fluid{

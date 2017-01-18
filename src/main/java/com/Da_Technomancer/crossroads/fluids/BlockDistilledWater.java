@@ -7,15 +7,16 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockDistilledWater extends BlockFluidClassic{
 
-	private static FluidDistilledWater distilledWater = new FluidDistilledWater();
+	protected static final FluidDistilledWater DISTILLED_WATER = new FluidDistilledWater();
 
 	public BlockDistilledWater(){
-		super(distilledWater, Material.WATER);
-		distilledWater.setBlock(this);
+		super(DISTILLED_WATER, Material.WATER);
+		DISTILLED_WATER.setBlock(this);
 		setUnlocalizedName("blockDistilledWater");
 		this.setRegistryName("blockDistilledWater");
 		GameRegistry.register(this);
@@ -23,10 +24,13 @@ public class BlockDistilledWater extends BlockFluidClassic{
 
 	}
 
-	public static FluidDistilledWater getDistilledWater(){
-		return distilledWater;
+	/**
+	 * For normal use.
+	 */
+	public static Fluid getDistilledWater(){
+		return FluidRegistry.getFluid("distilledwater");
 	}
-
+	
 	private static class FluidDistilledWater extends Fluid{
 
 		private FluidDistilledWater(){

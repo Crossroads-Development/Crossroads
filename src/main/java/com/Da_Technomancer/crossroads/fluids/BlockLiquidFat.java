@@ -7,15 +7,16 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockLiquidFat extends BlockFluidClassic{
 
-	private static FluidLiquidFat liquidFat = new FluidLiquidFat();
+	protected static final FluidLiquidFat LIQUID_FAT = new FluidLiquidFat();
 
 	public BlockLiquidFat(){
-		super(liquidFat, Material.WATER);
-		liquidFat.setBlock(this);
+		super(LIQUID_FAT, Material.WATER);
+		LIQUID_FAT.setBlock(this);
 		setUnlocalizedName("blockLiquidFat");
 		this.setRegistryName("blockLiquidFat");
 		GameRegistry.register(this);
@@ -23,8 +24,11 @@ public class BlockLiquidFat extends BlockFluidClassic{
 
 	}
 
-	public static FluidLiquidFat getLiquidFat(){
-		return liquidFat;
+	/**
+	 * For normal use.
+	 */
+	public static Fluid getLiquidFat(){
+		return FluidRegistry.getFluid("liquidfat");
 	}
 
 	private static class FluidLiquidFat extends Fluid{
