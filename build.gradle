@@ -12,8 +12,8 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.10.2-1.3.3"
-group = "com.Da_Technomancer.crossroads" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "1.10.2-1.4.0"
+group = "com.Da_Technomancer.crossroads"
 archivesBaseName = "crossroads"
 
 sourceCompatibility = 1.8

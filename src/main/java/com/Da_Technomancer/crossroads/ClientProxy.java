@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import amerifrance.guideapi.api.GuideAPI;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -41,6 +42,7 @@ public class ClientProxy extends CommonProxy{
 	protected void init(FMLInitializationEvent e){
 		super.init(e);
 		AModTESR.registerBlockRenderer();
+		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public class ElementEntry extends EntryItemStack{
 			case FUSION:
 				return new PageText(elem.toString() + ": Fuses the molecules of certain blocks into other blocks. Certain conversions require higher powers. Ex. Sand -> Pure Quartz Block when power >= 16, or Coal Block -> Diamond Block when power >= 128.");
 			case LIGHT:
-				return new PageText(elem.toString() + ": All magic is similer to light, but this element is closer than most. Converts rock materials into glowstone, and glass materials into glowglass (a light emitting glass that drops itself).");
+				return new PageText(elem.toString() + ": All magic is similar to light, but this element is closer than most. Converts rock materials into glowstone, and glass materials into glowglass (a light emitting glass that drops itself).");
 			case NO_MATCH:
 				return new PageText(elem.toString() + ": This element should not be obtainable. Report to mod author.");
 			case POTENTIAL:
@@ -98,7 +98,7 @@ public class ElementEntry extends EntryItemStack{
 			case POTENTIAL:
 				return new PageText(elem.toString() + ": Grows crops faster based on power.");
 			case RIFT:
-				return new PageText(elem.toString() + ": Spawns hostile mobs (Up to 3 * mob limit total). Converts purpur blocks to shulkers, skeleton skulls to wither skeleton skulls, and stone to silverfish stone.");
+				return new PageText(elem.toString() + ": Spawns hostile mobs (Up to #of players * 3 * mob limit total). Converts purpur blocks to shulkers, skeleton skulls to wither skeleton skulls, and stone to silverfish stone.");
 			case STABILITY:
 				return new PageText(elem.toString() + ": Does nothing on its own. In a Crystalline Master Axis it prevents power loss.");
 			case TIME:

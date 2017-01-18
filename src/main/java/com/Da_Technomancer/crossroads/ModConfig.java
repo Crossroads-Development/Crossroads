@@ -18,11 +18,20 @@ public final class ModConfig{
 	public static Property smallText;
 	public static Property retrogen;
 	public static Property heatEffects;
+	public static Property allowAllSingle;
+	public static Property allowAllServer;
+	public static Property technomancy;
+	public static Property alchemy;
+	public static Property witchcraft;
+	public static Property voidChunk;
+	public static Property resetChunk;
+	public static Property magicChunk;
 	
 	private static final String CAT_OPTIM = "Optimization";
 	private static final String CAT_ORES = "Ores";
 	private static final String CAT_MISC = "Misc";
-	
+	private static final String CAT_SPECIALIZATION = "Specializations";
+	private static final String CAT_FLUX = "Flux Disasters";	
 	protected static void init(FMLPreInitializationEvent e){
 
 		config = new Configuration(e.getSuggestedConfigurationFile());
@@ -38,5 +47,13 @@ public final class ModConfig{
 		rotateBeam = config.get(CAT_OPTIM, "Rotate Beams", true, "Should magic beams rotate? (Default true)");
 		smallText = config.get(CAT_MISC, "Use small text in the guide book? (Default true)", true);
 		heatEffects = config.get(CAT_MISC, "Cable Overheat Effects", true, "If false, all heat cable overheating effects are replaced with burning (Default true)");
+		allowAllSingle = config.get(CAT_SPECIALIZATION, "Allow Multiple specializations per player in SinglePlayer? (Default true)", true);
+		allowAllServer = config.get(CAT_SPECIALIZATION, "Allow Multiple specializations per player in MultiPlayer? (Default false)", false);
+		technomancy = config.get(CAT_SPECIALIZATION, "Enable Technomancy? (Default true)", true);
+		alchemy = config.get(CAT_SPECIALIZATION, "Enable Alchemy? (Default true)", true, "NYI");
+		witchcraft = config.get(CAT_SPECIALIZATION, "Enable Witchcraft? (Default true)", true, "NYI");
+		voidChunk = config.get(CAT_FLUX, "Allow Chunk Voiding disaster from Technomancy? (Default true)", true);
+		resetChunk = config.get(CAT_FLUX, "Allow Chunk Reset disaster from Technomancy? (Default true)", true);
+		magicChunk = config.get(CAT_FLUX, "Allow Chunk Magic-ifying disaster from Technomancy? (Default true)", true);
 	}
 }

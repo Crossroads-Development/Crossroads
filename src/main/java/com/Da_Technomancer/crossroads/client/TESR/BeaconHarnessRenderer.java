@@ -121,7 +121,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		GlStateManager.disableCull();
 		
-		float height = .4F + Math.abs(((.02F * beam.getWorld().getTotalWorldTime()) % .4F) - .2F);
+		float height = .4F + Math.abs(((.01F * beam.getWorld().getTotalWorldTime()) % .4F) - .2F);
 		float change = ticks / 10F;
 		
 		buf.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);

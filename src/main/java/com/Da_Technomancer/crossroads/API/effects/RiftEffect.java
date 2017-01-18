@@ -42,7 +42,7 @@ public class RiftEffect implements IEffect{
 		}
 		
 		WorldServer worldServ = (WorldServer) worldIn;
-		if(worldServ.countEntities(EnumCreatureType.MONSTER, true) <= 3 * EnumCreatureType.MONSTER.getMaxNumberOfCreature() && rand.nextInt(128) <= mult){
+		if(worldServ.countEntities(EnumCreatureType.MONSTER, true) <= worldServ.playerEntities.size() * 3 * EnumCreatureType.MONSTER.getMaxNumberOfCreature() && rand.nextInt(128) <= mult){
 			Biome.SpawnListEntry spawn = worldServ.getSpawnListEntryForTypeAt(EnumCreatureType.MONSTER, pos);
 			if(spawn != null){
 				EntityLiving ent = null;
@@ -62,7 +62,7 @@ public class RiftEffect implements IEffect{
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, double mult){
 			WorldServer worldServ = (WorldServer) worldIn;
-			if(worldServ.countEntities(EnumCreatureType.CREATURE, true) <= 3 * EnumCreatureType.CREATURE.getMaxNumberOfCreature() && rand.nextInt(128) <= mult){
+			if(worldServ.countEntities(EnumCreatureType.CREATURE, true) <= worldServ.playerEntities.size() * 10 * EnumCreatureType.CREATURE.getMaxNumberOfCreature() && rand.nextInt(128) <= mult){
 				Biome.SpawnListEntry spawn = worldServ.getSpawnListEntryForTypeAt(EnumCreatureType.CREATURE, pos);
 				if(spawn != null){
 					EntityLiving ent = null;
