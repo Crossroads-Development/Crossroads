@@ -24,21 +24,21 @@ public final class ModFluids{
 	
 	public static void init(){
 
-		FluidRegistry.registerFluid(BlockSteam.getSteam());
+		FluidRegistry.registerFluid(BlockSteam.STEAM);
 		steam = new BlockSteam();
-		FluidRegistry.addBucketForFluid(BlockSteam.getSteam());
+		FluidRegistry.addBucketForFluid(BlockSteam.STEAM);
 
-		FluidRegistry.registerFluid(BlockMoltenCopper.getMoltenCopper());
+		FluidRegistry.registerFluid(BlockMoltenCopper.MOLTEN_COPPER);
 		moltenCopper = new BlockMoltenCopper();
-		FluidRegistry.addBucketForFluid(BlockMoltenCopper.getMoltenCopper());
+		FluidRegistry.addBucketForFluid(BlockMoltenCopper.MOLTEN_COPPER);
 
-		FluidRegistry.registerFluid(BlockDistilledWater.getDistilledWater());
+		FluidRegistry.registerFluid(BlockDistilledWater.DISTILLED_WATER);
 		distilledWater = new BlockDistilledWater();
-		FluidRegistry.addBucketForFluid(BlockDistilledWater.getDistilledWater());
+		FluidRegistry.addBucketForFluid(BlockDistilledWater.DISTILLED_WATER);
 
-		FluidRegistry.registerFluid(BlockLiquidFat.getLiquidFat());
+		FluidRegistry.registerFluid(BlockLiquidFat.LIQUID_FAT);
 		liquidFat = new BlockLiquidFat();
-		FluidRegistry.addBucketForFluid(BlockLiquidFat.getLiquidFat());
+		FluidRegistry.addBucketForFluid(BlockLiquidFat.LIQUID_FAT);
 	}
 
 	/*
@@ -84,9 +84,9 @@ public final class ModFluids{
 
 	@SideOnly(Side.CLIENT)
 	public static void registerRenderers(){
-		registerFluidBlockRendering(BlockSteam.getSteam());
-		registerFluidBlockRendering(BlockMoltenCopper.getMoltenCopper());
-		registerFluidBlockRendering(BlockDistilledWater.getDistilledWater());
-		registerFluidBlockRendering(BlockLiquidFat.getLiquidFat());
+		registerFluidBlockRendering(BlockSteam.STEAM);
+		registerFluidBlockRendering(BlockMoltenCopper.MOLTEN_COPPER);
+		registerFluidBlockRendering(BlockDistilledWater.DISTILLED_WATER);
+		registerFluidBlockRendering(BlockLiquidFat.LIQUID_FAT);
 	}
 }

@@ -7,23 +7,27 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockMoltenCopper extends BlockFluidClassic{
 
-	private static FluidMoltenCopper moltenCopper = new FluidMoltenCopper();
+	protected static final FluidMoltenCopper MOLTEN_COPPER = new FluidMoltenCopper();
 
 	public BlockMoltenCopper(){
-		super(moltenCopper, Material.LAVA);
-		moltenCopper.setBlock(this);
+		super(MOLTEN_COPPER, Material.LAVA);
+		MOLTEN_COPPER.setBlock(this);
 		setUnlocalizedName("blockMoltenCopper");
 		this.setRegistryName("blockMoltenCopper");
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName("blockMoltenCopper"));
 	}
 
-	public static FluidMoltenCopper getMoltenCopper(){
-		return moltenCopper;
+	/**
+	 * For normal use.
+	 */
+	public static Fluid getMoltenCopper(){
+		return FluidRegistry.getFluid("moltencopper");
 	}
 
 	private static class FluidMoltenCopper extends Fluid{
