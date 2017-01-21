@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class SquidHelmet extends ItemArmor{
 
 	public SquidHelmet(){
-		super(ChickenBoots.BOBO, 1, EntityEquipmentSlot.HEAD);
+		super(ModItems.BOBO, 1, EntityEquipmentSlot.HEAD);
 		this.setMaxStackSize(1);
 		String name = "squidHelmet";
 		setUnlocalizedName(name);

@@ -42,5 +42,4 @@ public enum GearTypes{
 		name = char1 + name;
 		return name;
 	}
-
 }

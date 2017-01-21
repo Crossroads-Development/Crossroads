@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class CowLeggings extends ItemArmor{
 
 	public CowLeggings(){
-		super(ChickenBoots.BOBO, 2, EntityEquipmentSlot.LEGS);
+		super(ModItems.BOBO, 2, EntityEquipmentSlot.LEGS);
 		this.setMaxStackSize(1);
 		String name = "cowLeggings";
 		setUnlocalizedName(name);

@@ -13,9 +13,12 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,6 +36,8 @@ public final class ModItems{
 			return Item.getItemFromBlock(HeatCableFactory.cableMap.get(HeatConductors.COPPER).get(HeatInsulators.WOOL));
 		}
 	};
+	protected static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 0, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F);
+	protected static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[]{0, 0, 0, 2}, 0, SoundEvents.BLOCK_ANVIL_USE, 0);
 
 	@Deprecated
 	public static BasicItem metalScrap;
@@ -62,6 +67,7 @@ public final class ModItems{
 	public static ChickenBoots chickenBoots;
 	public static ChaosRod chaosRod;
 	public static BasicItem voidCrystal;
+	public static ModuleGoggles moduleGoggles;
 
 	private static ArrayList<Item> modelQue = new ArrayList<Item>();
 
@@ -105,6 +111,7 @@ public final class ModItems{
 		itemAddQue(chickenBoots = new ChickenBoots());
 		itemAddQue(chaosRod = new ChaosRod());
 		voidCrystal = new BasicItem("voidCrystal");
+		itemAddQue(moduleGoggles = new ModuleGoggles());
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.fields.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -19,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -45,15 +47,11 @@ public final class EventHandlerCommon{
 
 			NBTTagCompound tag = MiscOp.getPlayerTag(player);
 			ModPackets.network.sendTo(new SendElementNBTToClient(tag.getCompoundTag("elements")), (EntityPlayerMP) event.getEntity());
-			
+
 			//A convenience feature to start with a debug tool.
 			if(!tag.hasKey("starter")){
-				switch(player.getGameProfile().getName()){
-					case "Da_Technomancer":
-						player.inventory.addItemStackToInventory(new ItemStack(ModItems.debugReader, 1));
-						break;
-					default:
-						break;
+				if(player.getGameProfile().getName().equals("Da_Technomancer")){
+					player.inventory.addItemStackToInventory(new ItemStack(ModItems.debugReader, 1));
 				}
 
 				tag.setBoolean("starter", true);
@@ -189,5 +187,24 @@ public final class EventHandlerCommon{
 		}
 		
 		dilatingTime = false;
+	}
+	
+	@SubscribeEvent
+	public void craftGoggles(AnvilUpdateEvent e){
+		if(e.getLeft().getItem() == ModItems.moduleGoggles){
+			for(GoggleLenses lens : GoggleLenses.values()){
+				if(lens.matchesRecipe(e.getRight()) && (!e.getLeft().hasTagCompound() || !e.getLeft().getTagCompound().hasKey(lens.name()))){
+					ItemStack out = e.getLeft().copy();
+					if(!out.hasTagCompound()){
+						out.setTagCompound(new NBTTagCompound());
+					}
+					out.getTagCompound().setBoolean(lens.name(), true);
+					e.setOutput(out);
+					e.setCost(2);
+					e.setMaterialCost(1);
+					break;
+				}
+			}
+		}
 	}
 }

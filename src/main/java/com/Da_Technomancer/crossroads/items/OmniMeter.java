@@ -10,8 +10,6 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
 
 import amerifrance.guideapi.api.util.TextHelper;
@@ -55,7 +53,7 @@ public class OmniMeter extends Item{
 			pass = false;
 			if(!worldIn.isRemote){
 				playerIn.addChatComponentMessage(new TextComponentString("Temp: " + worldIn.getTileEntity(pos).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "*C"));
-
+				/* No longer necessary due to heat cables all having different textures, but the code is left in just in case.
 				if(te instanceof HeatCableTileEntity){
 					HeatCableTileEntity heatCable = (HeatCableTileEntity) te;
 					playerIn.addChatComponentMessage(new TextComponentString("Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
@@ -64,6 +62,7 @@ public class OmniMeter extends Item{
 					RedstoneHeatCableTileEntity heatCable = (RedstoneHeatCableTileEntity) te;
 					playerIn.addChatComponentMessage(new TextComponentString("Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
 				}
+				*/
 				playerIn.addChatComponentMessage(new TextComponentString("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * worldIn.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "*C"));
 			}
 		}

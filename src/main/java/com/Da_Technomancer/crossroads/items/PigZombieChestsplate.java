@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class PigZombieChestsplate extends ItemArmor{
 
 	public PigZombieChestsplate(){
-		super(ChickenBoots.BOBO, 1, EntityEquipmentSlot.CHEST);
+		super(ModItems.BOBO, 1, EntityEquipmentSlot.CHEST);
 		this.setMaxStackSize(1);
 		String name = "pigZombieChestplate";
 		setUnlocalizedName(name);

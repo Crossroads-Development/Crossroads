@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -72,6 +73,9 @@ public final class MiscOp{
 		return tag.getCompoundTag(Main.MODID);
 	}
 	
+	/**
+	 * For finding which box within a block is being moused over. Used for example by gear breaking.
+	 */
 	@Nullable
 	public static AxisAlignedBB rayTraceMulti(ArrayList<AxisAlignedBB> boxes, Vec3d start, Vec3d end){
 		if(boxes == null || boxes.size() == 0){
@@ -88,7 +92,19 @@ public final class MiscOp{
 				closest = box;
 			}
 		}
-		
+
 		return closest;
+	}
+
+	/**
+	 * A server-side friendly version of {@link Entity#rayTrace(double, float)}
+	 * 
+	 */
+	@Nullable
+	public static RayTraceResult rayTrace(Entity ent, double blockReachDistance){
+		Vec3d vec3d = ent.getPositionVector().add(new Vec3d(0, ent.getEyeHeight(), 0));
+		Vec3d vec3d1 = ent.getLook(0F);
+		Vec3d vec3d2 = vec3d.addVector(vec3d1.xCoord * blockReachDistance, vec3d1.yCoord * blockReachDistance, vec3d1.zCoord * blockReachDistance);
+		return ent.worldObj.rayTraceBlocks(vec3d, vec3d2, false, false, true);
 	}
 }
