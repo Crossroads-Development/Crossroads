@@ -51,7 +51,7 @@ public final class EventHandlerCommon{
 			//A convenience feature to start with a debug tool.
 			if(!tag.hasKey("starter")){
 				if(player.getGameProfile().getName().equals("Da_Technomancer")){
-					player.inventory.addItemStackToInventory(new ItemStack(ModItems.debugReader, 1));
+					player.inventory.addItemStackToInventory(new ItemStack(ModItems.moduleGoggles, 1));
 				}
 
 				tag.setBoolean("starter", true);
@@ -101,8 +101,17 @@ public final class EventHandlerCommon{
 			FieldWorldSavedData data = FieldWorldSavedData.get(e.world);
 			if(e.phase == TickEvent.Phase.START){
 				data.nodeForces.clear();
+				for(long key : data.fieldNodes.keySet()){
+					data.nodeForces.put(key, FieldWorldSavedData.getDefaultChunkForce());
+				}
 				
 			}else{
+				for(long key : data.fieldNodes.keySet()){
+					//Sometimes the forces disappear during startup and such. This fixes that.
+					if(!data.nodeForces.containsKey(key)){
+						data.nodeForces.put(key, FieldWorldSavedData.getDefaultChunkForce());
+					}
+				}
 				HashSet<Long> toRemove = new HashSet<Long>();
 				for(Entry<Long, byte[][][]> datum : data.fieldNodes.entrySet()){
 					//The fields must be processed in the order 2->0->1
@@ -172,7 +181,7 @@ public final class EventHandlerCommon{
 			return;
 		}
 		
-		int potential = 1 + FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromChunk(e.getEntity().getEntityWorld().getChunkFromBlockCoords(e.getEntity().getPosition())))[1][(e.getEntity().getPosition().getX() % 16) / 2][(e.getEntity().getPosition().getZ() % 16) / 2];
+		int potential = 1 + FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromChunk(e.getEntity().getEntityWorld().getChunkFromBlockCoords(e.getEntity().getPosition())))[1][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2];
 		dilatingTime = true;
 		
 		for(int i = 1; i < potential / 8; i++){

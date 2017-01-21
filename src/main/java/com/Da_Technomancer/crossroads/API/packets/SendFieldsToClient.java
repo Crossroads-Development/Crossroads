@@ -46,6 +46,7 @@ public class SendFieldsToClient extends Message<SendFieldsToClient>{
 		if(!saved.fieldNodes.containsKey(chunk)){
 			saved.fieldNodes.put(chunk, FieldWorldSavedData.getDefaultChunkFlux());
 		}
+		
 		saved.fieldNodes.get(chunk)[type] = fieldLayer;
 	}
 }

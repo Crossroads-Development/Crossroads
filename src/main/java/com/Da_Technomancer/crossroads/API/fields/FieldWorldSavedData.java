@@ -18,6 +18,10 @@ public class FieldWorldSavedData extends WorldSavedData{
 	public FieldWorldSavedData(){
 		super(FIELDS_ID);
 	}
+	
+	public FieldWorldSavedData(String name){
+		super(name);
+	}
 
 	public static FieldWorldSavedData get(World world){
 		MapStorage storage = world.getPerWorldStorage();
@@ -27,6 +31,7 @@ public class FieldWorldSavedData extends WorldSavedData{
 			data = new FieldWorldSavedData();
 			storage.setData(FIELDS_ID, data);
 		}
+		data.setDirty(true);
 		return data;
 	}
 	
@@ -64,9 +69,9 @@ public class FieldWorldSavedData extends WorldSavedData{
 		int i = 0;
 		while(nbt.hasKey("chu" + i)){
 			byte[][][] bytes = new byte[3][8][8];
-			for(int k = 0; k < 3; k++){
-				for(int l = 0; l < 8; i++){
-					bytes[k][l] = nbt.getByteArray("byt" + i + '_' + k + '_' + l);
+			for(int j = 0; j < 3; j++){
+				for(int k = 0; k < 8; k++){
+					bytes[j][k] = nbt.getByteArray("byt" + i + '_' + j + '_' + k);
 				}
 			}
 			fieldNodes.put(nbt.getLong("chu" + i), bytes);
@@ -79,9 +84,9 @@ public class FieldWorldSavedData extends WorldSavedData{
 		int i = 0;
 		for(Entry<Long, byte[][][]> mapping : fieldNodes.entrySet()){
 			nbt.setLong("chu" + i, mapping.getKey());
-			for(int k = 0; k < 3; k++){
-				for(int l = 0; l < 8; i++){
-					nbt.setByteArray("byt" + i + '_' + k + '_' + l, mapping.getValue()[k][l]);
+			for(int j = 0; j < 3; j++){
+				for(int k = 0; k < 8; k++){
+					nbt.setByteArray("byt" + i + '_' + j + '_' + k, mapping.getValue()[j][k]);
 				}
 			}
 			i++;
@@ -95,5 +100,12 @@ public class FieldWorldSavedData extends WorldSavedData{
 	
 	public static Chunk getChunkFromLong(World world, long combinedCoord){
 		return world.getChunkFromChunkCoords((int) (combinedCoord >> 32), (int) combinedCoord);
+	}
+	
+	public static int getChunkRelativeCoord(int coord){
+		if(coord >= 0){
+			return coord % 16;
+		}
+		return 15 + (coord % 16);
 	}
 }

@@ -44,6 +44,10 @@ public class MasterAxisTileEntity extends TileEntity implements ITileMasterAxis,
 		}
 		ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
 		memberCopy.addAll(rotaryMembers);
+		for(IAxleHandler axle : memberCopy){
+			//For 0-mass gears.
+			axle.getMotionData()[0] = 0;
+		}
 		rotaryMembers.clear();
 		locked = false;
 		Random rand = new Random();

@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
+import java.util.List;
+
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
@@ -32,6 +34,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class DebugReader extends Item{
 
@@ -126,5 +130,12 @@ public class DebugReader extends Item{
 		}
 
 		return EnumActionResult.PASS;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+		tooltip.add("THIS ITEM IS BEING REMOVED!");
+		tooltip.add("Destroy any that you have");
 	}
 }

@@ -44,6 +44,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
 import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxis;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
+import com.Da_Technomancer.crossroads.blocks.technomancy.ChunkUnlocker;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import net.minecraft.block.Block;
@@ -109,6 +110,7 @@ public final class ModBlocks{
 	public static BasicBlock blockSaltTile;
 	public static BeaconHarness beaconHarness;
 	public static FatFeeder fatFeeder;
+	public static ChunkUnlocker chunkUnlocker; 
 
 	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
 	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
@@ -176,6 +178,7 @@ public final class ModBlocks{
 		blockSaltTile = new BasicBlock("blockSaltTile", Material.SAND, 0, "shovel", .5F, SoundType.SAND, "blockSalt");
 		blockAddQue(beaconHarness = new BeaconHarness());
 		blockAddQue(fatFeeder = new FatFeeder());
+		blockAddQue(chunkUnlocker = new ChunkUnlocker());
 	}
 
 	@SideOnly(Side.CLIENT)
