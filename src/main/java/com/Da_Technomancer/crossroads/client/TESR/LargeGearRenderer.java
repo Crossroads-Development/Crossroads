@@ -5,6 +5,7 @@ import java.awt.Color;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelLargeGear;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 
@@ -22,7 +23,7 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 	@Override
 	public void renderTileEntityAt(LargeGearMasterTileEntity gear, double x, double y, double z, float partialTicks, int destroyStage){
 
-		if(!gear.getWorld().isBlockLoaded(gear.getPos(), false)){
+		if(gear.getWorld().getBlockState(gear.getPos()).getBlock() != ModBlocks.largeGearMaster || !gear.getWorld().isBlockLoaded(gear.getPos(), false)){
 			return;
 		}
 
@@ -56,9 +57,11 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 			GlStateManager.translate(.5F, -.5F, -.5F);
 			handler = gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH);
 		}
-		GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-		model.render();
+		if(handler != null){
+			GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
+			Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+			model.render();
+		}
 		GlStateManager.popMatrix();
 
 	}
