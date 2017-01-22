@@ -45,6 +45,10 @@ public class TimeEffect implements IEffect{
 
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, double mult){
+			//TODO temporary for testing
+			System.out.println("------------------------FLUX_EVENT-----------------------------");
+			/*
+			
 			int severity = RAND.nextInt((int) Math.min(mult, 128)) + 1;
 
 			if(severity >= 100 && ModConfig.voidChunk.getBoolean()){
@@ -89,7 +93,7 @@ public class TimeEffect implements IEffect{
 				}
 			}else{
 				worldIn.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), severity, false);
-			}
+			}*/
 		}
 		
 		private static void setChunk(Chunk current, Chunk swapWith){

@@ -61,6 +61,7 @@ public class FieldWorldSavedData extends WorldSavedData{
 	 * Value: Size 2 array of 8x8 array. In order, dimensions represent: type (0:FLUX, 1: RATE), node X, node Z, net force
 	 * 
 	 * NOTE THAT THIS IS NOT SAVED ON WORLD RELOAD
+	 * Any long that is in the fieldNodes map should also be correspond to something in the nodeForces map. Anything that causes this to not be the case is broken.
 	 */
 	public final HashMap<Long, short[][][]> nodeForces = new HashMap<Long, short[][][]>();
 	
@@ -75,6 +76,7 @@ public class FieldWorldSavedData extends WorldSavedData{
 				}
 			}
 			fieldNodes.put(nbt.getLong("chu" + i), bytes);
+			nodeForces.put(nbt.getLong("chu" + i), getDefaultChunkForce());
 			i++;
 		}
 	}
@@ -103,9 +105,6 @@ public class FieldWorldSavedData extends WorldSavedData{
 	}
 	
 	public static int getChunkRelativeCoord(int coord){
-		if(coord >= 0){
-			return coord % 16;
-		}
-		return 15 + (coord % 16);
+		return coord - (16 * Math.floorDiv(coord, 16));
 	}
 }

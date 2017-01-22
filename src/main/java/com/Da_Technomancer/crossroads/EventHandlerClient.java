@@ -50,10 +50,10 @@ public final class EventHandlerClient{
 						buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 						for(int j = 0; j < 7; j++){
 							for(int k = 0; k < 7; k++){
-								buf.pos(1 + (2 * j), ((float) fields[i][j][k] + 1F) / 8F, 1 + (2 * k)).tex(0, 0).endVertex();
-								buf.pos(3 + (2 * j), ((float) fields[i][j + 1][k] + 1F) / 8F, 1 + (2 * k)).tex(1, 0).endVertex();
-								buf.pos(3 + (2 * j), ((float) fields[i][j + 1][k + 1] + 1F) / 8F, 3 + (2 * k)).tex(1, 1).endVertex();
-								buf.pos(1 + (2 * j), ((float) fields[i][j][k + 1] + 1F) / 8F, 3 + (2 * k)).tex(0, 1).endVertex();
+								buf.pos(1 + (2 * j), (((float) fields[i][j][k]) + 1F) / 8F, 1 + (2 * k)).tex(0, 0).endVertex();
+								buf.pos(3 + (2 * j), (((float) fields[i][j + 1][k]) + 1F) / 8F, 1 + (2 * k)).tex(1, 0).endVertex();
+								buf.pos(3 + (2 * j), (((float) fields[i][j + 1][k + 1]) + 1F) / 8F, 3 + (2 * k)).tex(1, 1).endVertex();
+								buf.pos(1 + (2 * j), (((float) fields[i][j][k + 1]) + 1F) / 8F, 3 + (2 * k)).tex(0, 1).endVertex();
 							}
 						}
 						tes.draw();

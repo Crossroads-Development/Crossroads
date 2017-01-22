@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import java.util.Random;
-
-import com.Da_Technomancer.crossroads.API.fields.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -13,15 +10,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class ChunkUnlocker extends BlockContainer{
+public class RateManipulator extends BlockContainer{
 	
-	public ChunkUnlocker(){
+	public RateManipulator(){
 		super(Material.IRON);
-		String name = "chunkUnlocker";
+		String name = "rateManipulator";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -33,18 +29,11 @@ public class ChunkUnlocker extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new ChunkUnlockerTileEntity();
+		return new RateManipulatorTileEntity();
 	}
 
-	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
-		FieldWorldSavedData.get(worldIn).fieldNodes.put(FieldWorldSavedData.getLongFromChunk(worldIn.getChunkFromBlockCoords(pos)), FieldWorldSavedData.getDefaultChunkFlux());
-		FieldWorldSavedData.get(worldIn).nodeForces.put(FieldWorldSavedData.getLongFromChunk(worldIn.getChunkFromBlockCoords(pos)), FieldWorldSavedData.getDefaultChunkForce());
-	}
-	
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-
 }

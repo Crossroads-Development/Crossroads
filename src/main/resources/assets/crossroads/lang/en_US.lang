@@ -182,3 +182,5 @@ item.moduleGoggles.name=Modular Goggles
 tile.toggleGearCopshowium.name=Copshowium Toggle Gear
 item.largeGearCopshowium.name=Large Copshowium Gear
 item.gearCopshowium.name=Copshowium Gear
+tile.chunkUnlocker.name=Chunk Unlocker
+tile.rateManipulator.name=Rate Manipulator
