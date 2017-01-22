@@ -36,8 +36,8 @@ public class FieldWorldSavedData extends WorldSavedData{
 	}
 	
 	public static byte[][][] getDefaultChunkFlux(){
-		byte[][][] out = new byte[3][8][];
-		for(int i = 0; i < 3; i++){
+		byte[][][] out = new byte[2][8][];
+		for(int i = 0; i < 2; i++){
 			for(int j = 0; j < 8; j++){
 				out[i][j] = new byte[] {7, 7, 7, 7, 7, 7, 7, 7};
 			}
@@ -46,19 +46,19 @@ public class FieldWorldSavedData extends WorldSavedData{
 	}
 	
 	public static short[][][] getDefaultChunkForce(){
-		short[][][] out = new short[3][8][8];
+		short[][][] out = new short[2][8][8];
 		return out;
 	}
 	
 	/**
 	 * Key: Chunk coordinates in long form
-	 * Value: Size 3 array of 8x8 array. In order, dimensions represent: type (0: ENERGY, 1: POTENTIAL, 2: STABILITY), node X, node Z, flux - 1 (so as to fit 0-128 range into byte)
+	 * Value: Size 2 array of 8x8 array. In order, dimensions represent: type (0: FLUX, 1: RATE), node X, node Z, flux - 1 (so as to fit 0-128 range into byte)
 	 */
 	public final HashMap<Long, byte[][][]> fieldNodes = new HashMap<Long, byte[][][]>();
 	
 	/**
 	 * Key: Chunk coordinates in long form
-	 * Value: Size 3 array of 8x8 array. In order, dimensions represent: type (0: ENERGY, 1: POTENTIAL, 2: STABILITY), node X, node Z, net force
+	 * Value: Size 2 array of 8x8 array. In order, dimensions represent: type (0:FLUX, 1: RATE), node X, node Z, net force
 	 * 
 	 * NOTE THAT THIS IS NOT SAVED ON WORLD RELOAD
 	 */
@@ -68,8 +68,8 @@ public class FieldWorldSavedData extends WorldSavedData{
 	public void readFromNBT(NBTTagCompound nbt){
 		int i = 0;
 		while(nbt.hasKey("chu" + i)){
-			byte[][][] bytes = new byte[3][8][8];
-			for(int j = 0; j < 3; j++){
+			byte[][][] bytes = new byte[2][8][8];
+			for(int j = 0; j < 2; j++){
 				for(int k = 0; k < 8; k++){
 					bytes[j][k] = nbt.getByteArray("byt" + i + '_' + j + '_' + k);
 				}
@@ -84,7 +84,7 @@ public class FieldWorldSavedData extends WorldSavedData{
 		int i = 0;
 		for(Entry<Long, byte[][][]> mapping : fieldNodes.entrySet()){
 			nbt.setLong("chu" + i, mapping.getKey());
-			for(int j = 0; j < 3; j++){
+			for(int j = 0; j < 2; j++){
 				for(int k = 0; k < 8; k++){
 					nbt.setByteArray("byt" + i + '_' + j + '_' + k, mapping.getValue()[j][k]);
 				}

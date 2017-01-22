@@ -12,8 +12,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.translation.I18n;
 
-/**This class is for holding mathematical operations that I use often.*/
+/**This class is for holding operations that I use often.*/
+@SuppressWarnings("deprecation")
 public final class MiscOp{
 
 	public static double betterRound(double numIn, int decPlac){
@@ -106,5 +108,12 @@ public final class MiscOp{
 		Vec3d vec3d1 = ent.getLook(0F);
 		Vec3d vec3d2 = vec3d.addVector(vec3d1.xCoord * blockReachDistance, vec3d1.yCoord * blockReachDistance, vec3d1.zCoord * blockReachDistance);
 		return ent.worldObj.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+	}
+	
+	/**
+	 * Localizes the passed String. Works on the server side.
+	 */
+	public static String localizeEither(String toLocal){
+		return I18n.translateToLocalFormatted(toLocal);
 	}
 }

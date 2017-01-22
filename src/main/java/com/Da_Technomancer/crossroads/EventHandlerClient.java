@@ -43,10 +43,10 @@ public final class EventHandlerClient{
 				GlStateManager.translate(chunk.getChunkCoordIntPair().getXStart() - game.thePlayer.getPositionEyes(e.getPartialTicks()).xCoord, 0, chunk.getChunkCoordIntPair().getZStart() - game.thePlayer.getPositionEyes(e.getPartialTicks()).zCoord);
 				Tessellator tes = Tessellator.getInstance();
 				VertexBuffer buf = tes.getBuffer();
-				for(int i = 0; i < 3; i++){
+				for(int i = 1; i >= 0; i--){
 					GlStateManager.translate(0, .01F, 0);
-					if(game.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(i == 0 ? GoggleLenses.RUBY.name() : i == 1 ? GoggleLenses.EMERALD.name() : GoggleLenses.DIAMOND.name())){
-						GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, i == 2 ? 1 : 0, .4F);
+					if(game.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(i == 0 ? GoggleLenses.RUBY.name() : GoggleLenses.EMERALD.name())){
+						GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, 0, .4F);
 						buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 						for(int j = 0; j < 7; j++){
 							for(int k = 0; k < 7; k++){

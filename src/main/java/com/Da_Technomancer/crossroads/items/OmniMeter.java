@@ -12,7 +12,6 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
 
-import amerifrance.guideapi.api.util.TextHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -74,7 +73,7 @@ public class OmniMeter extends Item{
 
 				playerIn.addChatComponentMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
 				for(IFluidTankProperties tank : pipe.getTankProperties()){
-					playerIn.addChatComponentMessage(new TextComponentString("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : TextHelper.localize(tank.getContents().getFluid().getUnlocalizedName())) + ", Capacity: " + tank.getCapacity()));
+					playerIn.addChatComponentMessage(new TextComponentString("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : MiscOp.localizeEither(tank.getContents().getFluid().getUnlocalizedName())) + ", Capacity: " + tank.getCapacity()));
 				}
 			}
 		}

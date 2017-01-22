@@ -94,6 +94,7 @@ public final class EventHandlerCommon{
 	private final float longRange = 2F/9F;
 	private final float shortRange = 7F/9F;
 	
+	//TODO complete change
 	@SubscribeEvent
 	public void calcFields(WorldTickEvent e){
 		e.world.theProfiler.startSection("CrossroadsFieldCalculations");
@@ -114,16 +115,9 @@ public final class EventHandlerCommon{
 				}
 				HashSet<Long> toRemove = new HashSet<Long>();
 				for(Entry<Long, byte[][][]> datum : data.fieldNodes.entrySet()){
-					//The fields must be processed in the order 2->0->1
-					for(int i = 2; i < 3; ){
+					for(int i = 1; i >= 0; i--){
 						for(int j = 0; j < 8; j++){
 							for(int k = 0; k < 8; k++){
-								if(i == 0){
-									if(data.nodeForces.containsKey(datum.getKey())){
-										data.nodeForces.get(datum.getKey())[0][j][k] = (short) (datum.getValue()[2][j][k] == -1 ? 128 : Math.min(128, ((float) data.nodeForces.get(datum.getKey())[0][j][k]) * (1F + (((float) data.nodeForces.get(datum.getKey())[0][j][k]) * (RAND.nextFloat() - .1F) * 8F / ((float) data.fieldNodes.get(datum.getKey())[2][j][k] + 1F)))));
-									}
-								}
-
 								float netForce = Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[0][j][k], -10));
 								netForce += j == 0 ? 0 : shortRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j - 1][k], -10));
 								netForce += k == 0 ? 0 : shortRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j][k - 1], -10));
@@ -138,29 +132,30 @@ public final class EventHandlerCommon{
 								netForce += j >= 6 ? 0 : longRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j + 2][k], -10));
 								netForce += k >= 6 ? 0 : longRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j][k + 2], -10));
 
-								if(i != 0 || datum.getValue()[0][j][k] >= datum.getValue()[2][j][k]){
-									datum.getValue()[i][j][k] = (byte) (i == 1 ? datum.getValue()[2][j][k] > datum.getValue()[0][j][k] ? -1 : Math.max(Math.min((byte) Math.min(7 + (int) netForce, 127), datum.getValue()[0][j][k]), datum.getValue()[2][j][k]) : (byte) Math.max(0, Math.min(7 + (int) netForce, 127)));
-								}else{
-									datum.getValue()[0][j][k] = (byte) Math.min(127, !data.nodeForces.containsKey(datum.getKey()) || data.nodeForces.get(datum.getKey())[0][j][k] >= 0 ? 32 : Math.max(1, 32 / -data.nodeForces.get(datum.getKey())[0][j][k]));
-									if(datum.getValue()[0][j][k] > datum.getValue()[2][j][k]){
-										toRemove.add(datum.getKey());
+								if(i == 0){
+									if(datum.getValue()[0][j][k] < datum.getValue()[1][j][k]){
+										datum.getValue()[1][j][k] = 0;
+										datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) (Math.max(1, 32 * Math.pow(2, (int) netForce)) + (int) datum.getValue()[0][j][k])));
+										if(datum.getValue()[0][j][k] == 127){
+											MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getChunkCoordIntPair().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 127 - datum.getValue()[2][j][k]);
+											toRemove.add(datum.getKey());
+										}else if(datum.getValue()[0][j][k] >= datum.getValue()[1][j][k]){
+											toRemove.add(datum.getKey());
+										}
+									}else{
+										datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) netForce + (int) datum.getValue()[0][j][k]));
 									}
+								}else{
+									byte newValue = (byte) Math.max(0, Math.min((int) netForce + 7, 127));
+									data.nodeForces.get(datum.getKey())[0][j][k] += Math.abs(newValue - datum.getValue()[1][j][k]);
+									datum.getValue()[1][j][k] = newValue;
 								}
+								
 								if(i == 0 && datum.getValue()[0][j][k] == 127){
 									MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getChunkCoordIntPair().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 127 - datum.getValue()[2][j][k]);
-									//To (in most cases) prevent a chunk from triggering multiple disasters at once.
-									data.nodeForces.get(datum.getKey())[0][j][k] = 0;
 									toRemove.add(datum.getKey());
 								}
 							}
-						}
-						switch(i){
-							case 2: i = 0;
-							break;
-							case 0: i = 1;
-							break;
-							case 1: i = 3;
-							break;
 						}
 					}
 				}
