@@ -96,8 +96,8 @@ public final class EventHandlerCommon{
 	
 	@SubscribeEvent
 	public void calcFields(WorldTickEvent e){
-		e.world.theProfiler.startSection("CrossroadsFieldCalculations");
 		if(!e.world.isRemote && e.world.getTotalWorldTime() % 5 == 0){
+			e.world.theProfiler.startSection("CrossroadsFieldCalculations");
 			FieldWorldSavedData data = FieldWorldSavedData.get(e.world);
 			if(e.phase == TickEvent.Phase.START){
 				data.nodeForces.clear();
@@ -160,8 +160,8 @@ public final class EventHandlerCommon{
 					data.fieldNodes.remove(remove);
 				}
 			}
+			e.world.theProfiler.endSection();
 		}
-		e.world.theProfiler.endSection();
 	}
 	
 	private boolean dilatingTime = false;

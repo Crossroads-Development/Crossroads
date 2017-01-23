@@ -26,6 +26,7 @@ public final class ModConfig{
 	public static Property voidChunk;
 	public static Property resetChunk;
 	public static Property magicChunk;
+	public static Property fieldLines;
 	
 	private static final String CAT_OPTIM = "Optimization";
 	private static final String CAT_ORES = "Ores";
@@ -55,5 +56,6 @@ public final class ModConfig{
 		voidChunk = config.get(CAT_FLUX, "Allow Chunk Voiding disaster from Technomancy? (Default true)", true);
 		resetChunk = config.get(CAT_FLUX, "Allow Chunk Reset disaster from Technomancy? (Default true)", true);
 		magicChunk = config.get(CAT_FLUX, "Allow Chunk Magic-ifying disaster from Technomancy? (Default true)", true);
+		fieldLines = config.get(CAT_FLUX, "Draw fields with lines (True: lines, False: planes)? (Default true)", true);
 	}
 }

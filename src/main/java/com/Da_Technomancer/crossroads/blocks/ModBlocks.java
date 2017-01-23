@@ -45,6 +45,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxis;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
 import com.Da_Technomancer.crossroads.blocks.technomancy.ChunkUnlocker;
+import com.Da_Technomancer.crossroads.blocks.technomancy.FluxManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
@@ -113,6 +114,7 @@ public final class ModBlocks{
 	public static FatFeeder fatFeeder;
 	public static ChunkUnlocker chunkUnlocker; 
 	public static RateManipulator rateManipulator;
+	public static FluxManipulator fluxManipulator;
 
 	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
 	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
@@ -182,6 +184,7 @@ public final class ModBlocks{
 		blockAddQue(fatFeeder = new FatFeeder());
 		blockAddQue(chunkUnlocker = new ChunkUnlocker());
 		blockAddQue(rateManipulator = new RateManipulator());
+		blockAddQue(fluxManipulator = new FluxManipulator());
 	}
 
 	@SideOnly(Side.CLIENT)

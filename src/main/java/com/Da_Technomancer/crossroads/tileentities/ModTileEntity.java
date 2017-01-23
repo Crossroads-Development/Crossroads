@@ -40,6 +40,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 
 import net.minecraft.tileentity.TileEntity;
@@ -92,6 +93,7 @@ public class ModTileEntity{
 		register(FatFeederTileEntity.class, "fatFeeder");
 		register(ChunkUnlockerTileEntity.class, "chunkUnlocker");
 		register(RateManipulatorTileEntity.class, "rateManipulator");
+		register(FluxManipulatorTileEntity.class, "fluxManipulator");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){
