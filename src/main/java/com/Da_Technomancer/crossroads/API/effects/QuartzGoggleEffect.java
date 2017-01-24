@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.CrystalMasterAxisTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

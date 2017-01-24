@@ -1,8 +1,8 @@
-package com.Da_Technomancer.crossroads.blocks.rotary;
+package com.Da_Technomancer.crossroads.blocks.magic;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.CrystalMasterAxisTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;

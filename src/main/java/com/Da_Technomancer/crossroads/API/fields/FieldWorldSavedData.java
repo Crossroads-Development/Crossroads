@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import com.Da_Technomancer.crossroads.Main;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.chunk.Chunk;
@@ -106,5 +107,9 @@ public class FieldWorldSavedData extends WorldSavedData{
 	
 	public static int getChunkRelativeCoord(int coord){
 		return coord - (16 * Math.floorDiv(coord, 16));
+	}
+	
+	public static long getLongFromPos(BlockPos pos){
+		return (((long) (pos.getX()) >> 4) << 32) | ((pos.getZ() >> 4) & 0xffffffffL);
 	}
 }

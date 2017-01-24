@@ -43,12 +43,12 @@ public class ChunkUnlockerTileEntity extends TileEntity{
 		@Override
 		public void setMagic(MagicUnit mag){
 			if(MagicElements.getElement(mag) == MagicElements.TIME && mag.getVoid() == 0){
-				if(--timer <= 0 && !FieldWorldSavedData.get(worldObj).fieldNodes.containsKey(FieldWorldSavedData.getLongFromChunk(worldObj.getChunkFromBlockCoords(pos)))){
+				if(--timer <= 0 && !FieldWorldSavedData.get(worldObj).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos))){
 					worldObj.updateBlockTick(pos, ModBlocks.chunkUnlocker, 1, 1);
 					timer = COOLDOWN;
 				}
 			}else{
-				FieldWorldSavedData.get(worldObj).fieldNodes.remove(FieldWorldSavedData.getLongFromChunk(worldObj.getChunkFromBlockCoords(pos)));
+				FieldWorldSavedData.get(worldObj).fieldNodes.remove(FieldWorldSavedData.getLongFromPos(pos));
 				timer = COOLDOWN;
 			}
 		}

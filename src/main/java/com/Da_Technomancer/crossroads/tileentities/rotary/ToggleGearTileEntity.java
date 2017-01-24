@@ -12,7 +12,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -179,7 +179,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	private class CogHandler implements ICogHandler{
 
 		@Override
-		public void connect(ITileMasterAxis masterIn, byte key, double rotationRatioIn, double lastRadius){
+		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius){
 			axleHandler.propogate(masterIn, key, rotationRatioIn, lastRadius);
 		}
 
@@ -200,7 +200,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		}
 
 		@Override
-		public void propogate(ITileMasterAxis masterIn, byte keyIn, double rotRatioIn, double lastRadius){
+		public void propogate(IAxisHandler masterIn, byte keyIn, double rotRatioIn, double lastRadius){
 			if(lastRadius != 0){
 				rotRatioIn *= -lastRadius / .5D;
 			}
@@ -225,8 +225,11 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			}
 			key = keyIn;
 			
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) instanceof ITileMasterAxis){
-				((ITileMasterAxis) worldObj.getTileEntity(pos.offset(EnumFacing.DOWN))).trigger(key, masterIn, EnumFacing.UP);
+			if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
+				worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP).trigger(masterIn, key);
+			}
+			if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
+				masterIn.addAxisToList(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.UP), EnumFacing.UP);
 			}
 
 			if(worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){

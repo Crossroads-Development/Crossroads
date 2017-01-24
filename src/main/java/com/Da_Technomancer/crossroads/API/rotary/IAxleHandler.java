@@ -19,7 +19,7 @@ public interface IAxleHandler{
 	/**
 	 * If lastRadius equals 0, then the AxleHandler should not convert the rotationRationIn based on radius.
 	 */
-	public void propogate(@Nonnull ITileMasterAxis masterIn, byte key, double rotationRatioIn, double lastRadius);
+	public void propogate(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius);
 
 	/**
 	 * [0]=m, [1]=I

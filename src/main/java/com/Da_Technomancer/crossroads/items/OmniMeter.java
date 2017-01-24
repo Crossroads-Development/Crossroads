@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.CrystalMasterAxisTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

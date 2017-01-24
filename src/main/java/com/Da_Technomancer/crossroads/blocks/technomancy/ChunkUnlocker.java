@@ -38,8 +38,8 @@ public class ChunkUnlocker extends BlockContainer{
 
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
-		FieldWorldSavedData.get(worldIn).fieldNodes.put(FieldWorldSavedData.getLongFromChunk(worldIn.getChunkFromBlockCoords(pos)), FieldWorldSavedData.getDefaultChunkFlux());
-		FieldWorldSavedData.get(worldIn).nodeForces.put(FieldWorldSavedData.getLongFromChunk(worldIn.getChunkFromBlockCoords(pos)), FieldWorldSavedData.getDefaultChunkForce());
+		FieldWorldSavedData.get(worldIn).fieldNodes.put(FieldWorldSavedData.getLongFromPos(pos), FieldWorldSavedData.getDefaultChunkFlux());
+		FieldWorldSavedData.get(worldIn).nodeForces.put(FieldWorldSavedData.getLongFromPos(pos), FieldWorldSavedData.getDefaultChunkForce());
 	}
 	
 	@Override

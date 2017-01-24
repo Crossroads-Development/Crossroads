@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.tileentities.rotary;
+package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,7 +8,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.fields.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
@@ -19,7 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class MasterAxisTileEntity extends TileEntity implements ITickable{
+public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
 
@@ -29,59 +31,55 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 	private EnumFacing facing;
 	private byte key;
 
-	public MasterAxisTileEntity(){
+	public FluxReaderAxisTileEntity(){
 		this(EnumFacing.NORTH);
 	}
 
-	public MasterAxisTileEntity(EnumFacing facingIn){
+	public FluxReaderAxisTileEntity(EnumFacing facingIn){
 		facing = facingIn;
 	}
-
+	
 	private void runCalc(){
+		FieldWorldSavedData data = FieldWorldSavedData.get(worldObj);
+		double baseSpeed = data.fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos)) ? EnergyConverters.SPEED_PER_FLUX * data.fieldNodes.get(FieldWorldSavedData.getLongFromPos(pos))[0][FieldWorldSavedData.getChunkRelativeCoord(pos.getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ()) / 2] : 0;
+		
 		double sumIRot = 0;
 		sumEnergy = 0;
-		// IRL you wouldn't say a gear spinning a different direction has
-		// negative energy, but it makes the code easier.
-
+		
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
+			sumEnergy += MiscOp.posOrNeg(gear.getRotationRatio()) * gear.getMotionData()[1];
 		}
 		
-		if(sumIRot == 0 || sumIRot != sumIRot){
-			return;
+		double availableEnergy = Math.abs(sumEnergy) + Math.abs(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] : 0);
+		availableEnergy -= .1D;
+		availableEnergy -= sumIRot * Math.pow(baseSpeed, 2) / 2D;
+		if(availableEnergy < 0){
+			availableEnergy += sumIRot * Math.pow(baseSpeed, 2) / 2D;
+			baseSpeed = 0;
 		}
-		
-		sumEnergy = runLoss(rotaryMembers, 1.001D);
-		if(sumEnergy < 1 && sumEnergy > -1){
-			sumEnergy = 0;
+		if(availableEnergy < 0){
+			availableEnergy = 0;
 		}
 		
 		for(IAxleHandler gear : rotaryMembers){
 			double newEnergy = 0;
 
 			// set w
-			gear.getMotionData()[0] = MiscOp.posOrNeg(sumEnergy) * MiscOp.posOrNeg(gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
+			gear.getMotionData()[0] = gear.getRotationRatio() * baseSpeed;
 			// set energy
 			newEnergy = MiscOp.posOrNeg(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
 			gear.getMotionData()[1] = newEnergy;
+			sumEnergy += newEnergy;
 			// set power
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
 		}
-	}
-
-	/**
-	 * base should always be equal or greater than one. 1 means no loss. 
-	*/
-	private static double runLoss(ArrayList<IAxleHandler> gears, double base){
-		double sumEnergy = 0;
-
-		for(IAxleHandler gear : gears){
-			sumEnergy += MiscOp.posOrNeg(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(base, -Math.abs(gear.getMotionData()[0]));
+		
+		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
+			worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1], 1);
 		}
-
-		return sumEnergy;
 	}
 
 	@Override
@@ -135,7 +133,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		}
 	}
 	
-	private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
+private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){

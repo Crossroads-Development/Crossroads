@@ -1,7 +1,10 @@
-package com.Da_Technomancer.crossroads.tileentities.rotary;
+package com.Da_Technomancer.crossroads.tileentities.magic;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
@@ -9,8 +12,9 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
+import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,7 +22,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMasterAxis, ITickable{
+public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable{
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
 
@@ -43,49 +47,9 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 	public int getTime(){
 		return time;
 	}
-	
-	@Override
-	public boolean isLocked(){
-		return locked;
-	}
 
 	public CrystalMasterAxisTileEntity(EnumFacing facingIn){
 		facing = facingIn;
-	}
-
-	@Override
-	public void requestUpdate(){
-		if(worldObj.isRemote){
-			return;
-		}
-		ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
-		memberCopy.addAll(rotaryMembers);
-		for(IAxleHandler axle : memberCopy){
-			//For 0-mass gears.
-			axle.getMotionData()[0] = 0;
-		}
-		rotaryMembers.clear();
-		locked = false;
-		Random rand = new Random();
-		if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
-			byte keyNew;
-			do {
-				keyNew = (byte) (rand.nextInt(100) + 1);
-			}while(key == keyNew);
-			key = keyNew;
-			
-			worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 1, 0);
-		}
-		if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
-			for(IAxleHandler gear : rotaryMembers){
-				gear.resetAngle();
-			}
-		}
-	}
-
-	@Override
-	public double getTotalEnergy(){
-		return sumEnergy;
 	}
 
 	private double lastSumEnergy;
@@ -144,35 +108,6 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 	}
 
 	@Override
-	public void lock(){
-		locked = true;
-		for(IAxleHandler gear : rotaryMembers){
-			gear.getMotionData()[0] = 0;
-			gear.getMotionData()[1] = 0;
-			gear.getMotionData()[2] = 0;
-			gear.getMotionData()[3] = 0;
-		}
-	}
-
-	@Override
-	public boolean addToList(IAxleHandler handler){
-		if(!locked){
-			rotaryMembers.add(handler);
-			return false;
-		}else{
-			return true;
-		}
-	}
-
-	@Override
-	public void trigger(byte keyIn, ITileMasterAxis masterIn, EnumFacing side){
-		if(!locked && side == facing && keyIn != key){
-			locked = true;
-		}
-
-	}
-
-	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("facing", this.facing.getIndex());
@@ -205,7 +140,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 		ticksExisted++;
 		
 		if(ticksExisted % 300 == 20 || forceUpdate){
-			requestUpdate();
+			handler.requestUpdate();
 		}
 		
 		forceUpdate = CommonProxy.masterKey != lastKey;
@@ -226,14 +161,26 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 		
 		if(!locked && !rotaryMembers.isEmpty()){
 			runCalc();
+			triggerSlaves();
 		}
 	}
 	
+	private void triggerSlaves(){
+		for(Pair<ISlaveAxisHandler, EnumFacing> slave : slaves){
+			slave.getLeft().trigger(slave.getRight());
+		}
+	}
+	
+	private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
 	private final IMagicHandler magicHandler = new MagicHandler();
+	private final IAxisHandler handler = new AxisHandler();
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != facing){
+			return true;
+		}
+		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
 			return true;
 		}
 		
@@ -245,6 +192,9 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != facing){
 			return (T) magicHandler;
+		}
+		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
+			return (T) handler;
 		}
 
 		return super.getCapability(cap, side);
@@ -268,6 +218,82 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITileMast
 					time += mag.getPower() * IMagicHandler.BEAM_TIME;
 				}
 			}
+		}
+	}
+	
+	private class AxisHandler implements IAxisHandler{
+
+		@Override
+		public void trigger(IAxisHandler masterIn, byte keyIn){
+			if(keyIn != key){
+				locked = true;
+			}
+		}
+
+		@Override
+		public void requestUpdate(){
+			if(worldObj.isRemote){
+				return;
+			}
+			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
+			memberCopy.addAll(rotaryMembers);
+			for(IAxleHandler axle : memberCopy){
+				//For 0-mass gears.
+				axle.getMotionData()[0] = 0;
+			}
+			rotaryMembers.clear();
+			locked = false;
+			Random rand = new Random();
+			if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
+				byte keyNew;
+				do {
+					keyNew = (byte) (rand.nextInt(100) + 1);
+				}while(key == keyNew);
+				key = keyNew;
+				
+				worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 1, 0);
+			}
+			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
+				for(IAxleHandler gear : rotaryMembers){
+					gear.resetAngle();
+				}
+			}
+		}
+
+		@Override
+		public void lock(){
+			locked = true;
+			for(IAxleHandler gear : rotaryMembers){
+				gear.getMotionData()[0] = 0;
+				gear.getMotionData()[1] = 0;
+				gear.getMotionData()[2] = 0;
+				gear.getMotionData()[3] = 0;
+			}
+		}
+
+		@Override
+		public boolean isLocked(){
+			return locked;
+		}
+
+		@Override
+		public boolean addToList(IAxleHandler handler){
+			if(!locked){
+				rotaryMembers.add(handler);
+				return false;
+			}else{
+				return true;
+			}
+		}
+
+		@Override
+		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
+			slaves.add(Pair.of(handler, side));
+		}
+
+		@Override
+		public double getTotalEnergy(){
+			return sumEnergy;
 		}
 	}
 }

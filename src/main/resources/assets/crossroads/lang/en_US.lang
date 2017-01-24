@@ -185,3 +185,4 @@ item.gearCopshowium.name=Copshowium Gear
 tile.chunkUnlocker.name=Chunk Unlocker
 tile.rateManipulator.name=Rate Manipulator
 tile.fluxManipulator.name=Flux Manipulator
+tile.fluxReaderAxis.name=Flux-Regulated Master Axis

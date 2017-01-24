@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPosToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -92,7 +92,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IPosReceiver
 	private class CogHandler implements ICogHandler{
 
 		@Override
-		public void connect(ITileMasterAxis masterIn, byte key, double rotationRatioIn, double lastRadius){
+		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius){
 			getAxle().propogate(masterIn, key, rotationRatioIn, lastRadius);
 		}
 

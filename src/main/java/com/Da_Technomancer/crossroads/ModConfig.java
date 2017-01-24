@@ -27,6 +27,7 @@ public final class ModConfig{
 	public static Property resetChunk;
 	public static Property magicChunk;
 	public static Property fieldLines;
+	public static Property disableSlaves;
 	
 	private static final String CAT_OPTIM = "Optimization";
 	private static final String CAT_ORES = "Ores";
@@ -57,5 +58,6 @@ public final class ModConfig{
 		resetChunk = config.get(CAT_FLUX, "Allow Chunk Reset disaster from Technomancy? (Default true)", true);
 		magicChunk = config.get(CAT_FLUX, "Allow Chunk Magic-ifying disaster from Technomancy? (Default true)", true);
 		fieldLines = config.get(CAT_FLUX, "Draw fields with lines (True: lines, False: planes)? (Default true)", true);
+		disableSlaves = config.get(CAT_OPTIM, "If you are crashing from StackOverflow errors and you either have a tiny amount of RAM or built an insanely large & complicated (Soaryn scale) rotary-mathematics setup, then set this to true, destroy the setup, and set this to false. Also maybe send me a picture of the setup.", false);
 	}
 }

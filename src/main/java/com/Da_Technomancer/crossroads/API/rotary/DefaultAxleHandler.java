@@ -49,7 +49,7 @@ public class DefaultAxleHandler implements IAxleHandler{
 	}
 
 	@Override
-	public void propogate(ITileMasterAxis masterIn, byte key, double rotationRatioIn, double lastRadius){
+	public void propogate(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius){
 		
 	}
 

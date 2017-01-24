@@ -14,7 +14,7 @@ public interface ICogHandler{
 	/**
 	 * Should redirect to the AxleHandler propogate method.
 	 */
-	public void connect(@Nonnull ITileMasterAxis masterIn, byte key, double rotationRatioIn, double lastRadius);
+	public void connect(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius);
 
 	public IAxleHandler getAxle();
 }

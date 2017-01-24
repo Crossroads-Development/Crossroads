@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -127,7 +127,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 		}
 
 		@Override
-		public void propogate(ITileMasterAxis masterIn, byte keyIn, double rotRatioIn, double lastRadius){
+		public void propogate(IAxisHandler masterIn, byte keyIn, double rotRatioIn, double lastRadius){
 			//If true, this has already been checked.
 			if(key == keyIn){
 				//If true, there is rotation conflict.
@@ -151,11 +151,17 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 			EnumFacing endPos = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, worldObj.getBlockState(pos).getValue(Properties.AXIS));
 			EnumFacing endNeg = endPos.getOpposite();
 			
-			if(worldObj.getTileEntity(pos.offset(endPos)) instanceof ITileMasterAxis){
-				((ITileMasterAxis) worldObj.getTileEntity(pos.offset(endPos))).trigger(key, masterIn, endNeg);
+			if(worldObj.getTileEntity(pos.offset(endPos)) != null && worldObj.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endNeg)){
+				worldObj.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endNeg).trigger(masterIn, key);
 			}
-			if(worldObj.getTileEntity(pos.offset(endNeg)) instanceof ITileMasterAxis){
-				((ITileMasterAxis) worldObj.getTileEntity(pos.offset(endNeg))).trigger(key, masterIn, endPos);
+			if(worldObj.getTileEntity(pos.offset(endNeg)) != null && worldObj.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos)){
+				worldObj.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos).trigger(masterIn, key);
+			}
+			if(worldObj.getTileEntity(pos.offset(endPos)) != null && worldObj.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endNeg)){
+				masterIn.addAxisToList(worldObj.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endNeg), endNeg);
+			}
+			if(worldObj.getTileEntity(pos.offset(endNeg)) != null && worldObj.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endPos)){
+				masterIn.addAxisToList(worldObj.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endPos), endPos);
 			}
 
 			if(worldObj.getTileEntity(pos.offset(endNeg)) != null && worldObj.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endPos)){

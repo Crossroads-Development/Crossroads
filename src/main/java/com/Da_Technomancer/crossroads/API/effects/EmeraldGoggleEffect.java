@@ -8,7 +8,6 @@ import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldDisableToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -33,16 +32,16 @@ public class EmeraldGoggleEffect implements IGoggleEffect{
 				out += "Power: " + axle.getMotionData()[2] + ",\n";
 				out += "I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio();
 				ModPackets.network.sendTo(new SendChatToClient(out, CHAT_ID), (EntityPlayerMP) player);
-			}else if(world.getTileEntity(ray.getBlockPos()) instanceof ITileMasterAxis){
-				ModPackets.network.sendTo(new SendChatToClient("Total Energy: " + ((ITileMasterAxis) world.getTileEntity(ray.getBlockPos())).getTotalEnergy(), CHAT_ID), (EntityPlayerMP) player);
+			}else if(world.getTileEntity(ray.getBlockPos()).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
+				ModPackets.network.sendTo(new SendChatToClient("Total Energy: " + world.getTileEntity(ray.getBlockPos()).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy(), CHAT_ID), (EntityPlayerMP) player);
 			}
 		}
 
 		if(world.getTotalWorldTime() % 5 == 1){
-			if(FieldWorldSavedData.get(world).fieldNodes.containsKey(FieldWorldSavedData.getLongFromChunk(world.getChunkFromBlockCoords(player.getPosition())))){
-				ModPackets.network.sendTo(new SendFieldsToClient(FieldWorldSavedData.get(world).fieldNodes.get(FieldWorldSavedData.getLongFromChunk(world.getChunkFromBlockCoords(player.getPosition())))[1], (byte) 1, FieldWorldSavedData.getLongFromChunk(world.getChunkFromBlockCoords(player.getPosition()))), (EntityPlayerMP) player);
+			if(FieldWorldSavedData.get(world).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(player.getPosition()))){
+				ModPackets.network.sendTo(new SendFieldsToClient(FieldWorldSavedData.get(world).fieldNodes.get(FieldWorldSavedData.getLongFromPos(player.getPosition()))[1], (byte) 1, FieldWorldSavedData.getLongFromPos(player.getPosition())), (EntityPlayerMP) player);
 			}else{
-				ModPackets.network.sendTo(new SendFieldDisableToClient(FieldWorldSavedData.getLongFromChunk(world.getChunkFromBlockCoords(player.getPosition()))), (EntityPlayerMP) player);
+				ModPackets.network.sendTo(new SendFieldDisableToClient(FieldWorldSavedData.getLongFromPos(player.getPosition())), (EntityPlayerMP) player);
 			}
 		}
 	}

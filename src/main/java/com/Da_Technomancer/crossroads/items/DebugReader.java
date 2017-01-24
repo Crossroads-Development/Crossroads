@@ -11,10 +11,10 @@ import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
-import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -70,9 +70,9 @@ public class DebugReader extends Item{
 			}
 		}
 
-		if(te instanceof ITileMasterAxis){
-			playerIn.addChatComponentMessage(new TextComponentString(Boolean.toString(((ITileMasterAxis) te).isLocked())));
-			playerIn.addChatComponentMessage(new TextComponentString(((ITileMasterAxis) te).getTotalEnergy() + " Energy Total"));
+		if(te instanceof IAxisHandler){
+			playerIn.addChatComponentMessage(new TextComponentString(Boolean.toString(((IAxisHandler) te).isLocked())));
+			playerIn.addChatComponentMessage(new TextComponentString(((IAxisHandler) te).getTotalEnergy() + " Energy Total"));
 		}else{
 			playerIn.addChatComponentMessage(new TextComponentString(Integer.toString(CommonProxy.masterKey)));
 		}

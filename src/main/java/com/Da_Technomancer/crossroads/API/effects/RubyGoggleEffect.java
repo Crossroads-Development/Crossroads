@@ -30,10 +30,10 @@ public class RubyGoggleEffect implements IGoggleEffect{
 		}
 		
 		if(world.getTotalWorldTime() % 5 == 1){
-			if(FieldWorldSavedData.get(world).fieldNodes.containsKey(FieldWorldSavedData.getLongFromChunk(world.getChunkFromBlockCoords(player.getPosition())))){
-				ModPackets.network.sendTo(new SendFieldsToClient(FieldWorldSavedData.get(world).fieldNodes.get(FieldWorldSavedData.getLongFromChunk(world.getChunkFromBlockCoords(player.getPosition())))[0], (byte) 0, FieldWorldSavedData.getLongFromChunk(world.getChunkFromBlockCoords(player.getPosition()))), (EntityPlayerMP) player);
+			if(FieldWorldSavedData.get(world).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(player.getPosition()))){
+				ModPackets.network.sendTo(new SendFieldsToClient(FieldWorldSavedData.get(world).fieldNodes.get(FieldWorldSavedData.getLongFromPos(player.getPosition()))[0], (byte) 0, FieldWorldSavedData.getLongFromPos(player.getPosition())), (EntityPlayerMP) player);
 			}else{
-				ModPackets.network.sendTo(new SendFieldDisableToClient(FieldWorldSavedData.getLongFromChunk(world.getChunkFromBlockCoords(player.getPosition()))), (EntityPlayerMP) player);
+				ModPackets.network.sendTo(new SendFieldDisableToClient(FieldWorldSavedData.getLongFromPos(player.getPosition())), (EntityPlayerMP) player);
 			}
 		}
 	}

@@ -13,7 +13,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 
 import net.minecraft.nbt.NBTTagCompound;
 //import net.minecraft.nbt.NBTTagList;
@@ -272,7 +272,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 		
 		@Override
-		public void connect(ITileMasterAxis masterIn, byte key, double rotationRatioIn, double lastRadius){
+		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius){
 			axleHandlers[side].propogate(masterIn, key, rotationRatioIn, lastRadius);
 		}
 
@@ -298,7 +298,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public void propogate(ITileMasterAxis masterIn, byte key, double rotRatioIn, double lastRadius){
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 			if(members[side] == null || ticksExisted == 0){
 				return;
 			}
@@ -329,8 +329,11 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}
 			updateKey = key;
 			
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))) instanceof ITileMasterAxis){
-				((ITileMasterAxis) worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side)))).trigger(key, masterIn, EnumFacing.getFront(side).getOpposite());
+			if(worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))) != null && worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite())){
+				worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite()).trigger(masterIn, key);
+			}
+			if(worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))) != null && worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite())){
+				masterIn.addAxisToList(worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite()), EnumFacing.getFront(side).getOpposite());
 			}
 
 			for(int i = 0; i < 6; i++){

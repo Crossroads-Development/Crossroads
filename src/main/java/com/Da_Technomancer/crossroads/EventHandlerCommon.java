@@ -139,6 +139,7 @@ public final class EventHandlerCommon{
 											continue fluxEvent;
 										}
 									}else{
+										netForce += datum.getValue()[0][j][k] == 7 ? 0 : (RAND.nextFloat() - .2F) * .10F;
 										datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) netForce + (int) datum.getValue()[0][j][k]));
 									}
 								}else{
@@ -166,15 +167,18 @@ public final class EventHandlerCommon{
 	
 	private boolean dilatingTime = false;
 	
+	/**
+	 * TODO make this work on A) Players, and B) entities other than EntityLiving (Ex. Arrows)
+	 */
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void dilateEntityTime(LivingUpdateEvent e){
-		if(e.getEntity().worldObj.isRemote || dilatingTime || !FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.containsKey(FieldWorldSavedData.getLongFromChunk(e.getEntity().getEntityWorld().getChunkFromBlockCoords(e.getEntity().getPosition())))){
+		if(e.getEntity().worldObj.isRemote || dilatingTime || !FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))){
 			return;
 		}
 		
-		int potential = 1 + FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromChunk(e.getEntity().getEntityWorld().getChunkFromBlockCoords(e.getEntity().getPosition())))[1][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2];
+		int potential = 1 + FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))[1][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2];
 		dilatingTime = true;
-		if(FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromChunk(e.getEntity().getEntityWorld().getChunkFromBlockCoords(e.getEntity().getPosition())))[1][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2] > FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromChunk(e.getEntity().getEntityWorld().getChunkFromBlockCoords(e.getEntity().getPosition())))[0][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2]){
+		if(FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))[1][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2] > FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))[0][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2]){
 			potential = 0;
 		}
 		for(int i = 1; i < potential / 8; i++){

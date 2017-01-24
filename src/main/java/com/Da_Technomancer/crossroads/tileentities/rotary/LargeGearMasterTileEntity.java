@@ -14,7 +14,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 
@@ -241,7 +241,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		}
 
 		@Override
-		public void propogate(ITileMasterAxis masterIn, byte key, double rotRatioIn, double lastRadius){
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 			if(type == null || !valid){
 				return;
 			}
@@ -274,8 +274,11 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			}
 			updateKey = key;
 
-			if(worldObj.getTileEntity(pos.offset(sid)) instanceof ITileMasterAxis){
-				((ITileMasterAxis) worldObj.getTileEntity(pos.offset(sid))).trigger(key, masterIn, sid.getOpposite());
+			if(worldObj.getTileEntity(pos.offset(sid)) != null && worldObj.getTileEntity(pos.offset(sid)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, sid.getOpposite())){
+				worldObj.getTileEntity(pos.offset(sid)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, sid.getOpposite()).trigger(masterIn, key);
+			}
+			if(worldObj.getTileEntity(pos.offset(sid)) != null && worldObj.getTileEntity(pos.offset(sid)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, sid.getOpposite())){
+				masterIn.addAxisToList(worldObj.getTileEntity(pos.offset(sid)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, sid.getOpposite()), sid.getOpposite());
 			}
 
 			for(EnumFacing sideN : EnumFacing.values()){

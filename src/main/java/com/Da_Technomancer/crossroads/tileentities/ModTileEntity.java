@@ -26,11 +26,11 @@ import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEnti
 import com.Da_Technomancer.crossroads.tileentities.magic.BeaconHarnessTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterBasicTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.CrystallinePrismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.AxleTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ItemChutePortTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
@@ -41,6 +41,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEnt
 import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxManipulatorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 
 import net.minecraft.tileentity.TileEntity;
@@ -94,6 +95,7 @@ public class ModTileEntity{
 		register(ChunkUnlockerTileEntity.class, "chunkUnlocker");
 		register(RateManipulatorTileEntity.class, "rateManipulator");
 		register(FluxManipulatorTileEntity.class, "fluxManipulator");
+		register(FluxReaderAxisTileEntity.class, "fluxReaderAxis");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){
