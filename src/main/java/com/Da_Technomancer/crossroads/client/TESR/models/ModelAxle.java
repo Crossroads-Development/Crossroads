@@ -1,21 +1,58 @@
 package com.Da_Technomancer.crossroads.client.TESR.models;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
+import java.awt.Color;
 
-public class ModelAxle extends ModelBase {
-    public ModelRenderer shape1;
+import org.lwjgl.opengl.GL11;
 
-    public ModelAxle() {
-        this.textureWidth = 32;
-        this.textureHeight = 16;
-        this.shape1 = new ModelRenderer(this, 0, 0);
-        this.shape1.setRotationPoint(-1.0F, -8F, -1.0F);
-        this.shape1.addBox(0.0F, 0.0F, 0.0F, 2, 16, 2, 0.0F);
-    }
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 
-    public void render() { 
-    	float f = 1F / 16F;
-    	shape1.render(f);
-    }
+public class ModelAxle {
+
+	/**
+	 * Translate to position + .5 blocks in x,y,z first, then rotate facing, then rotate angle. 
+	 */
+	public void render(ResourceLocation res, Color color) { 
+		float radius = 1F / 16F;
+		
+		Minecraft.getMinecraft().renderEngine.bindTexture(res);
+		VertexBuffer vb = Tessellator.getInstance().getBuffer();
+
+		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(-radius, -.5F, -radius).tex(0, 0).endVertex();
+		vb.pos(radius, -.5F, -radius).tex(1, 0).endVertex();
+		vb.pos(radius, -.5F, radius).tex(1, 1).endVertex();
+		vb.pos(-radius, -.5F, radius).tex(0, 1).endVertex();
+		
+		vb.pos(-radius, .5F, radius).tex(0, 1).endVertex();
+		vb.pos(radius, .5F, radius).tex(1, 1).endVertex();
+		vb.pos(radius, .5F, -radius).tex(1, 0).endVertex();
+		vb.pos(-radius, .5F, -radius).tex(0, 0).endVertex();
+		
+		vb.pos(-radius, .5F, -radius).tex(0, 1).endVertex();
+		vb.pos(radius, .5F, -radius).tex(1, 1).endVertex();
+		vb.pos(radius, -.5F, -radius).tex(1, 0).endVertex();
+		vb.pos(-radius, -.5F, -radius).tex(0, 0).endVertex();
+		
+		vb.pos(-radius, -.5F, radius).tex(0, 0).endVertex();
+		vb.pos(radius, -.5F, radius).tex(1, 0).endVertex();
+		vb.pos(radius, .5F, radius).tex(1, 1).endVertex();
+		vb.pos(-radius, .5F, radius).tex(0, 1).endVertex();
+		
+		vb.pos(-radius, -.5F, -radius).tex(0, 0).endVertex();
+		vb.pos(-radius, -.5F, radius).tex(1, 0).endVertex();
+		vb.pos(-radius, .5F, radius).tex(1, 1).endVertex();
+		vb.pos(-radius, .5F, -radius).tex(0, 1).endVertex();
+		
+		vb.pos(radius, .5F, -radius).tex(0, 1).endVertex();
+		vb.pos(radius, .5F, radius).tex(1, 1).endVertex();
+		vb.pos(radius, -.5F, radius).tex(1, 0).endVertex();
+		vb.pos(radius, -.5F, -radius).tex(0, 0).endVertex();
+		Tessellator.getInstance().draw();
+	}
 }

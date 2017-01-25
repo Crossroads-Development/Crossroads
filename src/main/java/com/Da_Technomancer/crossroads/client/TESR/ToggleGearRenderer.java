@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.client.TESR;
 
+import java.awt.Color;
+
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -47,14 +49,14 @@ public class ToggleGearRenderer extends TileEntitySpecialRenderer<ToggleGearTile
 		GlStateManager.popMatrix();
 		
 		GlStateManager.pushMatrix();
+		GlStateManager.disableLighting();
 		GlStateManager.color(1, 1, 1);
-		GlStateManager.translate(x, y, z);
-		GlStateManager.translate(.5F, .375F, .5F);
+		GlStateManager.translate(x + .5F, y + .375F, z + .5F);
 		GlStateManager.scale(1D, .75D, 1D);
 		GlStateManager.translate(0, -.125F, 0);
 		GlStateManager.rotate((float) -gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getAngle(), 0F, 1F, 0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(textureAx);
-		modelAx.render();
+		modelAx.render(textureAx, Color.WHITE);
+		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}
 }
