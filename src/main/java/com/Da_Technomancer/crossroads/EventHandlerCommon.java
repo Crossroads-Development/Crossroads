@@ -139,7 +139,7 @@ public final class EventHandlerCommon{
 											continue fluxEvent;
 										}
 									}else{
-										netForce += datum.getValue()[0][j][k] == 7 ? 0 : (RAND.nextFloat() - .2F) * .10F;
+										netForce += datum.getValue()[0][j][k] == 7 ? 0 : (RAND.nextFloat() - .2F) * 5F;
 										datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) netForce + (int) datum.getValue()[0][j][k]));
 									}
 								}else{
