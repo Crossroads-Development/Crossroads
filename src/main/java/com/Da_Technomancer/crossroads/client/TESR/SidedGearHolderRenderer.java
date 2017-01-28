@@ -14,11 +14,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGearHolderTileEntity>{
 
-	//private final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/sidedGear.png");
-	//private final ModelGear model = new ModelGear();
-	
 	private final ModelGearOctagon modelOct = new ModelGearOctagon();
-	private final ResourceLocation res = new ResourceLocation(Main.MODID + ":textures/model/gearOct.png");
+	private final ResourceLocation res = new ResourceLocation(Main.MODID, "textures/model/gearOct.png");
 
 	@Override
 	public void renderTileEntityAt(SidedGearHolderTileEntity gearHolder, double x, double y, double z, float partialTicks, int destroyStage){

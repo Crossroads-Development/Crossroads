@@ -21,7 +21,4 @@ public interface ISlaveAxisHandler{
 	 * @return Any ISlaveAxisHandlers controlled by this axis. 
 	 */
 	public HashSet<ISlaveAxisHandler> getContainedAxes();
-	
-	/** For debugging mainly */
-	public double getTotalEnergy();
 }

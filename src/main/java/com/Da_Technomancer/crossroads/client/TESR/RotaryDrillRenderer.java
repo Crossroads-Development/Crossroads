@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTileEntity>{
 
 	private final ModelDrill model = new ModelDrill();
-	private final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/drill.png");
+	private final ResourceLocation texture = new ResourceLocation(Main.MODID, "textures/model/drill.png");
 
 	@Override
 	public void renderTileEntityAt(RotaryDrillTileEntity drill, double x, double y, double z, float partialTicks, int destroyStage){

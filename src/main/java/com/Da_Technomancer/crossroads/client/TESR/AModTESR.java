@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEnt
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -45,6 +46,7 @@ public class AModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(BeamSplitterBasicTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(AxleTileEntity.class, new AxleRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(BeaconHarnessTileEntity.class, new BeaconHarnessRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(MultiplicationAxisTileEntity.class, new MultiplicationAxisRenderer());
 	}
 
 	public static void reg(Block block){

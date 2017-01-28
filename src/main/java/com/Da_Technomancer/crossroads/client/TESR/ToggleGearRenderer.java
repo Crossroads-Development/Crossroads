@@ -18,8 +18,8 @@ import net.minecraft.util.ResourceLocation;
 public class ToggleGearRenderer extends TileEntitySpecialRenderer<ToggleGearTileEntity>{
 
 	private final ModelGearOctagon modelOct = new ModelGearOctagon();
-	private final ResourceLocation res = new ResourceLocation(Main.MODID + ":textures/model/gearOct.png");
-	private final ResourceLocation textureAx = new ResourceLocation(Main.MODID + ":textures/model/axle.png");
+	private final ResourceLocation res = new ResourceLocation(Main.MODID, "textures/model/gearOct.png");
+	private final ResourceLocation textureAx = new ResourceLocation(Main.MODID, "textures/model/axle.png");
 	private final ModelAxle modelAx = new ModelAxle();
 	
 	@Override
@@ -34,7 +34,6 @@ public class ToggleGearRenderer extends TileEntitySpecialRenderer<ToggleGearTile
 		}
 		
 		GlStateManager.pushMatrix();
-
 		GlStateManager.pushAttrib();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5D, y + .5D, z + .5D);

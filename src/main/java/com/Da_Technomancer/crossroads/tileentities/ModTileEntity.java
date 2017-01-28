@@ -42,6 +42,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 
 import net.minecraft.tileentity.TileEntity;
@@ -96,6 +97,7 @@ public class ModTileEntity{
 		register(RateManipulatorTileEntity.class, "rateManipulator");
 		register(FluxManipulatorTileEntity.class, "fluxManipulator");
 		register(FluxReaderAxisTileEntity.class, "fluxReaderAxis");
+		register(MultiplicationAxisTileEntity.class, "multiplicationAxis");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

@@ -141,7 +141,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 	private int ticksExisted = 0;
 
-	private final int tiers = ModConfig.speedTiers.getInt();
+	private static final int tiers = ModConfig.speedTiers.getInt();
 
 	private void sendWPacket(){
 		boolean flag = false;

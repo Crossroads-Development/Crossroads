@@ -16,7 +16,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class AxleRenderer extends TileEntitySpecialRenderer<AxleTileEntity>{
 
-	private final ResourceLocation textureAx = new ResourceLocation(Main.MODID + ":textures/model/axle.png");
+	private final ResourceLocation textureAx = new ResourceLocation(Main.MODID, "textures/model/axle.png");
 	private final ModelAxle modelAx = new ModelAxle();
 
 	@Override

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
 
 public class SteamTurbineRenderer extends TileEntitySpecialRenderer<SteamTurbineTileEntity>{
-	private static final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/pump.png");
+	private static final ResourceLocation texture = new ResourceLocation(Main.MODID, "textures/model/pump.png");
 	private static final ModelPump model = new ModelPump();
 
 	@Override

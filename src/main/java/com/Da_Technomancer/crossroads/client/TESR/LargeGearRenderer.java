@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMasterTileEntity>{
 
-	protected static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID + ":textures/model/largeGear.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/largeGear.png");
 	private static final ModelLargeGear model = new ModelLargeGear();
 
 	@Override
