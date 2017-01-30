@@ -24,9 +24,13 @@ public class TimeEffect implements IEffect{
 					return;
 				}
 			}
+			
 
 			for(int i = rand.nextInt((int) mult); i < mult; i++){
 				((ITickable) worldIn.getTileEntity(pos)).update();
+				if(!(worldIn.getTileEntity(pos) instanceof ITickable)){
+					break;
+				}
 			}
 		}
 
