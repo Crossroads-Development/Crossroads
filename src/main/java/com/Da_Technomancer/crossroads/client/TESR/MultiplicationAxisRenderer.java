@@ -63,7 +63,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.125D, .21875D, .5D);
 		GlStateManager.scale(1D, .4374D, 1D);
 		GlStateManager.rotate(angleOne, 0, 1F, 0);
-		modelAx.render(textureAx, Color.WHITE);
+		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//second carrier
@@ -71,7 +71,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.875D, .21875D, .5D);
 		GlStateManager.scale(1D, .4374D, 1D);
 		GlStateManager.rotate(angleThree, 0, 1F, 0);
-		modelAx.render(textureAx, Color.WHITE);
+		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//first transformer
@@ -79,7 +79,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.3125D, .40625D - (speedTwo > 0 ? 0D : Math.max(-8, Math.abs(speedTwo)) * .0234375D), .25D);
 		GlStateManager.scale(1D, .3125D, 1D);
 		GlStateManager.rotate(angleOne, 0, 1F, 0);
-		modelAx.render(textureAx, Color.WHITE);
+		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//second transformer
@@ -87,7 +87,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.6875D, .40625D - (speedTwo < 0 ? 0D : Math.min(8, speedTwo) * .0234375D), .25D);
 		GlStateManager.scale(1D, .3125D, 1D);
 		GlStateManager.rotate(angleThree, 0, 1F, 0);
-		modelAx.render(textureAx, Color.WHITE);
+		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//upper height control
@@ -95,7 +95,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.5D, .75D, .5D);
 		GlStateManager.scale(1D, .5D, 1D);
 		GlStateManager.rotate(-angleTwo, 0, 1F, 0);
-		modelAx.render(textureAx, Color.WHITE);
+		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//lower height control
@@ -107,7 +107,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.scale(1D, 1D, .15D);
 		GlStateManager.rotate(90, 1, 0, 0);
 		GlStateManager.rotate(-angleTwo, 0, 1F, 0);
-		modelAx.render(textureAx, Color.WHITE);
+		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//Pyramids
@@ -201,28 +201,28 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.3125D, .16D + (speedTwo > 0 ? 0D : Math.max(-8, speedTwo) * .01171875D), .25D);
 		GlStateManager.scale(1D, .1875D + (speedTwo > 0 ? 0D : Math.max(-8, speedTwo) * .0234375D), 1D);
-		modelAx.render(textureSpr, Color.WHITE);
+		modelAx.render(textureSpr, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//second transformer bottom
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.6875D, .16D - (speedTwo < 0 ? 0D : Math.min(8, speedTwo) * .01171875D), .25D);
 		GlStateManager.scale(1D, .1875D - (speedTwo < 0 ? 0D : Math.min(8, speedTwo) * .0234375D), 1D);
-		modelAx.render(textureSpr, Color.WHITE);
+		modelAx.render(textureSpr, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//first transformer top
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.3125D, .84D + (speedTwo > 0 ? 0D : Math.max(-8, speedTwo) * .01171875D), .25D);
 		GlStateManager.scale(1D, .1875D - (speedTwo > 0 ? 0D : Math.max(-8, speedTwo) * .0234375D), 1D);
-		modelAx.render(textureSpr, Color.WHITE);
+		modelAx.render(textureSpr, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//second transformer top
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.6875D, .84D - (speedTwo < 0 ? 0D : Math.min(8, speedTwo) * .01171875D), .25D);
 		GlStateManager.scale(1D, .1875D + (speedTwo < 0 ? 0D : Math.min(8, speedTwo) * .0234375D), 1D);
-		modelAx.render(textureSpr, Color.WHITE);
+		modelAx.render(textureSpr, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 		
 		//Belts

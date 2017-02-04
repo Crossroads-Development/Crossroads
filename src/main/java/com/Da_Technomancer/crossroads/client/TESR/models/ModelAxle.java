@@ -14,15 +14,15 @@ import net.minecraft.util.ResourceLocation;
 public class ModelAxle {
 
 	/**
-	 * Translate to position + .5*scale blocks in x,y,z first, then scale, then translate .5*scale - .5 in x,y,z, then rotate facing, then rotate angle. 
+	 * Translate to position + .5*scale blocks in x,y,z first, then scale, then rotate facing, then rotate angle. 
 	 */
-	public void render(ResourceLocation res, Color color) { 
+	public void render(ResourceLocation side, ResourceLocation ends, Color color) { 
 		float radius = 1F / 16F;
 		
-		Minecraft.getMinecraft().renderEngine.bindTexture(res);
 		VertexBuffer vb = Tessellator.getInstance().getBuffer();
 
 		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+		Minecraft.getMinecraft().renderEngine.bindTexture(ends);
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-radius, -.5F, -radius).tex(0, 0).endVertex();
 		vb.pos(radius, -.5F, -radius).tex(1, 0).endVertex();
@@ -33,7 +33,10 @@ public class ModelAxle {
 		vb.pos(radius, .5F, radius).tex(1, 1).endVertex();
 		vb.pos(radius, .5F, -radius).tex(1, 0).endVertex();
 		vb.pos(-radius, .5F, -radius).tex(0, 0).endVertex();
-		
+		Tessellator.getInstance().draw();
+
+		Minecraft.getMinecraft().renderEngine.bindTexture(side);
+		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-radius, .5F, -radius).tex(0, 1).endVertex();
 		vb.pos(radius, .5F, -radius).tex(1, 1).endVertex();
 		vb.pos(radius, -.5F, -radius).tex(1, 0).endVertex();

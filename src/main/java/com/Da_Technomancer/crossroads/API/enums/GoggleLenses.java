@@ -1,10 +1,12 @@
 package com.Da_Technomancer.crossroads.API.enums;
 
-import com.Da_Technomancer.crossroads.API.effects.DiamondGoggleEffect;
-import com.Da_Technomancer.crossroads.API.effects.EmeraldGoggleEffect;
-import com.Da_Technomancer.crossroads.API.effects.IGoggleEffect;
-import com.Da_Technomancer.crossroads.API.effects.QuartzGoggleEffect;
-import com.Da_Technomancer.crossroads.API.effects.RubyGoggleEffect;
+import java.util.ArrayList;
+
+import com.Da_Technomancer.crossroads.API.technomancy.DiamondGoggleEffect;
+import com.Da_Technomancer.crossroads.API.technomancy.EmeraldGoggleEffect;
+import com.Da_Technomancer.crossroads.API.technomancy.IGoggleEffect;
+import com.Da_Technomancer.crossroads.API.technomancy.QuartzGoggleEffect;
+import com.Da_Technomancer.crossroads.API.technomancy.RubyGoggleEffect;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
@@ -45,8 +47,8 @@ public enum GoggleLenses{
 	/**
 	 * Call on the server side ONLY.
 	 */
-	public void doEffect(World world, EntityPlayer player){
-		effect.armorTick(world, player);
+	public void doEffect(World world, EntityPlayer player, ArrayList<String> chat){
+		effect.armorTick(world, player, chat);
 	}
 	
 	/**This will return the name with all but the first char being lowercase,

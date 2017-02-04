@@ -40,6 +40,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.CounterGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
@@ -98,6 +99,7 @@ public class ModTileEntity{
 		register(FluxManipulatorTileEntity.class, "fluxManipulator");
 		register(FluxReaderAxisTileEntity.class, "fluxReaderAxis");
 		register(MultiplicationAxisTileEntity.class, "multiplicationAxis");
+		register(CounterGearTileEntity.class, "counterGear");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

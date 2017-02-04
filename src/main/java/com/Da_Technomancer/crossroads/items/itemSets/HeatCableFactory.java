@@ -13,8 +13,8 @@ import net.minecraftforge.client.model.ModelLoader;
 
 public final class HeatCableFactory{
 
-	public static HashMap<HeatConductors, HashMap<HeatInsulators, HeatCable>> cableMap = new HashMap<HeatConductors, HashMap<HeatInsulators, HeatCable>>();
-	public static HashMap<HeatConductors, HashMap<HeatInsulators, RedstoneHeatCable>> rCableMap = new HashMap<HeatConductors, HashMap<HeatInsulators, RedstoneHeatCable>>();
+	public static final HashMap<HeatConductors, HashMap<HeatInsulators, HeatCable>> HEAT_CABLES = new HashMap<HeatConductors, HashMap<HeatInsulators, HeatCable>>();
+	public static final HashMap<HeatConductors, HashMap<HeatInsulators, RedstoneHeatCable>> REDSTONE_HEAT_CABLES = new HashMap<HeatConductors, HashMap<HeatInsulators, RedstoneHeatCable>>();
 
 	public static void init(){
 		for(HeatConductors cond : HeatConductors.values()){
@@ -24,20 +24,20 @@ public final class HeatCableFactory{
 				map.put(insul, new HeatCable(cond, insul));
 				rMap.put(insul, new RedstoneHeatCable(cond, insul));
 			}
-			cableMap.put(cond, map);
-			rCableMap.put(cond, rMap);
+			HEAT_CABLES.put(cond, map);
+			REDSTONE_HEAT_CABLES.put(cond, rMap);
 		}
 	}
 	
 	public static void clientInit(){
 		//TODO ModelResourceLocation cableModel = new ModelResourceLocation(Main.MODID + ":heatCable");
-		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.cableMap.values()){
+		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.HEAT_CABLES.values()){
 			for(HeatCable cable : map.values()){
 				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cable), 0, new ModelResourceLocation(cable.getTexture().toString().replaceFirst("blocks/", "")));
 			}
 		}
 		
-		for(HashMap<HeatInsulators, RedstoneHeatCable> map : HeatCableFactory.rCableMap.values()){
+		for(HashMap<HeatInsulators, RedstoneHeatCable> map : HeatCableFactory.REDSTONE_HEAT_CABLES.values()){
 			for(RedstoneHeatCable cable : map.values()){
 				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cable), 0, new ModelResourceLocation(cable.getTexture().toString().replaceFirst("blocks/", "")));
 			}

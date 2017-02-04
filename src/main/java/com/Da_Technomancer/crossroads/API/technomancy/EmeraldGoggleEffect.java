@@ -1,10 +1,10 @@
-package com.Da_Technomancer.crossroads.API.effects;
+package com.Da_Technomancer.crossroads.API.technomancy;
+
+import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.fields.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldDisableToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
@@ -16,24 +16,18 @@ import net.minecraft.world.World;
 
 public class EmeraldGoggleEffect implements IGoggleEffect{
 
-	/**
-	 * Initial value chosen at random
-	 */
-	private static final int CHAT_ID = 246547;
-
 	@Override
-	public void armorTick(World world, EntityPlayer player){
+	public void armorTick(World world, EntityPlayer player, ArrayList<String> chat){
 		RayTraceResult ray = MiscOp.rayTrace(player, 8);
 		if(ray != null && world.getTileEntity(ray.getBlockPos()) != null){
 			if(world.getTileEntity(ray.getBlockPos()).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit.getOpposite())){
 				IAxleHandler axle = world.getTileEntity(ray.getBlockPos()).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit.getOpposite());
-				String out = "Speed: " + axle.getMotionData()[0] + ",\n";
-				out += "Energy: " + axle.getMotionData()[1] + ",\n";
-				out += "Power: " + axle.getMotionData()[2] + ",\n";
-				out += "I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio();
-				ModPackets.network.sendTo(new SendChatToClient(out, CHAT_ID), (EntityPlayerMP) player);
+				chat.add("Speed: " + axle.getMotionData()[0]);
+				chat.add("Energy: " + axle.getMotionData()[1]);
+				chat.add("Power: " + axle.getMotionData()[2]);
+				chat.add("I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio());
 			}else if(world.getTileEntity(ray.getBlockPos()).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
-				ModPackets.network.sendTo(new SendChatToClient("Total Energy: " + world.getTileEntity(ray.getBlockPos()).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy(), CHAT_ID), (EntityPlayerMP) player);
+				chat.add("Total Energy: " + world.getTileEntity(ray.getBlockPos()).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy());
 			}
 		}
 

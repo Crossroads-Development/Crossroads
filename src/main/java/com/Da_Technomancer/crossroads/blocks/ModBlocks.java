@@ -207,13 +207,13 @@ public final class ModBlocks{
 			}
 		}
 
-		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.cableMap.values()){
+		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.HEAT_CABLES.values()){
 			for(HeatCable cable : map.values()){
 				cable.initModel();
 			}
 		}
 		
-		for(HashMap<HeatInsulators, RedstoneHeatCable> map : HeatCableFactory.rCableMap.values()){
+		for(HashMap<HeatInsulators, RedstoneHeatCable> map : HeatCableFactory.REDSTONE_HEAT_CABLES.values()){
 			for(RedstoneHeatCable cable : map.values()){
 				cable.initModel();
 			}

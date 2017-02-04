@@ -139,7 +139,7 @@ public class SidedGearHolder extends BlockContainer{
 
 		for(EnumFacing side : EnumFacing.VALUES){
 			if(te.getMembers()[side.getIndex()] != null && !worldIn.isSideSolid(pos.offset(side), side.getOpposite(), false)){
-				spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(te.getMembers()[side.getIndex()]), 1));
+				spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.BASIC_GEARS.get(te.getMembers()[side.getIndex()]), 1));
 				te.setMembers(null, side.getIndex());
 			}
 		}
@@ -166,7 +166,7 @@ public class SidedGearHolder extends BlockContainer{
 				if(canHarvest){
 					for(int i = 0; i < 6; i++){
 						if(gear.getMembers()[i] != null){
-							spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(gear.getMembers()[i]), 1));
+							spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.BASIC_GEARS.get(gear.getMembers()[i]), 1));
 						}
 					}
 				}
@@ -174,7 +174,7 @@ public class SidedGearHolder extends BlockContainer{
 				return true;
 			}else{
 				if(canHarvest){
-					spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(gear.getMembers()[out]), 1));
+					spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.BASIC_GEARS.get(gear.getMembers()[out]), 1));
 				}
 				gear.setMembers(null, out);
 				
@@ -197,7 +197,7 @@ public class SidedGearHolder extends BlockContainer{
 		if(te != null){
 			for(int i = 0; i < 6; i++){
 				if(te.getMembers()[i] != null){
-					drops.add(new ItemStack(GearFactory.basicGears.get(te.getMembers()[i]), 1));
+					drops.add(new ItemStack(GearFactory.BASIC_GEARS.get(te.getMembers()[i]), 1));
 				}
 			}
 		}

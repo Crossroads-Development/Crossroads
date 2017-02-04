@@ -37,7 +37,7 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
 	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .5625D, 0D, 1D, .625D, 1D);
-	private GearTypes type;
+	private final GearTypes type;
 	
 	public ToggleGear(GearTypes type){
 		super(Material.IRON);
@@ -49,7 +49,7 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(this, 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.basicGears.get(type)));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(this, 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.BASIC_GEARS.get(type)));
 		setSoundType(SoundType.METAL);
 	}
 

@@ -32,7 +32,7 @@ public class AxleRenderer extends TileEntitySpecialRenderer<AxleTileEntity>{
 		GlStateManager.translate(x + .5F, y + .5F, z + .5F);
 		GlStateManager.rotate(axis == EnumFacing.Axis.Y ? 0 : 90F, axis == EnumFacing.Axis.Z ? 1 : 0, 0, axis == EnumFacing.Axis.X ? 1 : 0);
 		GlStateManager.rotate((axis == EnumFacing.Axis.X ? 1 : -1) * (float) axle.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, axis)).getAngle(), 0F, 1F, 0F);
-		modelAx.render(textureAx, Color.WHITE);
+		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}

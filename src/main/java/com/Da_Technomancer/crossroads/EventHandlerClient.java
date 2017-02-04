@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads;
 import org.lwjgl.opengl.GL11;
 
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
-import com.Da_Technomancer.crossroads.API.fields.FieldWorldSavedData;
+import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.client.Minecraft;

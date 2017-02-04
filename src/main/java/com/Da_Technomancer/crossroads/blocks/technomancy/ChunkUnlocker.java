@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import java.util.Random;
 
-import com.Da_Technomancer.crossroads.API.fields.FieldWorldSavedData;
+import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
 

@@ -35,7 +35,7 @@ public class LargeGear extends Item{
 		this.setCreativeTab(ModItems.tabCrossroads);
 		type = typeIn;
 		ModItems.itemAddQue(this);
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), "###", "#$#", "###", '#', GearFactory.basicGears.get(typeIn), '$', "block" + typeIn.toString()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), "###", "#$#", "###", '#', GearFactory.BASIC_GEARS.get(typeIn), '$', "block" + typeIn.toString()));
 	}
 
 	@Override

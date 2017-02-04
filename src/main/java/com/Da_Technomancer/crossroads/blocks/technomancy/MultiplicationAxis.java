@@ -18,6 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -65,6 +66,16 @@ public class MultiplicationAxis extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new MultiplicationAxisTileEntity(EnumFacing.getFront(meta));
 
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+	
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
+		return side == EnumFacing.UP || side == EnumFacing.DOWN || side.getAxis() == world.getBlockState(pos).getValue(Properties.FACING).getAxis();
 	}
 
 	@Override

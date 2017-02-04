@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.fields;
+package com.Da_Technomancer.crossroads.API.technomancy;
 
 import java.util.HashMap;
 import java.util.Map.Entry;

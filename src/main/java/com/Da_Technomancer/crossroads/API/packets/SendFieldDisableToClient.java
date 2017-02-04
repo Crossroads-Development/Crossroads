@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.API.fields.FieldWorldSavedData;
+import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;

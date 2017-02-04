@@ -8,9 +8,9 @@ import java.util.Random;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
-import com.Da_Technomancer.crossroads.API.fields.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
+import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
 
@@ -84,15 +84,8 @@ public final class EventHandlerCommon{
 		}
 	}
 	
-	//These values were created from the formula
-	//n = maximum distance in nodes where forces have effect.
-	//t = n - (distance from the node with force (At node with force, this equals 1))
-	//x = final multiplier on force
-	//if(t < n/2), x = 2(t*t)/(n*n)
-	//else t -= n/2
-	//x = -2t*t/(n*n) + 2t/n + .5
-	private final float longRange = 2F/9F;
-	private final float shortRange = 7F/9F;
+	private final float longRange = 1F/3F;
+	private final float shortRange = 2F/3F;
 	
 	@SubscribeEvent
 	public void calcFields(WorldTickEvent e){

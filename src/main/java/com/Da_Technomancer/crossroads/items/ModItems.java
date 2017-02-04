@@ -24,13 +24,13 @@ public final class ModItems{
 	public static final CreativeTabs tabCrossroads = new CreativeTabs(Main.MODID){
 		@Override
 		public Item getTabIconItem(){
-			return GearFactory.basicGears.get(GearTypes.BRONZE);
+			return GearFactory.BASIC_GEARS.get(GearTypes.BRONZE);
 		}
 	};
 	public static final CreativeTabs tabHeatCable = new CreativeTabs("heatCable"){
 		@Override
 		public Item getTabIconItem(){
-			return Item.getItemFromBlock(HeatCableFactory.cableMap.get(HeatConductors.COPPER).get(HeatInsulators.WOOL));
+			return Item.getItemFromBlock(HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL));
 		}
 	};
 	protected static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 0, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F);
