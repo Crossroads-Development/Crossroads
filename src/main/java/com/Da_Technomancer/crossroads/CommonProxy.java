@@ -34,10 +34,10 @@ public class CommonProxy{
 		ModBlocks.init();
 		ModItems.init();
 		ModFluids.init();
-		GearFactory.init();
 		HeatCableFactory.init();
 		ModTileEntity.init();
 		ModPackets.preInit();
+		GearFactory.init();
 	}
 
 	protected void init(FMLInitializationEvent e){

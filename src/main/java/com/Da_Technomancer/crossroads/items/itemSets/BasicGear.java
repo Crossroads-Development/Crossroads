@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -10,6 +11,7 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,16 +28,17 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class BasicGear extends Item{
 
-	private GearTypes type;
-
+	private final GearTypes type;
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gearBase", "inventory");
+	
 	public BasicGear(GearTypes typeIn){
 		setUnlocalizedName("gear" + typeIn.toString());
 		setRegistryName("gear" + typeIn.toString());
 		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		this.setCreativeTab(ModItems.tabGear);
 		OreDictionary.registerOre("gear" + typeIn.toString(), this);
 		type = typeIn;
-		ModItems.itemAddQue(this);
+		ModItems.itemAddQue(this, 0, LOCAT);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 9), " ? ", "?#?", " ? ", '#', "block" + typeIn.toString(), '?', "ingot" + typeIn.toString()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), " ? ", "?#?", " ? ", '#', "ingot" + typeIn.toString(), '?', "nugget" + typeIn.toString()));
 	}

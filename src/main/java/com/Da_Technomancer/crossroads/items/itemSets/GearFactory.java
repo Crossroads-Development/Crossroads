@@ -3,9 +3,18 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 import java.util.HashMap;
 
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.ToggleGear;
+import com.Da_Technomancer.crossroads.blocks.technomancy.BackCounterGear;
 import com.Da_Technomancer.crossroads.blocks.technomancy.CounterGear;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class GearFactory{
 
@@ -13,15 +22,31 @@ public class GearFactory{
 	public static final HashMap<GearTypes, LargeGear> LARGE_GEARS = new HashMap<GearTypes, LargeGear>();
 	public static final HashMap<GearTypes, ToggleGear> TOGGLE_GEARS = new HashMap<GearTypes, ToggleGear>();
 	public static final HashMap<GearTypes, CounterGear> COUNTER_GEARS = new HashMap<GearTypes, CounterGear>();
+	public static final HashMap<GearTypes, BackCounterGear> BACK_COUNTER_GEARS = new HashMap<GearTypes, BackCounterGear>();
 
 	public static void init(){
 		for(GearTypes typ : GearTypes.values()){
 			BASIC_GEARS.put(typ, new BasicGear(typ));
 			LARGE_GEARS.put(typ, new LargeGear(typ));
 			TOGGLE_GEARS.put(typ, new ToggleGear(typ));
-			ModBlocks.blockAddQue(TOGGLE_GEARS.get(typ));
 			COUNTER_GEARS.put(typ, new CounterGear(typ));
-			ModBlocks.blockAddQue(COUNTER_GEARS.get(typ));
+			BACK_COUNTER_GEARS.put(typ, new BackCounterGear(typ));
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void clientInit(){
+		for(GearTypes typ : GearTypes.values()){
+			int colorCode = typ.getColor().getRGB();
+			ItemColors itemColor = Minecraft.getMinecraft().getItemColors();
+			IItemColor itemColoring = new IItemColor(){
+				@Override
+				public int getColorFromItemstack(ItemStack stack, int tintIndex){
+					return colorCode;
+				}
+			};
+			itemColor.registerItemColorHandler(itemColoring, new Item[]{BASIC_GEARS.get(typ), LARGE_GEARS.get(typ)});
+			itemColor.registerItemColorHandler(itemColoring, new Block[]{TOGGLE_GEARS.get(typ), COUNTER_GEARS.get(typ), BACK_COUNTER_GEARS.get(typ)});
 		}
 	}
 }

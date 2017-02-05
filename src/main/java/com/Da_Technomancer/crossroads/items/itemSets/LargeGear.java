@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -11,6 +12,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,15 +28,17 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class LargeGear extends Item{
 
-	private GearTypes type;
+	private final GearTypes type;
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gearBase", "inventory");
+	
 
 	public LargeGear(GearTypes typeIn){
 		setUnlocalizedName("largeGear" + typeIn.toString());
 		setRegistryName("largeGear" + typeIn.toString());
 		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		this.setCreativeTab(ModItems.tabGear);
 		type = typeIn;
-		ModItems.itemAddQue(this);
+		ModItems.itemAddQue(this, 0, LOCAT);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), "###", "#$#", "###", '#', GearFactory.BASIC_GEARS.get(typeIn), '$', "block" + typeIn.toString()));
 	}
 

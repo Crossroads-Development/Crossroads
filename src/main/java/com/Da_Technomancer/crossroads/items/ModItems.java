@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.items;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.tuple.Triple;
+
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
@@ -24,13 +26,19 @@ public final class ModItems{
 	public static final CreativeTabs tabCrossroads = new CreativeTabs(Main.MODID){
 		@Override
 		public Item getTabIconItem(){
-			return GearFactory.BASIC_GEARS.get(GearTypes.BRONZE);
+			return omnimeter;
 		}
 	};
 	public static final CreativeTabs tabHeatCable = new CreativeTabs("heatCable"){
 		@Override
 		public Item getTabIconItem(){
 			return Item.getItemFromBlock(HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL));
+		}
+	};
+	public static final CreativeTabs tabGear = new CreativeTabs("gear"){
+		@Override
+		public Item getTabIconItem(){
+			return GearFactory.BASIC_GEARS.get(GearTypes.BRONZE);
 		}
 	};
 	protected static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 0, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F);
@@ -65,10 +73,14 @@ public final class ModItems{
 	public static BasicItem voidCrystal;
 	public static ModuleGoggles moduleGoggles;
 
-	private static ArrayList<Item> modelQue = new ArrayList<Item>();
+	private static ArrayList<Triple<Item, Integer, ModelResourceLocation>> modelQue = new ArrayList<Triple<Item, Integer, ModelResourceLocation>>();
 
 	public static void itemAddQue(Item item){
-		modelQue.add(item);
+		modelQue.add(Triple.of(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory")));
+	}
+	
+	public static void itemAddQue(Item item, int meta, ModelResourceLocation location){
+		modelQue.add(Triple.of(item, meta, location));
 	}
 
 	public static final void init(){
@@ -105,16 +117,8 @@ public final class ModItems{
 
 	@SideOnly(Side.CLIENT)
 	public static void initModels(){
-		// Any items that need models initialized without metadata other than 0,
-		// add it to modelQue. If it has metadata, add it manually.
-
-		for(Item modeling : modelQue){
-			register(modeling, 0);
+		for(Triple<Item, Integer, ModelResourceLocation> modeling : modelQue){
+			ModelLoader.setCustomModelResourceLocation(modeling.getLeft(), modeling.getMiddle(), modeling.getRight());
 		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	private static void register(Item item, int subtype){
-		ModelLoader.setCustomModelResourceLocation(item, subtype, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 }

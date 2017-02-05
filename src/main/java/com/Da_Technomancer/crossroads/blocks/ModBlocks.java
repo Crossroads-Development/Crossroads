@@ -1,9 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
@@ -49,6 +46,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.FluxManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxReaderAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.MultiplicationAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
+import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import net.minecraft.block.Block;
@@ -56,7 +54,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -120,16 +117,15 @@ public final class ModBlocks{
 	public static FluxReaderAxis fluxReaderAxis;
 	public static MultiplicationAxis multiplicationAxis;
 
-	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
-	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
-
 	public static void blockAddQue(Block block){
-		modelQue.add(block);
+		ModItems.itemAddQue(Item.getItemFromBlock(block));
 	}
 	
 	/** The integer is the end metadata value*/
-	public static void blockAddQueRange(Pair<Block, Integer> block){
-		modelQuePair.add(block);
+	public static void blockAddQueRange(Block block, int endMeta){
+		for(int i = 0; i <= endMeta; i++){
+			ModItems.itemAddQue(Item.getItemFromBlock(block), i, new ModelResourceLocation(block.getRegistryName(), "inventory"));
+		}
 	}
 
 	public static final void init(){
@@ -174,7 +170,7 @@ public final class ModBlocks{
 		blockAddQue(beamSplitter = new BeamSplitter());
 		blockAddQue(colorChart = new ColorChart());
 		blockAddQue(glowGlass = new GlowGlass());
-		blockAddQueRange(Pair.of(fertileSoil = new FertileSoil(), 9));
+		blockAddQueRange(fertileSoil = new FertileSoil(), 9);
 		multiPistonExtend = new MultiPistonExtend(false);
 		multiPistonExtendSticky = new MultiPistonExtend(true);
 		blockAddQue(multiPiston = new MultiPistonBase(false));
@@ -195,18 +191,6 @@ public final class ModBlocks{
 
 	@SideOnly(Side.CLIENT)
 	public static void preInitModels(){
-
-		for(Block modeling : modelQue){
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(modeling), 0, new ModelResourceLocation(modeling.getRegistryName(), "inventory"));
-
-		}
-		
-		for(Pair<Block, Integer> modeling : modelQuePair){
-			for(int i = 0; i <= modeling.getRight(); i++){
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(modeling.getLeft()), i, new ModelResourceLocation(modeling.getLeft().getRegistryName(), "inventory"));
-			}
-		}
-
 		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.HEAT_CABLES.values()){
 			for(HeatCable cable : map.values()){
 				cable.initModel();

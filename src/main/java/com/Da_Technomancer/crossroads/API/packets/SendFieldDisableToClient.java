@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -38,7 +39,7 @@ public class SendFieldDisableToClient extends Message<SendFieldDisableToClient>{
 		return null;
 	}
 
-	public void processMessage(WorldClient worldClient, long chunk){
+	public void processMessage(World worldClient, long chunk){
 		FieldWorldSavedData.get(worldClient).fieldNodes.remove(chunk);
 	}
 }

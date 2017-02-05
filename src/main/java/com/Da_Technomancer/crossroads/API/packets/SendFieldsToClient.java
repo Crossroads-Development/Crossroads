@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.packets;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -41,7 +41,7 @@ public class SendFieldsToClient extends Message<SendFieldsToClient>{
 		return null;
 	}
 
-	public void processMessage(byte[][] fieldLayer, byte type, long chunk, WorldClient world){
+	public void processMessage(byte[][] fieldLayer, byte type, long chunk, World world){
 		FieldWorldSavedData saved = FieldWorldSavedData.get(world);
 		if(!saved.fieldNodes.containsKey(chunk)){
 			saved.fieldNodes.put(chunk, FieldWorldSavedData.getDefaultChunkFlux());

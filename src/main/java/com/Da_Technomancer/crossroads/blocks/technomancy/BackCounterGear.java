@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.CounterGearTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.BackCounterGearTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -32,29 +32,29 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class CounterGear extends BlockContainer{
+public class BackCounterGear extends BlockContainer{
 	
 	private static final AxisAlignedBB BODY = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
 	private final GearTypes type;
 	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gearBaseToggle", "inventory");
 	
-	public CounterGear(GearTypes type){
+	public BackCounterGear(GearTypes type){
 		super(Material.IRON);
 		this.type = type;
-		String name = "counterGear" + type.toString();
+		String name = "backCounterGear" + type.toString();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		this.setCreativeTab(ModItems.tabGear);
 		this.setHardness(3);
-		ModItems.itemAddQue(Item.getItemFromBlock(this), 0, LOCAT);
 		setSoundType(SoundType.METAL);
+		ModItems.itemAddQue(Item.getItemFromBlock(this), 0, LOCAT);
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new CounterGearTileEntity(type);
+		return new BackCounterGearTileEntity(type);
 
 	}
 
@@ -119,6 +119,6 @@ public class CounterGear extends BlockContainer{
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return source.getTileEntity(pos) == null ? BODY : BODY.addCoord(0, ((CounterGearTileEntity) source.getTileEntity(pos)).getHeight(), 0);
+		return source.getTileEntity(pos) == null ? BODY : BODY.addCoord(0, ((BackCounterGearTileEntity) source.getTileEntity(pos)).getHeight(), 0);
 	}
 }

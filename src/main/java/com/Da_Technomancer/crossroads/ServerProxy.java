@@ -12,7 +12,6 @@ public class ServerProxy extends CommonProxy{
 	@Override
 	protected void preInit(FMLPreInitializationEvent e){
 		super.preInit(e);
-
 		if(Loader.isModLoaded("guideapi")){
 			GuideBooks.mainGuide(false);
 			GuideBooks.infoGuide(false);

@@ -23,6 +23,9 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IPosReceiver
 	private BlockPos masterPos;
 
 	public void setInitial(BlockPos masPos){
+		if(worldObj.isRemote){
+			return;
+		}
 		masterPos = masPos;
 		SendPosToClient msg = new SendPosToClient("init", masterPos, pos);
 		ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));

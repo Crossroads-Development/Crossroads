@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.client.bakedModel.BakedModelLoader;
 import com.Da_Technomancer.crossroads.fluids.ModFluids;
 import com.Da_Technomancer.crossroads.integration.GuideAPI.GuideBooks;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import amerifrance.guideapi.api.GuideAPI;
@@ -27,7 +28,7 @@ public class ClientProxy extends CommonProxy{
 		ModFluids.registerRenderers();
 		ModBlocks.preInitModels();
 		ModItems.initModels();
-
+		
 		if(Loader.isModLoaded("guideapi")){
 			GuideBooks.mainGuide(true);
 			GuideAPI.setModel(GuideBooks.MAIN);
@@ -41,6 +42,7 @@ public class ClientProxy extends CommonProxy{
 	@Override
 	protected void init(FMLInitializationEvent e){
 		super.init(e);
+		GearFactory.clientInit();
 		AModTESR.registerBlockRenderer();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
