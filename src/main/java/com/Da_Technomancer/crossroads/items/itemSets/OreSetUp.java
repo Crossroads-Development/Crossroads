@@ -4,6 +4,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.items.BasicItem;
 
@@ -38,15 +39,16 @@ public final class OreSetUp{
 	public static BasicBlock oreRuby;
 
 	public static void init(){
-		ingotTin = new BasicItem("ingotTin", "ingotTin");
-		blockTin = new BasicBlock("blockTin", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockTin");
-		nuggetTin = new BasicItem("nuggetTin", "nuggetTin");
-		oreTin = new BasicBlock("oreTin", Material.ROCK, 2, "pickaxe", 3, null, "oreTin");
+		boolean oreDict = ModConfig.registerOres.getBoolean();
+		ingotTin = new BasicItem("ingotTin", oreDict ? "ingotTin" : null);
+		blockTin = new BasicBlock("blockTin", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockTin" : null);
+		nuggetTin = new BasicItem("nuggetTin", oreDict ? "nuggetTin" : null);
+		oreTin = new BasicBlock("oreTin", Material.ROCK, 2, "pickaxe", 3, null, oreDict ? "oreTin" : null);
 
-		ingotCopper = new BasicItem("ingotCopper", "ingotCopper");
-		blockCopper = new BasicBlock("blockCopper", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockCopper");
-		nuggetCopper = new BasicItem("nuggetCopper", "nuggetCopper");
-		oreCopper = new BasicBlock("oreCopper", Material.ROCK, 2, "pickaxe", 3, null, "oreCopper");
+		ingotCopper = new BasicItem("ingotCopper", oreDict ? "ingotCopper" : null);
+		blockCopper = new BasicBlock("blockCopper", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockCopper" : null);
+		nuggetCopper = new BasicItem("nuggetCopper", oreDict ? "nuggetCopper" : null);
+		oreCopper = new BasicBlock("oreCopper", Material.ROCK, 2, "pickaxe", 3, null, oreDict ? "oreCopper" : null);
 		oreNativeCopper = new BasicBlock("oreNativeCopper", Material.ROCK, 1, "pickaxe", 3){
 			@Override
 			public int quantityDropped(Random random){
@@ -60,9 +62,9 @@ public final class OreSetUp{
 			}
 		};
 
-		ingotBronze = new BasicItem("ingotBronze", "ingotBronze");
-		blockBronze = new BasicBlock("blockBronze", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockBronze");
-		nuggetBronze = new BasicItem("nuggetBronze", "nuggetBronze");
+		ingotBronze = new BasicItem("ingotBronze", oreDict ? "ingotBronze" : null);
+		blockBronze = new BasicBlock("blockBronze", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockBronze" : null);
+		nuggetBronze = new BasicItem("nuggetBronze", oreDict ? "nuggetBronze" : null);
 
 		gemRuby = new BasicItem("gemRuby", "gemRuby");
 		blockRuby = new BasicBlock("blockRuby", Material.ROCK, 3, "pickaxe", 5, null, "blockRuby");

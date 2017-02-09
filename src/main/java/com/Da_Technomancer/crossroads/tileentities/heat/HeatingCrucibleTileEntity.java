@@ -33,8 +33,9 @@ import net.minecraftforge.oredict.OreDictionary;
 public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 
 	private FluidStack content = null;
-	private static final int PRODUCED = 200;
-	private static final int CAPACITY = 16 * PRODUCED;
+	private static final int PRODUCED_LAVA = 200;
+	private static final int PRODUCED_COPPER = 144;
+	private static final int CAPACITY = 16 * PRODUCED_LAVA;
 	private boolean init = false;
 	private double temp;
 	private ItemStack inventory = null;
@@ -54,7 +55,6 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 	 * 
 	 */
 	private byte getType(){
-
 		if(inventory != null){
 			for(int ID : OreDictionary.getOreIDs(inventory)){
 				if(ID == OreDictionary.getOreID("dustCopper")){
@@ -126,12 +126,14 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 			init = true;
 		}
 
-		if(inventory != null && ticksExisted % 10 == 0 && Math.random() < MiscOp.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= PRODUCED)){
+		byte type = getType();
+		
+		if(inventory != null && ticksExisted % 10 == 0 && Math.random() < MiscOp.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= (getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
 
 			if(content == null){
-				content = new FluidStack(getType() == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, PRODUCED);
+				content = new FluidStack(type == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA);
 			}else{
-				content.amount += PRODUCED;
+				content.amount += getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA;
 			}
 
 			if(--inventory.stackSize == 0){
