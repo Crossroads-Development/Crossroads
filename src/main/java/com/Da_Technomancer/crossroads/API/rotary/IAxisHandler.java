@@ -32,6 +32,5 @@ public interface IAxisHandler{
 	 */
 	public void addAxisToList(@Nonnull ISlaveAxisHandler handler, EnumFacing side);
 
-	/** For debugging mainly */
 	public double getTotalEnergy();
 }

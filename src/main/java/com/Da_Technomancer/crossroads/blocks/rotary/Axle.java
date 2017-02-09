@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.AxleTileEntity;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.SoundType;
@@ -65,6 +64,7 @@ public class Axle extends BlockContainer{
 	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		CommonProxy.masterKey++;
 		return this.getDefaultState().withProperty(Properties.AXIS, BlockPistonBase.getFacingFromEntity(pos, placer).getAxis());
 	}
 	
@@ -101,13 +101,6 @@ public class Axle extends BlockContainer{
 	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
 		return side.getAxis() == world.getBlockState(pos).getValue(Properties.AXIS);
-	}
-	
-	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
-		if(!worldIn.isRemote){
-			CommonProxy.masterKey++;
-		}
 	}
 
 	private static final AxisAlignedBB XBOX = new AxisAlignedBB(0, .4375D, .4375D, 1, .5625D, .5625D);

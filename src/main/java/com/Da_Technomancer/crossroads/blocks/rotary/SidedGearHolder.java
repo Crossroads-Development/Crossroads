@@ -44,7 +44,7 @@ public class SidedGearHolder extends BlockContainer{
 		BOUNDING_BOXES.add(new AxisAlignedBB(0D, 0D, .875D, 1D, 1D, 1D));//SOUTH
 		BOUNDING_BOXES.add(new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D));//WEST
 		BOUNDING_BOXES.add(new AxisAlignedBB(.875D, 0D, 0D, 1D, 1D, 1D));//EAST
-		BOUNDING_BOXES.add(new AxisAlignedBB(.25D, .25D, .25D, .75D, .75D, .75D));//Center
+		BOUNDING_BOXES.add(new AxisAlignedBB(.375D, .375D, .375D, .625D, .625D, .625D));//Center
 	}
 
 	public SidedGearHolder(){

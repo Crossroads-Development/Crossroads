@@ -41,6 +41,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
 import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxis;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
+import com.Da_Technomancer.crossroads.blocks.technomancy.AdditionAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.ChunkUnlocker;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxReaderAxis;
@@ -116,6 +117,7 @@ public final class ModBlocks{
 	public static FluxManipulator fluxManipulator;
 	public static FluxReaderAxis fluxReaderAxis;
 	public static MultiplicationAxis multiplicationAxis;
+	public static AdditionAxis additionAxis;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -187,6 +189,7 @@ public final class ModBlocks{
 		blockAddQue(fluxManipulator = new FluxManipulator());
 		blockAddQue(fluxReaderAxis = new FluxReaderAxis());
 		blockAddQue(multiplicationAxis = new MultiplicationAxis());
+		blockAddQue(additionAxis = new AdditionAxis());
 	}
 
 	@SideOnly(Side.CLIENT)

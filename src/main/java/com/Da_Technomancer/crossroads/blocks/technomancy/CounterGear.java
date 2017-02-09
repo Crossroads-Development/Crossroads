@@ -46,8 +46,8 @@ public class CounterGear extends BlockContainer{
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabGear);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabGear);
+		setHardness(3);
 		ModItems.itemAddQue(Item.getItemFromBlock(this), 0, LOCAT);
 		setSoundType(SoundType.METAL);
 	}

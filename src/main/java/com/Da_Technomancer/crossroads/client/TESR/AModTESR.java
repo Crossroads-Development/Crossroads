@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEnt
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.AdditionAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BackCounterGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CounterGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
@@ -51,6 +52,7 @@ public class AModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(MultiplicationAxisTileEntity.class, new MultiplicationAxisRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(CounterGearTileEntity.class, new CounterGearRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(BackCounterGearTileEntity.class, new BackCounterGearRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(AdditionAxisTileEntity.class, new AdditionAxisRenderer());
 	}
 
 	public static void reg(Block block){
