@@ -38,9 +38,9 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IPosReceiver
 		}
 	}
 
-	public void passBreak(EnumFacing side){
+	public void passBreak(EnumFacing side, boolean drop){
 		if(worldObj.getTileEntity(masterPos) instanceof LargeGearMasterTileEntity){
-			((LargeGearMasterTileEntity) worldObj.getTileEntity(masterPos)).breakGroup(side);
+			((LargeGearMasterTileEntity) worldObj.getTileEntity(masterPos)).breakGroup(side, drop);
 		}
 	}
 

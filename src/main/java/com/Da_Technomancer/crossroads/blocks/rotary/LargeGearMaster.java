@@ -126,9 +126,17 @@ public class LargeGearMaster extends BlockContainer{
 	}
 
 	@Override
+	public boolean removedByPlayer(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, boolean canHarvest){
+		if(canHarvest && worldIn.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
+			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(Properties.FACING), true);
+		}
+		return super.removedByPlayer(state, worldIn, pos, player, canHarvest);
+	}
+	
+	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		if(worldIn.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
-			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(Properties.FACING));
+			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(Properties.FACING), false);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

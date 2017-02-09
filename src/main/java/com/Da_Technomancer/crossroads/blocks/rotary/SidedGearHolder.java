@@ -170,6 +170,7 @@ public class SidedGearHolder extends BlockContainer{
 						}
 					}
 				}
+				CommonProxy.masterKey++;
 				worldIn.destroyBlock(pos, false);
 				return true;
 			}else{
@@ -177,7 +178,7 @@ public class SidedGearHolder extends BlockContainer{
 					spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.BASIC_GEARS.get(gear.getMembers()[out]), 1));
 				}
 				gear.setMembers(null, out);
-				
+				CommonProxy.masterKey++;
 				if(gear.getMembers()[0] == null && gear.getMembers()[1] == null && gear.getMembers()[2] == null && gear.getMembers()[3] == null && gear.getMembers()[4] == null && gear.getMembers()[5] == null){
 					worldIn.destroyBlock(pos, false);
 					return true;

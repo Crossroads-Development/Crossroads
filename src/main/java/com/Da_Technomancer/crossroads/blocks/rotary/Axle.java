@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.AxleTileEntity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.SoundType;
@@ -80,7 +81,15 @@ public class Axle extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.AXIS, EnumFacing.getFront(2 * meta).getAxis());
+		return getDefaultState().withProperty(Properties.AXIS, EnumFacing.getFront(2 * meta).getAxis());
+	}
+	
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+		if(worldIn.isRemote){
+			return;
+		}
+		CommonProxy.masterKey++;
 	}
 
 	@Override
