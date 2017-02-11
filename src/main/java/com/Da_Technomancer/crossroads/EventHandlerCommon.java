@@ -97,7 +97,6 @@ public final class EventHandlerCommon{
 				for(long key : data.fieldNodes.keySet()){
 					data.nodeForces.put(key, FieldWorldSavedData.getDefaultChunkForce());
 				}
-				
 			}else{
 				HashSet<Long> toRemove = new HashSet<Long>();
 				//This method has some labeled continues. Please don't hurt me...
@@ -106,20 +105,21 @@ public final class EventHandlerCommon{
 					for(int i = 1; i >= 0; i--){
 						for(int j = 0; j < 8; j++){
 							for(int k = 0; k < 8; k++){
-								float netForce = Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j][k], -8));
-								netForce += j == 0 ? 0 : shortRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j - 1][k], -8));
-								netForce += k == 0 ? 0 : shortRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j][k - 1], -8));
-								netForce += j == 7 ? 0 : shortRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j + 1][k], -8));
-								netForce += k == 7 ? 0 : shortRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j][k + 1], -8));
-								netForce += j == 0 || k == 0 ? 0 : longRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j - 1][k - 1], -8));
-								netForce += j == 7 || k == 0 ? 0 : longRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j + 1][k - 1], -8));
-								netForce += j == 7 || k == 7 ? 0 : longRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j + 1][k + 1], -8));
-								netForce += j == 0 || k == 7 ? 0 : longRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j - 1][k + 1], -8));
-								netForce += j <= 1 ? 0 : longRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j - 2][k], -10));
-								netForce += k <= 1 ? 0 : longRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j][k - 2], -8));
-								netForce += j >= 6 ? 0 : longRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j + 2][k], -8));
-								netForce += k >= 6 ? 0 : longRange * (float) Math.min(128, Math.max(data.nodeForces.get(datum.getKey())[i][j][k + 2], -8));
-
+								float netForce = data.nodeForces.get(datum.getKey())[i][j][k];
+								if(i == 1){
+									netForce += j == 0 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k];
+									netForce += k == 0 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j][k - 1];
+									netForce += j == 7 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k];
+									netForce += k == 7 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j][k + 1];
+									netForce += j == 0 || k == 0 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k - 1];
+									netForce += j == 7 || k == 0 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k - 1];
+									netForce += j == 7 || k == 7 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k + 1];
+									netForce += j == 0 || k == 7 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k + 1];
+									netForce += j <= 1 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 2][k];
+									netForce += k <= 1 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j][k - 2];
+									netForce += j >= 6 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 2][k];
+									netForce += k >= 6 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j][k + 2];
+								}
 								if(i == 0){
 									if(datum.getValue()[0][j][k] < datum.getValue()[1][j][k]){
 										datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) (Math.max(1, 32 * Math.pow(2, (int) netForce)) + (int) datum.getValue()[0][j][k])));
@@ -132,7 +132,7 @@ public final class EventHandlerCommon{
 											continue fluxEvent;
 										}
 									}else{
-										netForce += datum.getValue()[0][j][k] == 7 ? 0 : (RAND.nextFloat() - .2F) * 5F;
+										netForce += datum.getValue()[0][j][k] == 7 ? 0 : ((float) (RAND.nextInt(8) - 1));
 										datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) netForce + (int) datum.getValue()[0][j][k]));
 									}
 								}else{
