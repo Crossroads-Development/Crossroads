@@ -85,10 +85,10 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 			// full, tank and pipe are not BOTH empty, capacity and contents of
 			// pipe.
 
-			int tankContent = handler.drain(Integer.MAX_VALUE, false) == null ? 0 : handler.drain(Integer.MAX_VALUE, false).amount;
-			int tankCapacity = tankContent + handler.fill(content == null ? new FluidStack(handler.drain(1, false).getFluid(), Integer.MAX_VALUE) : new FluidStack(content.getFluid(), Integer.MAX_VALUE), false);
+			long tankContent = handler.drain(Integer.MAX_VALUE, false) == null ? 0 : handler.drain(Integer.MAX_VALUE, false).amount;
+			long tankCapacity = tankContent + handler.fill(content == null ? new FluidStack(handler.drain(1, false).getFluid(), Integer.MAX_VALUE) : new FluidStack(content.getFluid(), Integer.MAX_VALUE), false);
 
-			int total = (content == null ? 0 : content.amount) + tankContent;
+			int total = (int) Math.min((content == null ? 0 : content.amount) + tankContent, Integer.MAX_VALUE);
 
 			Fluid fluid = content == null ? handler.drain(1, false).getFluid() : content.getFluid();
 
@@ -98,7 +98,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 			int contentOne = total - contentTwo;
 
 			if(tankContent != 0){
-				handler.drain(tankContent, true);
+				handler.drain((int) Math.min(tankContent, Integer.MAX_VALUE), true);
 			}
 
 			content = null;
