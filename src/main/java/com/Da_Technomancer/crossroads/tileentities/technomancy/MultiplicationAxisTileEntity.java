@@ -204,7 +204,6 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	private boolean back = false;
 
 	private class SlaveAxisHandler implements ISlaveAxisHandler{
-
 		@Override
 		public void trigger(EnumFacing side){
 			if(side == EnumFacing.UP){
@@ -272,7 +271,7 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 				}while(key == keyNew);
 				key = keyNew;
 
-				worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 1, 0);
+				worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
 				for(IAxleHandler gear : rotaryMembers){

@@ -305,6 +305,8 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 			if(lastRadius != 0){
 				rotRatioIn *= -lastRadius / .5D;
+			}else if(rotRatioIn == 0){
+				rotRatioIn = 1D;
 			}else if(EnumFacing.getFront(side).getAxisDirection() == AxisDirection.POSITIVE){
 				rotRatioIn *= -1D;
 			}

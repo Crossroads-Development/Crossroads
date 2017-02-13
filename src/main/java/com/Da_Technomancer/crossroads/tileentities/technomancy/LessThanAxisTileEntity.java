@@ -7,12 +7,8 @@ import java.util.Random;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
@@ -23,53 +19,35 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
+public class LessThanAxisTileEntity extends TileEntity implements ITickable{
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
 
 	private boolean locked = false;
 	private double sumEnergy = 0;
 	private int ticksExisted = 0;
-	private EnumFacing.Axis axis;
+	private EnumFacing facing;
 	private byte key;
 
-	public AdditionAxisTileEntity(){
-		this(EnumFacing.Axis.X);
+	public LessThanAxisTileEntity(){
+		this(EnumFacing.NORTH);
 	}
 
-	public AdditionAxisTileEntity(EnumFacing.Axis axisIn){
-		axis = axisIn;
+	public LessThanAxisTileEntity(EnumFacing facingIn){
+		facing = facingIn;
 	}
-
-	@Override
-	public void receiveDouble(String context, double message){
-		if(context.equals("one")){
-			lastInPos = message;
-		}else if(context.equals("two")){
-			lastInNeg = message;
-		}
-	}
-	
-	//On the server side these serve as a record of what was sent to the client, but on the client this is the received data for rendering. 
-	public double lastInPos;
-	public double lastInNeg;
-	public double angleOne;
-	public double angleTwo;
-	public double angleThree;
 	
 	private void runCalc(){
-		double inPos = worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))) != null && worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)) ? worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)).getMotionData()[0] : 0;
-		double inNeg = worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))) != null && worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)) ? worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)).getMotionData()[0] : 0;
-		if(worldObj.getBlockState(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))) != null && worldObj.getBlockState(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).getBlock() == ModBlocks.axle){
-			inNeg *= -1D;
+		double inBack = worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[0] : 0;
+		double inTop = worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN) ? worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] : 0;
+		if(facing.getAxisDirection() == AxisDirection.POSITIVE && worldObj.getBlockState(pos.offset(facing.getOpposite())) != null && worldObj.getBlockState(pos.offset(facing.getOpposite())).getBlock() != ModBlocks.axle){
+			//inBack *= -1D;
 		}
-		double baseSpeed = inPos + inNeg;
+		double baseSpeed = inBack < inTop ? inBack : 0;
 		
 		double sumIRot = 0;
 		sumEnergy = 0;
@@ -109,23 +87,12 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 		if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
 			worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
 		}
-		
-		inPos *= -1D;
-		
-		if(MiscOp.tiersRound(inPos, ModConfig.speedTiers.getInt()) != lastInPos){
-			lastInPos = MiscOp.tiersRound(inPos, ModConfig.speedTiers.getInt());
-			ModPackets.network.sendToAllAround(new SendDoubleToClient("one", lastInPos, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		}
-		if(MiscOp.tiersRound(inNeg, ModConfig.speedTiers.getInt()) != lastInNeg){
-			lastInNeg = MiscOp.tiersRound(inNeg, ModConfig.speedTiers.getInt());
-			ModPackets.network.sendToAllAround(new SendDoubleToClient("two", lastInNeg, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setBoolean("axis", axis == Axis.Z);
+		nbt.setInteger("facing", this.facing.getIndex());
 
 		return nbt;
 	}
@@ -133,7 +100,7 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		axis = nbt.getBoolean("axis") ? Axis.Z : Axis.X;
+		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 	}
 
 	private int lastKey = 0;
@@ -142,9 +109,6 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 	@Override
 	public void update(){
 		if(worldObj.isRemote){
-			angleOne += Math.toDegrees(lastInPos / 20D);
-			angleTwo += Math.toDegrees(lastInNeg / 20D);
-			angleThree += Math.toDegrees((lastInNeg - lastInPos) / 20D);
 			return;
 		}
 
@@ -175,10 +139,10 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == EnumFacing.UP)){
+		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
 			return true;
 		}
-		if(cap == Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY && (side == null || side.getAxis() == axis)){
+		if(cap == Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == facing.getOpposite())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -190,44 +154,43 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == EnumFacing.UP)){
+		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
 			return (T) handler;
 		}
-		if(cap == Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY && (side == null || side.getAxis() == axis)){
+		if(cap == Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == facing.getOpposite())){
 			return (T) slaveHandler;
 		}
 
 		return super.getCapability(cap, side);
 	}
 
-	private boolean posTrig = false;
-	private boolean negTrig = false;
+	private boolean up = false;
+	private boolean back = false;
 
 	private class SlaveAxisHandler implements ISlaveAxisHandler{
-
 		@Override
 		public void trigger(EnumFacing side){
-			if(side == EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)){
-				if(negTrig){
-					negTrig = false;
-					posTrig = false;
+			if(side == EnumFacing.UP){
+				if(back){
+					back = false;
+					up = false;
 					if(!locked && !rotaryMembers.isEmpty()){
 						runCalc();
 						triggerSlaves();
 					}
 				}else{
-					posTrig = true;
+					up = true;
 				}
-			}else if(side == EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)){
-				if(posTrig){
-					negTrig = false;
-					posTrig = false;
+			}else if(side == facing.getOpposite()){
+				if(up){
+					back = false;
+					up = false;
 					if(!locked && !rotaryMembers.isEmpty()){
 						runCalc();
 						triggerSlaves();
 					}
 				}else{
-					negTrig = true;
+					back = true;
 				}
 			}
 		}
@@ -265,14 +228,14 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 			rotaryMembers.clear();
 			locked = false;
 			Random rand = new Random();
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 				byte keyNew;
 				do {
 					keyNew = (byte) (rand.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
 
-				worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).propogate(this, key, 0, 0);
+				worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
 				for(IAxleHandler gear : rotaryMembers){

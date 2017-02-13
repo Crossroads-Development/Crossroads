@@ -43,10 +43,15 @@ import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
 import com.Da_Technomancer.crossroads.blocks.technomancy.AdditionAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.ChunkUnlocker;
+import com.Da_Technomancer.crossroads.blocks.technomancy.EqualsAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxReaderAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.GreaterThanAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.LessThanAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.MultiplicationAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
+import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.SquareRootAxis;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
@@ -118,6 +123,11 @@ public final class ModBlocks{
 	public static FluxReaderAxis fluxReaderAxis;
 	public static MultiplicationAxis multiplicationAxis;
 	public static AdditionAxis additionAxis;
+	public static EqualsAxis equalsAxis;
+	public static GreaterThanAxis greaterThanAxis;
+	public static LessThanAxis lessThanAxis;
+	public static RedstoneAxis redstoneAxis;
+	public static SquareRootAxis squareRootAxis;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -190,6 +200,11 @@ public final class ModBlocks{
 		blockAddQue(fluxReaderAxis = new FluxReaderAxis());
 		blockAddQue(multiplicationAxis = new MultiplicationAxis());
 		blockAddQue(additionAxis = new AdditionAxis());
+		blockAddQue(equalsAxis = new EqualsAxis());
+		blockAddQue(greaterThanAxis = new GreaterThanAxis());
+		blockAddQue(lessThanAxis = new LessThanAxis());
+		blockAddQue(redstoneAxis = new RedstoneAxis());
+		blockAddQue(squareRootAxis = new SquareRootAxis());
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -252,6 +252,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			
 			if(lastRadius != 0){
 				rotRatioIn *= -lastRadius / 1.5D;
+			}else if(rotRatioIn == 0){
+				rotRatioIn = 1D;
 			}else if(sid.getAxisDirection() == AxisDirection.POSITIVE){
 				rotRatioIn *= -1D;
 			}

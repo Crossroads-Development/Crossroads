@@ -128,6 +128,9 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 
 		@Override
 		public void propogate(IAxisHandler masterIn, byte keyIn, double rotRatioIn, double lastRadius){
+			if(rotRatioIn == 0){
+				rotRatioIn = 1;
+			}
 			//If true, this has already been checked.
 			if(key == keyIn){
 				//If true, there is rotation conflict.

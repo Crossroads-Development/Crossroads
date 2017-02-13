@@ -2,10 +2,9 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.LessThanAxisTileEntity;
 
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -22,11 +21,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class FluxReaderAxis extends BlockContainer{
+public class LessThanAxis extends BlockContainer{
 	
-	public FluxReaderAxis(){
+	public LessThanAxis(){
 		super(Material.IRON);
-		String name = "fluxReaderAxis";
+		String name = "lessThanAxis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -38,8 +37,7 @@ public class FluxReaderAxis extends BlockContainer{
 
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : BlockPistonBase.getFacingFromEntity(pos, placer);
-		return getDefaultState().withProperty(Properties.FACING, enumfacing);
+		return getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
@@ -65,7 +63,7 @@ public class FluxReaderAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new FluxReaderAxisTileEntity(EnumFacing.getFront(meta));
+		return new LessThanAxisTileEntity(EnumFacing.getFront(meta));
 
 	}
 

@@ -17,7 +17,8 @@ public interface IAxleHandler{
 	public double[] getMotionData();
 
 	/**
-	 * If lastRadius equals 0, then the AxleHandler should not convert the rotationRationIn based on radius.
+	 * If lastRadius equals 0, then the AxleHandler should not convert the rotationRationIn based on radius (but may based on direction).
+	 * If lastRadius and rotationRatioIn both equal 0, this should set it's internal rotationRatio to 1.
 	 */
 	public void propogate(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius);
 

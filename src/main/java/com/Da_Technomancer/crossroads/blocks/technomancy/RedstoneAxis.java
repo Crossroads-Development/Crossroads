@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
@@ -22,11 +22,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class FluxReaderAxis extends BlockContainer{
+public class RedstoneAxis extends BlockContainer{
 	
-	public FluxReaderAxis(){
+	public RedstoneAxis(){
 		super(Material.IRON);
-		String name = "fluxReaderAxis";
+		String name = "redstoneAxis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -65,7 +65,7 @@ public class FluxReaderAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new FluxReaderAxisTileEntity(EnumFacing.getFront(meta));
+		return new RedstoneAxisTileEntity(EnumFacing.getFront(meta));
 
 	}
 

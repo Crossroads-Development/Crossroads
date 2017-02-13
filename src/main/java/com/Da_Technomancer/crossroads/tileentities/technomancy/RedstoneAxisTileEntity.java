@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.tileentities.magic;
+package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,12 +9,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.enums.MagicElements;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -22,7 +20,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable{
+public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
 
@@ -32,90 +30,65 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 	private EnumFacing facing;
 	private byte key;
 
-	public CrystalMasterAxisTileEntity(){
+	public RedstoneAxisTileEntity(){
 		this(EnumFacing.NORTH);
 	}
 
-	public MagicElements getElement(){
-		return currentElement;
-	}
-	
-	public boolean isVoid(){
-		return voi;
-	}
-	
-	public int getTime(){
-		return time;
-	}
-
-	public CrystalMasterAxisTileEntity(EnumFacing facingIn){
+	public RedstoneAxisTileEntity(EnumFacing facingIn){
 		facing = facingIn;
 	}
-
-	private double lastSumEnergy;
 	
 	private void runCalc(){
+		double baseSpeed = 0;
+		for(EnumFacing side : EnumFacing.values()){
+			baseSpeed = Math.max(ModBlocks.ratiator.getPowerOnSide(worldObj, pos, side, false), baseSpeed);
+		}
+		
 		double sumIRot = 0;
 		sumEnergy = 0;
-		// IRL you wouldn't say a gear spinning a different direction has
-		// negative energy, but it makes the code easier.
-
+		
+		double cost = 0;
+		
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
+			sumEnergy += MiscOp.posOrNeg(gear.getRotationRatio()) * gear.getMotionData()[1];
+			cost += Math.abs(gear.getMotionData()[1] * Math.pow(1.001D, -Math.abs(gear.getMotionData()[0])));
 		}
 		
-		if(sumIRot == 0 || sumIRot != sumIRot){
-			return;
+		cost += sumIRot * Math.pow(baseSpeed, 2) / 2D;
+		
+		double availableEnergy = Math.abs(sumEnergy) + Math.abs(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] : 0);
+		if(availableEnergy - cost < 0){
+			baseSpeed = 0;
+			cost = 0;
 		}
-		
-		sumEnergy = runLoss(rotaryMembers, currentElement == MagicElements.STABILITY ? (voi ? 1.5D : 1D) : 1.001D);
-		sumEnergy += MiscOp.posOrNeg(sumEnergy) * (currentElement == MagicElements.ENERGY ? (voi ? -10 : 10) : 0);
-		sumEnergy += currentElement == MagicElements.CHARGE ? (voi ? -10 : 10) : 0;
-		sumEnergy = currentElement == MagicElements.EQUALIBRIUM ? (voi ? ((7D * sumEnergy) - (3D * lastSumEnergy)) / 4D : (sumEnergy + (3D * lastSumEnergy)) / 4D) : sumEnergy;
-		
-		if(sumEnergy < 1 && sumEnergy > -1){
-			sumEnergy = 0;
-		}
-		
-		lastSumEnergy = sumEnergy;
+		availableEnergy -= cost;
 		
 		for(IAxleHandler gear : rotaryMembers){
 			double newEnergy = 0;
 
 			// set w
-			gear.getMotionData()[0] = MiscOp.posOrNeg(sumEnergy) * MiscOp.posOrNeg(gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
+			gear.getMotionData()[0] = gear.getRotationRatio() * baseSpeed;
 			// set energy
 			newEnergy = MiscOp.posOrNeg(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
 			gear.getMotionData()[1] = newEnergy;
+			sumEnergy += newEnergy;
 			// set power
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
 		}
-	}
-
-	/**
-	 * base should always be equal or greater than one. 1 means no loss. 
-	*/
-	private static double runLoss(ArrayList<IAxleHandler> gears, double base){
-		double sumEnergy = 0;
-
-		for(IAxleHandler gear : gears){
-			sumEnergy += MiscOp.posOrNeg(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(base, -Math.abs(gear.getMotionData()[0]));
+		
+		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
+			worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1], 1);
 		}
-
-		return sumEnergy;
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("facing", this.facing.getIndex());
-		nbt.setInteger("time", time);
-		nbt.setBoolean("voi", voi);
-		if(currentElement != null){
-			nbt.setString("elem", currentElement.name());
-		}
+		
 		return nbt;
 	}
 
@@ -123,9 +96,6 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
-		time = nbt.getInteger("time");
-		voi = nbt.getBoolean("voi");
-		currentElement = nbt.hasKey("elem") ? MagicElements.valueOf(nbt.getString("elem")) : null;
 	}
 
 	private int lastKey = 0;
@@ -138,7 +108,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		}
 
 		ticksExisted++;
-		
+
 		if(ticksExisted % 300 == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
@@ -153,12 +123,6 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		
 		lastKey = CommonProxy.masterKey;
 
-		if(currentElement != null && time-- <= 0){
-			currentElement = null;
-			time = 0;
-			voi = false;
-		}
-		
 		if(!locked && !rotaryMembers.isEmpty()){
 			runCalc();
 			triggerSlaves();
@@ -171,54 +135,25 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		}
 	}
 	
-	private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
-	private final IMagicHandler magicHandler = new MagicHandler();
-	private final IAxisHandler handler = new AxisHandler();
+private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != facing){
-			return true;
-		}
 		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
 			return true;
 		}
-		
 		return super.hasCapability(cap, side);
 	}
+	
+	private final IAxisHandler handler = new AxisHandler();
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != facing){
-			return (T) magicHandler;
-		}
 		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
 			return (T) handler;
 		}
-
 		return super.getCapability(cap, side);
-	}
-	
-	private MagicElements currentElement;
-	private boolean voi;
-	private int time;
-	
-	private class MagicHandler implements IMagicHandler{
-
-		@Override
-		public void setMagic(MagicUnit mag){
-			if(mag != null){
-				MagicElements newElem = MagicElements.getElement(mag);
-				if(newElem != currentElement || voi != (mag.getVoid() != 0)){
-					currentElement = newElem;
-					voi = mag.getVoid() != 0;
-					time = mag.getPower() * IMagicHandler.BEAM_TIME;
-				}else{
-					time += mag.getPower() * IMagicHandler.BEAM_TIME;
-				}
-			}
-		}
 	}
 	
 	private class AxisHandler implements IAxisHandler{
@@ -285,12 +220,12 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 				return true;
 			}
 		}
-
+		
 		@Override
 		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
 			slaves.add(Pair.of(handler, side));
 		}
-
+		
 		@Override
 		public double getTotalEnergy(){
 			return sumEnergy;

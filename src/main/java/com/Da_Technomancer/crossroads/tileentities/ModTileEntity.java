@@ -43,10 +43,15 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.AdditionAxisTileE
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BackCounterGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CounterGearTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.EqualsAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.GreaterThanAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.LessThanAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.SquareRootAxisTileEntity;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -104,6 +109,11 @@ public class ModTileEntity{
 		register(CounterGearTileEntity.class, "counterGear");
 		register(BackCounterGearTileEntity.class, "backCounterGear");
 		register(AdditionAxisTileEntity.class, "additionAxis");
+		register(EqualsAxisTileEntity.class, "equalsAxis");
+		register(GreaterThanAxisTileEntity.class, "greaterThanAxis");
+		register(LessThanAxisTileEntity.class, "lessThanAxis");
+		register(RedstoneAxisTileEntity.class, "redstoneAxis");
+		register(SquareRootAxisTileEntity.class, "squareRootAxis");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

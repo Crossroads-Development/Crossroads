@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:redstoneAxis"},
+		"facing=south": { "model": "crossroads:redstoneAxis", "y": 180 },
+		"facing=east": { "model": "crossroads:redstoneAxis", "y": 90 },
+		"facing=west": { "model": "crossroads:redstoneAxis", "y": 270 },
+		"facing=up": { "model": "crossroads:redstoneAxis", "x": 270 },
+		"facing=down": { "model": "crossroads:redstoneAxis", "x": 90 }
+	}
+}
