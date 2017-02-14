@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.EmeraldGoggleEffect;
 import com.Da_Technomancer.crossroads.API.technomancy.IGoggleEffect;
 import com.Da_Technomancer.crossroads.API.technomancy.QuartzGoggleEffect;
 import com.Da_Technomancer.crossroads.API.technomancy.RubyGoggleEffect;
+import com.Da_Technomancer.crossroads.API.technomancy.VoidGoggleEffect;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
@@ -21,10 +22,11 @@ public enum GoggleLenses{
 	
 	
 	//Don't reorder these unless you want to rename all the goggle texture files.
-	RUBY(new OreDictCraftingStack("gemRuby", 1), "ruby", new RubyGoggleEffect()),
-	EMERALD(new OreDictCraftingStack("gemEmerald", 1), "emerald", new EmeraldGoggleEffect()),
-	DIAMOND(new OreDictCraftingStack("gemDiamond", 1), "diamond", new DiamondGoggleEffect()),
-	QUARTZ(new CraftingStack(ModItems.pureQuartz, 1, 0), "quartz", new QuartzGoggleEffect());
+	RUBY(new OreDictCraftingStack("gemRuby", 1), "_ruby", new RubyGoggleEffect()),
+	EMERALD(new OreDictCraftingStack("gemEmerald", 1), "_emerald", new EmeraldGoggleEffect()),
+	DIAMOND(new OreDictCraftingStack("gemDiamond", 1), "_diamond", new DiamondGoggleEffect()),
+	QUARTZ(new CraftingStack(ModItems.pureQuartz, 1, 0), "_quartz", new QuartzGoggleEffect()),
+	VOID(new CraftingStack(ModItems.voidCrystal, 1, 0), "", new VoidGoggleEffect());
 	
 	private final ICraftingStack item;
 	private final String texturePath;

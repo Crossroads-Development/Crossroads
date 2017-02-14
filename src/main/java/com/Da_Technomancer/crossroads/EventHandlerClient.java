@@ -7,11 +7,14 @@ import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.chunk.Chunk;
@@ -97,6 +100,30 @@ public final class EventHandlerClient{
 				GlStateManager.popMatrix();
 			}
 			game.mcProfiler.endSection();
+		}
+	}
+	
+	@SubscribeEvent
+	public void voidGoggleGlow(RenderWorldLastEvent e){
+		WorldClient world = Minecraft.getMinecraft().theWorld;
+		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
+		if(world.getTotalWorldTime() % 5 == 0){
+			boolean glow = play.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && play.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == ModItems.moduleGoggles && play.getItemStackFromSlot(EntityEquipmentSlot.HEAD).hasTagCompound() && play.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(GoggleLenses.VOID.name());
+			for(Entity ent : world.getLoadedEntityList()){
+				if(!ent.getEntityData().hasKey("glow")){
+					ent.setGlowing(false);
+				}else{
+					ent.getEntityData().removeTag("glow");
+				}
+				
+				if(glow){
+					if(ent.isGlowing()){
+						ent.getEntityData().setBoolean("glow", true);
+					}else{
+						ent.setGlowing(true);
+					}
+				}
+			}
 		}
 	}
 }

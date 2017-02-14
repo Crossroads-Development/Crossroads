@@ -23,7 +23,7 @@ public class ModuleGoggles extends ItemArmor{
 	
 	public ModuleGoggles(){
 		super(ModItems.TECHNOMANCY, 1, EntityEquipmentSlot.HEAD);
-		this.setMaxStackSize(1);
+		setMaxStackSize(1);
 		String name = "moduleGoggles";
 		setUnlocalizedName(name);
 		setRegistryName(name);
@@ -79,7 +79,7 @@ public class ModuleGoggles extends ItemArmor{
 		if(stack.hasTagCompound()){
 			for(GoggleLenses lens : GoggleLenses.values()){
 				if(stack.getTagCompound().hasKey(lens.name())){
-					path += '_' + lens.getTexturePath();
+					path += lens.getTexturePath();
 				}
 			}
 		}
