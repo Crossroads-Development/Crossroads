@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.GreaterThanAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSplitterTileEntity;
 
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -21,20 +21,24 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class GreaterThanAxis extends BlockContainer{
-	
-	public GreaterThanAxis(){
-		super(Material.IRON);
-		String name = "greaterThanAxis";
+public class MechanicalBeamSplitter extends BlockContainer{
+
+	public MechanicalBeamSplitter(){
+		super(Material.ROCK);
+		String name = "mechanicalBeamSplitter";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
-		setSoundType(SoundType.METAL);
 	}
 
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta){
+		return new MechanicalBeamSplitterTileEntity();
+	}
+	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
@@ -60,18 +64,26 @@ public class GreaterThanAxis extends BlockContainer{
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(Properties.FACING).getIndex();
 	}
-
-	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new GreaterThanAxisTileEntity(EnumFacing.getFront(meta));
-
-	}
-
+	
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
 
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		if(worldIn.getTileEntity(pos) instanceof BeamRenderTE){
+			((BeamRenderTE) worldIn.getTileEntity(pos)).refresh();
+		}
+		
+		super.breakBlock(worldIn, pos, state);
+	}
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+	
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
 		return state.withProperty(Properties.FACING, rot.rotate(state.getValue(Properties.FACING)));

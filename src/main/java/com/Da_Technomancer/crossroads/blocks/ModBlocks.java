@@ -48,6 +48,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.FluxManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxReaderAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.GreaterThanAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.LessThanAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalBeamSplitter;
 import com.Da_Technomancer.crossroads.blocks.technomancy.MultiplicationAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
@@ -128,6 +129,7 @@ public final class ModBlocks{
 	public static LessThanAxis lessThanAxis;
 	public static RedstoneAxis redstoneAxis;
 	public static SquareRootAxis squareRootAxis;
+	public static MechanicalBeamSplitter mechanicalBeamSplitter;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -205,6 +207,7 @@ public final class ModBlocks{
 		blockAddQue(lessThanAxis = new LessThanAxis());
 		blockAddQue(redstoneAxis = new RedstoneAxis());
 		blockAddQue(squareRootAxis = new SquareRootAxis());
+		blockAddQue(mechanicalBeamSplitter = new MechanicalBeamSplitter());
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -206,3 +206,4 @@ tile.greaterThanAxis.name=Greater Than Axis
 tile.lessThanAxis.name=Less Than Axis
 tile.redstoneAxis.name=Redstone Axis
 tile.squareRootAxis.name=Square Root Axis
+tile.mechanicalBeamSplitter.name=Mechanical Beam Splitter

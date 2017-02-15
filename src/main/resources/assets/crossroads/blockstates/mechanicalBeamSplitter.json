@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:mechBeamSplitter"},
+		"facing=south": { "model": "crossroads:mechBeamSplitter", "y": 180 },
+		"facing=east": { "model": "crossroads:mechBeamSplitter", "y": 90 },
+		"facing=west": { "model": "crossroads:mechBeamSplitter", "y": 270 },
+		"facing=up": { "model": "crossroads:mechBeamSplitter", "x": 270 },
+		"facing=down": { "model": "crossroads:mechBeamSplitter", "x": 90 }
+	}
+}

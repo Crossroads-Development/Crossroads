@@ -48,6 +48,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxManipulatorTi
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GreaterThanAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.LessThanAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
@@ -114,6 +115,7 @@ public class ModTileEntity{
 		register(LessThanAxisTileEntity.class, "lessThanAxis");
 		register(RedstoneAxisTileEntity.class, "redstoneAxis");
 		register(SquareRootAxisTileEntity.class, "squareRootAxis");
+		register(MechanicalBeamSplitterTileEntity.class, "mechanicalBeamSplitter");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){
