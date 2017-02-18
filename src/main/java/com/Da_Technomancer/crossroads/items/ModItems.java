@@ -72,6 +72,7 @@ public final class ModItems{
 	public static ChaosRod chaosRod;
 	public static BasicItem voidCrystal;
 	public static ModuleGoggles moduleGoggles;
+	public static StaffTechnomancy staffTechnomancy;
 
 	private static ArrayList<Triple<Item, Integer, ModelResourceLocation>> modelQue = new ArrayList<Triple<Item, Integer, ModelResourceLocation>>();
 
@@ -113,6 +114,7 @@ public final class ModItems{
 		itemAddQue(chaosRod = new ChaosRod());
 		voidCrystal = new BasicItem("voidCrystal");
 		itemAddQue(moduleGoggles = new ModuleGoggles());
+		itemAddQue(staffTechnomancy = new StaffTechnomancy());
 	}
 
 	@SideOnly(Side.CLIENT)

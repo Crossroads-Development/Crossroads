@@ -53,6 +53,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxi
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SquareRootAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.StaffChargerTileEntity;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -116,6 +117,7 @@ public class ModTileEntity{
 		register(RedstoneAxisTileEntity.class, "redstoneAxis");
 		register(SquareRootAxisTileEntity.class, "squareRootAxis");
 		register(MechanicalBeamSplitterTileEntity.class, "mechanicalBeamSplitter");
+		register(StaffChargerTileEntity.class, "staffCharger");
 	}
 
 	private static void register(Class<? extends TileEntity> locat, String ID){

@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy{
-
+	
 	@Override
 	protected void preInit(FMLPreInitializationEvent e){
 		super.preInit(e);
@@ -44,6 +44,7 @@ public class ClientProxy extends CommonProxy{
 		super.init(e);
 		GearFactory.clientInit();
 		AAModTESR.registerBlockRenderer();
+		Keys.init();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 

@@ -24,5 +24,7 @@ public class ModPackets{
 		network.registerMessage(SendChatToClient.class, SendChatToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendFieldsToClient.class, SendFieldsToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendFieldDisableToClient.class, SendFieldDisableToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendStaffToServer.class, SendStaffToServer.class, packetId++, Side.SERVER);
+		network.registerMessage(SendLooseBeamToClient.class, SendLooseBeamToClient.class, packetId++, Side.CLIENT);
 	}
 }

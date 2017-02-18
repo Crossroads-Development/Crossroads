@@ -53,7 +53,7 @@ public class MagicUnit{
 		return new Color((int) Math.round(255D * ((double) energy) / top), (int) Math.round(255D * ((double) potential) / top), (int) Math.round(255D * ((double) stability) / top));
 	}
 	
-	/** Returns RGB with void. For rendering. */
+	/** Returns RGB with void.*/
 	public Color getRGB(){
 		if(getTrueRGB() == null && voi == 0){
 			return null;

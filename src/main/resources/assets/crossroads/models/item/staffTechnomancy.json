@@ -1,0 +1,28 @@
+{
+	"parent": "builtin/generated",
+	"textures": {
+		"layer0": "crossroads:items/staffTechnomancy"
+	},
+	"display": {
+		"ground": {
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, 2, 0],
+			"scale":[ 0.5, 0.5, 0.5 ]
+		},
+		"head": {
+			"rotation": [ 0, 180, 0 ],
+			"translation": [ 0, 13, 7],
+			"scale":[ 1, 1, 1]
+		},
+		"thirdperson_righthand": {
+			"rotation": [ 75, 0, 0 ],
+			"translation": [ 0, 0, 2 ],
+			"scale": [ 0.55, 2, 2 ]
+		},
+		"firstperson_righthand": {
+			"rotation": [ 0, -90, -20 ],
+			"translation": [ 1.13, 3.2, 1.13],
+			"scale": [ 0.68, 0.68, 0.68 ]
+		}
+	}
+}

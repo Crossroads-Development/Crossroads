@@ -73,8 +73,8 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 				Tessellator tes = Tessellator.getInstance();
 				VertexBuffer buf = tes.getBuffer();
 
-				final double small = 0 - (trip[dir].getRight().doubleValue() / 16D);
-				final double big = 0 + (trip[dir].getRight().doubleValue() / 16D);
+				final double small = -(trip[dir].getRight().doubleValue() / 16D);
+				final double big = (trip[dir].getRight().doubleValue() / 16D);
 				final int length = trip[dir].getMiddle().intValue();
 
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

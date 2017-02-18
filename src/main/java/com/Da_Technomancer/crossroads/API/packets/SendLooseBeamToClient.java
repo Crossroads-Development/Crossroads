@@ -1,24 +1,27 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
+import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 @SuppressWarnings("serial")
-public class SendLightningToClient extends Message<SendLightningToClient>{
+public class SendLooseBeamToClient extends Message<SendLooseBeamToClient>{
 
-	public SendLightningToClient(){
+	public SendLooseBeamToClient(){
 		
 	}
 	
-	public BlockPos pos;
+	public NBTTagCompound nbt;
 
-	public SendLightningToClient(BlockPos pos){
-		this.pos = pos;
+	/**
+	 * @param nbt Should represent a {@link LooseBeamRenderable}
+	 */
+	public SendLooseBeamToClient(NBTTagCompound nbt){
+		this.nbt = nbt; 
 	}
 
 	@Override
@@ -29,18 +32,13 @@ public class SendLightningToClient extends Message<SendLightningToClient>{
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
-		World client = minecraft.theWorld;
 		minecraft.addScheduledTask(new Runnable(){
 			@Override
 			public void run(){
-				summonLightning(client, pos);
+				SafeCallable.beamsToRender.add(LooseBeamRenderable.readFromNBT(nbt));
 			}
 		});
 
 		return null;
-	}
-	
-	public static void summonLightning(World client, BlockPos pos){
-		client.spawnEntityInWorld(new EntityLightningBolt(client, pos.getX(), pos.getY(), pos.getZ(), true));
 	}
 }

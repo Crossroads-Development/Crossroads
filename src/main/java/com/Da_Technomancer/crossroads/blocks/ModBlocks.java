@@ -53,6 +53,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.MultiplicationAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SquareRootAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.StaffCharger;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
@@ -130,6 +131,7 @@ public final class ModBlocks{
 	public static RedstoneAxis redstoneAxis;
 	public static SquareRootAxis squareRootAxis;
 	public static MechanicalBeamSplitter mechanicalBeamSplitter;
+	public static StaffCharger staffCharger;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -208,6 +210,7 @@ public final class ModBlocks{
 		blockAddQue(redstoneAxis = new RedstoneAxis());
 		blockAddQue(squareRootAxis = new SquareRootAxis());
 		blockAddQue(mechanicalBeamSplitter = new MechanicalBeamSplitter());
+		blockAddQue(staffCharger = new StaffCharger());
 	}
 
 	@SideOnly(Side.CLIENT)
