@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.container.GrindstoneContainer;
+import com.Da_Technomancer.crossroads.gui.container.GrindstoneContainer;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 
 import net.minecraft.client.gui.inventory.GuiContainer;

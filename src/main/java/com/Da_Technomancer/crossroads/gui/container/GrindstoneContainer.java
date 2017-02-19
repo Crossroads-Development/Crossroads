@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.container;
+package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 

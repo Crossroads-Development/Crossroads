@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.container;
+package com.Da_Technomancer.crossroads.gui.container;
 
 import java.awt.Color;
 
@@ -34,7 +34,7 @@ public class ColorChartContainer extends Container{
 	private static final int VAR_PER_ITEM = 2;
 	private static final int RADIUS = 256 / VAR_PER_ITEM;
 	private final World world;
-	
+
 	public ColorChartContainer(EntityPlayer player, World world, BlockPos pos){
 		if(!world.isRemote){
 			ModPackets.network.sendTo(new SendElementNBTToClient(MiscOp.getPlayerTag(player).getCompoundTag("elements")), (EntityPlayerMP) player);
@@ -53,14 +53,14 @@ public class ColorChartContainer extends Container{
 				}
 			}
 		}
-		
+
 	}
-	
+
 	@Nullable
 	private static Color getColor(int x, int y){
 		return Color.getHSBColor(((float) (Math.atan2(y - yCENTER, x - xCENTER) / (2D * Math.PI))), (float) Math.min(Math.sqrt(Math.pow(x - xCENTER, 2) + Math.pow(y - yCENTER, 2)) / RADIUS, 1), 1);
 	}
-	
+
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn){
 		return true;
@@ -70,7 +70,7 @@ public class ColorChartContainer extends Container{
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot){
 		return null;
 	}
-	
+
 	private class ChartInventory implements IInventory{
 
 		@Override
@@ -125,7 +125,7 @@ public class ColorChartContainer extends Container{
 
 		@Override
 		public void setInventorySlotContents(int index, ItemStack stack){
-			
+
 		}
 
 		@Override
@@ -135,7 +135,7 @@ public class ColorChartContainer extends Container{
 
 		@Override
 		public void markDirty(){
-			
+
 		}
 
 		@Override
@@ -145,12 +145,12 @@ public class ColorChartContainer extends Container{
 
 		@Override
 		public void openInventory(EntityPlayer player){
-			
+
 		}
 
 		@Override
 		public void closeInventory(EntityPlayer player){
-			
+
 		}
 
 		@Override
@@ -165,7 +165,7 @@ public class ColorChartContainer extends Container{
 
 		@Override
 		public void setField(int id, int value){
-			
+
 		}
 
 		@Override
@@ -175,7 +175,7 @@ public class ColorChartContainer extends Container{
 
 		@Override
 		public void clear(){
-			
+
 		}
 	}
 }

@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.container.CoalHeaterContainer;
-import com.Da_Technomancer.crossroads.container.ColorChartContainer;
-import com.Da_Technomancer.crossroads.container.GrindstoneContainer;
-import com.Da_Technomancer.crossroads.container.HeatingChamberContainer;
-import com.Da_Technomancer.crossroads.container.SlottedChestContainer;
+import com.Da_Technomancer.crossroads.gui.container.CoalHeaterContainer;
+import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
+import com.Da_Technomancer.crossroads.gui.container.GrindstoneContainer;
+import com.Da_Technomancer.crossroads.gui.container.HeatingChamberContainer;
+import com.Da_Technomancer.crossroads.gui.container.SlottedChestContainer;
 import com.Da_Technomancer.crossroads.tileentities.SlottedChestTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.CoalHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;

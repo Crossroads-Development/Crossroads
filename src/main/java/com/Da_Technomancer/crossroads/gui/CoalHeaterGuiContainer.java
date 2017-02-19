@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.container.CoalHeaterContainer;
+import com.Da_Technomancer.crossroads.gui.container.CoalHeaterContainer;
 import com.Da_Technomancer.crossroads.tileentities.heat.CoalHeaterTileEntity;
 
 import net.minecraft.client.gui.inventory.GuiContainer;

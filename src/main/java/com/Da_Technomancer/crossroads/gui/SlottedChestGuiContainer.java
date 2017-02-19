@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.container.SlottedChestContainer;
+import com.Da_Technomancer.crossroads.gui.container.SlottedChestContainer;
 import com.Da_Technomancer.crossroads.tileentities.SlottedChestTileEntity;
 
 import net.minecraft.client.gui.inventory.GuiContainer;

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.container.HeatingChamberContainer;
+import com.Da_Technomancer.crossroads.gui.container.HeatingChamberContainer;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
