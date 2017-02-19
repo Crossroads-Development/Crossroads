@@ -64,5 +64,6 @@ public class SendStaffToServer extends Message<SendStaffToServer>{
 		i += decrease ? -1 : 1;
 		i = Math.min(8, Math.max(i, 0));
 		nbt.setInteger(element, i);
+		player.resetActiveHand();
 	}
 }

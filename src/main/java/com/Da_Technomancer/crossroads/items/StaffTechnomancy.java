@@ -47,10 +47,35 @@ public class StaffTechnomancy extends Item{
 	
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
-		if(!player.worldObj.isRemote && getMaxItemUseDuration(stack) - count >= 5 && count % 5 == 0){
+		if(player.worldObj.isRemote && getMaxItemUseDuration(stack) - count == 1){
+			MagicElements elemChanged = null;
+			if(Keys.staffEnergy.isKeyDown()){
+				elemChanged = MagicElements.ENERGY;
+			}else if(Keys.staffPotential.isKeyDown()){
+				elemChanged = MagicElements.POTENTIAL;
+			}else if(Keys.staffStability.isKeyDown()){
+				elemChanged = MagicElements.STABILITY;
+			}else if(Keys.staffVoid.isKeyDown()){
+				elemChanged = MagicElements.VOID;
+			}
+			if(elemChanged != null && player instanceof EntityPlayer){
+				player.worldObj.playSound((EntityPlayer) player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 5, (float) Math.random());
+				ModPackets.network.sendToServer(new SendStaffToServer(elemChanged.name(), player.isSneaking()));
+				/*if(stack.getTagCompound() == null){
+					stack.setTagCompound(new NBTTagCompound());
+				}
+				NBTTagCompound nbt = stack.getTagCompound();
+				int i = nbt.getInteger(elemChanged.name());
+				i += player.isSneaking() ? -1 : 1;
+				i = Math.min(8, Math.max(i, 0));
+				nbt.setInteger(elemChanged.name(), i);*/
+				//return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+			}
+		}else if(!player.worldObj.isRemote && getMaxItemUseDuration(stack) - count >= 5 && count % 5 == 0){
 			if(!stack.hasTagCompound()){
 				return;
 			}
+			
 			NBTTagCompound nbt = stack.getTagCompound();
 			int energy = nbt.getInteger(MagicElements.ENERGY.name());
 			int potential = nbt.getInteger(MagicElements.POTENTIAL.name());
@@ -78,7 +103,7 @@ public class StaffTechnomancy extends Item{
 			}
 		}
 	}
-	
+
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack){
 		return 72000;
@@ -111,6 +136,7 @@ public class StaffTechnomancy extends Item{
 		playerIn.setActiveHand(hand);
 		//TODO this thing sticks in the on position while changing settings. To reproduce, hold staffEnergyKey, right click, release staffEnergyKey for example.
 		//Probably caused by item (nbt) changing while clicking it.
+		/*
 		if(worldIn.isRemote){
 			MagicElements elemChanged = null;
 			if(Keys.staffEnergy.isKeyDown()){
@@ -135,7 +161,7 @@ public class StaffTechnomancy extends Item{
 				nbt.setInteger(elemChanged.name(), i);
 				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
 			}
-		}
+		}*/
 		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
 	}

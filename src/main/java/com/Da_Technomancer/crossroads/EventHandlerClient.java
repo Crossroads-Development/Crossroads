@@ -121,7 +121,7 @@ public final class EventHandlerClient{
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
 				Color col = new Color(beam.color);
-				GlStateManager.color(col.getRed(), col.getGreen(), col.getBlue());
+				GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F);
 				GlStateManager.translate(beam.x - game.thePlayer.posX, beam.y - game.thePlayer.posY, beam.z - game.thePlayer.posZ);
 				GlStateManager.rotate(-beam.angleY, 0, 1, 0);
 				GlStateManager.rotate(beam.angleX + 90F, 1, 0, 0);
@@ -153,6 +153,7 @@ public final class EventHandlerClient{
 				buf.pos(big, 0, small).tex(0, length).endVertex();
 				buf.pos(big, length, small).tex(0, 0).endVertex();
 				tes.draw();
+				GlStateManager.color(1, 1, 1);
 				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();
 				
