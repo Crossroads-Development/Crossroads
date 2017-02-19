@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -38,12 +39,25 @@ public class ChunkUnlockerTileEntity extends TileEntity{
 	private int timer = COOLDOWN;
 	private static final int COOLDOWN = 40;
 	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
+		timer = nbt.getInteger("timer");
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
+		nbt.setInteger("timer", timer);
+		return nbt;
+	}
+	
 	private class MagicHandler implements IMagicHandler{
 
 		@Override
 		public void setMagic(MagicUnit mag){
 			if(MagicElements.getElement(mag) == MagicElements.TIME && mag.getVoid() == 0){
-				if(--timer <= 0 && !FieldWorldSavedData.get(worldObj).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos))){
+				if(!FieldWorldSavedData.get(worldObj).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos)) && --timer <= 0){
 					worldObj.updateBlockTick(pos, ModBlocks.chunkUnlocker, 1, 1);
 					timer = COOLDOWN;
 				}

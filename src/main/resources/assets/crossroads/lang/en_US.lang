@@ -214,3 +214,5 @@ staffStability.name=Staff Stability Control
 staffVoid.name=Staff Void Control
 item.staffTechnomancy.name=Beam Staff
 tile.staffCharger.name=Staff Charger
+death.attack.potentialvoid=%1$s has no potential.
+death.attack.potentialvoid.player=%2$s stole %1$s's potential.

@@ -32,7 +32,7 @@ public enum MagicElements{
 	
 	//These MUST be declared last so they have bottom priority.
 	ENERGY(new EnergizeEffect(), new EnergizeEffect.VoidEnergizeEffect(), new Color(255, 0, 0), 254),
-	POTENTIAL(new GrowEffect(), new GrowEffect.PlantKillEffect(), new Color(0, 255, 0), 254),
+	POTENTIAL(new GrowEffect(), new GrowEffect.KillEffect(), new Color(0, 255, 0), 254),
 	STABILITY(null, new ExplodeEffect(), new Color(0, 0, 255), 254),
 	VOID(new BlockEffect(Blocks.AIR.getDefaultState()), new BlockEffect(Blocks.AIR.getDefaultState()), new Color(0, 0, 0), 0),
 	//If there are any combinations that result in NO_MATCH, then another element should be made to fill that spot
