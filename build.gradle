@@ -1,18 +1,14 @@
-
 buildscript {
     repositories {
         jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.10.2-1.4.0"
+version = "1.11.2-1.4.0"
 group = "com.Da_Technomancer.crossroads"
 archivesBaseName = "crossroads"
 
@@ -25,38 +21,37 @@ tasks.withType(JavaCompile) {
 }
 
 minecraft {
-    version = "1.10.2-12.18.1.2070"
+    version = "1.11.2-13.20.0.2233"
     runDir = "run"
-    
-    mappings = "snapshot_20160820"
+	
+    mappings = "snapshot_20161220"
 	
 	replace 'gradVERSION', project.version
 	replaceIn 'Main.java'
-	
 }
 
 repositories {
 	maven { url 'http://tehnut.info/maven/' }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
+	maven { url "http://maven.blamejared.com/" }
 }
 
 dependencies {
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.10.2-2.0.2-45"
-	deobfCompile "mezz.jei:jei_1.10.2:3.13.0.332:api"
+    deobfCompile "info.amerifrance.guideapi:Guide-API:1.11-2.1.0-50"
+	deobfCompile "mezz.jei:jei_1.11.2:4.2.6.238:api"
+	deobfCompile "MineTweaker3:MineTweaker3-MC1112-Main:1.11.2-3.0.21.21"
 }
 
-processResources
-{
-	inputs.property "version", project.version
+processResources {
+    inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
-	
-	
+
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
-        expand 'version': project.version, 'mcversion': project.minecraft.version
+        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-	
+        
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
