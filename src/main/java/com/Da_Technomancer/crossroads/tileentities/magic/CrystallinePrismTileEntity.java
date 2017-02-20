@@ -58,46 +58,46 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
 		Triple<Color, Integer, Integer>[] out = new Triple[6];
-		if(worldObj.getBlockState(pos).getBlock() != ModBlocks.crystallinePrism){
+		if(world.getBlockState(pos).getBlock() != ModBlocks.crystallinePrism){
 			return null;
 		}
-		out[worldObj.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y).getOpposite().getIndex()] = tripR;
-		out[worldObj.getBlockState(pos).getValue(Properties.FACING).getIndex()] = tripG;
-		out[worldObj.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y).getIndex()] = tripB;
+		out[world.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y).getOpposite().getIndex()] = tripR;
+		out[world.getBlockState(pos).getValue(Properties.FACING).getIndex()] = tripG;
+		out[world.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y).getIndex()] = tripB;
 		return out;
 	}
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		
 		if(beamerR == null){
-			beamerR = new BeamManager(worldObj.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y).getOpposite(), pos, worldObj);
+			beamerR = new BeamManager(world.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y).getOpposite(), pos, world);
 		}
 		if(beamerG == null){
-			beamerG = new BeamManager(worldObj.getBlockState(pos).getValue(Properties.FACING), pos, worldObj);
+			beamerG = new BeamManager(world.getBlockState(pos).getValue(Properties.FACING), pos, world);
 		}
 		if(beamerB == null){
-			beamerB = new BeamManager(worldObj.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y), pos, worldObj);
+			beamerB = new BeamManager(world.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y), pos, world);
 		}
 
-		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 
 			MagicUnit out = toSend.getOutput();
 			
 			if(beamerR.emit(out == null || out.getEnergy() == 0 ? null : out.mult(1, 0, 0, 0, false))){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamR", beamerR.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient("beamR", beamerR.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			if(beamerG.emit(out == null || out.getPotential() == 0 ? null : out.mult(0, 1, 0, 0, false))){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamG", beamerG.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient("beamG", beamerG.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			if(beamerB.emit(out == null || out.getStability() == 0 ? null : out.mult(0, 0, 1, 0, false))){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamB", beamerB.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient("beamB", beamerB.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
-		}else if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
 		}
@@ -163,7 +163,7 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side == worldObj.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
 			return true;
 		}
 		
@@ -173,7 +173,7 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side == worldObj.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
 			return (T) magicHandler;
 		}
 		

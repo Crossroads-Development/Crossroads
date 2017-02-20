@@ -40,7 +40,7 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 	}
 	
 	private void runCalc(){
-		double inBack = worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[0] : 0;
+		double inBack = world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[0] : 0;
 		double baseSpeed = inBack < 0 ? 0 : Math.sqrt(inBack);
 		
 		double sumIRot = 0;
@@ -56,7 +56,7 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 
 		cost += sumIRot * Math.pow(baseSpeed, 2) / 2D;
 
-		double availableEnergy = Math.abs(sumEnergy) + Math.abs(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) ? worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] : 0);
+		double availableEnergy = Math.abs(sumEnergy) + Math.abs(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) ? world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] : 0);
 		if(availableEnergy - cost < 0){
 			baseSpeed = 0;
 			cost = 0;
@@ -78,8 +78,8 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 			gear.getMotionData()[3] = newEnergy;
 		}
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
-			worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
+		if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
+			world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
@@ -190,7 +190,7 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public void requestUpdate(){
-			if(worldObj.isRemote){
+			if(world.isRemote){
 				return;
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
@@ -202,14 +202,14 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 			rotaryMembers.clear();
 			locked = false;
 			Random rand = new Random();
-			if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
+			if(world.getTileEntity(pos.offset(facing)) != null && world.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 				byte keyNew;
 				do {
 					keyNew = (byte) (rand.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
 
-				worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
+				world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
 				for(IAxleHandler gear : rotaryMembers){
@@ -247,7 +247,7 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 		@Override
 		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
 			if(DefaultAxisHandler.contains(slaveHandler, handler)){
-				worldObj.setBlockState(pos, Blocks.AIR.getDefaultState());
+				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 				return;
 			}
 			slaves.add(Pair.of(handler, side));

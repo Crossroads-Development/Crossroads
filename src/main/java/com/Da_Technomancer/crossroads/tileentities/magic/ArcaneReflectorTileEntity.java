@@ -58,23 +58,23 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 	@Override
 	public void update(){
 		if(facing == null){
-			facing = worldObj.getBlockState(pos).getBlock() instanceof ArcaneReflector ? worldObj.getBlockState(pos).getValue(Properties.FACING) : null;
+			facing = world.getBlockState(pos).getBlock() instanceof ArcaneReflector ? world.getBlockState(pos).getValue(Properties.FACING) : null;
 		}
 		
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		
 		if(beamer == null){
-			beamer = new BeamManager(facing, pos, worldObj);
+			beamer = new BeamManager(facing, pos, world);
 		}
 
-		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 			if(beamer.emit(toSend.getOutput())){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
-		}else if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
 		}

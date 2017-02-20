@@ -41,7 +41,7 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 	private void runCalc(){
 		double baseSpeed = 0;
 		for(EnumFacing side : EnumFacing.values()){
-			baseSpeed = Math.max(ModBlocks.ratiator.getPowerOnSide(worldObj, pos, side, false), baseSpeed);
+			baseSpeed = Math.max(ModBlocks.ratiator.getPowerOnSide(world, pos, side, false), baseSpeed);
 		}
 		
 		double sumIRot = 0;
@@ -57,7 +57,7 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 		
 		cost += sumIRot * Math.pow(baseSpeed, 2) / 2D;
 		
-		double availableEnergy = Math.abs(sumEnergy) + Math.abs(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] : 0);
+		double availableEnergy = Math.abs(sumEnergy) + Math.abs(world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] : 0);
 		if(availableEnergy - cost < 0){
 			baseSpeed = 0;
 			cost = 0;
@@ -79,8 +79,8 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 			gear.getMotionData()[3] = newEnergy;
 		}
 		
-		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
-			worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1], 1);
+		if(world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
+			world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1], 1);
 		}
 	}
 
@@ -103,7 +103,7 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 	
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
@@ -167,7 +167,7 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 
 		@Override
 		public void requestUpdate(){
-			if(worldObj.isRemote){
+			if(world.isRemote){
 				return;
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
@@ -179,14 +179,14 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 			rotaryMembers.clear();
 			locked = false;
 			Random rand = new Random();
-			if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
+			if(world.getTileEntity(pos.offset(facing)) != null && world.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 				byte keyNew;
 				do {
 					keyNew = (byte) (rand.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
 				
-				worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
+				world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
 				for(IAxleHandler gear : rotaryMembers){

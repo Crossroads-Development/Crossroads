@@ -39,22 +39,22 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public void update(){
 		if(toFace){
-			dir = worldObj.getBlockState(pos).getValue(Properties.FACING);
+			dir = world.getBlockState(pos).getValue(Properties.FACING);
 			toFace = false;
 		}
 
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
 		if(lastCompl != completion){
 			SendIntToClient msg = new SendIntToClient("prog", completion, this.getPos());
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 			lastCompl = completion;
 		}
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof SteamTurbineTileEntity){
-			steamOutHandler.drain(worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN).fill(steamContentOut, true), true);
+		if(world.getTileEntity(pos.offset(EnumFacing.UP)) instanceof SteamTurbineTileEntity){
+			steamOutHandler.drain(world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN).fill(steamContentOut, true), true);
 		}
 
 		if(steamContent != null){
@@ -96,7 +96,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		int dis = 0;
 		while(true){
 			++dis;
-			TileEntity te = worldObj.getTileEntity(pos.offset(EnumFacing.UP, dis));
+			TileEntity te = world.getTileEntity(pos.offset(EnumFacing.UP, dis));
 			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 				return te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
 			}

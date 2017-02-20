@@ -25,7 +25,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 	
-	private ItemStack inv;
+	private ItemStack inv = ItemStack.EMPTY;
 	private FluidStack water;
 	private FluidStack dWater;
 	private final int CAPACITY = 10_000;
@@ -34,12 +34,12 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 	
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		
 		IAxleHandler gear;
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && (gear = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)) != null){
+		if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && (gear = world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)) != null){
 			if(Math.abs(gear.getMotionData()[0]) >= TIP_POINT && (MiscOp.posOrNeg(gear.getMotionData()[0]) == -1) == neg){
 				neg = !neg;
 				if(water != null && water.amount >= 100){
@@ -47,7 +47,7 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 						water = null;
 					}
 					dWater = new FluidStack(BlockDistilledWater.getDistilledWater(), Math.min(CAPACITY, 100 + (dWater == null ? 0 : dWater.amount)));
-					inv = new ItemStack(ModItems.dustSalt, Math.min(64, 1 + (inv == null ? 0 : inv.stackSize)));
+					inv = new ItemStack(ModItems.dustSalt, Math.min(64, 1 + inv.getCount()));
 				}
 			}
 		}
@@ -79,7 +79,7 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 		neg = nbt.getBoolean("neg");
 		water = nbt.hasKey("water") ? FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("water")) : null;
 		dWater = nbt.hasKey("dWater") ? FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("dWater")) : null;
-		inv = nbt.hasKey("inv") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv")) : null;
+		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : null;
 	}
 	
 	private final IFluidHandler waterHandler = new WaterHandler();
@@ -104,10 +104,10 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == null){
 			return (T) masterHandler;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (facing.getAxis() == Axis.X) != worldObj.getBlockState(pos).getValue(Properties.ORIENT)){
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (facing.getAxis() == Axis.X) != world.getBlockState(pos).getValue(Properties.ORIENT)){
 			return (T) waterHandler;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (facing.getAxis() == Axis.X) == worldObj.getBlockState(pos).getValue(Properties.ORIENT)){
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (facing.getAxis() == Axis.X) == world.getBlockState(pos).getValue(Properties.ORIENT)){
 			return (T) dWaterHandler;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
@@ -269,15 +269,18 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 				return null;
 			}
 			
-			int cap = Math.min(amount, inv.stackSize);
+			int cap = Math.min(amount, inv.getCount());
 			
 			if(!simulate){
-				if((inv.stackSize -= cap) <= 0){
-					inv = null;
-				}
+				inv.shrink(cap);
 			}
 			
 			return new ItemStack(ModItems.dustSalt, cap);
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
 		}
 	}
 }

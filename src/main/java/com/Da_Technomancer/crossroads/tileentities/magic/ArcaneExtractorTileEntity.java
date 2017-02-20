@@ -28,7 +28,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable, IIntReceiver{
 
-	private ItemStack inv;
+	private ItemStack inv = ItemStack.EMPTY;
 	private Triple<Color, Integer, Integer> visual;
 	
 	@Override
@@ -48,36 +48,34 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
 		Triple<Color, Integer, Integer>[] out = new Triple[6];
-		if(worldObj.getBlockState(pos).getBlock() != ModBlocks.arcaneExtractor){
+		if(world.getBlockState(pos).getBlock() != ModBlocks.arcaneExtractor){
 			return null;
 		}
-		out[worldObj.getBlockState(pos).getValue(Properties.FACING).getIndex()] = visual;
+		out[world.getBlockState(pos).getValue(Properties.FACING).getIndex()] = visual;
 		return out;
 	}
 	
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		
 		if(beamer == null){
-			beamer = new BeamManager(worldObj.getBlockState(pos).getValue(Properties.FACING), pos, worldObj);
+			beamer = new BeamManager(world.getBlockState(pos).getValue(Properties.FACING), pos, world);
 		}
 		
-		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
-			if(inv != null && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+			if(!inv.isEmpty() && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
 				MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
-				if(--inv.stackSize <= 0){
-					inv = null;
-				}
+				inv.shrink(1);
 				if(beamer.emit(mag)){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}else{
-				inv = null;
+				inv = ItemStack.EMPTY;
 				if(beamer.emit(null)){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}
 		}
@@ -106,7 +104,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		
-		inv = nbt.hasKey("inv") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv")) : null;
+		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : null;
 	}
 	
 	private final IItemHandler itemHandler = new ItemHandler();
@@ -138,35 +136,40 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inv : null;
+			return slot == 0 ? inv : ItemStack.EMPTY;
 		}
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || stack == null || !(RecipeHolder.magExtractRecipes.containsKey(stack.getItem()))){
+			if(slot != 0 || stack.isEmpty() || !(RecipeHolder.magExtractRecipes.containsKey(stack.getItem()))){
 				return stack;
 			}
 
-			if(inv != null && !ItemStack.areItemsEqual(stack, inv)){
+			if(!inv.isEmpty() && !ItemStack.areItemsEqual(stack, inv)){
 				return stack;
 			}
 
-			int limit = Math.min(stack.getMaxStackSize() - (inv == null ? 0 : inv.stackSize), stack.stackSize);
+			int limit = Math.min(stack.getMaxStackSize() - inv.getCount(), stack.getCount());
 			if(!simulate){
-				if(inv == null){
+				if(inv.isEmpty()){
 					inv = new ItemStack(stack.getItem(), limit, stack.getMetadata());
 				}else{
-					inv.stackSize += limit;
+					inv.grow(limit);
 				}
 
 			}
 
-			return stack.stackSize == limit ? null : new ItemStack(stack.getItem(), stack.stackSize - limit, stack.getMetadata());
+			return stack.getCount() == limit ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - limit, stack.getMetadata());
 		}
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
 			return null;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
 		}
 	}
 }

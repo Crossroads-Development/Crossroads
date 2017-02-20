@@ -29,7 +29,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 	
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			if(clientW == Double.POSITIVE_INFINITY){
 				angle = 0;
 			}else if(clientW == Double.NEGATIVE_INFINITY){
@@ -40,7 +40,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 			}
 		}
 
-		if(!worldObj.isRemote){
+		if(!world.isRemote){
 			sendWPacket();
 		}
 	}
@@ -56,7 +56,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 
 		if(flag){
 			SendDoubleToClient msg = new SendDoubleToClient("w", clientW, pos);
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 
 			if(clientW == Double.POSITIVE_INFINITY || clientW == Double.NEGATIVE_INFINITY){
 				clientW = 0;
@@ -101,7 +101,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing != null && facing.getAxis() == worldObj.getBlockState(pos).getValue(Properties.AXIS)){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing != null && facing.getAxis() == world.getBlockState(pos).getValue(Properties.AXIS)){
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -110,7 +110,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing != null && facing.getAxis() == worldObj.getBlockState(pos).getValue(Properties.AXIS)){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing != null && facing.getAxis() == world.getBlockState(pos).getValue(Properties.AXIS)){
 			return (T) axleHandler;
 		}
 		return super.getCapability(capability, facing);
@@ -151,27 +151,27 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 			}
 			key = keyIn;
 
-			EnumFacing endPos = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, worldObj.getBlockState(pos).getValue(Properties.AXIS));
+			EnumFacing endPos = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.AXIS));
 			EnumFacing endNeg = endPos.getOpposite();
 			
-			if(worldObj.getTileEntity(pos.offset(endPos)) != null && worldObj.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endNeg)){
-				worldObj.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endNeg).trigger(masterIn, key);
+			if(world.getTileEntity(pos.offset(endPos)) != null && world.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endNeg)){
+				world.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endNeg).trigger(masterIn, key);
 			}
-			if(worldObj.getTileEntity(pos.offset(endNeg)) != null && worldObj.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos)){
-				worldObj.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos).trigger(masterIn, key);
+			if(world.getTileEntity(pos.offset(endNeg)) != null && world.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos)){
+				world.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos).trigger(masterIn, key);
 			}
-			if(worldObj.getTileEntity(pos.offset(endPos)) != null && worldObj.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endNeg)){
-				masterIn.addAxisToList(worldObj.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endNeg), endNeg);
+			if(world.getTileEntity(pos.offset(endPos)) != null && world.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endNeg)){
+				masterIn.addAxisToList(world.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endNeg), endNeg);
 			}
-			if(worldObj.getTileEntity(pos.offset(endNeg)) != null && worldObj.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endPos)){
-				masterIn.addAxisToList(worldObj.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endPos), endPos);
+			if(world.getTileEntity(pos.offset(endNeg)) != null && world.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endPos)){
+				masterIn.addAxisToList(world.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endPos), endPos);
 			}
 
-			if(worldObj.getTileEntity(pos.offset(endNeg)) != null && worldObj.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endPos)){
-				worldObj.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endPos).propogate(masterIn, key, rotRatio, 0);
+			if(world.getTileEntity(pos.offset(endNeg)) != null && world.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endPos)){
+				world.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endPos).propogate(masterIn, key, rotRatio, 0);
 			}
-			if(worldObj.getTileEntity(pos.offset(endPos)) != null && worldObj.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endNeg)){
-				worldObj.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endNeg).propogate(masterIn, key, rotRatio, 0);
+			if(world.getTileEntity(pos.offset(endPos)) != null && world.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endNeg)){
+				world.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endNeg).propogate(masterIn, key, rotRatio, 0);
 			}
 		}
 
@@ -182,7 +182,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 
 		@Override
 		public void resetAngle(){
-			if(!worldObj.isRemote){
+			if(!world.isRemote){
 				clientW = (MiscOp.posOrNeg(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
 			}
 		}

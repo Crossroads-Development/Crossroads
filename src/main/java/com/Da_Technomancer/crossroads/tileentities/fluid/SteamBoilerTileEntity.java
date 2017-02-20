@@ -28,16 +28,16 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 
 	private FluidStack steamContent;
 	private FluidStack waterContent;
-	private ItemStack inventory;
+	private ItemStack inventory = ItemStack.EMPTY;
 	private final int CAPACITY = 10_000;
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		if(init == false){
-			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
 			init = true;
 		}
 
@@ -56,7 +56,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 		limit = limit < 0 ? 0 : limit;
 
 		if(salty){
-			limit = Math.min(limit, 64 - (inventory == null ? 0 : inventory.stackSize));
+			limit = Math.min(limit, 64 - inventory.getCount());
 		}
 
 		if(limit == 0){
@@ -75,10 +75,10 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 		}
 
 		if(salty){
-			if(inventory == null){
+			if(inventory.isEmpty()){
 				inventory = new ItemStack(ModItems.dustSalt, limit);
 			}else{
-				inventory.stackSize += limit;
+				inventory.grow(limit);;
 			}
 		}
 		markDirty();
@@ -98,7 +98,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 		this.init = nbt.getBoolean("init");
 		this.temp = nbt.getDouble("temp");
 
-		inventory = nbt.hasKey("inv") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv")) : null;
+		inventory = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 		nbt.setBoolean("init", this.init);
 		nbt.setDouble("temp", this.temp);
 
-		if(inventory != null){
+		if(!inventory.isEmpty()){
 			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
 		}
 		
@@ -191,7 +191,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inventory : null;
+			return slot == 0 ? inventory : ItemStack.EMPTY;
 		}
 
 		@Override
@@ -201,20 +201,23 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			if(slot != 0 || amount <= 0 || inventory == null){
-				return null;
+			if(slot != 0 || amount <= 0 || inventory.isEmpty()){
+				return ItemStack.EMPTY;
 			}
 			
-			int count = Math.min(inventory.stackSize, amount);
+			int count = Math.min(inventory.getCount(), amount);
 			
 			if(!simulate){
-				if((inventory.stackSize -= count) <= 0){
-					inventory = null;
-				}
+				inventory.shrink(count);
 				markDirty();
 			}
 			
-			return amount > 0 ? new ItemStack(ModItems.dustSalt, count) : null;
+			return amount > 0 ? new ItemStack(ModItems.dustSalt, count) : ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
 		}
 	}
 	
@@ -365,7 +368,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable{
 
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

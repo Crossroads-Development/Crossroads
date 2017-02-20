@@ -56,18 +56,18 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
 		if(beamer == null){
-			beamer = new BeamManager(EnumFacing.DOWN, pos, worldObj);
+			beamer = new BeamManager(EnumFacing.DOWN, pos, world);
 		}
 		if(beamerUp == null){
-			beamerUp = new BeamManager(EnumFacing.UP, pos, worldObj);
+			beamerUp = new BeamManager(EnumFacing.UP, pos, world);
 		}
 
-		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 			MagicUnit out = toSend.getOutput();
 			MagicUnit outMult = out == null ? null : out.mult(.5D, false);
 			if(outMult == null || outMult.getPower() == 0){
@@ -80,13 +80,13 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 				}
 			}
 			if(beamer.emit(outMult)){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			if(beamerUp.emit(out)){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamUp", beamerUp.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient("beamUp", beamerUp.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
-		}else if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
 		}

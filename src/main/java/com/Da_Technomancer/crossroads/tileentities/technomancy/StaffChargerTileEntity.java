@@ -18,7 +18,7 @@ public class StaffChargerTileEntity extends TileEntity{
 
 
 	private final IMagicHandler magicHandler = new MagicHandler();
-	private ItemStack staff = null;
+	private ItemStack staff = ItemStack.EMPTY;
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
@@ -55,7 +55,7 @@ public class StaffChargerTileEntity extends TileEntity{
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		if(staff != null){
+		if(!staff.isEmpty()){
 			staff.writeToNBT(nbt);
 		}
 		return nbt;
@@ -64,7 +64,8 @@ public class StaffChargerTileEntity extends TileEntity{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		staff = ItemStack.loadItemStackFromNBT(nbt);
+		if(nbt.hasKey("Count"))
+		staff = new ItemStack(nbt);
 	}
 	
 	private class MagicHandler implements IMagicHandler{

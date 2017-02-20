@@ -64,9 +64,9 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 	public double angleThree;
 	
 	private void runCalc(){
-		double inPos = worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))) != null && worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)) ? worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)).getMotionData()[0] : 0;
-		double inNeg = worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))) != null && worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)) ? worldObj.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)).getMotionData()[0] : 0;
-		if(worldObj.getBlockState(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))) != null && worldObj.getBlockState(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).getBlock() == ModBlocks.axle){
+		double inPos = world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))) != null && world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)) ? world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)).getMotionData()[0] : 0;
+		double inNeg = world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))) != null && world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)) ? world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)).getMotionData()[0] : 0;
+		if(world.getBlockState(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))) != null && world.getBlockState(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).getBlock() == ModBlocks.axle){
 			inNeg *= -1D;
 		}
 		double baseSpeed = inPos + inNeg;
@@ -84,7 +84,7 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 
 		cost += sumIRot * Math.pow(baseSpeed, 2) / 2D;
 
-		double availableEnergy = Math.abs(sumEnergy) + Math.abs(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) ? worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] : 0);
+		double availableEnergy = Math.abs(sumEnergy) + Math.abs(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) ? world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] : 0);
 		if(availableEnergy - cost < 0){
 			baseSpeed = 0;
 			cost = 0;
@@ -106,19 +106,19 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 			gear.getMotionData()[3] = newEnergy;
 		}
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
-			worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
+		if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
+			world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
 		}
 		
 		inPos *= -1D;
 		
 		if(MiscOp.tiersRound(inPos, ModConfig.speedTiers.getInt()) != lastInPos){
 			lastInPos = MiscOp.tiersRound(inPos, ModConfig.speedTiers.getInt());
-			ModPackets.network.sendToAllAround(new SendDoubleToClient("one", lastInPos, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendDoubleToClient("one", lastInPos, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 		if(MiscOp.tiersRound(inNeg, ModConfig.speedTiers.getInt()) != lastInNeg){
 			lastInNeg = MiscOp.tiersRound(inNeg, ModConfig.speedTiers.getInt());
-			ModPackets.network.sendToAllAround(new SendDoubleToClient("two", lastInNeg, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendDoubleToClient("two", lastInNeg, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 
@@ -141,7 +141,7 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			angleOne += Math.toDegrees(lastInPos / 20D);
 			angleTwo += Math.toDegrees(lastInNeg / 20D);
 			angleThree += Math.toDegrees((lastInNeg - lastInPos) / 20D);
@@ -253,7 +253,7 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 
 		@Override
 		public void requestUpdate(){
-			if(worldObj.isRemote){
+			if(world.isRemote){
 				return;
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
@@ -265,14 +265,14 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 			rotaryMembers.clear();
 			locked = false;
 			Random rand = new Random();
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 				byte keyNew;
 				do {
 					keyNew = (byte) (rand.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
 
-				worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).propogate(this, key, 0, 0);
+				world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
 				for(IAxleHandler gear : rotaryMembers){
@@ -310,7 +310,7 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 		@Override
 		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
 			if(DefaultAxisHandler.contains(slaveHandler, handler)){
-				worldObj.setBlockState(pos, Blocks.AIR.getDefaultState());
+				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 				return;
 			}
 			slaves.add(Pair.of(handler, side));

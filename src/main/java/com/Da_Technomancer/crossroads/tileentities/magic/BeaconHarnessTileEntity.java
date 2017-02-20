@@ -66,7 +66,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 			}
 		}
 		
-		if(worldObj.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() == Blocks.BEACON && worldObj.isAirBlock(pos.offset(EnumFacing.DOWN, 1))){
+		if(world.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() == Blocks.BEACON && world.isAirBlock(pos.offset(EnumFacing.DOWN, 1))){
 			return false;
 		}
 		
@@ -76,32 +76,32 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 	public void trigger(){
 		if(!running && !invalid(null, true)){
 			running = true;
-			ModPackets.network.sendToAllAround(new SendBoolToClient("light", true, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendBoolToClient("light", true, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 	
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
 		if(beamer == null){
-			beamer = new BeamManager(EnumFacing.UP, pos, worldObj);
+			beamer = new BeamManager(EnumFacing.UP, pos, world);
 		}
 
-		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 			if(running){
 				++cycles;
 				cycles %= 120;
 				Color col = Color.getHSBColor(((float) cycles) / 120F, 1, 1);
 				if(invalid(col, cycles < 0 || cycles % 40 < 8)){
 					running = false;
-					ModPackets.network.sendToAllAround(new SendBoolToClient("light", false, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendBoolToClient("light", false, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					cycles = -9;
 					
 					if(beamer.emit(null)){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					magStor.clear();
 					return;
@@ -111,7 +111,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 					MagicUnit out = new MagicUnit(col.getRed(), col.getGreen(), col.getBlue(), 0);
 					out = out.mult(512D / ((double) out.getPower()), false);
 					if(beamer.emit(out)){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((beamer.getDist() - 1) << 24) + (beamer.getLastSent().getRGB().getRGB() & 16777215), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((beamer.getDist() - 1) << 24) + (beamer.getLastSent().getRGB().getRGB() & 16777215), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 				}
 			}

@@ -21,13 +21,13 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
 		for(EnumFacing dir : EnumFacing.values()){
-			if(worldObj.getTileEntity(pos.offset(dir)) != null && worldObj.getTileEntity(pos.offset(dir)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())){
-				transfer(worldObj.getTileEntity(pos.offset(dir)).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()));
+			if(world.getTileEntity(pos.offset(dir)) != null && world.getTileEntity(pos.offset(dir)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())){
+				transfer(world.getTileEntity(pos.offset(dir)).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()));
 			}
 		}
 	}

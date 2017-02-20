@@ -33,13 +33,13 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		++ticksExisted;
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
@@ -51,10 +51,10 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 			markDirty();
 		}
 
-		if(RecipeHolder.envirHeatSource.containsKey(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())){
-			Triple<IBlockState, Double, Double> trip = RecipeHolder.envirHeatSource.get(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock());
+		if(RecipeHolder.envirHeatSource.containsKey(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())){
+			Triple<IBlockState, Double, Double> trip = RecipeHolder.envirHeatSource.get(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock());
 			if((trip.getMiddle() < 0 && trip.getRight() < temp) || (trip.getMiddle() >= 0 && trip.getRight() > temp)){
-				worldObj.setBlockState(pos.offset(EnumFacing.DOWN), trip.getLeft() == null ? Blocks.AIR.getDefaultState() : trip.getLeft(), 3);
+				world.setBlockState(pos.offset(EnumFacing.DOWN), trip.getLeft() == null ? Blocks.AIR.getDefaultState() : trip.getLeft(), 3);
 				handler.addHeat(trip.getMiddle());
 			}
 		}
@@ -67,8 +67,8 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 		int members = 1;
 
 		for(EnumFacing side : EnumFacing.values()){
-			if(side != EnumFacing.DOWN && worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				IHeatHandler handler = worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
+			if(side != EnumFacing.DOWN && world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				IHeatHandler handler = world.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
 				reservePool += handler.getTemp() * rate;
 				handler.addHeat(-(handler.getTemp() * rate));
 				members++;
@@ -78,8 +78,8 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 		reservePool /= members;
 
 		for(EnumFacing side : EnumFacing.values()){
-			if(worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
+			if(world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				world.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
 			}
 		}
 		temp += reservePool;
@@ -90,7 +90,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
-		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
+		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
 		newTemp /= (rate + 1);
 		temp = newTemp;
 	}
@@ -138,7 +138,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

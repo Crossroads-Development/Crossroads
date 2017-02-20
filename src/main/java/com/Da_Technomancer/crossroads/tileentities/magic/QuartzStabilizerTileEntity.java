@@ -70,31 +70,31 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	@Override
 	public void update(){
 		if(facing == null){
-			facing = worldObj.getBlockState(pos).getBlock() instanceof QuartzStabilizer ? worldObj.getBlockState(pos).getValue(Properties.FACING) : null;
+			facing = world.getBlockState(pos).getBlock() instanceof QuartzStabilizer ? world.getBlockState(pos).getValue(Properties.FACING) : null;
 		}
 		
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		
 		if(beamer == null){
-			beamer = new BeamManager(facing, pos, worldObj);
+			beamer = new BeamManager(facing, pos, world);
 		}
 		
-		if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 			if(!toSend.isEmpty()){
 				double mult = Math.min(1, ((double) RATE[large ? 1 : 0]) / ((double) (toSend.getOutput().getPower())));
 				MagicUnit mag = toSend.getOutput().mult(mult, true);
 				toSend.subtractMagic(mag);
 				if(beamer.emit(mag)){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}else{
 				if(beamer.emit(null)){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}
-		}else if(worldObj.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			MagicUnit magAdd = recieved.isEmpty() ? null : recieved.getOutput().mult(Math.min(((double) (LIMIT[large ? 1 : 0] - (toSend.isEmpty() ? 0 : toSend.getOutput().getPower()))) / ((double) recieved.getOutput().getPower()), 1), false);
 			toSend.addMagic(magAdd);
 			recieved.clear();

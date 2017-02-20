@@ -37,7 +37,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
@@ -47,7 +47,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 			if(insulator == HeatInsulators.ICE){
 				temp = -10;
 			}else{
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 			}
 			init = true;
 		}
@@ -60,9 +60,9 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 
 		if(temp > insulator.getLimit()){
 			if(ModConfig.heatEffects.getBoolean()){
-				insulator.getEffect().doEffect(worldObj, pos, 1);
+				insulator.getEffect().doEffect(world, pos, 1);
 			}else{
-				worldObj.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
+				world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
 			}
 		}
 	}
@@ -74,8 +74,8 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 		int members = 1;
 
 		for(EnumFacing side : EnumFacing.values()){
-			if(worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				IHeatHandler handler = worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
+			if(world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				IHeatHandler handler = world.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
 				reservePool += handler.getTemp() * rate;
 				handler.addHeat(-(handler.getTemp() * rate));
 				members++;
@@ -85,8 +85,8 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 		reservePool /= members;
 
 		for(EnumFacing side : EnumFacing.values()){
-			if(worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
+			if(world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				world.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
 			}
 		}
 		temp += reservePool;
@@ -109,7 +109,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 
 		nbt.setBoolean("init", this.init);
 		nbt.setDouble("temp", this.temp);
-		if(!worldObj.isRemote){
+		if(!world.isRemote){
 			nbt.setString("cond", conductor.name());
 			nbt.setString("insul", insulator.name());
 		}
@@ -129,7 +129,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
-		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
+		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
 		newTemp /= (rate + 1);
 		temp = newTemp;
 	}
@@ -161,7 +161,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 				if(insulator == HeatInsulators.ICE){
 					temp = -10;
 				}else{
-					temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+					temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 				}
 			}
 		}

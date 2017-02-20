@@ -26,27 +26,27 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
-			EnumFacing facing = worldObj.getBlockState(pos).getValue(Properties.FACING);
-			if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) && (facing.getOpposite() != EnumFacing.UP || !(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ToggleGearTileEntity) || worldObj.getBlockState(pos.offset(EnumFacing.UP)).getValue(Properties.REDSTONE_BOOL))){
-				angle = (float) worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getAngle();
+		if(world.isRemote){
+			EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
+			if(world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) && (facing.getOpposite() != EnumFacing.UP || !(world.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ToggleGearTileEntity) || world.getBlockState(pos.offset(EnumFacing.UP)).getValue(Properties.REDSTONE_BOOL))){
+				angle = (float) world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getAngle();
 			}
 
 			return;
 		}
 
-		EnumFacing facing = worldObj.getBlockState(pos).getValue(Properties.FACING);
+		EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
 		IAxleHandler handler;
-		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) && (facing.getOpposite() != EnumFacing.UP || !(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ToggleGearTileEntity) || worldObj.getBlockState(pos.offset(EnumFacing.UP)).getValue(Properties.REDSTONE_BOOL)) && Math.abs((handler = worldObj.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)).getMotionData()[1]) >= ENERGYUSE){
+		if(world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) && (facing.getOpposite() != EnumFacing.UP || !(world.getTileEntity(pos.offset(EnumFacing.UP)) instanceof ToggleGearTileEntity) || world.getBlockState(pos.offset(EnumFacing.UP)).getValue(Properties.REDSTONE_BOOL)) && Math.abs((handler = world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)).getMotionData()[1]) >= ENERGYUSE){
 			handler.addEnergy(-ENERGYUSE, false, false);
 			if(++ticksExisted % 10 == 0){
-				worldObj.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.BLOCKS, .2F, .5F);
-				if(!worldObj.isAirBlock(pos.offset(facing))){
-					if(Math.abs(handler.getMotionData()[0]) >= worldObj.getBlockState(pos.offset(facing)).getBlockHardness(worldObj, pos.offset(facing)) * SPEEDPERHARDNESS){
-						worldObj.destroyBlock(pos.offset(facing), true);
+				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.BLOCKS, .2F, .5F);
+				if(!world.isAirBlock(pos.offset(facing))){
+					if(Math.abs(handler.getMotionData()[0]) >= world.getBlockState(pos.offset(facing)).getBlockHardness(world, pos.offset(facing)) * SPEEDPERHARDNESS){
+						world.destroyBlock(pos.offset(facing), true);
 					}
-				}else if(worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE) != null){
-					for(EntityLivingBase ent : worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE)){
+				}else if(world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE) != null){
+					for(EntityLivingBase ent : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE)){
 						ent.attackEntityFrom(DRILL, (float) Math.abs(handler.getMotionData()[0] / SPEEDPERHARDNESS));
 					}
 				}

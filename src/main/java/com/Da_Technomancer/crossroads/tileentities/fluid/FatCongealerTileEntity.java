@@ -31,12 +31,12 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			IAxleHandler rot = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
+		if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			IAxleHandler rot = world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
 			int value = Math.min((int) (Math.abs(rot.getMotionData()[1]) * VALUE_PER_ENERGY), 40);
 			if(value == 0 || content == null){
 				return;
@@ -56,10 +56,10 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable{
 			nbt.setInteger("food", value - sat);
 			nbt.setInteger("sat", sat);
 			stack.setTagCompound(nbt);
-			EntityItem ent = new EntityItem(worldObj, pos.getX() + .5D, pos.getY() - .5D, pos.getZ() + .5D, stack);
+			EntityItem ent = new EntityItem(world, pos.getX() + .5D, pos.getY() - .5D, pos.getZ() + .5D, stack);
 			ent.motionX = 0;
 			ent.motionZ = 0;
-			worldObj.spawnEntityInWorld(ent);
+			world.spawnEntity(ent);
 			markDirty();
 		}
 	}

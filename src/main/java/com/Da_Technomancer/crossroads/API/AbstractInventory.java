@@ -18,12 +18,12 @@ public abstract class AbstractInventory extends TileEntity implements ISidedInve
 
 	@Override
 	public ITextComponent getDisplayName(){
-		return new TextComponentTranslation(this.getName());
+		return new TextComponentTranslation(getName());
 	}
 
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player){
-		return world.getTileEntity(this.getPos()) == this && player.getDistanceSq(this.pos.add(0.5, 0.5, 0.5)) <= 64;
+		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
 	}
 
 	@Override

@@ -15,16 +15,16 @@ public class RateManipulatorTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(!worldObj.isRemote){
-			if(worldObj.getTotalWorldTime() % 5 == 0 && !run){
-				if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-					FieldWorldSavedData data = FieldWorldSavedData.get(worldObj);
+		if(!world.isRemote){
+			if(world.getTotalWorldTime() % 5 == 0 && !run){
+				if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+					FieldWorldSavedData data = FieldWorldSavedData.get(world);
 					if(data.fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos))){
-						data.nodeForces.get(FieldWorldSavedData.getLongFromPos(pos))[1][FieldWorldSavedData.getChunkRelativeCoord(pos.getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ()) / 2] += worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] / EnergyConverters.SPEED_PER_RATE;
+						data.nodeForces.get(FieldWorldSavedData.getLongFromPos(pos))[1][FieldWorldSavedData.getChunkRelativeCoord(pos.getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ()) / 2] += world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] / EnergyConverters.SPEED_PER_RATE;
 					}
 				}
 				run = true;
-			}else if(worldObj.getTotalWorldTime() % 5 == 1){
+			}else if(world.getTotalWorldTime() % 5 == 1){
 				run = false;
 			}
 		}

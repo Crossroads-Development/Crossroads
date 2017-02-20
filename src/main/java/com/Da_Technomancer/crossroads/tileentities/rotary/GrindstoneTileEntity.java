@@ -12,7 +12,6 @@ import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 
@@ -20,6 +19,12 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 
 	private ItemStack[] inventory = new ItemStack[4];
 
+	public GrindstoneTileEntity(){
+		for(int i = 0; i < 4; i++){
+			inventory[i] = ItemStack.EMPTY;
+		}
+	}
+	
 	private int progress = 0;
 	public static final int REQUIRED = 100;
 	private static final double LOWERLIMIT = 0D;
@@ -33,12 +38,12 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 		IAxleHandler topGear = null;
 		IAxleHandler bottomGear = null;
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			topGear = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
+		if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			topGear = world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
 		}
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
-			bottomGear = worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP);
+		if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
+			bottomGear = world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP);
 		}
 
 		double holder = (topGear != null ? topGear.getMotionData()[0] : 0D) + (bottomGear != null ? bottomGear.getMotionData()[0] : 0D);
@@ -69,12 +74,12 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 			decrStackSize(0, 1);
 
 			for(ItemStack stack : outputs){
-				int remain = stack.stackSize;
+				int remain = stack.getCount();
 				for(int slot : new int[] {1, 2, 3}){
 					if(remain > 0 && ItemStack.areItemsEqual(inventory[slot], stack)){
-						int stored = stack.getMaxStackSize() - inventory[slot].stackSize;
+						int stored = stack.getMaxStackSize() - inventory[slot].getCount();
 
-						inventory[slot] = new ItemStack(stack.getItem(), inventory[slot].stackSize + Math.min(stored, remain), stack.getMetadata());
+						inventory[slot] = new ItemStack(stack.getItem(), inventory[slot].getCount() + Math.min(stored, remain), stack.getMetadata());
 						remain -= stored;
 					}
 				}
@@ -102,16 +107,16 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 
 		for(ItemStack stack : outputs){
 
-			int remain = stack.stackSize;
+			int remain = stack.getCount();
 			for(int slot : new int[] {1, 2, 3}){
 				if(!locked.contains(slot) && ItemStack.areItemsEqual(inventory[slot], stack)){
-					remain -= stack.getMaxStackSize() - inventory[slot].stackSize;
+					remain -= stack.getMaxStackSize() - inventory[slot].getCount();
 
 				}
 			}
 
 			for(int slot : new int[] {1, 2, 3}){
-				if(!locked.contains(slot) && remain > 0 && inventory[slot] == null){
+				if(!locked.contains(slot) && remain > 0 && inventory[slot].isEmpty()){
 					remain -= stack.getMaxStackSize();
 					locked.add(slot);
 				}
@@ -128,8 +133,8 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public void update(){
-		if(!worldObj.isRemote){
-			if(inventory[0] != null && getOutput() != null){
+		if(!world.isRemote){
+			if(!inventory[0].isEmpty() && getOutput() != null){
 				runMachine();
 			}else{
 				progress = 0;
@@ -142,7 +147,7 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 	}
 	
 	private ItemStack[] getOutput(){
-		if(inventory[0] == null){
+		if(inventory[0].isEmpty()){
 			return null;
 		}
 		for(Entry<ICraftingStack, ItemStack[]> recipe: RecipeHolder.grindRecipes.entrySet()){
@@ -161,45 +166,42 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 	@Override
 	public ItemStack getStackInSlot(int index){
 		if(index < 0 || index >= 4)
-			return null;
-		return this.inventory[index];
+			return ItemStack.EMPTY;
+		return inventory[index];
 	}
 
 	@Override
 	public ItemStack decrStackSize(int index, int count){
-		if(this.inventory[index] != null){
-			ItemStack itemstack;
+		if(!inventory[index].isEmpty()){
+			ItemStack itemstack = ItemStack.EMPTY;
 
-			if(inventory[index].stackSize <= count){
+			if(inventory[index].getCount() <= count){
 				itemstack = this.inventory[index];
-				this.setInventorySlotContents(index, null);
-				this.markDirty();
+				inventory[index] = ItemStack.EMPTY;
+				markDirty();
 				return itemstack;
 			}else{
 				itemstack = this.inventory[index].splitStack(count);
-
-				if(this.inventory[index].stackSize <= 0){
-					this.inventory[index] = null;
-				}
-
-				this.markDirty();
+				markDirty();
 				return itemstack;
 			}
 		}else{
-			return null;
+			return ItemStack.EMPTY;
 		}
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int index){
 		ItemStack stack = inventory[index];
-		inventory[index] = null;
+		inventory[index] = ItemStack.EMPTY;
 		return stack;
 	}
 
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack){
-		inventory[index] = stack;
+		if(index < 4){
+			inventory[index] = stack;
+		}
 	}
 
 	@Override
@@ -214,13 +216,13 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
-		return index != 0;
+		return index > 0 && index < 4;
 	}
 
 	@Override
 	public int getField(int id){
 		if(id == 0){
-			return this.progress;
+			return progress;
 		}else{
 			return 0;
 		}
@@ -229,7 +231,7 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 	@Override
 	public void setField(int id, int value){
 		if(id == 0){
-			this.progress = value;
+			progress = value;
 		}
 	}
 
@@ -240,23 +242,22 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public void clear(){
-		inventory = new ItemStack[4];
+		for(int i = 0; i < 4; i++){
+			inventory[i] = ItemStack.EMPTY;
+		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
-		NBTTagList list = new NBTTagList();
 		for(int i = 0; i < 4; ++i){
-			if(inventory[i] != null){
+			if(!inventory[i].isEmpty()){
 				NBTTagCompound stackTag = new NBTTagCompound();
-				stackTag.setByte("Slot", (byte) i);
-				this.inventory[i].writeToNBT(stackTag);
-				list.appendTag(stackTag);
+				inventory[i].writeToNBT(stackTag);
+				nbt.setTag("inv" + i, stackTag);
 			}
 		}
-		nbt.setTag("Items", list);
 		return nbt;
 	}
 
@@ -264,11 +265,10 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 
-		NBTTagList list = nbt.getTagList("Items", 10);
-		for(int i = 0; i < list.tagCount(); ++i){
-			NBTTagCompound stackTag = list.getCompoundTagAt(i);
-			int slot = stackTag.getByte("Slot") & 255;
-			this.inventory[slot] = ItemStack.loadItemStackFromNBT(stackTag);
+		for(int i = 0; i < 4; ++i){
+			if(nbt.hasKey("inv" + i)){
+				inventory[i] = new ItemStack(nbt.getCompoundTag("inv" + i));
+			}
 		}
 	}
 
@@ -279,11 +279,21 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction){
-		return this.isItemValidForSlot(index, itemStackIn);
+		return isItemValidForSlot(index, itemStackIn);
 	}
 
 	@Override
 	public String getName(){
 		return "container.grindstone";
+	}
+
+	@Override
+	public boolean isEmpty(){
+		for(int i = 0; i < 4; i++){
+			if(!inventory[i].isEmpty()){
+				return false;
+			}
+		}
+		return true;
 	}
 }

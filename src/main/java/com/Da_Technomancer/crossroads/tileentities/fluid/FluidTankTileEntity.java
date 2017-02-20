@@ -26,8 +26,8 @@ public class FluidTankTileEntity extends TileEntity{
 	
 	private void fixState(){
 		int i = content == null ? 0 : ((int) Math.ceil(15D * content.amount / CAPACITY));
-		if(i != worldObj.getBlockState(pos).getValue(Properties.REDSTONE)){
-			worldObj.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i));
+		if(i != world.getBlockState(pos).getValue(Properties.REDSTONE)){
+			world.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i));
 		}
 	}
 	

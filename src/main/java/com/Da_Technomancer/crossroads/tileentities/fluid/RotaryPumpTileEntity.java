@@ -33,14 +33,14 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			// TODO simplify this if statement
-			if(FluidRegistry.lookupFluidForBlock(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()) != null && (worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockFluidClassic && ((BlockFluidClassic) worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()).isSourceBlock(worldObj, pos.offset(EnumFacing.DOWN)) || worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getValue(BlockLiquid.LEVEL) == 0) && (content == null || (CAPACITY - content.amount >= 1000 && content.getFluid() == FluidRegistry.lookupFluidForBlock(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())))){
-				IAxleHandler te = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
+		if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			//If anyone knows a builtin way to simplify this if statement, be my guest. It's so long it scares me...
+			if(FluidRegistry.lookupFluidForBlock(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()) != null && (world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockFluidClassic && ((BlockFluidClassic) world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()).isSourceBlock(world, pos.offset(EnumFacing.DOWN)) || world.getBlockState(pos.offset(EnumFacing.DOWN)).getValue(BlockLiquid.LEVEL) == 0) && (content == null || (CAPACITY - content.amount >= 1000 && content.getFluid() == FluidRegistry.lookupFluidForBlock(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())))){
+				IAxleHandler te = world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
 
 				double holder = MiscOp.findEfficiency(te.getMotionData()[0], .2D, 8) * Math.abs(te.getMotionData()[1]);
 				te.addEnergy(-holder, false, false);
@@ -52,13 +52,13 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 
 		if(progress >= REQUIRED){
 			progress = 0;
-			content = new FluidStack(FluidRegistry.lookupFluidForBlock(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()), 1000 + (content == null ? 0 : content.amount));
-			worldObj.setBlockToAir(pos.offset(EnumFacing.DOWN));
+			content = new FluidStack(FluidRegistry.lookupFluidForBlock(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()), 1000 + (content == null ? 0 : content.amount));
+			world.setBlockToAir(pos.offset(EnumFacing.DOWN));
 		}
 
 		if(lastProgress != progress){
 			SendIntToClient msg = new SendIntToClient("prog", progress, this.getPos());
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
 			lastProgress = progress;
 		}
 	}

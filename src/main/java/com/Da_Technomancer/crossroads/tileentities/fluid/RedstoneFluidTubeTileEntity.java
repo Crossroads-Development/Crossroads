@@ -23,14 +23,14 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
-		if(worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			for(EnumFacing dir : EnumFacing.values()){
-				if(worldObj.getTileEntity(pos.offset(dir)) != null && worldObj.getTileEntity(pos.offset(dir)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())){
-					transfer(worldObj.getTileEntity(pos.offset(dir)).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()));
+				if(world.getTileEntity(pos.offset(dir)) != null && world.getTileEntity(pos.offset(dir)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())){
+					transfer(world.getTileEntity(pos.offset(dir)).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()));
 				}
 			}
 		}
@@ -137,7 +137,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			return (T) mainHandler;
 		}
 
@@ -147,7 +147,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL);
+			return world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL);
 		}
 		return super.hasCapability(capability, facing);
 	}

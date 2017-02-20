@@ -157,7 +157,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		if(flag){
 			for(int i = 0; i < 6; ++i){
 				SendDoubleToClient msg = new SendDoubleToClient("w" + i, clientW[i], pos);
-				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 
 			for(int i = 0; i < 6; i++){
@@ -208,7 +208,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			for(int i = 0; i < 6; i++){
 				if(clientW[i] == Double.POSITIVE_INFINITY){
 					angle[i] = 0;
@@ -221,7 +221,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}
 		}
 
-		if(!worldObj.isRemote){
+		if(!world.isRemote){
 			sendWPacket();
 		}
 
@@ -331,11 +331,11 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}
 			updateKey = key;
 			
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))) != null && worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite())){
-				worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite()).trigger(masterIn, key);
+			if(world.getTileEntity(pos.offset(EnumFacing.getFront(side))) != null && world.getTileEntity(pos.offset(EnumFacing.getFront(side))).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite())){
+				world.getTileEntity(pos.offset(EnumFacing.getFront(side))).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite()).trigger(masterIn, key);
 			}
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))) != null && worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite())){
-				masterIn.addAxisToList(worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite()), EnumFacing.getFront(side).getOpposite());
+			if(world.getTileEntity(pos.offset(EnumFacing.getFront(side))) != null && world.getTileEntity(pos.offset(EnumFacing.getFront(side))).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite())){
+				masterIn.addAxisToList(world.getTileEntity(pos.offset(EnumFacing.getFront(side))).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite()), EnumFacing.getFront(side).getOpposite());
 			}
 
 			for(int i = 0; i < 6; i++){
@@ -348,19 +348,19 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 				if(i != side && i != EnumFacing.getFront(side).getOpposite().getIndex()){
 					EnumFacing facing = EnumFacing.getFront(i);
 					// Adjacent gears
-					if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.getFront(side))){
-						worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.getFront(side)).connect(masterIn, key, rotRatio, .5D);
+					if(world.getTileEntity(pos.offset(facing)) != null && world.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.getFront(side))){
+						world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.getFront(side)).connect(masterIn, key, rotRatio, .5D);
 					}
 
 					// Diagonal gears
-					if(!worldObj.getBlockState(pos.offset(facing)).getBlock().isNormalCube(worldObj.getBlockState(pos.offset(facing)), worldObj, pos.offset(facing)) && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))) != null && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
-						worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, rotRatio, .5D);
+					if(!world.getBlockState(pos.offset(facing)).getBlock().isNormalCube(world.getBlockState(pos.offset(facing)), world, pos.offset(facing)) && world.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))) != null && world.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+						world.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, rotRatio, .5D);
 					}
 				}
 			}
 			
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))) != null && worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite())){
-				worldObj.getTileEntity(pos.offset(EnumFacing.getFront(side))).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite()).propogate(masterIn, key, EnumFacing.getFront(side).getAxisDirection() == AxisDirection.POSITIVE ? -rotRatio : rotRatio, 0);
+			if(world.getTileEntity(pos.offset(EnumFacing.getFront(side))) != null && world.getTileEntity(pos.offset(EnumFacing.getFront(side))).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite())){
+				world.getTileEntity(pos.offset(EnumFacing.getFront(side))).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite()).propogate(masterIn, key, EnumFacing.getFront(side).getAxisDirection() == AxisDirection.POSITIVE ? -rotRatio : rotRatio, 0);
 			}
 		}
 
@@ -371,7 +371,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 		@Override
 		public void resetAngle(){
-			if(!worldObj.isRemote){
+			if(!world.isRemote){
 				clientW[side] = (MiscOp.posOrNeg(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
 			}
 		}
@@ -399,9 +399,9 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 				physData[side][1] = physData[side][0] * .125D;
 			}
 
-			if(!worldObj.isRemote){
+			if(!world.isRemote){
 				SendStringToClient msg = new SendStringToClient("memb" + side, members[side] == null ? "" : members[side].name(), pos);
-				ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 256));
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 256));
 			}
 		}
 

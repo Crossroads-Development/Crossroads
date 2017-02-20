@@ -15,7 +15,7 @@ import net.minecraftforge.common.capabilities.Capability;
 
 public class CoalHeaterTileEntity extends AbstractInventory implements ITickable{
 
-	private ItemStack inventory = null;
+	private ItemStack inventory = ItemStack.EMPTY;
 	private int burnTime;
 	private double temp;
 	private boolean init = false;
@@ -23,20 +23,20 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
-		if(++ticksExisted % 10 == 0 && worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+		if(++ticksExisted % 10 == 0 && world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 			double reservePool = temp * HeatConductors.COPPER.getRate();
 			temp -= reservePool;
 
-			IHeatHandler handler = worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN);
+			IHeatHandler handler = world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN);
 			reservePool += handler.getTemp() * HeatConductors.COPPER.getRate();
 			handler.addHeat(-(handler.getTemp() * HeatConductors.COPPER.getRate()));
 			reservePool /= 2;
@@ -50,11 +50,9 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 			--burnTime;
 		}
 
-		if(burnTime == 0 && inventory != null && inventory.getItem() == Items.COAL){
+		if(burnTime == 0 && !inventory.isEmpty() && inventory.getItem() == Items.COAL){
 			markDirty();
-			if(--inventory.stackSize == 0){
-				inventory = null;
-			}
+			inventory.shrink(1);
 
 			burnTime = 1600;
 		}
@@ -69,7 +67,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 		temp = nbt.getDouble("temp");
 		burnTime = nbt.getInteger("burn");
 		if(nbt.hasKey("inv")){
-			inventory = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv"));
+			inventory = new ItemStack(nbt.getCompoundTag("inv"));
 		}
 	}
 
@@ -80,7 +78,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 		nbt.setBoolean("init", this.init);
 		nbt.setDouble("temp", this.temp);
 		nbt.setInteger("burn", burnTime);
-		if(inventory != null){
+		if(!inventory.isEmpty()){
 			NBTTagCompound invTag = new NBTTagCompound();
 			inventory.writeToNBT(invTag);
 			nbt.setTag("inv", invTag);
@@ -112,7 +110,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}
@@ -143,16 +141,13 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public ItemStack getStackInSlot(int index){
-		return index == 0 ? inventory : null;
+		return index == 0 ? inventory : ItemStack.EMPTY;
 	}
 
 	@Override
 	public ItemStack decrStackSize(int index, int count){
-		if(index == 0 && inventory != null){
+		if(index == 0 && !inventory.isEmpty()){
 			ItemStack stack = inventory.splitStack(count);
-			if(inventory.stackSize == 0){
-				inventory = null;
-			}
 			markDirty();
 			return stack;
 		}
@@ -163,7 +158,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 	@Override
 	public ItemStack removeStackFromSlot(int index){
 		ItemStack stack = inventory;
-		inventory = null;
+		inventory = ItemStack.EMPTY;
 		markDirty();
 		return stack;
 	}
@@ -189,7 +184,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 	@Override
 	public int getField(int id){
 		if(id == 0){
-			return this.burnTime;
+			return burnTime;
 		}else{
 			return 0;
 		}
@@ -198,7 +193,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 	@Override
 	public void setField(int id, int value){
 		if(id == 0){
-			this.burnTime = value;
+			burnTime = value;
 		}
 	}
 
@@ -209,7 +204,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public void clear(){
-		inventory = null;
+		inventory = ItemStack.EMPTY;
 	}
 
 	@Override
@@ -219,7 +214,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction){
-		return this.isItemValidForSlot(index, itemStackIn);
+		return isItemValidForSlot(index, itemStackIn);
 	}
 
 	@Override
@@ -230,6 +225,11 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 	@Override
 	public String getName(){
 		return "container.coalHeater";
+	}
+
+	@Override
+	public boolean isEmpty(){
+		return inventory.isEmpty();
 	}
 
 }

@@ -16,19 +16,19 @@ public class FluxManipulatorTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(!worldObj.isRemote){
-			if(worldObj.getTotalWorldTime() % 5 != lastTick){
-				if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-					FieldWorldSavedData data = FieldWorldSavedData.get(worldObj);
+		if(!world.isRemote){
+			if(world.getTotalWorldTime() % 5 != lastTick){
+				if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+					FieldWorldSavedData data = FieldWorldSavedData.get(world);
 					if(data.fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos))){
-						netForce += worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] / (20D * EnergyConverters.SPEED_PER_FLUX);
-						if(worldObj.getTotalWorldTime() % 5 == 0){
+						netForce += world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] / (20D * EnergyConverters.SPEED_PER_FLUX);
+						if(world.getTotalWorldTime() % 5 == 0){
 							data.nodeForces.get(FieldWorldSavedData.getLongFromPos(pos))[0][FieldWorldSavedData.getChunkRelativeCoord(pos.getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ()) / 2] += netForce;
 							netForce = 0;
 						}
 					}
 				}
-				lastTick = (int) (worldObj.getTotalWorldTime() % 5);
+				lastTick = (int) (world.getTotalWorldTime() % 5);
 			}
 		}
 	}

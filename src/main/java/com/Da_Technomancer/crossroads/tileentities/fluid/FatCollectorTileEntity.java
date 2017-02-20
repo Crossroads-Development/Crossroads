@@ -30,7 +30,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 	private boolean init = false;
 	private FluidStack content = null;
 	private final int CAPACITY = 2_000;
-	private ItemStack inv = null;
+	private ItemStack inv = ItemStack.EMPTY;
 	/**
 	 * Below the first double the machine does not operate, above the last
 	 * double all fat is wasted, between the 2nd and 3rd double is the peak
@@ -45,16 +45,14 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 			heatHandler.init();
 		}
 
-		if(bracket() > 0 && inv != null){
+		if(bracket() > 0 && !inv.isEmpty()){
 			int value = (int) (((ItemFood) inv.getItem()).getHealAmount(inv) + ((ItemFood) inv.getItem()).getSaturationModifier(inv));
 			double holder = ((double) value) * USE_PER_VALUE;
 			value *= EnergyConverters.FAT_PER_VALUE;
 			value *= (bracket() == 3 ? 0 : bracket() == 1 ? .8D : 1.2D);
 			if(value <= (CAPACITY - (content == null ? 0 : content.amount))){
 				temp -= holder;
-				if(--inv.stackSize <= 0){
-					inv = null;
-				}
+				inv.shrink(1);
 				if(value != 0){
 					content = new FluidStack(BlockLiquidFat.getLiquidFat(), value + (content == null ? 0 : content.amount));
 				}
@@ -82,7 +80,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 		init = nbt.getBoolean("init");
 		temp = nbt.getDouble("temp");
 		content = FluidStack.loadFluidStackFromNBT(nbt);
-		inv = nbt.hasKey("inv") ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv")) : null;
+		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
 	}
 
 	@Override
@@ -94,7 +92,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 		if(content != null){
 			content.writeToNBT(nbt);
 		}
-		if(inv != null){
+		if(!inv.isEmpty()){
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
 
@@ -139,7 +137,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(getPos()).getFloatTemperature(getPos());
 				init = true;
 			}
 		}
@@ -223,35 +221,40 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inv : null;
+			return slot == 0 ? inv : ItemStack.EMPTY;
 		}
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || stack == null || !(stack.getItem() instanceof ItemFood) || stack.getItem() == ModItems.edibleBlob){
+			if(slot != 0 || stack.isEmpty() || !(stack.getItem() instanceof ItemFood) || stack.getItem() == ModItems.edibleBlob){
 				return stack;
 			}
 
-			if(inv != null && !ItemStack.areItemsEqual(stack, inv)){
+			if(!inv.isEmpty() && !ItemStack.areItemsEqual(stack, inv)){
 				return stack;
 			}
 
-			int limit = Math.min(stack.getMaxStackSize() - (inv == null ? 0 : inv.stackSize), stack.stackSize);
+			int limit = Math.min(stack.getMaxStackSize() - inv.getCount(), stack.getCount());
 			if(!simulate){
-				if(inv == null){
+				if(inv.isEmpty()){
 					inv = new ItemStack(stack.getItem(), limit, stack.getMetadata());
 				}else{
-					inv.stackSize += limit;
+					inv.grow(limit);
 				}
 
 			}
 
-			return stack.stackSize == limit ? null : new ItemStack(stack.getItem(), stack.stackSize - limit, stack.getMetadata());
+			return stack.getCount() == limit ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - limit, stack.getMetadata());
 		}
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			return null;
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
 		}
 
 	}

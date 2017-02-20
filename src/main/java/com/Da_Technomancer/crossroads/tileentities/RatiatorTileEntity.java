@@ -37,16 +37,16 @@ public class RatiatorTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
-		EnumFacing side = worldObj.getBlockState(pos).getValue(Properties.FACING);
-		double sidePower = Math.max(ModBlocks.ratiator.getPowerOnSide(worldObj, pos, side.rotateY(), false), ModBlocks.ratiator.getPowerOnSide(worldObj, pos, side.getOpposite().rotateY(), false));
-		double backPower = ModBlocks.ratiator.getPowerOnSide(worldObj, pos, side.getOpposite(), true);
+		EnumFacing side = world.getBlockState(pos).getValue(Properties.FACING);
+		double sidePower = Math.max(ModBlocks.ratiator.getPowerOnSide(world, pos, side.rotateY(), false), ModBlocks.ratiator.getPowerOnSide(world, pos, side.getOpposite().rotateY(), false));
+		double backPower = ModBlocks.ratiator.getPowerOnSide(world, pos, side.getOpposite(), true);
 		if(inputSide != sidePower || inputBack != backPower){
 			inputSide = sidePower;
 			inputBack = backPower;
-			ModBlocks.ratiator.neighborChanged(worldObj.getBlockState(pos), worldObj, pos, null);
+			ModBlocks.ratiator.neighborChanged(world.getBlockState(pos), world, pos, null, null);
 		}
 	}
 }

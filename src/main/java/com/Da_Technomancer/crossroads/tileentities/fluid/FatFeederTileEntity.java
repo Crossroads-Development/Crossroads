@@ -33,16 +33,16 @@ public class FatFeederTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		
-		IAxleHandler upAxle = worldObj.getTileEntity(pos.offset(EnumFacing.UP)) != null ? worldObj.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN) : null;
-		IAxleHandler downAxle = worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null ? worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) : null;
+		IAxleHandler upAxle = world.getTileEntity(pos.offset(EnumFacing.UP)) != null ? world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN) : null;
+		IAxleHandler downAxle = world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null ? world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) : null;
 		
 		if(upAxle != null && downAxle != null && content != null){
 			int range = (int) (downAxle.getMotionData()[0] == 0 ? 0 : Math.abs(upAxle.getMotionData()[0] / downAxle.getMotionData()[0]));
-			List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.subtract(new Vec3i(range, range, range)), pos.add(new Vec3i(range, range, range))), EntitySelectors.IS_ALIVE);
+			List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.subtract(new Vec3i(range, range, range)), pos.add(new Vec3i(range, range, range))), EntitySelectors.IS_ALIVE);
 			if(players != null){
 				for(EntityPlayer play : players){
 					FoodStats food = play.getFoodStats();

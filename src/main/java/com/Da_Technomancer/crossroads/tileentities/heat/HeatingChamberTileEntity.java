@@ -22,31 +22,33 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 	public final static int REQUIRED = 100;
 	private final static int MINTEMP = 200;
 
+	public HeatingChamberTileEntity(){
+		inventory[0] = ItemStack.EMPTY;
+		inventory[1] = ItemStack.EMPTY;
+	}
+	
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
-		if(inventory[0] != null && getOutput() != null && temp >= 2 + MINTEMP){
+		if(!inventory[0].isEmpty() && !getOutput().isEmpty() && temp >= 2 + MINTEMP){
 			temp -= 2;
 			if((progress += 2) >= REQUIRED){
 				progress = 0;
 				markDirty();
-				if(inventory[1] == null){
+				if(inventory[1].isEmpty()){
 					inventory[1] = getOutput();
 				}else{
-					inventory[1].stackSize += getOutput().stackSize;
+					inventory[1].grow(getOutput().getCount());
 				}
-
-				if(--inventory[0].stackSize == 0){
-					inventory[0] = null;
-				}
+				inventory[0].shrink(1);
 			}
 		}
 	}
@@ -54,16 +56,16 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 	private ItemStack getOutput(){
 		ItemStack stack = FurnaceRecipes.instance().getSmeltingResult(inventory[0]);
 
-		if(stack == null){
-			return null;
+		if(stack.isEmpty()){
+			return ItemStack.EMPTY;
 		}
 
-		if(inventory[1] != null && !ItemStack.areItemsEqual(stack, inventory[1])){
-			return null;
+		if(!inventory[1].isEmpty() && !ItemStack.areItemsEqual(stack, inventory[1])){
+			return ItemStack.EMPTY;
 		}
 
-		if(inventory[1] != null && getInventoryStackLimit() - inventory[1].stackSize < stack.stackSize){
-			return null;
+		if(!inventory[1].isEmpty() && getInventoryStackLimit() - inventory[1].getCount() < stack.getCount()){
+			return ItemStack.EMPTY;
 		}
 
 		return stack.copy();
@@ -78,10 +80,10 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 		progress = nbt.getInteger("prog");
 
 		if(nbt.hasKey("inv")){
-			inventory[0] = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv"));
+			inventory[0] = new ItemStack(nbt.getCompoundTag("inv"));
 		}
 		if(nbt.hasKey("invO")){
-			inventory[1] = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("invO"));
+			inventory[1] = new ItemStack(nbt.getCompoundTag("invO"));
 		}
 	}
 
@@ -93,12 +95,12 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 		nbt.setDouble("temp", this.temp);
 		nbt.setInteger("prog", progress);
 
-		if(inventory[0] != null){
+		if(!inventory[0].isEmpty()){
 			NBTTagCompound invTag = new NBTTagCompound();
 			inventory[0].writeToNBT(invTag);
 			nbt.setTag("inv", invTag);
 		}
-		if(inventory[1] != null){
+		if(!inventory[1].isEmpty()){
 			NBTTagCompound invTagO = new NBTTagCompound();
 			inventory[1].writeToNBT(invTagO);
 			nbt.setTag("invO", invTagO);
@@ -134,10 +136,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 	@Override
 	public ItemStack decrStackSize(int index, int count){
-		ItemStack out = index > 1 ? null : inventory[index].splitStack(count);
-		if(inventory[index] != null && inventory[index].stackSize <= 0){
-			inventory[index] = null;
-		}
+		ItemStack out = index > 1 ? ItemStack.EMPTY : inventory[index].splitStack(count);
 		return out;
 	}
 
@@ -149,11 +148,11 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 	@Override
 	public ItemStack removeStackFromSlot(int index){
 		if(index > 1){
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		ItemStack holder = inventory[index];
-		inventory[index] = null;
+		inventory[index] = ItemStack.EMPTY;
 		return holder;
 	}
 
@@ -216,7 +215,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}
@@ -239,5 +238,10 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 			temp += heat;
 		}
 
+	}
+
+	@Override
+	public boolean isEmpty(){
+		return inventory[0].isEmpty() && inventory[1].isEmpty();
 	}
 }

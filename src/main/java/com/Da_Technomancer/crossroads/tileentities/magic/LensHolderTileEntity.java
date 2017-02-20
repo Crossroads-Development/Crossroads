@@ -19,6 +19,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
@@ -55,12 +56,12 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
-		if(worldObj.getBlockState(pos).getBlock() != ModBlocks.lensHolder){
+		if(world.getBlockState(pos).getBlock() != ModBlocks.lensHolder){
 			return null;
 		}
 		Triple<Color, Integer, Integer>[] out = new Triple[6];
-		out[EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, worldObj.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z).getIndex()] = tripUp;
-		out[EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, worldObj.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z).getIndex()] = trip;
+		out[EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z).getIndex()] = tripUp;
+		out[EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z).getIndex()] = trip;
 		return out;
 	}
 
@@ -76,21 +77,21 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		
 		double holder = Math.max(beamer == null || beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()) / 3D, beamerUp == null || beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()) / 3D);
 		if(holder != lastRedstone){
 			lastRedstone = holder;
-			worldObj.updateComparatorOutputLevel(pos, ModBlocks.lensHolder);
+			world.updateComparatorOutputLevel(pos, ModBlocks.lensHolder);
 		}
 
 		if(beamer == null){
-			beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, worldObj.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, worldObj);
+			beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
 		}
 		if(beamerUp == null){
-			beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, worldObj.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, worldObj);
+			beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
 		}
 		
 		
@@ -151,7 +152,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (side.getAxis() == Axis.X) == worldObj.getBlockState(pos).getValue(Properties.ORIENT))){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (side.getAxis() == Axis.X) == world.getBlockState(pos).getValue(Properties.ORIENT))){
 			return true;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
@@ -165,7 +166,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (side.getAxis() == Axis.X) == worldObj.getBlockState(pos).getValue(Properties.ORIENT))){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (side.getAxis() == Axis.X) == world.getBlockState(pos).getValue(Properties.ORIENT))){
 			return side == null ? (T) magicHandler : side.getAxisDirection() == AxisDirection.NEGATIVE ? (T) magicHandlerNeg : (T) magicHandler;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
@@ -188,49 +189,49 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			if(beamer == null || beamerUp == null){
 				return;
 			}
-			if(mag != null && mag.getVoid() != 0 && worldObj.getBlockState(pos).getValue(Properties.TEXTURE_7) != 0){
-				worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
+			if(mag != null && mag.getVoid() != 0 && world.getBlockState(pos).getValue(Properties.TEXTURE_7) != 0){
+				world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
 				(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag);
 				return;
 			}
 			
-			switch(worldObj.getBlockState(pos).getValue(Properties.TEXTURE_7)){
+			switch(world.getBlockState(pos).getValue(Properties.TEXTURE_7)){
 				case 0:
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag)){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 				case 1:
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getEnergy() == 0 ? null : new MagicUnit(mag.getEnergy(), 0, 0, 0))){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 				case 2:
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getPotential() == 0 ? null : new MagicUnit(0, mag.getPotential(), 0, 0))){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 				case 3:
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getStability() == 0 ? null : new MagicUnit(0, 0, mag.getStability(), 0))){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 				case 4:
 					if(MagicElements.getElement(mag) == MagicElements.LIGHT){
-						worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 5));
+						world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 5));
 					}
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag)){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 				case 5:
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag)){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 				case 6:
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || MagicElements.getElement(mag) != MagicElements.RIFT ? null : new MagicUnit(0, 0, 0, mag.getPower()))){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam" + (dir == AxisDirection.POSITIVE ? "Up" : ""), (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					break;
 			}
@@ -240,9 +241,9 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	private class LensHandler implements IItemHandler{
 
 		private ItemStack getLens(){
-			switch(worldObj.getBlockState(pos).getValue(Properties.TEXTURE_7)){
+			switch(world.getBlockState(pos).getValue(Properties.TEXTURE_7)){
 				case 0:
-					return null;
+					return ItemStack.EMPTY;
 				case 1:
 					return new ItemStack(Item.getByNameOrId(Main.MODID + ":gemRuby"), 1);
 				case 2:
@@ -265,20 +266,20 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? getLens() : null;
+			return slot == 0 ? getLens() : ItemStack.EMPTY;
 		}
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || getLens() != null || stack == null || (stack.getItem() != Items.DIAMOND && stack.getItem() != Items.EMERALD && stack.getItem() != ModItems.pureQuartz && stack.getItem() != Item.getByNameOrId(Main.MODID + ":gemRuby"))){
+			if(slot != 0 || !getLens().isEmpty() || stack.isEmpty() || (stack.getItem() != Items.DIAMOND && stack.getItem() != Items.EMERALD && stack.getItem() != ModItems.pureQuartz && stack.getItem() != OreSetUp.gemRuby)){
 				return stack;
 			}
 			
 			if(!simulate){
-				worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == Items.DIAMOND ? 3 : 1));
+				world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == Items.DIAMOND ? 3 : 1));
 			}
 			
-			return stack.stackSize - 1 <= 0 ? null : new ItemStack(stack.getItem(), stack.stackSize - 1);
+			return stack.getCount() - 1 <= 0 ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - 1);
 		}
 
 		@Override
@@ -288,9 +289,14 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			}
 			ItemStack holder = getLens();
 			if(!simulate){
-				worldObj.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, worldObj.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
+				world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
 			}
 			return holder;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 1 : 0;
 		}
 	}
 } 

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
 
 import net.minecraft.block.BlockContainer;
@@ -114,8 +115,8 @@ public class LensHolder extends BlockContainer implements IBlockCompare{
 					dropped.setOwner(playerIn.getName());
 				}
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
-			}else if(stack != null && state.getValue(Properties.TEXTURE_7) == 0){
-				int i = stack.getItem() == ModItems.voidCrystal ? 6 : stack.getItem() == Items.DIAMOND ? 3 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == Item.getByNameOrId(Main.MODID + ":gemRuby") ? 1 : 0;
+			}else if(!stack.isEmpty() && state.getValue(Properties.TEXTURE_7) == 0){
+				int i = stack.getItem() == ModItems.voidCrystal ? 6 : stack.getItem() == Items.DIAMOND ? 3 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == OreSetUp.gemRuby ? 1 : 0;
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, i));
 				if(i != 0){
 					stack.shrink(1);

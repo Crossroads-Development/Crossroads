@@ -63,7 +63,7 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 	
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			if(clientW == Double.POSITIVE_INFINITY){
 				angle = 0;
 			}else if(clientW == Double.NEGATIVE_INFINITY){
@@ -74,9 +74,9 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 			}
 		}
 
-		if(!worldObj.isRemote){
+		if(!world.isRemote){
 			boolean bottom = height == 0;
-			if(motionData[0] < 0 && worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+			if(motionData[0] < 0 && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 				height = .625D;
 			}else{
 				height -= .625D * motionData[0] / (2D * Math.PI * 20D * MAX_COUNT);
@@ -100,7 +100,7 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 
 		if(flag){
 			SendDoubleToClient msg = new SendDoubleToClient("w", clientW, pos);
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 
 			if(clientW == Double.POSITIVE_INFINITY || clientW == Double.NEGATIVE_INFINITY){
 				clientW = 0;
@@ -110,7 +110,7 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 		if(lastSentHeight != MiscOp.tiersRound(height, tiers)){
 			lastSentHeight = MiscOp.tiersRound(height, tiers);
 			SendDoubleToClient msg = new SendDoubleToClient("height", height, pos);
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 
@@ -247,30 +247,30 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 			}
 			key = keyIn;
 			
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
-				worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP).trigger(masterIn, key);
+			if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
+				world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP).trigger(masterIn, key);
 			}
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
-				masterIn.addAxisToList(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.UP), EnumFacing.UP);
+			if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
+				masterIn.addAxisToList(world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.UP), EnumFacing.UP);
 			}
 
 			if(height == 0){
 				for(int i = 2; i < 6; ++i){
 					EnumFacing facing = EnumFacing.getFront(i);
 					// Adjacent gears
-					if(worldObj.getTileEntity(pos.offset(facing)) != null && worldObj.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-						worldObj.getTileEntity(pos.offset(facing)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.DOWN).connect(masterIn, key, rotRatio, .5D);
+					if(world.getTileEntity(pos.offset(facing)) != null && world.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+						world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.DOWN).connect(masterIn, key, rotRatio, .5D);
 					}
 
 					// Diagonal gears
-					if(!worldObj.getBlockState(pos.offset(facing)).getBlock().isNormalCube(worldObj.getBlockState(pos.offset(facing)), worldObj, pos.offset(facing)) && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
-						worldObj.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, rotRatio, .5D);
+					if(!world.getBlockState(pos.offset(facing)).getBlock().isNormalCube(world.getBlockState(pos.offset(facing)), world, pos.offset(facing)) && world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+						world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, rotRatio, .5D);
 					}
 				}
 			}
 
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
-				worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).propogate(masterIn, key, rotRatio, 0);
+			if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
+				world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).propogate(masterIn, key, rotRatio, 0);
 			}
 		}
 		
@@ -281,7 +281,7 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 
 		@Override
 		public void resetAngle(){
-			if(!worldObj.isRemote){
+			if(!world.isRemote){
 				clientW = (MiscOp.posOrNeg(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
 			}
 		}

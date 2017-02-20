@@ -38,7 +38,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 	private static final int CAPACITY = 16 * PRODUCED_LAVA;
 	private boolean init = false;
 	private double temp;
-	private ItemStack inventory = null;
+	private ItemStack inventory = ItemStack.EMPTY;
 
 	/**
 	 * This controls whether the tile entity gets replaced whenever the block
@@ -55,7 +55,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 	 * 
 	 */
 	private byte getType(){
-		if(inventory != null){
+		if(!inventory.isEmpty()){
 			for(int ID : OreDictionary.getOreIDs(inventory)){
 				if(ID == OreDictionary.getOreID("dustCopper")){
 					return 1;
@@ -80,7 +80,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 
 	private boolean recipeIsValid(ItemStack stack){
 
-		if(stack == null){
+		if(stack.isEmpty()){
 			return false;
 		}
 
@@ -111,24 +111,24 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 	private int ticksExisted = 0;
 
 	private IBlockState getCorrectState(){
-		return ModBlocks.heatingCrucible.getDefaultState().withProperty(Properties.FULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + (inventory == null ? 0F : ((float) inventory.stackSize)) * 3F / 16F))).withProperty(Properties.TEXTURE_4, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
+		return ModBlocks.heatingCrucible.getDefaultState().withProperty(Properties.FULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + ((float) inventory.getCount()) * 3F / 16F))).withProperty(Properties.TEXTURE_4, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
 	}
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		ticksExisted++;
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
 		byte type = getType();
 		
-		if(inventory != null && ticksExisted % 10 == 0 && Math.random() < MiscOp.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= (getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
+		if(!inventory.isEmpty() && ticksExisted % 10 == 0 && Math.random() < MiscOp.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= (getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
 
 			if(content == null){
 				content = new FluidStack(type == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA);
@@ -136,16 +136,14 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 				content.amount += getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA;
 			}
 
-			if(--inventory.stackSize == 0){
-				inventory = null;
-			}
+			inventory.shrink(1);
 
 			temp -= 100D;
 			markDirty();
 		}
 
-		if(worldObj.getBlockState(pos).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || worldObj.getBlockState(pos).getValue(Properties.TEXTURE_4) != getCorrectState().getValue(Properties.TEXTURE_4)){
-			worldObj.setBlockState(pos, getCorrectState(), 2);
+		if(world.getBlockState(pos).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || world.getBlockState(pos).getValue(Properties.TEXTURE_4) != getCorrectState().getValue(Properties.TEXTURE_4)){
+			world.setBlockState(pos, getCorrectState(), 2);
 		}
 	}
 
@@ -158,7 +156,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		this.temp = nbt.getDouble("temp");
 
 		if(nbt.hasKey("inv")){
-			inventory = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv"));
+			inventory = new ItemStack(nbt.getCompoundTag("inv"));
 		}
 	}
 
@@ -172,7 +170,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		nbt.setBoolean("init", this.init);
 		nbt.setDouble("temp", this.temp);
 
-		if(inventory != null){
+		if(!inventory.isEmpty()){
 			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
 		}
 
@@ -227,7 +225,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inventory : null;
+			return slot == 0 ? inventory : ItemStack.EMPTY;
 		}
 
 		@Override
@@ -236,19 +234,24 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 				return stack;
 			}
 			
-			int amount = Math.min(16 - (inventory == null ? 0 : inventory.stackSize), stack.stackSize);
+			int amount = Math.min(16 - inventory.getCount(), stack.getCount());
 			
 			if(!simulate){
-				inventory = new ItemStack(stack.getItem(), amount + (inventory == null ? 0 : inventory.stackSize), stack.getMetadata());
+				inventory = new ItemStack(stack.getItem(), amount + inventory.getCount(), stack.getMetadata());
 				markDirty();
 			}
 			
-			return amount == stack.stackSize ? null : new ItemStack(stack.getItem(), stack.stackSize - amount, stack.getMetadata());
+			return amount == stack.getCount() ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - amount, stack.getMetadata());
 		}
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
 			return null;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 16 : 0;
 		}
 	}
 
@@ -305,7 +308,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}
