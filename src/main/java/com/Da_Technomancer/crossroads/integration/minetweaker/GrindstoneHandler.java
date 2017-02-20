@@ -33,10 +33,10 @@ public class GrindstoneHandler {
 	@ZenMethod
 	public static void addRecipe(IItemStack input, IIngredient output1, @Optional IIngredient output2, @Optional IIngredient output3) {
 		ItemStack in = MineTweakerMC.getItemStack(input);
-		if(in == null){
+		if(in.isEmpty()){
 			return;
 		}
-		MineTweakerAPI.apply(new Add(new CraftingStack(in.getItem(), in.stackSize, OreDictionary.WILDCARD_VALUE == input.getDamage() ? -1 : in.getMetadata()), MineTweakerIntegration.toItemStack(output1, output2, output3)));
+		MineTweakerAPI.apply(new Add(new CraftingStack(in.getItem(), in.getCount(), OreDictionary.WILDCARD_VALUE == input.getDamage() ? -1 : in.getMetadata()), MineTweakerIntegration.toItemStack(output1, output2, output3)));
 	}
 
 	/**
@@ -155,11 +155,11 @@ public class GrindstoneHandler {
 	@ZenMethod
 	public static void removeRecipe(IItemStack input) {
 		ItemStack in = MineTweakerMC.getItemStack(input);
-		if(in == null){
+		if(in.isEmpty()){
 			return;
 		}
 		
-		MineTweakerAPI.apply(new Remove(new CraftingStack(in.getItem(), in.stackSize, input.getDamage() == OreDictionary.WILDCARD_VALUE ? -1 : in.getMetadata())));
+		MineTweakerAPI.apply(new Remove(new CraftingStack(in.getItem(), in.getCount(), input.getDamage() == OreDictionary.WILDCARD_VALUE ? -1 : in.getMetadata())));
 	}
 
 	/**

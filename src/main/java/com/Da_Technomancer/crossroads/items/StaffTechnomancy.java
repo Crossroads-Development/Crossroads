@@ -47,7 +47,7 @@ public class StaffTechnomancy extends Item{
 	
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
-		if(player.worldObj.isRemote && getMaxItemUseDuration(stack) - count == 1){
+		if(player.world.isRemote && getMaxItemUseDuration(stack) - count == 1){
 			MagicElements elemChanged = null;
 			if(Keys.staffEnergy.isKeyDown()){
 				elemChanged = MagicElements.ENERGY;
@@ -59,10 +59,10 @@ public class StaffTechnomancy extends Item{
 				elemChanged = MagicElements.VOID;
 			}
 			if(elemChanged != null && player instanceof EntityPlayer){
-				player.worldObj.playSound((EntityPlayer) player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 5, (float) Math.random());
+				player.world.playSound((EntityPlayer) player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 5, (float) Math.random());
 				ModPackets.network.sendToServer(new SendStaffToServer(elemChanged.name(), player.isSneaking()));
 			}
-		}else if(!player.worldObj.isRemote && getMaxItemUseDuration(stack) - count >= 5){
+		}else if(!player.world.isRemote && getMaxItemUseDuration(stack) - count >= 5){
 			if(!stack.hasTagCompound()){
 				return;
 			}
@@ -84,7 +84,7 @@ public class StaffTechnomancy extends Item{
 					BlockPos endPos = ray == null ? player.getPosition().add(new Vec3i(lookVec.xCoord, lookVec.yCoord, lookVec.zCoord)) : ray.getBlockPos();
 					IEffect effect = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
 					if(effect != null){
-						effect.doEffect(player.worldObj, endPos, mag.getPower());
+						effect.doEffect(player.world, endPos, mag.getPower());
 					}
 					NBTTagCompound beamNBT = new NBTTagCompound();
 					new LooseBeamRenderable(player.posX, player.posY + player.getEyeHeight(), player.posZ, (int) Math.sqrt(endPos.distanceSq(player.getPosition())), player.rotationPitch, player.rotationYawHead, ((byte) Math.pow(mag.getPower(), 1D / 3D)), mag.getRGB().getRGB()).saveToNBT(beamNBT);
@@ -125,8 +125,8 @@ public class StaffTechnomancy extends Item{
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand){
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand){
 		playerIn.setActiveHand(hand);
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}
 }

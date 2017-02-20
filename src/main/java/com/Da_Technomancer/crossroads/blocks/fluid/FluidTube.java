@@ -102,7 +102,7 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 		if(exState.getValue(Properties.CONNECT)[5]){
 			list.add(EAST);
 		}
-		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
@@ -147,7 +147,7 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean nobodyKnows){
 		addCollisionBoxToList(pos, mask, list, BB);
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
 		

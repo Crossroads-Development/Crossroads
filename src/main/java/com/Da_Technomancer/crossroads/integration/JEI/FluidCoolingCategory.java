@@ -1,6 +1,9 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import java.util.List;
+
 import com.Da_Technomancer.crossroads.Main;
+import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -52,26 +55,9 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipeW
 		GlStateManager.enableBlend();
 		slot.draw(minecraft, 80, 55);
 		arrowStatic.draw(minecraft, 45, 56);
+		arrow.draw(minecraft, 45, 56);
 		GlStateManager.disableBlend();
 		GlStateManager.disableAlpha();
-	}
-
-	@Override
-	public void drawAnimations(Minecraft minecraft){
-		arrow.draw(minecraft, 45, 56);
-	}
-
-	@Deprecated
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, FluidCoolingRecipeWrapper recipeWrapper){
-		if(!(recipeWrapper instanceof FluidCoolingRecipeWrapper)){
-			return;
-		}
-		FluidCoolingRecipeWrapper wrapper = ((FluidCoolingRecipeWrapper) recipeWrapper);
-		recipeLayout.getFluidStacks().init(0, true, 21, 30, 16, 64, 1000, true, null);
-		recipeLayout.getFluidStacks().set(0, wrapper.getFluidInputs());
-		recipeLayout.getItemStacks().init(0, false, 80, 55);
-		recipeLayout.getItemStacks().set(0, wrapper.getOutputs());
 	}
 
 	@Override
@@ -82,7 +68,17 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipeW
 		recipeLayout.getFluidStacks().init(0, true, 21, 30, 16, 64, 1000, true, null);
 		recipeLayout.getFluidStacks().set(0, ingredients.getInputs(FluidStack.class).get(0));
 		recipeLayout.getItemStacks().init(0, false, 80, 55);
-		recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class));
+		recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class).get(0));
+	}
+
+	@Override
+	public IDrawable getIcon(){
+		return null;
+	}
+
+	@Override
+	public List<String> getTooltipStrings(int mouseX, int mouseY){
+		return ImmutableList.of();
 	}
 
 }

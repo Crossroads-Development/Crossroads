@@ -92,7 +92,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel, 
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean thingyOfThings){
 		addCollisionBoxToList(pos, mask, list, BB);
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
 		
@@ -187,7 +187,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel, 
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isBlockPowered(pos)){
 			if(!state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
@@ -255,7 +255,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel, 
 		if(exState.getValue(Properties.CONNECT)[5]){
 			list.add(EAST);
 		}
-		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);

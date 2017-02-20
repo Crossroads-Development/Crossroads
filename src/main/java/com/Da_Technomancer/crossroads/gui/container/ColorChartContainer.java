@@ -46,7 +46,7 @@ public class ColorChartContainer extends Container{
 				if(Math.pow(RADIUS - (16 * i), 2) + Math.pow(RADIUS - (16 * j), 2) <= RADIUS * RADIUS){
 					addSlotToContainer(new Slot(inv, index++, xCENTER + RADIUS - (16 * i), yCENTER + RADIUS - (16 * j)){
 						@Override
-						public boolean isItemValid(@Nullable ItemStack stack){
+						public boolean isItemValid(ItemStack stack){
 							return false;
 						}
 					});
@@ -68,7 +68,7 @@ public class ColorChartContainer extends Container{
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot){
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	private class ChartInventory implements IInventory{
@@ -96,31 +96,31 @@ public class ColorChartContainer extends Container{
 		@Override
 		public ItemStack getStackInSlot(int index){
 			if(index >= inventorySlots.size()){
-				return null;
+				return ItemStack.EMPTY;
 			}
 			if(!world.isRemote){
-				return null;
+				return ItemStack.EMPTY;
 			}
-			ItemStack item = new ItemStack(SendElementNBTToClient.elementNBT.hasKey(MagicElements.getElement(getColor(inventorySlots.get(index).xDisplayPosition, inventorySlots.get(index).yDisplayPosition)).name()) ? ModItems.invisItem : Item.getItemFromBlock(Blocks.BARRIER), 1);
+			ItemStack item = new ItemStack(SendElementNBTToClient.elementNBT.hasKey(MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name()) ? ModItems.invisItem : Item.getItemFromBlock(Blocks.BARRIER), 1);
 			NBTTagCompound nbt = new NBTTagCompound();
 			NBTTagList nbtlist = new NBTTagList();
-			Color col = getColor(inventorySlots.get(index).xDisplayPosition, inventorySlots.get(index).yDisplayPosition);
+			Color col = getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos);
 			nbtlist.appendTag(new NBTTagString("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
 			nbt.setTag("Lore", nbtlist);
 			item.setTagInfo("display", nbt);
-			item.setStackDisplayName(SendElementNBTToClient.elementNBT.hasKey(MagicElements.getElement(getColor(inventorySlots.get(index).xDisplayPosition, inventorySlots.get(index).yDisplayPosition)).name()) ? MagicElements.getElement(getColor(inventorySlots.get(index).xDisplayPosition, inventorySlots.get(index).yDisplayPosition)).name() : "UNDISCOVERED");
+			item.setStackDisplayName(SendElementNBTToClient.elementNBT.hasKey(MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name()) ? MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name() : "UNDISCOVERED");
 
 			return item;
 		}
 
 		@Override
 		public ItemStack decrStackSize(int index, int count){
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		@Override
 		public ItemStack removeStackFromSlot(int index){
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		@Override
@@ -139,7 +139,7 @@ public class ColorChartContainer extends Container{
 		}
 
 		@Override
-		public boolean isUseableByPlayer(EntityPlayer player){
+		public boolean isUsableByPlayer(EntityPlayer player){
 			return true;
 		}
 
@@ -176,6 +176,11 @@ public class ColorChartContainer extends Container{
 		@Override
 		public void clear(){
 
+		}
+
+		@Override
+		public boolean isEmpty(){
+			return false;
 		}
 	}
 }

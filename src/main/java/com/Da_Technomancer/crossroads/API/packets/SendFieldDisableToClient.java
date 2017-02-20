@@ -29,7 +29,7 @@ public class SendFieldDisableToClient extends Message<SendFieldDisableToClient>{
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
-		final WorldClient worldClient = minecraft.theWorld;
+		final WorldClient worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
 			public void run(){
 				processMessage(worldClient, chunk);

@@ -14,7 +14,7 @@ public class ChargeEffect implements IEffect{
 
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
-		worldIn.spawnEntityInWorld(new EntityLightningBolt(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
+		worldIn.spawnEntity(new EntityLightningBolt(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
 		ModPackets.network.sendToAllAround(new SendLightningToClient(pos), new TargetPoint(worldIn.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		
 		if(worldIn.getBlockState(pos).getMaterial() == Material.ROCK){

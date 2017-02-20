@@ -32,7 +32,7 @@ public class SendStringToClient extends Message<SendStringToClient>{
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
-		final WorldClient worldClient = minecraft.theWorld;
+		final WorldClient worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
 			public void run(){
 				processMessage(worldClient, sContext, message, pos);

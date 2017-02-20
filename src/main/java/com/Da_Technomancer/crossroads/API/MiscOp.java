@@ -120,7 +120,7 @@ public final class MiscOp{
 		Vec3d vec3d = ent.getPositionVector().add(new Vec3d(0, ent.getEyeHeight(), 0));
 		Vec3d vec3d1 = ent.getLook(1F);
 		Vec3d vec3d2 = vec3d.addVector(vec3d1.xCoord * blockReachDistance, vec3d1.yCoord * blockReachDistance, vec3d1.zCoord * blockReachDistance);
-		return ent.worldObj.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+		return ent.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
 	}
 	
 	/**

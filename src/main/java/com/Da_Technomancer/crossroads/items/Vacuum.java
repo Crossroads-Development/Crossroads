@@ -31,7 +31,7 @@ public class Vacuum extends Item{
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand){
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand){
 		ArrayList<Entity> entities = (ArrayList<Entity>) worldIn.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(playerIn.posX - range, playerIn.posY - range, playerIn.posZ - range, playerIn.posX + range, playerIn.posY + range, playerIn.posZ + range), EntitySelectors.IS_ALIVE);
 
 		entities = areValid(entities, playerIn);
@@ -41,9 +41,9 @@ public class Vacuum extends Item{
 			ent.addVelocity(motVec.xCoord, motVec.yCoord, motVec.zCoord);
 		}
 
-		stack.damageItem(1, playerIn);
+		playerIn.getHeldItem(hand).damageItem(1, playerIn);
 
-		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
+		return ActionResult.newResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}
 
 	private static ArrayList<Entity> areValid(ArrayList<Entity> listIn, EntityPlayer player){

@@ -24,7 +24,7 @@ public class RiftEffect implements IEffect{
 			EntityShulker shulker = new EntityShulker(worldIn);
 			shulker.setAttachmentPos(pos);
 			shulker.setPosition(pos.getX(), pos.getY(), pos.getZ());
-			worldIn.spawnEntityInWorld(shulker);
+			worldIn.spawnEntity(shulker);
 			return;
 		}
 		
@@ -52,7 +52,7 @@ public class RiftEffect implements IEffect{
 					e.printStackTrace();
 				}
 				ent.setPosition(pos.getX(), pos.getY(), pos.getZ());
-				worldServ.spawnEntityInWorld(ent);
+				worldServ.spawnEntity(ent);
 			}
 		}
 	}
@@ -72,7 +72,7 @@ public class RiftEffect implements IEffect{
 						e.printStackTrace();
 					}
 					ent.setPosition(pos.getX(), pos.getY(), pos.getZ());
-					worldServ.spawnEntityInWorld(ent);
+					worldServ.spawnEntity(ent);
 				}
 			}
 		}

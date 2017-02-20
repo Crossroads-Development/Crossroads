@@ -11,12 +11,10 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
-import com.Da_Technomancer.crossroads.integration.GuideAPI.GuideBooks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 
-import amerifrance.guideapi.api.GuideAPI;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -27,7 +25,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -80,13 +77,6 @@ public final class ModCrafting{
 		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));
 		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(36, 24, 0, 0));
 		RecipeHolder.magExtractRecipes.put(Items.GLOWSTONE_DUST, new MagicUnit(1, 1, 1, 0));
-
-		if(Loader.isModLoaded("guideapi")){
-			// Guide book
-			GameRegistry.addShapelessRecipe(GuideAPI.getStackFromBook(GuideBooks.MAIN), Items.BOOK, Items.COMPASS);
-			GameRegistry.addShapelessRecipe(GuideAPI.getStackFromBook(GuideBooks.MAIN), GuideAPI.getStackFromBook(GuideBooks.INFO));
-			GameRegistry.addShapelessRecipe(GuideAPI.getStackFromBook(GuideBooks.INFO), GuideAPI.getStackFromBook(GuideBooks.MAIN));
-		}
 
 		// Axle
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));

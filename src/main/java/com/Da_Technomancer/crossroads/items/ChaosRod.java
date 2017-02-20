@@ -29,18 +29,18 @@ public class ChaosRod extends Item{
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand){
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand){
 		if(worldIn.isRemote){
 			playerIn.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, 1, 1);
-			return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
+			return ActionResult.newResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 		}
 		Vec3d change = playerIn.getLookVec().scale(8);
 		playerIn.setPositionAndUpdate(playerIn.posX + change.xCoord, playerIn.posY + change.yCoord, playerIn.posZ + change.zCoord);
 		if(playerIn.getGameProfile().getName().equals("Potus4mine") ? playerIn.getActivePotionEffect(MobEffects.WEAKNESS) != null : playerIn.getActivePotionEffect(MobEffects.GLOWING) != null){
-			playerIn.attackEntityFrom(DamageSource.dragonBreath, 5F);
+			playerIn.attackEntityFrom(DamageSource.DRAGON_BREATH, 5F);
 		}
 		playerIn.addPotionEffect(new PotionEffect(playerIn.getGameProfile().getName().equals("Potus4mine") ? MobEffects.WEAKNESS : MobEffects.GLOWING, 100, 0));
-		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
+		return ActionResult.newResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}
 	
 	@Override

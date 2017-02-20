@@ -34,7 +34,7 @@ public class SendFieldsToClient extends Message<SendFieldsToClient>{
 		Minecraft minecraft = Minecraft.getMinecraft();
 		minecraft.addScheduledTask(new Runnable(){
 			public void run(){
-				processMessage(fieldLayer, type, chunk, minecraft.theWorld);
+				processMessage(fieldLayer, type, chunk, minecraft.world);
 			}
 		});
 

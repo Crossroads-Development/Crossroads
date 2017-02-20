@@ -77,7 +77,7 @@ public class SidedGearHolder extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos){
 		TileEntity te = worldIn.getTileEntity(pos);
-		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
@@ -101,7 +101,7 @@ public class SidedGearHolder extends BlockContainer{
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean nothingProbably){
 		for(EnumFacing side : EnumFacing.values()){
 			if(worldIn.getTileEntity(pos).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side)){
 				addCollisionBoxToList(pos, mask, list, BOUNDING_BOXES.get(side.getIndex()));
@@ -130,7 +130,7 @@ public class SidedGearHolder extends BlockContainer{
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isRemote){
 			return;
 		}

@@ -19,7 +19,7 @@ public class OreDictCraftingStack implements ICraftingStack{
 
 	@Override
 	public boolean match(ItemStack stack){
-		if(stack == null || count != stack.stackSize){
+		if(stack.isEmpty() || count != stack.getCount()){
 			return false;
 		}
 

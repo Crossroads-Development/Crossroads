@@ -16,6 +16,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,20 +26,20 @@ public final class ModItems{
 
 	public static final CreativeTabs tabCrossroads = new CreativeTabs(Main.MODID){
 		@Override
-		public Item getTabIconItem(){
-			return omnimeter;
+		public ItemStack getTabIconItem(){
+			return new ItemStack(omnimeter, 1);
 		}
 	};
 	public static final CreativeTabs tabHeatCable = new CreativeTabs("heatCable"){
 		@Override
-		public Item getTabIconItem(){
-			return Item.getItemFromBlock(HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL));
+		public ItemStack getTabIconItem(){
+			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL), 1);
 		}
 	};
 	public static final CreativeTabs tabGear = new CreativeTabs("gear"){
 		@Override
-		public Item getTabIconItem(){
-			return GearFactory.BASIC_GEARS.get(GearTypes.BRONZE);
+		public ItemStack getTabIconItem(){
+			return new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.BRONZE));
 		}
 	};
 	protected static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 0, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F);

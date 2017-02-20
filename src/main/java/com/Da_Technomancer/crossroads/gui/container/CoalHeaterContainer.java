@@ -32,19 +32,19 @@ public class CoalHeaterContainer extends Container{
 		// Player Inventory, Slots 9-35, Slot IDs 1-27
 		for(int y = 0; y < 3; ++y){
 			for(int x = 0; x < 9; ++x){
-				this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 54 + y * 18));
+				addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 54 + y * 18));
 			}
 		}
 
 		// Player Inventory, Slot 0-8, Slot IDs 28-36
 		for(int x = 0; x < 9; ++x){
-			this.addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 112));
+			addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 112));
 		}
 	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot){
-		ItemStack previous = null;
+		ItemStack previous = ItemStack.EMPTY;
 		Slot slot = (Slot) this.inventorySlots.get(fromSlot);
 
 		if(slot != null && slot.getHasStack()){
@@ -53,29 +53,29 @@ public class CoalHeaterContainer extends Container{
 
 			if(fromSlot == 0){
 				// From TE Inventory to Player Inventory
-				if(!this.mergeItemStack(current, 1, 37, true))
-					return null;
+				if(!mergeItemStack(current, 1, 37, true))
+					return ItemStack.EMPTY;
 			}else{
 				// From Player Inventory to TE Inventory
 				if(!this.mergeItemStack(current, 0, 1, false))
-					return null;
+					return ItemStack.EMPTY;
 			}
 
-			if(current.stackSize == 0)
-				slot.putStack((ItemStack) null);
+			if(current.isEmpty())
+				slot.putStack(ItemStack.EMPTY);
 			else
 				slot.onSlotChanged();
 
-			if(current.stackSize == previous.stackSize)
-				return null;
-			slot.onPickupFromSlot(playerIn, current);
+			if(current.getCount() == previous.getCount())
+				return ItemStack.EMPTY;
+			slot.onTake(playerIn, current);
 		}
 		return previous;
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn){
-		return te.isUseableByPlayer(playerIn);
+		return te.isUsableByPlayer(playerIn);
 	}
 
 	@Override

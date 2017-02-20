@@ -57,8 +57,8 @@ public class MultiPistonBase extends Block{
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.FACING, BlockPistonBase.getFacingFromEntity(pos, placer));
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer));
 	}
 
 	protected void safeBreak(World worldIn, BlockPos pos){
@@ -278,11 +278,11 @@ public class MultiPistonBase extends Block{
 	
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
-		neighborChanged(world.getBlockState(pos), world, pos, null);
+		neighborChanged(world.getBlockState(pos), world, pos, null, null);
 	}
 	
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isRemote){
 			return;
 		}
@@ -322,13 +322,13 @@ public class MultiPistonBase extends Block{
 	private static ArrayList<Entity> getEntitiesMultiChunk(AxisAlignedBB checkBox, World worldIn){
 		ArrayList<Entity> found = new ArrayList<Entity>();
 
-		int i = MathHelper.floor_double((checkBox.minX - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
-		int j = MathHelper.floor_double((checkBox.maxX + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
-		int k = MathHelper.floor_double((checkBox.minZ - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
-		int l = MathHelper.floor_double((checkBox.maxZ + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
+		int i = MathHelper.floor((checkBox.minX - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
+		int j = MathHelper.floor((checkBox.maxX + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
+		int k = MathHelper.floor((checkBox.minZ - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
+		int l = MathHelper.floor((checkBox.maxZ + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
 
-		int yMin = MathHelper.clamp_int(MathHelper.floor_double((checkBox.minY - World.MAX_ENTITY_RADIUS) / 16.0D) - 1, 0, 15);
-		int yMax = MathHelper.clamp_int(MathHelper.floor_double((checkBox.maxY + World.MAX_ENTITY_RADIUS) / 16.0D) + 1, 0, 15);
+		int yMin = MathHelper.clamp(MathHelper.floor((checkBox.minY - World.MAX_ENTITY_RADIUS) / 16.0D) - 1, 0, 15);
+		int yMax = MathHelper.clamp(MathHelper.floor((checkBox.maxY + World.MAX_ENTITY_RADIUS) / 16.0D) + 1, 0, 15);
 
 		for(int iLoop = i; iLoop <= j; ++iLoop){
 			for(int kLoop = k; kLoop <= l; ++kLoop){

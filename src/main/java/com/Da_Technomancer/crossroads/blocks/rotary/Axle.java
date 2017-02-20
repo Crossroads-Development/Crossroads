@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.AxleTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -40,8 +39,8 @@ public class Axle extends BlockContainer{
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 		setSoundType(SoundType.METAL);
 		OreDictionary.registerOre("stickIron", this);
 	}
@@ -64,9 +63,9 @@ public class Axle extends BlockContainer{
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		CommonProxy.masterKey++;
-		return this.getDefaultState().withProperty(Properties.AXIS, BlockPistonBase.getFacingFromEntity(pos, placer).getAxis());
+		return getDefaultState().withProperty(Properties.AXIS, EnumFacing.getDirectionFromEntityLiving(pos, placer).getAxis());
 	}
 	
 	@Override
@@ -85,7 +84,7 @@ public class Axle extends BlockContainer{
 	}
 	
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isRemote){
 			return;
 		}

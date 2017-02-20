@@ -22,8 +22,8 @@ public abstract class AbstractInventory extends TileEntity implements ISidedInve
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player){
-		return this.worldObj.getTileEntity(this.getPos()) == this && player.getDistanceSq(this.pos.add(0.5, 0.5, 0.5)) <= 64;
+	public boolean isUsableByPlayer(EntityPlayer player){
+		return world.getTileEntity(this.getPos()) == this && player.getDistanceSq(this.pos.add(0.5, 0.5, 0.5)) <= 64;
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -8,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,11 +35,11 @@ public class CraftingStack implements ICraftingStack{
 
 	@Override
 	public boolean match(ItemStack stack){
-		if(stack == null){
+		if(stack.isEmpty()){
 			return false;
 		}
 
-		if(stack.getItem() == item && stack.stackSize == count && (meta == -1 || stack.getMetadata() == meta)){
+		if(stack.getItem() == item && stack.getCount() == count && (meta == -1 || stack.getMetadata() == meta)){
 			return true;
 		}
 
@@ -65,7 +65,7 @@ public class CraftingStack implements ICraftingStack{
 		if(meta != -1 || !item.getHasSubtypes()){
 			return ImmutableList.of(new ItemStack(item, count, meta));
 		}
-		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+		NonNullList<ItemStack> list = NonNullList.create();
 		item.getSubItems(item, null, list);
 		return list;
 	}

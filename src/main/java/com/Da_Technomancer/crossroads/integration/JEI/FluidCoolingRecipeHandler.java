@@ -15,13 +15,8 @@ public class FluidCoolingRecipeHandler implements IRecipeHandler<FluidCoolingRec
 	}
 
 	@Override
-	public String getRecipeCategoryUid(){
-		return id;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(FluidCoolingRecipe recipe){
-		return getRecipeCategoryUid();
+		return id;
 	}
 
 	@Override

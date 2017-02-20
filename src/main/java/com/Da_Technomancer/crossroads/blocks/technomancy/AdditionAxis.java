@@ -36,8 +36,8 @@ public class AdditionAxis extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.ORIENT, (placer == null) ? false : placer.getHorizontalFacing().getAxis() == EnumFacing.Axis.Z);
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.ORIENT, (placer == null) ? false : placer.getHorizontalFacing().getAxis() == EnumFacing.Axis.Z);
 	}
 
 	@Override

@@ -30,13 +30,13 @@ public class HeatingCrucible extends BlockContainer{
 		setRegistryName("heatingCrucible");
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName("heatingCrucible"));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.FULLNESS, 0).withProperty(Properties.TEXTURE_4, 0);
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.FULLNESS, 0).withProperty(Properties.TEXTURE_4, 0);
 	}
 
 	@Override

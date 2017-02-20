@@ -41,7 +41,7 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 						if(!nbt.hasKey(MagicElements.getElement(check).name())){
 							nbt.setBoolean(MagicElements.getElement(check).name(), true);
 							//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
-							player.addChatComponentMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString() + TextFormatting.RESET.toString()));
+							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString() + TextFormatting.RESET.toString()));
 						}
 						chat.add(EnumFacing.getFront(i).toString() + ": " + check.toString());
 					}

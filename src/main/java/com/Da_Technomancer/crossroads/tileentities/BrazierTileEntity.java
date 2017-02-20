@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -13,12 +12,9 @@ import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
@@ -28,11 +24,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
-public class BrazierTileEntity extends TileEntity implements ISidedInventory, ITickable{
-
-	private static Random rand = new Random();
+public class BrazierTileEntity extends TileEntity implements ITickable{
 
 	private int ticksExisted = 0;
 
@@ -43,25 +40,26 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 		ticksExisted++;
 
 		if(getState() != 0 && --time <= 0){
-			decrStackSize(0, 1);
+			inventory.shrink(1);
 			time = 6000;
+			markDirty();
 		}
 
 		if(getState() == 0){
-			if(worldObj.getBlockState(pos).getValue(Properties.LIGHT)){
-				worldObj.setBlockState(pos, ModBlocks.brazier.getDefaultState().withProperty(Properties.LIGHT, false), 2);
+			if(world.getBlockState(pos).getValue(Properties.LIGHT)){
+				world.setBlockState(pos, ModBlocks.brazier.getDefaultState().withProperty(Properties.LIGHT, false), 2);
 			}
-		}else if(!worldObj.getBlockState(pos).getValue(Properties.LIGHT)){
-			worldObj.setBlockState(pos, ModBlocks.brazier.getDefaultState().withProperty(Properties.LIGHT, true), 2);
+		}else if(!world.getBlockState(pos).getValue(Properties.LIGHT)){
+			world.setBlockState(pos, ModBlocks.brazier.getDefaultState().withProperty(Properties.LIGHT, true), 2);
 		}
 
-		WorldServer server = (WorldServer) worldObj;
+		WorldServer server = (WorldServer) world;
 
 		if(ticksExisted % 10 == 0){
 			ItemStack out;
@@ -69,22 +67,22 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 				case 0:
 					break;
 				case 1:
-					server.spawnParticle(EnumParticleTypes.FLAME, false, pos.getX() + .25 + (.5 * rand.nextDouble()), pos.getY() + 1 + (rand.nextDouble() * .25D), pos.getZ() + .25 + (.5 * rand.nextDouble()), 1, 0, 0, 0, 0, new int[0]);
+					server.spawnParticle(EnumParticleTypes.FLAME, false, pos.getX() + .25 + (.5 * Math.random()), pos.getY() + 1 + (Math.random() * .25D), pos.getZ() + .25 + (.5 * Math.random()), 1, 0, 0, 0, 0, new int[0]);
 					break;
 				case 2:
-					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * rand.nextDouble()), pos.getY() + 1 + (rand.nextDouble() * .25D), pos.getZ() + .25 + (.5 * rand.nextDouble()), 0, -1, 1, 1, 1, new int[0]);
+					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * Math.random()), pos.getY() + 1 + (Math.random() * .25D), pos.getZ() + .25 + (.5 * Math.random()), 0, -1, 1, 1, 1, new int[0]);
 					break;
 				case 3:
-					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * rand.nextDouble()), pos.getY() + 1 + (rand.nextDouble() * .25D), pos.getZ() + .25 + (.5 * rand.nextDouble()), 0, -1, 0, 1, 1, new int[0]);
-					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * rand.nextDouble()), pos.getY() + 1 + (rand.nextDouble() * .25D), pos.getZ() + .25 + (.5 * rand.nextDouble()), 0, 0, 1, 0, 1, new int[0]);
-					if((out = RecipeHolder.recipeMatch((ArrayList<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE))) != null){
-						for(EntityItem item : worldObj.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
+					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * Math.random()), pos.getY() + 1 + (Math.random() * .25D), pos.getZ() + .25 + (.5 * Math.random()), 0, -1, 0, 1, 1, new int[0]);
+					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * Math.random()), pos.getY() + 1 + (Math.random() * .25D), pos.getZ() + .25 + (.5 * Math.random()), 0, 0, 1, 0, 1, new int[0]);
+					if((out = RecipeHolder.recipeMatch((ArrayList<EntityItem>) world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE))) != ItemStack.EMPTY){
+						for(EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
 							item.setDead();
 						}
 
-						worldObj.spawnEntityInWorld(new EntityLightningBolt(worldObj, pos.getX(), pos.getY() + 1, pos.getZ(), true));
-						ModPackets.network.sendToAllAround(new SendLightningToClient(pos), new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY() + 1, pos.getZ(), 512));
-						worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.getX(), pos.getY() + 1, pos.getZ(), out.copy()));
+						world.spawnEntity(new EntityLightningBolt(world, pos.getX(), pos.getY() + 1, pos.getZ(), true));
+						ModPackets.network.sendToAllAround(new SendLightningToClient(pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY() + 1, pos.getZ(), 512));
+						world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), out.copy()));
 					}
 					break;
 			}
@@ -106,12 +104,19 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 	}
 
 	private int time = 6000;
-	private ItemStack inventory;
-
+	private ItemStack inventory = ItemStack.EMPTY;
+	
+	/**
+	 * For internal use
+	 */
+	public ItemStack getInventory(){
+		return inventory;
+	}
+	
 	// 0 means not lit, 1 means lit normally, 2 means lit with salt, 3 means lit
 	// with poisonous potato.
 	private byte getState(){
-		if(inventory == null){
+		if(inventory.isEmpty()){
 			return 0;
 		}
 
@@ -130,165 +135,78 @@ public class BrazierTileEntity extends TileEntity implements ISidedInventory, IT
 		return 0;
 	}
 
-	public ItemStack addFuel(ItemStack stack){
-		if((stack.getItem() == Items.COAL && stack.getMetadata() == 1) || stack.getItem() == ModItems.dustSalt || stack.getItem() == Items.POISONOUS_POTATO){
-			if(inventory == null || (stack.getItem() == inventory.getItem() && inventory.stackSize != getInventoryStackLimit())){
+	private final FuelHandler fuelHandler = new FuelHandler();
+	
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return true;
+		}
+		return super.hasCapability(cap, side);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return (T) fuelHandler;
+		}
+		return super.getCapability(cap, side);
+	}
+	
+	private class FuelHandler implements IItemHandler{
 
-				stack.stackSize--;
+		@Override
+		public int getSlots(){
+			return 1;
+		}
 
-				inventory = new ItemStack(stack.getItem(), 1 + (inventory == null ? 0 : inventory.stackSize), stack.getMetadata());
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return slot == 0 ? inventory : ItemStack.EMPTY;
+		}
 
-				if(stack.stackSize <= 0){
-					stack = null;
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			if(slot == 0 && ((stack.getItem() == Items.COAL && stack.getMetadata() == 1) || stack.getItem() == ModItems.dustSalt || stack.getItem() == Items.POISONOUS_POTATO)){
+				if(inventory.isEmpty() || (stack.getItem() == inventory.getItem() && inventory.getCount() < 64)){
+					ItemStack out = new ItemStack(stack.getItem(), stack.getCount() + inventory.getCount() - 64);
+					if(!simulate){
+						inventory = new ItemStack(stack.getItem(), Math.min(inventory.getCount() + stack.getCount(), 64), stack.getMetadata());
+						markDirty();
+					}
+					if(out.getCount() <= 0){
+						return ItemStack.EMPTY;
+					}
+					return out;
 				}
 			}
-		}
-		return stack;
-	}
-
-	@Override
-	public int getSizeInventory(){
-		return 1;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int index){
-		return index == 0 ? inventory : null;
-	}
-
-	@Override
-	public ItemStack decrStackSize(int index, int count){
-		if(index != 0 || inventory == null){
-			return null;
+			return stack;
 		}
 
-		int holder = Math.min(inventory.stackSize, count);
-		ItemStack taken = inventory.splitStack(holder);
-		if(inventory.stackSize == 0){
-			inventory = null;
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			return ItemStack.EMPTY;
 		}
-		this.markDirty();
-		return taken;
-	}
 
-	@Override
-	public ItemStack removeStackFromSlot(int index){
-		if(index != 0){
-			return null;
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
 		}
-		ItemStack output = inventory;
-		inventory = null;
-		return output;
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack){
-		if(index == 0){
-			inventory = stack;
-		}
-	}
-
-	@Override
-	public int getInventoryStackLimit(){
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player){
-		return this.worldObj.getTileEntity(this.getPos()) == this && player.getDistanceSq(this.pos.add(0.5, 0.5, 0.5)) <= 64;
-	}
-
-	@Override
-	public void openInventory(EntityPlayer player){
-
-	}
-
-	@Override
-	public void closeInventory(EntityPlayer player){
-
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && (stack.getItem() == ModItems.dustSalt || (stack.getItem() == Items.COAL && stack.getMetadata() == 1) || stack.getItem() == Items.POISONOUS_POTATO);
-	}
-
-	@Override
-	public int getField(int id){
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value){
-
-	}
-
-	@Override
-	public int getFieldCount(){
-		return 0;
-	}
-
-	@Override
-	public void clear(){
-		inventory = null;
-	}
-
-	@Override
-	public String getName(){
-		return "container.brazier";
-	}
-
-	@Override
-	public boolean hasCustomName(){
-		return false;
-	}
-
-	@Override
-	public int[] getSlotsForFace(EnumFacing side){
-		return new int[] {0};
-	}
-
-	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction){
-		return isItemValidForSlot(index, itemStackIn);
-	}
-
-	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
-		return false;
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-
-		NBTTagList list = new NBTTagList();
-		for(int i = 0; i < this.getSizeInventory(); ++i){
-			if(this.getStackInSlot(i) != null){
-				NBTTagCompound stackTag = new NBTTagCompound();
-				stackTag.setByte("Slot", (byte) i);
-				this.getStackInSlot(i).writeToNBT(stackTag);
-				list.appendTag(stackTag);
-			}
-		}
-		nbt.setTag("Items", list);
-
+		inventory.writeToNBT(nbt);
 		nbt.setInteger("time", time);
-
 		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-
-		NBTTagList list = nbt.getTagList("Items", 10);
-		for(int i = 0; i < list.tagCount(); ++i){
-			NBTTagCompound stackTag = list.getCompoundTagAt(i);
-			int slot = stackTag.getByte("Slot") & 255;
-			this.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(stackTag));
-		}
-
+		inventory = new ItemStack(nbt);
 		time = nbt.getInteger("time");
 	}
 }

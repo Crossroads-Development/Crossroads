@@ -46,13 +46,13 @@ public class BlockSalt extends Block{
 			entityIn.setDead();
 			if(!worldIn.isRemote){
 				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.SLIME_BALL));
-				worldIn.spawnEntityInWorld(item);
+				worldIn.spawnEntity(item);
 			}
 		}else if(entityIn instanceof EntityCreeper){
 			entityIn.setDead();
 			if(!worldIn.isRemote){
 				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Blocks.DEADBUSH));
-				worldIn.spawnEntityInWorld(item);
+				worldIn.spawnEntity(item);
 			}
 		}
 

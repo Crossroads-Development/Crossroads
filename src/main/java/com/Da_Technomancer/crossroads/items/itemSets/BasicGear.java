@@ -51,21 +51,21 @@ public class BasicGear extends Item{
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(worldIn.isRemote){
 			return EnumActionResult.SUCCESS;
 		}
 
 		if(worldIn.getTileEntity(pos.offset(side)) instanceof SidedGearHolderTileEntity && !worldIn.getTileEntity(pos.offset(side)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()) && worldIn.isSideSolid(pos, side)){
-			if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
-				playerIn.setHeldItem(hand, null);
+			if(!playerIn.capabilities.isCreativeMode){
+				playerIn.getHeldItem(hand).shrink(1);
 			}
 
 			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).setMembers(type, side.getOpposite().getIndex());
 			CommonProxy.masterKey++;
 		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && worldIn.isSideSolid(pos, side)){
-			if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
-				playerIn.setHeldItem(hand, null);
+			if(!playerIn.capabilities.isCreativeMode){
+				playerIn.getHeldItem(hand).shrink(1);
 			}
 
 			worldIn.setBlockState(pos.offset(side), ModBlocks.sidedGearHolder.getDefaultState(), 3);

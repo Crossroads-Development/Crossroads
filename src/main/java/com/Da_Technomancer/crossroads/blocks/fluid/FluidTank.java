@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -27,6 +25,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -45,8 +44,8 @@ public class FluidTank extends BlockContainer implements IBlockCompare{
 		setSoundType(SoundType.METAL);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
@@ -83,12 +82,17 @@ public class FluidTank extends BlockContainer implements IBlockCompare{
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			return FluidUtil.interactWithFluidHandler(heldItem, worldIn.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), playerIn);
+			FluidActionResult result = FluidUtil.interactWithFluidHandler(playerIn.getHeldItem(hand), worldIn.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), playerIn);
+			if(result.isSuccess()){
+				playerIn.setHeldItem(hand, result.result);
+				return true;
+			}
+			return false;
 		}
 
-		return FluidUtil.getFluidHandler(heldItem) != null;
+		return FluidUtil.getFluidHandler(playerIn.getHeldItem(hand)) != null;
 	}
 	
 	@Override

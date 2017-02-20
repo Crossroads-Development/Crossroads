@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.StaffChargerTileEntity;
@@ -16,7 +14,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -39,8 +36,8 @@ public class StaffCharger extends BlockContainer{
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
@@ -59,8 +56,8 @@ public class StaffCharger extends BlockContainer{
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.HEAD, false);
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.HEAD, false);
 	}
 
 	@Override
@@ -79,15 +76,15 @@ public class StaffCharger extends BlockContainer{
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			if(state.getValue(Properties.HEAD)){
 				playerIn.inventory.addItemStackToInventory(((StaffChargerTileEntity) worldIn.getTileEntity(pos)).getStaff());
-				((StaffChargerTileEntity) worldIn.getTileEntity(pos)).setStaff(null);
+				((StaffChargerTileEntity) worldIn.getTileEntity(pos)).setStaff(ItemStack.EMPTY);
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.HEAD, false));
-			}else if(stack != null && stack.getItem() == ModItems.staffTechnomancy){
-				((StaffChargerTileEntity) worldIn.getTileEntity(pos)).setStaff(stack);
-				playerIn.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, null);
+			}else if(!playerIn.getHeldItem(hand).isEmpty() && playerIn.getHeldItem(hand).getItem() == ModItems.staffTechnomancy){
+				((StaffChargerTileEntity) worldIn.getTileEntity(pos)).setStaff(playerIn.getHeldItem(hand));
+				playerIn.setHeldItem(hand, ItemStack.EMPTY);
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.HEAD, true));
 			}
 		}
@@ -120,7 +117,7 @@ public class StaffCharger extends BlockContainer{
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean sproinksOrSomethingIDontKnowItsLateAndImTired){
 		addCollisionBoxToList(pos, mask, list, BB);
 	}
 }

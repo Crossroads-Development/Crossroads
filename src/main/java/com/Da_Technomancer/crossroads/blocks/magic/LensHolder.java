@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.magic;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -48,8 +46,8 @@ public class LensHolder extends BlockContainer implements IBlockCompare{
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
@@ -84,8 +82,8 @@ public class LensHolder extends BlockContainer implements IBlockCompare{
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.ORIENT, (placer == null) ? true : placer.getHorizontalFacing().getAxis() == Axis.X).withProperty(Properties.TEXTURE_7, 0);
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.ORIENT, (placer == null) ? true : placer.getHorizontalFacing().getAxis() == Axis.X).withProperty(Properties.TEXTURE_7, 0);
 	}
 
 	@Override
@@ -104,8 +102,9 @@ public class LensHolder extends BlockContainer implements IBlockCompare{
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
+			ItemStack stack = playerIn.getHeldItem(hand);
 			if(state.getValue(Properties.TEXTURE_7) != 0){
 				int i = state.getValue(Properties.TEXTURE_7);
 				ItemStack gotten = new ItemStack(i == 1 ? Item.getByNameOrId(Main.MODID + ":gemRuby") : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1);
@@ -114,13 +113,12 @@ public class LensHolder extends BlockContainer implements IBlockCompare{
 					dropped.setNoPickupDelay();
 					dropped.setOwner(playerIn.getName());
 				}
-				//playerIn.setHeldItem(hand, new ItemStack(i == 1 ? Item.getByNameOrId(Main.MODID + ":gemRuby") : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1));
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
 			}else if(stack != null && state.getValue(Properties.TEXTURE_7) == 0){
 				int i = stack.getItem() == ModItems.voidCrystal ? 6 : stack.getItem() == Items.DIAMOND ? 3 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == Item.getByNameOrId(Main.MODID + ":gemRuby") ? 1 : 0;
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, i));
-				if(i != 0 && --stack.stackSize <= 0){
-					playerIn.setHeldItem(hand, null);
+				if(i != 0){
+					stack.shrink(1);
 				}
 			}
 		}
@@ -158,7 +156,7 @@ public class LensHolder extends BlockContainer implements IBlockCompare{
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean stuff){
 		addCollisionBoxToList(pos, mask, list, state.getValue(Properties.ORIENT) ? BBA : BB);
 	}
 

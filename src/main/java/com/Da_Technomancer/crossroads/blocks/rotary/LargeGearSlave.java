@@ -46,8 +46,8 @@ public class LargeGearSlave extends BlockContainer{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 		setSoundType(SoundType.METAL);
 	}
 
@@ -58,7 +58,7 @@ public class LargeGearSlave extends BlockContainer{
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class LargeGearSlave extends BlockContainer{
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isRemote){
 			return;
 		}

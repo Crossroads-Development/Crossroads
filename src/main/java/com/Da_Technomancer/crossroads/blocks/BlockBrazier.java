@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
@@ -28,6 +29,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class BlockBrazier extends BlockContainer{
 
@@ -69,17 +72,26 @@ public class BlockBrazier extends BlockContainer{
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(!worldIn.isRemote && heldItem != null){
-			heldItem = ((BrazierTileEntity) worldIn.getTileEntity(pos)).addFuel(heldItem);
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+		if(!worldIn.isRemote && !playerIn.getHeldItem(hand).isEmpty() && MiscOp.safeHasCap(worldIn, pos, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)){
+			IItemHandler handler = worldIn.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			ItemStack inserting = playerIn.getHeldItem(hand).copy();
+			if(inserting.isEmpty()){
+				return false;
+			}
+			inserting.setCount(1);
+			if(handler.insertItem(0, inserting, false).isEmpty()){
+				playerIn.getHeldItem(hand).shrink(1);
+				return true;
+			}
 		}
 
 		return false;
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.LIGHT, false);
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
+		return getDefaultState().withProperty(Properties.LIGHT, false);
 	}
 
 	@Override
@@ -94,7 +106,7 @@ public class BlockBrazier extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.LIGHT, meta == 1);
+		return getDefaultState().withProperty(Properties.LIGHT, meta == 1);
 	}
 
 	@Override
@@ -103,8 +115,8 @@ public class BlockBrazier extends BlockContainer{
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
-		addCollisionBoxToList(pos, mask, list, BB);
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> list, @Nullable Entity entityIn, boolean p_185477_7_){
+		addCollisionBoxToList(pos, entityBox, list, BB);
 	}
 
 	@Override
@@ -119,10 +131,10 @@ public class BlockBrazier extends BlockContainer{
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		BrazierTileEntity te = (BrazierTileEntity) world.getTileEntity(pos);
-		if(te.getStackInSlot(0) != null && te.getStackInSlot(0).stackSize > 1){
-			ItemStack stack = te.getStackInSlot(0);
-			--stack.stackSize;
+		if(!world.isRemote && MiscOp.safeHasCap(world, pos, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)){
+			IItemHandler handler = world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			ItemStack stack = handler.getStackInSlot(0);
+			stack.shrink(1);
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 		}
 		super.breakBlock(world, pos, blockstate);

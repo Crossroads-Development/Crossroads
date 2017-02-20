@@ -33,7 +33,7 @@ public class SendDoubleToClient extends Message<SendDoubleToClient>{
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
-		final WorldClient worldClient = minecraft.theWorld;
+		final WorldClient worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
 			@Override
 			public void run(){

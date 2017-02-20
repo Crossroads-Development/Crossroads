@@ -29,7 +29,7 @@ public class ItemChutePort extends BlockContainer{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(2);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setSoundType(SoundType.METAL);
@@ -46,9 +46,9 @@ public class ItemChutePort extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite();
-		return this.getDefaultState().withProperty(Properties.FACING, enumfacing);
+		return getDefaultState().withProperty(Properties.FACING, enumfacing);
 	}
 
 	@Override

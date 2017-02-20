@@ -47,7 +47,7 @@ public class EdibleBlob extends ItemFood{
 	@Override
 	@Nullable
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving){
-		--stack.stackSize;
+		stack.shrink(1);
 
 		if (entityLiving instanceof EntityPlayer){
 			EntityPlayer entityplayer = (EntityPlayer) entityLiving;

@@ -42,7 +42,7 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	public void addItemsAndUpdateData(EntityJoinWorldEvent event){
-		if(event.getEntity() instanceof EntityPlayer && !event.getEntity().worldObj.isRemote){
+		if(event.getEntity() instanceof EntityPlayer && !event.getEntity().world.isRemote){
 			EntityPlayer player = (EntityPlayer) event.getEntity();
 
 			NBTTagCompound tag = MiscOp.getPlayerTag(player);
@@ -124,7 +124,7 @@ public final class EventHandlerCommon{
 									if(datum.getValue()[0][j][k] < datum.getValue()[1][j][k]){
 										datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) (Math.max(1, 32 * Math.pow(2, (int) netForce)) + (int) datum.getValue()[0][j][k])));
 										if(datum.getValue()[0][j][k] == 127){
-											MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getChunkCoordIntPair().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
+											MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getPos().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
 											toRemove.add(datum.getKey());
 											continue fluxEvent;
 										}else if(datum.getValue()[0][j][k] >= datum.getValue()[1][j][k]){
@@ -142,7 +142,7 @@ public final class EventHandlerCommon{
 								}
 								
 								if(i == 0 && datum.getValue()[0][j][k] == 127){
-									MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getChunkCoordIntPair().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
+									MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getPos().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
 									toRemove.add(datum.getKey());
 									continue fluxEvent;
 								}
@@ -165,7 +165,7 @@ public final class EventHandlerCommon{
 	 */
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void dilateEntityTime(LivingUpdateEvent e){
-		if(e.getEntity().worldObj.isRemote || dilatingTime || !FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))){
+		if(e.getEntity().world.isRemote || dilatingTime || !FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))){
 			return;
 		}
 		

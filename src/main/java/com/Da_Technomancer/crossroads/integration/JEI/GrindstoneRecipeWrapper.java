@@ -11,7 +11,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 public class GrindstoneRecipeWrapper implements IRecipeWrapper{
 
@@ -23,37 +22,8 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper{
 		inputs = recipe.getInput().getMatchingList();
 	}
 
-	@Deprecated
-	@Override
-	public List<ItemStack> getInputs(){
-		return inputs;
-	}
-
-	@Deprecated
-	@Override
-	public List<ItemStack> getOutputs(){
-		return outputs;
-	}
-
-	@Deprecated
-	@Override
-	public List<FluidStack> getFluidInputs(){
-		return ImmutableList.of();
-	}
-
-	@Deprecated
-	@Override
-	public List<FluidStack> getFluidOutputs(){
-		return ImmutableList.of();
-	}
-
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY){
-
-	}
-
-	@Override
-	public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight){
 
 	}
 

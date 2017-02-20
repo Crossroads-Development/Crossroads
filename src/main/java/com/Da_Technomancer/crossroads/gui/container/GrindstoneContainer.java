@@ -32,24 +32,24 @@ public class GrindstoneContainer extends Container{
 		// Player Inventory, Slots 9-35, Slot IDs 4-30
 		for(int y = 0; y < 3; ++y){
 			for(int x = 0; x < 9; ++x){
-				this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
+				addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
 			}
 		}
 
 		// Player Inventory, Slot 0-8, Slot IDs 31-39
 		for(int x = 0; x < 9; ++x){
-			this.addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 142));
+			addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 142));
 		}
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn){
-		return te.isUseableByPlayer(playerIn);
+		return te.isUsableByPlayer(playerIn);
 	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot){
-		ItemStack previous = null;
+		ItemStack previous = ItemStack.EMPTY;
 		Slot slot = (Slot) this.inventorySlots.get(fromSlot);
 
 		if(slot != null && slot.getHasStack()){
@@ -58,22 +58,24 @@ public class GrindstoneContainer extends Container{
 
 			if(fromSlot < 4){
 				// From TE Inventory to Player Inventory
-				if(!this.mergeItemStack(current, 4, 40, true))
-					return null;
+				if(!mergeItemStack(current, 4, 40, true))
+					return ItemStack.EMPTY;
 			}else{
 				// From Player Inventory to TE Inventory
-				if(!this.mergeItemStack(current, 0, 1, false))
-					return null;
+				if(!mergeItemStack(current, 0, 1, false))
+					return ItemStack.EMPTY;
 			}
 
-			if(current.stackSize == 0)
-				slot.putStack((ItemStack) null);
-			else
+			if(current.isEmpty()){
+				slot.putStack(ItemStack.EMPTY);
+			}else{
 				slot.onSlotChanged();
+			}
 
-			if(current.stackSize == previous.stackSize)
-				return null;
-			slot.onPickupFromSlot(playerIn, current);
+			if(current.getCount() == previous.getCount()){
+				return ItemStack.EMPTY;
+			}
+			slot.onTake(playerIn, current);
 		}
 		return previous;
 	}
@@ -81,13 +83,13 @@ public class GrindstoneContainer extends Container{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int id, int data){
-		this.te.setField(id, data);
+		te.setField(id, data);
 	}
 
 	@Override
 	public void addListener(IContainerListener listener){
 		super.addListener(listener);
-		listener.sendAllWindowProperties(this, this.te);
+		listener.sendAllWindowProperties(this, te);
 	}
 
 	/**
@@ -97,14 +99,14 @@ public class GrindstoneContainer extends Container{
 	public void detectAndSendChanges(){
 		super.detectAndSendChanges();
 
-		for(int i = 0; i < this.listeners.size(); ++i){
-			IContainerListener icontainerlistener = (IContainerListener) this.listeners.get(i);
+		for(int i = 0; i < listeners.size(); ++i){
+			IContainerListener icontainerlistener = (IContainerListener) listeners.get(i);
 
-			if(this.progress != this.te.getField(0)){
-				icontainerlistener.sendProgressBarUpdate(this, 0, this.te.getField(0));
+			if(progress != te.getField(0)){
+				icontainerlistener.sendProgressBarUpdate(this, 0, te.getField(0));
 			}
 		}
 
-		this.progress = this.te.getField(0);
+		progress = te.getField(0);
 	}
 }

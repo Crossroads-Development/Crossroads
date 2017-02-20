@@ -51,7 +51,7 @@ public class ColorChartGuiContainer extends GuiContainer{
 
 			for(Slot slot : inventorySlots.inventorySlots){
 				if(slot.getStack().getItem() != Item.getItemFromBlock(Blocks.BARRIER) && !slot.getStack().getDisplayName().startsWith(search.toUpperCase())){
-					drawModalRectWithCustomSizedTexture(slot.xDisplayPosition, slot.yDisplayPosition, 0, 0, 16, 16, 16, 16);
+					drawModalRectWithCustomSizedTexture(slot.xPos, slot.yPos, 0, 0, 16, 16, 16, 16);
 				}
 			}
 		}

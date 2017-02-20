@@ -50,7 +50,7 @@ public class LargeGear extends Item{
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		pos = pos.offset(side);
 
 		for(BlockPos cPos : section(pos, side)){
@@ -59,8 +59,8 @@ public class LargeGear extends Item{
 			}
 		}
 
-		if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
-			playerIn.setHeldItem(hand, null);
+		if(!playerIn.capabilities.isCreativeMode){
+			playerIn.getHeldItem(hand).shrink(1);
 		}
 
 		for(BlockPos cPos : section(pos, side)){

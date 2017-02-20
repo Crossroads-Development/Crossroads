@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.items;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -26,7 +25,7 @@ public class FluidGauge extends Item{
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		TileEntity te = worldIn.getTileEntity(pos);
 
 		if(te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
@@ -34,10 +33,10 @@ public class FluidGauge extends Item{
 
 				IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 
-				playerIn.addChatComponentMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
+				playerIn.sendMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
 
 				for(IFluidTankProperties tank : pipe.getTankProperties()){
-					playerIn.addChatComponentMessage(new TextComponentString("% full: " + (tank.getContents() == null ? 0 : tank.getContents().amount) * 100 / tank.getCapacity()));
+					playerIn.sendMessage(new TextComponentString("% full: " + (tank.getContents() == null ? 0 : tank.getContents().amount) * 100 / tank.getCapacity()));
 				}
 			}
 			return EnumActionResult.SUCCESS;

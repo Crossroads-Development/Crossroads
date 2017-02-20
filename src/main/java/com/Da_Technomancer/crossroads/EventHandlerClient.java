@@ -34,10 +34,10 @@ public final class EventHandlerClient{
 	@SubscribeEvent
 	public void drawFieldsAndBeams(RenderWorldLastEvent e){
 		Minecraft game = Minecraft.getMinecraft();
-		if(game.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && game.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == ModItems.moduleGoggles && game.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.HEAD).hasTagCompound()){
+		if(game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == ModItems.moduleGoggles && game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).hasTagCompound()){
 			game.mcProfiler.startSection("crossroadsFieldRender");
-			Chunk chunk = game.theWorld.getChunkFromBlockCoords(game.thePlayer.getPosition());
-			byte[][][] fields = FieldWorldSavedData.get(game.theWorld).fieldNodes.get(FieldWorldSavedData.getLongFromChunk(chunk));
+			Chunk chunk = game.world.getChunkFromBlockCoords(game.player.getPosition());
+			byte[][][] fields = FieldWorldSavedData.get(game.world).fieldNodes.get(FieldWorldSavedData.getLongFromChunk(chunk));
 			if(fields != null){
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
@@ -48,13 +48,13 @@ public final class EventHandlerClient{
 				float brightY = OpenGlHelper.lastBrightnessY;
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 				GlStateManager.disableCull();
-				GlStateManager.translate(chunk.getChunkCoordIntPair().getXStart() - game.thePlayer.getPositionEyes(e.getPartialTicks()).xCoord, 0, chunk.getChunkCoordIntPair().getZStart() - game.thePlayer.getPositionEyes(e.getPartialTicks()).zCoord);
+				GlStateManager.translate(chunk.getPos().getXStart() - game.player.getPositionEyes(e.getPartialTicks()).xCoord, 0, chunk.getPos().getZStart() - game.player.getPositionEyes(e.getPartialTicks()).zCoord);
 				Tessellator tes = Tessellator.getInstance();
 				VertexBuffer buf = tes.getBuffer();
 				for(int i = 1; i >= 0; i--){
 					if(i == 0 ? ModConfig.fieldLinesEnergy.getBoolean() : ModConfig.fieldLinesPotential.getBoolean()){
 						GlStateManager.translate(0, .01F, 0);
-						if(game.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(i == 0 ? GoggleLenses.RUBY.name() : GoggleLenses.EMERALD.name())){
+						if(game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(i == 0 ? GoggleLenses.RUBY.name() : GoggleLenses.EMERALD.name())){
 							GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, 0, .4F);
 							GlStateManager.glLineWidth(10F);
 							GlStateManager.disableTexture2D();
@@ -79,7 +79,7 @@ public final class EventHandlerClient{
 					}else{
 						game.getTextureManager().bindTexture(TEXTURE_FIELDS);
 						GlStateManager.translate(0, .01F, 0);
-						if(game.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(i == 0 ? GoggleLenses.RUBY.name() : GoggleLenses.EMERALD.name())){
+						if(game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(i == 0 ? GoggleLenses.RUBY.name() : GoggleLenses.EMERALD.name())){
 							GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, 0, .4F);
 							buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 							for(int j = 0; j < 7; j++){
@@ -122,7 +122,7 @@ public final class EventHandlerClient{
 				GlStateManager.pushAttrib();
 				Color col = new Color(beam.color);
 				GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F);
-				GlStateManager.translate(beam.x - game.thePlayer.posX, beam.y - game.thePlayer.posY, beam.z - game.thePlayer.posZ);
+				GlStateManager.translate(beam.x - game.player.posX, beam.y - game.player.posY, beam.z - game.player.posZ);
 				GlStateManager.rotate(-beam.angleY, 0, 1, 0);
 				GlStateManager.rotate(beam.angleX + 90F, 1, 0, 0);
 				final double small = -(beam.width / 16D);
@@ -157,8 +157,8 @@ public final class EventHandlerClient{
 				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();
 				
-				if(beam.lastTick != game.theWorld.getTotalWorldTime()){
-					beam.lastTick = game.theWorld.getTotalWorldTime();
+				if(beam.lastTick != game.world.getTotalWorldTime()){
+					beam.lastTick = game.world.getTotalWorldTime();
 					if(beam.lifeTime-- <= 0){
 						toRemove.add(beam);
 					}
@@ -176,8 +176,8 @@ public final class EventHandlerClient{
 
 	@SubscribeEvent
 	public void voidGoggleGlow(RenderWorldLastEvent e){
-		WorldClient world = Minecraft.getMinecraft().theWorld;
-		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
+		WorldClient world = Minecraft.getMinecraft().world;
+		EntityPlayer play = Minecraft.getMinecraft().player;
 		if(world.getTotalWorldTime() % 5 == 0){
 			boolean glow = play.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && play.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == ModItems.moduleGoggles && play.getItemStackFromSlot(EntityEquipmentSlot.HEAD).hasTagCompound() && play.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(GoggleLenses.VOID.name());
 			for(Entity ent : world.getLoadedEntityList()){

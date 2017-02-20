@@ -34,7 +34,7 @@ public class RainIdol extends Item{
 		if(isSelected && entityIn instanceof EntityPlayer){
 			EntityPlayer play = (EntityPlayer) entityIn;
 			if(!ModConfig.weatherControl.getBoolean()){
-				play.addChatMessage(new TextComponentString("This item was disabled in the config."));
+				play.sendMessage(new TextComponentString("This item was disabled in the config."));
 				return;
 			}
 

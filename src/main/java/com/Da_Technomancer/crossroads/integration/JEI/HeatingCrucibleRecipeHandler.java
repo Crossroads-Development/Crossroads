@@ -13,13 +13,8 @@ public class HeatingCrucibleRecipeHandler implements IRecipeHandler<HeatingCruci
 	}
 
 	@Override
-	public String getRecipeCategoryUid(){
-		return Main.MODID + ".heatingCrucible";
-	}
-
-	@Override
 	public String getRecipeCategoryUid(HeatingCrucibleRecipe recipe){
-		return getRecipeCategoryUid();
+		return Main.MODID + ".heatingCrucible";
 	}
 
 	@Override

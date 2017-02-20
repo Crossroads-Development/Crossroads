@@ -115,7 +115,7 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 	}
 	
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos prevPos){
 		if(worldIn.isBlockPowered(pos)){
 			if(!state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));

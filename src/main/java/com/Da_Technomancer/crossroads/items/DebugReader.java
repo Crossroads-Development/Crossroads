@@ -47,12 +47,12 @@ public class DebugReader extends Item{
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		if(worldIn.isRemote && worldIn.getTileEntity(pos) instanceof SidedGearHolderTileEntity){
 			for(int i = 0; i < 6; i++){
 				SidedGearHolderTileEntity gear = (SidedGearHolderTileEntity) worldIn.getTileEntity(pos);
-				playerIn.addChatComponentMessage(new TextComponentString("Angle=" + (gear.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)) ? gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getAngle() : "NONE")));
-				playerIn.addChatComponentMessage(new TextComponentString("Member=" + (gear.getMembers()[i] == null ? "NONE" : gear.getMembers()[i].toString())));
+				playerIn.sendMessage(new TextComponentString("Angle=" + (gear.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)) ? gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getAngle() : "NONE")));
+				playerIn.sendMessage(new TextComponentString("Member=" + (gear.getMembers()[i] == null ? "NONE" : gear.getMembers()[i].toString())));
 			}
 		}
 
@@ -65,25 +65,25 @@ public class DebugReader extends Item{
 		for(int i = 0; i < 6; i++){
 			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i))){
 				double[] gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFront(i)).getMotionData();
-				playerIn.addChatComponentMessage(new TextComponentString("w=" + gear[0] + ", E=" + gear[1] + ", P=" + gear[2] + ", lastE=" + gear[3]));
+				playerIn.sendMessage(new TextComponentString("w=" + gear[0] + ", E=" + gear[1] + ", P=" + gear[2] + ", lastE=" + gear[3]));
 
 			}
 		}
 
 		if(te instanceof IAxisHandler){
-			playerIn.addChatComponentMessage(new TextComponentString(Boolean.toString(((IAxisHandler) te).isLocked())));
-			playerIn.addChatComponentMessage(new TextComponentString(((IAxisHandler) te).getTotalEnergy() + " Energy Total"));
+			playerIn.sendMessage(new TextComponentString(Boolean.toString(((IAxisHandler) te).isLocked())));
+			playerIn.sendMessage(new TextComponentString(((IAxisHandler) te).getTotalEnergy() + " Energy Total"));
 		}else{
-			playerIn.addChatComponentMessage(new TextComponentString(Integer.toString(CommonProxy.masterKey)));
+			playerIn.sendMessage(new TextComponentString(Integer.toString(CommonProxy.masterKey)));
 		}
 
 		if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
 			IHeatHandler cable = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null);
-			playerIn.addChatComponentMessage(new TextComponentString("Temp = " + cable.getTemp()));
+			playerIn.sendMessage(new TextComponentString("Temp = " + cable.getTemp()));
 
 			if(te instanceof HeatCableTileEntity){
 				HeatCableTileEntity heatCable = (HeatCableTileEntity) te;
-				playerIn.addChatComponentMessage(new TextComponentString("Insul = " + heatCable.getInsulator() + ", Cond = " + heatCable.getConductor()));
+				playerIn.sendMessage(new TextComponentString("Insul = " + heatCable.getInsulator() + ", Cond = " + heatCable.getConductor()));
 			}
 		}
 
@@ -91,7 +91,7 @@ public class DebugReader extends Item{
 			IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 
 			for(IFluidTankProperties tank : pipe.getTankProperties()){
-				playerIn.addChatComponentMessage(new TextComponentString("Amount = " + (tank.getContents() == null ? 0 : tank.getContents().amount) + " Type = " + (tank.getContents() == null ? "None" : tank.getContents().getFluid().getUnlocalizedName()) + " Capacity = " + tank.getCapacity()));
+				playerIn.sendMessage(new TextComponentString("Amount = " + (tank.getContents() == null ? 0 : tank.getContents().amount) + " Type = " + (tank.getContents() == null ? "None" : tank.getContents().getFluid().getUnlocalizedName()) + " Capacity = " + tank.getCapacity()));
 			}
 		}
 		
@@ -110,11 +110,11 @@ public class DebugReader extends Item{
 							
 							if(!nbt.hasKey(MagicElements.getElement(check).name())){
 								nbt.setBoolean(MagicElements.getElement(check).name(), true);
-								playerIn.addChatComponentMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
+								playerIn.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
 								ModPackets.network.sendTo(new SendElementNBTToClient(nbt), (EntityPlayerMP) playerIn);
 							}
 							
-							playerIn.addChatComponentMessage(new TextComponentString(EnumFacing.getFront(i).toString() + ": " + check.toString()));
+							playerIn.sendMessage(new TextComponentString(EnumFacing.getFront(i).toString() + ": " + check.toString()));
 						}
 					}
 				}
@@ -122,11 +122,11 @@ public class DebugReader extends Item{
 		}
 		
 		if(te instanceof CrystalMasterAxisTileEntity){
-			playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((((CrystalMasterAxisTileEntity) te).getElement() == null) ? "NONE" : ((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime())));
+			playerIn.sendMessage(new TextComponentString("Element: " + ((((CrystalMasterAxisTileEntity) te).getElement() == null) ? "NONE" : ((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime())));
 		}
 		
 		if(te instanceof RatiatorTileEntity){
-			playerIn.addChatComponentMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
+			playerIn.sendMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
 		}
 
 		return EnumActionResult.PASS;

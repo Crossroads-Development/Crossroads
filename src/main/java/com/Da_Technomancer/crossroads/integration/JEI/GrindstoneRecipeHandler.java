@@ -15,13 +15,8 @@ public class GrindstoneRecipeHandler implements IRecipeHandler<GrindstoneRecipe>
 	}
 
 	@Override
-	public String getRecipeCategoryUid(){
-		return Main.MODID + ".grindstone";
-	}
-
-	@Override
 	public String getRecipeCategoryUid(@Nonnull GrindstoneRecipe recipe){
-		return getRecipeCategoryUid();
+		return Main.MODID + ".grindstone";
 	}
 
 	@Override

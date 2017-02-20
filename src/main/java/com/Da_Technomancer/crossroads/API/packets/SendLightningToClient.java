@@ -29,7 +29,7 @@ public class SendLightningToClient extends Message<SendLightningToClient>{
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
-		World client = minecraft.theWorld;
+		World client = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
 			@Override
 			public void run(){
@@ -41,6 +41,6 @@ public class SendLightningToClient extends Message<SendLightningToClient>{
 	}
 	
 	public static void summonLightning(World client, BlockPos pos){
-		client.spawnEntityInWorld(new EntityLightningBolt(client, pos.getX(), pos.getY(), pos.getZ(), true));
+		client.spawnEntity(new EntityLightningBolt(client, pos.getX(), pos.getY(), pos.getZ(), true));
 	}
 }

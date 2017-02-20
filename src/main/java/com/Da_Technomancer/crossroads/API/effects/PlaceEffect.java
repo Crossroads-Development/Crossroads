@@ -19,7 +19,8 @@ public class PlaceEffect implements IEffect{
 			for(EntityItem ent : items){
 				if(ent.getEntityItem() != null && ent.getEntityItem().getItem() instanceof ItemBlock && worldIn.getBlockState(ent.getPosition()).getBlock().isReplaceable(worldIn, ent.getPosition())){
 					worldIn.setBlockState(ent.getPosition(), ((ItemBlock) ent.getEntityItem().getItem()).getBlock().getStateFromMeta(ent.getEntityItem().getMetadata()));
-					if(--ent.getEntityItem().stackSize <= 0){
+					ent.getEntityItem().shrink(1);
+					if(ent.getEntityItem().getCount() <= 0){
 						ent.setDead();
 					}
 				}

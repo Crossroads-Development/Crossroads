@@ -15,7 +15,6 @@ import com.Da_Technomancer.crossroads.tileentities.magic.CrystalMasterAxisTileEn
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
@@ -41,7 +40,7 @@ public class OmniMeter extends Item{
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te == null){
 			return EnumActionResult.PASS;
@@ -51,18 +50,18 @@ public class OmniMeter extends Item{
 		if(te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
 			pass = false;
 			if(!worldIn.isRemote){
-				playerIn.addChatComponentMessage(new TextComponentString("Temp: " + worldIn.getTileEntity(pos).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "*C"));
+				playerIn.sendMessage(new TextComponentString("Temp: " + worldIn.getTileEntity(pos).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "*C"));
 				/* No longer necessary due to heat cables all having different textures, but the code is left in just in case.
 				if(te instanceof HeatCableTileEntity){
 					HeatCableTileEntity heatCable = (HeatCableTileEntity) te;
-					playerIn.addChatComponentMessage(new TextComponentString("Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
+					playerIn.sendMessage(new TextComponentString("Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
 				}
 				if(te instanceof RedstoneHeatCableTileEntity){
 					RedstoneHeatCableTileEntity heatCable = (RedstoneHeatCableTileEntity) te;
-					playerIn.addChatComponentMessage(new TextComponentString("Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
+					playerIn.sendMessage(new TextComponentString("Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
 				}
 				*/
-				playerIn.addChatComponentMessage(new TextComponentString("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * worldIn.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "*C"));
+				playerIn.sendMessage(new TextComponentString("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * worldIn.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "*C"));
 			}
 		}
 
@@ -71,9 +70,9 @@ public class OmniMeter extends Item{
 			if(!worldIn.isRemote){
 				IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 
-				playerIn.addChatComponentMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
+				playerIn.sendMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
 				for(IFluidTankProperties tank : pipe.getTankProperties()){
-					playerIn.addChatComponentMessage(new TextComponentString("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : MiscOp.localizeEither(tank.getContents().getFluid().getUnlocalizedName())) + ", Capacity: " + tank.getCapacity()));
+					playerIn.sendMessage(new TextComponentString("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : MiscOp.localizeEither(tank.getContents().getFluid().getUnlocalizedName())) + ", Capacity: " + tank.getCapacity()));
 				}
 			}
 		}
@@ -83,7 +82,7 @@ public class OmniMeter extends Item{
 			if(!worldIn.isRemote){
 				IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
 
-				playerIn.addChatComponentMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]));
+				playerIn.sendMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]));
 			}
 		}
 		
@@ -103,11 +102,11 @@ public class OmniMeter extends Item{
 							
 							if(!nbt.hasKey(MagicElements.getElement(check).name())){
 								nbt.setBoolean(MagicElements.getElement(check).name(), true);
-								playerIn.addChatComponentMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
+								playerIn.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
 								ModPackets.network.sendTo(new SendElementNBTToClient(nbt), (EntityPlayerMP) playerIn);
 							}
 							
-							playerIn.addChatComponentMessage(new TextComponentString(EnumFacing.getFront(i).toString() + ": " + check.toString()));
+							playerIn.sendMessage(new TextComponentString(EnumFacing.getFront(i).toString() + ": " + check.toString()));
 						}
 					}
 				}
@@ -117,14 +116,14 @@ public class OmniMeter extends Item{
 		if(te instanceof CrystalMasterAxisTileEntity){
 			pass = false;
 			if(!worldIn.isRemote){
-				playerIn.addChatComponentMessage(new TextComponentString("Element: " + ((((CrystalMasterAxisTileEntity) te).getElement() == null) ? "NONE" : (((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime()))));
+				playerIn.sendMessage(new TextComponentString("Element: " + ((((CrystalMasterAxisTileEntity) te).getElement() == null) ? "NONE" : (((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime()))));
 			}
 		}
 
 		if(te instanceof RatiatorTileEntity){
 			pass = false;
 			if(!worldIn.isRemote){
-				playerIn.addChatComponentMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
+				playerIn.sendMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
 			}
 		}
 

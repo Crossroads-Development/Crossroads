@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -69,22 +71,23 @@ public final class RecipeHolder{
 		JEIWrappers.add(new HeatingCrucibleRecipe(false));
 	}
 
+	@Nonnull
 	public static ItemStack recipeMatch(ArrayList<EntityItem> itemEnt){
 		if(itemEnt == null){
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 
 		for(EntityItem it : itemEnt){
-			if(it.getEntityItem() == null || it.getEntityItem().stackSize != 1){
-				return null;
+			if(it.getEntityItem() == null || it.getEntityItem().getCount() != 1){
+				return ItemStack.EMPTY;
 			}
 			items.add(it.getEntityItem());
 		}
 
 		if(items.size() != 3){
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		for(Pair<ICraftingStack[], ItemStack> craft : poisonBoboRecipes){
@@ -105,6 +108,6 @@ public final class RecipeHolder{
 			}
 		}
 
-		return null;
+		return ItemStack.EMPTY;
 	}
 }

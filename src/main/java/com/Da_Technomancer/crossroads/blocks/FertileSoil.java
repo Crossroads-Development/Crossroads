@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.google.common.base.Function;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeetroot;
@@ -25,6 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -44,7 +43,7 @@ public class FertileSoil extends Block{
 		setSoundType(SoundType.GROUND);
 		setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
-		GameRegistry.register(new ItemMultiTexture(this, this, new Function<ItemStack, String>(){
+		GameRegistry.register(new ItemMultiTexture(this, this, new ItemMultiTexture.Mapper(){
 			@Override
 			@Nullable
 			public String apply(@Nullable ItemStack stack){
@@ -73,13 +72,13 @@ public class FertileSoil extends Block{
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(state.getValue(Properties.PLANT) >= 4){
-			updateTick(worldIn, pos, state, new Random());
+			updateTick(worldIn, pos, state, RANDOM);
 		}else{
 			for(EnumFacing side : EnumFacing.values()){
 				if(side != EnumFacing.UP && worldIn.getBlockState(pos.offset(side)).getBlock() != this){
-					worldIn.getBlockState(pos.offset(side)).getBlock().neighborChanged(worldIn.getBlockState(pos.offset(side)), worldIn, pos.offset(side), this);
+					worldIn.getBlockState(pos.offset(side)).getBlock().neighborChanged(worldIn.getBlockState(pos.offset(side)), worldIn, pos.offset(side), this, pos);
 				}
 			}
 		}
@@ -144,7 +143,7 @@ public class FertileSoil extends Block{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list){
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list){
 		for(int i = 0; i < 10; i++){
 			list.add(new ItemStack(itemIn, 1, i));
 		}

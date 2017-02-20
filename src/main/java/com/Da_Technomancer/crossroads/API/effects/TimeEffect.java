@@ -109,9 +109,9 @@ public class TimeEffect implements IEffect{
 						if(swapWith.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) != null){
 							NBTTagCompound nbt = new NBTTagCompound();
 							swapWith.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK).writeToNBT(nbt);
-							nbt.setInteger("x", current.getChunkCoordIntPair().getXStart() + pos.getX());
+							nbt.setInteger("x", current.getPos().getXStart() + pos.getX());
 							nbt.setInteger("y", pos.getY());
-							nbt.setInteger("z", current.getChunkCoordIntPair().getZStart() + pos.getZ());
+							nbt.setInteger("z", current.getPos().getZStart() + pos.getZ());
 							current.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK).readFromNBT(nbt);
 						}
 					}

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -58,38 +59,9 @@ public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipeWrapp
 		slot.draw(minecraft, 79, 52);
 		slot.draw(minecraft, 97, 52);
 		arrowStatic.draw(minecraft, 66, 35);
+		arrow.draw(minecraft, 66, 35);
 		GlStateManager.disableBlend();
 		GlStateManager.disableAlpha();
-	}
-
-	@Override
-	public void drawAnimations(Minecraft minecraft){
-		arrow.draw(minecraft, 66, 35);
-	}
-
-	@Deprecated
-	@Override
-	public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull GrindstoneRecipeWrapper recipeWrapper){
-		if(!(recipeWrapper instanceof GrindstoneRecipeWrapper)){
-			return;
-		}
-		GrindstoneRecipeWrapper wrapper = ((GrindstoneRecipeWrapper) recipeWrapper);
-
-		List<ItemStack> inputs = wrapper.getInputs();
-		if (inputs.size() != 1) {
-			// Might happen if MineTweaker added a wrong recipe
-			return;
-		}
-
-		recipeLayout.getItemStacks().init(0, true, 79, 16);
-		recipeLayout.getItemStacks().set(0, inputs.get(0));
-
-		recipeLayout.getItemStacks().init(1, false, 61, 52);
-		recipeLayout.getItemStacks().init(2, false, 79, 52);
-		recipeLayout.getItemStacks().init(3, false, 97, 52);
-		recipeLayout.getItemStacks().set(1, wrapper.getOutputs().size() >= 1 ? wrapper.getOutputs().get(0) : null);
-		recipeLayout.getItemStacks().set(2, wrapper.getOutputs().size() >= 2 ? wrapper.getOutputs().get(1) : null);
-		recipeLayout.getItemStacks().set(3, wrapper.getOutputs().size() == 3 ? wrapper.getOutputs().get(2) : null);
 	}
 
 	@Override
@@ -112,6 +84,16 @@ public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipeWrapp
 		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(ItemStack.class).size() >= 1 ? ingredients.getOutputs(ItemStack.class).get(0) : null);
 		recipeLayout.getItemStacks().set(2, ingredients.getOutputs(ItemStack.class).size() >= 2 ? ingredients.getOutputs(ItemStack.class).get(1) : null);
 		recipeLayout.getItemStacks().set(3, ingredients.getOutputs(ItemStack.class).size() == 3 ? ingredients.getOutputs(ItemStack.class).get(2) : null);
+	}
+
+	@Override
+	public IDrawable getIcon(){
+		return null;
+	}
+
+	@Override
+	public List<String> getTooltipStrings(int mouseX, int mouseY){
+		return ImmutableList.of();
 	}
 
 }
