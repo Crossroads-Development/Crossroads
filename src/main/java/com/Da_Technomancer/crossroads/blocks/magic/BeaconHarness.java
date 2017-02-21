@@ -19,7 +19,7 @@ public class BeaconHarness extends BlockContainer{
 
 	public BeaconHarness(){
 		super(Material.GLASS);
-		String name = "beaconHarness";
+		String name = "beacon_harness";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

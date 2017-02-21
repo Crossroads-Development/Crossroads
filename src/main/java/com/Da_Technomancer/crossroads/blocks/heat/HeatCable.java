@@ -64,7 +64,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		super(Material.IRON);
 		this.conductor = conductor;
 		this.insulator = insulator;
-		String name = "heatCable" + conductor.toString() + insulator.toString();
+		String name = "heat_cable_" + conductor.toString().toLowerCase() + '_' + insulator.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		this.setHardness(1);

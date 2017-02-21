@@ -1,6 +1,0 @@
-{
-	"variants": {
-		"orient=true": { "model": "crossroads:multiplicationAxis"},
-		"orient=false": { "model": "crossroads:multiplicationAxis", "y": 180 }
-	}
-}

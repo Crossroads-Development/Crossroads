@@ -13,8 +13,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ObsidianCuttingKit extends Item{
 
 	public ObsidianCuttingKit(){
-		setUnlocalizedName("obsidianCuttingKit");
-		setRegistryName("obsidianCuttingKit");
+		String name = "obsidian_cutting_kit";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
 		this.setCreativeTab(ModItems.tabCrossroads);
 	}

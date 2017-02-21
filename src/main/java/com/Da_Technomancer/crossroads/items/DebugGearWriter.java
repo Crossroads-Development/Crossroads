@@ -14,8 +14,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class DebugGearWriter extends Item{
 
 	public DebugGearWriter(){
-		setUnlocalizedName("debugGearWriter");
-		setRegistryName("debugGearWriter");
+		String name = "debug_gear_writer";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
 		this.setCreativeTab(ModItems.tabCrossroads);
 	}

@@ -102,7 +102,7 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "copper"), new EntryItemStack(pages, "Copper Processing", new ItemStack(OreSetUp.ingotCopper, 1), smallText));
 			pages = new ArrayList<IPage>();
 
-			categories.add(new CategoryItemStack(entries, "The Basics", new ItemStack(Item.getByNameOrId("crossroads:oreCopper"), 1)));
+			categories.add(new CategoryItemStack(entries, "The Basics", new ItemStack(OreSetUp.oreCopper, 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
 			// HEAT
@@ -245,7 +245,7 @@ public final class GuideBooks{
 
 			MAIN.setTitle("Main Menu");
 			MAIN.setWelcomeMessage("Welcome to Crossroads");
-			MAIN.setDisplayName("mysteriousJournal");
+			MAIN.setDisplayName("mysterious_journal");
 			MAIN.setColor(Color.GRAY);
 			MAIN.setCategoryList(categories);
 			MAIN.setRegistryName(new ResourceLocation(Main.MODID, "crossroadsMainGuide"));
@@ -302,7 +302,7 @@ public final class GuideBooks{
 			pages = new ArrayList<IPage>();
 
 
-			categories.add(new CategoryItemStack(entries, "The Basics", new ItemStack(Item.getByNameOrId("crossroads:oreCopper"), 1)));
+			categories.add(new CategoryItemStack(entries, "The Basics", new ItemStack(OreSetUp.oreCopper, 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
 			// HEAT
@@ -445,7 +445,7 @@ public final class GuideBooks{
 
 			INFO.setTitle("Main Menu");
 			INFO.setWelcomeMessage("Welcome to Crossroads");
-			INFO.setDisplayName("technicianManual");
+			INFO.setDisplayName("technician_manual");
 			INFO.setColor(Color.CYAN);
 			INFO.setCategoryList(categories);
 			INFO.setRegistryName(new ResourceLocation(Main.MODID, "info_guide"));

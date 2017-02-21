@@ -94,7 +94,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		
-		if(inv != null){
+		if(!inv.isEmpty()){
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
 		return nbt;
@@ -104,7 +104,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		
-		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : null;
+		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
 	}
 	
 	private final IItemHandler itemHandler = new ItemHandler();

@@ -51,7 +51,7 @@ public class SortingHopper extends BlockContainer{
 
 	protected SortingHopper(){
 		super(Material.IRON);
-		String name = "sortingHopper";
+		String name = "sorting_hopper";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(2);

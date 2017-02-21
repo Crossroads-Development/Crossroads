@@ -1,0 +1,41 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"text": {
+			0: {
+				"textures": {
+					"filling": "crossroads:blocks/ore_native_copper"
+				}
+			},
+			1: {
+				"textures": {
+					"filling": "crossroads:blocks/moltencopper_still"
+				}
+			},
+			2: {
+				"textures": {
+					"filling": "blocks/cobblestone"
+				}
+			},
+			3: {
+				"textures": {
+					"filling": "blocks/lava_still"
+				}
+			}
+		},
+		"fullness": {
+			0: {
+				"model": "crossroads:empty_heating_crucible"
+			},
+			1: {
+				"model": "crossroads:one_heating_crucible"
+			},
+			2: {
+				"model": "crossroads:two_heating_crucible"
+			},
+			3: {
+				"model": "crossroads:three_heating_crucible"
+			}
+		}
+	}
+}

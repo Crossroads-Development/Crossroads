@@ -14,8 +14,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class HandCrank extends Item{
 
 	public HandCrank(){
-		setUnlocalizedName("handCrank");
-		setRegistryName("handCrank");
+		String name = "hand_crank";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
 		this.setCreativeTab(ModItems.tabCrossroads);
 	}

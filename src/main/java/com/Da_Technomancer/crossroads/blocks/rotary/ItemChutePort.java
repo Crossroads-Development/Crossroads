@@ -25,7 +25,7 @@ public class ItemChutePort extends BlockContainer{
 
 	public ItemChutePort(){
 		super(Material.IRON);
-		String name = "itemChutePort";
+		String name = "item_chute_port";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(2);

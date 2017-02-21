@@ -25,7 +25,7 @@ public class LessThanAxis extends BlockContainer{
 	
 	public LessThanAxis(){
 		super(Material.IRON);
-		String name = "lessThanAxis";
+		String name = "less_than_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

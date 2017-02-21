@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.items.BasicItem;
@@ -40,35 +38,34 @@ public final class OreSetUp{
 
 	public static void init(){
 		boolean oreDict = ModConfig.registerOres.getBoolean();
-		ingotTin = new BasicItem("ingotTin", oreDict ? "ingotTin" : null);
-		blockTin = new BasicBlock("blockTin", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockTin" : null);
-		nuggetTin = new BasicItem("nuggetTin", oreDict ? "nuggetTin" : null);
-		oreTin = new BasicBlock("oreTin", Material.ROCK, 2, "pickaxe", 3, null, oreDict ? "oreTin" : null);
+		ingotTin = new BasicItem("ingot_tin", oreDict ? "ingotTin" : null);
+		blockTin = new BasicBlock("block_tin", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockTin" : null);
+		nuggetTin = new BasicItem("nugget_tin", oreDict ? "nuggetTin" : null);
+		oreTin = new BasicBlock("ore_tin", Material.ROCK, 2, "pickaxe", 3, null, oreDict ? "oreTin" : null);
 
-		ingotCopper = new BasicItem("ingotCopper", oreDict ? "ingotCopper" : null);
-		blockCopper = new BasicBlock("blockCopper", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockCopper" : null);
-		nuggetCopper = new BasicItem("nuggetCopper", oreDict ? "nuggetCopper" : null);
-		oreCopper = new BasicBlock("oreCopper", Material.ROCK, 2, "pickaxe", 3, null, oreDict ? "oreCopper" : null);
-		oreNativeCopper = new BasicBlock("oreNativeCopper", Material.ROCK, 1, "pickaxe", 3){
+		ingotCopper = new BasicItem("ingot_copper", oreDict ? "ingotCopper" : null);
+		blockCopper = new BasicBlock("block_copper", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockCopper" : null);
+		nuggetCopper = new BasicItem("nugget_copper", oreDict ? "nuggetCopper" : null);
+		oreCopper = new BasicBlock("ore_copper", Material.ROCK, 2, "pickaxe", 3, null, oreDict ? "oreCopper" : null);
+		oreNativeCopper = new BasicBlock("ore_native_copper", Material.ROCK, 1, "pickaxe", 3){
 			@Override
 			public int quantityDropped(Random random){
 				return 3;
 			}
 
 			@Override
-			@Nullable
 			public Item getItemDropped(IBlockState state, Random rand, int fortune){
 				return nuggetCopper;
 			}
 		};
 
-		ingotBronze = new BasicItem("ingotBronze", oreDict ? "ingotBronze" : null);
-		blockBronze = new BasicBlock("blockBronze", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockBronze" : null);
-		nuggetBronze = new BasicItem("nuggetBronze", oreDict ? "nuggetBronze" : null);
+		ingotBronze = new BasicItem("ingot_bronze", oreDict ? "ingotBronze" : null);
+		blockBronze = new BasicBlock("block_bronze", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockBronze" : null);
+		nuggetBronze = new BasicItem("nugget_bronze", oreDict ? "nuggetBronze" : null);
 
-		gemRuby = new BasicItem("gemRuby", "gemRuby");
-		blockRuby = new BasicBlock("blockRuby", Material.ROCK, 3, "pickaxe", 5, null, "blockRuby");
-		oreRuby = new BasicBlock("oreRuby", Material.ROCK, 3, "pickaxe", 3, null, "oreRuby"){
+		gemRuby = new BasicItem("gem_ruby", "gemRuby");
+		blockRuby = new BasicBlock("block_ruby", Material.ROCK, 3, "pickaxe", 5, null, "blockRuby");
+		oreRuby = new BasicBlock("ore_ruby", Material.ROCK, 3, "pickaxe", 3, null, "oreRuby"){
 			@Override
 			public int quantityDroppedWithBonus(int fortune, Random random){
 				if(fortune > 0){
@@ -78,7 +75,6 @@ public final class OreSetUp{
 			}
 
 			@Override
-			@Nullable
 			public Item getItemDropped(IBlockState state, Random rand, int fortune){
 				return gemRuby;
 			}

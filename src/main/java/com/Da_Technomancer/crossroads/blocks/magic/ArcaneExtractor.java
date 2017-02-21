@@ -23,7 +23,7 @@ public class ArcaneExtractor extends BlockContainer{
 
 	public ArcaneExtractor(){
 		super(Material.ROCK);
-		String name = "arcaneExtractor";
+		String name = "arcane_extractor";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

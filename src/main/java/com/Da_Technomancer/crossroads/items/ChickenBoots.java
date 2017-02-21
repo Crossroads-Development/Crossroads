@@ -14,7 +14,7 @@ public class ChickenBoots extends ItemArmor{
 	public ChickenBoots(){
 		super(ModItems.BOBO, 1, EntityEquipmentSlot.FEET);
 		this.setMaxStackSize(1);
-		String name = "chickenBoots";
+		String name = "chicken_boots";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

@@ -17,7 +17,7 @@ public class FatCongealer extends BlockContainer{
 
 	public FatCongealer(){
 		super(Material.IRON);
-		String name = "fatCongealer";
+		String name = "fat_congealer";
 		setUnlocalizedName(name);
 		setSoundType(SoundType.METAL);
 		setRegistryName(name);

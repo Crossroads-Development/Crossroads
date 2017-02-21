@@ -14,7 +14,7 @@ public class SquidHelmet extends ItemArmor{
 	public SquidHelmet(){
 		super(ModItems.BOBO, 1, EntityEquipmentSlot.HEAD);
 		this.setMaxStackSize(1);
-		String name = "squidHelmet";
+		String name = "squid_helmet";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

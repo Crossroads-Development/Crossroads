@@ -29,12 +29,13 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class LargeGear extends Item{
 
 	private final GearTypes type;
-	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gearBase", "inventory");
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
 	
 
 	public LargeGear(GearTypes typeIn){
-		setUnlocalizedName("largeGear" + typeIn.toString());
-		setRegistryName("largeGear" + typeIn.toString());
+		String name = "large_gear_" + typeIn.toString().toLowerCase();
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
 		this.setCreativeTab(ModItems.tabGear);
 		type = typeIn;

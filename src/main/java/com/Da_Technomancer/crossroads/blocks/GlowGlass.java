@@ -20,7 +20,7 @@ public class GlowGlass extends BlockBreakable{
 	protected GlowGlass(){
 		super(Material.GLASS, false);
 		setSoundType(SoundType.GLASS);
-		String name = "glowGlass";
+		String name = "glow_glass";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		this.setCreativeTab(ModItems.tabCrossroads);

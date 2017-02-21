@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/slotted_chest",
+		"south": "crossroads:blocks/slotted_chest",
+		"east": "crossroads:blocks/slotted_chest",
+		"west": "crossroads:blocks/slotted_chest",
+		"up": "crossroads:blocks/slotted_chest_top",
+		"down": "crossroads:blocks/slotted_chest_bottom",
+		"particle": "crossroads:blocks/slotted_chest"
+	}
+}

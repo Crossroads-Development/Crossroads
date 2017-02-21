@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ChaosRod extends Item{
 	
 	public ChaosRod(){
-		String name = "chaosRod";
+		String name = "chaos_rod";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

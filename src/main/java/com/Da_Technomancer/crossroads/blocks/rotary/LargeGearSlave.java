@@ -42,7 +42,7 @@ public class LargeGearSlave extends BlockContainer{
 	
 	public LargeGearSlave(){
 		super(Material.IRON);
-		String name = "largeGearSlave";
+		String name = "large_gear_slave";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

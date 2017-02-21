@@ -25,7 +25,7 @@ public class EqualsAxis extends BlockContainer{
 	
 	public EqualsAxis(){
 		super(Material.IRON);
-		String name = "equalsAxis";
+		String name = "equals_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

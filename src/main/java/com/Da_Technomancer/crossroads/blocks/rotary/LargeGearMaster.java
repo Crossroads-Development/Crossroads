@@ -38,7 +38,7 @@ public class LargeGearMaster extends BlockContainer{
 	
 	public LargeGearMaster(){
 		super(Material.IRON);
-		String name = "largeGearMaster";
+		String name = "large_gear_master";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

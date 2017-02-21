@@ -49,8 +49,9 @@ public class SidedGearHolder extends BlockContainer{
 
 	public SidedGearHolder(){
 		super(Material.IRON);
-		setUnlocalizedName("sidedGearHolder");
-		setRegistryName("sidedGearHolder");
+		String name = "sided_gear_holder";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
 		this.setHardness(1);
 		setSoundType(SoundType.METAL);

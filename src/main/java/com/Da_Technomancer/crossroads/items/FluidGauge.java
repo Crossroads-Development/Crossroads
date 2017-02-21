@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class FluidGauge extends Item{
 
 	public FluidGauge(){
-		String name = "fluidGauge";
+		String name = "fluid_gauge";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

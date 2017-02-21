@@ -16,7 +16,7 @@ public class FluidVoid extends BlockContainer{
 
 	public FluidVoid(){
 		super(Material.IRON);
-		String name = "fluidVoid";
+		String name = "fluid_void";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

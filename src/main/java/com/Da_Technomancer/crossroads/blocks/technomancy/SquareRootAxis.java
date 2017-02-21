@@ -25,7 +25,7 @@ public class SquareRootAxis extends BlockContainer{
 	
 	public SquareRootAxis(){
 		super(Material.IRON);
-		String name = "squareRootAxis";
+		String name = "square_root_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

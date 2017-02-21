@@ -29,7 +29,7 @@ public class SteamTurbine extends BlockContainer{
 
 	public SteamTurbine(){
 		super(Material.IRON);
-		String name = "steamTurbine";
+		String name = "steam_turbine";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class CoalHeaterGuiContainer extends GuiContainer{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID + ":textures/gui/container/coalHeaterGui.png");
+	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID + ":textures/gui/container/coal_heater_gui.png");
 
 	private CoalHeaterTileEntity te;
 	private IInventory playerInv;

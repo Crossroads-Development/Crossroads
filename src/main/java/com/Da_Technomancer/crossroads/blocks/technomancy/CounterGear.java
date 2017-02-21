@@ -36,12 +36,12 @@ public class CounterGear extends BlockContainer{
 	
 	private static final AxisAlignedBB BODY = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
 	private final GearTypes type;
-	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gearBaseToggle", "inventory");
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base_toggle", "inventory");
 	
 	public CounterGear(GearTypes type){
 		super(Material.IRON);
 		this.type = type;
-		String name = "counterGear" + type.toString();
+		String name = "counter_gear_" + type.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

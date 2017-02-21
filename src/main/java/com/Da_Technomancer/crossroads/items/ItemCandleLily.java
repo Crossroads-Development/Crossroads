@@ -23,8 +23,9 @@ public class ItemCandleLily extends ItemLilyPad{
 
 	public ItemCandleLily(){
 		super(ModBlocks.candleLilyPad);
-		setRegistryName("candleLilypad");
-		setUnlocalizedName("candleLilypad");
+		String name = "candle_lilypad";
+		setRegistryName(name);
+		setUnlocalizedName(name);
 		this.setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
 	}

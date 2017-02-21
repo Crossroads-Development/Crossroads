@@ -1,0 +1,50 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"orient": {
+			true: {
+				"model": "crossroads:lens_holder", "y":90
+			},
+			false: {
+				"model": "crossroads:lens_holder"
+			}
+		},
+		"text_seven": {
+			0: {
+				"textures": {
+					"gem": "crossroads:items/empty"
+				}
+			},
+			1: {
+				"textures": {
+					"gem": "crossroads:items/gem_ruby"
+				}
+			},
+			2: {
+				"textures": {
+					"gem": "items/emerald"
+				}
+			},
+			3: {
+				"textures": {
+					"gem": "items/diamond"
+				}
+			},
+			4: {
+				"textures": {
+					"gem": "crossroads:items/pure_quartz"
+				}
+			},
+			5: {
+				"textures": {
+					"gem": "crossroads:items/glow_quartz"
+				}
+			},
+			6: {
+				"textures": {
+					"gem": "crossroads:items/void_crystal"
+				}
+			}
+		}
+	}
+}

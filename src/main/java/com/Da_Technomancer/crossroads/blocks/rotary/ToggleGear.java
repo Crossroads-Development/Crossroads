@@ -41,12 +41,12 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
 	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .5625D, 0D, 1D, .625D, 1D);
 	private final GearTypes type;
-	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gearBaseToggle", "inventory");
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base_toggle", "inventory");
 	
 	public ToggleGear(GearTypes type){
 		super(Material.IRON);
 		this.type = type;
-		String name = "toggleGear" + type.toString();
+		String name = "toggle_gear_" + type.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class CandleLilyPad extends BlockLilyPad{
 
 	protected CandleLilyPad(){
-		String name = "candleLilypad";
+		String name = "candle_lilypad";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

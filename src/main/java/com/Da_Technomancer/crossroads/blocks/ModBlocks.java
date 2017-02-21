@@ -75,6 +75,7 @@ public final class ModBlocks{
 	public static SteamBoiler steamBoiler;
 	public static BlockSalt blockSalt;
 	public static BlockBrazier brazier;
+	public static FluidVoid fluidVoid;
 	public static RotaryPump rotaryPump;
 	public static SteamTurbine steamTurbine;
 	public static HeatExchanger heatExchanger;
@@ -157,7 +158,7 @@ public final class ModBlocks{
 		steamTurbine = new SteamTurbine();
 		blockAddQue(blockSalt = new BlockSalt());
 		blockAddQue(brazier = new BlockBrazier());
-		blockAddQue(new FluidVoid());
+		blockAddQue(fluidVoid = new FluidVoid());
 		blockAddQue(heatExchanger = new HeatExchanger(false));
 		blockAddQue(insulHeatExchanger = new HeatExchanger(true));
 		blockAddQue(fluidTank = new FluidTank());
@@ -182,7 +183,7 @@ public final class ModBlocks{
 		blockAddQue(crystallinePrism = new CrystallinePrism());
 		blockAddQue(arcaneReflector = new ArcaneReflector());
 		blockAddQue(lensHolder = new LensHolder());
-		blockPureQuartz = new BasicBlock("blockPureQuartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz");
+		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz");
 		blockAddQue(beamSplitter = new BeamSplitter());
 		blockAddQue(colorChart = new ColorChart());
 		blockAddQue(glowGlass = new GlowGlass());
@@ -195,7 +196,7 @@ public final class ModBlocks{
 		blockAddQue(crystalMasterAxis = new CrystalMasterAxis());
 		blockAddQue(axle = new Axle());
 		blockAddQue(ratiator = new Ratiator());
-		blockSaltTile = new BasicBlock("blockSaltTile", Material.SAND, 0, "shovel", .5F, SoundType.SAND, "blockSalt");
+		blockSaltTile = new BasicBlock("block_salt_tile", Material.SAND, 0, "shovel", .5F, SoundType.SAND, "blockSalt");
 		blockAddQue(beaconHarness = new BeaconHarness());
 		blockAddQue(fatFeeder = new FatFeeder());
 		blockAddQue(chunkUnlocker = new ChunkUnlocker());

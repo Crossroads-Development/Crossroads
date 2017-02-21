@@ -198,7 +198,9 @@ public class BrazierTileEntity extends TileEntity implements ITickable{
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		inventory.writeToNBT(nbt);
+		if(!inventory.isEmpty()){
+			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
+		}
 		nbt.setInteger("time", time);
 		return nbt;
 	}
@@ -206,7 +208,7 @@ public class BrazierTileEntity extends TileEntity implements ITickable{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		inventory = new ItemStack(nbt);
+		inventory = new ItemStack(nbt.getCompoundTag("inv"));
 		time = nbt.getInteger("time");
 	}
 }

@@ -28,7 +28,7 @@ public class BlockSalt extends Block{
 	protected BlockSalt(){
 		super(Material.SAND);
 		setHarvestLevel("shovel", 0);
-		String name = "blockSalt";
+		String name = "block_salt";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		this.setCreativeTab(ModItems.tabCrossroads);

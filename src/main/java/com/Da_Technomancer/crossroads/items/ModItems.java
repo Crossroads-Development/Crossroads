@@ -45,6 +45,8 @@ public final class ModItems{
 	protected static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 0, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F);
 	protected static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[]{0, 0, 0, 2}, 0, SoundEvents.BLOCK_ANVIL_USE, 0);
 
+	public static DebugGearWriter debugGearWriter;
+	public static DebugHeatWriter debugHeatWriter;
 	public static BasicItem dustSalt;
 	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
@@ -54,8 +56,6 @@ public final class ModItems{
 	public static FluidGauge fluidGauge;
 	public static Speedometer speedometer;
 	public static OmniMeter omnimeter;
-	@Deprecated
-	public static DebugReader debugReader;
 	public static Vacuum vacuum;
 	public static MagentaBread magentaBread;
 	public static ItemCandleLily itemCandleLilypad;
@@ -86,12 +86,11 @@ public final class ModItems{
 	}
 
 	public static final void init(){
-		itemAddQue(new DebugGearWriter());
-		itemAddQue(debugReader = new DebugReader());
+		itemAddQue(debugGearWriter = new DebugGearWriter());
 		itemAddQue(handCrank = new HandCrank());
-		itemAddQue(new DebugHeatWriter());
-		dustCopper = new BasicItem("dustCopper", "dustCopper");
-		dustSalt = new BasicItem("dustSalt", "dustSalt");
+		itemAddQue(debugHeatWriter = new DebugHeatWriter());
+		dustCopper = new BasicItem("dust_copper", "dustCopper");
+		dustSalt = new BasicItem("dust_salt", "dustSalt");
 		itemAddQue(obsidianKit = new ObsidianCuttingKit());
 		itemAddQue(mashedPotato = new MashedPotato());
 		itemAddQue(thermometer = new Thermometer());
@@ -102,18 +101,18 @@ public final class ModItems{
 		itemAddQue(magentaBread = new MagentaBread());
 		itemAddQue(itemCandleLilypad = new ItemCandleLily());
 		itemAddQue(edibleBlob = new EdibleBlob());
-		itemAddQue(diamondWire = new BasicItem("diamondWire", "wireDiamond"));
+		itemAddQue(diamondWire = new BasicItem("diamond_wire", "wireDiamond"));
 		itemAddQue(rainIdol = new RainIdol());
-		pureQuartz = new BasicItem("pureQuartz", "gemQuartz");
-		luminescentQuartz = new BasicItem("luminescentQuartz");
-		lensArray = new BasicItem("lensArray");
-		invisItem = new BasicItem("invisItem", null, false);
+		pureQuartz = new BasicItem("pure_quartz", "gemQuartz");
+		luminescentQuartz = new BasicItem("luminescent_quartz");
+		lensArray = new BasicItem("lens_array");
+		invisItem = new BasicItem("invis_item", null, false);
 		itemAddQue(squidHelmet = new SquidHelmet());
 		itemAddQue(pigZombieChestplate = new PigZombieChestsplate());
 		itemAddQue(cowLeggings = new CowLeggings());
 		itemAddQue(chickenBoots = new ChickenBoots());
 		itemAddQue(chaosRod = new ChaosRod());
-		voidCrystal = new BasicItem("voidCrystal");
+		voidCrystal = new BasicItem("void_crystal");
 		itemAddQue(moduleGoggles = new ModuleGoggles());
 		itemAddQue(staffTechnomancy = new StaffTechnomancy());
 	}

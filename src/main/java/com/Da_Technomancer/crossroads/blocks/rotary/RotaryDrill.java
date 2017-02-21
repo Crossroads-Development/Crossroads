@@ -32,7 +32,7 @@ public class RotaryDrill extends BlockContainer{
 	
 	public RotaryDrill(){
 		super(Material.IRON);
-		String name = "rotaryDrill";
+		String name = "rotary_drill";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

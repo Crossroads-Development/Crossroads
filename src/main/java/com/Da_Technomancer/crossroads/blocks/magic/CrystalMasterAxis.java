@@ -25,10 +25,11 @@ public class CrystalMasterAxis extends BlockContainer{
 	
 	public CrystalMasterAxis(){
 		super(Material.ROCK);
-		setUnlocalizedName("masterAxisCrystal");
-		setRegistryName("masterAxisCrystal");
+		String name = "master_axis_crystal";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("masterAxisCrystal"));
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setCreativeTab(ModItems.tabCrossroads);
 		setHardness(3);
 		setSoundType(SoundType.STONE);

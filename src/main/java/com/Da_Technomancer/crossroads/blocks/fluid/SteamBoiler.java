@@ -21,10 +21,11 @@ public class SteamBoiler extends BlockContainer{
 
 	public SteamBoiler(){
 		super(Material.IRON);
-		setUnlocalizedName("steamBoiler");
-		setRegistryName("steamBoiler");
+		String name = "steam_boiler";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("steamBoiler"));
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		this.setCreativeTab(ModItems.tabCrossroads);
 		this.setHardness(3);
 		setSoundType(SoundType.METAL);

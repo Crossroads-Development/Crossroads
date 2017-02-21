@@ -130,7 +130,7 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		@Override
 		public String getName(){
-			return "container.slottedChest";
+			return "container.slotted_chest";
 		}
 
 		@Override

@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class HeatingChamberGuiContainer extends GuiContainer{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID + ":textures/gui/container/heatingChamberGui.png");
+	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID + ":textures/gui/container/heating_chamber_gui.png");
 
 	private IInventory playerInv;
 	private HeatingChamberTileEntity te;

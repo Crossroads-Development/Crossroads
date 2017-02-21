@@ -18,7 +18,7 @@ public class BeamSplitterBasic extends BlockContainer{
 
 	public BeamSplitterBasic(){
 		super(Material.ROCK);
-		String name = "beamSplitterBasic";
+		String name = "beam_splitter_basic";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

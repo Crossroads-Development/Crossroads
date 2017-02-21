@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:arcane_extractor"},
+		"facing=south": { "model": "crossroads:arcane_extractor", "y": 180 },
+		"facing=east": { "model": "crossroads:arcane_extractor", "y": 90 },
+		"facing=west": { "model": "crossroads:arcane_extractor", "y": 270 },
+		"facing=up": { "model": "crossroads:arcane_extractor"},
+		"facing=down": { "model": "crossroads:arcane_extractor"}
+	}
+}

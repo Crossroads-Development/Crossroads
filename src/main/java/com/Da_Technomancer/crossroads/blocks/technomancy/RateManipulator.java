@@ -17,7 +17,7 @@ public class RateManipulator extends BlockContainer{
 	
 	public RateManipulator(){
 		super(Material.IRON);
-		String name = "rateManipulator";
+		String name = "rate_manipulator";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

@@ -31,7 +31,7 @@ public class StaffCharger extends BlockContainer{
 
 	public StaffCharger(){
 		super(Material.IRON);
-		String name = "staffCharger";
+		String name = "staff_charger";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

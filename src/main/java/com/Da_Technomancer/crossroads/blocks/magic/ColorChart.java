@@ -33,7 +33,7 @@ public class ColorChart extends Block{
 	
 	public ColorChart(){
 		super(Material.WOOD);
-		String name = "colorChart";
+		String name = "color_chart";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

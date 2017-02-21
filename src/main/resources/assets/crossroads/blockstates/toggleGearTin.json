@@ -1,6 +1,0 @@
-{
-	"variants": {
-		"redstone_bool=true": { "model": "crossroads:blockTin" },
-		"redstone_bool=false": { "model": "crossroads:blockTin" }
-	}
-}

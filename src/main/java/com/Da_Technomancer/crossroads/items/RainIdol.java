@@ -17,7 +17,7 @@ public class RainIdol extends Item{
 
 
 	protected RainIdol(){
-		String name = "rainIdol";
+		String name = "rain_idol";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

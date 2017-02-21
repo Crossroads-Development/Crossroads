@@ -20,7 +20,7 @@ public class HeatExchanger extends BlockContainer{
 	public HeatExchanger(boolean insul){
 		super(Material.IRON);
 		insulat = insul;
-		String name = insul ? "insulatedHeatExchanger" : "heatExchanger";
+		String name = insul ? "insulated_heat_exchanger" : "heat_exchanger";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

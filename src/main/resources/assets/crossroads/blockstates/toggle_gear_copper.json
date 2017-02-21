@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"redstone_bool=true": { "model": "crossroads:block_copper" },
+		"redstone_bool=false": { "model": "crossroads:block_copper" }
+	}
+}

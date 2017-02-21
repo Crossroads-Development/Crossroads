@@ -26,7 +26,7 @@ public class MultiplicationAxis extends BlockContainer{
 	
 	public MultiplicationAxis(){
 		super(Material.IRON);
-		String name = "multiplicationAxis";
+		String name = "multiplication_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

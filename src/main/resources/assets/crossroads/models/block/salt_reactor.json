@@ -1,0 +1,8 @@
+{
+	"parent": "block/cube_bottom_top",
+	"textures": {
+		"side": "crossroads:blocks/salt_reactor",
+		"top": "crossroads:blocks/salt_reactor",
+		"bottom": "crossroads:blocks/salt_reactor_bottom"
+	}
+}

@@ -14,7 +14,7 @@ public class MagentaBread extends ItemFood{
 
 	public MagentaBread(){
 		super(20, .5F, false);
-		String name = "magentaBread";
+		String name = "magenta_bread";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

@@ -23,10 +23,11 @@ public class Grindstone extends BlockContainer{
 
 	public Grindstone(){
 		super(Material.ROCK);
-		setUnlocalizedName("grindstone");
-		setRegistryName("grindstone");
+		String name = "grindstone";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("grindstone"));
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setCreativeTab(ModItems.tabCrossroads);
 		setHardness(3);
 	}

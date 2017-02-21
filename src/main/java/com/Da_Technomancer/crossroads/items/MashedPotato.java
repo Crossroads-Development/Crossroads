@@ -7,11 +7,10 @@ public class MashedPotato extends ItemFood{
 	
 	public MashedPotato(){
 		super(5, .3F, true);
-		String name = "mashedPotato";
+		String name = "mashed_potato";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		setCreativeTab(ModItems.tabCrossroads);
 	}
-
 }

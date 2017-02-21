@@ -22,7 +22,7 @@ public class CrystallinePrism extends BlockContainer{
 
 	public CrystallinePrism(){
 		super(Material.ROCK);
-		String name = "crystallinePrism";
+		String name = "crystalline_prism";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

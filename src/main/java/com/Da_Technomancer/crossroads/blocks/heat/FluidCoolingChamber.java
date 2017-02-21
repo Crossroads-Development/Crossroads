@@ -21,7 +21,7 @@ public class FluidCoolingChamber extends BlockContainer{
 
 	public FluidCoolingChamber(){
 		super(Material.IRON);
-		String name = "fluidCoolingChamber";
+		String name = "fluid_cooling_chamber";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

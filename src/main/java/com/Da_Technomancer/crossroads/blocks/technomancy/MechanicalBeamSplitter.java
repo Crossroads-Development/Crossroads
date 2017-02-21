@@ -25,7 +25,7 @@ public class MechanicalBeamSplitter extends BlockContainer{
 
 	public MechanicalBeamSplitter(){
 		super(Material.ROCK);
-		String name = "mechanicalBeamSplitter";
+		String name = "mechanical_beam_splitter";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

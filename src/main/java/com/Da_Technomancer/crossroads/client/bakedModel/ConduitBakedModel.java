@@ -31,7 +31,7 @@ public class ConduitBakedModel implements IBakedModel{
 	private final VertexFormat format;
 	private final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter;
 
-	public static final ModelResourceLocation BAKED_MODEL = new ModelResourceLocation(Main.MODID + ":conduit");
+	public static final ModelResourceLocation BAKED_MODEL = new ModelResourceLocation(Main.MODID, "conduit");
 
 	protected ConduitBakedModel(VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter){
 		this.bakedTextureGetter = bakedTextureGetter;

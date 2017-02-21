@@ -25,7 +25,7 @@ public class FluxReaderAxis extends BlockContainer{
 	
 	public FluxReaderAxis(){
 		super(Material.IRON);
-		String name = "fluxReaderAxis";
+		String name = "flux_reader_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

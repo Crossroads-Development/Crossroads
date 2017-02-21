@@ -26,7 +26,7 @@ public class ItemChute extends Block{
 	
 	protected ItemChute(){
 		super(Material.IRON);
-		String name = "itemChute";
+		String name = "item_chute";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.tabCrossroads);

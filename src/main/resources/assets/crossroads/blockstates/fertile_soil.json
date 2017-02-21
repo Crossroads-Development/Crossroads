@@ -1,0 +1,14 @@
+{
+	"variants": {
+		"plant=0": { "model": "crossroads:fertile_soil"},
+		"plant=1": { "model": "crossroads:fertile_soil"},
+		"plant=2": { "model": "crossroads:fertile_soil"},
+		"plant=3": { "model": "crossroads:fertile_soil"},
+		"plant=4": { "model": "crossroads:fertile_soil"},
+		"plant=5": { "model": "crossroads:fertile_soil"},
+		"plant=6": { "model": "crossroads:fertile_soil"},
+		"plant=7": { "model": "crossroads:fertile_soil"},
+		"plant=8": { "model": "crossroads:fertile_soil"},
+		"plant=9": { "model": "crossroads:fertile_soil"}
+	}
+}

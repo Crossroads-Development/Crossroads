@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RotaryPump extends BlockContainer{
 	public RotaryPump(){
 		super(Material.IRON);
-		String name = "rotaryPump";
+		String name = "rotary_pump";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

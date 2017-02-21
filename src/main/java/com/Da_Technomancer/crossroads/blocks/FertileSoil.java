@@ -36,7 +36,7 @@ public class FertileSoil extends Block{
 
 	protected FertileSoil(){
 		super(Material.GROUND);
-		String name = "fertileSoil";
+		String name = "fertile_soil";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(.5F);

@@ -26,10 +26,11 @@ public class HeatingCrucible extends BlockContainer{
 
 	public HeatingCrucible(){
 		super(Material.ROCK);
-		setUnlocalizedName("heatingCrucible");
-		setRegistryName("heatingCrucible");
+		String name = "heating_crucible";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("heatingCrucible"));
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setCreativeTab(ModItems.tabCrossroads);
 		setHardness(3);
 	}

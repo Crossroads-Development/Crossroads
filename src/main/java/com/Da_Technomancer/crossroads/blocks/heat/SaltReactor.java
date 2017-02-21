@@ -21,7 +21,7 @@ public class SaltReactor extends BlockContainer{
 
 	public SaltReactor(){
 		super(Material.IRON);
-		String name = "saltReactor";
+		String name = "salt_reactor";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

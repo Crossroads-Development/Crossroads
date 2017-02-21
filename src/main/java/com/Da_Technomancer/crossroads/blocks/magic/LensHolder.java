@@ -42,7 +42,7 @@ public class LensHolder extends BlockContainer implements IBlockCompare{
 
 	public LensHolder(){
 		super(Material.ROCK);
-		String name = "lensHolder";
+		String name = "lens_holder";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

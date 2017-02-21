@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:color_chart"},
+		"facing=south": { "model": "crossroads:color_chart", "y": 180 },
+		"facing=east": { "model": "crossroads:color_chart", "y": 90 },
+		"facing=west": { "model": "crossroads:color_chart", "y": 270 },
+		"facing=up": { "model": "crossroads:color_chart"},
+		"facing=down": { "model": "crossroads:color_chart"}
+	}
+}

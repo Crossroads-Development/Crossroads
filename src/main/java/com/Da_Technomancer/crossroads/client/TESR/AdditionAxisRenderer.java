@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 public class AdditionAxisRenderer extends TileEntitySpecialRenderer<AdditionAxisTileEntity>{
 
 	private final ResourceLocation textureAx = new ResourceLocation(Main.MODID, "textures/model/axle.png");
-	private final ResourceLocation textureGear = new ResourceLocation(Main.MODID, "textures/model/gearOct.png");
+	private final ResourceLocation textureGear = new ResourceLocation(Main.MODID, "textures/model/gear_oct.png");
 	private final ModelAxle modelAx = new ModelAxle();
 	private final ModelGearOctagon modelGear = new ModelGearOctagon();
 

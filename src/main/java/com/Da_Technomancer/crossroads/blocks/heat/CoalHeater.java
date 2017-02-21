@@ -23,7 +23,7 @@ public class CoalHeater extends BlockContainer{
 
 	public CoalHeater(){
 		super(Material.ROCK);
-		String name = "coalHeater";
+		String name = "coal_heater";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

@@ -22,7 +22,7 @@ public class BeamSplitter extends BlockContainer{
 
 	public BeamSplitter(){
 		super(Material.ROCK);
-		String name = "beamSplitter";
+		String name = "beam_splitter";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

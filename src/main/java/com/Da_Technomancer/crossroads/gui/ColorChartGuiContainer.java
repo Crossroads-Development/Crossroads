@@ -18,9 +18,9 @@ import net.minecraft.world.World;
 
 public class ColorChartGuiContainer extends GuiContainer{
 
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/colorChartGui.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/color_chart_gui.png");
 	private static final ResourceLocation BLOCKED = new ResourceLocation("textures/items/barrier.png");
-	private static final ResourceLocation BAR = new ResourceLocation(Main.MODID, "textures/gui/container/searchBar.png");
+	private static final ResourceLocation BAR = new ResourceLocation(Main.MODID, "textures/gui/container/search_bar.png");
 
 	public ColorChartGuiContainer(EntityPlayer player, World world, BlockPos pos){
 		super(new ColorChartContainer(player, world, pos));

@@ -1,0 +1,5 @@
+{
+	"variants": {
+		"normal": { "model": "crossroads:beam_splitter_basic"}
+	}
+}

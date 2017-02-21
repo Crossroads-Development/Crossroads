@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:arcane_reflector"},
+		"facing=south": { "model": "crossroads:arcane_reflector", "y": 180 },
+		"facing=east": { "model": "crossroads:arcane_reflector", "y": 90 },
+		"facing=west": { "model": "crossroads:arcane_reflector", "y": 270 },
+		"facing=up": { "model": "crossroads:arcane_reflector", "x": 270},
+		"facing=down": { "model": "crossroads:arcane_reflector", "x": 90}
+	}
+}

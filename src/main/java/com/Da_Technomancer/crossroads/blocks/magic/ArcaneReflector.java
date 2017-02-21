@@ -23,7 +23,7 @@ public class ArcaneReflector extends BlockContainer{
 
 	public ArcaneReflector(){
 		super(Material.ROCK);
-		String name = "arcaneReflector";
+		String name = "arcane_reflector";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

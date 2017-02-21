@@ -15,8 +15,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class DebugHeatWriter extends Item{
 
 	public DebugHeatWriter(){
-		setUnlocalizedName("debugHeatWriter");
-		setRegistryName("debugHeatWriter");
+		String name = "debug_heat_writer";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
 		this.setCreativeTab(ModItems.tabCrossroads);
 	}

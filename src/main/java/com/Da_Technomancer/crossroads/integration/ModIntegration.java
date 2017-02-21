@@ -12,12 +12,12 @@ public class ModIntegration {
 	public static boolean isJEIAvailable = false;
 
 	public static void init() {
-		if(Loader.isModLoaded("JEI")){
+		if(Loader.isModLoaded("jei")){
 			RecipeHolder.rebind();
 			isJEIAvailable = true;
 		}
 
-		if (Loader.isModLoaded("MineTweaker3")) {
+		if (Loader.isModLoaded("minetweaker3")) {
 			MineTweakerIntegration.init();
 		}
 	}

@@ -18,7 +18,7 @@ public class BlockMoltenCopper extends BlockFluidClassic{
 		super(MOLTEN_COPPER, Material.LAVA);
 		MOLTEN_COPPER.setBlock(this);
 		setUnlocalizedName("blockMoltenCopper");
-		this.setRegistryName("blockMoltenCopper");
+		setRegistryName("blockMoltenCopper");
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName("blockMoltenCopper"));
 	}

@@ -39,7 +39,9 @@ public class SendFieldDisableToClient extends Message<SendFieldDisableToClient>{
 		return null;
 	}
 
-	public void processMessage(World worldClient, long chunk){
-		FieldWorldSavedData.get(worldClient).fieldNodes.remove(chunk);
+	public void processMessage(World world, long chunk){
+		if(world != null){
+			FieldWorldSavedData.get(world).fieldNodes.remove(chunk);
+		}
 	}
 }

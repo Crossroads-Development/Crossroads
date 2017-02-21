@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:crystalline_prism"},
+		"facing=south": { "model": "crossroads:crystalline_prism", "y": 180 },
+		"facing=east": { "model": "crossroads:crystalline_prism", "y": 90 },
+		"facing=west": { "model": "crossroads:crystalline_prism", "y": 270 },
+		"facing=up": { "model": "crossroads:crystalline_prism"},
+		"facing=down": { "model": "crossroads:crystalline_prism"}
+	}
+}

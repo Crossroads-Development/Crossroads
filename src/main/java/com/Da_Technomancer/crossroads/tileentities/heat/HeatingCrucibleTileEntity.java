@@ -152,8 +152,8 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		super.readFromNBT(nbt);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
 
-		this.init = nbt.getBoolean("init");
-		this.temp = nbt.getDouble("temp");
+		init = nbt.getBoolean("init");
+		temp = nbt.getDouble("temp");
 
 		if(nbt.hasKey("inv")){
 			inventory = new ItemStack(nbt.getCompoundTag("inv"));
@@ -167,8 +167,8 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 			content.writeToNBT(nbt);
 		}
 
-		nbt.setBoolean("init", this.init);
-		nbt.setDouble("temp", this.temp);
+		nbt.setBoolean("init", init);
+		nbt.setDouble("temp", temp);
 
 		if(!inventory.isEmpty()){
 			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));

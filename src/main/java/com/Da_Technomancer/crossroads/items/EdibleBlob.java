@@ -22,7 +22,7 @@ public class EdibleBlob extends ItemFood{
 
 	public EdibleBlob(){
 		super(0, 0, true);
-		String name = "edibleBlob";
+		String name = "edible_blob";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

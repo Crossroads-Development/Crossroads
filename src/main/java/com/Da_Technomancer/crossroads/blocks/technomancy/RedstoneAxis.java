@@ -25,7 +25,7 @@ public class RedstoneAxis extends BlockContainer{
 	
 	public RedstoneAxis(){
 		super(Material.IRON);
-		String name = "redstoneAxis";
+		String name = "redstone_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

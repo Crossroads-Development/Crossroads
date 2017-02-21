@@ -25,7 +25,7 @@ public class HeatingChamber extends BlockContainer{
 
 	public HeatingChamber(){
 		super(Material.IRON);
-		String name = "heatingChamber";
+		String name = "heating_chamber";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

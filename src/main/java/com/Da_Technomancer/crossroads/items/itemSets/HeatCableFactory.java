@@ -30,7 +30,6 @@ public final class HeatCableFactory{
 	}
 	
 	public static void clientInit(){
-		//TODO ModelResourceLocation cableModel = new ModelResourceLocation(Main.MODID + ":heatCable");
 		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.HEAT_CABLES.values()){
 			for(HeatCable cable : map.values()){
 				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cable), 0, new ModelResourceLocation(cable.getTexture().toString().replaceFirst("blocks/", "")));

@@ -50,7 +50,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
-		if(inventory != null){
+		if(!inventory.isEmpty()){
 			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
 		}
 		return nbt;

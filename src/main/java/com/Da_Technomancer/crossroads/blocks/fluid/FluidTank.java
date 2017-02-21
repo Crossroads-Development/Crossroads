@@ -38,7 +38,7 @@ public class FluidTank extends BlockContainer implements IBlockCompare{
 	
 	public FluidTank(){
 		super(Material.IRON);
-		String name = "fluidTank";
+		String name = "fluid_tank";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setSoundType(SoundType.METAL);

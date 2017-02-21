@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:multiplication_axis"},
+		"facing=south": { "model": "crossroads:multiplication_axis", "y": 180 },
+		"facing=east": { "model": "crossroads:multiplication_axis", "y": 90 },
+		"facing=west": { "model": "crossroads:multiplication_axis", "y": 270 },
+		"facing=up": { "model": "crossroads:multiplication_axis"},
+		"facing=down": { "model": "crossroads:multiplication_axis"}
+	}
+}

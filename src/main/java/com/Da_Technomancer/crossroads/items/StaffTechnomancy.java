@@ -36,7 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class StaffTechnomancy extends Item{
 
 	public StaffTechnomancy(){
-		String name = "staffTechnomancy";
+		String name = "staff_technomancy";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

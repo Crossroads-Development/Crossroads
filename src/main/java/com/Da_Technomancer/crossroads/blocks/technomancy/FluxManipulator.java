@@ -17,7 +17,7 @@ public class FluxManipulator extends BlockContainer{
 	
 	public FluxManipulator(){
 		super(Material.IRON);
-		String name = "fluxManipulator";
+		String name = "flux_manipulator";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

@@ -21,7 +21,7 @@ public class ChunkUnlocker extends BlockContainer{
 	
 	public ChunkUnlocker(){
 		super(Material.IRON);
-		String name = "chunkUnlocker";
+		String name = "chunk_unlocker";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

@@ -25,7 +25,7 @@ public class GreaterThanAxis extends BlockContainer{
 	
 	public GreaterThanAxis(){
 		super(Material.IRON);
-		String name = "greaterThanAxis";
+		String name = "greater_than_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

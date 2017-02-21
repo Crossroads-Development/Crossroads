@@ -26,7 +26,7 @@ public class QuartzStabilizer extends BlockContainer{
 	public QuartzStabilizer(boolean large){
 		super(Material.ROCK);
 		this.large = large;
-		String name = (large ? "large" : "small") + "QuartzStabilizer";
+		String name = (large ? "large" : "small") + "_quartz_stabilizer";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

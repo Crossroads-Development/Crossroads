@@ -1,16 +1,16 @@
 {
 	"variants": {
 		"facing=north,redstone_bool=false": { "model": "crossroads:ratiator" },
-		"facing=north,redstone_bool=true": { "model": "crossroads:ratiatorDiv" },
+		"facing=north,redstone_bool=true": { "model": "crossroads:ratiator_div" },
 		"facing=south,redstone_bool=false": { "model": "crossroads:ratiator", "y": 180 },
-		"facing=south,redstone_bool=true": { "model": "crossroads:ratiatorDiv", "y": 180 },
+		"facing=south,redstone_bool=true": { "model": "crossroads:ratiator_div", "y": 180 },
 		"facing=east,redstone_bool=false": { "model": "crossroads:ratiator", "y": 90 },
-		"facing=east,redstone_bool=true": { "model": "crossroads:ratiatorDiv", "y": 90 },
+		"facing=east,redstone_bool=true": { "model": "crossroads:ratiator_div", "y": 90 },
 		"facing=west,redstone_bool=false": { "model": "crossroads:ratiator", "y": 270 },
-		"facing=west,redstone_bool=true": { "model": "crossroads:ratiatorDiv", "y": 270 },
+		"facing=west,redstone_bool=true": { "model": "crossroads:ratiator_div", "y": 270 },
 		"facing=up,redstone_bool=false": { "model": "crossroads:ratiator"},
-		"facing=up,redstone_bool=true": { "model": "crossroads:ratiatorDiv"},
+		"facing=up,redstone_bool=true": { "model": "crossroads:ratiator_div"},
 		"facing=down,redstone_bool=false": { "model": "crossroads:ratiator"},
-		"facing=down,redstone_bool=true": { "model": "crossroads:ratiatorDiv"}
+		"facing=down,redstone_bool=true": { "model": "crossroads:ratiator_div"}
 	}
 }

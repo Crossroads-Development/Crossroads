@@ -60,7 +60,7 @@ public class RedstoneFluidTube extends BlockContainer implements IConduitModel{
 	
 	public RedstoneFluidTube(){
 		super(Material.IRON);
-		String name = "redstoneFluidTube";
+		String name = "redstone_fluid_tube";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

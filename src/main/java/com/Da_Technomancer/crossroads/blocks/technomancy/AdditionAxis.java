@@ -25,7 +25,7 @@ public class AdditionAxis extends BlockContainer{
 	
 	public AdditionAxis(){
 		super(Material.IRON);
-		String name = "additionAxis";
+		String name = "addition_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -52,7 +52,7 @@ public class AdditionAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.ORIENT, meta == 1);
+		return getDefaultState().withProperty(Properties.ORIENT, meta == 1);
 	}
 
 	@Override

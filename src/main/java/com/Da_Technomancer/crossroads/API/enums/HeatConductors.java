@@ -24,7 +24,7 @@ public enum HeatConductors{
 	}
 
 	/**This will return the name with all but the first char being lowercase,
-	 * so COPPER becomes Copper, which is good for oreDict and registry
+	 * so COPPER becomes Copper, which is good for oreDict
 	 */
 	@Override
 	public String toString(){

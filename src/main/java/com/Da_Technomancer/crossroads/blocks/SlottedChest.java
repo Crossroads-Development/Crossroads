@@ -24,7 +24,7 @@ public class SlottedChest extends BlockContainer{
 
 	protected SlottedChest(){
 		super(Material.WOOD);
-		String name = "slottedChest";
+		String name = "slotted_chest";
 		setSoundType(SoundType.WOOD);
 		setUnlocalizedName(name);
 		setRegistryName(name);

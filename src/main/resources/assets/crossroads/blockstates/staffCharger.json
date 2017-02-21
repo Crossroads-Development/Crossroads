@@ -1,6 +1,0 @@
-{
-	"variants": {
-		"head=true": { "model": "crossroads:staffChargerStaff" },
-		"head=false": { "model": "crossroads:staffCharger" }
-	}
-}

@@ -79,7 +79,7 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 		neg = nbt.getBoolean("neg");
 		water = nbt.hasKey("water") ? FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("water")) : null;
 		dWater = nbt.hasKey("dWater") ? FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("dWater")) : null;
-		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : null;
+		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
 	}
 	
 	private final IFluidHandler waterHandler = new WaterHandler();

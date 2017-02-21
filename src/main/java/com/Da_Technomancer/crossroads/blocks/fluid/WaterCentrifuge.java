@@ -26,7 +26,7 @@ public class WaterCentrifuge extends BlockContainer{
 	
 	public WaterCentrifuge(){
 		super(Material.IRON);
-		String name = "waterCentrifuge";
+		String name = "water_centrifuge";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);

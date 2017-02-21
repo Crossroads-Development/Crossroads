@@ -27,6 +27,7 @@ public class StaffChargerTileEntity extends TileEntity{
 	
 	public void setStaff(ItemStack staff){
 		this.staff = staff;
+		markDirty();
 	}
 	
 	public ItemStack getStaff(){
@@ -56,7 +57,7 @@ public class StaffChargerTileEntity extends TileEntity{
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		if(!staff.isEmpty()){
-			staff.writeToNBT(nbt);
+			nbt.setTag("inv", staff.writeToNBT(new NBTTagCompound()));
 		}
 		return nbt;
 	}
@@ -64,8 +65,7 @@ public class StaffChargerTileEntity extends TileEntity{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		if(nbt.hasKey("Count"))
-		staff = new ItemStack(nbt);
+		staff = new ItemStack(nbt.getCompoundTag("inv"));
 	}
 	
 	private class MagicHandler implements IMagicHandler{
