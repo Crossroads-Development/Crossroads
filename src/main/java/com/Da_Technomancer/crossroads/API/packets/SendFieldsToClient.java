@@ -42,7 +42,14 @@ public class SendFieldsToClient extends Message<SendFieldsToClient>{
 	}
 
 	public void processMessage(byte[][] fieldLayer, byte type, long chunk, World world){
+		if(world == null){
+			return;
+		}
 		FieldWorldSavedData saved = FieldWorldSavedData.get(world);
+		if(type == -1){
+			saved.fieldNodes.remove(chunk);
+			return;
+		}
 		if(!saved.fieldNodes.containsKey(chunk)){
 			saved.fieldNodes.put(chunk, FieldWorldSavedData.getDefaultChunkFlux());
 		}

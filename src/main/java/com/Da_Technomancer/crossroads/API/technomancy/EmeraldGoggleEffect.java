@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendFieldDisableToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 
@@ -35,7 +34,7 @@ public class EmeraldGoggleEffect implements IGoggleEffect{
 			if(FieldWorldSavedData.get(world).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(player.getPosition()))){
 				ModPackets.network.sendTo(new SendFieldsToClient(FieldWorldSavedData.get(world).fieldNodes.get(FieldWorldSavedData.getLongFromPos(player.getPosition()))[1], (byte) 1, FieldWorldSavedData.getLongFromPos(player.getPosition())), (EntityPlayerMP) player);
 			}else{
-				ModPackets.network.sendTo(new SendFieldDisableToClient(FieldWorldSavedData.getLongFromPos(player.getPosition())), (EntityPlayerMP) player);
+				ModPackets.network.sendTo(new SendFieldsToClient(new byte[1][1], (byte) -1, FieldWorldSavedData.getLongFromPos(player.getPosition())), (EntityPlayerMP) player);
 			}
 		}
 	}

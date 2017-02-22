@@ -1,5 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendSlotFilterToClient;
+import com.Da_Technomancer.crossroads.gui.container.SlottedChestContainer;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -9,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -17,10 +22,25 @@ public class SlottedChestTileEntity extends TileEntity{
 	public SlottedChestTileEntity(){
 		for(int i = 0; i < 54; i++){
 			inv[i] = ItemStack.EMPTY;
+			lockedInv[i] = ItemStack.EMPTY;
 		}
 	}
 	
 	private ItemStack[] inv = new ItemStack[54];
+	public ItemStack[] lockedInv = new ItemStack[54];
+	
+	public void filterChanged(){
+		if(world.isRemote){
+			return;
+		}
+		NBTTagCompound slotNBT = new NBTTagCompound();
+		for(int i = 0; i < 54; ++i){
+			if(!lockedInv[i].isEmpty()){
+				slotNBT.setTag("lock" + i, lockedInv[i].writeToNBT(new NBTTagCompound()));
+			}
+		}
+		ModPackets.network.sendToAllAround(new SendSlotFilterToClient(slotNBT, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
@@ -29,6 +49,11 @@ public class SlottedChestTileEntity extends TileEntity{
 		for(int i = 0; i < 54; ++i){
 			if(nbt.hasKey("slot" + i)){
 				inv[i] = new ItemStack(nbt.getCompoundTag("slot" + i));
+				//Backward compatibility.
+				lockedInv[i] = new ItemStack(nbt.getCompoundTag("slot" + i));
+			}
+			if(nbt.hasKey("lockSlot" + i)){
+				lockedInv[i] = new ItemStack(nbt.getCompoundTag("lockSlot" + i));
 			}
 		}
 	}
@@ -41,15 +66,30 @@ public class SlottedChestTileEntity extends TileEntity{
 			if(!inv[i].isEmpty()){
 				nbt.setTag("slot" + i, inv[i].writeToNBT(new NBTTagCompound()));
 			}
+			if(!lockedInv[i].isEmpty()){
+				nbt.setTag("lockSlot" + i, lockedInv[i].writeToNBT(new NBTTagCompound()));
+			}
 		}
 
 		return nbt;
 	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		for(int i = 0; i < 54; ++i){
+			if(!lockedInv[i].isEmpty()){
+				nbt.setTag("lockSlot" + i, lockedInv[i].writeToNBT(new NBTTagCompound()));
+			}
+		}
+		return nbt;
+	}
 
 	public void cleanPreset(int slot){
-		if(slot < 54){
-			inv[slot] = ItemStack.EMPTY;
+		if(slot < 54 && inv[slot].isEmpty()){
+			lockedInv[slot] = ItemStack.EMPTY;
 		}
+		filterChanged();
 	}
 
 	@Override
@@ -199,7 +239,7 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		@Override
 		public void openInventory(EntityPlayer player){
-
+			filterChanged();
 		}
 
 		@Override
@@ -209,7 +249,7 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		@Override
 		public boolean isItemValidForSlot(int index, ItemStack stack){
-			return index < 54 && ItemStack.areItemsEqual(stack, inv[index]);
+			return index < 54 && (inv[index].isEmpty() ? lockedInv[index].isEmpty() ? true : SlottedChestContainer.doStackContentsMatch(stack, lockedInv[index]) : SlottedChestContainer.doStackContentsMatch(stack, inv[index]));
 		}
 
 		@Override
@@ -229,13 +269,17 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		@Override
 		public void clear(){
-			inv = new ItemStack[54];
+			for(int i = 0; i < 54; i++){
+				inv[i] = ItemStack.EMPTY;
+				lockedInv[i] = ItemStack.EMPTY;
+			}
+			filterChanged();
 		}
 
 		@Override
 		public boolean isEmpty(){
 			for(int i = 0; i < 54; i++){
-				if(!inv[i].isEmpty()){
+				if(!inv[i].isEmpty() || !lockedInv[i].isEmpty()){
 					return false;
 				}
 			}
