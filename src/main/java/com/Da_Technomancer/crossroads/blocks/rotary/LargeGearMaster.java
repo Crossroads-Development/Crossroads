@@ -58,7 +58,7 @@ public class LargeGearMaster extends BlockContainer{
 		if(world.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
 			return new ItemStack(GearFactory.LARGE_GEARS.get(((LargeGearMasterTileEntity) world.getTileEntity(pos)).getMember()), 1);
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 	
 	@Override

@@ -72,11 +72,11 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 
 		if(canFit(outputs)){
 			progress = 0;
-			decrStackSize(0, 1);
+			inventory[0].shrink(1);
 
 			for(ItemStack stack : outputs){
 				int remain = stack.getCount();
-				for(int slot : new int[] {1, 2, 3}){
+				for(int slot = 1; slot < 4; slot++){
 					if(remain > 0 && ItemStack.areItemsEqual(inventory[slot], stack)){
 						int stored = stack.getMaxStackSize() - inventory[slot].getCount();
 
@@ -85,12 +85,12 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 					}
 				}
 
-				for(int slot : new int[] {1, 2, 3}){
+				for(int slot = 1; slot < 4; slot++){
 					if(remain <= 0){
 						break;
 					}
 
-					if(getStackInSlot(slot) == null){
+					if(inventory[slot].isEmpty()){
 						inventory[slot] = new ItemStack(stack.getItem(), Math.min(stack.getMaxStackSize(), remain), stack.getMetadata());
 						remain -= Math.min(stack.getMaxStackSize(), remain);
 					}

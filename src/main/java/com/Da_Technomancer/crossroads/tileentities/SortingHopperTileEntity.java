@@ -52,15 +52,15 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	
 	private void updateHopper(){
 		if(world != null && !world.isRemote){
-			if(!isOnTransferCooldown() && BlockHopper.isEnabled(this.getBlockMetadata())){
+			if(!isOnTransferCooldown() && BlockHopper.isEnabled(getBlockMetadata())){
 				boolean flag = false;
 
 				if(!isFull()){
-					flag = captureDroppedItems(this) || flag;
+					flag = captureDroppedItems(this);
 				}
 
 				if(!this.isEmpty()){
-					flag = transferItemsOut();
+					flag = transferItemsOut() || flag;
 				}
 
 				if(flag){
@@ -679,11 +679,11 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	}
 
 	public boolean isOnTransferCooldown(){
-		return this.transferCooldown > 0;
+		return transferCooldown > 0;
 	}
 
 	public boolean mayTransfer(){
-		return this.transferCooldown <= 1;
+		return transferCooldown <= 1;
 	}
 
 	@Override

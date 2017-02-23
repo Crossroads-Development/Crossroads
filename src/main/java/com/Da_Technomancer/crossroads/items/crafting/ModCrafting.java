@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.items.crafting;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
@@ -19,7 +18,6 @@ import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -36,7 +34,7 @@ public final class ModCrafting{
 
 		OreDictionary.registerOre("wool", new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE));
 
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("oreCopper", 1), new ItemStack[] {new ItemStack(Item.getByNameOrId(Main.MODID + ":dustCopper"), 2), new ItemStack(Blocks.SAND)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("oreCopper", 1), new ItemStack[] {new ItemStack(ModItems.dustCopper, 2), new ItemStack(Blocks.SAND)});
 		RecipeHolder.grindRecipes.put(new CraftingStack(Items.WHEAT, 1, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
 		RecipeHolder.grindRecipes.put(new CraftingStack(Blocks.PUMPKIN, 1, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
 		RecipeHolder.grindRecipes.put(new CraftingStack(Items.MELON, 1, 0), new ItemStack[] {new ItemStack(Items.MELON_SEEDS, 3)});

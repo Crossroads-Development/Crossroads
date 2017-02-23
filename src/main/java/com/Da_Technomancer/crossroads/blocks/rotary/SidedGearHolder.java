@@ -19,6 +19,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -65,7 +66,12 @@ public class SidedGearHolder extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
-		return null;
+		Item out = GearFactory.BASIC_GEARS.get(((SidedGearHolderTileEntity) world.getTileEntity(pos)).getMembers()[target.sideHit.getOpposite().getIndex()]);
+		if(out == null){
+			return ItemStack.EMPTY;
+		}else{
+			return new ItemStack(out, 1);
+		}
 	}
 
 	@Override

@@ -105,7 +105,7 @@ public class LargeGearSlave extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
