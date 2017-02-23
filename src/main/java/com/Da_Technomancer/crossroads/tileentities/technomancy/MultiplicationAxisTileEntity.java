@@ -43,6 +43,7 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	}
 
 	public MultiplicationAxisTileEntity(EnumFacing facingIn){
+		super();
 		facing = facingIn;
 	}
 

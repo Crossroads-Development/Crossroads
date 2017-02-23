@@ -31,6 +31,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 	}
 
 	public HeatCableTileEntity(HeatConductors conductor, HeatInsulators insulator){
+		super();
 		this.conductor = conductor;
 		this.insulator = insulator;
 	}

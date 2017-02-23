@@ -37,6 +37,7 @@ public class EqualsAxisTileEntity extends TileEntity implements ITickable{
 	}
 
 	public EqualsAxisTileEntity(EnumFacing facingIn){
+		super();
 		facing = facingIn;
 	}
 	

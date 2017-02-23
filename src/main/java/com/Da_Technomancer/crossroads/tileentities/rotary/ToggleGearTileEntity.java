@@ -34,10 +34,11 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	private double compOut = 0;
 	
 	public ToggleGearTileEntity(){
-		
+		super();
 	}
 	
 	public ToggleGearTileEntity(GearTypes type){
+		super();
 		this.type = type;
 		physData[0] = type.getDensity() / 8D;
 		physData[1] = type.getDensity() / 64D;

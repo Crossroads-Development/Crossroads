@@ -12,6 +12,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -20,6 +23,7 @@ import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -30,10 +34,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class SortingHopperTileEntity extends TileEntity implements IHopper, ITickable{
+public class SortingHopperTileEntity extends TileEntityLockable implements IHopper, ITickable{
 
 	public SortingHopperTileEntity(){
+		super();
 		for(int i = 0; i < 5; i++){
 			inventory[i] = ItemStack.EMPTY;
 		}
@@ -67,9 +73,14 @@ public class SortingHopperTileEntity extends TileEntity implements IHopper, ITic
 
 	@Override
 	public String getName(){
-		return "container.sortingHopper";
+		return "container.sorting_hopper";
 	}
 
+	@Override
+	protected net.minecraftforge.items.IItemHandler createUnSidedHandler(){
+		return new HopperItemHandler(this);
+	}
+	
 	@Override
 	public boolean hasCustomName(){
 		return false;
@@ -78,6 +89,33 @@ public class SortingHopperTileEntity extends TileEntity implements IHopper, ITic
 	private ItemStack[] inventory = new ItemStack[5];
 	private int transferCooldown = -1;
 
+	/**
+	 * VanillaHopperItemHandler modified to take SortingHopper
+	 */
+	private class HopperItemHandler extends InvWrapper{
+		private final SortingHopperTileEntity hopper;
+
+		public HopperItemHandler(SortingHopperTileEntity hopper){
+			super(hopper);
+			this.hopper = hopper;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			if(stack.isEmpty())
+				return ItemStack.EMPTY;
+			if(simulate || !hopper.mayTransfer())
+				return super.insertItem(slot, stack, simulate);
+
+			int curStackSize = stack.getCount();
+			ItemStack itemStack = super.insertItem(slot, stack, false);
+			if(itemStack.isEmpty() || curStackSize != itemStack.getCount()){
+				transferCooldown = 8;
+			}
+			return itemStack;
+		}
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -611,6 +649,11 @@ public class SortingHopperTileEntity extends TileEntity implements IHopper, ITic
 		return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
 	}
 
+	@Override
+	public String getGuiID(){
+		return "minecraft:hopper";
+	}
+	
 	/**
 	 * Gets the world X position for this hopper entity.
 	 */
@@ -662,5 +705,10 @@ public class SortingHopperTileEntity extends TileEntity implements IHopper, ITic
 		for(int i = 0; i < 5; ++i){
 			this.inventory[i] = ItemStack.EMPTY;
 		}
+	}
+
+	@Override
+	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn){
+		return new ContainerHopper(playerInventory, this, playerIn);
 	}
 }

@@ -44,6 +44,7 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 	}
 
 	public AdditionAxisTileEntity(EnumFacing.Axis axisIn){
+		super();
 		axis = axisIn;
 	}
 

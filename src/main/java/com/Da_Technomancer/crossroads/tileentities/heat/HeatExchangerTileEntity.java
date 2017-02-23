@@ -28,6 +28,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 	}
 
 	public HeatExchangerTileEntity(boolean insul){
+		super();
 		this.insul = insul;
 	}
 

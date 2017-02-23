@@ -49,6 +49,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 	}
 
 	public CrystalMasterAxisTileEntity(EnumFacing facingIn){
+		super();
 		facing = facingIn;
 	}
 

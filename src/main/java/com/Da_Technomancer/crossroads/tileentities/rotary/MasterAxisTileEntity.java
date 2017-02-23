@@ -34,6 +34,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 	}
 
 	public MasterAxisTileEntity(EnumFacing facingIn){
+		super();
 		facing = facingIn;
 	}
 

@@ -20,6 +20,7 @@ import net.minecraftforge.items.IItemHandler;
 public class SlottedChestTileEntity extends TileEntity{
 
 	public SlottedChestTileEntity(){
+		super();
 		for(int i = 0; i < 54; i++){
 			inv[i] = ItemStack.EMPTY;
 			lockedInv[i] = ItemStack.EMPTY;
@@ -114,6 +115,10 @@ public class SlottedChestTileEntity extends TileEntity{
 		return super.getCapability(cap, facing);
 	}
 
+	public boolean isInventoryType(IInventory inv){
+		return inv instanceof Inventory;
+	}
+	
 	private class InventoryHandler implements IItemHandler{
 
 		@Override
@@ -150,12 +155,12 @@ public class SlottedChestTileEntity extends TileEntity{
 			}
 
 			int change = Math.min(inv[slot].getCount(), amount);
-
-			if(!simulate){
-				inv[slot].grow(change);
-			}
 			ItemStack out = inv[slot].copy();
 			out.setCount(change);
+			
+			if(!simulate){
+				inv[slot].shrink(change);
+			}
 			
 			return change == 0 ? ItemStack.EMPTY : out;
 		}
@@ -219,6 +224,10 @@ public class SlottedChestTileEntity extends TileEntity{
 		public void setInventorySlotContents(int index, ItemStack stack){
 			if(index < 54){
 				inv[index] = stack;
+				if(!stack.isEmpty()){
+					lockedInv[index] = stack.copy();
+					lockedInv[index].setCount(1);
+				}
 			}
 		}
 
@@ -279,7 +288,7 @@ public class SlottedChestTileEntity extends TileEntity{
 		@Override
 		public boolean isEmpty(){
 			for(int i = 0; i < 54; i++){
-				if(!inv[i].isEmpty() || !lockedInv[i].isEmpty()){
+				if(!inv[i].isEmpty()){
 					return false;
 				}
 			}

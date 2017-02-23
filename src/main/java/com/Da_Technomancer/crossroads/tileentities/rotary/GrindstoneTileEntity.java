@@ -20,6 +20,7 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 	private ItemStack[] inventory = new ItemStack[4];
 
 	public GrindstoneTileEntity(){
+		super();
 		for(int i = 0; i < 4; i++){
 			inventory[i] = ItemStack.EMPTY;
 		}

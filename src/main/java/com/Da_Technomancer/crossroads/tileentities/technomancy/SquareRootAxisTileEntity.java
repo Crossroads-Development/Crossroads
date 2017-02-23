@@ -36,6 +36,7 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 	}
 
 	public SquareRootAxisTileEntity(EnumFacing facingIn){
+		super();
 		facing = facingIn;
 	}
 	

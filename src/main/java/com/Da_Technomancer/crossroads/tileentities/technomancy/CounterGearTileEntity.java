@@ -37,10 +37,11 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 	private static final double MAX_COUNT = 4;
 	
 	public CounterGearTileEntity(){
-		
+		super();
 	}
 	
 	public CounterGearTileEntity(GearTypes type){
+		super();
 		this.type = type;
 		physData[0] = type.getDensity() / 8D;
 		physData[1] = type.getDensity() / 64D;

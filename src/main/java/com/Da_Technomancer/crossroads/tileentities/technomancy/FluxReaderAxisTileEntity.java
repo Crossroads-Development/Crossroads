@@ -36,6 +36,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 	}
 
 	public FluxReaderAxisTileEntity(EnumFacing facingIn){
+		super();
 		facing = facingIn;
 	}
 	

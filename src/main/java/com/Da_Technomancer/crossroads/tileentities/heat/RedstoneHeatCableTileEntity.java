@@ -35,6 +35,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	}
 
 	public RedstoneHeatCableTileEntity(HeatConductors conductor, HeatInsulators insulator){
+		super();
 		this.conductor = conductor;
 		this.insulator = insulator;
 	}

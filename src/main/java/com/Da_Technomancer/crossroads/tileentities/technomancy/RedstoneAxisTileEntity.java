@@ -35,6 +35,7 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 	}
 
 	public RedstoneAxisTileEntity(EnumFacing facingIn){
+		super();
 		facing = facingIn;
 	}
 	

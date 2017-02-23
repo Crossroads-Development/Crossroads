@@ -36,6 +36,7 @@ public class GreaterThanAxisTileEntity extends TileEntity implements ITickable{
 	}
 
 	public GreaterThanAxisTileEntity(EnumFacing facingIn){
+		super();
 		facing = facingIn;
 	}
 	
