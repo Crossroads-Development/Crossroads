@@ -152,7 +152,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 			return stack;
 		}
 
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -224,7 +224,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public String getName(){
-		return "container.coalHeater";
+		return "container.coal_heater";
 	}
 
 	@Override

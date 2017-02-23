@@ -26,12 +26,12 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
-		if(isSpotInvalid() && inventory != null){
+		if(isSpotInvalid() && !inventory.isEmpty()){
 			world.spawnEntity(new EntityItem(world, pos.offset(world.getBlockState(pos).getValue(Properties.FACING)).getX(), pos.getY(), pos.offset(world.getBlockState(pos).getValue(Properties.FACING)).getZ(), inventory.copy()));
-			inventory = null;
+			inventory = ItemStack.EMPTY;
 		}else{
 			EnumFacing side = world.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y);
-			if(inventory != null && getOutput() != null && world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
+			if(!inventory.isEmpty() && getOutput() != null && world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
 				EnumFacing facing = world.getBlockState(getOutput()).getValue(Properties.FACING);
 				if(Math.abs(world.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).getMotionData()[0]) > .1D && Math.abs(world.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).getMotionData()[1]) > .5D){
 					world.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(-.5D, false, false);
@@ -39,7 +39,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 					ent.motionX = 0;
 					ent.motionZ = 0;
 					world.spawnEntity(ent);
-					inventory = null;
+					inventory = ItemStack.EMPTY;
 					markDirty();
 				}
 			}
@@ -123,7 +123,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inventory : null;
+			return slot == 0 ? inventory : ItemStack.EMPTY;
 		}
 
 		@Override
@@ -145,7 +145,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		@Override

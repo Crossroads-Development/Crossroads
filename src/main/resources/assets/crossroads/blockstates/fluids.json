@@ -9,9 +9,9 @@
       "model": "forge:fluid",
       "custom": { "fluid": "distilledwater" }
     },
-    "moltencopper": {
+    "copper": {
       "model": "forge:fluid",
-      "custom": { "fluid": "moltencopper" }
+      "custom": { "fluid": "copper" }
     },
     "liquidfat": {
         "model": "forge:fluid",

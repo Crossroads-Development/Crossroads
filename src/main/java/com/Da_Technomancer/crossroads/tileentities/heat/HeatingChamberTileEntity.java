@@ -38,18 +38,22 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 			init = true;
 		}
 
-		if(!inventory[0].isEmpty() && !getOutput().isEmpty() && temp >= 2 + MINTEMP){
-			temp -= 2;
-			if((progress += 2) >= REQUIRED){
-				progress = 0;
-				markDirty();
-				if(inventory[1].isEmpty()){
-					inventory[1] = getOutput();
-				}else{
-					inventory[1].grow(getOutput().getCount());
+		if(!inventory[0].isEmpty() && !getOutput().isEmpty()){
+			if(temp >= 2 + MINTEMP){
+				temp -= 2;
+				if((progress += 2) >= REQUIRED){
+					progress = 0;
+					markDirty();
+					if(inventory[1].isEmpty()){
+						inventory[1] = getOutput();
+					}else{
+						inventory[1].grow(getOutput().getCount());
+					}
+					inventory[0].shrink(1);
 				}
-				inventory[0].shrink(1);
 			}
+		}else{
+			progress = 0;
 		}
 	}
 
@@ -131,7 +135,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 	@Override
 	public ItemStack getStackInSlot(int index){
-		return index > 1 ? null : inventory[index];
+		return index > 1 ? ItemStack.EMPTY : inventory[index];
 	}
 
 	@Override
@@ -142,7 +146,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 	@Override
 	public String getName(){
-		return "container.heatingChamber";
+		return "container.heating_chamber";
 	}
 
 	@Override

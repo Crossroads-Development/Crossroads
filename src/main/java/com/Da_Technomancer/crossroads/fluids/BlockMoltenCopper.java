@@ -27,16 +27,13 @@ public class BlockMoltenCopper extends BlockFluidClassic{
 	 * For normal use.
 	 */
 	public static Fluid getMoltenCopper(){
-		//TODO at some point the fluid name should be changed to just "copper" to provide compatability with Tinker's Construct.
-		//However, as doing that change would delete any pre-existing molten copper, this change is not to occur until a point where people expect incompatibility
-		//with prior worlds, such as a Minecraft version change. 
-		return FluidRegistry.getFluid("moltencopper");
+		return FluidRegistry.getFluid("copper");
 	}
 
 	private static class FluidMoltenCopper extends Fluid{
 
 		private FluidMoltenCopper(){
-			super("moltencopper", new ResourceLocation(Main.MODID + ":blocks/moltencopper_still"), new ResourceLocation(Main.MODID + ":blocks/moltencopper_flow"));
+			super("copper", new ResourceLocation(Main.MODID + ":blocks/moltencopper_still"), new ResourceLocation(Main.MODID + ":blocks/moltencopper_flow"));
 			setDensity(3000);
 			setTemperature(6000);
 			setViscosity(1300);

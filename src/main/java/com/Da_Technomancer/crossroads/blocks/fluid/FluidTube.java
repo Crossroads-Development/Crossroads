@@ -64,8 +64,8 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 		setSoundType(SoundType.METAL);
 	}
 
@@ -185,7 +185,7 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 
 	@Override
 	public ResourceLocation getTexture(){
-		return new ResourceLocation(Main.MODID + ":blocks/blockBronze");
+		return new ResourceLocation(Main.MODID, "blocks/block_bronze");
 	}
 
 	@Override

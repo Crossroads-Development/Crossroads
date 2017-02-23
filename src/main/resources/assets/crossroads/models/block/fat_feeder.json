@@ -2,7 +2,7 @@
 	"parent": "block/cube_bottom_top",
 	"textures": {
 		"side": "crossroads:blocks/netherrack_pipe_framed_tin",
-		"top": "crossroads:blocks/bronze_axle",
-		"bottom": "crossroads:blocks/bronze_axle"
+		"top": "crossroads:blocks/tin_axle",
+		"bottom": "crossroads:blocks/tin_axle"
 	}
 }

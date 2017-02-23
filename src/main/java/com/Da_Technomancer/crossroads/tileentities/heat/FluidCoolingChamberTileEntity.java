@@ -34,7 +34,7 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 	private double temp;
 	private ItemStack inventory = ItemStack.EMPTY;
 	private int ticksExisted = 0;
-	private static final Random rand = new Random();
+	private static final Random RAND = new Random();
 
 	@Override
 	public void update(){
@@ -49,7 +49,7 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 
 		if(++ticksExisted % 10 == 0 && content != null && RecipeHolder.fluidCoolingRecipes.containsKey(content.getFluid()) && content.amount >= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()){
 			Triple<ItemStack, Double, Double> trip = RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getRight();
-			if((inventory.isEmpty() || (ItemStack.areItemsEqual(trip.getLeft(), inventory) && 16 - inventory.getCount() >= trip.getLeft().getCount())) && temp < trip.getMiddle() - rand.nextInt(ECAP * trip.getRight().intValue())){
+			if((inventory.isEmpty() || (ItemStack.areItemsEqual(trip.getLeft(), inventory) && 16 - inventory.getCount() >= trip.getLeft().getCount())) && temp < trip.getMiddle() - RAND.nextInt(ECAP * trip.getRight().intValue())){
 				temp += trip.getRight();
 				if((content.amount -= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()) <= 0){
 					content = null;
@@ -68,8 +68,8 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
-		this.init = nbt.getBoolean("init");
-		this.temp = nbt.getDouble("temp");
+		init = nbt.getBoolean("init");
+		temp = nbt.getDouble("temp");
 
 		if(nbt.hasKey("inv")){
 			inventory = new ItemStack(nbt.getCompoundTag("inv"));
@@ -82,8 +82,8 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 		if(content != null){
 			content.writeToNBT(nbt);
 		}
-		nbt.setBoolean("init", this.init);
-		nbt.setDouble("temp", this.temp);
+		nbt.setBoolean("init", init);
+		nbt.setDouble("temp", temp);
 
 		if(!inventory.isEmpty()){
 			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
@@ -120,7 +120,7 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 			return true;
 		}
 
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing == EnumFacing.UP || facing == null){
+		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return true;
 		}
 		
