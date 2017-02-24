@@ -120,7 +120,7 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 			return true;
 		}
 
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing == EnumFacing.UP || facing == null){
+		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return true;
 		}
 		
