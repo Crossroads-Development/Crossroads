@@ -7,9 +7,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
+ * The purpose of this interface is to allow for recipe inputs with arbitrary requirements,
+ * instead of just the usual OreDict/Item & count.
  * 
- * Implementers of this interface should override .equals
- *
+ * Implementers of this interface should override {@link Object#equals(Object)}
  */
 public interface ICraftingStack{
 	

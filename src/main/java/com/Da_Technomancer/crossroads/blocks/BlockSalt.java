@@ -36,7 +36,7 @@ public class BlockSalt extends Block{
 		setHardness(.5F);
 		setSoundType(SoundType.SAND);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		OreDictionary.registerOre(name, this);
+		OreDictionary.registerOre("blockSalt", this);
 		this.setTickRandomly(true);
 	}
 
@@ -45,7 +45,7 @@ public class BlockSalt extends Block{
 		if(entityIn instanceof EntitySlime){
 			entityIn.setDead();
 			if(!worldIn.isRemote){
-				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.SLIME_BALL));
+				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.SLIME_BALL, ((EntitySlime) entityIn).getSlimeSize() + 1));
 				worldIn.spawnEntity(item);
 			}
 		}else if(entityIn instanceof EntityCreeper){
