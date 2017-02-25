@@ -42,6 +42,13 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		
 		VertexBuffer vb = Tessellator.getInstance().getBuffer();
 		
+		GlStateManager.pushMatrix();
+		if(facing.getAxis() == EnumFacing.Axis.X){
+			GlStateManager.rotate(facing.getHorizontalIndex() * 90, 0, 1, 0);
+		}else if(facing == EnumFacing.SOUTH){
+			GlStateManager.rotate(180, 0, 1, 0);
+		}
+		
 		//Body
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, -.25D, .19D);
@@ -87,15 +94,24 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 			}
 		}
 		
+		GlStateManager.popMatrix();
 		
 		GlStateManager.popMatrix();
-
-
 		GlStateManager.color(1, 1, 1);
 
+		//Wheel
 		GlStateManager.pushMatrix();
 		GlStateManager.disableCull();
 		GlStateManager.rotate(wheel.angle, 0F, 1F, 0F);
+
+		//Axle Support
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, -.4375D, 0);
+		GlStateManager.scale(1, .8D, 1);
+		GlStateManager.rotate(90, 1, 0, 0);
+		modelAxle.render(textureAx, textureAx, Color.WHITE);
+		GlStateManager.popMatrix();
+
 		Minecraft.getMinecraft().renderEngine.bindTexture(textureAx);
 
 
@@ -165,7 +181,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		
 		GlStateManager.enableCull();
 		GlStateManager.popMatrix();
-		
+
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}
