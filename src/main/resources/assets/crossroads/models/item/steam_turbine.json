@@ -1,7 +1,7 @@
 {
 	"parent": "crossroads:block/rotary_pump",
 	"textures": {
-		"valve": "crossroads:blocks/valve_red"
+		"valve": "crossroads:blocks/valve"
 	},
 	"display": {
 		"thirdperson": {
