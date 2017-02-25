@@ -215,6 +215,8 @@ tile.staff_charger.name=Staff Charger
 death.attack.potentialvoid=%1$s has no potential.
 death.attack.potentialvoid.player=%2$s stole %1$s's potential.
 tile.hamster_wheel.name=Hamster Wheel
+tile.fluid_splitter.name=Redstone Fluid Splitter
+tile.basic_fluid_splitter.name=Basic Fluid Splitter
 
 #GuideAPI documentation
 #Mysterious Journal

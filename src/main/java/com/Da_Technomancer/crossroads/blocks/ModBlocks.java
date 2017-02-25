@@ -3,9 +3,11 @@ package com.Da_Technomancer.crossroads.blocks;
 import java.util.HashMap;
 
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
+import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCongealer;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatFeeder;
+import com.Da_Technomancer.crossroads.blocks.fluid.FluidSplitter;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidTank;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidTube;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidVoid;
@@ -134,6 +136,8 @@ public final class ModBlocks{
 	public static MechanicalBeamSplitter mechanicalBeamSplitter;
 	public static StaffCharger staffCharger;
 	public static HamsterWheel hamsterWheel;
+	public static FluidSplitter fluidSplitter;
+	public static BasicFluidSplitter basicFluidSplitter;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -214,6 +218,8 @@ public final class ModBlocks{
 		blockAddQue(mechanicalBeamSplitter = new MechanicalBeamSplitter());
 		blockAddQue(staffCharger = new StaffCharger());
 		blockAddQue(hamsterWheel = new HamsterWheel());
+		blockAddQue(fluidSplitter = new FluidSplitter());
+		blockAddQue(basicFluidSplitter = new BasicFluidSplitter());
 	}
 
 	@SideOnly(Side.CLIENT)

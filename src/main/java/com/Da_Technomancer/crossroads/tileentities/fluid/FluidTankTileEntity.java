@@ -27,7 +27,7 @@ public class FluidTankTileEntity extends TileEntity{
 	private void fixState(){
 		int i = content == null ? 0 : ((int) Math.ceil(15D * content.amount / CAPACITY));
 		if(i != world.getBlockState(pos).getValue(Properties.REDSTONE)){
-			world.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i));
+			world.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i < 0 ? 0 : i > 15 ? 15 : i));
 		}
 	}
 	
@@ -91,11 +91,11 @@ public class FluidTankTileEntity extends TileEntity{
 
 		@Override
 		public int fill(FluidStack resource, boolean doFill){
-			if(resource != null && (content == null || resource.getFluid() == content.getFluid())){
+			if(resource != null && (content == null || resource.isFluidEqual(content))){
 				int amount = Math.min(resource.amount, CAPACITY - (content == null ? 0 : content.amount));
 
 				if(doFill && amount != 0){
-					content = new FluidStack(resource.getFluid(), amount + (content == null ? 0 : content.amount));
+					content = new FluidStack(resource.getFluid(), amount + (content == null ? 0 : content.amount), resource.tag);
 					fixState();
 				}
 
@@ -125,7 +125,6 @@ public class FluidTankTileEntity extends TileEntity{
 
 		@Override
 		public FluidStack drain(int maxDrain, boolean doDrain){
-
 			if(maxDrain <= 0 || content == null){
 				return null;
 			}
