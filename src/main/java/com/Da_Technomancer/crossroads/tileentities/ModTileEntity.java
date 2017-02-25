@@ -118,8 +118,14 @@ public class ModTileEntity{
 		register(SquareRootAxisTileEntity.class, "squareRootAxis");
 		register(MechanicalBeamSplitterTileEntity.class, "mechanicalBeamSplitter");
 		register(StaffChargerTileEntity.class, "staffCharger");
+		register(HamsterWheelTileEntity.class, "hamster_wheel");
 	}
 
+	/**
+	 * 
+	 * @param locat
+	 * @param ID For all new TileEntities, this should be lowercase just in case they limit this to lowercase in a later update (future-proofing). Pre-existing TileEntities should keep their old ID.
+	 */
 	private static void register(Class<? extends TileEntity> locat, String ID){
 		GameRegistry.registerTileEntity(locat, Main.MODID + "_" + ID);
 	}

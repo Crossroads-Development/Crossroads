@@ -74,7 +74,7 @@ public final class ModBlocks{
 	public static Grindstone grindstone;
 	public static SteamBoiler steamBoiler;
 	public static BlockSalt blockSalt;
-	public static BlockBrazier brazier;
+	public static Brazier brazier;
 	public static FluidVoid fluidVoid;
 	public static RotaryPump rotaryPump;
 	public static SteamTurbine steamTurbine;
@@ -133,6 +133,7 @@ public final class ModBlocks{
 	public static SquareRootAxis squareRootAxis;
 	public static MechanicalBeamSplitter mechanicalBeamSplitter;
 	public static StaffCharger staffCharger;
+	public static HamsterWheel hamsterWheel;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -157,7 +158,7 @@ public final class ModBlocks{
 		rotaryPump = new RotaryPump();
 		steamTurbine = new SteamTurbine();
 		blockAddQue(blockSalt = new BlockSalt());
-		blockAddQue(brazier = new BlockBrazier());
+		blockAddQue(brazier = new Brazier());
 		blockAddQue(fluidVoid = new FluidVoid());
 		blockAddQue(heatExchanger = new HeatExchanger(false));
 		blockAddQue(insulHeatExchanger = new HeatExchanger(true));
@@ -212,6 +213,7 @@ public final class ModBlocks{
 		blockAddQue(squareRootAxis = new SquareRootAxis());
 		blockAddQue(mechanicalBeamSplitter = new MechanicalBeamSplitter());
 		blockAddQue(staffCharger = new StaffCharger());
+		blockAddQue(hamsterWheel = new HamsterWheel());
 	}
 
 	@SideOnly(Side.CLIENT)

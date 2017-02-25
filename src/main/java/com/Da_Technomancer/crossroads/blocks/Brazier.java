@@ -32,12 +32,12 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BlockBrazier extends BlockContainer{
+public class Brazier extends BlockContainer{
 
 	private static final AxisAlignedBB BB = new AxisAlignedBB(0, 0, 0, 1, .875D, 1);
 
-	protected BlockBrazier(){
-		super(Material.IRON);
+	protected Brazier(){
+		super(Material.ROCK);
 		String name = "brazier";
 		setUnlocalizedName(name);
 		setHardness(2);

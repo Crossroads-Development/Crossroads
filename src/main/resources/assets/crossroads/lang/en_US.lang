@@ -214,6 +214,7 @@ item.staff_technomancy.name=Beam Staff
 tile.staff_charger.name=Staff Charger
 death.attack.potentialvoid=%1$s has no potential.
 death.attack.potentialvoid.player=%2$s stole %1$s's potential.
+tile.hamster_wheel.name=Hamster Wheel
 
 #GuideAPI documentation
 #Mysterious Journal
