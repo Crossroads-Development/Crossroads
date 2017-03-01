@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 
 public class ModWorldGen implements IWorldGenerator{
 
-	/**Two arguments are marked nullable not due to being null in normal use, but because they are null when called during retrogen
+	/**Two arguments are marked @Nullable not due to being null in normal use, but because they are null when called during retrogen
 	 */
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, @Nullable IChunkGenerator chunkGenerator, @Nullable IChunkProvider chunkProvider){

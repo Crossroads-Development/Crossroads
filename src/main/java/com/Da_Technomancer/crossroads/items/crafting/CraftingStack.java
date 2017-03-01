@@ -17,15 +17,21 @@ public class CraftingStack implements ICraftingStack{
 	private final int count;
 	private final int meta;
 
-	/** A metadata of -1 means ignore metadata
+	/**
 	 * 
+	 * @param block
+	 * @param count
+	 * @param meta A value of -1 means to ignore metadata
 	 */
 	public CraftingStack(Block block, int count, int meta){
 		this(Item.getItemFromBlock(block), count, meta);
 	}
 
-	/** A metadata of -1 means ignore metadata
+	/**
 	 * 
+	 * @param item
+	 * @param count
+	 * @param meta A value of -1 means to ignore metadata
 	 */
 	public CraftingStack(Item item, int count, int meta){
 		this.item = item;
