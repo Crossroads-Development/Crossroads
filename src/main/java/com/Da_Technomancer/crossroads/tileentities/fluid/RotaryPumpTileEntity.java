@@ -100,17 +100,12 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	}
 
 	private final IFluidHandler pumpedHandler = new PumpedFluidHandler();
-	private final IFluidHandler innerHandler = new InnerFluidHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			if(facing == null){
-				return (T) innerHandler;
-			}else{
-				return (T) pumpedHandler;
-			}
+			return (T) pumpedHandler;
 		}
 
 		return super.getCapability(capability, facing);
@@ -174,70 +169,5 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 
 			return new FluidStack(fluid, change);
 		}
-
 	}
-
-	private class InnerFluidHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new FluidTankProperties[] {new FluidTankProperties(content, CAPACITY, true, true)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource != null && (content == null || resource.isFluidEqual(content))){
-				int change = Math.min(CAPACITY - (content == null ? 0 : content.amount), resource.amount);
-
-				if(doFill){
-					content = new FluidStack(resource.getFluid(), (content == null ? 0 : content.amount) + change);
-				}
-
-				return change;
-			}else{
-				return 0;
-			}
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-
-			if(resource != null && resource.isFluidEqual(content)){
-				int change = Math.min(content.amount, resource.amount);
-				Fluid fluid = content.getFluid();
-
-				if(doDrain){
-					content.amount -= change;
-					if(content.amount == 0){
-						content = null;
-					}
-				}
-
-				return new FluidStack(fluid, change);
-			}else{
-				return null;
-			}
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(content == null || maxDrain == 0){
-				return null;
-			}
-
-			int change = Math.min(content.amount, maxDrain);
-			Fluid fluid = content.getFluid();
-
-			if(doDrain){
-				content.amount -= change;
-				if(content.amount == 0){
-					content = null;
-				}
-			}
-
-			return new FluidStack(fluid, change);
-		}
-
-	}
-
 }
