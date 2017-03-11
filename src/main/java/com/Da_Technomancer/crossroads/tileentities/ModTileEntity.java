@@ -44,6 +44,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.AdditionAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BackCounterGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.CopshowiumCreationChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CounterGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.EqualsAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxManipulatorTileEntity;
@@ -123,6 +124,7 @@ public class ModTileEntity{
 		register(HamsterWheelTileEntity.class, "hamster_wheel");
 		register(FluidSplitterTileEntity.class, "fluid_splitter");
 		register(BasicFluidSplitterTileEntity.class, "basic_fluid_splitter");
+		register(CopshowiumCreationChamberTileEntity.class, "copshowium_creation_chamber");
 	}
 
 	/**

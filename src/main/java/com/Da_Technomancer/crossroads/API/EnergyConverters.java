@@ -16,7 +16,7 @@ public final class EnergyConverters{
 	/**
 	 * The number of degrees (thermal energy) that one joule (rotary energy) is
 	 * worth. Based on simplicity & game balance. Scientifically speaking, this
-	 * conversion is far too simple (Heat capacity, thermodynamics, dimensions,
+	 * conversion is far too simple (Heat capacity, thermodynamics, units,
 	 * etc.)
 	 */
 	public static final double DEG_PER_JOULE = 4D;
@@ -39,4 +39,10 @@ public final class EnergyConverters{
 	 * Value derived from 1 revolution = 32 FLUX.
 	 */
 	public static final double SPEED_PER_FLUX = Math.PI / 16D;
+	
+	/**
+	 * The number of mB of molten copshowium produced from 1mb of molten copper OR 1mb of distilled water.
+	 * Based on balance and convenientce. 
+	 */
+	public static final double COPSHOWIUM_PER_COPPER = 1.8D;
 }

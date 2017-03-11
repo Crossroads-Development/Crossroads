@@ -27,7 +27,6 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 
 public class ConduitBakedModel implements IBakedModel{
 
-	private TextureAtlasSprite sprite;
 	private final VertexFormat format;
 	private final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter;
 
@@ -91,7 +90,7 @@ public class ConduitBakedModel implements IBakedModel{
 
 		List<BakedQuad> quads = new ArrayList<>();
 
-		sprite = bakedTextureGetter.apply(((IConduitModel) state.getBlock()).getTexture());
+		TextureAtlasSprite sprite = bakedTextureGetter.apply(((IConduitModel) state.getBlock()).getTexture());
 
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 
@@ -186,7 +185,9 @@ public class ConduitBakedModel implements IBakedModel{
 
 	@Override
 	public TextureAtlasSprite getParticleTexture(){
-		return sprite;
+		//Here's the thing... due to all heat cables and fluid tubes sharing a conduit baked model, the breaking particles have to be shared within a chunk.
+		//They all use the bronze block texture for breaking particles. This could be fixed by giving each variant it's own model, but RAM usage would greatly increase. 
+		return bakedTextureGetter.apply(new ResourceLocation(Main.MODID, "blocks/block_bronze"));
 	}
 
 	@Override

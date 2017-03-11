@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.API.enums;
 
 import java.awt.Color;
 
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.API.effects.BlockEffect;
 import com.Da_Technomancer.crossroads.API.effects.ChargeEffect;
 import com.Da_Technomancer.crossroads.API.effects.EnchantEffect;
@@ -88,7 +90,8 @@ public enum MagicElements{
 		return true;
 	}
 	
-	public static MagicElements getElement(MagicUnit magic){
+	@Nullable
+	public static MagicElements getElement(@Nullable MagicUnit magic){
 		return magic == null ? null : getElement(magic.getTrueRGB());
 	}
 	

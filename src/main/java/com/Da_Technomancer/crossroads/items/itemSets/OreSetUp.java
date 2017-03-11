@@ -35,6 +35,10 @@ public final class OreSetUp{
 	public static BasicItem gemRuby;
 	public static BasicBlock blockRuby;
 	public static BasicBlock oreRuby;
+	
+	public static BasicItem ingotCopshowium;
+	public static BasicItem nuggetCopshowium;
+	public static BasicBlock blockCopshowium;
 
 	public static void init(){
 		boolean oreDict = ModConfig.registerOres.getBoolean();
@@ -79,6 +83,10 @@ public final class OreSetUp{
 				return gemRuby;
 			}
 		};
+		
+		ingotCopshowium = new BasicItem("ingot_copshowium", "ingotCopshowium");
+		blockCopshowium = new BasicBlock("block_copshowium", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockCopshowium");
+		nuggetCopshowium = new BasicItem("nugget_copshowium", "nuggetCopshowium");
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetTin, 9), "ingotTin"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotTin, 9), "blockTin"));
@@ -99,5 +107,10 @@ public final class OreSetUp{
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(gemRuby, 4), "blockRuby"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockRuby, 1), "**", "**", '*', "gemRuby"));
 		GameRegistry.addSmelting(new ItemStack(oreRuby, 1), new ItemStack(gemRuby, 1), 1F);
+		
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetCopshowium, 9), "ingotCopshowium"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotCopshowium, 9), "blockCopshowium"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotCopshowium, 1), "***", "***", "***", '*', "nuggetCopshowium"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCopshowium, 1), "***", "***", "***", '*', "ingotCopshowium"));
 	}
 }

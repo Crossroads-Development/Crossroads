@@ -217,6 +217,11 @@ death.attack.potentialvoid.player=%2$s stole %1$s's potential.
 tile.hamster_wheel.name=Hamster Wheel
 tile.fluid_splitter.name=Redstone Fluid Splitter
 tile.basic_fluid_splitter.name=Basic Fluid Splitter
+tile.copshowium_creation_chamber.name=Copshowium Creation Chamber
+fluid.copshowium=Molten Copshowium
+tile.block_copshowium.name=Block of Copshowium
+item.ingot_copshowium.name=Copshowium Ingot
+item.nugget_copshowium.name=Copshowium Nugget
 
 #GuideAPI documentation
 #Mysterious Journal

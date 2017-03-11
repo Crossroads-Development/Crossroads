@@ -45,6 +45,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
 import com.Da_Technomancer.crossroads.blocks.technomancy.AdditionAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.ChunkUnlocker;
+import com.Da_Technomancer.crossroads.blocks.technomancy.CopshowiumCreationChamber;
 import com.Da_Technomancer.crossroads.blocks.technomancy.EqualsAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxReaderAxis;
@@ -138,6 +139,7 @@ public final class ModBlocks{
 	public static HamsterWheel hamsterWheel;
 	public static FluidSplitter fluidSplitter;
 	public static BasicFluidSplitter basicFluidSplitter;
+	public static CopshowiumCreationChamber copshowiumCreationChamber;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -220,6 +222,7 @@ public final class ModBlocks{
 		blockAddQue(hamsterWheel = new HamsterWheel());
 		blockAddQue(fluidSplitter = new FluidSplitter());
 		blockAddQue(basicFluidSplitter = new BasicFluidSplitter());
+		blockAddQue(copshowiumCreationChamber = new CopshowiumCreationChamber());
 	}
 
 	@SideOnly(Side.CLIENT)
