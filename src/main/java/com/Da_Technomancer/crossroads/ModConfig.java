@@ -30,6 +30,7 @@ public final class ModConfig{
 	public static Property fieldLinesPotential;
 	public static Property disableSlaves;
 	public static Property registerOres;
+	public static Property gearResetTime;
 	
 	private static final String CAT_OPTIM = "Optimization";
 	private static final String CAT_ORES = "Ores";
@@ -63,5 +64,6 @@ public final class ModConfig{
 		fieldLinesPotential = config.get(CAT_FLUX, "Draw potential fields with lines (True: lines, False: planes)? (Default false)", false);
 		disableSlaves = config.get(CAT_OPTIM, "If you are crashing from StackOverflow errors and you either have a tiny amount of RAM or built an insanely large & complicated (Soaryn scale) rotary-mathematics setup, then set this to true, destroy the setup, and set this to false. Also maybe send me a picture of the setup.", false);
 		registerOres = config.get(CAT_OPTIM, "Register OreDictionary for copper/tin/bronze? (Default true)", true, "Disabling this will make Crossroads copper/tin/bronze completely useless. The recipes will need copper/tin/bronze from other mods. Don't ask me why you'd want this.");
+		gearResetTime = config.get(CAT_OPTIM, "Gear Reset Time", 300, "Interval in ticks between gear network checks and visual angle resets. (Range 100-2400, Default 300)", 100, 2400);
 	}
 }

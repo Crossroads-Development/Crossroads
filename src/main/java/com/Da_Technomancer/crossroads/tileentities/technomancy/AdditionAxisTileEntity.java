@@ -139,7 +139,8 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 
 	private int lastKey = 0;
 	private boolean forceUpdate;
-
+	private static final int updateTime = ModConfig.gearResetTime.getInt();
+	
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -151,13 +152,13 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 
 		ticksExisted++;
 
-		if(ticksExisted % 300 == 20 || forceUpdate){
+		if(ticksExisted % updateTime == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
 
 		forceUpdate = CommonProxy.masterKey != lastKey;
 
-		if(ticksExisted % 300 == 20){
+		if(ticksExisted % updateTime == 20){
 			for(IAxleHandler gear : rotaryMembers){
 				gear.resetAngle();
 			}

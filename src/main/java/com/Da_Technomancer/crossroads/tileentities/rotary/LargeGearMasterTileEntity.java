@@ -23,6 +23,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -55,6 +56,13 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	public GearTypes getMember(){
 		//IRON is returned instead of null to prevent edge case crashes.
 		return type == null ? GearTypes.IRON : type;
+	}
+	
+	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -1, -1, 2, 2, 2);
+	
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return RENDER_BOX.offset(pos);
 	}
 	
 	public void breakGroup(EnumFacing side, boolean drop){
@@ -140,7 +148,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		return nbt;
 	}
 
-	private final int tiers = ModConfig.speedTiers.getInt();
+	private static final int tiers = ModConfig.speedTiers.getInt() * 3;
 
 	@Override
 	public void receiveDouble(String context, double message){

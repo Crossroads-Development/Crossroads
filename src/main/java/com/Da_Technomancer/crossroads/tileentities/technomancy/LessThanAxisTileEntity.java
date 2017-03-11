@@ -7,6 +7,7 @@ import java.util.Random;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxisHandler;
@@ -106,7 +107,8 @@ public class LessThanAxisTileEntity extends TileEntity implements ITickable{
 
 	private int lastKey = 0;
 	private boolean forceUpdate;
-
+	private static final int updateTime = ModConfig.gearResetTime.getInt();
+	
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -115,13 +117,13 @@ public class LessThanAxisTileEntity extends TileEntity implements ITickable{
 
 		ticksExisted++;
 
-		if(ticksExisted % 300 == 20 || forceUpdate){
+		if(ticksExisted % updateTime == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
 
 		forceUpdate = CommonProxy.masterKey != lastKey;
 
-		if(ticksExisted % 300 == 20){
+		if(ticksExisted % updateTime == 20){
 			for(IAxleHandler gear : rotaryMembers){
 				gear.resetAngle();
 			}
