@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
 
 import net.minecraft.block.Block;
@@ -66,6 +67,9 @@ public final class RecipeHolder{
 		}
 		for(Entry<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> rec : fluidCoolingRecipes.entrySet()){
 			JEIWrappers.add(new FluidCoolingRecipe(rec));
+		}
+		for(Entry<Block, Triple<IBlockState, Double, Double>> rec : envirHeatSource.entrySet()){
+			JEIWrappers.add(new HeatExchangerRecipe(rec));
 		}
 		JEIWrappers.add(new HeatingCrucibleRecipe(true));
 		JEIWrappers.add(new HeatingCrucibleRecipe(false));

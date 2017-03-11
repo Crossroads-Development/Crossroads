@@ -25,7 +25,7 @@ public class HeatingCrucibleRecipeWrapper implements IRecipeWrapper{
 
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY){
-		minecraft.fontRendererObj.drawString("When above 1000*C", 10, 10, 4210752);
+		minecraft.fontRendererObj.drawString("When above 1000°C", 10, 10, 4210752);
 	}
 
 	@Override
