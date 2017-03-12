@@ -130,9 +130,15 @@ public class EqualsAxisTileEntity extends TileEntity implements ITickable{
 	}
 	
 	private void triggerSlaves(){
+		HashSet<Pair<ISlaveAxisHandler, EnumFacing>> toRemove = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
 		for(Pair<ISlaveAxisHandler, EnumFacing> slave : slaves){
+			if(slave.getLeft().isInvalid()){
+				toRemove.add(slave);
+				continue;
+			}
 			slave.getLeft().trigger(slave.getRight());
 		}
+		slaves.removeAll(toRemove);
 	}
 	
 private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
@@ -201,6 +207,11 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 				out.add(slave.getLeft());
 			}
 			return out;
+		}
+		
+		@Override
+		public boolean isInvalid(){
+			return tileEntityInvalid;
 		}
 	}
 	

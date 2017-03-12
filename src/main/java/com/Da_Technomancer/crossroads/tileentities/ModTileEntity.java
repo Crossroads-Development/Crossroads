@@ -42,9 +42,12 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.AdditionAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.ArcCosAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.ArcSinAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BackCounterGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CopshowiumCreationChamberTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.CosAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CounterGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.EqualsAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxManipulatorTileEntity;
@@ -55,6 +58,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSpl
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.SinAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SquareRootAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.StaffChargerTileEntity;
 
@@ -125,6 +129,10 @@ public class ModTileEntity{
 		register(FluidSplitterTileEntity.class, "fluid_splitter");
 		register(BasicFluidSplitterTileEntity.class, "basic_fluid_splitter");
 		register(CopshowiumCreationChamberTileEntity.class, "copshowium_creation_chamber");
+		register(SinAxisTileEntity.class, "sin_axis");
+		register(CosAxisTileEntity.class, "cos_axis");
+		register(ArcSinAxisTileEntity.class, "arcsin_axis");
+		register(ArcCosAxisTileEntity.class, "arccos_axis");
 	}
 
 	/**

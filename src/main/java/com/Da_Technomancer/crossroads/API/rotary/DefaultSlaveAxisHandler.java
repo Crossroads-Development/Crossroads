@@ -15,4 +15,9 @@ public class DefaultSlaveAxisHandler implements ISlaveAxisHandler{
 	public HashSet<ISlaveAxisHandler> getContainedAxes(){
 		return null;
 	}
+
+	@Override
+	public boolean isInvalid(){
+		return true;
+	}
 }

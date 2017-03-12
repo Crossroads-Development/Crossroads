@@ -44,8 +44,11 @@ import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxis;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
 import com.Da_Technomancer.crossroads.blocks.technomancy.AdditionAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.ArcCosAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.ArcSinAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.ChunkUnlocker;
 import com.Da_Technomancer.crossroads.blocks.technomancy.CopshowiumCreationChamber;
+import com.Da_Technomancer.crossroads.blocks.technomancy.CosAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.EqualsAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxReaderAxis;
@@ -55,6 +58,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalBeamSplitter;
 import com.Da_Technomancer.crossroads.blocks.technomancy.MultiplicationAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.SinAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SquareRootAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.StaffCharger;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -140,6 +144,10 @@ public final class ModBlocks{
 	public static FluidSplitter fluidSplitter;
 	public static BasicFluidSplitter basicFluidSplitter;
 	public static CopshowiumCreationChamber copshowiumCreationChamber;
+	public static SinAxis sinAxis;
+	public static CosAxis cosAxis;
+	public static ArcSinAxis arcsinAxis;
+	public static ArcCosAxis arccosAxis;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -223,6 +231,10 @@ public final class ModBlocks{
 		blockAddQue(fluidSplitter = new FluidSplitter());
 		blockAddQue(basicFluidSplitter = new BasicFluidSplitter());
 		blockAddQue(copshowiumCreationChamber = new CopshowiumCreationChamber());
+		blockAddQue(sinAxis = new SinAxis());
+		blockAddQue(cosAxis = new CosAxis());
+		blockAddQue(arcsinAxis = new ArcSinAxis());
+		blockAddQue(arccosAxis = new ArcCosAxis());
 	}
 
 	@SideOnly(Side.CLIENT)

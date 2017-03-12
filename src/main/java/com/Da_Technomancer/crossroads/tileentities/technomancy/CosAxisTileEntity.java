@@ -10,25 +10,19 @@ import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class MultiplicationAxisTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
+public class CosAxisTileEntity extends TileEntity implements ITickable{
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
 
@@ -38,38 +32,18 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	private EnumFacing facing;
 	private byte key;
 
-	public MultiplicationAxisTileEntity(){
+	public CosAxisTileEntity(){
 		this(EnumFacing.NORTH);
 	}
 
-	public MultiplicationAxisTileEntity(EnumFacing facingIn){
+	public CosAxisTileEntity(EnumFacing facingIn){
 		super();
 		facing = facingIn;
 	}
-
-	@Override
-	public void receiveDouble(String context, double message){
-		if(context.equals("one")){
-			lastInOne = message;
-		}else if(context.equals("two")){
-			lastInTwo = message;
-		}
-	}
-	
-	//On the server side these serve as a record of what was sent to the client, but on the client this is the received data for rendering. 
-	public double lastInOne;
-	public double lastInTwo;
-	public double angleOne;
-	public double angleTwo;
-	public double angleThree;
 	
 	private void runCalc(){
-		double inOne = world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[0] : 0;
-		double inTwo = world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN) ? world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] : 0;
-		if(facing.getAxisDirection() == AxisDirection.POSITIVE && world.getBlockState(pos.offset(facing.getOpposite())) != null && world.getBlockState(pos.offset(facing.getOpposite())).getBlock() != ModBlocks.axle){
-			inOne *= -1D;
-		}
-		double baseSpeed = inTwo < 0 ? -inOne / Math.min(8, Math.abs(inTwo)) : -inOne * Math.min(8, Math.abs(inTwo));
+		double inBack = world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[0] : 0;
+		double baseSpeed = Math.cos(inBack);
 		
 		double sumIRot = 0;
 		sumEnergy = 0;
@@ -109,18 +83,6 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 		if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
 			world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
 		}
-		
-		if(facing.getAxisDirection() == AxisDirection.NEGATIVE){
-			inOne *= -1D;
-		}
-		if(MiscOp.tiersRound(baseSpeed == 0 ? 0 : inOne, ModConfig.speedTiers.getInt()) != lastInOne){
-			lastInOne = MiscOp.tiersRound(baseSpeed == 0 ? 0 : inOne, ModConfig.speedTiers.getInt());
-			ModPackets.network.sendToAllAround(new SendDoubleToClient("one", lastInOne, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		}
-		if(MiscOp.tiersRound(inTwo, ModConfig.speedTiers.getInt()) != lastInTwo){
-			lastInTwo = MiscOp.tiersRound(inTwo, ModConfig.speedTiers.getInt());
-			ModPackets.network.sendToAllAround(new SendDoubleToClient("two", lastInTwo, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		}
 	}
 
 	@Override
@@ -144,9 +106,6 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	@Override
 	public void update(){
 		if(world.isRemote){
-			angleOne += Math.toDegrees(lastInOne / 20D);
-			angleTwo += Math.toDegrees(lastInTwo / 20D);
-			angleThree += Math.toDegrees(lastInOne * Math.abs(lastInTwo < 0 ? 1F / lastInTwo : lastInTwo) / 20D);
 			return;
 		}
 
@@ -186,7 +145,7 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
 			return true;
 		}
-		if(cap == Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == facing.getOpposite())){
+		if(cap == Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY && side == facing.getOpposite()){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -201,40 +160,20 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
 			return (T) handler;
 		}
-		if(cap == Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == facing.getOpposite())){
+		if(cap == Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY && side == facing.getOpposite()){
 			return (T) slaveHandler;
 		}
 
 		return super.getCapability(cap, side);
 	}
 
-	private boolean up = false;
-	private boolean back = false;
-
 	private class SlaveAxisHandler implements ISlaveAxisHandler{
 		@Override
 		public void trigger(EnumFacing side){
-			if(side == EnumFacing.UP){
-				if(back){
-					back = false;
-					up = false;
-					if(!locked && !rotaryMembers.isEmpty()){
-						runCalc();
-						triggerSlaves();
-					}
-				}else{
-					up = true;
-				}
-			}else if(side == facing.getOpposite()){
-				if(up){
-					back = false;
-					up = false;
-					if(!locked && !rotaryMembers.isEmpty()){
-						runCalc();
-						triggerSlaves();
-					}
-				}else{
-					back = true;
+			if(side == facing.getOpposite()){
+				if(!locked && !rotaryMembers.isEmpty()){
+					runCalc();
+					triggerSlaves();
 				}
 			}
 		}

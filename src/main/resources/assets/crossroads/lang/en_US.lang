@@ -222,6 +222,10 @@ fluid.copshowium=Molten Copshowium
 tile.block_copshowium.name=Block of Copshowium
 item.ingot_copshowium.name=Copshowium Ingot
 item.nugget_copshowium.name=Copshowium Nugget
+tile.sin_axis.name=Sin Axis
+tile.cos_axis.name=Cos Axis
+tile.arcsin_axis.name=ArcSin Axis
+tile.arccos_axis.name=ArcCos Axis
 
 #GuideAPI documentation
 #Mysterious Journal

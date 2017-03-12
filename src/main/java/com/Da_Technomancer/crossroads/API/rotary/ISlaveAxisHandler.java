@@ -21,4 +21,9 @@ public interface ISlaveAxisHandler{
 	 * @return Any ISlaveAxisHandlers controlled by this axis. 
 	 */
 	public HashSet<ISlaveAxisHandler> getContainedAxes();
+	
+	/**
+	 * This must be implemented to return true if this block no longer exists, or if it is unavailable for any other reason.
+	 */
+	public boolean isInvalid();
 }
