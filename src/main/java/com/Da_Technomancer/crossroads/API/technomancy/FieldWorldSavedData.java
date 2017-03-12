@@ -105,6 +105,9 @@ public class FieldWorldSavedData extends WorldSavedData{
 		return world.getChunkFromChunkCoords((int) (combinedCoord >> 32), (int) combinedCoord);
 	}
 	
+	/**
+	 * @returns The coordinate in chunk relative form. NOT the same as coord % 16. Note that this value should be divided by 2 for use with fieldNodes and nodeForces.
+	 */
 	public static int getChunkRelativeCoord(int coord){
 		return coord - (16 * Math.floorDiv(coord, 16));
 	}

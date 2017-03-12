@@ -105,11 +105,11 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 						}else if(power >= (content.amount / 72) - 1){
 							FieldWorldSavedData data = FieldWorldSavedData.get(world);
 							if(data.fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos))){
-								if(data.fieldNodes.get(FieldWorldSavedData.getLongFromPos(pos))[1][FieldWorldSavedData.getChunkRelativeCoord(pos.getX())][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ())] + 1 < 8 * (content.amount / 72)){
+								if(data.fieldNodes.get(FieldWorldSavedData.getLongFromPos(pos))[1][FieldWorldSavedData.getChunkRelativeCoord(pos.getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ()) / 2] + 1 < 8 * (content.amount / 72)){
 									return;
 								}
 
-								data.nodeForces.get(FieldWorldSavedData.getLongFromPos(pos))[0][FieldWorldSavedData.getChunkRelativeCoord(pos.getX())][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ())] -= 8 * (content.amount / 72);
+								data.nodeForces.get(FieldWorldSavedData.getLongFromPos(pos))[0][FieldWorldSavedData.getChunkRelativeCoord(pos.getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ()) / 2] -= 8 * (content.amount / 72);
 
 								content = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) content.amount) * EnergyConverters.COPSHOWIUM_PER_COPPER));
 								if(content.amount > CAPACITY){
