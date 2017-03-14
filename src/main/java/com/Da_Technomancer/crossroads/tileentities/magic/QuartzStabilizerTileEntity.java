@@ -71,6 +71,9 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	public void update(){
 		if(facing == null){
 			facing = world.getBlockState(pos).getBlock() instanceof QuartzStabilizer ? world.getBlockState(pos).getValue(Properties.FACING) : null;
+			if(facing == null){
+				invalidate();
+			}
 		}
 		
 		if(world.isRemote){
@@ -86,11 +89,11 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 				double mult = Math.min(1, ((double) RATE[large ? 1 : 0]) / ((double) (toSend.getOutput().getPower())));
 				MagicUnit mag = toSend.getOutput().mult(mult, true);
 				toSend.subtractMagic(mag);
-				if(beamer.emit(mag)){
+				if(beamer.emit(mag) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
 					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}else{
-				if(beamer.emit(null)){
+				if(beamer.emit(null) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
 					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}

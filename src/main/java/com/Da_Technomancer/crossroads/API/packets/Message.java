@@ -51,6 +51,7 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		// map(ItemStack.class, Message::readItemStack, Message::writeItemStack);
 		map(BlockPos.class, Message::readBlockPos, Message::writeBlockPos);
 		map(byte[][].class, Message::readByte2DArray, Message::writeByte2DArray);
+		map(int[].class, Message::readIntArray, Message::writeIntArray);
 	}
 
 	// The thing you override!
@@ -215,6 +216,22 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		buf.writeInt(bytes[0].length);
 		for(byte[] inner : bytes){
 			buf.writeBytes(inner);
+		}
+	}
+	
+	private static int[] readIntArray(ByteBuf buf){
+		int size = buf.readInt();
+		int[] out = new int[size];
+		for(int i = 0; i < size; i++){
+			out[i] = buf.readInt();
+		}
+		return out;
+	}
+
+	private static void writeIntArray(int[] ints, ByteBuf buf){
+		buf.writeInt(ints.length);
+		for(int inner : ints){
+			buf.writeInt(inner);
 		}
 	}
 

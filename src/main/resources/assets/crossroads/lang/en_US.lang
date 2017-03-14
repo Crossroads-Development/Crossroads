@@ -226,6 +226,7 @@ tile.sin_axis.name=Sin Axis
 tile.cos_axis.name=Cos Axis
 tile.arcsin_axis.name=ArcSin Axis
 tile.arccos_axis.name=ArcCos Axis
+tile.gateway_frame.name=Gateway Frame
 
 #GuideAPI documentation
 #Mysterious Journal

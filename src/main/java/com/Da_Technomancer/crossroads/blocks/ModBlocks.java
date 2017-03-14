@@ -52,6 +52,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.CosAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.EqualsAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.FluxReaderAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.GatewayFrame;
 import com.Da_Technomancer.crossroads.blocks.technomancy.GreaterThanAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.LessThanAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalBeamSplitter;
@@ -148,6 +149,7 @@ public final class ModBlocks{
 	public static CosAxis cosAxis;
 	public static ArcSinAxis arcsinAxis;
 	public static ArcCosAxis arccosAxis;
+	public static GatewayFrame gatewayFrame;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -235,6 +237,7 @@ public final class ModBlocks{
 		blockAddQue(cosAxis = new CosAxis());
 		blockAddQue(arcsinAxis = new ArcSinAxis());
 		blockAddQue(arccosAxis = new ArcCosAxis());
+		blockAddQue(gatewayFrame = new GatewayFrame());
 	}
 
 	@SideOnly(Side.CLIENT)

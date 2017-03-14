@@ -81,10 +81,10 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 					out = null;
 				}
 			}
-			if(beamer.emit(outMult)){
+			if(beamer.emit(outMult) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
 				ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
-			if(beamerUp.emit(out)){
+			if(beamerUp.emit(out) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamUp", beamerUp.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();

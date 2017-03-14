@@ -6,6 +6,8 @@ import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
+import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
@@ -19,6 +21,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 @Mod(modid = Main.MODID, name = Main.MODNAME, version = Main.VERSION, dependencies = "required-after:forge; before:guideapi; after:jei", useMetadata = true)
 public final class Main{
@@ -734,5 +738,15 @@ public final class Main{
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e){
 		proxy.postInit(e);
+	}
+	
+	@Mod.EventHandler
+	public void serverLoading(FMLServerStartingEvent e){
+		e.registerServerCommand(new WorkspaceDimTeleport());
+	}
+	
+	@Mod.EventHandler
+	public void serverStarted(FMLServerStartedEvent e){
+		ModDimensions.loadDims();
 	}
 }

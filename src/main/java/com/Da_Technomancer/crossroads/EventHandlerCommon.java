@@ -61,7 +61,7 @@ public final class EventHandlerCommon{
 
 	private static final Random RAND = new Random();
 	private static final ArrayList<Chunk> TO_RETROGEN = new ArrayList<Chunk>();
-	
+
 	@SubscribeEvent
 	public void runRetrogen(WorldTickEvent e){
 		if(TO_RETROGEN.size() != 0){
@@ -70,7 +70,7 @@ public final class EventHandlerCommon{
 			TO_RETROGEN.remove(0);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void buildRetrogenList(ChunkDataEvent.Load e) {
 		if (!ModConfig.retrogen.getString().isEmpty()) {
@@ -83,10 +83,10 @@ public final class EventHandlerCommon{
 			}
 		}
 	}
-	
+
 	private final float longRange = 1F/3F;
 	private final float shortRange = 2F/3F;
-	
+
 	@SubscribeEvent
 	public void calcFields(WorldTickEvent e){
 		if(!e.world.isRemote && e.world.getTotalWorldTime() % 5 == 0){
@@ -101,55 +101,55 @@ public final class EventHandlerCommon{
 				HashSet<Long> toRemove = new HashSet<Long>();
 				//This method has some labeled continues. Please don't hurt me...
 				fluxEvent:
-				for(Entry<Long, byte[][][]> datum : data.fieldNodes.entrySet()){
-					for(int i = 1; i >= 0; i--){
-						for(int j = 0; j < 8; j++){
-							for(int k = 0; k < 8; k++){
-								float netForce = data.nodeForces.get(datum.getKey())[i][j][k];
-								if(i == 1){
-									netForce += j == 0 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k];
-									netForce += k == 0 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j][k - 1];
-									netForce += j == 7 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k];
-									netForce += k == 7 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j][k + 1];
-									netForce += j == 0 || k == 0 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k - 1];
-									netForce += j == 7 || k == 0 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k - 1];
-									netForce += j == 7 || k == 7 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k + 1];
-									netForce += j == 0 || k == 7 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k + 1];
-									netForce += j <= 1 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 2][k];
-									netForce += k <= 1 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j][k - 2];
-									netForce += j >= 6 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 2][k];
-									netForce += k >= 6 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j][k + 2];
-								}
-								if(i == 0){
-									if(datum.getValue()[0][j][k] < datum.getValue()[1][j][k]){
-										datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) (Math.max(1, 32 * Math.pow(2, (int) netForce)) + (int) datum.getValue()[0][j][k])));
-										if(datum.getValue()[0][j][k] == 127){
-											MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getPos().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
-											toRemove.add(datum.getKey());
-											continue fluxEvent;
-										}else if(datum.getValue()[0][j][k] >= datum.getValue()[1][j][k]){
-											toRemove.add(datum.getKey());
-											continue fluxEvent;
+					for(Entry<Long, byte[][][]> datum : data.fieldNodes.entrySet()){
+						for(int i = 1; i >= 0; i--){
+							for(int j = 0; j < 8; j++){
+								for(int k = 0; k < 8; k++){
+									float netForce = data.nodeForces.get(datum.getKey())[i][j][k];
+									if(i == 1){
+										netForce += j == 0 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k];
+										netForce += k == 0 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j][k - 1];
+										netForce += j == 7 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k];
+										netForce += k == 7 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j][k + 1];
+										netForce += j == 0 || k == 0 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k - 1];
+										netForce += j == 7 || k == 0 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k - 1];
+										netForce += j == 7 || k == 7 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k + 1];
+										netForce += j == 0 || k == 7 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k + 1];
+										netForce += j <= 1 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 2][k];
+										netForce += k <= 1 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j][k - 2];
+										netForce += j >= 6 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 2][k];
+										netForce += k >= 6 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j][k + 2];
+									}
+									if(i == 0){
+										if(datum.getValue()[0][j][k] < datum.getValue()[1][j][k]){
+											datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) (Math.max(1, 32 * Math.pow(2, (int) netForce)) + (int) datum.getValue()[0][j][k])));
+											if(datum.getValue()[0][j][k] == 127){
+												MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getPos().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
+												toRemove.add(datum.getKey());
+												continue fluxEvent;
+											}else if(datum.getValue()[0][j][k] >= datum.getValue()[1][j][k]){
+												toRemove.add(datum.getKey());
+												continue fluxEvent;
+											}
+										}else{
+											netForce += datum.getValue()[0][j][k] == 7 ? 0 : ((float) (RAND.nextInt(8) - 1));
+											datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) netForce + (int) datum.getValue()[0][j][k]));
 										}
 									}else{
-										netForce += datum.getValue()[0][j][k] == 7 ? 0 : ((float) (RAND.nextInt(8) - 1));
-										datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) netForce + (int) datum.getValue()[0][j][k]));
+										byte newValue = (byte) Math.max(0, Math.min((int) netForce + 7, 127));
+										data.nodeForces.get(datum.getKey())[0][j][k] += Math.abs(newValue - datum.getValue()[1][j][k]) / 2;
+										datum.getValue()[1][j][k] = newValue;
 									}
-								}else{
-									byte newValue = (byte) Math.max(0, Math.min((int) netForce + 7, 127));
-									data.nodeForces.get(datum.getKey())[0][j][k] += Math.abs(newValue - datum.getValue()[1][j][k]) / 2;
-									datum.getValue()[1][j][k] = newValue;
-								}
-								
-								if(i == 0 && datum.getValue()[0][j][k] == 127){
-									MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getPos().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
-									toRemove.add(datum.getKey());
-									continue fluxEvent;
+
+									if(i == 0 && datum.getValue()[0][j][k] == 127){
+										MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getPos().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
+										toRemove.add(datum.getKey());
+										continue fluxEvent;
+									}
 								}
 							}
 						}
 					}
-				}
 				for(long remove : toRemove){
 					data.fieldNodes.remove(remove);
 				}
@@ -157,9 +157,9 @@ public final class EventHandlerCommon{
 			e.world.theProfiler.endSection();
 		}
 	}
-	
+
 	private boolean dilatingTime = false;
-	
+
 	/**
 	 * TODO make this work on A) Players, and B) entities other than EntityLiving (Ex. Arrows)
 	 */
@@ -168,7 +168,7 @@ public final class EventHandlerCommon{
 		if(e.getEntity().world.isRemote || dilatingTime || !FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))){
 			return;
 		}
-		
+
 		int potential = 1 + FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))[1][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2];
 		dilatingTime = true;
 		if(FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))[1][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2] > FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))[0][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2]){
@@ -184,10 +184,10 @@ public final class EventHandlerCommon{
 		}else if(potential < 8){
 			e.setCanceled(true);
 		}
-		
+
 		dilatingTime = false;
 	}
-	
+
 	@SubscribeEvent
 	public void craftGoggles(AnvilUpdateEvent e){
 		if(e.getLeft().getItem() == ModItems.moduleGoggles){

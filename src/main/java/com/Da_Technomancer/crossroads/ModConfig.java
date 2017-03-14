@@ -31,8 +31,9 @@ public final class ModConfig{
 	public static Property disableSlaves;
 	public static Property registerOres;
 	public static Property gearResetTime;
+	public static Property wipeInvalidMappings;
 	
-	private static final String CAT_OPTIM = "Optimization";
+	private static final String CAT_INTERNAL = "Internal";
 	private static final String CAT_ORES = "Ores";
 	private static final String CAT_MISC = "Misc";
 	private static final String CAT_SPECIALIZATION = "Specializations";
@@ -47,9 +48,9 @@ public final class ModConfig{
 		genRubyOre = config.get(CAT_ORES, "Generate Ruby Ore?", true);
 		genNativeCopperOre = config.get(CAT_ORES, "Generate Native Copper Ore?", true);
 		retrogen = config.get(CAT_ORES, "Retrogen Key", "", "Changing this value will cause retrogen. Leaving it blank disables retrogen. TURN THIS OFF WHEN YOU ARE DONE!");
-		speedTiers = config.get(CAT_OPTIM, "Speed Tiers", 50, "Higher value means smoother gear rotation and less clipping, but more packets sent AKA lag. (Range 1-1000, Default 50)", 1, 1000);
+		speedTiers = config.get(CAT_INTERNAL, "Speed Tiers", 50, "Higher value means smoother gear rotation and less clipping, but more packets sent AKA lag. (Range 1-1000, Default 50)", 1, 1000);
 		weatherControl = config.get(CAT_MISC, "Enable rain idol? (Default true)", true);
-		rotateBeam = config.get(CAT_OPTIM, "Rotate Beams", true, "Should magic beams rotate? (Default true)");
+		rotateBeam = config.get(CAT_MISC, "Rotate Beams", true, "Should magic beams rotate? (Default true)");
 		smallText = config.get(CAT_MISC, "Use small text in the guide book? (Default true)", true);
 		heatEffects = config.get(CAT_MISC, "Cable Overheat Effects", true, "If false, all heat cable overheating effects are replaced with burning (Default true)");
 		allowAllSingle = config.get(CAT_SPECIALIZATION, "Allow Multiple specializations per player in SinglePlayer? (Default true)", true);
@@ -62,8 +63,9 @@ public final class ModConfig{
 		magicChunk = config.get(CAT_FLUX, "Allow Chunk Magic-ifying disaster from Technomancy? (Default true)", true);
 		fieldLinesEnergy = config.get(CAT_FLUX, "Draw energy fields with lines (True: lines, False: planes)? (Default true)", true);
 		fieldLinesPotential = config.get(CAT_FLUX, "Draw potential fields with lines (True: lines, False: planes)? (Default false)", false);
-		disableSlaves = config.get(CAT_OPTIM, "If you are crashing from StackOverflow errors and you either have a tiny amount of RAM or built an insanely large & complicated (Soaryn scale) rotary-mathematics setup, then set this to true, destroy the setup, and set this to false. Also maybe send me a picture of the setup.", false);
-		registerOres = config.get(CAT_OPTIM, "Register OreDictionary for copper/tin/bronze? (Default true)", true, "Disabling this will make Crossroads copper/tin/bronze completely useless. The recipes will need copper/tin/bronze from other mods. Don't ask me why you'd want this.");
-		gearResetTime = config.get(CAT_OPTIM, "Gear Reset Time", 300, "Interval in ticks between gear network checks and visual angle resets. (Range 100-2400, Default 300)", 100, 2400);
+		disableSlaves = config.get(CAT_INTERNAL, "If you are crashing from StackOverflow errors and you either have a tiny amount of RAM or built an insanely large & complicated (Soaryn scale) rotary-mathematics setup, then set this to true, destroy the setup, and set this to false. Also maybe send me a picture of the setup.", false);
+		registerOres = config.get(CAT_ORES, "Register OreDictionary for copper/tin/bronze? (Default true)", true, "Disabling this will make Crossroads copper/tin/bronze completely useless. The recipes will need copper/tin/bronze from other mods. Don't ask me why you'd want this.");
+		gearResetTime = config.get(CAT_INTERNAL, "Gear Reset Time", 300, "Interval in ticks between gear network checks and visual angle resets. (Range 100-2400, Default 300)", 100, 2400);
+		wipeInvalidMappings = config.get(CAT_INTERNAL, "Wipe internal per player dimension mappings on failure? (Default false)", false, "Only use this if needed, as the mappings between players and technomancy workspace dimensions will be lost. If doing this, delete the files for those dimensions. Also, make a backup of the world file before setting this to true.");
 	}
 }

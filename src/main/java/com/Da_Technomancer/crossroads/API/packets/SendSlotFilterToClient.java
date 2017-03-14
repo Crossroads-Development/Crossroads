@@ -1,13 +1,8 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.tileentities.SlottedChestTileEntity;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,29 +30,13 @@ public class SendSlotFilterToClient extends Message<SendSlotFilterToClient>{
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
-		final World worldClient = minecraft.world;
-		minecraft.addScheduledTask(new Runnable(){
+			minecraft.addScheduledTask(new Runnable(){
 			@Override
 			public void run(){
-				processMessage(worldClient, nbt, pos);
+				SafeCallable.chestLock(minecraft.world, nbt, pos);
 			}
 		});
 
 		return null;
-	}
-
-	public void processMessage(World worldClient, NBTTagCompound nbt, BlockPos pos){
-		TileEntity te = worldClient.getTileEntity(pos);
-
-		if(te instanceof SlottedChestTileEntity){
-			SlottedChestTileEntity chest = ((SlottedChestTileEntity) te);
-			for(int i = 0; i < 54; i++){
-				if(nbt.hasKey("lock" + i)){
-					chest.lockedInv[i] = new ItemStack(nbt.getCompoundTag("lock" + i));
-				}else{
-					chest.lockedInv[i] = ItemStack.EMPTY;
-				}
-			}
-		}
 	}
 }

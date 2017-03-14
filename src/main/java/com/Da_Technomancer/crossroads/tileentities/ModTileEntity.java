@@ -52,6 +52,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.CounterGearTileEn
 import com.Da_Technomancer.crossroads.tileentities.technomancy.EqualsAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GreaterThanAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.LessThanAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSplitterTileEntity;
@@ -133,6 +134,7 @@ public class ModTileEntity{
 		register(CosAxisTileEntity.class, "cos_axis");
 		register(ArcSinAxisTileEntity.class, "arcsin_axis");
 		register(ArcCosAxisTileEntity.class, "arccos_axis");
+		register(GatewayFrameTileEntity.class, "gateway_frame");
 	}
 
 	/**
