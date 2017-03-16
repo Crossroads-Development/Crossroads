@@ -19,16 +19,16 @@ public class GrindstoneGuiContainer extends GuiContainer{
 		this.playerInv = playerInv;
 		this.te = te;
 
-		this.xSize = 176;
-		this.ySize = 166;
+		xSize = 176;
+		ySize = 166;
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		this.mc.getTextureManager().bindTexture(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstone_gui.png"));
-		this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-		this.drawTexturedModalRect(guiLeft + 66, guiTop + 35, 176, 0, 44, getScaledProgress());
+		mc.getTextureManager().bindTexture(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstone_gui.png"));
+		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+		drawTexturedModalRect(guiLeft + 66, guiTop + 35, 176, 0, 44, getScaledProgress());
 	}
 
 	@Override

@@ -46,8 +46,17 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable{
 		return (oldState.getBlock() != newState.getBlock());
 	}
 
+	private boolean cacheValid;
+	public float alpha;
+
 	@Override
 	public void update(){
+		if(world.isRemote){
+			alpha = (((float) Math.sin(world.getTotalWorldTime() / 100F) + 1F) / 3F) + .33F;
+		}
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+			cacheValid = false;
+		}
 		if(!world.isRemote && world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			if(world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
 				if(owner != null && magicPassed && checkStructure() && world.provider.getDimension() != 1){
@@ -154,22 +163,38 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable{
 		return true;
 	}
 
+	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -3, -1, 2, 0, 2);
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return RENDER_BOX.offset(pos);
+	}
+
+	private Axis cached;
+
 	/**
 	 * Returns null unless called on the top frame and there is a valid placement of 2 other frames.
 	 */
 	@Nullable
 	public Axis getAlignment(){
+		if(cacheValid){
+			return cached;
+		}
+		cacheValid = true;
 		BlockPos midPos = pos.offset(EnumFacing.DOWN, 2);
 		IBlockState baseState = ModBlocks.gatewayFrame.getDefaultState();
 		if(world.getBlockState(midPos.offset(EnumFacing.EAST, 2)) == baseState.withProperty(Properties.FACING, EnumFacing.WEST) && world.getBlockState(midPos.offset(EnumFacing.WEST, 2)) == baseState.withProperty(Properties.FACING, EnumFacing.EAST)){
+			cached = Axis.X;
 			return Axis.X;
 		}
 		if(world.getBlockState(midPos.offset(EnumFacing.NORTH, 2)) == baseState.withProperty(Properties.FACING, EnumFacing.SOUTH) && world.getBlockState(midPos.offset(EnumFacing.SOUTH, 2)) == baseState.withProperty(Properties.FACING, EnumFacing.NORTH)){
+			cached = Axis.Z;
 			return Axis.Z;
 		}
+		cached = null;
 		return null;
 	}
-	
+
 	@Nullable
 	private GatewayFrameTileEntity dialedCoord(Axis axis){
 		//The frame in the negative direction controls the X coord. 

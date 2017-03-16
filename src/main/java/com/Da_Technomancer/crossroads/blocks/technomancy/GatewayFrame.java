@@ -95,5 +95,9 @@ public class GatewayFrame extends BlockContainer{
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
 		return state.withRotation(mirrorIn.toRotation(state.getValue(Properties.FACING)));
 	}
-
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return state != getDefaultState().withProperty(Properties.FACING, EnumFacing.UP);
+	}
 }

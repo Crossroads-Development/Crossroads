@@ -59,6 +59,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalBeamSplitter;
 import com.Da_Technomancer.crossroads.blocks.technomancy.MultiplicationAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneKeyboard;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SinAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SquareRootAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.StaffCharger;
@@ -150,6 +151,7 @@ public final class ModBlocks{
 	public static ArcSinAxis arcsinAxis;
 	public static ArcCosAxis arccosAxis;
 	public static GatewayFrame gatewayFrame;
+	public static RedstoneKeyboard redstoneKeyboard;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -238,6 +240,7 @@ public final class ModBlocks{
 		blockAddQue(arcsinAxis = new ArcSinAxis());
 		blockAddQue(arccosAxis = new ArcCosAxis());
 		blockAddQue(gatewayFrame = new GatewayFrame());
+		blockAddQue(redstoneKeyboard = new RedstoneKeyboard());
 	}
 
 	@SideOnly(Side.CLIENT)

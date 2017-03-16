@@ -4,11 +4,13 @@ import com.Da_Technomancer.crossroads.gui.container.CoalHeaterContainer;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
 import com.Da_Technomancer.crossroads.gui.container.GrindstoneContainer;
 import com.Da_Technomancer.crossroads.gui.container.HeatingChamberContainer;
+import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
 import com.Da_Technomancer.crossroads.gui.container.SlottedChestContainer;
 import com.Da_Technomancer.crossroads.tileentities.SlottedChestTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.CoalHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +24,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int HEATINGCHAMBER_GUI = 2;
 	public static final int SLOTTEDCHEST_GUI = 3;
 	public static final int COLORCHART_GUI = 4;
+	public static final int REDSTONEKEYBOARD_GUI = 5;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -36,6 +39,8 @@ public class GuiHandler implements IGuiHandler{
 				return new SlottedChestContainer(player.inventory, ((SlottedChestTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case COLORCHART_GUI:
 				return new ColorChartContainer(player, world, new BlockPos(x, y, z));
+			case REDSTONEKEYBOARD_GUI:
+				return new RedstoneKeyboardContainer();
 		}
 
 		return null;
@@ -54,6 +59,8 @@ public class GuiHandler implements IGuiHandler{
 				return new SlottedChestGuiContainer(player.inventory, ((SlottedChestTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case COLORCHART_GUI:
 				return new ColorChartGuiContainer(player, world, new BlockPos(x, y, z));
+			case REDSTONEKEYBOARD_GUI:
+				return new RedstoneKeyboardGuiContainer(((RedstoneKeyboardTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 
 		return null;

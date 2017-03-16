@@ -26,10 +26,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ColorChart extends Block{
 	
-	private final AxisAlignedBB BBNORTH = new AxisAlignedBB(0, 0, .5D, 1, 1, 1);
-	private final AxisAlignedBB BBSOUTH = new AxisAlignedBB(0, 0, 0, 1, 1, .5D);
-	private final AxisAlignedBB BBWEST = new AxisAlignedBB(.5D, 0, 0, 1, 1, 1);
-	private final AxisAlignedBB BBEAST = new AxisAlignedBB(0, 0, 0, .5D, 1, 1);
+	private static final AxisAlignedBB BBNORTH = new AxisAlignedBB(0, 0, .5D, 1, 1, 1);
+	private static final AxisAlignedBB BBSOUTH = new AxisAlignedBB(0, 0, 0, 1, 1, .5D);
+	private static final AxisAlignedBB BBWEST = new AxisAlignedBB(.5D, 0, 0, 1, 1, 1);
+	private static final AxisAlignedBB BBEAST = new AxisAlignedBB(0, 0, 0, .5D, 1, 1);
 	
 	public ColorChart(){
 		super(Material.WOOD);
@@ -86,7 +86,7 @@ public class ColorChart extends Block{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta == 0 || meta == 1 ? 2 : meta));
+		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta == 0 || meta == 1 ? 2 : meta));
 	}
 
 	@Override

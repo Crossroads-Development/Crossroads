@@ -59,6 +59,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSpl
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SinAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SquareRootAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.StaffChargerTileEntity;
@@ -135,6 +136,7 @@ public class ModTileEntity{
 		register(ArcSinAxisTileEntity.class, "arcsin_axis");
 		register(ArcCosAxisTileEntity.class, "arccos_axis");
 		register(GatewayFrameTileEntity.class, "gateway_frame");
+		register(RedstoneKeyboardTileEntity.class, "redstone_keyboard");
 	}
 
 	/**
