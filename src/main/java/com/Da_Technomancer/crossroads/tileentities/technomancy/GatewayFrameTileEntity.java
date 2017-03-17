@@ -196,7 +196,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable{
 	}
 
 	@Nullable
-	private GatewayFrameTileEntity dialedCoord(Axis axis){
+	public GatewayFrameTileEntity dialedCoord(Axis axis){
 		//The frame in the negative direction controls the X coord. 
 		if(getAlignment() == null){
 			return null;
@@ -204,8 +204,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable{
 		return (GatewayFrameTileEntity) world.getTileEntity(pos.offset(EnumFacing.DOWN, 2).offset(EnumFacing.getFacingFromAxis(axis == Axis.X ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE, getAlignment()), 2));
 	}
 
-	public int getCoord(){
-		return (int) savedCoord;
+	public double getCoord(){
+		return MiscOp.betterRound(savedCoord, 3);
 	}
 
 	@Override

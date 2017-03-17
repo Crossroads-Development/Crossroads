@@ -4,12 +4,17 @@ import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -27,6 +32,11 @@ public class EmeraldGoggleEffect implements IGoggleEffect{
 				chat.add("I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio());
 			}else if(world.getTileEntity(ray.getBlockPos()).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
 				chat.add("Total Energy: " + world.getTileEntity(ray.getBlockPos()).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy());
+			}else if(world.getBlockState(ray.getBlockPos()) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
+				GatewayFrameTileEntity frame = (GatewayFrameTileEntity) world.getTileEntity(ray.getBlockPos());
+				if(frame.dialedCoord(Axis.X) != null){
+					chat.add("Dialed: " + frame.dialedCoord(Axis.X).getCoord() + ", " + frame.getCoord() + ", " + frame.dialedCoord(Axis.Z).getCoord());
+				}
 			}
 		}
 
