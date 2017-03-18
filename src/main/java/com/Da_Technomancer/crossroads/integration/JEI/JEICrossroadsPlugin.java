@@ -19,15 +19,16 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	@Override
 	public void register(@Nonnull IModRegistry registry){
 
-		registry.addRecipeCategories(new GrindstoneCategory(registry.getJeiHelpers().getGuiHelper()), new FluidCoolingCategory(registry.getJeiHelpers().getGuiHelper()), new HeatingCrucibleCategory(registry.getJeiHelpers().getGuiHelper()), new HeatExchangerCategory(registry.getJeiHelpers().getGuiHelper()));
-		registry.addRecipeHandlers(new GrindstoneRecipeHandler(), new FluidCoolingRecipeHandler(), new HeatingCrucibleRecipeHandler(), new HeatExchangerRecipeHandler());
+		registry.addRecipeCategories(new GrindstoneCategory(registry.getJeiHelpers().getGuiHelper()), new FluidCoolingCategory(registry.getJeiHelpers().getGuiHelper()), new HeatingCrucibleCategory(registry.getJeiHelpers().getGuiHelper()), new HeatExchangerCategory(registry.getJeiHelpers().getGuiHelper()), new DetailedCrafterCategory(registry.getJeiHelpers().getGuiHelper()));
+		registry.addRecipeHandlers(new GrindstoneRecipeHandler(), new FluidCoolingRecipeHandler(), new HeatingCrucibleRecipeHandler(), new HeatExchangerRecipeHandler(), new DetailedCrafterRecipeHandler());
 
 		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.grindstone, 1), GrindstoneCategory.id);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.fluidCoolingChamber, 1), FluidCoolingCategory.id);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.heatingCrucible, 1), HeatingCrucibleCategory.id);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.heatExchanger, 1), HeatExchangerCategory.ID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.insulHeatExchanger, 1), HeatExchangerCategory.ID);
-
+		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.detailedCrafter, 1), DetailedCrafterCategory.ID);
+		
 		registry.addRecipes(RecipeHolder.JEIWrappers);
 	}
 

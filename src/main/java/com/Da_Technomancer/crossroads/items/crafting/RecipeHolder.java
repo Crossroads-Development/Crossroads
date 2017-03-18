@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.integration.JEI.DetailedCrafterRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerRecipe;
@@ -55,12 +56,14 @@ public final class RecipeHolder{
 	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
 	 */
 	public static final HashMap<Item, MagicUnit> magExtractRecipes = new HashMap<Item, MagicUnit>();
-	
+
 	/**
 	 * The recipes for the Detailed Crafter that require technomancy to be unlocked.
+	 * 
+	 * ONLY USE ShapedOreRecipe and ShapelessOreRecipe. Using any other type require changing the JEI integration (DetailedCrafterRecipeWrapper) or it will crash.
 	 */
 	public static final ArrayList<IRecipe> technomancyRecipes = new ArrayList<IRecipe>();
-	
+
 	public static final ArrayList<Object> JEIWrappers = new ArrayList<Object>();
 
 	/**
@@ -76,6 +79,9 @@ public final class RecipeHolder{
 		}
 		for(Entry<Block, Triple<IBlockState, Double, Double>> rec : envirHeatSource.entrySet()){
 			JEIWrappers.add(new HeatExchangerRecipe(rec));
+		}
+		for(IRecipe rec : technomancyRecipes){
+			JEIWrappers.add(new DetailedCrafterRecipe(rec, 0));
 		}
 		JEIWrappers.add(new HeatingCrucibleRecipe(true));
 		JEIWrappers.add(new HeatingCrucibleRecipe(false));

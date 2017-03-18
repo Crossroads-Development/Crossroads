@@ -31,8 +31,8 @@ public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipeWrapp
 	protected GrindstoneCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
-		arrowStatic = guiHelper.createDrawable(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstone_gui.png"), 66, 35, 44, 17);
-		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation(Main.MODID + ":textures/gui/container/grindstone_gui.png"), 176, 0, 44, 17), 40, StartDirection.TOP, false);
+		arrowStatic = guiHelper.createDrawable(new ResourceLocation(Main.MODID, "textures/gui/container/grindstone_gui.png"), 66, 35, 44, 17);
+		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation(Main.MODID, "textures/gui/container/grindstone_gui.png"), 176, 0, 44, 17), 40, StartDirection.TOP, false);
 	}
 
 	@Override
