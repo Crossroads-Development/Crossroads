@@ -102,8 +102,8 @@ public final class MiscOp{
 		
 		for(AxisAlignedBB box : boxes){
 			RayTraceResult raytraceresult = box.calculateIntercept(start, end);
-			if(raytraceresult != null && (dist > raytraceresult.hitVec.lengthSquared() || dist == 0)){
-				dist = (float) raytraceresult.hitVec.lengthSquared();
+			if(raytraceresult != null && (dist > raytraceresult.hitVec.subtract(start).lengthVector() || dist == 0)){
+				dist = (float) raytraceresult.hitVec.subtract(start).lengthVector();
 				closest = box;
 			}
 		}

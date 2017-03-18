@@ -353,7 +353,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 					}
 
 					// Diagonal gears
-					if(!world.getBlockState(pos.offset(facing)).getBlock().isNormalCube(world.getBlockState(pos.offset(facing)), world, pos.offset(facing)) && world.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))) != null && world.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+					if(!world.getBlockState(pos.offset(facing)).isNormalCube() && world.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))) != null && world.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
 						world.getTileEntity(pos.offset(facing).offset(EnumFacing.getFront(side))).getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, rotRatio, .5D);
 					}
 				}

@@ -84,7 +84,7 @@ public class SortingHopper extends BlockContainer{
 			enumfacing = EnumFacing.DOWN;
 		}
 
-		return getDefaultState().withProperty(FACING, enumfacing).withProperty(ENABLED, Boolean.valueOf(true));
+		return getDefaultState().withProperty(FACING, enumfacing).withProperty(ENABLED, true);
 	}
 
 	@Override

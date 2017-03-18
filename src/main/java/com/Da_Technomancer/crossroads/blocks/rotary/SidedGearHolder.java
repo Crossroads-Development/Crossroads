@@ -45,7 +45,7 @@ public class SidedGearHolder extends BlockContainer{
 		BOUNDING_BOXES.add(new AxisAlignedBB(0D, 0D, .875D, 1D, 1D, 1D));//SOUTH
 		BOUNDING_BOXES.add(new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D));//WEST
 		BOUNDING_BOXES.add(new AxisAlignedBB(.875D, 0D, 0D, 1D, 1D, 1D));//EAST
-		BOUNDING_BOXES.add(new AxisAlignedBB(.375D, .375D, .375D, .625D, .625D, .625D));//Center
+		BOUNDING_BOXES.add(new AxisAlignedBB(.3125D, .3125D, .3125D, .6875D, .6875D, .6875D));//Center
 	}
 
 	public SidedGearHolder(){
@@ -86,7 +86,7 @@ public class SidedGearHolder extends BlockContainer{
 		TileEntity te = worldIn.getTileEntity(pos);
 		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
-		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
+		Vec3d start = play.getPositionEyes(0F).subtract((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
 		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
 		AxisAlignedBB out = getAimedSide(te, start, end, true);
 		return (out == null ? BOUNDING_BOXES.get(6) : out).offset(pos);
@@ -103,7 +103,7 @@ public class SidedGearHolder extends BlockContainer{
 			return null;
 		}else{
 			RayTraceResult untransformed = out.calculateIntercept(start, end);
-			return new RayTraceResult(untransformed.hitVec.addVector((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
+			return new RayTraceResult(untransformed.hitVec.addVector((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()), untransformed.sideHit, pos);
 		}
 	}
 
@@ -166,10 +166,11 @@ public class SidedGearHolder extends BlockContainer{
 			Vec3d end = start.addVector(player.getLook(0F).xCoord * reDist, player.getLook(0F).yCoord * reDist, player.getLook(0F).zCoord * reDist);
 			int out = BOUNDING_BOXES.indexOf(getAimedSide(te, start, end, true));
 
-			SidedGearHolderTileEntity gear = (SidedGearHolderTileEntity) te;
 			if(out == -1){
 				return false;
-			}else if(out == 6){
+			}
+			SidedGearHolderTileEntity gear = (SidedGearHolderTileEntity) te;
+			if(out == 6){
 				if(canHarvest){
 					for(int i = 0; i < 6; i++){
 						if(gear.getMembers()[i] != null){

@@ -242,7 +242,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 					}
 
 					// Diagonal gears
-					if(!world.getBlockState(pos.offset(facing)).getBlock().isNormalCube(world.getBlockState(pos.offset(facing)), world, pos.offset(facing)) && world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+					if(!world.getBlockState(pos.offset(facing)).isNormalCube() && world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
 						world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, rotRatio, .5D);
 					}
 				}

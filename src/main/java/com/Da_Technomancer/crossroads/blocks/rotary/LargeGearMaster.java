@@ -104,11 +104,6 @@ public class LargeGearMaster extends BlockContainer{
 	public boolean isFullCube(IBlockState state){
 		return false;
 	}
-	
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
-		return true;
-	}
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state){

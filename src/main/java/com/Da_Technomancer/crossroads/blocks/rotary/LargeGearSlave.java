@@ -120,11 +120,6 @@ public class LargeGearSlave extends BlockContainer{
 	}
 
 	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
-		return true;
-	}
-
-	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}

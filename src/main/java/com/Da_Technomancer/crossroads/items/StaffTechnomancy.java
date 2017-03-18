@@ -115,12 +115,12 @@ public class StaffTechnomancy extends Item{
 			nbt = new NBTTagCompound();
 		}
 		tooltip.add("Energy output: " + nbt.getInteger(MagicElements.ENERGY.name()));
-		tooltip.add("Energy stored: " + nbt.getInteger("stored_" + MagicElements.ENERGY.name()));
 		tooltip.add("Potential output: " + nbt.getInteger(MagicElements.POTENTIAL.name()));
-		tooltip.add("Potential stored: " + nbt.getInteger("stored_" + MagicElements.POTENTIAL.name()));
 		tooltip.add("Stability output: " + nbt.getInteger(MagicElements.STABILITY.name()));
-		tooltip.add("Stability stored: " + nbt.getInteger("stored_" + MagicElements.STABILITY.name()));
 		tooltip.add("Void output: " + nbt.getInteger(MagicElements.VOID.name()));
+		tooltip.add("Energy stored: " + nbt.getInteger("stored_" + MagicElements.ENERGY.name()));
+		tooltip.add("Potential stored: " + nbt.getInteger("stored_" + MagicElements.POTENTIAL.name()));
+		tooltip.add("Stability stored: " + nbt.getInteger("stored_" + MagicElements.STABILITY.name()));
 		tooltip.add("Void stored: " + nbt.getInteger("stored_" + MagicElements.VOID.name()));
 	}
 	

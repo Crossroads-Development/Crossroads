@@ -22,6 +22,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class GatewayFrame extends BlockContainer{
@@ -44,7 +45,7 @@ public class GatewayFrame extends BlockContainer{
 		if(facing == EnumFacing.UP){
 			facing = EnumFacing.DOWN;
 		}
-		return getDefaultState().withProperty(Properties.FACING, facing);
+		return getDefaultState().withProperty(Properties.FACING, placer instanceof FakePlayer ? EnumFacing.NORTH : facing);
 	}
 
 	@Override
