@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.integration.GuideAPI;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
-import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
+import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.Book;
@@ -34,7 +34,7 @@ public class ElementEntry extends EntryItemStack{
 			((PageText) pageList.get(0)).setUnicodeFlag(true);
 		}
 		for(MagicElements elem : MagicElements.values()){
-			if(elem == MagicElements.ENERGY || elem == MagicElements.POTENTIAL || elem == MagicElements.STABILITY || SendElementNBTToClient.elementNBT.hasKey(elem.name())){
+			if(elem == MagicElements.ENERGY || elem == MagicElements.POTENTIAL || elem == MagicElements.STABILITY || StoreNBTToClient.storedNBT.hasKey(elem.name())){
 				//Reverse order, because for the most part the more basic elements are at the bottom of the list.
 				pageList.add(1, lore ? getPage(elem) : getPageNoLore(elem));
 				if(GuideBooks.smallText){

@@ -6,18 +6,22 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
+/**
+ * This can be used to store an NBTTagCompound on a client. 
+ * The most recent one received overwrites the previous. This is used for GUIs mainly. 
+ */
 @SuppressWarnings("serial")
-public class SendElementNBTToClient extends Message<SendElementNBTToClient>{
+public class StoreNBTToClient extends Message<StoreNBTToClient>{
 
-	public SendElementNBTToClient(){
+	public StoreNBTToClient(){
 		
 	}
 	
-	public static NBTTagCompound elementNBT = new NBTTagCompound();
+	public static NBTTagCompound storedNBT = new NBTTagCompound();
 	
 	public NBTTagCompound nbt;
 
-	public SendElementNBTToClient(NBTTagCompound nbt){
+	public StoreNBTToClient(NBTTagCompound nbt){
 		this.nbt = nbt;
 	}
 
@@ -38,6 +42,6 @@ public class SendElementNBTToClient extends Message<SendElementNBTToClient>{
 	}
 
 	public void processMessage(NBTTagCompound nbt){
-		elementNBT = nbt;
+		storedNBT = nbt;
 	}
 }

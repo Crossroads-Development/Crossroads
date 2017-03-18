@@ -152,6 +152,7 @@ public final class ModBlocks{
 	public static ArcCosAxis arccosAxis;
 	public static GatewayFrame gatewayFrame;
 	public static RedstoneKeyboard redstoneKeyboard;
+	public static DetailedCrafter detailedCrafter;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -241,6 +242,7 @@ public final class ModBlocks{
 		blockAddQue(arccosAxis = new ArcCosAxis());
 		blockAddQue(gatewayFrame = new GatewayFrame());
 		blockAddQue(redstoneKeyboard = new RedstoneKeyboard());
+		blockAddQue(detailedCrafter = new DetailedCrafter());
 	}
 
 	@SideOnly(Side.CLIENT)

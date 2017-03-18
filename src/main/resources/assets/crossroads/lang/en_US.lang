@@ -228,6 +228,8 @@ tile.arcsin_axis.name=ArcSin Axis
 tile.arccos_axis.name=ArcCos Axis
 tile.gateway_frame.name=Gateway Frame
 tile.redstone_keyboard.name=Redstone Keyboard
+tile.detailed_crafter.name=Detailed Crafter
+container.detailed_crafting=Detailed Crafting
 
 #GuideAPI documentation
 #Mysterious Journal

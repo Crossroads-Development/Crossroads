@@ -6,8 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
-/**Tile entities should only use ISidedInventory if they really need to (GUI for example). Otherwise just use Capabilities.
- * 
+/**
+ * Tile entities should only use ISidedInventory if they really need to (GUI for example). Otherwise just use Capabilities.
  */
 public abstract class AbstractInventory extends TileEntity implements ISidedInventory{
 

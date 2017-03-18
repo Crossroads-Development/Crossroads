@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendElementNBTToClient;
+import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
@@ -46,7 +46,7 @@ public final class EventHandlerCommon{
 			EntityPlayer player = (EntityPlayer) event.getEntity();
 
 			NBTTagCompound tag = MiscOp.getPlayerTag(player);
-			ModPackets.network.sendTo(new SendElementNBTToClient(tag.getCompoundTag("elements")), (EntityPlayerMP) event.getEntity());
+			ModPackets.network.sendTo(new StoreNBTToClient(tag.getCompoundTag("elements")), (EntityPlayerMP) event.getEntity());
 
 			//A convenience feature to start with a debug tool.
 			if(!tag.hasKey("starter")){

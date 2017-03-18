@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.gui.container.CoalHeaterContainer;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
+import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.gui.container.GrindstoneContainer;
 import com.Da_Technomancer.crossroads.gui.container.HeatingChamberContainer;
 import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
@@ -25,6 +26,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int SLOTTEDCHEST_GUI = 3;
 	public static final int COLORCHART_GUI = 4;
 	public static final int REDSTONEKEYBOARD_GUI = 5;
+	public static final int CRAFTER_GUI = 6;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -41,6 +43,8 @@ public class GuiHandler implements IGuiHandler{
 				return new ColorChartContainer(player, world, new BlockPos(x, y, z));
 			case REDSTONEKEYBOARD_GUI:
 				return new RedstoneKeyboardContainer();
+			case CRAFTER_GUI:
+				return new DetailedCrafterContainer(player.inventory, new BlockPos(x, y, z));
 		}
 
 		return null;
@@ -61,6 +65,8 @@ public class GuiHandler implements IGuiHandler{
 				return new ColorChartGuiContainer(player, world, new BlockPos(x, y, z));
 			case REDSTONEKEYBOARD_GUI:
 				return new RedstoneKeyboardGuiContainer(((RedstoneKeyboardTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case CRAFTER_GUI:
+				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z));
 		}
 
 		return null;

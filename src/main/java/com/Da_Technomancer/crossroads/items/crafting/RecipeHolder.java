@@ -20,6 +20,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fluids.Fluid;
 
 public final class RecipeHolder{
@@ -54,6 +55,11 @@ public final class RecipeHolder{
 	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
 	 */
 	public static final HashMap<Item, MagicUnit> magExtractRecipes = new HashMap<Item, MagicUnit>();
+	
+	/**
+	 * The recipes for the Detailed Crafter that require technomancy to be unlocked.
+	 */
+	public static final ArrayList<IRecipe> technomancyRecipes = new ArrayList<IRecipe>();
 	
 	public static final ArrayList<Object> JEIWrappers = new ArrayList<Object>();
 
