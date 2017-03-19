@@ -36,6 +36,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		EnumFacing facing = wheel.getWorld().getBlockState(wheel.getPos()).getValue(Properties.FACING);
 		
 		GlStateManager.pushMatrix();
+		GlStateManager.pushAttrib();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5F, y + .5F, z + .5F);
 		GlStateManager.rotate(facing.getAxisDirection() == (facing.getAxis() == EnumFacing.Axis.Z ? EnumFacing.AxisDirection.POSITIVE : EnumFacing.AxisDirection.NEGATIVE) ? -90F : 90F, facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0, 0, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0);
@@ -183,6 +184,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		GlStateManager.popMatrix();
 
 		GlStateManager.enableLighting();
+		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
 	}
 }

@@ -52,7 +52,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable{
 	@Override
 	public void update(){
 		if(world.isRemote){
-			alpha = (((float) Math.sin(world.getTotalWorldTime() / 100F) + 1F) / 3F) + .33F;
+			alpha = (((float) Math.sin((double) world.getTotalWorldTime() / 10D) + 1F) / 6F) + (2F / 3F);
 		}
 		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			cacheValid = false;

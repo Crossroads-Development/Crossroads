@@ -99,6 +99,6 @@ public class GatewayFrame extends BlockContainer{
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
-		return state != getDefaultState().withProperty(Properties.FACING, EnumFacing.UP);
+		return false;
 	}
 }
