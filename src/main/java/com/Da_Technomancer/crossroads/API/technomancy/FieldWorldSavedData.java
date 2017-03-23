@@ -6,10 +6,8 @@ import java.util.Map.Entry;
 import com.Da_Technomancer.crossroads.Main;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapStorage;
 
 public class FieldWorldSavedData extends WorldSavedData{
@@ -95,24 +93,5 @@ public class FieldWorldSavedData extends WorldSavedData{
 			i++;
 		}
 		return nbt;
-	}
-	
-	public static long getLongFromChunk(Chunk chunk){
-		return (((long) chunk.xPosition) << 32) | (chunk.zPosition & 0xffffffffL);
-	}
-	
-	public static Chunk getChunkFromLong(World world, long combinedCoord){
-		return world.getChunkFromChunkCoords((int) (combinedCoord >> 32), (int) combinedCoord);
-	}
-	
-	/**
-	 * @returns The coordinate in chunk relative form. NOT the same as coord % 16. Note that this value should be divided by 2 for use with fieldNodes and nodeForces.
-	 */
-	public static int getChunkRelativeCoord(int coord){
-		return coord - (16 * Math.floorDiv(coord, 16));
-	}
-	
-	public static long getLongFromPos(BlockPos pos){
-		return (((long) (pos.getX()) >> 4) << 32) | ((pos.getZ() >> 4) & 0xffffffffL);
 	}
 }

@@ -2,12 +2,14 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.ChunkPos;
 
 public class FluxManipulatorTileEntity extends TileEntity implements ITickable{
 
@@ -20,10 +22,10 @@ public class FluxManipulatorTileEntity extends TileEntity implements ITickable{
 			if(world.getTotalWorldTime() % 5 != lastTick){
 				if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 					FieldWorldSavedData data = FieldWorldSavedData.get(world);
-					if(data.fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos))){
+					if(data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))){
 						netForce += world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] / (20D * EnergyConverters.SPEED_PER_FLUX);
 						if(world.getTotalWorldTime() % 5 == 0){
-							data.nodeForces.get(FieldWorldSavedData.getLongFromPos(pos))[0][FieldWorldSavedData.getChunkRelativeCoord(pos.getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ()) / 2] += netForce;
+							data.nodeForces.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[0][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] += netForce;
 							netForce = 0;
 						}
 					}

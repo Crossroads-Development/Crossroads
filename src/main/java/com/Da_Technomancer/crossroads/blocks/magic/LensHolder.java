@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.blocks.magic;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -38,7 +37,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class LensHolder extends BlockContainer implements IBlockCompare{
+public class LensHolder extends BlockContainer{
 
 	public LensHolder(){
 		super(Material.ROCK);
@@ -159,10 +158,5 @@ public class LensHolder extends BlockContainer implements IBlockCompare{
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean stuff){
 		addCollisionBoxToList(pos, mask, list, state.getValue(Properties.ORIENT) ? BBA : BB);
-	}
-
-	@Override
-	public double getOutput(World worldIn, BlockPos pos){
-		return ((LensHolderTileEntity) worldIn.getTileEntity(pos)).getRedstone();
 	}
 }

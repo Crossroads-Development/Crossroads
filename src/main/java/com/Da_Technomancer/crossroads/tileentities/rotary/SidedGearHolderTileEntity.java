@@ -425,6 +425,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 					motionData[side][1] = 0;
 				}
 			}
+			markDirty();
 		}
 
 		@Override
@@ -432,5 +433,9 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			return rotRatio;
 		}
 
+		@Override
+		public void markChanged(){
+			markDirty();
+		}
 	}
 }

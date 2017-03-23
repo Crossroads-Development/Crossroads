@@ -78,6 +78,8 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
+			
+			gear.markChanged();
 		}
 
 		if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
@@ -204,7 +206,7 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public void requestUpdate(){
-			if(world.isRemote){
+			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();

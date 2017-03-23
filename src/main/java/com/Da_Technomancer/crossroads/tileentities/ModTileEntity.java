@@ -57,6 +57,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.GreaterThanAxisTi
 import com.Da_Technomancer.crossroads.tileentities.technomancy.LessThanAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
@@ -137,6 +138,7 @@ public class ModTileEntity{
 		register(ArcCosAxisTileEntity.class, "arccos_axis");
 		register(GatewayFrameTileEntity.class, "gateway_frame");
 		register(RedstoneKeyboardTileEntity.class, "redstone_keyboard");
+		register(PrototypingTableTileEntity.class, "prototyping_table");
 	}
 
 	/**

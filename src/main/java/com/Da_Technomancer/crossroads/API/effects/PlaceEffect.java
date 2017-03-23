@@ -6,11 +6,14 @@ import com.Da_Technomancer.crossroads.Main;
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -30,6 +33,8 @@ public class PlaceEffect implements IEffect{
 					worldIn.setBlockState(ent.getPosition(), ((ItemBlock) ent.getEntityItem().getItem()).getBlock().getStateForPlacement(worldIn, ent.getPosition(), EnumFacing.DOWN, 0, 0, 0, ent.getEntityItem().getMetadata(), placer, EnumHand.MAIN_HAND));
 					Block block = ((ItemBlock) ent.getEntityItem().getItem()).getBlock();
 					block.onBlockPlacedBy(worldIn, ent.getPosition(), worldIn.getBlockState(ent.getPosition()), placer, ent.getEntityItem());
+					SoundType soundtype = block.getSoundType(worldIn.getBlockState(pos), worldIn, pos, null);
+					worldIn.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 					ent.getEntityItem().shrink(1);
 					if(ent.getEntityItem().getCount() <= 0){
 						ent.setDead();
@@ -43,6 +48,9 @@ public class PlaceEffect implements IEffect{
 
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, double mult){
+			if(worldIn.getBlockState(pos).getBlock() == Blocks.BARRIER){
+				return;
+			}
 			worldIn.destroyBlock(pos, true);
 		}
 	}

@@ -211,11 +211,17 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 					motionData[1] = 0;
 				}
 			}
+			markDirty();
 		}
 
 		@Override
 		public double getRotationRatio(){
 			return rotRatio;
+		}
+
+		@Override
+		public void markChanged(){
+			markDirty();
 		}
 	}
 }

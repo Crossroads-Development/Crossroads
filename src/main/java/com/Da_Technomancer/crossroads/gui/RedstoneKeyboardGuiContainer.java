@@ -75,8 +75,10 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 					return;
 				}
 			}else{
-				if((Character.isAlphabetic(key) || key == '.' || Character.isDigit(key)) && search.length() <= 25){
-					search += key;
+				if((Character.isAlphabetic(key) || key == '.' || Character.isDigit(key))){
+					if(search.length() <= 25){
+						search += key;
+					}
 					return;
 				}
 			}

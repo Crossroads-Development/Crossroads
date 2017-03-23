@@ -79,6 +79,8 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
+			
+			gear.markChanged();
 		}
 		
 		if(world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
@@ -170,7 +172,7 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 
 		@Override
 		public void requestUpdate(){
-			if(world.isRemote){
+			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();

@@ -32,6 +32,7 @@ public final class ModConfig{
 	public static Property registerOres;
 	public static Property gearResetTime;
 	public static Property wipeInvalidMappings;
+	public static Property blockedPrototype;
 	
 	private static final String CAT_INTERNAL = "Internal";
 	private static final String CAT_ORES = "Ores";
@@ -63,9 +64,10 @@ public final class ModConfig{
 		magicChunk = config.get(CAT_FLUX, "Allow Chunk Magic-ifying disaster from Technomancy? (Default true)", true);
 		fieldLinesEnergy = config.get(CAT_FLUX, "Draw energy fields with lines (True: lines, False: planes)? (Default true)", true);
 		fieldLinesPotential = config.get(CAT_FLUX, "Draw potential fields with lines (True: lines, False: planes)? (Default false)", false);
-		disableSlaves = config.get(CAT_INTERNAL, "If you are crashing from StackOverflow errors and you either have a tiny amount of RAM or built an insanely large & complicated (Soaryn scale) rotary-mathematics setup, then set this to true, destroy the setup, and set this to false. Also maybe send me a picture of the setup.", false);
+		disableSlaves = config.get(CAT_INTERNAL, "If you are crashing from StackOverflow errors and you either have a tiny amount of RAM or built an insanely large & complicated rotary setup, then set this to true, destroy the setup, and set this to false. Also maybe send me a picture of the setup.", false);
 		registerOres = config.get(CAT_ORES, "Register OreDictionary for copper/tin/bronze? (Default true)", true, "Disabling this will make Crossroads copper/tin/bronze completely useless. The recipes will need copper/tin/bronze from other mods. Don't ask me why you'd want this.");
 		gearResetTime = config.get(CAT_INTERNAL, "Gear Reset Time", 300, "Interval in ticks between gear network checks and visual angle resets. (Range 100-2400, Default 300)", 100, 2400);
 		wipeInvalidMappings = config.get(CAT_INTERNAL, "Wipe internal per player dimension mappings on failure? (Default false)", false, "Only use this if needed, as the mappings between players and technomancy workspace dimensions will be lost. If doing this, delete the files for those dimensions. Also, make a backup of the world file before setting this to true.");
+		blockedPrototype = config.get(CAT_INTERNAL, "Blocks disallowed to be used in prototypes. Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'.", new String[] {Main.MODID + ":large_gear_slave", Main.MODID + ":large_gear_master", Main.MODID + ":prototype"}, "Use to prevent exploits, bugs, travel to the prototype dimension, griefing, and other naughty things. Also, most modded multiblocks should be blocked to prevent bugs.");
 	}
 }

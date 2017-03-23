@@ -7,13 +7,12 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IBlockCompare;
-import com.Da_Technomancer.crossroads.API.IConduitModel;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.client.bakedModel.ConduitBakedModel;
+import com.Da_Technomancer.crossroads.client.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
 
@@ -49,7 +48,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class RedstoneHeatCable extends BlockContainer implements IConduitModel, IBlockCompare{
+public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	private HeatConductors conductor;
 	private HeatInsulators insulator;
@@ -297,17 +296,5 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel, 
 			RayTraceResult untransformed = out.calculateIntercept(start, end);
 			return new RayTraceResult(untransformed.hitVec.addVector((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
 		}
-	}
-
-	@Override
-	public double getOutput(World worldIn, BlockPos pos){
-		RedstoneHeatCableTileEntity te = (RedstoneHeatCableTileEntity) worldIn.getTileEntity(pos);
-		if(!te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null) || te.getInsulator() == null){
-			return 0;
-		}
-		double holder = (te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + 273) / (te.getInsulator().getLimit() + 273);
-		holder *= 15D;
-		
-		return holder;
 	}
 }

@@ -39,4 +39,10 @@ public interface IAxleHandler{
 	 * spin direction)
 	 */
 	public void addEnergy(double energy, boolean allowInvert, boolean absolute);
+	
+	/**
+	 * Should be called whenever a value in the AxleHandler is changed by something outside the AxleHandler. 
+	 * Used to markDirty() in tile entities. 
+	 */
+	public void markChanged();
 }

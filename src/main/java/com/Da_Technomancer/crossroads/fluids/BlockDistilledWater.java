@@ -34,7 +34,7 @@ public class BlockDistilledWater extends BlockFluidClassic{
 	private static class FluidDistilledWater extends Fluid{
 
 		private FluidDistilledWater(){
-			super("distilledwater", new ResourceLocation(Main.MODID + ":blocks/distilledwater_still"), new ResourceLocation(Main.MODID + ":blocks/distilledwater_flow"));
+			super("distilledwater", new ResourceLocation(Main.MODID, "blocks/distilledwater_still"), new ResourceLocation(Main.MODID, "blocks/distilledwater_flow"));
 		}
 	}
 }

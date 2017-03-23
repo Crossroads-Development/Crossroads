@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -41,10 +42,10 @@ public class EmeraldGoggleEffect implements IGoggleEffect{
 		}
 
 		if(world.getTotalWorldTime() % 5 == 1){
-			if(FieldWorldSavedData.get(world).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(player.getPosition()))){
-				ModPackets.network.sendTo(new SendFieldsToClient(FieldWorldSavedData.get(world).fieldNodes.get(FieldWorldSavedData.getLongFromPos(player.getPosition()))[1], (byte) 1, FieldWorldSavedData.getLongFromPos(player.getPosition())), (EntityPlayerMP) player);
+			if(FieldWorldSavedData.get(world).fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(player.getPosition())))){
+				ModPackets.network.sendTo(new SendFieldsToClient(FieldWorldSavedData.get(world).fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(player.getPosition())))[1], (byte) 1, MiscOp.getLongFromChunkPos(new ChunkPos(player.getPosition()))), (EntityPlayerMP) player);
 			}else{
-				ModPackets.network.sendTo(new SendFieldsToClient(new byte[1][1], (byte) -1, FieldWorldSavedData.getLongFromPos(player.getPosition())), (EntityPlayerMP) player);
+				ModPackets.network.sendTo(new SendFieldsToClient(new byte[1][1], (byte) -1, MiscOp.getLongFromChunkPos(new ChunkPos(player.getPosition()))), (EntityPlayerMP) player);
 			}
 		}
 	}

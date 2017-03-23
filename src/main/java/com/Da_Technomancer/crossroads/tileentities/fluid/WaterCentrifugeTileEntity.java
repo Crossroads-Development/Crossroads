@@ -65,7 +65,7 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 		if(dWater != null){
 			nbt.setTag("dWater", dWater.writeToNBT(new NBTTagCompound()));
 		}
-		if(inv != null){
+		if(!inv.isEmpty()){
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
 		
@@ -255,7 +255,7 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inv : null;
+			return slot == 0 ? inv : ItemStack.EMPTY;
 		}
 
 		@Override
@@ -265,8 +265,8 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			if(slot != 0 || amount <= 0 || inv == null){
-				return null;
+			if(slot != 0 || amount <= 0 || inv.isEmpty()){
+				return ItemStack.EMPTY;
 			}
 			
 			int cap = Math.min(amount, inv.getCount());

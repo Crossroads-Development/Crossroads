@@ -37,6 +37,9 @@ public class Capabilities{
 	
 	@CapabilityInject(ISlaveAxisHandler.class)
 	public static Capability<ISlaveAxisHandler> SLAVE_AXIS_HANDLER_CAPABILITY = null;
+	
+	@CapabilityInject(IAdvancedRedstoneHandler.class)
+	public static Capability<IAdvancedRedstoneHandler> ADVANCED_REDSTONE_HANDLER_CAPABILITY = null;
 
 	public static void register(){
 		CapabilityManager.INSTANCE.register(IHeatHandler.class, new DefaultStorage<>(), DefaultHeatHandler.class);
@@ -45,5 +48,6 @@ public class Capabilities{
 		CapabilityManager.INSTANCE.register(IMagicHandler.class, new DefaultStorage<>(), DefaultMagicHandler.class);
 		CapabilityManager.INSTANCE.register(IAxisHandler.class, new DefaultStorage<>(), DefaultAxisHandler.class);
 		CapabilityManager.INSTANCE.register(ISlaveAxisHandler.class, new DefaultStorage<>(), DefaultSlaveAxisHandler.class);
+		CapabilityManager.INSTANCE.register(IAdvancedRedstoneHandler.class, new DefaultStorage<>(), DefaultAdvancedRedstoneHandler.class);
 	}
 }

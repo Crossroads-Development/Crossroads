@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -16,6 +17,7 @@ import com.Da_Technomancer.crossroads.fluids.ModFluids;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -104,12 +106,12 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 							content = null;
 						}else if(power >= (content.amount / 72) - 1){
 							FieldWorldSavedData data = FieldWorldSavedData.get(world);
-							if(data.fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos))){
-								if(data.fieldNodes.get(FieldWorldSavedData.getLongFromPos(pos))[1][FieldWorldSavedData.getChunkRelativeCoord(pos.getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ()) / 2] + 1 < 8 * (content.amount / 72)){
+							if(data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))){
+								if(data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[1][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] + 1 < 8 * (content.amount / 72)){
 									return;
 								}
 
-								data.nodeForces.get(FieldWorldSavedData.getLongFromPos(pos))[0][FieldWorldSavedData.getChunkRelativeCoord(pos.getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ()) / 2] -= 8 * (content.amount / 72);
+								data.nodeForces.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[0][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] -= 8 * (content.amount / 72);
 
 								content = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) content.amount) * EnergyConverters.COPSHOWIUM_PER_COPPER));
 								if(content.amount > CAPACITY){

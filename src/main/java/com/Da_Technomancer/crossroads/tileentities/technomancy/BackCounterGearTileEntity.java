@@ -15,11 +15,13 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -172,6 +174,11 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 		}
 	}
 	
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return Block.FULL_BLOCK_AABB.offset(pos);
+	}
+	
 	private final IAxleHandler axleHandler = new AxleHandler();
 	private final ICogHandler cogHandler = new CogHandler();
 	
@@ -311,11 +318,17 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 					motionData[1] = 0;
 				}
 			}
+			markDirty();
 		}
 
 		@Override
 		public double getRotationRatio(){
 			return rotRatio;
+		}
+		
+		@Override
+		public void markChanged(){
+			markDirty();
 		}
 	}
 }

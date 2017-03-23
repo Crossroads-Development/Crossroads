@@ -57,4 +57,9 @@ public class DefaultAxleHandler implements IAxleHandler{
 	public double getRotationRatio(){
 		return 0;
 	}
+	
+	@Override
+	public void markChanged(){
+		
+	}
 }

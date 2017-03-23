@@ -5,7 +5,6 @@ import java.util.List;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -21,6 +20,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -36,7 +36,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public class ToggleGear extends BlockContainer implements IBlockCompare{
+public class ToggleGear extends BlockContainer{
 
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
 	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .5625D, 0D, 1D, .625D, 1D);
@@ -71,6 +71,12 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 	}
 	
 	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		CommonProxy.masterKey++;
+		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, false);
+	}
+	
+	@Override
 	public boolean hasComparatorInputOverride(IBlockState state){
 		return true;
 	}
@@ -100,7 +106,7 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
+		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
 	}
 
 	@Override
@@ -145,17 +151,4 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
 	}
-
-	@Override
-	public double getOutput(World worldIn, BlockPos pos){
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(!te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			return 0;
-		}
-		double holder = Math.pow(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0], 2) / 2D;
-		holder *= 15D;
-		
-		return holder;
-	}
-
 }

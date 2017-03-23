@@ -170,7 +170,7 @@ public class BrazierTileEntity extends TileEntity implements ITickable{
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
 			if(slot == 0 && ((stack.getItem() == Items.COAL && stack.getMetadata() == 1) || stack.getItem() == ModItems.dustSalt || stack.getItem() == Items.POISONOUS_POTATO)){
 				if(inventory.isEmpty() || (stack.getItem() == inventory.getItem() && inventory.getCount() < 64)){
-					ItemStack out = new ItemStack(stack.getItem(), stack.getCount() + inventory.getCount() - 64);
+					ItemStack out = new ItemStack(stack.getItem(), stack.getCount() + inventory.getCount() - 64, stack.getMetadata());
 					if(!simulate){
 						inventory = new ItemStack(stack.getItem(), Math.min(inventory.getCount() + stack.getCount(), 64), stack.getMetadata());
 						markDirty();

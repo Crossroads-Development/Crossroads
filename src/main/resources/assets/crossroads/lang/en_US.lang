@@ -230,6 +230,7 @@ tile.gateway_frame.name=Gateway Frame
 tile.redstone_keyboard.name=Redstone Keyboard
 tile.detailed_crafter.name=Detailed Crafter
 container.detailed_crafting=Detailed Crafting
+tile.prototyping_table.name=Prototyping Table
 
 #GuideAPI documentation
 #Mysterious Journal

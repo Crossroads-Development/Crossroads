@@ -81,6 +81,8 @@ public class EqualsAxisTileEntity extends TileEntity implements ITickable{
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
+			
+			gear.markChanged();
 		}
 		
 		if(worldObj.getTileEntity(pos.offset(facing.getOpposite())) != null && worldObj.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
@@ -226,7 +228,7 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 
 		@Override
 		public void requestUpdate(){
-			if(worldObj.isRemote){
+			if(worldObj.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();

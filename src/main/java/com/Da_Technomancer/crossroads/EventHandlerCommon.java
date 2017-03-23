@@ -19,6 +19,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -124,7 +126,7 @@ public final class EventHandlerCommon{
 										if(datum.getValue()[0][j][k] < datum.getValue()[1][j][k]){
 											datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) (Math.max(1, 32 * Math.pow(2, (int) netForce)) + (int) datum.getValue()[0][j][k])));
 											if(datum.getValue()[0][j][k] == 127){
-												MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getPos().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
+												MagicElements.TIME.getVoidEffect().doEffect(e.world, MiscOp.getChunkPosFromLong(datum.getKey()).getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
 												toRemove.add(datum.getKey());
 												continue fluxEvent;
 											}else if(datum.getValue()[0][j][k] >= datum.getValue()[1][j][k]){
@@ -142,7 +144,7 @@ public final class EventHandlerCommon{
 									}
 
 									if(i == 0 && datum.getValue()[0][j][k] == 127){
-										MagicElements.TIME.getVoidEffect().doEffect(e.world, FieldWorldSavedData.getChunkFromLong(e.world, datum.getKey()).getPos().getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
+										MagicElements.TIME.getVoidEffect().doEffect(e.world, MiscOp.getChunkPosFromLong(datum.getKey()).getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
 										toRemove.add(datum.getKey());
 										continue fluxEvent;
 									}
@@ -165,13 +167,15 @@ public final class EventHandlerCommon{
 	 */
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void dilateEntityTime(LivingUpdateEvent e){
-		if(e.getEntity().world.isRemote || dilatingTime || !FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))){
+		BlockPos entityPos = e.getEntity().getPosition();
+		long entityChunk = MiscOp.getLongFromChunkPos(new ChunkPos(entityPos));
+		if(e.getEntity().world.isRemote || dilatingTime || !FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.containsKey(entityChunk)){
 			return;
 		}
 
-		int potential = 1 + FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))[1][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2];
+		int potential = 1 + FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(entityChunk)[1][MiscOp.getChunkRelativeCoord(entityPos.getX()) / 2][MiscOp.getChunkRelativeCoord(entityPos.getZ()) / 2];
 		dilatingTime = true;
-		if(FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))[1][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2] > FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(FieldWorldSavedData.getLongFromPos(e.getEntity().getPosition()))[0][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(e.getEntity().getPosition().getZ()) / 2]){
+		if(FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(entityChunk)[1][MiscOp.getChunkRelativeCoord(entityPos.getX()) / 2][MiscOp.getChunkRelativeCoord(entityPos.getZ()) / 2] > FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(entityChunk)[0][MiscOp.getChunkRelativeCoord(entityPos.getX()) / 2][MiscOp.getChunkRelativeCoord(entityPos.getZ()) / 2]){
 			potential = 0;
 		}
 		for(int i = 1; i < potential / 8; i++){

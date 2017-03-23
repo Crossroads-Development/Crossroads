@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -10,6 +11,7 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class ChunkUnlockerTileEntity extends TileEntity{
@@ -57,12 +59,12 @@ public class ChunkUnlockerTileEntity extends TileEntity{
 		@Override
 		public void setMagic(MagicUnit mag){
 			if(MagicElements.getElement(mag) == MagicElements.TIME && mag.getVoid() == 0){
-				if(!FieldWorldSavedData.get(world).fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos)) && --timer <= 0){
+				if(!FieldWorldSavedData.get(world).fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos))) && --timer <= 0){
 					world.updateBlockTick(pos, ModBlocks.chunkUnlocker, 1, 1);
 					timer = COOLDOWN;
 				}
 			}else{
-				FieldWorldSavedData.get(world).fieldNodes.remove(FieldWorldSavedData.getLongFromPos(pos));
+				FieldWorldSavedData.get(world).fieldNodes.remove(MiscOp.getLongFromChunkPos(new ChunkPos(pos)));
 				timer = COOLDOWN;
 			}
 		}

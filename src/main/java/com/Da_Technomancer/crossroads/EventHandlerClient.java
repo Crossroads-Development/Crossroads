@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
@@ -37,7 +38,7 @@ public final class EventHandlerClient{
 		if(game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == ModItems.moduleGoggles && game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).hasTagCompound()){
 			game.mcProfiler.startSection("crossroadsFieldRender");
 			Chunk chunk = game.world.getChunkFromBlockCoords(game.player.getPosition());
-			byte[][][] fields = FieldWorldSavedData.get(game.world).fieldNodes.get(FieldWorldSavedData.getLongFromChunk(chunk));
+			byte[][][] fields = FieldWorldSavedData.get(game.world).fieldNodes.get(MiscOp.getLongFromChunk(chunk));
 			if(fields != null){
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();

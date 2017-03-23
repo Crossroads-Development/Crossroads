@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.dimensions;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -49,7 +48,7 @@ public class PlayerDimensionMapSavedData extends WorldSavedData{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		for(int i = 0; i < nbt.getInteger("length"); i++){
-			GameProfile profile = new GameProfile(nbt.hasKey(i + "_id_least") ? new UUID(nbt.getLong(i + "_id_most"), nbt.getLong(i + "_id_least")) : null, nbt.hasKey(i + "_name") ? nbt.getString(i + "_name") : null);
+			GameProfile profile = new GameProfile(nbt.hasKey(i + "_id") ? nbt.getUniqueId(i + "_id") : null, nbt.hasKey(i + "_name") ? nbt.getString(i + "_name") : null);
 			if(cache != null && profile.getId() == null){
 				Main.logger.info(Main.MODID + ": Attempting to complete player profile in dimension map. This is not an error. Profile: " + profile.toString());
 				GameProfile search = cache.getGameProfileForUsername(profile.getName());
@@ -70,8 +69,7 @@ public class PlayerDimensionMapSavedData extends WorldSavedData{
 				nbt.setString(counter + "_name", dim.getKey().getName());
 			}
 			if(dim.getKey().getId() != null){
-				nbt.setLong(counter + "_id_least", dim.getKey().getId().getLeastSignificantBits());
-				nbt.setLong(counter + "_id_most", dim.getKey().getId().getMostSignificantBits());
+				nbt.setUniqueId(counter + "_id", dim.getKey().getId());
 			}
 			nbt.setInteger(counter + "_dim", dim.getValue());
 			counter++;

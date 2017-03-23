@@ -20,6 +20,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
@@ -43,7 +44,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 	
 	private void runCalc(){
 		FieldWorldSavedData data = FieldWorldSavedData.get(world);
-		double baseSpeed = data.fieldNodes.containsKey(FieldWorldSavedData.getLongFromPos(pos)) ? EnergyConverters.SPEED_PER_FLUX * data.fieldNodes.get(FieldWorldSavedData.getLongFromPos(pos))[0][FieldWorldSavedData.getChunkRelativeCoord(pos.getX()) / 2][FieldWorldSavedData.getChunkRelativeCoord(pos.getZ()) / 2] : 0;
+		double baseSpeed = data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos))) ? EnergyConverters.SPEED_PER_FLUX * data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[0][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] : 0;
 		
 		double sumIRot = 0;
 		sumEnergy = 0;
@@ -78,6 +79,8 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
+			
+			gear.markChanged();
 		}
 		
 		if(world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
@@ -175,7 +178,7 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 
 		@Override
 		public void requestUpdate(){
-			if(world.isRemote){
+			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();

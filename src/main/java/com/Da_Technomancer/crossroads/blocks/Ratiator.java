@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks;
 
 import java.util.Random;
 
-import com.Da_Technomancer.crossroads.API.IBlockCompare;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
@@ -118,9 +118,10 @@ public class Ratiator extends BlockContainer{
 	public double getPowerOnSide(World worldIn, BlockPos pos, EnumFacing side, boolean allowAll){
 		IBlockState state = worldIn.getBlockState(pos.offset(side));
 		Block block = state.getBlock();
+		TileEntity te = worldIn.getTileEntity(pos.offset(side));
 		if(allowAll){
-			if(block instanceof IBlockCompare){
-				return ((IBlockCompare) block).getOutput(worldIn, pos.offset(side));
+			if(te != null && te.hasCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite())){
+				return te.getCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite()).getOutput();
 			}
 			if(state.hasComparatorInputOverride()){
 				return state.getComparatorInputOverride(worldIn, pos.offset(side));

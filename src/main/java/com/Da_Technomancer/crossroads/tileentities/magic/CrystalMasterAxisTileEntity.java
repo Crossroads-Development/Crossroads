@@ -93,6 +93,8 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
+			
+			gear.markChanged();
 		}
 	}
 
@@ -240,7 +242,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 
 		@Override
 		public void requestUpdate(){
-			if(world.isRemote){
+			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();

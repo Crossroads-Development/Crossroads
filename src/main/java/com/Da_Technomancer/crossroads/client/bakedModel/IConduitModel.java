@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API;
+package com.Da_Technomancer.crossroads.client.bakedModel;
 
 import net.minecraft.util.ResourceLocation;
 

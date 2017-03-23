@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
@@ -151,10 +152,14 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY){
 			return world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL);
 		}
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+			return true;
+		}
 		return super.hasCapability(capability, facing);
 	}
 
 	private final HeatHandler heatHandler = new HeatHandler();
+	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -162,9 +167,26 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			return (T) heatHandler;
 		}
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+			return (T) redstoneHandler;
+		}
 		return super.getCapability(capability, facing);
 	}
 
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(){
+			if(!world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) || insulator == null){
+				return 0;
+			}
+			double holder = (temp + 273) / (insulator.getLimit() + 273);
+			holder *= 15D;
+			
+			return holder;
+		}
+	}
+	
 	private class HeatHandler implements IHeatHandler{
 
 		private void init(){

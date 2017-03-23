@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
@@ -29,12 +28,11 @@ import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class FluidTank extends BlockContainer implements IBlockCompare{
+public class FluidTank extends BlockContainer{
 	
 	public FluidTank(){
 		super(Material.IRON);
@@ -128,11 +126,5 @@ public class FluidTank extends BlockContainer implements IBlockCompare{
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
-	}
-
-	@Override
-	public double getOutput(World worldIn, BlockPos pos){
-		IFluidTankProperties fluid = worldIn.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0];
-		return fluid.getContents() == null ? 0 : 15D * (double) fluid.getContents().amount / (double) fluid.getCapacity();
 	}
 }

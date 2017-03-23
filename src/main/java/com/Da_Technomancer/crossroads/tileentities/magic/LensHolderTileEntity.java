@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
@@ -149,13 +150,14 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	private final IMagicHandler magicHandler = new MagicHandler(AxisDirection.NEGATIVE);
 	private final IMagicHandler magicHandlerNeg = new MagicHandler(AxisDirection.POSITIVE);
 	private final IItemHandler lensHandler = new LensHandler();
+	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (side.getAxis() == Axis.X) == world.getBlockState(pos).getValue(Properties.ORIENT))){
 			return true;
 		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
 			return true;
 		}
 		
@@ -172,8 +174,19 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) lensHandler;
 		}
+		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+			return (T) redstoneHandler;
+		}
 		
 		return super.getCapability(cap, side);
+	}
+	
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(){
+			return lastRedstone;
+		}
 	}
 	
 	private class MagicHandler implements IMagicHandler{

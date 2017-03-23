@@ -13,10 +13,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.Capability;
 
 /**This class is for holding operations that I use often.*/
@@ -139,5 +141,32 @@ public final class MiscOp{
 	 */
 	public static boolean safeHasCap(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Capability<?> cap, EnumFacing side){
 		return world.getTileEntity(pos) != null && world.getTileEntity(pos).hasCapability(cap, side);
+	}
+
+	/**
+	 * Returns a long that contains the chunk's coordinates (In chunk coordinates). Suitable for HashMap keys. 
+	 * It should be noted that this is NOT the same as {@link ChunkPos#asLong(int, int)} in terms of results. 
+	 */
+	public static long getLongFromChunk(@Nonnull Chunk chunk){
+		return (((long) chunk.xPosition) << 32) | (chunk.zPosition & 0xffffffffL);
+	}
+	
+	public static ChunkPos getChunkPosFromLong(long combinedCoord){
+		return new ChunkPos((int) (combinedCoord >> 32), (int) combinedCoord);
+	}
+
+	/**
+	 * @returns The coordinate in chunk relative form. NOT the same as coord % 16. Note that this value should be divided by 2 for use with fieldNodes and nodeForces.
+	 */
+	public static int getChunkRelativeCoord(int coord){
+		return coord - (16 * Math.floorDiv(coord, 16));
+	}
+	
+	/**
+	 * Returns a long that contains the chunk's coordinates (In chunk coordinates). Suitable for HashMap keys. 
+	 * It should be noted that this is NOT the same as {@link ChunkPos#asLong(int, int)} in terms of results. 
+	 */
+	public static long getLongFromChunkPos(@Nonnull ChunkPos pos){
+		return (((long) pos.chunkXPos << 32) | (pos.chunkZPos & 0xffffffffL));
 	}
 }

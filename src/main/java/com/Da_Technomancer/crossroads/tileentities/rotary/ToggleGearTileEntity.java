@@ -4,21 +4,24 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -150,8 +153,14 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		}
 	}
 	
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return Block.FULL_BLOCK_AABB.offset(pos);
+	}
+	
 	private final IAxleHandler axleHandler = new AxleHandler();
 	private final ICogHandler cogHandler = new CogHandler();
+	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
@@ -159,6 +168,9 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			return true;
 		}
 		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+			return true;
+		}
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -173,8 +185,22 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			return (T) cogHandler;
 		}
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+			return (T) redstoneHandler;
+		}
 		
 		return super.getCapability(capability, facing);
+	}
+	
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(){
+			double holder = Math.pow(motionData[0], 2) / 2D;
+			holder *= 15D;
+			
+			return holder;
+		}
 	}
 	
 	private class CogHandler implements ICogHandler{
@@ -289,11 +315,17 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 					motionData[1] = 0;
 				}
 			}
+			markDirty();
 		}
 
 		@Override
 		public double getRotationRatio(){
 			return rotRatio;
+		}
+		
+		@Override
+		public void markChanged(){
+			markDirty();
 		}
 	}
 }

@@ -84,8 +84,10 @@ public class ColorChartGuiContainer extends GuiContainer{
 					return;
 				}
 			}else{
-				if(Character.isAlphabetic(key) && search.length() <= 25){
-					search += key;
+				if(Character.isAlphabetic(key)){
+					if(search.length() <= 25){
+						search += key;
+					}
 					return;
 				}
 			}

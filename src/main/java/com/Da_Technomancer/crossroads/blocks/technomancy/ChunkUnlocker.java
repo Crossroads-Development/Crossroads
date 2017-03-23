@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import java.util.Random;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
@@ -14,6 +15,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -38,8 +40,8 @@ public class ChunkUnlocker extends BlockContainer{
 
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
-		FieldWorldSavedData.get(worldIn).fieldNodes.put(FieldWorldSavedData.getLongFromPos(pos), FieldWorldSavedData.getDefaultChunkFlux());
-		FieldWorldSavedData.get(worldIn).nodeForces.put(FieldWorldSavedData.getLongFromPos(pos), FieldWorldSavedData.getDefaultChunkForce());
+		FieldWorldSavedData.get(worldIn).fieldNodes.put(MiscOp.getLongFromChunkPos(new ChunkPos(pos)), FieldWorldSavedData.getDefaultChunkFlux());
+		FieldWorldSavedData.get(worldIn).nodeForces.put(MiscOp.getLongFromChunkPos(new ChunkPos(pos)), FieldWorldSavedData.getDefaultChunkForce());
 	}
 	
 	@Override
