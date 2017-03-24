@@ -38,7 +38,7 @@ public class DetailedCrafter extends Block{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			ModPackets.network.sendTo(new StoreNBTToClient(MiscOp.getPlayerTag(playerIn).getCompoundTag("path")), (EntityPlayerMP) playerIn);
+			ModPackets.network.sendTo(new StoreNBTToClient(MiscOp.getPlayerTag(playerIn)), (EntityPlayerMP) playerIn);
 			playerIn.openGui(Main.instance, GuiHandler.CRAFTER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;

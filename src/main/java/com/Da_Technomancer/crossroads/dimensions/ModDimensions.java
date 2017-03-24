@@ -6,9 +6,10 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDimLoadToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.PrototypeOwnerInfo;
+import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -86,7 +87,7 @@ public class ModDimensions{
 	/**
 	 * Sets up the next available prototype dimension chunk, reserves the chunk, and returns the coordinates in long form. 
 	 */
-	public static long nextFreePrototypeChunk(){
+	public static long nextFreePrototypeChunk(PrototypePortTypes[] ports){
 		//This method assumes that all chunks saved in PrototypeWorldSavedData are in the layout this would create.
 		//It creates a grid layout of chunks containing only barriers & air, with the remaining chunks being used for prototypes. The grid is centered on chunk 0,0 (non prototype). 
 		//The grid created starts at (-100, -100) and goes to (100, infinity). 
@@ -107,7 +108,7 @@ public class ModDimensions{
 		blockChunk(new ChunkPos(x + 1, z + 1));
 		
 		long chunk = MiscOp.getLongFromChunkPos(new ChunkPos(x, z));
-		data.prototypeInfo.put(chunk, new PrototypeOwnerInfo(0, null, false));
+		data.prototypeInfo.put(chunk, new PrototypeInfo(ports));
 		return chunk;
 	}
 	

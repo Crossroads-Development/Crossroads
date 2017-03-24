@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
+import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
@@ -83,19 +84,19 @@ public class DetailedCrafterContainer extends Container{
 		if(!world.isRemote && !MiscOp.getPlayerTag(playerInv.player).hasKey("path")){
 			MiscOp.getPlayerTag(playerInv.player).setTag("path", new NBTTagCompound());
 		}
-		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.storedNBT : MiscOp.getPlayerTag(playerInv.player).getCompoundTag("path");
-		if(nbt.getBoolean("technomancy")){
+		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.storedNBT : MiscOp.getPlayerTag(playerInv.player);
+		if(nbt.getCompoundTag("path").getBoolean("technomancy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.technomancyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
 			if(out != ItemStack.EMPTY){
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world)){
+		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world) && nbt.getCompoundTag("elements").hasKey(MagicElements.TIME.name())){
 			for(int i = 0; i < 9; i++){
 				inInv.decrStackSize(i, 1);
 			}
-			nbt.setBoolean("technomancy", true);
+			nbt.getCompoundTag("path").setBoolean("technomancy", true);
 		}
 		outInv.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(inInv, world));
 	}

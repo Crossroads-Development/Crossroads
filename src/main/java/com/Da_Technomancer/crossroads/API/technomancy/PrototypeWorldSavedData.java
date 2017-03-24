@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -47,17 +48,19 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	
 	/**
 	 * Key: Chunk coordinates in long form <br>
-	 * Value: PrototypeOwnerInfo for that chunk <br>
+	 * Value: PrototypeInfo for that chunk <br>
 	 * 
 	 * ONLY USE chunks where both the X and Z chunk coordinate are odd numbers in order to allow for barrier walls.
 	 */
-	public final HashMap<Long, PrototypeOwnerInfo> prototypeInfo = new HashMap<Long, PrototypeOwnerInfo>();
+	public final HashMap<Long, PrototypeInfo> prototypeInfo = new HashMap<Long, PrototypeInfo>();
+	
+	public final HashMap<Long, WeakReference<IPrototypeOwner>> prototypeOwner = new HashMap<Long, WeakReference<IPrototypeOwner>>();
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		int i = 0;
 		while(nbt.hasKey("chu" + i)){
-			prototypeInfo.put(nbt.getLong("chu" + i), PrototypeOwnerInfo.readFromNBT(nbt.getCompoundTag("info" + i)));
+			prototypeInfo.put(nbt.getLong("chu" + i), PrototypeInfo.readFromNBT(nbt.getCompoundTag("info" + i)));
 			i++;
 		}
 	}
@@ -65,7 +68,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		int i = 0;
-		for(Entry<Long, PrototypeOwnerInfo> mapping : prototypeInfo.entrySet()){
+		for(Entry<Long, PrototypeInfo> mapping : prototypeInfo.entrySet()){
 			nbt.setLong("chu" + i, mapping.getKey());
 			nbt.setTag("info" + i, mapping.getValue().writeToNBT(new NBTTagCompound()));
 			i++;
