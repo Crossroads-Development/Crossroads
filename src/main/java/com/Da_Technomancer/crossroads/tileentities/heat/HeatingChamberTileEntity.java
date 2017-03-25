@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 
 import net.minecraft.item.ItemStack;

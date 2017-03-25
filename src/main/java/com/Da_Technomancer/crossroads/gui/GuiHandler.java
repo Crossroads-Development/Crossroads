@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.gui.container.GrindstoneContainer;
 import com.Da_Technomancer.crossroads.gui.container.HeatingChamberContainer;
+import com.Da_Technomancer.crossroads.gui.container.PrototypePortContainer;
 import com.Da_Technomancer.crossroads.gui.container.PrototypingTableContainer;
 import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
 import com.Da_Technomancer.crossroads.gui.container.SlottedChestContainer;
@@ -12,6 +13,7 @@ import com.Da_Technomancer.crossroads.tileentities.SlottedChestTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.CoalHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
 
@@ -30,6 +32,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int REDSTONEKEYBOARD_GUI = 5;
 	public static final int CRAFTER_GUI = 6;
 	public static final int PROTOTYPING_GUI = 7;
+	public static final int PROTOTYPE_PORT_GUI = 8;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -50,6 +53,8 @@ public class GuiHandler implements IGuiHandler{
 				return new DetailedCrafterContainer(player.inventory, new BlockPos(x, y, z));
 			case PROTOTYPING_GUI:
 				return new PrototypingTableContainer(player.inventory, ((PrototypingTableTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case PROTOTYPE_PORT_GUI:
+				return new PrototypePortContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 
 		return null;
@@ -74,6 +79,8 @@ public class GuiHandler implements IGuiHandler{
 				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z));
 			case PROTOTYPING_GUI:
 				return new PrototypingTableGuiContainer(player.inventory, ((PrototypingTableTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case PROTOTYPE_PORT_GUI:
+				return new PrototypePortGuiContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 
 		return null;

@@ -90,5 +90,4 @@ public class AdditionAxis extends BlockContainer{
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
-
 }

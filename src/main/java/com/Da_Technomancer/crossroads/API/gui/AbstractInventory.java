@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API;
+package com.Da_Technomancer.crossroads.API.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;

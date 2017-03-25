@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;

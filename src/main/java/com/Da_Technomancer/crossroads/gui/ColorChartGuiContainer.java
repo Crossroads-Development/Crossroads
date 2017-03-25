@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import java.awt.Color;
 import java.io.IOException;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.gui.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -20,8 +20,9 @@ public class ColorChartGuiContainer extends GuiContainer{
 
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/color_chart_gui.png");
 	private static final ResourceLocation BLOCKED = new ResourceLocation("textures/items/barrier.png");
-	private static final ResourceLocation BAR = new ResourceLocation(Main.MODID, "textures/gui/container/search_bar.png");
-
+	
+	private TextBarGuiObject searchBar;
+	
 	public ColorChartGuiContainer(EntityPlayer player, World world, BlockPos pos){
 		super(new ColorChartContainer(player, world, pos));
 		xSize = 300;
@@ -29,69 +30,46 @@ public class ColorChartGuiContainer extends GuiContainer{
 	}
 
 	@Override
+	public void initGui(){
+		super.initGui();
+		
+		searchBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 300, 300, 25, "Filter", (Character key) -> Character.isAlphabetic(key));
+	}
+	
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1, 1, 1);
 		mc.getTextureManager().bindTexture(BACKGROUND);
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
 		drawModalRectWithCustomSizedTexture(i, j, 0, 0, xSize, ySize, 300, 300);
-		mc.getTextureManager().bindTexture(BAR);
-		if(searchSelect){
-			GlStateManager.color(1, 1, 0);
-		}
-		drawModalRectWithCustomSizedTexture(i, j + 300, 0, 0, 300, 20, 300, 20);
+		
+		searchBar.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
+		String search = searchBar.getText().toUpperCase();
+		searchBar.drawFore(mouseX, mouseY, fontRendererObj);
 		if(!search.isEmpty()){
-			GlStateManager.color(1, 1, 1);
-			drawString(fontRendererObj, search, 5, 305, Color.WHITE.getRGB());
 			mc.getTextureManager().bindTexture(BLOCKED);
-
 			for(Slot slot : inventorySlots.inventorySlots){
-				if(slot.getStack().getItem() != Item.getItemFromBlock(Blocks.BARRIER) && !slot.getStack().getDisplayName().startsWith(search.toUpperCase())){
+				if(slot.getStack().getItem() != Item.getItemFromBlock(Blocks.BARRIER) && !slot.getStack().getDisplayName().startsWith(search)){
 					drawModalRectWithCustomSizedTexture(slot.xPos, slot.yPos, 0, 0, 16, 16, 16, 16);
 				}
 			}
 		}
 	}
-
-	private String search = "";
-	private boolean searchSelect;
-
-	@Override
+@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException {
 		super.mouseClicked(x, y, button);
-		int i = (width - xSize) / 2;
-		int j = (height - ySize) / 2;
-		if(x >= i && x <= i + 300 && y >= j + 300 && y <= j + 320){
-			searchSelect = !searchSelect;
-		}
+		searchBar.mouseClicked(x, y, button);
 	}
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(searchSelect){
-			//Enter & Esc
-			if(key == 13 || key == 27){
-				searchSelect = false;
-				return;
-			//Backspace
-			}else if(key == 8){
-				if(!search.isEmpty()){
-					search = search.substring(0, search.length() - 1);
-					return;
-				}
-			}else{
-				if(Character.isAlphabetic(key)){
-					if(search.length() <= 25){
-						search += key;
-					}
-					return;
-				}
-			}
+		if(!searchBar.buttonPress(key)){
+			super.keyTyped(key, keyCode);
 		}
-		super.keyTyped(key, keyCode);
 	}
 }

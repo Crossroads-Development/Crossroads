@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.AbstractInventory;
+import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 

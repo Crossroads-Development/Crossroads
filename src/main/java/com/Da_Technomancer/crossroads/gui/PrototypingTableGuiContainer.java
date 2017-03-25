@@ -4,24 +4,25 @@ import java.awt.Color;
 import java.io.IOException;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.gui.ButtonGuiObject;
+import com.Da_Technomancer.crossroads.API.gui.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.gui.container.PrototypingTableContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
 public class PrototypingTableGuiContainer extends GuiContainer{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID, "textures/gui/container/prototype_table_gui.png");
-	private static final ResourceLocation BAR = new ResourceLocation(Main.MODID, "textures/gui/container/search_bar.png");
-
+	
 	private PrototypingTableTileEntity te;
 	private IInventory playerInv;
+	
+	private TextBarGuiObject textBar;
+	private ButtonGuiObject button;
 
 	public PrototypingTableGuiContainer(IInventory playerInv, PrototypingTableTileEntity te){
 		super(new PrototypingTableContainer(playerInv, te));
@@ -30,6 +31,14 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 
 		this.xSize = 176;
 		this.ySize = 214;
+	}
+	
+	@Override
+	public void initGui(){
+		super.initGui();
+		
+		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 98, 120, 25, "Name", (Character key) -> Character.isAlphabetic(key) || Character.isDigit(key) || key == ' ');
+		button = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 76, 70, "Prototype");
 	}
 
 	@Override
@@ -41,11 +50,8 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 		int j = (height - ySize) / 2;
 		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
 		
-		mc.getTextureManager().bindTexture(BAR);
-		if(searchSelect){
-			GlStateManager.color(1, 1, 0);
-		}
-		drawModalRectWithCustomSizedTexture(i + 8, j + 100, 0, 0, 120, 20, 120, 20);
+		textBar.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
+		button.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
 	}
 
 	@Override
@@ -53,7 +59,7 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 		fontRendererObj.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 120, 4210752);
 		
 		//Name
-		drawString(fontRendererObj, name.isEmpty() ? "Name" : name, 13, 106, name.isEmpty() ? Color.GRAY.getRGB() : Color.WHITE.getRGB());
+		textBar.drawFore(mouseX, mouseY, fontRendererObj);
 		
 		//Log
 		drawString(fontRendererObj, log[0], 10, 10, Color.WHITE.getRGB());
@@ -61,57 +67,27 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 		drawString(fontRendererObj, log[2], 10, 40, Color.WHITE.getRGB());
 		
 		//Prototype Button
-		int i = (width - xSize) / 2;
-		int j = (height - ySize) / 2;
-		if(!searchSelect && mouseX >= i + 8 && mouseX <= i + 79 && mouseY >= j + 76 && mouseY <= j + 96){
-			drawString(fontRendererObj, "Prototype", 13, 82, Color.YELLOW.getRGB());
-		}else{
-			drawString(fontRendererObj, "Prototype", 13, 82, Color.WHITE.getRGB());
-		}
+		button.drawFore(mouseX, mouseY, fontRendererObj);
 	}
-	
-	private String name = "";
-	private boolean searchSelect;
 	
 	private String[] log = new String[] {"TEST 1", "TEST 2", "TEST 3"};//TODO Log management
 
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException {
 		super.mouseClicked(x, y, button);
-		int i = (width - xSize) / 2;
-		int j = (height - ySize) / 2;
-		if(x >= i + 8 && x <= i + 128 && y >= j + 100 && y <= j + 119){
-			searchSelect = !searchSelect;
+		if(textBar.mouseClicked(x, y, button)){
+			return;
 		}
 		
-		if(!searchSelect && x >= i + 8 && x <= i + 79 && y >= j + 76 && y <= j + 96){
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+		if(this.button.mouseClicked(x, y, button)){
 			//TODO the actual main purpose of this machine
 		}
 	}
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(searchSelect){
-			//Enter & Esc
-			if(key == 13 || key == 27){
-				searchSelect = false;
-				return;
-			//Backspace
-			}else if(key == 8){
-				if(!name.isEmpty()){
-					name = name.substring(0, name.length() - 1);
-					return;
-				}
-			}else{
-				if(Character.isAlphabetic(key) || Character.isDigit(key) || key == ' '){
-					if(name.length() <= 25){
-						name += key;
-					}
-					return;
-				}
-			}
+		if(!textBar.buttonPress(key)){
+			super.keyTyped(key, keyCode);
 		}
-		super.keyTyped(key, keyCode);
 	}
 }
