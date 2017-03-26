@@ -149,7 +149,6 @@ tile.beam_splitter.name=Redstone Beam Splitter
 tile.beam_splitter_basic.name=Basic Beam Splitter
 item.invis_item.name=Invisible Item
 tile.color_chart.name=Color Chart
-tile.glow_glass.name=Glow Glass
 tile.fertile_soil.wheat.name=Wheat Fertile Soil
 tile.fertile_soil.carrot.name=Carrot Fertile Soil
 tile.fertile_soil.potato.name=Potato Fertile Soil

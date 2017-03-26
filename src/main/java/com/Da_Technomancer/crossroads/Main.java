@@ -57,9 +57,6 @@ public final class Main{
 						case("fertilesoil"):
 							mapping.remap(ModBlocks.fertileSoil);
 							break;
-						case("glowglass"):
-							mapping.remap(ModBlocks.glowGlass);
-							break;
 						case("itemchute"):
 							mapping.remap(ModBlocks.itemChute);
 							break;
@@ -330,9 +327,6 @@ public final class Main{
 							break;
 						case("fertilesoil"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fertileSoil));
-							break;
-						case("glowglass"):
-							mapping.remap(Item.getItemFromBlock(ModBlocks.glowGlass));
 							break;
 						case("itemchute"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.itemChute));

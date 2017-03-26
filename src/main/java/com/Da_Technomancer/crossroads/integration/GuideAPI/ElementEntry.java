@@ -37,9 +37,9 @@ public class ElementEntry extends EntryItemStack{
 			if(elem == MagicElements.ENERGY || elem == MagicElements.POTENTIAL || elem == MagicElements.STABILITY || StoreNBTToClient.storedNBT.hasKey(elem.name())){
 				//Reverse order, because for the most part the more basic elements are at the bottom of the list.
 				pageList.add(1, lore ? getPage(elem) : getPageNoLore(elem));
-				if(GuideBooks.smallText){
+				//if(GuideBooks.smallText){ Ignores the config because otherwise it doesn't all fit on the page.
 					((PageText) pageList.get(1)).setUnicodeFlag(true);
-				}
+				//}
 			}
 		}
 	}
@@ -51,15 +51,15 @@ public class ElementEntry extends EntryItemStack{
 			case ENCHANTMENT:
 				return new PageText(elem.toString() + ": Enchants nearby items on the ground randomly. Higher power beams increase enchanting level. Can create treasure enchants with power >= 32.");
 			case ENERGY:
-				return new PageText(elem.toString() + ": Adds (power)*C/5 ticks to whatever heat devices it hits. In a Crystalling Master Axis is adds 10 energy/tick in the direction gears are currently spinning.");
+				return new PageText(elem.toString() + ": Adds (power)°C/5 ticks to whatever heat devices it hits. In a Crystalling Master Axis is adds 10 energy/tick in the direction gears are currently spinning.");
 			case EQUALIBRIUM:
 				return new PageText(elem.toString() + ": The force of a stalemate, where equal powers fight against eachother leading to no net change. Does nothing on its own. In a Crystalline Master Axis it reduces the change in energy each tick by 75%.");
 			case EXPANSION:
 				return new PageText(elem.toString() + ": Expands items within a range of (power) into full blocks.");
 			case FUSION:
-				return new PageText(elem.toString() + ": Fuses the molecules of certain blocks into other blocks. Certain conversions require higher powers. Ex. Sand -> Pure Quartz Block when power >= 16, or Coal Block -> Diamond Block when power >= 128.");
+				return new PageText(elem.toString() + ": Fuses the molecules of certain blocks into other blocks. Turns Sand -> Pure Quartz Block when power >= 16, Water -> Ice, Snow -> Ice, Distilled Water -> Packed Ice when power >= 4, Netherrack -> Nether Brick when power >= 8, Gravel -> Prismarine when power >= 8, Prismarine -> Prismarine Bricks when power >= 12, Prismarine Bricks -> Dark Prismarine when power >= 16, Cobblestone -> Stone, Stone -> Stone Bricks.");
 			case LIGHT:
-				return new PageText(elem.toString() + ": All magic is similar to light, but this element is closer than most. Converts rock materials into glowstone, and glass materials into glowglass (a light emitting glass that drops itself).");
+				return new PageText(elem.toString() + ": All magic is similar to light, but this element is closer than most. Converts rock materials into glowstone, and glass materials into sea lanterns.");
 			case NO_MATCH:
 				return new PageText(elem.toString() + ": This element should not be obtainable. Report to mod author.");
 			case POTENTIAL:
@@ -84,15 +84,15 @@ public class ElementEntry extends EntryItemStack{
 			case ENCHANTMENT:
 				return new PageText(elem.toString() + ": Enchants nearby items on the ground randomly. Higher power beams increase enchanting level. Can create treasure enchants when power >= 32.");
 			case ENERGY:
-				return new PageText(elem.toString() + ": Adds (power)*C/5 ticks to whatever heat devices it hits. In a Crystalling Master Axis is adds 10 energy/tick in the direction gears are currently spinning.");
+				return new PageText(elem.toString() + ": Adds (power)°C/5 ticks to whatever heat devices it hits. In a Crystalling Master Axis is adds 10 energy/tick in the direction gears are currently spinning.");
 			case EQUALIBRIUM:
 				return new PageText(elem.toString() + ": Does nothing on its own. In a Crystalline Master Axis it reduces the change in energy each tick by 75%.");
 			case EXPANSION:
 				return new PageText(elem.toString() + ": Places items within a range of (power) as blocks.");
 			case FUSION:
-				return new PageText(elem.toString() + ": Converts certain blocks into other blocks. Certain conversions require higher powers. Ex. Sand -> Pure Quartz Block when power >= 16, or Coal Block -> Diamond Block when power >= 128.");
+				return new PageText(elem.toString() + ": Turns Sand -> Pure Quartz Block when power >= 16, Water -> Ice, Snow -> Ice, Distilled Water -> Packed Ice when power >= 4, Netherrack -> Nether Brick when power >= 8, Gravel -> Prismarine when power >= 8, Prismarine -> Prismarine Bricks when power >= 12, Prismarine Bricks -> Dark Prismarine when power >= 16, Cobblestone -> Stone, Stone -> Stone Bricks.");
 			case LIGHT:
-				return new PageText(elem.toString() + ": Converts rock materials into glowstone, and glass materials into glowglass (a light emitting glass that drops itself).");
+				return new PageText(elem.toString() + ": Converts rock materials into glowstone, and glass materials into sea lanterns.");
 			case NO_MATCH:
 				return new PageText(elem.toString() + ": This element should not be obtainable. Report to mod author.");
 			case POTENTIAL:

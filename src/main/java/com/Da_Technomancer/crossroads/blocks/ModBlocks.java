@@ -119,7 +119,6 @@ public final class ModBlocks{
 	public static BasicBlock blockPureQuartz;
 	public static BeamSplitter beamSplitter;
 	public static ColorChart colorChart;
-	public static GlowGlass glowGlass;
 	public static FertileSoil fertileSoil;
 	public static MultiPistonExtend multiPistonExtend;
 	public static MultiPistonExtend multiPistonExtendSticky;
@@ -213,7 +212,6 @@ public final class ModBlocks{
 		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz");
 		blockAddQue(beamSplitter = new BeamSplitter());
 		blockAddQue(colorChart = new ColorChart());
-		blockAddQue(glowGlass = new GlowGlass());
 		blockAddQueRange(fertileSoil = new FertileSoil(), 9);
 		multiPistonExtend = new MultiPistonExtend(false);
 		multiPistonExtendSticky = new MultiPistonExtend(true);

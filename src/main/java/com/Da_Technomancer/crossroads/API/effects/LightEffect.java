@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -16,7 +14,7 @@ public class LightEffect implements IEffect{
 		if(state.getMaterial() == Material.ROCK){
 			worldIn.setBlockState(pos, Blocks.GLOWSTONE.getDefaultState());
 		}else if(state.getMaterial() == Material.GLASS && state.getBlock() != Blocks.GLOWSTONE){
-			worldIn.setBlockState(pos, ModBlocks.glowGlass.getDefaultState());
+			worldIn.setBlockState(pos, Blocks.SEA_LANTERN.getDefaultState());
 		}
 	}
 
@@ -27,7 +25,7 @@ public class LightEffect implements IEffect{
 			IBlockState state = worldIn.getBlockState(pos);
 			if(state.getBlock() == Blocks.GLOWSTONE){
 				worldIn.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
-			}else if(state.getBlock() == ModBlocks.glowGlass){
+			}else if(state.getBlock() == Blocks.SEA_LANTERN){
 				worldIn.setBlockState(pos, Blocks.GLASS.getDefaultState());
 			}
 		}
