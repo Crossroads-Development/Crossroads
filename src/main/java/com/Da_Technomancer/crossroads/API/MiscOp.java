@@ -10,19 +10,18 @@ import com.Da_Technomancer.crossroads.Main;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.Capability;
 
 /**This class is for holding operations that I use often.*/
-@SuppressWarnings("deprecation")
 public final class MiscOp{
 
 	public static double betterRound(double numIn, int decPlac){
@@ -126,13 +125,6 @@ public final class MiscOp{
 	}
 	
 	/**
-	 * Localizes the passed String. Works on the server side.
-	 */
-	public static String localizeEither(String toLocal){
-		return I18n.translateToLocalFormatted(toLocal);
-	}
-	
-	/**
 	 * @param world
 	 * @param pos
 	 * @param cap
@@ -140,7 +132,8 @@ public final class MiscOp{
 	 * @return Whether or not there is A) A TileEntity at pos and B) The TileEntity has Capability cap on side
 	 */
 	public static boolean safeHasCap(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Capability<?> cap, EnumFacing side){
-		return world.getTileEntity(pos) != null && world.getTileEntity(pos).hasCapability(cap, side);
+		TileEntity te = world.getTileEntity(pos);
+		return te != null && te.hasCapability(cap, side);
 	}
 
 	/**

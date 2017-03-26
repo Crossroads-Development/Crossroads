@@ -14,7 +14,11 @@ import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
 
 public class PrototypeWorldSavedData extends WorldSavedData{
-
+	
+	//Everything related to the prototype system should be setup in such a way that should things go very wrong,
+	//then if the folder for the prototype dimension is deleted, everything should work and all existing prototypes
+	//will cleanly self-destruct. 
+	
 	public static final String PROTOTYPE_ID = Main.MODID + "_prototype";
 	
 	public PrototypeWorldSavedData(){

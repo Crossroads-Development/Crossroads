@@ -72,7 +72,7 @@ public class OmniMeter extends Item{
 
 				playerIn.sendMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
 				for(IFluidTankProperties tank : pipe.getTankProperties()){
-					playerIn.sendMessage(new TextComponentString("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : MiscOp.localizeEither(tank.getContents().getFluid().getUnlocalizedName())) + ", Capacity: " + tank.getCapacity()));
+					playerIn.sendMessage(new TextComponentString("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : tank.getContents().getLocalizedName()) + ", Capacity: " + tank.getCapacity()));
 				}
 			}
 		}

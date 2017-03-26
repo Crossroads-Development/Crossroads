@@ -49,8 +49,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class HeatCable extends BlockContainer implements IConduitModel{
 
-	private HeatConductors conductor;
-	private HeatInsulators insulator;
+	private final HeatConductors conductor;
+	private final HeatInsulators insulator;
 	private static final double size = .2D;
 	private static final AxisAlignedBB BB = new AxisAlignedBB(size, size, size, 1 - size, 1 - size, 1 - size);
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(size, 0, size, 1 - size, size, 1 - size);

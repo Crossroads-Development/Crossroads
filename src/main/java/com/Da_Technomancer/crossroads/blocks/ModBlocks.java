@@ -57,6 +57,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.GreaterThanAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.LessThanAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalBeamSplitter;
 import com.Da_Technomancer.crossroads.blocks.technomancy.MultiplicationAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.Prototype;
 import com.Da_Technomancer.crossroads.blocks.technomancy.PrototypePort;
 import com.Da_Technomancer.crossroads.blocks.technomancy.PrototypingTable;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
@@ -72,7 +73,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -156,8 +156,7 @@ public final class ModBlocks{
 	public static RedstoneKeyboard redstoneKeyboard;
 	public static DetailedCrafter detailedCrafter;
 	public static PrototypingTable prototypingTable;
-	//TODO this is a placeholder. REPLACE with the actual Prototype once added.
-	public static Block prototype = Blocks.SPONGE;
+	public static Prototype prototype;
 	public static PrototypePort prototypePort;
 
 	public static void blockAddQue(Block block){
@@ -249,6 +248,7 @@ public final class ModBlocks{
 		blockAddQue(redstoneKeyboard = new RedstoneKeyboard());
 		blockAddQue(detailedCrafter = new DetailedCrafter());
 		blockAddQue(prototypingTable = new PrototypingTable());
+		blockAddQue(prototype = new Prototype());
 		blockAddQue(prototypePort = new PrototypePort());
 	}
 
@@ -268,5 +268,7 @@ public final class ModBlocks{
 
 		fluidTube.initModel();
 		redstoneFluidTube.initModel();
+		prototype.initModel();
+		prototypePort.initModel();
 	}
 }

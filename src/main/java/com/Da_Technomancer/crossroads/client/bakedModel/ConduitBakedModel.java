@@ -67,12 +67,12 @@ public class ConduitBakedModel implements IBakedModel{
 	}
 	
 	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int u, int v, EnumFacing side){
-		Vec3d normal = v1.subtract(v2).crossProduct(v3.subtract(v2));
+		Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2));
 
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
 		builder.setQuadOrientation(side);
 		builder.setTexture(sprite);
-		builder.setApplyDiffuseLighting(false);
+		//Not needed as this is a full block builder.setApplyDiffuseLighting(false);
 		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, 0, 0, sprite);
 		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, 0, v, sprite);
 		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, u, v, sprite);

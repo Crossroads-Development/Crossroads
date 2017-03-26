@@ -58,6 +58,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.LessThanAxisTileE
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
@@ -140,6 +141,7 @@ public class ModTileEntity{
 		register(GatewayFrameTileEntity.class, "gateway_frame");
 		register(RedstoneKeyboardTileEntity.class, "redstone_keyboard");
 		register(PrototypingTableTileEntity.class, "prototyping_table");
+		register(PrototypeTileEntity.class, "prototype");
 		register(PrototypePortTileEntity.class, "prototype_port");
 	}
 

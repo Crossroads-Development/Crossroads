@@ -70,7 +70,6 @@ public class FertileSoil extends Block{
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(state.getValue(Properties.PLANT) >= 4){
@@ -78,7 +77,7 @@ public class FertileSoil extends Block{
 		}else{
 			for(EnumFacing side : EnumFacing.values()){
 				if(side != EnumFacing.UP && worldIn.getBlockState(pos.offset(side)).getBlock() != this){
-					worldIn.getBlockState(pos.offset(side)).getBlock().neighborChanged(worldIn.getBlockState(pos.offset(side)), worldIn, pos.offset(side), this, pos);
+					worldIn.getBlockState(pos.offset(side)).neighborChanged(worldIn, pos.offset(side), this, pos);
 				}
 			}
 		}
@@ -156,7 +155,7 @@ public class FertileSoil extends Block{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.PLANT, meta);
+		return getDefaultState().withProperty(Properties.PLANT, meta);
 	}
 
 	@Override

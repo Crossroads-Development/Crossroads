@@ -25,12 +25,13 @@ public class ModDimensions{
 	public static DimensionType workspaceDimType;
 	public static DimensionType prototypeDimType;
 	private static HashMap<GameProfileNonPicky, Integer> playerDim;
+	public static final int PROTOTYPE_DIM_ID = 27;
 
 	public static void init(){
 		workspaceDimType = DimensionType.register(Main.MODID, "_workspace", 567, WorkspaceWorldProvider.class, false);
 		prototypeDimType = DimensionType.register(Main.MODID, "_prototype", 568, WorkspaceWorldProvider.class, false);
 		
-		DimensionManager.registerDimension(27, prototypeDimType);
+		DimensionManager.registerDimension(PROTOTYPE_DIM_ID, prototypeDimType);
 	}
 
 	public static void loadDims(){
@@ -87,11 +88,13 @@ public class ModDimensions{
 	/**
 	 * Sets up the next available prototype dimension chunk, reserves the chunk, and returns the coordinates in long form. 
 	 */
-	public static long nextFreePrototypeChunk(PrototypePortTypes[] ports){
+	public static long nextFreePrototypeChunk(PrototypePortTypes[] ports, BlockPos[] portPos){
 		//This method assumes that all chunks saved in PrototypeWorldSavedData are in the layout this would create.
 		//It creates a grid layout of chunks containing only barriers & air, with the remaining chunks being used for prototypes. The grid is centered on chunk 0,0 (non prototype). 
 		//The grid created starts at (-100, -100) and goes to (100, infinity). 
-		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(DimensionManager.getWorld(27));
+		
+		WorldServer worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
+		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(worldDim);
 		
 		int used = data.prototypeInfo.size();
 		
@@ -100,25 +103,24 @@ public class ModDimensions{
 		int z = (used / 50) - 99;
 		
 		//This part may redundantly block already blocked chunks. This is a possible optimization point if it ends up mattering. 
-		blockChunk(new ChunkPos(x - 1, z - 1));
-		blockChunk(new ChunkPos(x - 1, z));
-		blockChunk(new ChunkPos(x, z - 1));
-		blockChunk(new ChunkPos(x + 1, z));
-		blockChunk(new ChunkPos(x, z + 1));
-		blockChunk(new ChunkPos(x + 1, z + 1));
+		blockChunk(new ChunkPos(x - 1, z - 1), worldDim);
+		blockChunk(new ChunkPos(x - 1, z), worldDim);
+		blockChunk(new ChunkPos(x, z - 1), worldDim);
+		blockChunk(new ChunkPos(x + 1, z), worldDim);
+		blockChunk(new ChunkPos(x, z + 1), worldDim);
+		blockChunk(new ChunkPos(x + 1, z + 1), worldDim);
 		
 		long chunk = MiscOp.getLongFromChunkPos(new ChunkPos(x, z));
-		data.prototypeInfo.put(chunk, new PrototypeInfo(ports));
+		data.prototypeInfo.put(chunk, new PrototypeInfo(ports, portPos));
 		return chunk;
 	}
 	
-	private static void blockChunk(ChunkPos pos){
-		WorldServer world = DimensionManager.getWorld(27);
+	private static void blockChunk(ChunkPos pos, WorldServer dimWorld){
 		for(int x = pos.getXStart(); x <= pos.getXEnd(); x++){
 			for(int z = pos.getZStart(); z <= pos.getZEnd(); z++){
 				for(int y = 0; y < 256; y++){
 					if(x == pos.getXStart() || x == pos.getXEnd() || z == pos.getZStart() || z == pos.getZEnd()){
-						world.setBlockState(new BlockPos(x, y, z), Blocks.BARRIER.getDefaultState(), 0);
+						dimWorld.setBlockState(new BlockPos(x, y, z), Blocks.BARRIER.getDefaultState(), 0);
 					}
 				}
 			}

@@ -55,6 +55,7 @@ public class PrototypePortGuiContainer extends GuiContainer{
 		PrototypePortTypes type = typeIndex == 0 ? (in_out.getPressed() == 0 ? PrototypePortTypes.REDSTONE_IN : PrototypePortTypes.REDSTONE_OUT) : typeIndex == 1 ? PrototypePortTypes.ROTARY : typeIndex == 2 ? (in_out.getPressed() == 0 ? PrototypePortTypes.MAGIC_IN : PrototypePortTypes.MAGIC_OUT) : PrototypePortTypes.HEAT;
 		te.setType(type);
 		ModPackets.network.sendToServer(new SendIntToServer("side_type", side.getPressed() + (type.ordinal() << 3), te.getPos(), te.getWorld().provider.getDimension()));
+		te.getWorld().markBlockRangeForRenderUpdate(te.getPos(), te.getPos());
 	}
 	
 	@Override

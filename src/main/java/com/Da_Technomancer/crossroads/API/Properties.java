@@ -9,6 +9,7 @@ import net.minecraft.util.EnumFacing;
 public class Properties{
 
 	public static final UnlistedPropertyBooleanSixArray CONNECT = new UnlistedPropertyBooleanSixArray("connect");
+	public static final UnlistedPropertyIntegerSixArray PORT_TYPE = new UnlistedPropertyIntegerSixArray("port_type");
 	public static final PropertyBool LIGHT = PropertyBool.create("light");
 	public static final PropertyInteger REDSTONE = PropertyInteger.create("redstone", 0, 15);
 	public static final PropertyBool REDSTONE_BOOL = PropertyBool.create("redstone_bool");

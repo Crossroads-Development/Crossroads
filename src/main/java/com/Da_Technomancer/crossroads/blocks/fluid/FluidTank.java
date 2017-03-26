@@ -64,7 +64,7 @@ public class FluidTank extends BlockContainer{
 		if(!(te instanceof FluidTankTileEntity) || te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents() == null){
 			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
 		}else{
-			player.addExhaustion(0.025F);
+			player.addExhaustion(0.005F);
 			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
 			stack.setTagCompound(te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents().writeToNBT(new NBTTagCompound()));
 			spawnAsEntity(worldIn, pos, stack);
@@ -105,7 +105,7 @@ public class FluidTank extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.REDSTONE, meta);
+		return getDefaultState().withProperty(Properties.REDSTONE, meta);
 	}
 
 	@Override
