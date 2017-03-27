@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTile
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -36,7 +37,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PrototypePort extends BlockContainer{
-	
+
 	public PrototypePort(){
 		super(Material.IRON);
 		String name = "prototype_port";
@@ -54,7 +55,7 @@ public class PrototypePort extends BlockContainer{
 		return new PrototypePortTileEntity();
 
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		PrototypePortTileEntity te = ((PrototypePortTileEntity) worldIn.getTileEntity(pos));
@@ -69,7 +70,7 @@ public class PrototypePort extends BlockContainer{
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public void initModel(){
 		StateMapperBase ignoreState = new StateMapperBase(){
@@ -92,5 +93,11 @@ public class PrototypePort extends BlockContainer{
 		Integer[] sides = new Integer[6];
 		sides[te.getSide().getIndex()] = te.getType().ordinal();
 		return ((IExtendedBlockState) state).withProperty(Properties.PORT_TYPE, sides);
+	}
+
+	@Override
+	public EnumPushReaction getMobilityFlag(IBlockState state){
+		//Tile entities shouldn't be pushable anyway, but there are enough mods in existence that allow moving tile entities to warrant extra precautions. 
+		return EnumPushReaction.BLOCK;
 	}
 }

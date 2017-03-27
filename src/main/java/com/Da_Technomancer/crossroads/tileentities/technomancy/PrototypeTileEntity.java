@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import java.util.ArrayList;
+
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
@@ -17,22 +19,24 @@ import net.minecraftforge.common.capabilities.Capability;
 
 public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 
-	private long chunk;
+	private int index;
 	public String name;
 	
-	public void setChunk(long chunk){
-		this.chunk = chunk;
+	public void setIndex(int index){
+		this.index = index;
 		markDirty();
 	}
 	
-	public long getChunk(){
-		return chunk;
+	public int getIndex(){
+		return index;
 	}
 
+	//TODO this setting itself to the PrototypeInfo on load and removing itself on unload.
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setLong("chunk", chunk);
+		nbt.setInteger("index", index);
 		nbt.setString("name", name);
 		return nbt;
 	}
@@ -41,9 +45,10 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		if(!world.isRemote){
-			chunk = nbt.getLong("chunk");
+			index = nbt.getInteger("index");
 			name = nbt.getString("name");
-			if(!PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypeInfo.containsKey(chunk)){
+			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
+			if(info.size() < index + 1 || info.get(index) == null){
 				//In this case, the prototype info is missing and this should self-destruct.
 				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			}
@@ -54,7 +59,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(side != null){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-			PrototypeInfo info = PrototypeWorldSavedData.get(worldDim).prototypeInfo.get(chunk);
+			PrototypeInfo info = PrototypeWorldSavedData.get(worldDim).prototypes.get(index);
 			if(info != null && info.ports[side.getIndex()] != null && info.ports[side.getIndex()].getCapability() == cap && info.ports[side.getIndex()].exposeExternal()){
 				IPrototypePort port = (IPrototypePort) worldDim.getTileEntity(info.portPos[side.getIndex()]);
 				return port != null && port.hasCapPrototype(cap);
@@ -67,7 +72,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(side != null){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-			PrototypeInfo info = PrototypeWorldSavedData.get(worldDim).prototypeInfo.get(chunk);
+			PrototypeInfo info = PrototypeWorldSavedData.get(worldDim).prototypes.get(index);
 			if(info != null && info.ports[side.getIndex()] != null && info.ports[side.getIndex()].getCapability() == cap && info.ports[side.getIndex()].exposeExternal()){
 				IPrototypePort port = (IPrototypePort) worldDim.getTileEntity(info.portPos[side.getIndex()]);
 				if(port != null && port.hasCapPrototype(cap)){

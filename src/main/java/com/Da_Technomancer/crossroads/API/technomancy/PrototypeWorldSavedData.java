@@ -1,8 +1,6 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +28,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	}
 
 	/**
-	 * 
+	 * DOES NOT call markDirty() by default unless just being created, modifiers should call it manually.
 	 * @param world The world for the Prototype Dimension (ID 27)
 	 * @return The PrototypeWorldSavedData instance. Returns null if, and only if, the world is NOT the world for the Prototype Dimension
 	 */
@@ -45,36 +43,32 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 		if (data == null) {
 			data = new PrototypeWorldSavedData();
 			storage.setData(PROTOTYPE_ID, data);
+			data.setDirty(true);
 		}
-		data.setDirty(true);
 		return data;
 	}
 	
 	/**
-	 * Key: Chunk coordinates in long form <br>
-	 * Value: PrototypeInfo for that chunk <br>
-	 * 
-	 * ONLY USE chunks where both the X and Z chunk coordinate are odd numbers in order to allow for barrier walls.
+	 * A null value represents a wiped prototype. Elements should never be removed from this list, but may be replaced. 
 	 */
-	public final HashMap<Long, PrototypeInfo> prototypeInfo = new HashMap<Long, PrototypeInfo>();
-	
-	public final HashMap<Long, WeakReference<IPrototypeOwner>> prototypeOwner = new HashMap<Long, WeakReference<IPrototypeOwner>>();
+	public final ArrayList<PrototypeInfo> prototypes = new ArrayList<PrototypeInfo>();
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
-		int i = 0;
-		while(nbt.hasKey("chu" + i)){
-			prototypeInfo.put(nbt.getLong("chu" + i), PrototypeInfo.readFromNBT(nbt.getCompoundTag("info" + i)));
-			i++;
+		int length = nbt.getInteger("length");
+		for(int i = 0; i < length; i++){
+			prototypes.add(nbt.hasKey("pro" + i) ? PrototypeInfo.readFromNBT(nbt.getCompoundTag("pro" + i)) : null);
 		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		nbt.setInteger("length", prototypes.size());
 		int i = 0;
-		for(Entry<Long, PrototypeInfo> mapping : prototypeInfo.entrySet()){
-			nbt.setLong("chu" + i, mapping.getKey());
-			nbt.setTag("info" + i, mapping.getValue().writeToNBT(new NBTTagCompound()));
+		for(PrototypeInfo entry : prototypes){
+			if(entry != null){
+				nbt.setTag("pro" + i, entry.writeToNBT(new NBTTagCompound()));
+			}
 			i++;
 		}
 		return nbt;

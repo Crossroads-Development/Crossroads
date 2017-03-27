@@ -1,5 +1,9 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
+import java.lang.ref.WeakReference;
+
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +25,12 @@ public class PrototypeInfo{
 	 * Positions of the ports within the chunk.
 	 */
 	public final BlockPos[] portPos = new BlockPos[6];
+	
+	/**
+	 * The prototype dimension chunk should only be force loaded if this is A: Not null, and B: Does not contain null. TODO force loading
+	 */
+	@Nullable
+	public WeakReference<IPrototypeOwner> owner;
 	
 	/**
 	 * 

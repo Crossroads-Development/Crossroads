@@ -42,14 +42,22 @@ public class PrototypingTableContainer extends Container{
 			}
 		});
 
-		// Player Inventory, Slots 9-35, Slot IDs 3-29
+		//Trash ID 3
+		addSlotToContainer(new Slot(te, 3, 134, 108){
+			@Override
+			public boolean isItemValid(ItemStack stack){
+				return stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() == ModBlocks.prototype;
+			}
+		});
+		
+		// Player Inventory, Slots 9-35, Slot IDs 3-30
 		for(int y = 0; y < 3; ++y){
 			for(int x = 0; x < 9; ++x){
 				addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 132 + y * 18));
 			}
 		}
 
-		// Player Inventory, Slot 0-8, Slot IDs 30-38
+		// Player Inventory, Slot 0-8, Slot IDs 31-39
 		for(int x = 0; x < 9; ++x){
 			addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 190));
 		}
@@ -64,14 +72,14 @@ public class PrototypingTableContainer extends Container{
 			ItemStack current = slot.getStack();
 			previous = current.copy();
 
-			if(fromSlot >= 0 && fromSlot <= 2){
+			if(fromSlot >= 0 && fromSlot <= 3){
 				// From TE Inventory to Player Inventory
-				if(!mergeItemStack(current, 3, 39, true)){
+				if(!mergeItemStack(current, 4, 40, true)){
 					return ItemStack.EMPTY;
 				}
 			}else{
 				// From Player Inventory to TE Inventory
-				if(!mergeItemStack(current, 0, 2, false)){
+				if(!mergeItemStack(current, 0, 3, false)){
 					return ItemStack.EMPTY;
 				}
 			}

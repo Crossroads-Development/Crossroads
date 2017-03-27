@@ -84,7 +84,10 @@ public class Prototype extends BlockContainer{
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		Integer[] sides = new Integer[6];
-		PrototypeInfo info = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypeInfo.get(((PrototypeTileEntity) world.getTileEntity(pos)).getChunk());
+		PrototypeInfo info = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes.get(((PrototypeTileEntity) world.getTileEntity(pos)).getIndex());
+		if(info == null){
+			return extendedBlockState;
+		}
 		for(int i = 0; i < 6; i++){
 			sides[i] = info.ports[i] == null ? null : info.ports[i].ordinal();
 		}
@@ -98,7 +101,12 @@ public class Prototype extends BlockContainer{
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
 		if(stack.hasTagCompound()){
 			tooltip.add("Name: " + stack.getTagCompound().getString("name"));
-			PrototypeInfo info = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypeInfo.get(stack.getTagCompound().getLong("chunk"));
+			ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
+			int index = stack.getTagCompound().getInteger("index");
+			if(infoList.size() < index + 1){
+				return;
+			}
+			PrototypeInfo info = infoList.get(index);
 			if(info == null){
 				return;
 			}
@@ -115,7 +123,7 @@ public class Prototype extends BlockContainer{
 		if(te instanceof PrototypeTileEntity){
 			ItemStack drop = new ItemStack(Item.getItemFromBlock(this), 1, 0);
 			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setLong("chunk", ((PrototypeTileEntity) te).getChunk());
+			nbt.setInteger("index", ((PrototypeTileEntity) te).getIndex());
 			nbt.setString("name", ((PrototypeTileEntity) te).name);
 			drop.setTagCompound(nbt);
 			drops.add(drop);
@@ -128,8 +136,8 @@ public class Prototype extends BlockContainer{
 		if(!world.isRemote){
 			if(stack.hasTagCompound()){
 				PrototypeTileEntity te = (PrototypeTileEntity) world.getTileEntity(pos);
-				if(PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypeInfo.containsKey(stack.getTagCompound().getLong("chunk"))){
-					te.setChunk(stack.getTagCompound().getLong("chunk"));
+				if(PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes.size() > stack.getTagCompound().getInteger("index")){
+					te.setIndex(stack.getTagCompound().getInteger("index"));
 					te.name = stack.getTagCompound().getString("name");
 				}else{
 					world.setBlockState(pos, Blocks.AIR.getDefaultState());

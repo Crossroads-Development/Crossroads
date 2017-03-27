@@ -1,14 +1,22 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import java.util.ArrayList;
+
+import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
+import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
+import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -94,7 +102,8 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ITi
 
 	@Override
 	public int getSizeInventory(){
-		return 3;
+		//The fake fourth slot is for destroying prototypes
+		return 4;
 	}
 
 	@Override
@@ -155,6 +164,29 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ITi
 			markDirty();
 		}else if(index == 2){
 			output = stack;
+			markDirty();
+		}else if(index == 3 && stack.getItem() == Item.getItemFromBlock(ModBlocks.prototype)){
+			int ind = stack.getTagCompound().hasKey("index") ? stack.getTagCompound().getInteger("index") : -1;
+			if(ind == -1){
+				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + 3, 64));
+				markDirty();
+				return;
+			}
+			ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
+			if(infoList.size() <= ind){
+				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + 3, 64));
+				markDirty();
+				return;
+			}
+			int out = 3;
+			PrototypePortTypes[] types = infoList.get(ind).ports;
+			for(int i = 0; i < 6; i++){
+				if(types[i] != null){
+					out++;
+				}
+			}
+			copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + out, 64));
+			infoList.set(ind, null);
 			markDirty();
 		}
 	}

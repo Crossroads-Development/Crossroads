@@ -2,10 +2,13 @@ package com.Da_Technomancer.crossroads.dimensions;
 
 import java.util.HashMap;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDimLoadToClient;
@@ -30,7 +33,7 @@ public class ModDimensions{
 	public static void init(){
 		workspaceDimType = DimensionType.register(Main.MODID, "_workspace", 567, WorkspaceWorldProvider.class, false);
 		prototypeDimType = DimensionType.register(Main.MODID, "_prototype", 568, WorkspaceWorldProvider.class, false);
-		
+
 		DimensionManager.registerDimension(PROTOTYPE_DIM_ID, prototypeDimType);
 	}
 
@@ -40,7 +43,7 @@ public class ModDimensions{
 		}
 		//This hasn't broken in testing, but there are far too many ways for this to go wrong. Better safe then sorry.
 		try{
-			
+
 			playerDim = PlayerDimensionMapSavedData.get(DimensionManager.getWorld(0), DimensionManager.getWorld(0).getMinecraftServer() == null ? null : DimensionManager.getWorld(0).getMinecraftServer().getPlayerProfileCache()).playerDim;
 			for(int id : playerDim.values()){
 				DimensionManager.registerDimension(id, workspaceDimType);
@@ -66,7 +69,7 @@ public class ModDimensions{
 	public static int getDimForPlayer(EntityPlayerMP play){
 		return getDimForPlayer(new GameProfileNonPicky(play.getGameProfile()));
 	}
-	
+
 	/**
 	 * This does not initialize the dimension. If needed, run 
 	 * {@link DimensionManager#initDimension(int)} on the dimension if {@link DimensionManager#getWorld(int)} returns null for that dimension.
@@ -76,7 +79,7 @@ public class ModDimensions{
 			int dim = playerDim.get(play);
 			return dim;
 		}
-		
+
 		int dim = DimensionManager.getNextFreeDimId();
 		DimensionManager.registerDimension(dim, workspaceDimType);
 		playerDim.put(play, dim);
@@ -84,37 +87,55 @@ public class ModDimensions{
 		ModPackets.network.sendToAll(new SendDimLoadToClient(new int[] {dim}));
 		return dim;
 	}
-	
+
 	/**
-	 * Sets up the next available prototype dimension chunk, reserves the chunk, and returns the coordinates in long form. 
+	 * Sets up the next available prototype dimension chunk, reserves the chunk, and returns the index and ChunkPos. Returns null if it failed. 
+	 * portPos should be chunk relative when passed to this method. The method adjusts accordingly. 
 	 */
-	public static long nextFreePrototypeChunk(PrototypePortTypes[] ports, BlockPos[] portPos){
+	@Nullable
+	public static Pair<Integer, ChunkPos> nextFreePrototypeChunk(PrototypePortTypes[] ports, BlockPos[] portPos){
 		//This method assumes that all chunks saved in PrototypeWorldSavedData are in the layout this would create.
 		//It creates a grid layout of chunks containing only barriers & air, with the remaining chunks being used for prototypes. The grid is centered on chunk 0,0 (non prototype). 
-		//The grid created starts at (-100, -100) and goes to (100, infinity). 
-		
+		//The grid created starts at (-100, -100) and goes to (100, 100). 
+
 		WorldServer worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
 		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(worldDim);
-		
-		int used = data.prototypeInfo.size();
-		
-		//Do to the grid, one row has capacity for 100 chunks
-		int x = ((used % 100) * 2) - 99;
-		int z = (used / 50) - 99;
-		
-		//This part may redundantly block already blocked chunks. This is a possible optimization point if it ends up mattering. 
-		blockChunk(new ChunkPos(x - 1, z - 1), worldDim);
-		blockChunk(new ChunkPos(x - 1, z), worldDim);
-		blockChunk(new ChunkPos(x, z - 1), worldDim);
-		blockChunk(new ChunkPos(x + 1, z), worldDim);
-		blockChunk(new ChunkPos(x, z + 1), worldDim);
-		blockChunk(new ChunkPos(x + 1, z + 1), worldDim);
-		
-		long chunk = MiscOp.getLongFromChunkPos(new ChunkPos(x, z));
-		data.prototypeInfo.put(chunk, new PrototypeInfo(ports, portPos));
-		return chunk;
+
+		if(data.prototypes.contains(null)){
+			//Recycles deleted prototypes if possible.
+			int available = data.prototypes.indexOf(null);
+			//Do to the grid, one row has capacity for 100 chunks
+			int x = (((available + 1) % 100) * 2) - 99;
+			int z = ((available + 1) / 50) - 99;
+
+			data.prototypes.set(available, new PrototypeInfo(ports, portPos));
+			data.setDirty(true);
+			return Pair.of(available, new ChunkPos(x, z));
+		}else{
+			int used = data.prototypes.size();
+			if(used > 5000){
+				//Too many prototypes in existence.
+				return null;
+			}
+
+			//Do to the grid, one row has capacity for 100 chunks
+			int x = ((used % 100) * 2) - 99;
+			int z = (used / 50) - 99;
+
+			//This part may redundantly block already blocked chunks. This is a possible optimization point if it ends up mattering. 
+			blockChunk(new ChunkPos(x - 1, z - 1), worldDim);
+			blockChunk(new ChunkPos(x - 1, z), worldDim);
+			blockChunk(new ChunkPos(x, z - 1), worldDim);
+			blockChunk(new ChunkPos(x + 1, z), worldDim);
+			blockChunk(new ChunkPos(x, z + 1), worldDim);
+			blockChunk(new ChunkPos(x + 1, z + 1), worldDim);
+
+			data.prototypes.add(used, new PrototypeInfo(ports, portPos));
+			data.setDirty(true);
+			return Pair.of(used, new ChunkPos(x, z));
+		}
 	}
-	
+
 	private static void blockChunk(ChunkPos pos, WorldServer dimWorld){
 		for(int x = pos.getXStart(); x <= pos.getXEnd(); x++){
 			for(int z = pos.getZStart(); z <= pos.getZEnd(); z++){
