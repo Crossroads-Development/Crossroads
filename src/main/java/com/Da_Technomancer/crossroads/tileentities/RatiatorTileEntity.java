@@ -1,18 +1,17 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraftforge.common.capabilities.Capability;
 
-public class RatiatorTileEntity extends TileEntity implements ITickable{
+public class RatiatorTileEntity extends TileEntity{
 	
 	private double output;
-	private double inputSide;
-	private double inputBack;
 	
 	public double getOutput(){
 		return output;
@@ -34,19 +33,31 @@ public class RatiatorTileEntity extends TileEntity implements ITickable{
 		nbt.setDouble("out", output);
 		return nbt;
 	}
-
+	
+	private final IAdvancedRedstoneHandler redstoneHandler = new RedstoneHandler();
+	
 	@Override
-	public void update(){
-		if(world.isRemote){
-			return;
+	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
+			return true;
 		}
-		EnumFacing side = world.getBlockState(pos).getValue(Properties.FACING);
-		double sidePower = Math.max(ModBlocks.ratiator.getPowerOnSide(world, pos, side.rotateY(), false), ModBlocks.ratiator.getPowerOnSide(world, pos, side.getOpposite().rotateY(), false));
-		double backPower = ModBlocks.ratiator.getPowerOnSide(world, pos, side.getOpposite(), true);
-		if(inputSide != sidePower || inputBack != backPower){
-			inputSide = sidePower;
-			inputBack = backPower;
-			ModBlocks.ratiator.neighborChanged(world.getBlockState(pos), world, pos, null, null);
+		return super.hasCapability(cap, side);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
+			return (T) redstoneHandler;
+		}
+		return super.getCapability(cap, side);
+	}
+	
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(boolean read){
+			return output;
 		}
 	}
 }

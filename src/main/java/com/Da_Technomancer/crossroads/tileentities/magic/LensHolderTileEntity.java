@@ -184,8 +184,8 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{
 
 		@Override
-		public double getOutput(){
-			return lastRedstone;
+		public double getOutput(boolean read){
+			return read ? lastRedstone : 0;
 		}
 	}
 	

@@ -195,11 +195,8 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{
 
 		@Override
-		public double getOutput(){
-			double holder = Math.pow(motionData[0], 2) / 2D;
-			holder *= 15D;
-			
-			return holder;
+		public double getOutput(boolean measure){
+			return measure ? 15D * Math.pow(motionData[0], 2) / 2D : 0;
 		}
 	}
 	

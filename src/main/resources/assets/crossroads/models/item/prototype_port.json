@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/block_salt_tile",
+	"parent": "crossroads:block/prototype_port",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

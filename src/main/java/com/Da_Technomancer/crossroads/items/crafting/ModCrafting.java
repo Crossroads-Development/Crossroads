@@ -107,7 +107,6 @@ public final class ModCrafting{
 		// Salt Block
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSalt, 1), "##", "##", '#', "dustSalt"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.dustSalt, 4), "#", '#', "blockSalt"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.blockSaltTile, 4), "##", "##", '#', "blockSalt"));
 		// Rotary Pump
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "#$#", "&$&", '#', "ingotBronze", '&', "blockGlass", '$', "stickIron"));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.rotaryPump, 1), ModBlocks.steamTurbine);

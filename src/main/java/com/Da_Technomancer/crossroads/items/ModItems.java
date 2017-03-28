@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
@@ -42,8 +43,8 @@ public final class ModItems{
 			return new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.BRONZE));
 		}
 	};
-	protected static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 0, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F);
-	protected static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[]{0, 0, 0, 2}, 0, SoundEvents.BLOCK_ANVIL_USE, 0);
+	protected static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 25, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F).setRepairItem(new ItemStack(Items.POISONOUS_POTATO));
+	protected static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[4], 0, SoundEvents.BLOCK_ANVIL_USE, 0);
 
 	public static DebugGearWriter debugGearWriter;
 	public static DebugHeatWriter debugHeatWriter;

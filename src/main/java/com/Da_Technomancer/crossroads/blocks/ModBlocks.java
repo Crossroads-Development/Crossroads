@@ -70,7 +70,6 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -128,7 +127,6 @@ public final class ModBlocks{
 	public static CrystalMasterAxis crystalMasterAxis;
 	public static Axle axle;
 	public static Ratiator ratiator;
-	public static BasicBlock blockSaltTile;
 	public static BeaconHarness beaconHarness;
 	public static FatFeeder fatFeeder;
 	public static ChunkUnlocker chunkUnlocker; 
@@ -220,7 +218,6 @@ public final class ModBlocks{
 		blockAddQue(crystalMasterAxis = new CrystalMasterAxis());
 		blockAddQue(axle = new Axle());
 		blockAddQue(ratiator = new Ratiator());
-		blockSaltTile = new BasicBlock("block_salt_tile", Material.SAND, 0, "shovel", .5F, SoundType.SAND, "blockSalt");
 		blockAddQue(beaconHarness = new BeaconHarness());
 		blockAddQue(fatFeeder = new FatFeeder());
 		blockAddQue(chunkUnlocker = new ChunkUnlocker());

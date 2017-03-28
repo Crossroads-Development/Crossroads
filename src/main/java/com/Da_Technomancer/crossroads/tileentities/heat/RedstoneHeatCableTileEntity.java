@@ -176,8 +176,8 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{
 
 		@Override
-		public double getOutput(){
-			if(!world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) || insulator == null){
+		public double getOutput(boolean read){
+			if(!read || !world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) || insulator == null){
 				return 0;
 			}
 			double holder = (temp + 273) / (insulator.getLimit() + 273);

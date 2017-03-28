@@ -52,7 +52,7 @@ public class RedstoneKeyboardTileEntity extends TileEntity implements IDoubleRec
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{
 
 		@Override
-		public double getOutput(){
+		public double getOutput(boolean measure){
 			return output;
 		}
 	}

@@ -91,8 +91,8 @@ public class FluidTankTileEntity extends TileEntity{
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{
 
 		@Override
-		public double getOutput(){
-			return content == null ? 0 : 15D * (double) content.amount / (double) CAPACITY;
+		public double getOutput(boolean read){
+			return read ? content == null ? 0 : 15D * (double) content.amount / (double) CAPACITY : 0;
 		}
 	}
 	

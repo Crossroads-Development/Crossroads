@@ -63,9 +63,6 @@ public final class Main{
 						case("blockpurequartz"):
 							mapping.remap(ModBlocks.blockPureQuartz);
 							break;
-						case("blocksalttile"):
-							mapping.remap(ModBlocks.blockSaltTile);
-							break;
 						case("multipiston"):
 							mapping.remap(ModBlocks.multiPiston);
 							break;
@@ -333,9 +330,6 @@ public final class Main{
 							break;
 						case("blockpurequartz"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.blockPureQuartz));
-							break;
-						case("blocksalttile"):
-							mapping.remap(Item.getItemFromBlock(ModBlocks.blockSaltTile));
 							break;
 						case("multipiston"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.multiPiston));
