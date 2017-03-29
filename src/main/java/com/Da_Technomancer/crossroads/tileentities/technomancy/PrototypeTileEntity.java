@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
@@ -19,7 +20,7 @@ import net.minecraftforge.common.capabilities.Capability;
 
 public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 
-	private int index;
+	private int index = -1;
 	public String name;
 	
 	public void setIndex(int index){
@@ -31,7 +32,21 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 		return index;
 	}
 
-	//TODO this setting itself to the PrototypeInfo on load and removing itself on unload.
+	@Override
+	public void onLoad(){
+		if(!world.isRemote && index != -1){
+			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
+			info.get(index).owner = new WeakReference<IPrototypeOwner>(this);
+		}
+	}
+
+	@Override
+	public void onChunkUnload(){
+		if(!world.isRemote && index != -1){
+			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
+			info.get(index).owner = null;
+		}
+	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){

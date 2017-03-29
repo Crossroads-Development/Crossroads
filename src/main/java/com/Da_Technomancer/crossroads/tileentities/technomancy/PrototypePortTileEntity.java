@@ -19,7 +19,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	private PrototypePortTypes type = PrototypePortTypes.HEAT;
 	private boolean active;
 	private int index;
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -29,7 +29,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		nbt.setInteger("index", index);
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -38,7 +38,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		active = nbt.getBoolean("act");
 		index = nbt.getInteger("index");
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
@@ -46,31 +46,31 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		nbt.setString("type", type.name());
 		return nbt;
 	}
-	
+
 	public boolean isUsableByPlayer(EntityPlayer player){
 		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
 	}
-	
+
 	public PrototypePortTypes getType(){
 		return type;
 	}
-	
+
 	public void setType(PrototypePortTypes type){
 		this.type = type;
 	}
-	
+
 	public EnumFacing getSide(){
 		return side;
 	}
-	
+
 	public void setSide(EnumFacing side){
 		this.side = side;
 	}
-	
+
 	public void makeActive(){
 		active = true;
 	}
-	
+
 	public boolean isActive(){
 		return active;
 	}
@@ -83,7 +83,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 			markDirty();
 		}
 	}
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(active && type.getCapability() == cap && type.exposeInternal() && side == this.side){
@@ -94,7 +94,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		}
 		return super.hasCapability(cap, side);
 	}
-	
+
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(active && type.getCapability() == cap && type.exposeInternal() && side == this.side){
@@ -105,7 +105,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		}
 		return super.getCapability(cap, side);
 	}
-	
+
 	@Override
 	public boolean hasCapPrototype(Capability<?> cap){
 		if(active && type.getCapability() == cap){
@@ -113,7 +113,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		}
 		return false;
 	}
-	
+
 	@Override
 	public <T> T getCapPrototype(Capability<T> cap){
 		if(active && type.getCapability() == cap){

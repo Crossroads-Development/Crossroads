@@ -139,6 +139,8 @@ public class Prototype extends BlockContainer{
 				if(PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes.size() > stack.getTagCompound().getInteger("index")){
 					te.setIndex(stack.getTagCompound().getInteger("index"));
 					te.name = stack.getTagCompound().getString("name");
+					//onLoad is normally called before onBlockPlacedBy, AKA before the index is set. It gets called again here so it can run with the index.
+					te.onLoad();
 				}else{
 					world.setBlockState(pos, Blocks.AIR.getDefaultState());
 				}
@@ -146,5 +148,11 @@ public class Prototype extends BlockContainer{
 				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			}
 		}
+	}
+	
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		worldIn.getTileEntity(pos).onChunkUnload();
+		super.breakBlock(worldIn, pos, state);
 	}
 }
