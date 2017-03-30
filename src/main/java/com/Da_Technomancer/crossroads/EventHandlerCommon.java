@@ -8,22 +8,22 @@ import java.util.Random;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
+import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
+import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
+import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
 
 import net.minecraft.entity.monster.EntityWitch;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
@@ -37,26 +37,14 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	public void cancelWitchSpawns(LivingSpawnEvent e){
-		if(e.getEntity() instanceof EntityWitch && BrazierTileEntity.blockSpawning(e.getWorld(), e.getX(), e.getY(), e.getZ())){
-			e.setResult(Result.DENY);
-		}
-	}
+		if(e.getEntity() instanceof EntityWitch){
+			// 64 squared
+			int RANGE_SQUARED = 4096;
 
-	@SubscribeEvent
-	public void addItemsAndUpdateData(EntityJoinWorldEvent event){
-		if(event.getEntity() instanceof EntityPlayer && !event.getEntity().world.isRemote){
-			EntityPlayer player = (EntityPlayer) event.getEntity();
-
-			NBTTagCompound tag = MiscOp.getPlayerTag(player);
-			ModPackets.network.sendTo(new StoreNBTToClient(tag.getCompoundTag("elements")), (EntityPlayerMP) event.getEntity());
-
-			//A convenience feature to start with a debug tool.
-			if(!tag.hasKey("starter")){
-				if(player.getGameProfile().getName().equals("Da_Technomancer")){
-					player.inventory.addItemStackToInventory(new ItemStack(ModItems.moduleGoggles, 1));
+			for(TileEntity te : e.getWorld().loadedTileEntityList){
+				if(te instanceof BrazierTileEntity && ((BrazierTileEntity) te).getState() == 2 && te.getDistanceSq(e.getX(), e.getY(), e.getZ()) <= RANGE_SQUARED){
+					e.setResult(Result.DENY);
 				}
-
-				tag.setBoolean("starter", true);
 			}
 		}
 	}
@@ -65,11 +53,22 @@ public final class EventHandlerCommon{
 	private static final ArrayList<Chunk> TO_RETROGEN = new ArrayList<Chunk>();
 
 	@SubscribeEvent
-	public void runRetrogen(WorldTickEvent e){
+	public void runRetrogenAndLoadChunks(WorldTickEvent e){
 		if(TO_RETROGEN.size() != 0){
 			Chunk chunk = TO_RETROGEN.get(0);
 			CommonProxy.WORLD_GEN.generate(RAND, chunk.xPosition, chunk.zPosition, chunk.getWorld(), null, null);
 			TO_RETROGEN.remove(0);
+		}
+		//Only should be called on the server side. Not called every tick, as that would be excessive
+		if(!e.world.isRemote && e.world.getTotalWorldTime() % 20 == 0 && e.world.provider.getDimension() == ModDimensions.PROTOTYPE_DIM_ID && PrototypeWorldSavedData.loadingTicket != null){
+			for(ChunkPos chunk : PrototypeWorldSavedData.loadingTicket.getChunkList()){
+				ForgeChunkManager.unforceChunk(PrototypeWorldSavedData.loadingTicket, chunk);
+			}
+			for(PrototypeInfo info : PrototypeWorldSavedData.get(e.world).prototypes){
+				if(info != null && info.owner != null && info.owner.get() != null){
+					ForgeChunkManager.forceChunk(PrototypeWorldSavedData.loadingTicket, info.chunk);
+				}
+			}
 		}
 	}
 

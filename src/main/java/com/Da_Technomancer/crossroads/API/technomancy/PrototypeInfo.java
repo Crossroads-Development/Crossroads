@@ -4,10 +4,12 @@ import java.lang.ref.WeakReference;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 
 /**
  * 
@@ -32,15 +34,18 @@ public class PrototypeInfo{
 	@Nullable
 	public WeakReference<IPrototypeOwner> owner;
 	
+	public final ChunkPos chunk;
+	
 	/**
 	 * 
 	 * @param ports Needs to have a capacity of 6.
 	 */
-	public PrototypeInfo(PrototypePortTypes[] ports, BlockPos[] portPos){
+	public PrototypeInfo(PrototypePortTypes[] ports, BlockPos[] portPos, ChunkPos chunk){
 		for(int i = 0; i < 6; i++){
 			this.ports[i] = ports[i];
 			this.portPos[i] = portPos[i];
 		}
+		this.chunk = chunk;
 	}
 	
 	protected NBTTagCompound writeToNBT(NBTTagCompound nbt){
@@ -50,6 +55,7 @@ public class PrototypeInfo{
 				nbt.setLong("pos" + i, portPos[i].toLong());
 			}
 		}
+		nbt.setLong("chunk", MiscOp.getLongFromChunkPos(chunk));
 		return nbt;
 	}
 	
@@ -60,6 +66,6 @@ public class PrototypeInfo{
 			ports[i] = nbt.hasKey("port" + i) ? PrototypePortTypes.valueOf(nbt.getString("port" + i)) : null;
 			portPos[i] = nbt.hasKey("pos" + i) ? BlockPos.fromLong(nbt.getLong("pos" + i)) : null;
 		}
-		return new PrototypeInfo(ports, portPos);
+		return new PrototypeInfo(ports, portPos, MiscOp.getChunkPosFromLong(nbt.getLong("chunk")));
 	}
 }

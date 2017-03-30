@@ -89,20 +89,6 @@ public class BrazierTileEntity extends TileEntity implements ITickable{
 		}
 	}
 
-	public static boolean blockSpawning(World worldIn, double X, double Y, double Z){
-
-		// 64 squared
-		final int RANGE_SQUARED = 4096;
-
-		for(TileEntity te : worldIn.loadedTileEntityList){
-			if(te instanceof BrazierTileEntity && ((BrazierTileEntity) te).getState() == 2 && te.getDistanceSq(X, Y, Z) <= RANGE_SQUARED){
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	private int time = 6000;
 	private ItemStack inventory = ItemStack.EMPTY;
 	
@@ -115,7 +101,7 @@ public class BrazierTileEntity extends TileEntity implements ITickable{
 	
 	// 0 means not lit, 1 means lit normally, 2 means lit with salt, 3 means lit
 	// with poisonous potato.
-	private byte getState(){
+	public byte getState(){
 		if(inventory.isEmpty()){
 			return 0;
 		}

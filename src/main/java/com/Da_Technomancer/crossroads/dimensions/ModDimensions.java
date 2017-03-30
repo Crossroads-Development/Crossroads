@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.dimensions;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
@@ -20,13 +19,18 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
 public class ModDimensions{
 
 	public static DimensionType workspaceDimType;
 	public static DimensionType prototypeDimType;
+
 	private static HashMap<GameProfileNonPicky, Integer> playerDim;
 	public static final int PROTOTYPE_DIM_ID = 27;
 
@@ -35,13 +39,20 @@ public class ModDimensions{
 		prototypeDimType = DimensionType.register(Main.MODID, "_prototype", 568, WorkspaceWorldProvider.class, false);
 
 		DimensionManager.registerDimension(PROTOTYPE_DIM_ID, prototypeDimType);
+		ForgeChunkManager.setForcedChunkLoadingCallback(Main.instance, new LoadingCallback(){
+
+			@Override
+			public void ticketsLoaded(List<Ticket> tickets, World world){
+
+			}
+		});
 	}
 
 	public static void loadDims(){
 		for(int i : DimensionManager.getDimensions(workspaceDimType)){
 			DimensionManager.unregisterDimension(i);
 		}
-		//This hasn't broken in testing, but there are far too many ways for this to go wrong. Better safe then sorry.
+		// This hasn't broken in testing, but there are far too many ways for this to go wrong. Better safe then sorry.
 		try{
 
 			playerDim = PlayerDimensionMapSavedData.get(DimensionManager.getWorld(0), DimensionManager.getWorld(0).getMinecraftServer() == null ? null : DimensionManager.getWorld(0).getMinecraftServer().getPlayerProfileCache()).playerDim;
@@ -60,20 +71,18 @@ public class ModDimensions{
 			}
 			throw ex;
 		}
+		ForgeChunkManager.releaseTicket(PrototypeWorldSavedData.loadingTicket);
+		PrototypeWorldSavedData.loadingTicket = ForgeChunkManager.requestTicket(Main.instance, DimensionManager.getWorld(PROTOTYPE_DIM_ID), ForgeChunkManager.Type.NORMAL);
 	}
 
-	/**
-	 * This does not initialize the dimension. If needed, run 
-	 * {@link DimensionManager#initDimension(int)} on the dimension if {@link DimensionManager#getWorld(int)} returns null for that dimension.
-	 */
+	/** This does not initialize the dimension. If needed, run
+	 * {@link DimensionManager#initDimension(int)} on the dimension if {@link DimensionManager#getWorld(int)} returns null for that dimension. */
 	public static int getDimForPlayer(EntityPlayerMP play){
 		return getDimForPlayer(new GameProfileNonPicky(play.getGameProfile()));
 	}
 
-	/**
-	 * This does not initialize the dimension. If needed, run 
-	 * {@link DimensionManager#initDimension(int)} on the dimension if {@link DimensionManager#getWorld(int)} returns null for that dimension.
-	 */
+	/** This does not initialize the dimension. If needed, run
+	 * {@link DimensionManager#initDimension(int)} on the dimension if {@link DimensionManager#getWorld(int)} returns null for that dimension. */
 	public static int getDimForPlayer(GameProfileNonPicky play){
 		if(playerDim.containsKey(play)){
 			int dim = playerDim.get(play);
@@ -88,41 +97,39 @@ public class ModDimensions{
 		return dim;
 	}
 
-	/**
-	 * Sets up the next available prototype dimension chunk, reserves the chunk, and returns the index and ChunkPos. Returns null if it failed. 
-	 * portPos should be chunk relative when passed to this method. The method adjusts accordingly. 
-	 */
+	/** Sets up the next available prototype dimension chunk, reserves the chunk, and returns the index. Returns -1 if it failed.
+	 * portPos should be chunk relative when passed to this method. The method adjusts accordingly. */
 	@Nullable
-	public static Pair<Integer, ChunkPos> nextFreePrototypeChunk(PrototypePortTypes[] ports, BlockPos[] portPos){
-		//This method assumes that all chunks saved in PrototypeWorldSavedData are in the layout this would create.
-		//It creates a grid layout of chunks containing only barriers & air, with the remaining chunks being used for prototypes. The grid is centered on chunk 0,0 (non prototype). 
-		//The grid created starts at (-100, -100) and goes to (100, 100). 
+	public static int nextFreePrototypeChunk(PrototypePortTypes[] ports, BlockPos[] portPos){
+		// This method assumes that all chunks saved in PrototypeWorldSavedData are in the layout this would create.
+		// It creates a grid layout of chunks containing only barriers & air, with the remaining chunks being used for prototypes. The grid is centered on chunk 0,0 (non prototype).
+		// The grid created starts at (-100, -100) and goes to (100, -80).
 
 		WorldServer worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
 		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(worldDim);
 
 		if(data.prototypes.contains(null)){
-			//Recycles deleted prototypes if possible.
+			// Recycles deleted prototypes if possible.
 			int available = data.prototypes.indexOf(null);
-			//Do to the grid, one row has capacity for 100 chunks
+			// Do to the grid, one row has capacity for 100 chunks
 			int x = (((available + 1) % 100) * 2) - 99;
 			int z = ((available + 1) / 50) - 99;
 
-			data.prototypes.set(available, new PrototypeInfo(ports, portPos));
+			data.prototypes.set(available, new PrototypeInfo(ports, portPos, new ChunkPos(x, z)));
 			data.setDirty(true);
-			return Pair.of(available, new ChunkPos(x, z));
+			return available;
 		}else{
 			int used = data.prototypes.size();
-			if(used > 5000){
-				//Too many prototypes in existence.
-				return null;
+			if(used > 500){
+				// Too many prototypes in existence.
+				return -1;
 			}
 
-			//Do to the grid, one row has capacity for 100 chunks
+			// Do to the grid, one row has capacity for 100 chunks
 			int x = ((used % 100) * 2) - 99;
 			int z = (used / 50) - 99;
 
-			//This part may redundantly block already blocked chunks. This is a possible optimization point if it ends up mattering. 
+			// This part may redundantly block already blocked chunks. This is a possible optimization point if it ends up mattering.
 			blockChunk(new ChunkPos(x - 1, z - 1), worldDim);
 			blockChunk(new ChunkPos(x - 1, z), worldDim);
 			blockChunk(new ChunkPos(x, z - 1), worldDim);
@@ -130,9 +137,9 @@ public class ModDimensions{
 			blockChunk(new ChunkPos(x, z + 1), worldDim);
 			blockChunk(new ChunkPos(x + 1, z + 1), worldDim);
 
-			data.prototypes.add(used, new PrototypeInfo(ports, portPos));
+			data.prototypes.add(used, new PrototypeInfo(ports, portPos, new ChunkPos(x, z)));
 			data.setDirty(true);
-			return Pair.of(used, new ChunkPos(x, z));
+			return used;
 		}
 	}
 

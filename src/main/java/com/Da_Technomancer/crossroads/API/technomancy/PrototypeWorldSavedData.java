@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
 public class PrototypeWorldSavedData extends WorldSavedData{
 	
@@ -18,6 +19,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	//will cleanly self-destruct. 
 	
 	public static final String PROTOTYPE_ID = Main.MODID + "_prototype";
+	public static Ticket loadingTicket;
 	
 	public PrototypeWorldSavedData(){
 		super(PROTOTYPE_ID);
