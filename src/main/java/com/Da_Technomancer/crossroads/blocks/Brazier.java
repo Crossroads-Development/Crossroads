@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
@@ -51,7 +50,7 @@ public class Brazier extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new BrazierTileEntity();
 	}
-	
+
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
 		return BB;
@@ -73,16 +72,19 @@ public class Brazier extends BlockContainer{
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
-		if(!worldIn.isRemote && !playerIn.getHeldItem(hand).isEmpty() && MiscOp.safeHasCap(worldIn, pos, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)){
-			IItemHandler handler = worldIn.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-			ItemStack inserting = playerIn.getHeldItem(hand).copy();
-			if(inserting.isEmpty()){
-				return false;
-			}
-			inserting.setCount(1);
-			if(handler.insertItem(0, inserting, false).isEmpty()){
-				playerIn.getHeldItem(hand).shrink(1);
-				return true;
+		if(!worldIn.isRemote && !playerIn.getHeldItem(hand).isEmpty()){
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)){
+				IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+				ItemStack inserting = playerIn.getHeldItem(hand).copy();
+				if(inserting.isEmpty()){
+					return false;
+				}
+				inserting.setCount(1);
+				if(handler.insertItem(0, inserting, false).isEmpty()){
+					playerIn.getHeldItem(hand).shrink(1);
+					return true;
+				}
 			}
 		}
 
@@ -128,14 +130,17 @@ public class Brazier extends BlockContainer{
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
-	
+
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		if(!world.isRemote && MiscOp.safeHasCap(world, pos, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)){
-			IItemHandler handler = world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-			ItemStack stack = handler.getStackInSlot(0);
-			stack.shrink(1);
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+		if(!world.isRemote){
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)){
+				IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+				ItemStack stack = handler.getStackInSlot(0);
+				stack.shrink(1);
+				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+			}
 		}
 		super.breakBlock(world, pos, blockstate);
 	}

@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.blocks;
+package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class ItemChute extends Block{
 
 	private final AxisAlignedBB BB = new AxisAlignedBB(.125D, 0, .125D, .875D, 1, .875D);
 	
-	protected ItemChute(){
+	public ItemChute(){
 		super(Material.IRON);
 		String name = "item_chute";
 		setUnlocalizedName(name);

@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
@@ -19,6 +18,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
@@ -72,7 +72,8 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 			MagicUnit out = toSend.getOutput();
 			EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
-			double splitRatio = MiscOp.safeHasCap(world, pos.offset(facing), Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()) ? Math.min(Math.abs(world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).getMotionData()[0]), 15D) / 15D : 0;
+			TileEntity te = world.getTileEntity(pos.offset(facing));
+			double splitRatio = te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()) ? Math.min(Math.abs(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).getMotionData()[0]), 15D) / 15D : 0;
 			MagicUnit outMult = out == null ? null : out.mult(splitRatio, false);
 			if(outMult == null || outMult.getPower() == 0){
 				outMult = null;

@@ -33,12 +33,13 @@ public final class ModConfig{
 	public static Property gearResetTime;
 	public static Property wipeInvalidMappings;
 	public static Property blockedPrototype;
+	public static Property allowPrototype;
 	
 	private static final String CAT_INTERNAL = "Internal";
 	private static final String CAT_ORES = "Ores";
 	private static final String CAT_MISC = "Misc";
 	private static final String CAT_SPECIALIZATION = "Specializations";
-	private static final String CAT_FLUX = "Flux Disasters";	
+	private static final String CAT_TECHNOMANCY = "Technomancy";	
 	protected static void init(FMLPreInitializationEvent e){
 
 		config = new Configuration(e.getSuggestedConfigurationFile());
@@ -59,15 +60,16 @@ public final class ModConfig{
 		technomancy = config.get(CAT_SPECIALIZATION, "Enable Technomancy? (Default true)", true);
 		alchemy = config.get(CAT_SPECIALIZATION, "Enable Alchemy? (Default true)", true, "NYI");
 		witchcraft = config.get(CAT_SPECIALIZATION, "Enable Witchcraft? (Default true)", true, "NYI");
-		voidChunk = config.get(CAT_FLUX, "Allow Chunk Voiding disaster from Technomancy? (Default true)", true);
-		resetChunk = config.get(CAT_FLUX, "Allow Chunk Reset disaster from Technomancy? (Default true)", true);
-		magicChunk = config.get(CAT_FLUX, "Allow Chunk Magic-ifying disaster from Technomancy? (Default true)", true);
-		fieldLinesEnergy = config.get(CAT_FLUX, "Draw energy fields with lines (True: lines, False: planes)? (Default true)", true);
-		fieldLinesPotential = config.get(CAT_FLUX, "Draw potential fields with lines (True: lines, False: planes)? (Default false)", false);
+		voidChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Voiding disaster from Technomancy? (Default true)", true);
+		resetChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Reset disaster from Technomancy? (Default true)", true);
+		magicChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Magic-ifying disaster from Technomancy? (Default true)", true);
+		fieldLinesEnergy = config.get(CAT_TECHNOMANCY, "Draw energy fields with lines (True: lines, False: planes)? (Default true)", true);
+		fieldLinesPotential = config.get(CAT_TECHNOMANCY, "Draw potential fields with lines (True: lines, False: planes)? (Default false)", false);
 		disableSlaves = config.get(CAT_INTERNAL, "If you are crashing from StackOverflow errors and you either have a tiny amount of RAM or built an insanely large & complicated rotary setup, then set this to true, destroy the setup, and set this to false. Also maybe send me a picture of the setup.", false);
 		registerOres = config.get(CAT_ORES, "Register OreDictionary for copper/tin/bronze? (Default true)", true, "Disabling this will make Crossroads copper/tin/bronze completely useless. The recipes will need copper/tin/bronze from other mods. Don't ask me why you'd want this.");
 		gearResetTime = config.get(CAT_INTERNAL, "Gear Reset Time", 300, "Interval in ticks between gear network checks and visual angle resets. (Range 100-2400, Default 300)", 100, 2400);
 		wipeInvalidMappings = config.get(CAT_INTERNAL, "Wipe internal per player dimension mappings on failure? (Default false)", false, "Only use this if needed, as the mappings between players and technomancy workspace dimensions will be lost. If doing this, delete the files for those dimensions. Also, make a backup of the world file before setting this to true.");
-		blockedPrototype = config.get(CAT_INTERNAL, "Blocks disallowed to be used in prototypes. Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'.", new String[] {Main.MODID + ":large_gear_slave", Main.MODID + ":large_gear_master", Main.MODID + ":prototype", "minecraft:portal", "rftools:matter_transmitter", "bloodmagic:blockteleposer"}, "Use to prevent exploits, bugs, travel to the prototype dimension, griefing, and other naughty things. Also, most modded multiblocks should be blocked to prevent bugs.");
+		blockedPrototype = config.get(CAT_TECHNOMANCY, "Blocks disallowed to be used in prototypes. Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'.", new String[] {Main.MODID + ":large_gear_slave", Main.MODID + ":large_gear_master", Main.MODID + ":prototype", "minecraft:portal", "rftools:matter_transmitter", "bloodmagic:blockteleposer"}, "Use to prevent exploits, bugs, travel to the prototype dimension, griefing, and other naughty things. Also, most modded multiblocks should be blocked to prevent bugs.");
+		allowPrototype = config.get(CAT_TECHNOMANCY, "Restrictions on prototyping. (Default 0)", 0, "-1: Prototyping is disabled. May block large amounts of the mod. 0: Default value. 1: Prototyping destroys the template structure the prototype was made from instead of copying the template. (prevents unintended dupe exploits). 2: Prototyping works as normal, except prototype blocks themselves cannot be placed, only used within other compatable devices (such as the watch).", -1, 2);
 	}
 }

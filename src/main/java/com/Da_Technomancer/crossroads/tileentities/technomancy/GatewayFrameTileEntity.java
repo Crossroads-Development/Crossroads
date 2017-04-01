@@ -91,8 +91,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable{
 			switch(world.getBlockState(pos).getValue(Properties.FACING)){
 				case EAST:
 					if(world.getBlockState(pos.offset(EnumFacing.EAST, 2).offset(EnumFacing.UP, 2)) == active){
-						if(MiscOp.safeHasCap(world, pos.offset(EnumFacing.WEST), Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST)){
-							savedCoord += world.getTileEntity(pos.offset(EnumFacing.WEST)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST).getMotionData()[0] / 20D;
+						TileEntity te = world.getTileEntity(pos.offset(EnumFacing.WEST));
+						if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST)){
+							savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST).getMotionData()[0] / 20D;
 						}
 					}else{
 						savedCoord = 0;
@@ -100,8 +101,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable{
 					break;
 				case NORTH:
 					if(world.getBlockState(pos.offset(EnumFacing.NORTH, 2).offset(EnumFacing.UP, 2)) == active){
-						if(MiscOp.safeHasCap(world, pos.offset(EnumFacing.SOUTH), Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH)){
-							savedCoord += world.getTileEntity(pos.offset(EnumFacing.SOUTH)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH).getMotionData()[0] / 20D;
+						TileEntity te = world.getTileEntity(pos.offset(EnumFacing.SOUTH));
+						if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH)){
+							savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH).getMotionData()[0] / 20D;
 						}
 					}else{
 						savedCoord = 0;
@@ -109,8 +111,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable{
 					break;
 				case SOUTH:
 					if(world.getBlockState(pos.offset(EnumFacing.SOUTH, 2).offset(EnumFacing.UP, 2)) == active){
-						if(MiscOp.safeHasCap(world, pos.offset(EnumFacing.NORTH), Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
-							savedCoord += world.getTileEntity(pos.offset(EnumFacing.NORTH)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH).getMotionData()[0] / 20D;
+						TileEntity te = world.getTileEntity(pos.offset(EnumFacing.NORTH));
+						if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
+							savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH).getMotionData()[0] / 20D;
 						}
 					}else{
 						savedCoord = 0;
@@ -118,16 +121,18 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable{
 					break;
 				case UP:
 					for(EnumFacing dir : EnumFacing.HORIZONTALS){
-						if(MiscOp.safeHasCap(world, pos.offset(dir), Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite())){
-							savedCoord = Math.max(0, Math.min(250, savedCoord + world.getTileEntity(pos.offset(dir)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite()).getMotionData()[0] / 20D));
+						TileEntity te = world.getTileEntity(pos.offset(dir));
+						if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite())){
+							savedCoord = Math.max(0, Math.min(250, savedCoord + te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite()).getMotionData()[0] / 20D));
 							break;
 						}
 					}
 					break;
 				case WEST:
 					if(world.getBlockState(pos.offset(EnumFacing.WEST, 2).offset(EnumFacing.UP, 2)) == active){
-						if(MiscOp.safeHasCap(world, pos.offset(EnumFacing.EAST), Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST)){
-							savedCoord += world.getTileEntity(pos.offset(EnumFacing.EAST)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST).getMotionData()[0] / 20D;
+						TileEntity te = world.getTileEntity(pos.offset(EnumFacing.EAST));
+						if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST)){
+							savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST).getMotionData()[0] / 20D;
 						}
 					}else{
 						savedCoord = 0;

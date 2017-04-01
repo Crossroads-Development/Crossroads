@@ -10,16 +10,11 @@ import com.Da_Technomancer.crossroads.Main;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.capabilities.Capability;
 
 /**This class is for holding operations that I use often.*/
 public final class MiscOp{
@@ -122,18 +117,6 @@ public final class MiscOp{
 		Vec3d vec3d1 = ent.getLook(1F);
 		Vec3d vec3d2 = vec3d.addVector(vec3d1.xCoord * blockReachDistance, vec3d1.yCoord * blockReachDistance, vec3d1.zCoord * blockReachDistance);
 		return ent.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
-	}
-	
-	/**
-	 * @param world
-	 * @param pos
-	 * @param cap
-	 * @param side
-	 * @return Whether or not there is A) A TileEntity at pos and B) The TileEntity has Capability cap on side
-	 */
-	public static boolean safeHasCap(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Capability<?> cap, EnumFacing side){
-		TileEntity te = world.getTileEntity(pos);
-		return te != null && te.hasCapability(cap, side);
 	}
 
 	/**

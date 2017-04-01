@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
@@ -132,6 +133,11 @@ public class Prototype extends BlockContainer{
 	}
 
 	@Override
+	public boolean canPlaceBlockAt(World worldIn, BlockPos pos){
+		return ModConfig.allowPrototype.getInt() != -1 && ModConfig.allowPrototype.getInt() != 2 && super.canPlaceBlockAt(worldIn, pos);
+	}
+
+	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		if(!world.isRemote){
 			if(stack.hasTagCompound()){
@@ -149,7 +155,7 @@ public class Prototype extends BlockContainer{
 			}
 		}
 	}
-	
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		worldIn.getTileEntity(pos).onChunkUnload();

@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
@@ -109,7 +108,8 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	@Override
 	public boolean hasCapPrototype(Capability<?> cap){
 		if(active && type.getCapability() == cap){
-			return MiscOp.safeHasCap(world, pos.offset(side), cap, side.getOpposite());
+			TileEntity te = world.getTileEntity(pos.offset(side));
+			return te != null && te.hasCapability(cap, side.getOpposite());
 		}
 		return false;
 	}

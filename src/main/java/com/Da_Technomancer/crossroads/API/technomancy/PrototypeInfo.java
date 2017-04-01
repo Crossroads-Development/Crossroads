@@ -18,13 +18,13 @@ import net.minecraft.util.math.ChunkPos;
 public class PrototypeInfo{
 	
 	/**
-	 * The index of each member of this array corresponds to the index an EnumFacing.
+	 * The index of each member of this array corresponds to the index of an EnumFacing.
 	 */
 	public final PrototypePortTypes[] ports = new PrototypePortTypes[6];
 	
 	/**
-	 * The index of each member of this array corresponds to the index an EnumFacing.
-	 * Positions of the ports within the chunk.
+	 * The index of each member of this array corresponds to the index of an EnumFacing.
+	 * Positions of the ports within the chunk. (Chunk relative position).
 	 */
 	public final BlockPos[] portPos = new BlockPos[6];
 	
@@ -46,6 +46,20 @@ public class PrototypeInfo{
 			this.portPos[i] = portPos[i];
 		}
 		this.chunk = chunk;
+	}
+	
+	/**
+	 * Convenience method.
+	 * @return The total number of ports used.
+	 */
+	public int getTotalPorts(){
+		int count = 0;
+		for(int i = 0; i < 6; i++){
+			if(ports[i] != null){
+				count++;
+			}
+		}
+		return count;
 	}
 	
 	protected NBTTagCompound writeToNBT(NBTTagCompound nbt){

@@ -33,6 +33,7 @@ public class ModDimensions{
 
 	private static HashMap<GameProfileNonPicky, Integer> playerDim;
 	public static final int PROTOTYPE_DIM_ID = 27;
+	public static final int PROTOTYPE_LIMIT = 500;
 
 	public static void init(){
 		workspaceDimType = DimensionType.register(Main.MODID, "_workspace", 567, WorkspaceWorldProvider.class, false);
@@ -98,7 +99,8 @@ public class ModDimensions{
 	}
 
 	/** Sets up the next available prototype dimension chunk, reserves the chunk, and returns the index. Returns -1 if it failed.
-	 * portPos should be chunk relative when passed to this method. The method adjusts accordingly. */
+	 * portPos should be chunk relative when passed to this method. The method adjusts accordingly.
+	 */
 	@Nullable
 	public static int nextFreePrototypeChunk(PrototypePortTypes[] ports, BlockPos[] portPos){
 		// This method assumes that all chunks saved in PrototypeWorldSavedData are in the layout this would create.
@@ -120,7 +122,7 @@ public class ModDimensions{
 			return available;
 		}else{
 			int used = data.prototypes.size();
-			if(used > 500){
+			if(used > PROTOTYPE_LIMIT){
 				// Too many prototypes in existence.
 				return -1;
 			}

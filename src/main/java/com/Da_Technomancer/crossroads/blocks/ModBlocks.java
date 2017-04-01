@@ -37,6 +37,7 @@ import com.Da_Technomancer.crossroads.blocks.magic.LensHolder;
 import com.Da_Technomancer.crossroads.blocks.magic.QuartzStabilizer;
 import com.Da_Technomancer.crossroads.blocks.rotary.Axle;
 import com.Da_Technomancer.crossroads.blocks.rotary.Grindstone;
+import com.Da_Technomancer.crossroads.blocks.rotary.ItemChute;
 import com.Da_Technomancer.crossroads.blocks.rotary.ItemChutePort;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;

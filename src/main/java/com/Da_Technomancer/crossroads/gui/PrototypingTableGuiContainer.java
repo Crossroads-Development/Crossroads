@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import java.awt.Color;
 import java.io.IOException;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.gui.ButtonGuiObject;
+import com.Da_Technomancer.crossroads.API.gui.OutputLogGuiObject;
 import com.Da_Technomancer.crossroads.API.gui.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.gui.container.PrototypingTableContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
@@ -23,6 +23,7 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 	
 	private TextBarGuiObject textBar;
 	private ButtonGuiObject button;
+	private OutputLogGuiObject log;
 
 	public PrototypingTableGuiContainer(IInventory playerInv, PrototypingTableTileEntity te){
 		super(new PrototypingTableContainer(playerInv, te));
@@ -36,9 +37,9 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 	@Override
 	public void initGui(){
 		super.initGui();
-		
 		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 98, 120, 25, "Name", (Character key) -> Character.isAlphabetic(key) || Character.isDigit(key) || key == ' ');
 		button = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 76, 70, "Prototype");
+		log = new OutputLogGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 5, 160, 3, 35);
 	}
 
 	@Override
@@ -52,25 +53,17 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 		
 		textBar.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
 		button.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
+		log.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		fontRendererObj.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 120, 4210752);
 		
-		//Name
 		textBar.drawFore(mouseX, mouseY, fontRendererObj);
-		
-		//Log
-		drawString(fontRendererObj, log[0], 10, 10, Color.WHITE.getRGB());
-		drawString(fontRendererObj, log[1], 10, 25, Color.WHITE.getRGB());
-		drawString(fontRendererObj, log[2], 10, 40, Color.WHITE.getRGB());
-		
-		//Prototype Button
+		log.drawFore(mouseX, mouseY, fontRendererObj);
 		button.drawFore(mouseX, mouseY, fontRendererObj);
 	}
-	
-	private String[] log = new String[] {"TEST 1", "TEST 2", "TEST 3"};//TODO Log management
 
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException {
@@ -79,7 +72,7 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 			return;
 		}
 		
-		if(this.button.mouseClicked(x, y, button)){
+		if(this.button.mouseClicked(x, y, button) && inventorySlots.getSlot(0).getHasStack() && !inventorySlots.getSlot(2).getHasStack()){
 			//TODO the actual main purpose of this machine
 		}
 	}
@@ -89,5 +82,9 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 		if(!textBar.buttonPress(key)){
 			super.keyTyped(key, keyCode);
 		}
+	}
+	
+	public OutputLogGuiObject getLog(){
+		return log;
 	}
 }

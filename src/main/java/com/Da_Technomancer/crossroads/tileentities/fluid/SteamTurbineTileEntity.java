@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
@@ -45,8 +44,9 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 	}
 
 	private IAxleHandler getGear(){
-		if(MiscOp.safeHasCap(world, pos.offset(EnumFacing.UP), Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			return world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
+		TileEntity te = world.getTileEntity(pos.offset(EnumFacing.UP));
+		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			return te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
 		}
 		return null;
 	}

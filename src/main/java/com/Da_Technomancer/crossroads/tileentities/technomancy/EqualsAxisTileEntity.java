@@ -43,8 +43,10 @@ public class EqualsAxisTileEntity extends TileEntity implements ITickable{
 	}
 	
 	private void runCalc(){
-		double speedCounterClock = MiscOp.safeHasCap(worldObj, pos.offset(facing.rotateYCCW()), Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateY()) ? worldObj.getTileEntity(pos.offset(facing.rotateYCCW())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateY()).getMotionData()[0] : 0;
-		double speedClock = MiscOp.safeHasCap(worldObj, pos.offset(facing.rotateY()), Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateYCCW()) ? worldObj.getTileEntity(pos.offset(facing.rotateY())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateYCCW()).getMotionData()[0] : 0;
+		TileEntity teCounter = worldObj.getTileEntity(pos.offset(facing.rotateYCCW()));
+		double speedCounterClock = teCounter != null && teCounter.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateY()) ? teCounter.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateY()).getMotionData()[0] : 0;
+		TileEntity teClock = worldObj.getTileEntity(pos.offset(facing.rotateY()));
+		double speedClock = teClock != null && teClock.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateYCCW()) ? teClock.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateYCCW()).getMotionData()[0] : 0;
 		double margin = .01D;
 		double baseSpeed = speedCounterClock > speedClock - margin && speedCounterClock < speedClock + margin ? speedClock : 0;
 		
