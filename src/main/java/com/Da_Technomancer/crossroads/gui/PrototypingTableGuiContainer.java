@@ -4,8 +4,11 @@ import java.io.IOException;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.gui.ButtonGuiObject;
+import com.Da_Technomancer.crossroads.API.gui.ILogUser;
 import com.Da_Technomancer.crossroads.API.gui.OutputLogGuiObject;
 import com.Da_Technomancer.crossroads.API.gui.TextBarGuiObject;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendStringToServer;
 import com.Da_Technomancer.crossroads.gui.container.PrototypingTableContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 
@@ -14,7 +17,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
-public class PrototypingTableGuiContainer extends GuiContainer{
+public class PrototypingTableGuiContainer extends GuiContainer implements ILogUser{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID, "textures/gui/container/prototype_table_gui.png");
 	
@@ -39,7 +42,7 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 		super.initGui();
 		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 98, 120, 25, "Name", (Character key) -> Character.isAlphabetic(key) || Character.isDigit(key) || key == ' ');
 		button = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 76, 70, "Prototype");
-		log = new OutputLogGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 5, 160, 3, 35);
+		log = new OutputLogGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 5, 160, 3, 60);
 	}
 
 	@Override
@@ -73,7 +76,11 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 		}
 		
 		if(this.button.mouseClicked(x, y, button) && inventorySlots.getSlot(0).getHasStack() && !inventorySlots.getSlot(2).getHasStack()){
-			//TODO the actual main purpose of this machine
+			if(!textBar.getText().isEmpty()){
+				ModPackets.network.sendToServer(new SendStringToServer("create", textBar.getText(), te.getPos(), te.getWorld().provider.getDimension()));
+			}else{
+				log.addText("Name required.", null);
+			}
 		}
 	}
 
@@ -84,7 +91,7 @@ public class PrototypingTableGuiContainer extends GuiContainer{
 		}
 	}
 	
-	public OutputLogGuiObject getLog(){
-		return log;
+	public OutputLogGuiObject getLog(String name){
+		return name.equals("prototypeCreate") ? log : null;
 	}
 }

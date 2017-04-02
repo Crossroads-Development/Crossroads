@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -71,7 +72,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	}
 
 	@Override
-	public void receiveInt(String context, int message){
+	public void receiveInt(String context, int message, EntityPlayerMP player){
 		switch(context){
 			case "prog":
 				progress = message;

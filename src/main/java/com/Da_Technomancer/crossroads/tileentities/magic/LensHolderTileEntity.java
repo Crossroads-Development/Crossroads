@@ -23,6 +23,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -102,7 +103,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	private BeamManager beamerUp;
 
 	@Override
-	public void receiveInt(String context, int message){
+	public void receiveInt(String context, int message, EntityPlayerMP player){
 		if(context.equals("beam")){
 			trip = BeamManager.getTriple(message);
 		}else if(context.equals("beamUp")){

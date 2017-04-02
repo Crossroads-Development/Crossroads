@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
+import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.client.bakedModel.PrototypeBakedModel;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
@@ -28,7 +28,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -85,12 +84,9 @@ public class Prototype extends BlockContainer{
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		Integer[] sides = new Integer[6];
-		PrototypeInfo info = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes.get(((PrototypeTileEntity) world.getTileEntity(pos)).getIndex());
-		if(info == null){
-			return extendedBlockState;
-		}
+		PrototypePortTypes[] ports = ((PrototypeTileEntity) world.getTileEntity(pos)).getTypes();
 		for(int i = 0; i < 6; i++){
-			sides[i] = info.ports[i] == null ? null : info.ports[i].ordinal();
+			sides[i] = ports[i] == null ? null : ports[i].ordinal();
 		}
 		extendedBlockState = extendedBlockState.withProperty(Properties.PORT_TYPE, sides);
 
@@ -102,18 +98,6 @@ public class Prototype extends BlockContainer{
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
 		if(stack.hasTagCompound()){
 			tooltip.add("Name: " + stack.getTagCompound().getString("name"));
-			ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
-			int index = stack.getTagCompound().getInteger("index");
-			if(infoList.size() < index + 1){
-				return;
-			}
-			PrototypeInfo info = infoList.get(index);
-			if(info == null){
-				return;
-			}
-			for(EnumFacing side : EnumFacing.values()){
-				tooltip.add(side.toString() + ": " + (info.ports[side.getIndex()] == null ? "NONE" : info.ports[side.getIndex()].toString()));
-			}
 		}
 	}
 

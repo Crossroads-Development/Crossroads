@@ -97,6 +97,9 @@ public class TextBarGuiObject implements IGuiObject{
 		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 2, 20, 300, 20);
 		Gui.drawModalRectWithCustomSizedTexture(x + 2, y, 2, 0, endX - x - 4, 20, 300, 20);
 		Gui.drawModalRectWithCustomSizedTexture(endX - 2, y, 298, 0, 2, 20, 300, 20);
+		if(selected){
+			GlStateManager.color(1, 1, 1);
+		}
 		return true;
 	}
 

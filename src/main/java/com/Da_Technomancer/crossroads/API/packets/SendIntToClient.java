@@ -49,7 +49,7 @@ public class SendIntToClient extends Message<SendIntToClient>{
 		TileEntity te = worldClient.getTileEntity(pos);
 
 		if(te instanceof IIntReceiver){
-			((IIntReceiver) te).receiveInt(context, message);
+			((IIntReceiver) te).receiveInt(context, message, null);
 		}
 	}
 }

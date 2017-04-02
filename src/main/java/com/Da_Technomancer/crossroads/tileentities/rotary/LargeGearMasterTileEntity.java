@@ -17,14 +17,15 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -177,7 +178,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	}
 
 	@Override
-	public void receiveString(String context, String message){
+	public void receiveString(String context, String message, EntityPlayerMP player){
 		if(context.equals("memb")){
 			type = message.equals("") ? null : GearTypes.valueOf(message);
 		}

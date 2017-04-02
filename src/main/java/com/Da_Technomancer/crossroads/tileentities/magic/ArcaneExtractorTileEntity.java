@@ -17,6 +17,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -84,7 +85,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	private BeamManager beamer;
 	
 	@Override
-	public void receiveInt(String context, int message){
+	public void receiveInt(String context, int message, EntityPlayerMP player){
 		if(context.equals("beam")){
 			visual = BeamManager.getTriple(message);
 		}

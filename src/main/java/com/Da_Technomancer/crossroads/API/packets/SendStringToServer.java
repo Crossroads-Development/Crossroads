@@ -10,18 +10,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 @SuppressWarnings("serial")
-public class SendIntToServer extends Message<SendIntToServer>{
+public class SendStringToServer extends Message<SendStringToServer>{
 
-	public SendIntToServer(){
+	public SendStringToServer(){
 		
 	}
 
 	public String sContext;
-	public int message;
+	public String message;
 	public BlockPos pos;
 	public int dim;
 	
-	public SendIntToServer(String context, int message, BlockPos pos, int dim){
+	public SendStringToServer(String context, String message, BlockPos pos, int dim){
 		this.sContext = context;
 		this.message = message;
 		this.pos = pos;
@@ -45,11 +45,11 @@ public class SendIntToServer extends Message<SendIntToServer>{
 		return null;
 	}
 
-	public void processMessage(World world, String context, int message, BlockPos pos, EntityPlayerMP sendingPlayer){
+	public void processMessage(World world, String context, String message, BlockPos pos, EntityPlayerMP sendingPlayer){
 		TileEntity te = world.getTileEntity(pos);
 
-		if(te instanceof IIntReceiver){
-			((IIntReceiver) te).receiveInt(context, message, sendingPlayer);
+		if(te instanceof IStringReceiver){
+			((IStringReceiver) te).receiveString(context, message, sendingPlayer);
 		}
 	}
 }

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
@@ -14,14 +15,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 
 	private int index = -1;
-	public String name;
+	public String name = "";
+	//For client side use only.
+	private PrototypePortTypes[] ports = new PrototypePortTypes[6];
 	
 	public void setIndex(int index){
 		this.index = index;
@@ -48,6 +54,11 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 		}
 	}
 	
+	@SideOnly(Side.CLIENT)
+	public PrototypePortTypes[] getTypes(){
+		return ports;
+	}
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -56,6 +67,11 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 		return nbt;
 	}
 
+	@Override
+	public void setWorldCreate(World worldIn){
+		setWorld(worldIn);
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -67,7 +83,27 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 				//In this case, the prototype info is missing and this should self-destruct.
 				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			}
+		}else{
+			for(int i = 0; i < 6; i++){
+				if(nbt.hasKey("port" + i)){
+					ports[i] = PrototypePortTypes.valueOf(nbt.getString("port" + i));
+				}
+			}
 		}
+	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		if(index != -1){
+			PrototypePortTypes[] ports = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes.get(index).ports;
+			for(int i = 0; i < 6; i++){
+				if(ports[i] != null){
+					nbt.setString("port" + i, ports[i].name());
+				}
+			}
+		}
+		return nbt;
 	}
 
 	@Override

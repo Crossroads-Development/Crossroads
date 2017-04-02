@@ -29,5 +29,7 @@ public class ModPackets{
 		network.registerMessage(SendDimLoadToClient.class, SendDimLoadToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendDoubleToServer.class, SendDoubleToServer.class, packetId++, Side.SERVER);
 		network.registerMessage(SendIntToServer.class, SendIntToServer.class, packetId++, Side.SERVER);
+		network.registerMessage(SendLogToClient.class, SendLogToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendStringToServer.class, SendStringToServer.class, packetId++, Side.SERVER);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -36,7 +37,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	 */
 	@Nullable
 	public static PrototypeWorldSavedData get(World world){
-		if(world == null || world.provider.getDimension() != 27){
+		if(world == null || world.provider.getDimension() != ModDimensions.PROTOTYPE_DIM_ID){
 			return null;
 		}
 		MapStorage storage = world.getPerWorldStorage();
@@ -45,7 +46,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 		if (data == null) {
 			data = new PrototypeWorldSavedData();
 			storage.setData(PROTOTYPE_ID, data);
-			data.setDirty(true);
+			data.markDirty();
 		}
 		return data;
 	}

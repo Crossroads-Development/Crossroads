@@ -1,18 +1,27 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
+import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendLogToClient;
+import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -20,7 +29,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -31,75 +39,43 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class PrototypingTableTileEntity extends AbstractInventory implements ITickable{
-	
+public class PrototypingTableTileEntity extends AbstractInventory implements IStringReceiver{
+
 	private ItemStack copshowium = ItemStack.EMPTY;
 	private ItemStack template = ItemStack.EMPTY;
 	private ItemStack output = ItemStack.EMPTY;
 
-	@Override
-	public void update(){
-		if(world.isRemote){
-			return;
-		}
+	/** 
+	 * @return Pair<PrototypePortTypes[], BlockPos[]> representing ports if it passed, BlockPos if it failed with the actual pos of what it failed on.
+	 * 
+	 * If multiple ports have the same side set, it passes with the last one taking precedence.
+	 */
+	private static Object regionValid(World fromWorld, BlockPos startPos, int lengthX, int lengthY, int lengthZ){
+		List<String> blackList = Arrays.asList(ModConfig.blockedPrototype.getStringList());
+		PrototypePortTypes[] ports = new PrototypePortTypes[6];
+		BlockPos[] portPos = new BlockPos[6];
 
-		if(!template.isEmpty() && !copshowium.isEmpty() && template.getItem() instanceof ItemBlock && ((ItemBlock) template.getItem()).getBlock() == ModBlocks.prototype && output.isEmpty() && Math.abs(ModConfig.allowPrototype.getInt()) != 1){
-			WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-			ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(dimWorld).prototypes;
-			int index = template.getTagCompound().getInteger("index");
-			if(infoList.size() < index + 1){
-				template = ItemStack.EMPTY;
-				markDirty();
-				return;
-			}
-			PrototypeInfo info = infoList.get(index);
-			if(info == null){
-				template = ItemStack.EMPTY;
-				markDirty();
-				return;
-			}
-			int cost = 3 + info.getTotalPorts();
-			if(cost < copshowium.getCount()){
-				return;
-			}
-			//Even though regionValid should return true as the original already passed to be created, it should be checked again as the config may change.
-			if(!regionValid(dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16)){
-				template = ItemStack.EMPTY;
-				markDirty();
-				return;
-			}
-			int newChunk = ModDimensions.nextFreePrototypeChunk(info.ports, info.portPos);
-			if(newChunk != -1){
-				copshowium.shrink(cost);
-				ChunkPos chunkPos = infoList.get(newChunk).chunk;
-				if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16)){
-					infoList.set(newChunk, null);
-					//Copshowium is still used even if it fails, because presumably it will fail again each time and this stops this from happening every tick for eternity (probably).
-					return;
-				}
-				
-				output = template.copy();
-				output.getTagCompound().setInteger("index", newChunk);
-				markDirty();
-			}
-		}
-	}
-
-	private static boolean regionValid(World fromWorld, BlockPos startPos, int lengthX, int lengthY, int lengthZ){
-		ArrayList<String> blackList = (ArrayList<String>) Arrays.asList(ModConfig.blockedPrototype.getStringList());
 		for(int x = startPos.getX(); x < startPos.getX() + lengthX; x++){
 			for(int z = startPos.getZ(); z < startPos.getZ() + lengthZ; z++){
 				for(int y = startPos.getY(); y < lengthY + startPos.getY(); y++){
 					BlockPos pos = new BlockPos(x, y, z);
 					if(blackList.contains(fromWorld.getBlockState(pos).getBlock().getRegistryName().toString())){
-						return false;
+						return pos;
+					}else{
+						TileEntity teCheck = fromWorld.getTileEntity(pos);
+						if(teCheck instanceof IPrototypePort){
+							IPrototypePort port = (IPrototypePort) teCheck;
+							int facing = port.getSide().getIndex();
+							ports[facing] = port.getType();
+							portPos[facing] = new BlockPos(x - startPos.getX(), 16 + y - startPos.getY(), z - startPos.getZ());
+						}
 					}
 				}
 			}
 		}
-		return true;
+		return Pair.of(ports, portPos);
 	}
-	
+
 	/**
 	 * @return true if something went wrong (an exception was caught). In this case, the caller should cancel the operation.
 	 */
@@ -134,6 +110,131 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ITi
 		copyTo.setModified(true);
 		copyTo.checkLight();
 		return false;
+	}
+
+	@Override
+	public void receiveString(String context, String message, EntityPlayerMP player){
+		if(context.equals("create") && message != null){
+			if(!copshowium.isEmpty() && output.isEmpty() && ModConfig.allowPrototype.getInt() != -1){
+				if(!template.isEmpty()){
+					if(template.getItem() instanceof ItemBlock && ((ItemBlock) template.getItem()).getBlock() == ModBlocks.prototype && ModConfig.allowPrototype.getInt() != 1){
+						WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+						ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(dimWorld).prototypes;
+						int index = template.getTagCompound().getInteger("index");
+						if(infoList.size() < index + 1){
+							template = ItemStack.EMPTY;
+							markDirty();
+							if(player != null){
+								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID/BUGGED TEMPLATE! Removing.", Color.RED, false), player);
+							}
+							return;
+						}
+						PrototypeInfo info = infoList.get(index);
+						if(info == null){
+							template = ItemStack.EMPTY;
+							markDirty();
+							if(player != null){
+								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID/BUGGED TEMPLATE! Removing.", Color.RED, false), player);
+							}
+							return;
+						}
+						int cost = 3 + info.getTotalPorts();
+						if(cost < copshowium.getCount()){
+							if(player != null){
+								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Insufficient copshowium.", Color.YELLOW, false), player);
+							}
+							return;
+						}
+						//Even though regionValid should pass as the original already passed to be created, it should be checked again as the config may change.
+						if(regionValid(dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16) instanceof BlockPos){
+							infoList.set(index, null);
+							PrototypeWorldSavedData.get(dimWorld).markDirty();
+							template = ItemStack.EMPTY;
+							markDirty();
+							if(player != null){
+								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID TEMPLATE! Blame config changes. Removing.", Color.RED, false), player);
+							}
+							return;
+						}
+						int newChunk = ModDimensions.nextFreePrototypeChunk(info.ports, info.portPos);
+						if(newChunk != -1){
+							ChunkPos chunkPos = infoList.get(newChunk).chunk;
+							if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16)){
+								infoList.set(newChunk, null);
+								PrototypeWorldSavedData.get(dimWorld).markDirty();
+								if(player != null){
+									ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR WHILE COPYING! View logs for more info.", Color.RED, false), player);
+								}
+								return;
+							}
+							copshowium.shrink(cost);
+							output = template.copy();
+							output.getTagCompound().setInteger("index", newChunk);
+							output.getTagCompound().setString("name", message);
+							markDirty();
+							if(player != null){
+								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype copied." , Color.WHITE, false), player);
+							}
+						}else{
+							if(player != null){
+								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
+							}
+						}
+					}else{
+						return;
+					}
+				}else{
+					Object validityCheck = regionValid(world, pos.add(1, 1, 1), 16, 16, 16);
+					if(validityCheck instanceof BlockPos){
+						if(player != null){
+							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Blacklisted block at pos " + validityCheck.toString() + ".", Color.YELLOW, false), player);
+						}
+						return;
+					}
+					@SuppressWarnings("unchecked")
+					Pair<PrototypePortTypes[], BlockPos[]> portInfo = (Pair<PrototypePortTypes[], BlockPos[]>) validityCheck;
+					int cost = 3;
+					for(PrototypePortTypes type : portInfo.getLeft()){
+						if(type != null){
+							cost++;
+						}
+					}
+					if(cost > copshowium.getCount()){
+						if(player != null){
+							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Insufficient copshowium.", Color.YELLOW, false), player);
+						}
+						return;
+					}
+					WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+					ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(dimWorld).prototypes;
+					int newChunk = ModDimensions.nextFreePrototypeChunk(portInfo.getLeft(), portInfo.getRight());
+					if(newChunk != -1){
+						ChunkPos chunkPos = infoList.get(newChunk).chunk;
+						if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), world, pos.add(1, 1, 1), 16, 16, 16)){
+							infoList.set(newChunk, null);
+							PrototypeWorldSavedData.get(dimWorld).markDirty();
+							if(player != null){
+								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR WHILE COPYING! View server logs for more info.", Color.RED, false), player);
+							}
+							return;
+						}
+						copshowium.shrink(cost);
+						output = new ItemStack(ModBlocks.prototype, 1);
+						output.setTagCompound(new NBTTagCompound());
+						output.getTagCompound().setInteger("index", newChunk);
+						output.getTagCompound().setString("name", message);
+						markDirty();
+						if(player != null){
+							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype created." , Color.WHITE, false), player);
+						}
+					}else{
+						if(player != null){
+							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -270,22 +371,27 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ITi
 				markDirty();
 				return;
 			}
-			ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
-			if(infoList.size() <= ind){
-				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + 3, 64));
-				markDirty();
-				return;
-			}
-			int out = 3;
-			PrototypePortTypes[] types = infoList.get(ind).ports;
-			for(int i = 0; i < 6; i++){
-				if(types[i] != null){
-					out++;
+			if(!world.isRemote){
+				ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
+				if(infoList.size() <= ind){
+					copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + 3, 64));
+					markDirty();
+					return;
 				}
+				int out = 3;
+				PrototypePortTypes[] types = infoList.get(ind).ports;
+				for(int i = 0; i < 6; i++){
+					if(types[i] != null){
+						out++;
+					}
+				}
+				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + out, 64));
+				infoList.set(ind, null);
+				PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).markDirty();
+				markDirty();
+			}else{
+				markDirty();
 			}
-			copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + out, 64));
-			infoList.set(ind, null);
-			markDirty();
 		}
 	}
 

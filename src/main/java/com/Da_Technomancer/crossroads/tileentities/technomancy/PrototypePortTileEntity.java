@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -50,6 +51,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
 	}
 
+	@Override
 	public PrototypePortTypes getType(){
 		return type;
 	}
@@ -58,6 +60,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		this.type = type;
 	}
 
+	@Override
 	public EnumFacing getSide(){
 		return side;
 	}
@@ -75,7 +78,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	}
 
 	@Override
-	public void receiveInt(String context, int message){
+	public void receiveInt(String context, int message, EntityPlayerMP player){
 		if(context.equals("side_type")){
 			side = EnumFacing.getFront(message & 7);
 			type = PrototypePortTypes.values()[message >> 3];

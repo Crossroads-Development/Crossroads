@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 
 public class ButtonGuiObject implements IGuiObject{
@@ -54,6 +55,7 @@ public class ButtonGuiObject implements IGuiObject{
 	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
 		Gui.drawRect(x, y, endX, endY, mouseX >= x && mouseX <= endX && mouseY >= y && mouseY <= endY ? Color.DARK_GRAY.getRGB() : Color.GRAY.getRGB());
+		GlStateManager.color(1, 1, 1);
 		return true;
 	}
 

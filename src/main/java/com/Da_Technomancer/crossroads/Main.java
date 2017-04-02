@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
@@ -14,6 +15,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 
 import net.minecraft.item.Item;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -23,6 +25,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
 @Mod(modid = Main.MODID, name = Main.MODNAME, version = Main.VERSION, dependencies = "required-after:forge; before:guideapi; after:jei", useMetadata = true)
 public final class Main{
@@ -736,5 +739,10 @@ public final class Main{
 	@Mod.EventHandler
 	public void serverStarted(FMLServerStartedEvent e){
 		ModDimensions.loadDims();
+	}
+	
+	@Mod.EventHandler
+	public void serverEnded(FMLServerStoppingEvent e){
+		ForgeChunkManager.releaseTicket(PrototypeWorldSavedData.loadingTicket);
 	}
 }

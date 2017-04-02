@@ -11,10 +11,11 @@ import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 //import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
@@ -169,7 +170,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public void receiveString(String context, String message){
+	public void receiveString(String context, String message, EntityPlayerMP player){
 		if(context.contains("memb")){
 			switch(context){
 				case "memb0":{

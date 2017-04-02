@@ -18,6 +18,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -104,7 +105,7 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	}
 
 	@Override
-	public void receiveInt(String context, int message){
+	public void receiveInt(String context, int message, EntityPlayerMP player){
 		switch(context){
 			case "beamR":
 				tripR = BeamManager.getTriple(message);

@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 
 public class ToggleButtonGuiObject implements IGuiObject{
@@ -57,6 +58,7 @@ public class ToggleButtonGuiObject implements IGuiObject{
 	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
 		Gui.drawRect(x, y, endX, endY, depressed ? Color.DARK_GRAY.getRGB() : Color.GRAY.getRGB());
+		GlStateManager.color(1, 1, 1);
 		return true;
 	}
 

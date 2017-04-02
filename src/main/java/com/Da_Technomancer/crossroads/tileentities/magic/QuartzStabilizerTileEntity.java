@@ -18,6 +18,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.magic.QuartzStabilizer;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -107,7 +108,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	private BeamManager beamer;
 
 	@Override
-	public void receiveInt(String context, int message){
+	public void receiveInt(String context, int message, EntityPlayerMP player){
 		if(context.equals("beam")){
 			trip = BeamManager.getTriple(message);
 		}

@@ -17,6 +17,7 @@ import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -98,7 +99,7 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 	}
 
 	@Override
-	public void receiveInt(String context, int message){
+	public void receiveInt(String context, int message, EntityPlayerMP player){
 		if(context.equals("beam")){
 			trip = BeamManager.getTriple(message);
 		}else if(context.equals("beamUp")){

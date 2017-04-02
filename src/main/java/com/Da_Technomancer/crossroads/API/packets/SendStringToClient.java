@@ -46,7 +46,7 @@ public class SendStringToClient extends Message<SendStringToClient>{
 		TileEntity te = worldClient.getTileEntity(pos);
 
 		if(te instanceof IStringReceiver){
-			((IStringReceiver) te).receiveString(context, message);
+			((IStringReceiver) te).receiveString(context, message, null);
 		}
 	}
 }

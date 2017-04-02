@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.Main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class OutputLogGuiObject implements IGuiObject{
@@ -62,11 +63,11 @@ public class OutputLogGuiObject implements IGuiObject{
 	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
 		Minecraft.getMinecraft().getTextureManager().bindTexture(BAR);
-		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 2, endY, 300, 20);//left side (top to bottom)
-		Gui.drawModalRectWithCustomSizedTexture(x + 2, y + 2, 2, 2, endX - x - 4, endY - y - 4, 300, 20);//middle
-		Gui.drawModalRectWithCustomSizedTexture(endX - 2, y, 298, 0, 2, endY, 300, 20);//right side (top to bottom)
-		Gui.drawModalRectWithCustomSizedTexture(x + 2, y, 2, 0, endX - x - 4, 2, 300, 20);//top (offset left to offset right)
-		Gui.drawModalRectWithCustomSizedTexture(x + 2, endY - 2, 2, 18, endX - x - 4, endY, 300, 20);//bottom (offset left to offset right)
+		Gui.drawScaledCustomSizeModalRect(x, y, 0, 0, 300, 2, 2, endY - y, 300, 20);//left side (top to bottom)
+		Gui.drawScaledCustomSizeModalRect(x + 2, y + 2, 2, 2, 296, 16, endX - x - 4, endY - y - 4, 300, 20);//middle
+		Gui.drawScaledCustomSizeModalRect(endX - 2, y, 298, 0, 2, 20, 2, endY - y, 300, 20);//right side (top to bottom)
+		Gui.drawScaledCustomSizeModalRect(x + 2, y, 2, 0, 296, 2, endX - x - 4, 2, 300, 20);//top (offset left to offset right)
+		Gui.drawScaledCustomSizeModalRect(x + 2, endY - 2, 2, 18, 296, 2, endX - x - 4, 2, 300, 20);//bottom (offset left to offset right)
 		return true;
 	}
 
@@ -75,9 +76,11 @@ public class OutputLogGuiObject implements IGuiObject{
 		if(text.isEmpty()){
 			return false;
 		}
+		//TODO smaller text
 		for(int i = 0; i < text.size(); i++){
 			fontRenderer.drawStringWithShadow(text.get(i).getLeft(), 5 + baseX, 6 + baseY + (20 * i), text.get(i).getRight().getRGB());
 		}
+		GlStateManager.color(1, 1, 1);
 		return true;
 	}
 	
