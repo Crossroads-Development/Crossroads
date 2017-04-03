@@ -108,7 +108,7 @@ public class ModDimensions{
 		// The grid created starts at (-100, -100) and goes to (100, -80).
 
 		WorldServer worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
-		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(worldDim);
+		PrototypeWorldSavedData data = PrototypeWorldSavedData.get();
 
 		if(data.prototypes.contains(null)){
 			// Recycles deleted prototypes if possible.

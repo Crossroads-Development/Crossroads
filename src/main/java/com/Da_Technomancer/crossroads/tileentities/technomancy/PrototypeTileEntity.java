@@ -41,7 +41,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	@Override
 	public void onLoad(){
 		if(!world.isRemote && index != -1){
-			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
+			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get().prototypes;
 			info.get(index).owner = new WeakReference<IPrototypeOwner>(this);
 		}
 	}
@@ -49,7 +49,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	@Override
 	public void onChunkUnload(){
 		if(!world.isRemote && index != -1){
-			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
+			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get().prototypes;
 			info.get(index).owner = null;
 		}
 	}
@@ -78,7 +78,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 		if(!world.isRemote){
 			index = nbt.getInteger("index");
 			name = nbt.getString("name");
-			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
+			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get().prototypes;
 			if(info.size() < index + 1 || info.get(index) == null){
 				//In this case, the prototype info is missing and this should self-destruct.
 				world.setBlockState(pos, Blocks.AIR.getDefaultState());
@@ -96,7 +96,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
 		if(index != -1){
-			PrototypePortTypes[] ports = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes.get(index).ports;
+			PrototypePortTypes[] ports = PrototypeWorldSavedData.get().prototypes.get(index).ports;
 			for(int i = 0; i < 6; i++){
 				if(ports[i] != null){
 					nbt.setString("port" + i, ports[i].name());
@@ -110,7 +110,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(side != null){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-			PrototypeInfo info = PrototypeWorldSavedData.get(worldDim).prototypes.get(index);
+			PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
 			if(info != null && info.ports[side.getIndex()] != null && info.ports[side.getIndex()].getCapability() == cap && info.ports[side.getIndex()].exposeExternal()){
 				BlockPos relPos = info.portPos[side.getIndex()];
 				IPrototypePort port = (IPrototypePort) worldDim.getTileEntity(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ()));
@@ -124,7 +124,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(side != null){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-			PrototypeInfo info = PrototypeWorldSavedData.get(worldDim).prototypes.get(index);
+			PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
 			if(info != null && info.ports[side.getIndex()] != null && info.ports[side.getIndex()].getCapability() == cap && info.ports[side.getIndex()].exposeExternal()){
 				BlockPos relPos = info.portPos[side.getIndex()];
 				IPrototypePort port = (IPrototypePort) worldDim.getTileEntity(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ()));

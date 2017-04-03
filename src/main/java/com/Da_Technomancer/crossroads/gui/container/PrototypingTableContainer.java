@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -49,7 +50,7 @@ public class PrototypingTableContainer extends Container{
 				return stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() == ModBlocks.prototype;
 			}
 		});
-		
+
 		// Player Inventory, Slots 9-35, Slot IDs 3-30
 		for(int y = 0; y < 3; ++y){
 			for(int x = 0; x < 9; ++x){
@@ -100,5 +101,12 @@ public class PrototypingTableContainer extends Container{
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn){
 		return te.isUsableByPlayer(playerIn);
+	}
+
+	@Override
+	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player){
+		ItemStack out = super.slotClick(slotId, dragType, clickTypeIn, player);
+		detectAndSendChanges();
+		return out;
 	}
 }

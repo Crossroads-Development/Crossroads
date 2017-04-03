@@ -64,7 +64,7 @@ public final class EventHandlerCommon{
 			for(ChunkPos chunk : PrototypeWorldSavedData.loadingTicket.getChunkList()){
 				ForgeChunkManager.unforceChunk(PrototypeWorldSavedData.loadingTicket, chunk);
 			}
-			for(PrototypeInfo info : PrototypeWorldSavedData.get(e.world).prototypes){
+			for(PrototypeInfo info : PrototypeWorldSavedData.get().prototypes){
 				if(info != null && info.owner != null && info.owner.get() != null){
 					ForgeChunkManager.forceChunk(PrototypeWorldSavedData.loadingTicket, info.chunk);
 				}

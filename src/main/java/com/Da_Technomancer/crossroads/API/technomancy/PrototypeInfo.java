@@ -29,7 +29,7 @@ public class PrototypeInfo{
 	public final BlockPos[] portPos = new BlockPos[6];
 	
 	/**
-	 * The prototype dimension chunk should only be force loaded if this is A: Not null, and B: Does not contain null. TODO force loading
+	 * The prototype dimension chunk should only be force loaded if this is A: Not null, and B: Does not contain null.
 	 */
 	@Nullable
 	public WeakReference<IPrototypeOwner> owner;

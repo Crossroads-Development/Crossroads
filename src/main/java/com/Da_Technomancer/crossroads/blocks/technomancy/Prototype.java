@@ -8,7 +8,6 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.client.bakedModel.PrototypeBakedModel;
-import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypeTileEntity;
 
 import net.minecraft.block.BlockContainer;
@@ -32,7 +31,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
@@ -126,7 +124,7 @@ public class Prototype extends BlockContainer{
 		if(!world.isRemote){
 			if(stack.hasTagCompound()){
 				PrototypeTileEntity te = (PrototypeTileEntity) world.getTileEntity(pos);
-				if(PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes.size() > stack.getTagCompound().getInteger("index")){
+				if(PrototypeWorldSavedData.get().prototypes.size() > stack.getTagCompound().getInteger("index")){
 					te.setIndex(stack.getTagCompound().getInteger("index"));
 					te.name = stack.getTagCompound().getString("name");
 					//onLoad is normally called before onBlockPlacedBy, AKA before the index is set. It gets called again here so it can run with the index.

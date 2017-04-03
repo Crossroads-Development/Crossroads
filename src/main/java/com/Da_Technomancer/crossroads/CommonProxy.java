@@ -50,7 +50,6 @@ public class CommonProxy{
 		if(ModConfig.retrogen.getString().isEmpty()){
 			GameRegistry.registerWorldGenerator(WORLD_GEN, 0);
 		}
-		
 		ModIntegration.init();
 
 		ModConfig.config.save();

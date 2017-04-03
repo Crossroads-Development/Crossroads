@@ -119,7 +119,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 				if(!template.isEmpty()){
 					if(template.getItem() instanceof ItemBlock && ((ItemBlock) template.getItem()).getBlock() == ModBlocks.prototype && ModConfig.allowPrototype.getInt() != 1){
 						WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-						ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(dimWorld).prototypes;
+						ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get().prototypes;
 						int index = template.getTagCompound().getInteger("index");
 						if(infoList.size() < index + 1){
 							template = ItemStack.EMPTY;
@@ -148,7 +148,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 						//Even though regionValid should pass as the original already passed to be created, it should be checked again as the config may change.
 						if(regionValid(dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16) instanceof BlockPos){
 							infoList.set(index, null);
-							PrototypeWorldSavedData.get(dimWorld).markDirty();
+							PrototypeWorldSavedData.get().markDirty();
 							template = ItemStack.EMPTY;
 							markDirty();
 							if(player != null){
@@ -161,7 +161,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 							ChunkPos chunkPos = infoList.get(newChunk).chunk;
 							if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16)){
 								infoList.set(newChunk, null);
-								PrototypeWorldSavedData.get(dimWorld).markDirty();
+								PrototypeWorldSavedData.get().markDirty();
 								if(player != null){
 									ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR WHILE COPYING! View logs for more info.", Color.RED, false), player);
 								}
@@ -206,13 +206,13 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 						return;
 					}
 					WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-					ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(dimWorld).prototypes;
+					ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get().prototypes;
 					int newChunk = ModDimensions.nextFreePrototypeChunk(portInfo.getLeft(), portInfo.getRight());
 					if(newChunk != -1){
 						ChunkPos chunkPos = infoList.get(newChunk).chunk;
 						if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), world, pos.add(1, 1, 1), 16, 16, 16)){
 							infoList.set(newChunk, null);
-							PrototypeWorldSavedData.get(dimWorld).markDirty();
+							PrototypeWorldSavedData.get().markDirty();
 							if(player != null){
 								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR WHILE COPYING! View server logs for more info.", Color.RED, false), player);
 							}
@@ -365,17 +365,16 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 			output = stack;
 			markDirty();
 		}else if(index == 3 && stack.getItem() == Item.getItemFromBlock(ModBlocks.prototype)){
+			markDirty();
 			int ind = stack.getTagCompound().hasKey("index") ? stack.getTagCompound().getInteger("index") : -1;
 			if(ind == -1){
 				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + 3, 64));
-				markDirty();
 				return;
 			}
 			if(!world.isRemote){
-				ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).prototypes;
-				if(infoList.size() <= ind){
+				ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get().prototypes;
+				if(infoList.size() <= ind || infoList.get(ind) == null){
 					copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + 3, 64));
-					markDirty();
 					return;
 				}
 				int out = 3;
@@ -387,10 +386,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 				}
 				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + out, 64));
 				infoList.set(ind, null);
-				PrototypeWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).markDirty();
-				markDirty();
-			}else{
-				markDirty();
+				PrototypeWorldSavedData.get().markDirty();
 			}
 		}
 	}
