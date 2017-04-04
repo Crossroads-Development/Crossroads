@@ -72,8 +72,6 @@ public class ModDimensions{
 			}
 			throw ex;
 		}
-		
-		PrototypeWorldSavedData.loadingTicket = ForgeChunkManager.requestTicket(Main.instance, DimensionManager.getWorld(PROTOTYPE_DIM_ID), ForgeChunkManager.Type.NORMAL);
 	}
 
 	/** This does not initialize the dimension. If needed, run

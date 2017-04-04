@@ -21,4 +21,8 @@ public interface IPrototypePort{
 	public PrototypePortTypes getType();
 	
 	public EnumFacing getSide();
+	
+	public void makeActive();
+	
+	public boolean isActive();
 }

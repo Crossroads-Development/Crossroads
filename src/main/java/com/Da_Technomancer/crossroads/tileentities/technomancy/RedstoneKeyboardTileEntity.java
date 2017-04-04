@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -30,6 +31,9 @@ public class RedstoneKeyboardTileEntity extends TileEntity implements IDoubleRec
 	public void receiveDouble(String context, double message){
 		if(context.equals("output") || context.equals("newOutput")){
 			output = message;
+			if(!world.isRemote){
+				world.updateComparatorOutputLevel(pos, ModBlocks.redstoneKeyboard);
+			}
 		}
 	}
 	

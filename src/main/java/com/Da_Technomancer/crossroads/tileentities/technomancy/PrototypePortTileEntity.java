@@ -69,10 +69,12 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		this.side = side;
 	}
 
+	@Override
 	public void makeActive(){
 		active = true;
 	}
 
+	@Override
 	public boolean isActive(){
 		return active;
 	}

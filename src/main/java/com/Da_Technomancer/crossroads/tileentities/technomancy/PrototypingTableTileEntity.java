@@ -93,13 +93,19 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 						if(oldTe != null){
 							NBTTagCompound nbt = new NBTTagCompound();
 							oldTe.writeToNBT(nbt);
-							nbt.setInteger("x", copyTo.getPos().getXStart() + pos.getX());
-							nbt.setInteger("y", pos.getY());
-							nbt.setInteger("z", copyTo.getPos().getZStart() + pos.getZ());
-							copyTo.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK).readFromNBT(nbt);
+							BlockPos newPos = pos.add(copyTo.getPos().getBlock(0, 0, 0));
+							nbt.setInteger("x", newPos.getX());
+							nbt.setInteger("y", newPos.getY());
+							nbt.setInteger("z", newPos.getZ());
+							TileEntity newTe = copyTo.getWorld().getTileEntity(newPos);
+							newTe.readFromNBT(nbt);
+							if(newTe instanceof IPrototypePort){
+								((IPrototypePort) newTe).makeActive();
+							}
 						}
 					}catch(Exception e){
-						Main.logger.error("Crossroads: Something went wrong while setting up a prototype. Error cloning block at " + oldPos.toString() + " in dimension " + fromWorld.provider.getDimension() + ". Errored prototype invalidated. Report to mod author, and disable prototyping that block type in the config. This errored gracefully.");
+						Main.logger.error("Something went wrong while setting up a prototype. Error cloning block at " + oldPos.toString() + " in dimension " + fromWorld.provider.getDimension() + ". Errored prototype invalidated. Report to mod author, and disable prototyping that block type in the config. This errored gracefully.");
+						Main.logger.catching(e);
 						return true;
 					}
 				}
@@ -205,8 +211,8 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 						}
 						return;
 					}
-					WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 					ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get().prototypes;
+					WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 					int newChunk = ModDimensions.nextFreePrototypeChunk(portInfo.getLeft(), portInfo.getRight());
 					if(newChunk != -1){
 						ChunkPos chunkPos = infoList.get(newChunk).chunk;

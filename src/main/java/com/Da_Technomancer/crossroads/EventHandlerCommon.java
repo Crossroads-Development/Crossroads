@@ -23,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -51,7 +52,8 @@ public final class EventHandlerCommon{
 
 	private static final Random RAND = new Random();
 	private static final ArrayList<Chunk> TO_RETROGEN = new ArrayList<Chunk>();
-
+	protected static Ticket loadingTicket;
+	
 	@SubscribeEvent
 	public void runRetrogenAndLoadChunks(WorldTickEvent e){
 		if(TO_RETROGEN.size() != 0){
@@ -60,13 +62,15 @@ public final class EventHandlerCommon{
 			TO_RETROGEN.remove(0);
 		}
 		//Only should be called on the server side. Not called every tick, as that would be excessive
-		if(!e.world.isRemote && e.world.getTotalWorldTime() % 20 == 0 && e.world.provider.getDimension() == ModDimensions.PROTOTYPE_DIM_ID && PrototypeWorldSavedData.loadingTicket != null){
-			for(ChunkPos chunk : PrototypeWorldSavedData.loadingTicket.getChunkList()){
-				ForgeChunkManager.unforceChunk(PrototypeWorldSavedData.loadingTicket, chunk);
-			}
-			for(PrototypeInfo info : PrototypeWorldSavedData.get().prototypes){
+		if(!e.world.isRemote && e.world.provider.getDimension() == ModDimensions.PROTOTYPE_DIM_ID && e.world.getTotalWorldTime() % 20 == 0){
+			PrototypeWorldSavedData data = PrototypeWorldSavedData.get();
+			
+			ForgeChunkManager.releaseTicket(loadingTicket);
+			loadingTicket = ForgeChunkManager.requestTicket(Main.instance, e.world, ForgeChunkManager.Type.NORMAL);
+			
+			for(PrototypeInfo info : data.prototypes){
 				if(info != null && info.owner != null && info.owner.get() != null){
-					ForgeChunkManager.forceChunk(PrototypeWorldSavedData.loadingTicket, info.chunk);
+					ForgeChunkManager.forceChunk(loadingTicket, info.chunk);
 				}
 			}
 		}

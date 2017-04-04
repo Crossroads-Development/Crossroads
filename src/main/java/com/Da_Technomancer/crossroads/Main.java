@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
-import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
@@ -743,6 +742,7 @@ public final class Main{
 	
 	@Mod.EventHandler
 	public void serverEnded(FMLServerStoppingEvent e){
-		ForgeChunkManager.releaseTicket(PrototypeWorldSavedData.loadingTicket);
+		ForgeChunkManager.releaseTicket(EventHandlerCommon.loadingTicket);
+		EventHandlerCommon.loadingTicket = null;
 	}
 }

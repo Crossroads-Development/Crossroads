@@ -10,7 +10,6 @@ import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
 public class PrototypeWorldSavedData extends WorldSavedData{
 	
@@ -19,8 +18,6 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	//will cleanly self-destruct. 
 	
 	public static final String PROTOTYPE_ID = Main.MODID + "_prototype";
-	public static Ticket loadingTicket;
-	
 	public PrototypeWorldSavedData(){
 		super(PROTOTYPE_ID);
 	}
@@ -31,7 +28,8 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 
 	/**
 	 * DOES NOT call markDirty() by default unless just being created, modifiers should call it manually.
-	 * Do not call until after the overworld has been initialized. Designed to lose all data if the prototype dimension file is deleted.
+	 * Do not call until after the overworld has been initialized.
+	 * Designed to lose all data if the prototype dimension file is deleted.
 	 * @return The PrototypeWorldSavedData instance.
 	 */
 	public static PrototypeWorldSavedData get(){
@@ -40,6 +38,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 			DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 			world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		}
+		
 		MapStorage storage = world.getPerWorldStorage();
 		PrototypeWorldSavedData data = (PrototypeWorldSavedData) storage.getOrLoadData(PrototypeWorldSavedData.class, PROTOTYPE_ID);
 		
