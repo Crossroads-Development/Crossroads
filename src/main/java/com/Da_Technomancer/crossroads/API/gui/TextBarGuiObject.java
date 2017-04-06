@@ -29,6 +29,7 @@ public class TextBarGuiObject implements IGuiObject{
 	
 	private boolean selected;
 	private String text = "";
+	private int index;
 	
 	/**
 	 * 
@@ -54,22 +55,43 @@ public class TextBarGuiObject implements IGuiObject{
 	}
 	
 	@Override
-	public boolean buttonPress(char key){
+	public boolean buttonPress(char key, int keyCode){
 		if(selected){
 			//Enter & Esc
 			if(key == 13 || key == 27){
 				selected = false;
+				index = text.length();
 				return true;
 			//Backspace
 			}else if(key == 8){
-				if(!text.isEmpty()){
-					text = text.substring(0, text.length() - 1);
+				if(!text.isEmpty() && index != 0){
+					text = text.substring(0, index - 1) + (index == text.length() ? "" : text.substring(index));
+					index--;
+					return true;
+				}
+			//Delete
+			}else if(keyCode == 211){
+				if(index < text.length()){
+					text = text.substring(0, index) + text.substring(index + 1);
+					return true;
+				}
+			//Left arrow
+			}else if(keyCode == 203){
+				if(index > 0){
+					index--;
+					return true;
+				}
+			//Right arrow
+			}else if(keyCode == 205){
+				if(index < text.length()){
+					index++;
 					return true;
 				}
 			}else{
 				if(acceptedChar.test(key)){
 					if(text.length() < maxChar){
-						text += key;
+						text = text.substring(0, index) + key + text.substring(index);
+						index++;
 					}
 					return true;
 				}
@@ -85,6 +107,7 @@ public class TextBarGuiObject implements IGuiObject{
 			return true;
 		}
 		selected = false;
+		index = text.length();
 		return false;
 	}
 
@@ -108,7 +131,8 @@ public class TextBarGuiObject implements IGuiObject{
 		if(text.isEmpty() && emptyText == null){
 			return false;
 		}
-		fontRenderer.drawStringWithShadow(text.isEmpty() ? emptyText : text, 5 + baseX, 6 + baseY, text.isEmpty() ? Color.GRAY.getRGB() : Color.WHITE.getRGB());
+		fontRenderer.drawStringWithShadow(text.isEmpty() ? emptyText : text.substring(0, index) + ':' + text.substring(index), 5 + baseX, 7 + baseY, text.isEmpty() ? Color.GRAY.getRGB() : Color.WHITE.getRGB());
+		GlStateManager.color(1, 1, 1);
 		return true;
 	}
 	
@@ -118,5 +142,6 @@ public class TextBarGuiObject implements IGuiObject{
 	
 	public void setText(@Nonnull String text){
 		this.text = text;
+		index = text.length();
 	}
 }

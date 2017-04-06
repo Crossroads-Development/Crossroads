@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.gui;
 
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.gui.ButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.gui.ILogUser;
@@ -40,7 +42,7 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 	@Override
 	public void initGui(){
 		super.initGui();
-		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 98, 120, 25, "Name", (Character key) -> Character.isAlphabetic(key) || Character.isDigit(key) || key == ' ');
+		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 98, 120, 18, "Name", (Character key) -> StringUtils.isAsciiPrintable(String.valueOf(key)));
 		button = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 76, 70, "Prototype");
 		log = new OutputLogGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 5, 160, 3, 60);
 	}
@@ -86,7 +88,7 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(!textBar.buttonPress(key)){
+		if(!textBar.buttonPress(key, keyCode)){
 			super.keyTyped(key, keyCode);
 		}
 	}

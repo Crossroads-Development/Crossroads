@@ -6,9 +6,10 @@ public interface IGuiObject{
 	
 	/**
 	 * @param key The key pressed.
+	 * @param keyCode the Key Code.
 	 * @return Whether it handled the key press.
 	 */
-	public boolean buttonPress(char key);
+	public boolean buttonPress(char key, int keyCode);
 	
 	/**
 	 * @param x X coordinate of click.

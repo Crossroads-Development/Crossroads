@@ -38,7 +38,7 @@ public class RadioButtonGuiObject implements IGuiObject{
 	}
 
 	@Override
-	public boolean buttonPress(char key){
+	public boolean buttonPress(char key, int keyCode){
 		return false;
 	}
 

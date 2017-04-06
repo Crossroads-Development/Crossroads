@@ -54,7 +54,7 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(!textBar.buttonPress(key)){
+		if(!textBar.buttonPress(key, keyCode)){
 			super.keyTyped(key, keyCode);
 		}
 	}

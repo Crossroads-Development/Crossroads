@@ -68,7 +68,7 @@ public class ColorChartGuiContainer extends GuiContainer{
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(!searchBar.buttonPress(key)){
+		if(!searchBar.buttonPress(key, keyCode)){
 			super.keyTyped(key, keyCode);
 		}
 	}
