@@ -21,7 +21,7 @@ public class WorkspaceWorldProvider extends WorldProvider{
 
 	@Override
 	public DimensionType getDimensionType(){
-		return ModDimensions.workspaceDimType;
+		return world != null && world.provider.getDimension() == ModDimensions.PROTOTYPE_DIM_ID ? ModDimensions.prototypeDimType : ModDimensions.workspaceDimType;
 	}
 
 	@Override

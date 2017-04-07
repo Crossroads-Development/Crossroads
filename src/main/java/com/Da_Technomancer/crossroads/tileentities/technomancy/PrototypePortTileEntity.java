@@ -18,7 +18,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	private EnumFacing side = EnumFacing.DOWN;
 	private PrototypePortTypes type = PrototypePortTypes.HEAT;
 	private boolean active;
-	private int index;
+	private int index = -1;
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
@@ -90,7 +90,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(active && type.getCapability() == cap && type.exposeInternal() && side == this.side){
+		if(!world.isRemote && index != -1 && active && type.getCapability() == cap && type.exposeInternal() && side == this.side){
 			PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
 			if(info != null && info.owner != null && info.owner.get() != null && info.owner.get().hasCap(cap, this.side)){
 				return true;
@@ -101,7 +101,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(active && type.getCapability() == cap && type.exposeInternal() && side == this.side){
+		if(!world.isRemote && index != -1 && active && type.getCapability() == cap && type.exposeInternal() && side == this.side){
 			PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
 			if(info != null && info.owner != null && info.owner.get() != null && info.owner.get().hasCap(cap, this.side)){
 				return info.owner.get().getCap(cap, this.side);
@@ -125,5 +125,15 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 			return world.getTileEntity(pos.offset(side)).getCapability(cap, side.getOpposite());
 		}
 		return null;
+	}
+
+	@Override
+	public int getIndex(){
+		return index;
+	}
+	
+	@Override
+	public void setIndex(int index){
+		this.index = index;
 	}
 }

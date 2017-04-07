@@ -39,6 +39,10 @@ public class OmniMeter extends Item{
 		this.setCreativeTab(ModItems.tabCrossroads);
 	}
 
+	/**
+	 * Many things only correctly return to hasCapability on the server side, but here it is called on both client and server. Everywhere the actual capability is needed it is called on the server.
+	 * The client only calls it to get a rough idea of if the capability exists at all (for what EnumActionResult to return). As the return on the client side is a minor visual thing, it is okay if it is only correct 95% of the time. 
+	 */
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		TileEntity te = worldIn.getTileEntity(pos);

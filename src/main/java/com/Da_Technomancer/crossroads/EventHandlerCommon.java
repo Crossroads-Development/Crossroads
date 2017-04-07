@@ -21,7 +21,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -62,11 +64,11 @@ public final class EventHandlerCommon{
 			TO_RETROGEN.remove(0);
 		}
 		//Only should be called on the server side. Not called every tick, as that would be excessive
-		if(!e.world.isRemote && e.world.provider.getDimension() == ModDimensions.PROTOTYPE_DIM_ID && e.world.getTotalWorldTime() % 20 == 0){
+		if(!e.world.isRemote && e.world.provider.getDimension() == 0 && e.world.getTotalWorldTime() % 20 == 0){
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get();
-			
+			WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			ForgeChunkManager.releaseTicket(loadingTicket);
-			loadingTicket = ForgeChunkManager.requestTicket(Main.instance, e.world, ForgeChunkManager.Type.NORMAL);
+			loadingTicket = ForgeChunkManager.requestTicket(Main.instance, world, ForgeChunkManager.Type.NORMAL);
 			
 			for(PrototypeInfo info : data.prototypes){
 				if(info != null && info.owner != null && info.owner.get() != null){

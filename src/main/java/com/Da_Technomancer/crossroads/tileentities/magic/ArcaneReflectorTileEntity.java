@@ -16,7 +16,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.blocks.magic.ArcaneReflector;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -59,7 +59,7 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 	@Override
 	public void update(){
 		if(facing == null){
-			facing = world.getBlockState(pos).getBlock() instanceof ArcaneReflector ? world.getBlockState(pos).getValue(Properties.FACING) : null;
+			facing = world.getBlockState(pos).getBlock() == ModBlocks.arcaneReflector ? world.getBlockState(pos).getValue(Properties.FACING) : null;
 		}
 		
 		if(world.isRemote){

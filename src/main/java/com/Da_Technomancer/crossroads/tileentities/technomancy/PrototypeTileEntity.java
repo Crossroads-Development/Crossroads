@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -89,6 +90,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 					ports[i] = PrototypePortTypes.valueOf(nbt.getString("port" + i));
 				}
 			}
+			world.markBlockRangeForRenderUpdate(pos, pos);
 		}
 	}
 	
@@ -108,13 +110,21 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(side != null){
+		if(side != null && index != -1 && !world.isRemote){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			if(worldDim == null){
+				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
+				worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			}
 			PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
 			if(info != null && info.ports[side.getIndex()] != null && info.ports[side.getIndex()].getCapability() == cap && info.ports[side.getIndex()].exposeExternal()){
 				BlockPos relPos = info.portPos[side.getIndex()];
-				IPrototypePort port = (IPrototypePort) worldDim.getTileEntity(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ()));
-				return port != null && port.hasCapPrototype(cap);
+				TileEntity te = worldDim.getTileEntity(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ()));
+				if(!(te instanceof IPrototypePort)){
+					return false;
+				}
+				IPrototypePort port = (IPrototypePort) te;
+				return port.hasCapPrototype(cap);
 			}
 		}
 		return super.hasCapability(cap, side);
@@ -122,8 +132,12 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(side != null){
+		if(side != null && index != -1 && !world.isRemote){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			if(worldDim == null){
+				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
+				worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			}
 			PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
 			if(info != null && info.ports[side.getIndex()] != null && info.ports[side.getIndex()].getCapability() == cap && info.ports[side.getIndex()].exposeExternal()){
 				BlockPos relPos = info.portPos[side.getIndex()];
@@ -145,5 +159,10 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	@Override
 	public <T> T getCap(Capability<T> cap, EnumFacing side){
 		return world.getTileEntity(pos.offset(side)).getCapability(cap, side.getOpposite());
+	}
+
+	@Override
+	public void neighborChanged(EnumFacing fromSide, Block blockIn){
+		world.getBlockState(pos.offset(fromSide)).neighborChanged(world, pos.offset(fromSide), blockIn, pos);
 	}
 }

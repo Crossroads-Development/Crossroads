@@ -2,13 +2,19 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
+import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.bakedModel.PrototypeBakedModel;
+import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
@@ -29,6 +35,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
@@ -99,5 +106,33 @@ public class PrototypePort extends BlockContainer{
 	public EnumPushReaction getMobilityFlag(IBlockState state){
 		//Tile entities shouldn't be pushable anyway, but there are enough mods in existence that allow moving tile entities to warrant extra precautions. 
 		return EnumPushReaction.BLOCK;
+	}
+	
+	@Override
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor){
+		if(pos.getY() == neighbor.getY() && world instanceof World){
+			neighborChanged(world.getBlockState(pos), (World) world, pos, world.getBlockState(neighbor).getBlock(), neighbor);
+		}
+	}
+
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+		if(worldIn.isRemote || worldIn != DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)){
+			return;
+		}
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(!(te instanceof PrototypePortTileEntity)){
+			return;
+		}
+		PrototypePortTileEntity prTe = (PrototypePortTileEntity) te;
+		BlockPos dirPos = pos.subtract(fromPos);
+		EnumFacing dir = EnumFacing.getFacingFromVector(dirPos.getX(), dirPos.getY(), dirPos.getZ());
+		if(prTe.getIndex() == -1 || prTe.getType() != PrototypePortTypes.REDSTONE_OUT || prTe.getSide() != dir){
+			return;
+		}
+		PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(prTe.getIndex());
+		if(info != null && info.owner != null && info.owner.get() != null){
+			info.owner.get().neighborChanged(dir, ModBlocks.prototypePort);
+		}
 	}
 }

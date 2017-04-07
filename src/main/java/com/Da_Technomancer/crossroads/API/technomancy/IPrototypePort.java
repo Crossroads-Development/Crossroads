@@ -25,4 +25,8 @@ public interface IPrototypePort{
 	public void makeActive();
 	
 	public boolean isActive();
+	
+	public int getIndex();
+	
+	public void setIndex(int index);
 }

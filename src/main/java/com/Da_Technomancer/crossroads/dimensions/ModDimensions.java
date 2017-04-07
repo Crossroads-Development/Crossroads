@@ -37,8 +37,7 @@ public class ModDimensions{
 
 	public static void init(){
 		workspaceDimType = DimensionType.register(Main.MODID, "_workspace", 567, WorkspaceWorldProvider.class, false);
-		prototypeDimType = DimensionType.register(Main.MODID, "_prototype", 568, WorkspaceWorldProvider.class, false);
-
+		prototypeDimType = DimensionType.register(Main.MODID, "_prototype", 568, WorkspaceWorldProvider.class, true);
 		DimensionManager.registerDimension(PROTOTYPE_DIM_ID, prototypeDimType);
 		ForgeChunkManager.setForcedChunkLoadingCallback(Main.instance, new LoadingCallback(){
 

@@ -31,5 +31,6 @@ public class ModPackets{
 		network.registerMessage(SendIntToServer.class, SendIntToServer.class, packetId++, Side.SERVER);
 		network.registerMessage(SendLogToClient.class, SendLogToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendStringToServer.class, SendStringToServer.class, packetId++, Side.SERVER);
+		network.registerMessage(SendNBTToClient.class, SendNBTToClient.class, packetId++, Side.CLIENT);
 	}
 }

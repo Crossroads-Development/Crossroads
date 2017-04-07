@@ -79,7 +79,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 	/**
 	 * @return true if something went wrong (an exception was caught). In this case, the caller should cancel the operation.
 	 */
-	private static boolean setChunk(Chunk copyTo, World fromWorld, BlockPos startPos, int lengthX, int lengthY, int lengthZ){
+	private static boolean setChunk(Chunk copyTo, World fromWorld, BlockPos startPos, int lengthX, int lengthY, int lengthZ, int index){
 		for(int x = 0; x < lengthX; x++){
 			for(int z = 0; z < lengthZ; z++){
 				copyTo.setBlockState(new BlockPos(x, 15, z), Blocks.BARRIER.getDefaultState());
@@ -101,6 +101,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 							newTe.readFromNBT(nbt);
 							if(newTe instanceof IPrototypePort){
 								((IPrototypePort) newTe).makeActive();
+								((IPrototypePort) newTe).setIndex(index);
 							}
 						}
 					}catch(Exception e){
@@ -165,7 +166,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 						int newChunk = ModDimensions.nextFreePrototypeChunk(info.ports, info.portPos);
 						if(newChunk != -1){
 							ChunkPos chunkPos = infoList.get(newChunk).chunk;
-							if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16)){
+							if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16, newChunk)){
 								infoList.set(newChunk, null);
 								PrototypeWorldSavedData.get().markDirty();
 								if(player != null){
@@ -216,7 +217,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 					int newChunk = ModDimensions.nextFreePrototypeChunk(portInfo.getLeft(), portInfo.getRight());
 					if(newChunk != -1){
 						ChunkPos chunkPos = infoList.get(newChunk).chunk;
-						if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), world, pos.add(1, 1, 1), 16, 16, 16)){
+						if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), world, pos.add(1, 1, 1), 16, 16, 16, newChunk)){
 							infoList.set(newChunk, null);
 							PrototypeWorldSavedData.get().markDirty();
 							if(player != null){
