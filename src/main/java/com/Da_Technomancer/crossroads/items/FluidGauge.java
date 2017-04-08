@@ -28,16 +28,12 @@ public class FluidGauge extends Item{
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		TileEntity te = worldIn.getTileEntity(pos);
 
-		if(te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
-			if(!worldIn.isRemote){
+		if(te != null && !worldIn.isRemote && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
+			IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 
-				IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-
-				playerIn.sendMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
-
-				for(IFluidTankProperties tank : pipe.getTankProperties()){
-					playerIn.sendMessage(new TextComponentString("% full: " + (tank.getContents() == null ? 0 : tank.getContents().amount) * 100 / tank.getCapacity()));
-				}
+			playerIn.sendMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
+			for(IFluidTankProperties tank : pipe.getTankProperties()){
+				playerIn.sendMessage(new TextComponentString("% full: " + (tank.getContents() == null ? 0 : tank.getContents().amount) * 100 / tank.getCapacity()));
 			}
 			return EnumActionResult.SUCCESS;
 		}

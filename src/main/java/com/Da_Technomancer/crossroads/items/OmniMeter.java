@@ -39,79 +39,55 @@ public class OmniMeter extends Item{
 		this.setCreativeTab(ModItems.tabCrossroads);
 	}
 
-	/**
-	 * Many things only correctly return to hasCapability on the server side, but here it is called on both client and server. Everywhere the actual capability is needed it is called on the server.
-	 * The client only calls it to get a rough idea of if the capability exists at all (for what EnumActionResult to return). As the return on the client side is a minor visual thing, it is okay if it is only correct 95% of the time. 
-	 */
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		TileEntity te = worldIn.getTileEntity(pos);
-		if(te == null){
+		if(te == null || worldIn.isRemote){
 			return EnumActionResult.PASS;
 		}
 		boolean pass = true;
 
 		if(te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
 			pass = false;
-			if(!worldIn.isRemote){
-				playerIn.sendMessage(new TextComponentString("Temp: " + worldIn.getTileEntity(pos).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "*C"));
-				/* No longer necessary due to heat cables all having different textures, but the code is left in just in case.
-				if(te instanceof HeatCableTileEntity){
-					HeatCableTileEntity heatCable = (HeatCableTileEntity) te;
-					playerIn.sendMessage(new TextComponentString("Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
-				}
-				if(te instanceof RedstoneHeatCableTileEntity){
-					RedstoneHeatCableTileEntity heatCable = (RedstoneHeatCableTileEntity) te;
-					playerIn.sendMessage(new TextComponentString("Insul: " + heatCable.getInsulator() + ", Cond: " + heatCable.getConductor()));
-				}
-				*/
-				playerIn.sendMessage(new TextComponentString("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * worldIn.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "*C"));
-			}
+			playerIn.sendMessage(new TextComponentString("Temp: " + worldIn.getTileEntity(pos).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "*C"));
+			playerIn.sendMessage(new TextComponentString("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * worldIn.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "*C"));
 		}
 
 		if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
 			pass = false;
-			if(!worldIn.isRemote){
-				IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-
-				playerIn.sendMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
-				for(IFluidTankProperties tank : pipe.getTankProperties()){
-					playerIn.sendMessage(new TextComponentString("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : tank.getContents().getLocalizedName()) + ", Capacity: " + tank.getCapacity()));
-				}
+			IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+			playerIn.sendMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
+			for(IFluidTankProperties tank : pipe.getTankProperties()){
+				playerIn.sendMessage(new TextComponentString("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : tank.getContents().getLocalizedName()) + ", Capacity: " + tank.getCapacity()));
 			}
 		}
 
 		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 			pass = false;
-			if(!worldIn.isRemote){
-				IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
-
-				playerIn.sendMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]));
-			}
+			IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
+			playerIn.sendMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]));
 		}
-		
+
 		if(te instanceof BeamRenderTE){
 			pass = false;
-			if(!worldIn.isRemote){
-				MagicUnit[] mag = ((BeamRenderTE) te).getLastFullSent();
-				if(mag != null){
-					for(int i = 0; i < mag.length; i++){
-						MagicUnit check = mag[i];
-						if(check != null){
-							NBTTagCompound nbt = MiscOp.getPlayerTag(playerIn);
-							if(!nbt.hasKey("elements")){
-								nbt.setTag("elements", new NBTTagCompound());
-							}
-							nbt = nbt.getCompoundTag("elements");
-							
-							if(!nbt.hasKey(MagicElements.getElement(check).name())){
-								nbt.setBoolean(MagicElements.getElement(check).name(), true);
-								playerIn.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
-								ModPackets.network.sendTo(new StoreNBTToClient(nbt), (EntityPlayerMP) playerIn);
-							}
-							
-							playerIn.sendMessage(new TextComponentString(EnumFacing.getFront(i).toString() + ": " + check.toString()));
+			MagicUnit[] mag = ((BeamRenderTE) te).getLastFullSent();
+			if(mag != null){
+				for(int i = 0; i < mag.length; i++){
+					MagicUnit check = mag[i];
+					if(check != null){
+						NBTTagCompound nbt = MiscOp.getPlayerTag(playerIn);
+						if(!nbt.hasKey("elements")){
+							nbt.setTag("elements", new NBTTagCompound());
 						}
+						nbt = nbt.getCompoundTag("elements");
+
+						if(!nbt.hasKey(MagicElements.getElement(check).name())){
+							nbt.setBoolean(MagicElements.getElement(check).name(), true);
+							playerIn.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
+							ModPackets.network.sendTo(new StoreNBTToClient(nbt), (EntityPlayerMP) playerIn);
+						}
+
+						playerIn.sendMessage(new TextComponentString(EnumFacing.getFront(i).toString() + ": " + check.toString()));
 					}
 				}
 			}
@@ -119,19 +95,14 @@ public class OmniMeter extends Item{
 
 		if(te instanceof CrystalMasterAxisTileEntity){
 			pass = false;
-			if(!worldIn.isRemote){
-				playerIn.sendMessage(new TextComponentString("Element: " + ((((CrystalMasterAxisTileEntity) te).getElement() == null) ? "NONE" : (((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime()))));
-			}
+			playerIn.sendMessage(new TextComponentString("Element: " + ((((CrystalMasterAxisTileEntity) te).getElement() == null) ? "NONE" : (((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime()))));
 		}
 
 		if(te instanceof RatiatorTileEntity){
 			pass = false;
-			if(!worldIn.isRemote){
-				playerIn.sendMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
-			}
+			playerIn.sendMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
 		}
 
 		return pass ? EnumActionResult.PASS : EnumActionResult.SUCCESS;
 	}
-
 }

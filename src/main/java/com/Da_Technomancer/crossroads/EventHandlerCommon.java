@@ -44,7 +44,7 @@ public final class EventHandlerCommon{
 			// 64 squared
 			int RANGE_SQUARED = 4096;
 
-			for(TileEntity te : e.getWorld().loadedTileEntityList){
+			for(TileEntity te : e.getWorld().tickableTileEntities){
 				if(te instanceof BrazierTileEntity && ((BrazierTileEntity) te).getState() == 2 && te.getDistanceSq(e.getX(), e.getY(), e.getZ()) <= RANGE_SQUARED){
 					e.setResult(Result.DENY);
 				}

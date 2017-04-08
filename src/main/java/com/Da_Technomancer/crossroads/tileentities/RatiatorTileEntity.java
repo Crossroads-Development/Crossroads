@@ -38,7 +38,7 @@ public class RatiatorTileEntity extends TileEntity{
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
+		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING)){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -47,7 +47,7 @@ public class RatiatorTileEntity extends TileEntity{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
+		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING)){
 			return (T) redstoneHandler;
 		}
 		return super.getCapability(cap, side);

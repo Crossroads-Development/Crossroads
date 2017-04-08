@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.magic;
 
 import java.awt.Color;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Triple;
@@ -30,7 +31,7 @@ public class BeamManager{
 	
 	private MagicUnit lastFullSent;
 	
-	public BeamManager(EnumFacing dir, BlockPos pos, World world){
+	public BeamManager(@Nonnull EnumFacing dir, @Nonnull BlockPos pos, @Nonnull World world){
 		this.dir = dir;
 		this.world = world;
 		this.pos = pos.toImmutable();

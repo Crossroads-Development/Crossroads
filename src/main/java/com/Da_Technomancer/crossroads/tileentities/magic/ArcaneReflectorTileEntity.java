@@ -19,6 +19,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -60,6 +61,10 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 	public void update(){
 		if(facing == null){
 			facing = world.getBlockState(pos).getBlock() == ModBlocks.arcaneReflector ? world.getBlockState(pos).getValue(Properties.FACING) : null;
+			if(facing == null){
+				world.setBlockState(pos, Blocks.AIR.getDefaultState());
+				return;
+			}
 		}
 		
 		if(world.isRemote){

@@ -18,6 +18,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -25,6 +26,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -156,7 +158,7 @@ public class Ratiator extends BlockContainer{
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
 		RatiatorTileEntity te = ((RatiatorTileEntity) worldIn.getTileEntity(pos));
 		double lastOut = te.getOutput();
-		double sidePower = Math.max(getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).rotateY(), false), getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).getOpposite().rotateY(), false));
+		double sidePower = Math.max(getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).rotateY(), false), getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).rotateYCCW(), false));
 		te.setOutput(state.getValue(Properties.REDSTONE_BOOL) ? getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).getOpposite(), true) / (sidePower == 0 ? 1D : sidePower) : getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).getOpposite(), true) * sidePower);
 		if(lastOut != te.getOutput()){
 			worldIn.neighborChanged(pos.offset(state.getValue(Properties.FACING)), this, pos);
@@ -167,7 +169,9 @@ public class Ratiator extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, !state.getValue(Properties.REDSTONE_BOOL)));
+			boolean oldValue = state.getValue(Properties.REDSTONE_BOOL);
+			worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, !oldValue));
+			worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, oldValue ? .55F : .5F);
 			neighborChanged(state.withProperty(Properties.REDSTONE_BOOL, !state.getValue(Properties.REDSTONE_BOOL)), worldIn, pos, null, null);
 		}
 		return true;
