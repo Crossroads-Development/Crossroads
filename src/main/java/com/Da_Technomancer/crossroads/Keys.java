@@ -7,15 +7,15 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class Keys{
 	
-	public static KeyBinding staffEnergy;
-	public static KeyBinding staffPotential;
-	public static KeyBinding staffStability;
-	public static KeyBinding staffVoid;
+	public static KeyBinding controlEnergy;
+	public static KeyBinding controlPotential;
+	public static KeyBinding controlStability;
+	public static KeyBinding controlVoid;
 	
 	protected static void init(){
-		ClientRegistry.registerKeyBinding(staffEnergy = new KeyBinding("staffEnergy.name", Keyboard.KEY_NONE, Main.MODID));
-		ClientRegistry.registerKeyBinding(staffPotential = new KeyBinding("staffPotential.name", Keyboard.KEY_NONE, Main.MODID));
-		ClientRegistry.registerKeyBinding(staffStability = new KeyBinding("staffStability.name", Keyboard.KEY_NONE, Main.MODID));
-		ClientRegistry.registerKeyBinding(staffVoid = new KeyBinding("staffVoid.name", Keyboard.KEY_NONE, Main.MODID));
+		ClientRegistry.registerKeyBinding(controlEnergy = new KeyBinding("controlEnergy.name", Keyboard.KEY_NONE, Main.MODID));
+		ClientRegistry.registerKeyBinding(controlPotential = new KeyBinding("controlPotential.name", Keyboard.KEY_NONE, Main.MODID));
+		ClientRegistry.registerKeyBinding(controlStability = new KeyBinding("controlStability.name", Keyboard.KEY_NONE, Main.MODID));
+		ClientRegistry.registerKeyBinding(controlVoid = new KeyBinding("controlVoid.name", Keyboard.KEY_NONE, Main.MODID));
 	}
 }

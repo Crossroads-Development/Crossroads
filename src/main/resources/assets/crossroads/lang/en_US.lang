@@ -204,10 +204,10 @@ tile.redstone_axis.name=Redstone Axis
 tile.square_root_axis.name=Square Root Axis
 tile.mechanical_beam_splitter.name=Mechanical Beam Splitter
 crossroads=Crossroads
-staffEnergy.name=Staff Energy Control
-staffPotential.name=Staff Potential Control
-staffStability.name=Staff Stability Control
-staffVoid.name=Staff Void Control
+controlEnergy.name=Item Energy Control
+controlPotential.name=Item Potential Control
+controlStability.name=Item Stability Control
+controlVoid.name=Item Void Control
 item.staff_technomancy.name=Beam Staff
 tile.staff_charger.name=Staff Charger
 death.attack.potentialvoid=%1$s has no potential.
@@ -230,6 +230,7 @@ tile.detailed_crafter.name=Detailed Crafter
 container.detailed_crafting=Detailed Crafting
 tile.prototyping_table.name=Prototyping Table
 tile.prototype_port.name=Prototype Port
+tile.prototype.name=Prototype
 
 #GuideAPI documentation
 #Mysterious Journal

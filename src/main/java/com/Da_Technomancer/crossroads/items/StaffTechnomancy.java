@@ -2,67 +2,41 @@ package com.Da_Technomancer.crossroads.items;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.Keys;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseBeamToClient;
-import com.Da_Technomancer.crossroads.API.packets.SendStaffToServer;
 import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class StaffTechnomancy extends Item{
+public class StaffTechnomancy extends MagicUsingItem{
 
 	public StaffTechnomancy(){
 		String name = "staff_technomancy";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabCrossroads);
 	}
-	
-	public static long lastRenderTick = 0;
 	
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
-		if(player.world.isRemote && getMaxItemUseDuration(stack) - count == 1){
-			MagicElements elemChanged = null;
-			if(Keys.staffEnergy.isKeyDown()){
-				elemChanged = MagicElements.ENERGY;
-			}else if(Keys.staffPotential.isKeyDown()){
-				elemChanged = MagicElements.POTENTIAL;
-			}else if(Keys.staffStability.isKeyDown()){
-				elemChanged = MagicElements.STABILITY;
-			}else if(Keys.staffVoid.isKeyDown()){
-				elemChanged = MagicElements.VOID;
-			}
-			if(elemChanged != null && player instanceof EntityPlayer){
-				player.world.playSound((EntityPlayer) player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 5, (float) Math.random());
-				ModPackets.network.sendToServer(new SendStaffToServer(elemChanged.name(), player.isSneaking()));
-			}
-		}else if(!player.world.isRemote && getMaxItemUseDuration(stack) - count >= 5){
+		super.onUsingTick(stack, player, count);
+		if(!player.world.isRemote && getMaxItemUseDuration(stack) - count >= 4){
 			if(!stack.hasTagCompound()){
 				return;
 			}
@@ -98,35 +72,17 @@ public class StaffTechnomancy extends Item{
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack){
-		return 72000;
-	}
-	
-	@Override
-	public EnumAction getItemUseAction(ItemStack stack){
-		return EnumAction.NONE;
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+		super.addInformation(stack, playerIn, tooltip, advanced);
+		//TODO remove below, magic storage will be migrated to a separate item. 
 		NBTTagCompound nbt = stack.getTagCompound();
 		if(nbt == null){
 			nbt = new NBTTagCompound();
 		}
-		tooltip.add("Energy output: " + nbt.getInteger(MagicElements.ENERGY.name()));
-		tooltip.add("Potential output: " + nbt.getInteger(MagicElements.POTENTIAL.name()));
-		tooltip.add("Stability output: " + nbt.getInteger(MagicElements.STABILITY.name()));
-		tooltip.add("Void output: " + nbt.getInteger(MagicElements.VOID.name()));
 		tooltip.add("Energy stored: " + nbt.getInteger("stored_" + MagicElements.ENERGY.name()));
 		tooltip.add("Potential stored: " + nbt.getInteger("stored_" + MagicElements.POTENTIAL.name()));
 		tooltip.add("Stability stored: " + nbt.getInteger("stored_" + MagicElements.STABILITY.name()));
 		tooltip.add("Void stored: " + nbt.getInteger("stored_" + MagicElements.VOID.name()));
-	}
-	
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand){
-		playerIn.setActiveHand(hand);
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}
 }

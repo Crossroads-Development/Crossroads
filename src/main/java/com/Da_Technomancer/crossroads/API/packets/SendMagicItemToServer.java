@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.MagicUsingItem;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,16 +11,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 @SuppressWarnings("serial")
-public class SendStaffToServer extends Message<SendStaffToServer>{
+public class SendMagicItemToServer extends Message<SendMagicItemToServer>{
 
-	public SendStaffToServer(){
+	public SendMagicItemToServer(){
 		
 	}
 	
 	public String element;
 	public boolean decrease;
 
-	public SendStaffToServer(String element, boolean decrease){
+	public SendMagicItemToServer(String element, boolean decrease){
 		this.element = element;
 		this.decrease = decrease;
 	}
@@ -48,9 +48,9 @@ public class SendStaffToServer extends Message<SendStaffToServer>{
 	
 	public void processMessage(EntityPlayer player, String element, boolean decrease){
 		EnumHand hand = null;
-		if(player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() == ModItems.staffTechnomancy){
+		if(player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() instanceof MagicUsingItem){
 			hand = EnumHand.MAIN_HAND;
-		}else if(player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() == ModItems.staffTechnomancy){
+		}else if(player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() instanceof MagicUsingItem){
 			hand = EnumHand.OFF_HAND;
 		}
 		if(hand == null){

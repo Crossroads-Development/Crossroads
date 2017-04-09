@@ -160,7 +160,7 @@ public final class EventHandlerClient{
 				
 				if(beam.lastTick != game.world.getTotalWorldTime()){
 					beam.lastTick = game.world.getTotalWorldTime();
-					if(beam.lifeTime-- <= 0){
+					if(beam.lifeTime-- < 0){
 						toRemove.add(beam);
 					}
 				}
@@ -172,7 +172,8 @@ public final class EventHandlerClient{
 
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 			GlStateManager.enableCull();
-			GlStateManager.enableLighting();		}
+			GlStateManager.enableLighting();
+		}
 	}
 
 	@SubscribeEvent

@@ -109,7 +109,6 @@ public final class MiscOp{
 
 	/**
 	 * A server-side friendly version of {@link Entity#rayTrace(double, float)}
-	 * 
 	 */
 	@Nullable
 	public static RayTraceResult rayTrace(Entity ent, double blockReachDistance){
