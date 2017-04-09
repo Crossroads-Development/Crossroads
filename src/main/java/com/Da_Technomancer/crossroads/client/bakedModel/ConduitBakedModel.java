@@ -72,7 +72,7 @@ public class ConduitBakedModel implements IBakedModel{
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
 		builder.setQuadOrientation(side);
 		builder.setTexture(sprite);
-		//Not needed as this is a full block builder.setApplyDiffuseLighting(false);
+		builder.setApplyDiffuseLighting(false);
 		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, 0, 0, sprite);
 		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, 0, v, sprite);
 		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, u, v, sprite);

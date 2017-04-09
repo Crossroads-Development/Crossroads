@@ -56,6 +56,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	}
 	
 	@SideOnly(Side.CLIENT)
+	@Override
 	public PrototypePortTypes[] getTypes(){
 		return ports;
 	}
@@ -110,6 +111,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+		//No capabilities are found on the client side because that would require the prototype dimension to be loaded on the client side, which it almost certainly won't be.
 		if(side != null && index != -1 && !world.isRemote){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			if(worldDim == null){
@@ -132,6 +134,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+		//No capabilities are found on the client side because that would require the prototype dimension to be loaded on the client side, which it almost certainly won't be.
 		if(side != null && index != -1 && !world.isRemote){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			if(worldDim == null){

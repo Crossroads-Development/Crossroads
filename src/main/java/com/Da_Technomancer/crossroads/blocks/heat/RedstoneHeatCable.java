@@ -11,6 +11,9 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
+import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
+import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.client.bakedModel.ConduitBakedModel;
 import com.Da_Technomancer.crossroads.client.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -60,7 +63,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(size, size, 1, 1 - size, 1 - size, 1 - size);
 	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, size, size, size, 1 - size, 1 - size);
 	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, size, size, 1 - size, 1 - size, 1 - size);
-	
+
 	public RedstoneHeatCable(HeatConductors conductor, HeatInsulators insulator){
 		super(Material.IRON);
 		this.conductor = conductor;
@@ -84,7 +87,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 		};
 		ModelLoader.setCustomStateMapper(this, ignoreState);
 	}
-	
+
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
 		return BB;
@@ -94,7 +97,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean thingyOfThings){
 		addCollisionBoxToList(pos, mask, list, BB);
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
-		
+
 		if(exState.getValue(Properties.CONNECT)[0]){
 			addCollisionBoxToList(pos, mask, list, DOWN);
 		}
@@ -137,7 +140,8 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 		if(state.getValue(Properties.REDSTONE_BOOL)){
 			for(EnumFacing direction : EnumFacing.values()){
-				if(world.getTileEntity(pos.offset(direction)) != null && world.getTileEntity(pos.offset(direction)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite())){
+				TileEntity sideTe = world.getTileEntity(pos.offset(direction));
+				if(sideTe != null && ((sideTe instanceof IPrototypePort && ((IPrototypePort) sideTe).getType() == PrototypePortTypes.HEAT && ((IPrototypePort) sideTe).getSide() == direction.getOpposite()) || (sideTe instanceof IPrototypeOwner && ((IPrototypeOwner) sideTe).getTypes()[direction.getOpposite().getIndex()] == PrototypePortTypes.HEAT) || sideTe.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite()))){
 					connect[direction.getIndex()] = true;
 				}
 			}
@@ -147,7 +151,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 		return extendedBlockState;
 	}
-	
+
 	@Override
 	public int damageDropped(IBlockState state){
 		return 0;
@@ -162,7 +166,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(Properties.REDSTONE_BOOL) ? 1 : 0;
 	}
-	
+
 	@Override
 	public boolean hasComparatorInputOverride(IBlockState state){
 		return true;
@@ -176,7 +180,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 		}
 		double holder = (te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + 273) / (te.getInsulator().getLimit() + 273);
 		holder *= 15D;
-		
+
 		return (int) holder;
 	}
 
@@ -197,7 +201,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 			}
 		}
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new RedstoneHeatCableTileEntity(conductor, insulator);
@@ -207,7 +211,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
@@ -230,7 +234,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World source, BlockPos pos){
@@ -286,7 +290,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 		if(exState.getValue(Properties.CONNECT)[5]){
 			list.add(EAST);
 		}
-		
+
 		start = start.subtract(pos.getX(), pos.getY(), pos.getZ());
 		end = end.subtract(pos.getX(), pos.getY(), pos.getZ());
 		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);

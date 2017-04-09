@@ -1,8 +1,12 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
+import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
+
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IPrototypeOwner{
 	
@@ -20,4 +24,10 @@ public interface IPrototypeOwner{
 	 * @param blockIn The port block.
 	 */
 	public void neighborChanged(EnumFacing fromSide, Block blockIn);
+	
+	/**
+	 * Returns the prototype port types for each side. This cannot be used to fetch capabilities, it mainly exists for rendering purposes.
+	 */
+	@SideOnly(Side.CLIENT)
+	public PrototypePortTypes[] getTypes();
 }
