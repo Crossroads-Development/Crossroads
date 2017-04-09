@@ -24,6 +24,8 @@ import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SidedGearHolderTileEntity extends TileEntity implements ITickable, IStringReceiver, IDoubleReceiver{
 	
@@ -437,6 +439,12 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+		
+		@SideOnly(Side.CLIENT)
+		@Override
+		public double getNextAngle(){
+			return Double.isFinite(clientW[side]) ? angle[side] + (clientW[side] * 9D / Math.PI) : angle[side];
 		}
 	}
 }

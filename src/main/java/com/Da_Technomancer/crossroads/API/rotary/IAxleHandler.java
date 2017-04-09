@@ -2,6 +2,9 @@ package com.Da_Technomancer.crossroads.API.rotary;
 
 import javax.annotation.Nonnull;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 /**
  * Gears and other rotary connectables use two capabilities, ICogHandler and IAxleHandler. 
  * The AxleHandler represents the core of the block, that can connect to machines and axles.
@@ -32,6 +35,14 @@ public interface IAxleHandler{
 	public void resetAngle();
 
 	public double getAngle();
+	
+	/**
+	 * To be used for rendering with partial ticks. Use of this is completely optional. If it is used, then it should return a prediction for the next angle value (usually found by assuming the speed is constant).
+	 */
+	@SideOnly(Side.CLIENT)
+	public default double getNextAngle(){
+		return getAngle();
+	}
 
 	/**
 	 * negative value decreases energy. For non-gears (or axises) affecting the

@@ -79,7 +79,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 	/**
 	 * @return true if something went wrong (an exception was caught). In this case, the caller should cancel the operation.
 	 */
-	private static boolean setChunk(Chunk copyTo, World fromWorld, BlockPos startPos, int lengthX, int lengthY, int lengthZ, int index){
+	private static boolean setChunk(Chunk copyTo, World fromWorld, BlockPos startPos, int lengthX, int lengthY, int lengthZ, int index, boolean wipeOld){
 		for(int x = 0; x < lengthX; x++){
 			for(int z = 0; z < lengthZ; z++){
 				copyTo.setBlockState(new BlockPos(x, 15, z), Blocks.BARRIER.getDefaultState());
@@ -104,6 +104,9 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 								((IPrototypePort) newTe).setIndex(index);
 							}
 						}
+						if(wipeOld){
+							fromWorld.setBlockState(oldPos, Blocks.AIR.getDefaultState());
+						}
 					}catch(Exception e){
 						Main.logger.error("Something went wrong while setting up a prototype. Error cloning block at " + oldPos.toString() + " in dimension " + fromWorld.provider.getDimension() + ". Errored prototype invalidated. Report to mod author, and disable prototyping that block type in the config. This errored gracefully.");
 						Main.logger.catching(e);
@@ -124,7 +127,11 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 		if(context.equals("create") && message != null){
 			if(!copshowium.isEmpty() && output.isEmpty() && ModConfig.allowPrototype.getInt() != -1){
 				if(!template.isEmpty()){
-					if(template.getItem() instanceof ItemBlock && ((ItemBlock) template.getItem()).getBlock() == ModBlocks.prototype && ModConfig.allowPrototype.getInt() != 1){
+					if(template.getItem() instanceof ItemBlock && ((ItemBlock) template.getItem()).getBlock() == ModBlocks.prototype){
+						if(ModConfig.allowPrototype.getInt() == 1){
+							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Copying disabled in config.", Color.YELLOW, false), player);
+							return;
+						}
 						WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 						ArrayList<PrototypeInfo> infoList = PrototypeWorldSavedData.get().prototypes;
 						int index = template.getTagCompound().getInteger("index");
@@ -146,7 +153,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 							return;
 						}
 						int cost = 3 + info.getTotalPorts();
-						if(cost < copshowium.getCount()){
+						if(cost > copshowium.getCount()){
 							if(player != null){
 								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Insufficient copshowium.", Color.YELLOW, false), player);
 							}
@@ -166,7 +173,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 						int newChunk = ModDimensions.nextFreePrototypeChunk(info.ports, info.portPos);
 						if(newChunk != -1){
 							ChunkPos chunkPos = infoList.get(newChunk).chunk;
-							if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16, newChunk)){
+							if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16, newChunk, false)){
 								infoList.set(newChunk, null);
 								PrototypeWorldSavedData.get().markDirty();
 								if(player != null){
@@ -217,7 +224,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 					int newChunk = ModDimensions.nextFreePrototypeChunk(portInfo.getLeft(), portInfo.getRight());
 					if(newChunk != -1){
 						ChunkPos chunkPos = infoList.get(newChunk).chunk;
-						if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), world, pos.add(1, 1, 1), 16, 16, 16, newChunk)){
+						if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), world, pos.add(1, 1, 1), 16, 16, 16, newChunk, ModConfig.allowPrototype.getInt() == 1)){
 							infoList.set(newChunk, null);
 							PrototypeWorldSavedData.get().markDirty();
 							if(player != null){

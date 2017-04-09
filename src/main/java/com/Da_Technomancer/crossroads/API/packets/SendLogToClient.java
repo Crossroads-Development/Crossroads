@@ -52,7 +52,7 @@ public class SendLogToClient extends Message<SendLogToClient>{
 	public void processMessage(String logName, String text, Color col, boolean clear){
 		GuiScreen gui = Minecraft.getMinecraft().currentScreen;
 		if(gui instanceof ILogUser){
-			OutputLogGuiObject log = ((ILogUser) gui).getLog("context");
+			OutputLogGuiObject log = ((ILogUser) gui).getLog(logName);
 			if(log != null){
 				if(clear){
 					log.clearLog();
