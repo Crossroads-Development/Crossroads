@@ -2,16 +2,19 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import java.util.Random;
 
+import org.apache.logging.log4j.Level;
+
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.dimensions.WorkspaceWorldProvider;
 
-import net.minecraft.crash.CrashReport;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -30,7 +33,7 @@ public class TimeEffect implements IEffect{
 					return;
 				}
 			}
-			
+
 
 			for(int i = RAND.nextInt((int) mult); i < mult; i++){
 				((ITickable) worldIn.getTileEntity(pos)).update();
@@ -52,23 +55,17 @@ public class TimeEffect implements IEffect{
 			//TODO temporary for testing
 			System.out.println("------------------------FLUX_EVENT-----------------------------");
 			/*
-			
-			int severity = RAND.nextInt((int) Math.min(mult, 128)) + 1;
+
+			int severity = worldIn.provider instanceof WorkspaceWorldProvider ? 3 : RAND.nextInt((int) Math.min(mult, 128)) + 1;
 
 			if(severity >= 100 && ModConfig.voidChunk.getBoolean()){
-				try{
-					Chunk current = worldIn.getChunkFromBlockCoords(pos);
-					for(int x = 0; x < 16; x++){
-						for(int z = 0; z < 16; z++){
-							for(int y = 0; y < 256; y++){
-								BlockPos posAir = new BlockPos(x, y, z);
-								current.setBlockState(posAir, Blocks.AIR.getDefaultState());
-							}
+				ChunkPos chunkPos = new ChunkPos(pos);
+				for(int x = 0; x < 16; x++){
+					for(int z = 0; z < 16; z++){
+						for(int y = 0; y < 256; y++){
+							worldIn.setBlockState(chunkPos.getBlock(x, y, z), Blocks.AIR.getDefaultState());
 						}
 					}
-				}catch(Exception e){
-					CrashReport report = new CrashReport("Something went wrong while voiding a chunk. Disable this in the config if necessary, and hope nothing got corrupted.", e);
-					new ReportedException(report).printStackTrace();
 				}
 			}else if(severity > 60 && ModConfig.resetChunk.getBoolean()){
 				try{
@@ -77,51 +74,46 @@ public class TimeEffect implements IEffect{
 					Chunk current = worldIn.getChunkFromBlockCoords(pos);
 					setChunk(current, swapWith);
 				}catch(Exception e){
-					CrashReport report = new CrashReport("Something went wrong while reseting a chunk. Disable this in the config if necessary, and hope nothing got corrupted.", e);
-					new ReportedException(report).printStackTrace();
+					Main.logger.log(Level.ERROR, "Something went wrong while reseting a chunk. Disable this in the config if necessary. Please report this as a bug.", e);
 				}
 			}else if(severity > 10 && ModConfig.magicChunk.getBoolean()){
-				try{
-					ChunkPos base = worldIn.getChunkFromBlockCoords(pos).getChunkCoordIntPair();
-					for(int i = 0; i < severity; i++){
-						BlockPos effectPos = base.getBlock(RAND.nextInt(16), RAND.nextInt(256), RAND.nextInt(16));
-						MagicElements element = null;
-						do{
-							element = MagicElements.values()[RAND.nextInt(MagicElements.values().length)];
-						}while(element == MagicElements.TIME || element.getEffect() == null);
-						element.getEffect().doEffect(worldIn, effectPos, severity);
-					}
-				}catch(Exception e){
-					CrashReport report = new CrashReport("Something went wrong while magic-ifying a chunk. Disable this in the config if necessary, and hope nothing got corrupted.", e);
-					new ReportedException(report).printStackTrace();
+				ChunkPos base = worldIn.getChunkFromBlockCoords(pos).getPos();
+				for(int i = 0; i < severity; i++){
+					BlockPos effectPos = base.getBlock(RAND.nextInt(16), RAND.nextInt(256), RAND.nextInt(16));
+					MagicElements element = null;
+					do{
+						element = MagicElements.values()[RAND.nextInt(MagicElements.values().length)];
+					}while(element == MagicElements.TIME || element.getEffect() == null);
+					element.getEffect().doEffect(worldIn, effectPos, severity);
 				}
 			}else{
 				worldIn.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), severity, false);
 			}*/
 		}
-		
-		private static void setChunk(Chunk current, Chunk swapWith){
+
+		private static void setChunk(Chunk copyTo, Chunk copyFrom){
 			for(int x = 0; x < 16; x++){
 				for(int z = 0; z < 16; z++){
 					for(int y = 0; y < 256; y++){
-						BlockPos pos = new BlockPos(x, y, z);
-						current.setBlockState(pos, swapWith.getBlockState(pos));
-						if(swapWith.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) != null){
+						BlockPos newPos = copyTo.getPos().getBlock(x, y, z);
+						BlockPos oldPos = copyFrom.getPos().getBlock(x, y, z);
+						copyTo.getWorld().setBlockState(newPos, copyTo.getWorld().getBlockState(oldPos));
+						TileEntity oldTe = copyTo.getWorld().getTileEntity(oldPos);
+						if(oldTe != null){
 							NBTTagCompound nbt = new NBTTagCompound();
-							swapWith.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK).writeToNBT(nbt);
-							nbt.setInteger("x", current.getPos().getXStart() + pos.getX());
-							nbt.setInteger("y", pos.getY());
-							nbt.setInteger("z", current.getPos().getZStart() + pos.getZ());
-							current.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK).readFromNBT(nbt);
+							oldTe.writeToNBT(nbt);
+							nbt.setInteger("x", newPos.getX());
+							nbt.setInteger("y", newPos.getY());
+							nbt.setInteger("z", newPos.getZ());
+							TileEntity newTe = copyTo.getWorld().getTileEntity(newPos);
+							newTe.readFromNBT(nbt);
 						}
 					}
 				}
 			}
-			
-			
-			current.setBiomeArray(swapWith.getBiomeArray());
-			current.setModified(true);
-			current.checkLight();
+
+			copyTo.setModified(true);
+			copyTo.checkLight();
 		}
 	}
 }

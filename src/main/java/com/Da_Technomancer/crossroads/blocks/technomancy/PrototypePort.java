@@ -55,6 +55,7 @@ public class PrototypePort extends BlockContainer{
 		setCreativeTab(ModItems.tabCrossroads);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
+		setResistance(2000);
 	}
 
 	@Override
