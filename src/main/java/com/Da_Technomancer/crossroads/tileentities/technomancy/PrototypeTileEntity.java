@@ -153,7 +153,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	@Override
 	public boolean hasCap(Capability<?> cap, EnumFacing side){
 		TileEntity te = world.getTileEntity(pos.offset(side));
-		return te != null && te.hasCapability(cap, side.getOpposite());
+		return te != null && !(te instanceof IPrototypeOwner) && te.hasCapability(cap, side.getOpposite());
 	}
 
 	@Override
