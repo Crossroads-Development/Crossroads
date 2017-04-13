@@ -278,9 +278,6 @@ public final class Main{
 						case("squarerootaxis"):
 							mapping.remap(ModBlocks.squareRootAxis);
 						break;
-						case("staffcharger"):
-							mapping.remap(ModBlocks.staffCharger);
-						break;
 						case("blockcopper"):
 							mapping.remap(OreSetUp.blockCopper);
 						break;
@@ -536,9 +533,6 @@ public final class Main{
 							break;
 						case("squarerootaxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.squareRootAxis));
-							break;
-						case("staffcharger"):
-							mapping.remap(Item.getItemFromBlock(ModBlocks.staffCharger));
 							break;
 						case("blockcopper"):
 							mapping.remap(Item.getItemFromBlock(OreSetUp.blockCopper));

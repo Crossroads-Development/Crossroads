@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"head=true": { "model": "crossroads:cage_charger_used" },
+		"head=false": { "model": "crossroads:cage_charger" }
+	}
+}

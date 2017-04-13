@@ -75,6 +75,7 @@ public final class ModItems{
 	public static BasicItem voidCrystal;
 	public static ModuleGoggles moduleGoggles;
 	public static StaffTechnomancy staffTechnomancy;
+	public static BeamCage beamCage;
 
 	private static ArrayList<Triple<Item, Integer, ModelResourceLocation>> modelQue = new ArrayList<Triple<Item, Integer, ModelResourceLocation>>();
 
@@ -116,6 +117,7 @@ public final class ModItems{
 		voidCrystal = new BasicItem("void_crystal");
 		itemAddQue(moduleGoggles = new ModuleGoggles());
 		itemAddQue(staffTechnomancy = new StaffTechnomancy());
+		itemAddQue(beamCage = new BeamCage());
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -14,29 +14,29 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class StaffChargerTileEntity extends TileEntity{
+public class CageChargerTileEntity extends TileEntity{
 
 
 	private final IMagicHandler magicHandler = new MagicHandler();
-	private ItemStack staff = ItemStack.EMPTY;
+	private ItemStack cage = ItemStack.EMPTY;
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return (oldState.getBlock() != newState.getBlock());
 	}
 	
-	public void setStaff(ItemStack staff){
-		this.staff = staff;
+	public void setCage(ItemStack cage){
+		this.cage = cage;
 		markDirty();
 	}
 	
-	public ItemStack getStaff(){
-		return staff;
+	public ItemStack getCage(){
+		return cage;
 	}
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == EnumFacing.DOWN || side == null)){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != EnumFacing.DOWN){
 			return true;
 		}
 
@@ -46,7 +46,7 @@ public class StaffChargerTileEntity extends TileEntity{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == EnumFacing.DOWN || side == null)){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != EnumFacing.DOWN){
 			return (T) magicHandler;
 		}
 
@@ -56,8 +56,8 @@ public class StaffChargerTileEntity extends TileEntity{
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		if(!staff.isEmpty()){
-			nbt.setTag("inv", staff.writeToNBT(new NBTTagCompound()));
+		if(!cage.isEmpty()){
+			nbt.setTag("inv", cage.writeToNBT(new NBTTagCompound()));
 		}
 		return nbt;
 	}
@@ -65,18 +65,18 @@ public class StaffChargerTileEntity extends TileEntity{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		staff = new ItemStack(nbt.getCompoundTag("inv"));
+		cage = new ItemStack(nbt.getCompoundTag("inv"));
 	}
 	
 	private class MagicHandler implements IMagicHandler{
 		
 		@Override
 		public void setMagic(MagicUnit mag){
-			if(mag != null && staff != null){
-				if(staff.getTagCompound() == null){
-					staff.setTagCompound(new NBTTagCompound());
+			if(mag != null && cage != null){
+				if(cage.getTagCompound() == null){
+					cage.setTagCompound(new NBTTagCompound());
 				}
-				NBTTagCompound nbt = staff.getTagCompound();
+				NBTTagCompound nbt = cage.getTagCompound();
 				int energy = nbt.getInteger("stored_" + MagicElements.ENERGY.name());
 				energy += mag.getEnergy();
 				energy = Math.min(1024, energy);

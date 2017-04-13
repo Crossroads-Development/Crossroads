@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.items;
 
-import java.util.List;
-
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
@@ -11,17 +9,15 @@ import com.Da_Technomancer.crossroads.API.packets.SendLooseBeamToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class StaffTechnomancy extends MagicUsingItem{
 
@@ -40,18 +36,24 @@ public class StaffTechnomancy extends MagicUsingItem{
 			if(!stack.hasTagCompound()){
 				return;
 			}
+			ItemStack cage = player.getHeldItem(player.getActiveHand() == EnumHand.MAIN_HAND ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
+			if(cage.getItem() != ModItems.beamCage || !cage.hasTagCompound()){
+				player.resetActiveHand();
+				return;
+			}
 			
+			NBTTagCompound cageNbt = cage.getTagCompound();
 			NBTTagCompound nbt = stack.getTagCompound();
 			int energy = nbt.getInteger(MagicElements.ENERGY.name());
 			int potential = nbt.getInteger(MagicElements.POTENTIAL.name());
 			int stability = nbt.getInteger(MagicElements.STABILITY.name());
 			int voi = nbt.getInteger(MagicElements.VOID.name());
-			if(energy <= nbt.getInteger("stored_" + MagicElements.ENERGY.name()) && potential <= nbt.getInteger("stored_" + MagicElements.POTENTIAL.name()) && stability <= nbt.getInteger("stored_" + MagicElements.STABILITY.name()) && voi <= nbt.getInteger("stored_" + MagicElements.VOID.name())){
+			if(energy <= cageNbt.getInteger("stored_" + MagicElements.ENERGY.name()) && potential <= cageNbt.getInteger("stored_" + MagicElements.POTENTIAL.name()) && stability <= cageNbt.getInteger("stored_" + MagicElements.STABILITY.name()) && voi <= cageNbt.getInteger("stored_" + MagicElements.VOID.name())){
 				if(energy + potential + stability + voi > 0){
-					nbt.setInteger("stored_" + MagicElements.ENERGY.name(), nbt.getInteger("stored_" + MagicElements.ENERGY.name()) - energy);
-					nbt.setInteger("stored_" + MagicElements.POTENTIAL.name(), nbt.getInteger("stored_" + MagicElements.POTENTIAL.name()) - potential);
-					nbt.setInteger("stored_" + MagicElements.STABILITY.name(), nbt.getInteger("stored_" + MagicElements.STABILITY.name()) - stability);
-					nbt.setInteger("stored_" + MagicElements.VOID.name(), nbt.getInteger("stored_" + MagicElements.VOID.name()) - voi);
+					cageNbt.setInteger("stored_" + MagicElements.ENERGY.name(), cageNbt.getInteger("stored_" + MagicElements.ENERGY.name()) - energy);
+					cageNbt.setInteger("stored_" + MagicElements.POTENTIAL.name(), cageNbt.getInteger("stored_" + MagicElements.POTENTIAL.name()) - potential);
+					cageNbt.setInteger("stored_" + MagicElements.STABILITY.name(), cageNbt.getInteger("stored_" + MagicElements.STABILITY.name()) - stability);
+					cageNbt.setInteger("stored_" + MagicElements.VOID.name(), cageNbt.getInteger("stored_" + MagicElements.VOID.name()) - voi);
 					MagicUnit mag = new MagicUnit(energy, potential, stability, voi);
 					RayTraceResult ray = MiscOp.rayTrace(player, 32);
 					Vec3d lookVec = player.getLookVec().scale(32D);
@@ -69,20 +71,5 @@ public class StaffTechnomancy extends MagicUsingItem{
 				}
 			}
 		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		super.addInformation(stack, playerIn, tooltip, advanced);
-		//TODO remove below, magic storage will be migrated to a separate item. 
-		NBTTagCompound nbt = stack.getTagCompound();
-		if(nbt == null){
-			nbt = new NBTTagCompound();
-		}
-		tooltip.add("Energy stored: " + nbt.getInteger("stored_" + MagicElements.ENERGY.name()));
-		tooltip.add("Potential stored: " + nbt.getInteger("stored_" + MagicElements.POTENTIAL.name()));
-		tooltip.add("Stability stored: " + nbt.getInteger("stored_" + MagicElements.STABILITY.name()));
-		tooltip.add("Void stored: " + nbt.getInteger("stored_" + MagicElements.VOID.name()));
 	}
 }

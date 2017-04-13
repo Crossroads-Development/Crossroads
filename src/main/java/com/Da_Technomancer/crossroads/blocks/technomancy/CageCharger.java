@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.StaffChargerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -27,11 +27,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class StaffCharger extends BlockContainer{
+public class CageCharger extends BlockContainer{
 
-	public StaffCharger(){
+	public CageCharger(){
 		super(Material.IRON);
-		String name = "staff_charger";
+		String name = "cage_charger";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -42,7 +42,7 @@ public class StaffCharger extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new StaffChargerTileEntity();
+		return new CageChargerTileEntity();
 	}
 	
 	@Override
@@ -79,11 +79,11 @@ public class StaffCharger extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			if(state.getValue(Properties.HEAD)){
-				playerIn.inventory.addItemStackToInventory(((StaffChargerTileEntity) worldIn.getTileEntity(pos)).getStaff());
-				((StaffChargerTileEntity) worldIn.getTileEntity(pos)).setStaff(ItemStack.EMPTY);
+				playerIn.inventory.addItemStackToInventory(((CageChargerTileEntity) worldIn.getTileEntity(pos)).getCage());
+				((CageChargerTileEntity) worldIn.getTileEntity(pos)).setCage(ItemStack.EMPTY);
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.HEAD, false));
-			}else if(!playerIn.getHeldItem(hand).isEmpty() && playerIn.getHeldItem(hand).getItem() == ModItems.staffTechnomancy){
-				((StaffChargerTileEntity) worldIn.getTileEntity(pos)).setStaff(playerIn.getHeldItem(hand));
+			}else if(!playerIn.getHeldItem(hand).isEmpty() && playerIn.getHeldItem(hand).getItem() == ModItems.beamCage){
+				((CageChargerTileEntity) worldIn.getTileEntity(pos)).setCage(playerIn.getHeldItem(hand));
 				playerIn.setHeldItem(hand, ItemStack.EMPTY);
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.HEAD, true));
 			}
@@ -94,7 +94,7 @@ public class StaffCharger extends BlockContainer{
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
 		if(state.getValue(Properties.HEAD)){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((StaffChargerTileEntity) world.getTileEntity(pos)).getStaff());
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((CageChargerTileEntity) world.getTileEntity(pos)).getCage());
 		}
 		super.breakBlock(world, pos, state);
 	}

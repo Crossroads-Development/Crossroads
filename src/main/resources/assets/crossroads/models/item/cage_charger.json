@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/staff_charger",
+	"parent": "crossroads:block/cage_charger",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

@@ -65,7 +65,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileE
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SinAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SquareRootAxisTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.StaffChargerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEntity;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -129,7 +129,7 @@ public class ModTileEntity{
 		register(RedstoneAxisTileEntity.class, "redstoneAxis");
 		register(SquareRootAxisTileEntity.class, "squareRootAxis");
 		register(MechanicalBeamSplitterTileEntity.class, "mechanicalBeamSplitter");
-		register(StaffChargerTileEntity.class, "staffCharger");
+		register(CageChargerTileEntity.class, "cage_charger");
 		register(HamsterWheelTileEntity.class, "hamster_wheel");
 		register(FluidSplitterTileEntity.class, "fluid_splitter");
 		register(BasicFluidSplitterTileEntity.class, "basic_fluid_splitter");

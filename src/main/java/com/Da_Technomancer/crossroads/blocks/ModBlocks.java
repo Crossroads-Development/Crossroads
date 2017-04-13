@@ -66,7 +66,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneKeyboard;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SinAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SquareRootAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.StaffCharger;
+import com.Da_Technomancer.crossroads.blocks.technomancy.CageCharger;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
@@ -142,7 +142,7 @@ public final class ModBlocks{
 	public static RedstoneAxis redstoneAxis;
 	public static SquareRootAxis squareRootAxis;
 	public static MechanicalBeamSplitter mechanicalBeamSplitter;
-	public static StaffCharger staffCharger;
+	public static CageCharger cageCharger;
 	public static HamsterWheel hamsterWheel;
 	public static FluidSplitter fluidSplitter;
 	public static BasicFluidSplitter basicFluidSplitter;
@@ -233,7 +233,7 @@ public final class ModBlocks{
 		blockAddQue(redstoneAxis = new RedstoneAxis());
 		blockAddQue(squareRootAxis = new SquareRootAxis());
 		blockAddQue(mechanicalBeamSplitter = new MechanicalBeamSplitter());
-		blockAddQue(staffCharger = new StaffCharger());
+		blockAddQue(cageCharger = new CageCharger());
 		blockAddQue(hamsterWheel = new HamsterWheel());
 		blockAddQue(fluidSplitter = new FluidSplitter());
 		blockAddQue(basicFluidSplitter = new BasicFluidSplitter());

@@ -209,7 +209,7 @@ controlPotential.name=Item Potential Control
 controlStability.name=Item Stability Control
 controlVoid.name=Item Void Control
 item.staff_technomancy.name=Beam Staff
-tile.staff_charger.name=Staff Charger
+tile.cage_charger.name=Cage Charger
 death.attack.potentialvoid=%1$s has no potential.
 death.attack.potentialvoid.player=%2$s stole %1$s's potential.
 tile.hamster_wheel.name=Hamster Wheel
@@ -231,6 +231,7 @@ container.detailed_crafting=Detailed Crafting
 tile.prototyping_table.name=Prototyping Table
 tile.prototype_port.name=Prototype Port
 tile.prototype.name=Prototype
+item.beam_cage.name=Beam Cage
 
 #GuideAPI documentation
 #Mysterious Journal
