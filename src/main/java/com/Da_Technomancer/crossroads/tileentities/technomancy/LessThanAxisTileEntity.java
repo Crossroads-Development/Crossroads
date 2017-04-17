@@ -16,7 +16,6 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -289,7 +288,7 @@ public class LessThanAxisTileEntity extends TileEntity implements ITickable{
 		@Override
 		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
 			if(DefaultAxisHandler.contains(slaveHandler, handler)){
-				world.setBlockState(pos, Blocks.AIR.getDefaultState());
+				world.destroyBlock(pos, true);
 				return;
 			}
 			slaves.add(Pair.of(handler, side));

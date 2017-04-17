@@ -731,6 +731,7 @@ public final class Main{
 	
 	@Mod.EventHandler
 	public void serverStarted(FMLServerStartedEvent e){
+		CommonProxy.masterKey = 1;
 		ModDimensions.loadDims();
 	}
 	

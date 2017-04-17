@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
@@ -19,12 +20,14 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
-import net.minecraft.init.Blocks;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -48,6 +51,11 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	}
 
 	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return newState.getBlock() != oldState.getBlock();
+	}
+	
+	@Override
 	public void receiveDouble(String context, double message){
 		if(context.equals("one")){
 			lastInOne = message;
@@ -62,14 +70,17 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	public double angleOne;
 	public double angleTwo;
 	public double angleThree;
+	public double angleTwoPos;
 	
 	private void runCalc(){
-		double inOne = world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[0] : 0;
-		double inTwo = world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN) ? world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] : 0;
-		if(facing.getAxisDirection() == AxisDirection.POSITIVE && world.getBlockState(pos.offset(facing.getOpposite())) != null && world.getBlockState(pos.offset(facing.getOpposite())).getBlock() != ModBlocks.axle){
+		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));
+		double inOne = backTE != null && backTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[0] : 0;
+		TileEntity topTE = world.getTileEntity(pos.offset(EnumFacing.UP));
+		double inTwo = topTE != null && topTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN) ? topTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] : 0;
+		if(facing.getAxisDirection() == AxisDirection.POSITIVE && world.getBlockState(pos.offset(facing.getOpposite())).getBlock() != ModBlocks.axle){
 			inOne *= -1D;
 		}
-		double baseSpeed = inTwo < 0 ? -inOne / Math.min(8, Math.abs(inTwo)) : -inOne * Math.min(8, Math.abs(inTwo));
+		double baseSpeed = inTwo == 0 ? 0 : world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) ? -inOne / inTwo : -inOne * inTwo;
 		
 		double sumIRot = 0;
 		sumEnergy = 0;
@@ -84,7 +95,8 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 
 		cost += sumIRot * Math.pow(baseSpeed, 2) / 2D;
 
-		double availableEnergy = Math.abs(sumEnergy) + Math.abs(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) ? world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] : 0);
+		TileEntity downTE = world.getTileEntity(pos.offset(EnumFacing.DOWN));
+		double availableEnergy = Math.abs(sumEnergy) + Math.abs(downTE != null && downTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) ? downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] : 0);
 		if(availableEnergy - cost < 0){
 			baseSpeed = 0;
 			cost = 0;
@@ -108,15 +120,15 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 			gear.markChanged();
 		}
 
-		if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
-			world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
+		if(downTE != null && downTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
+			downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
 		}
 		
 		if(facing.getAxisDirection() == AxisDirection.NEGATIVE){
 			inOne *= -1D;
 		}
-		if(MiscOp.tiersRound(baseSpeed == 0 ? 0 : inOne, ModConfig.speedTiers.getInt()) != lastInOne){
-			lastInOne = MiscOp.tiersRound(baseSpeed == 0 ? 0 : inOne, ModConfig.speedTiers.getInt());
+		if(MiscOp.tiersRound(inOne, ModConfig.speedTiers.getInt()) != lastInOne){
+			lastInOne = MiscOp.tiersRound(inOne, ModConfig.speedTiers.getInt());
 			ModPackets.network.sendToAllAround(new SendDoubleToClient("one", lastInOne, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 		if(MiscOp.tiersRound(inTwo, ModConfig.speedTiers.getInt()) != lastInTwo){
@@ -128,8 +140,9 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setInteger("facing", this.facing.getIndex());
-
+		nbt.setInteger("facing", facing.getIndex());
+		nbt.setDouble("lastOne", lastInOne);
+		nbt.setDouble("lastTwo", lastInTwo);
 		return nbt;
 	}
 
@@ -137,30 +150,42 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		lastInOne = nbt.getDouble("lastOne");
+		lastInTwo = nbt.getDouble("lastTwo");
+	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setDouble("lastOne", lastInOne);
+		nbt.setDouble("lastTwo", lastInTwo);
+		return nbt;
 	}
 
 	private int lastKey = 0;
 	private boolean forceUpdate;
-	private static final int updateTime = ModConfig.gearResetTime.getInt();
+	private static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
 	
 	@Override
 	public void update(){
 		if(world.isRemote){
-			angleOne += Math.toDegrees(lastInOne / 20D);
+			boolean divide = world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL);
+			angleOne += Math.toDegrees((divide ? (lastInTwo == 0 ? 0 : divide ? -lastInOne / lastInTwo : -lastInOne * lastInTwo) : lastInOne) / 20D);
 			angleTwo += Math.toDegrees(lastInTwo / 20D);
-			angleThree += Math.toDegrees(lastInOne * Math.abs(lastInTwo < 0 ? 1F / lastInTwo : lastInTwo) / 20D);
+			angleTwoPos += Math.toDegrees(Math.abs(lastInTwo) / 20D);
+			angleThree += Math.toDegrees((divide ? lastInOne : (lastInTwo == 0 ? 0 : divide ? -lastInOne / lastInTwo : -lastInOne * lastInTwo)) / 20D);
 			return;
 		}
 
 		ticksExisted++;
 
-		if(ticksExisted % updateTime == 20 || forceUpdate){
+		if(ticksExisted % UPDATE_TIME == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
 
 		forceUpdate = CommonProxy.masterKey != lastKey;
 
-		if(ticksExisted % updateTime == 20){
+		if(ticksExisted % UPDATE_TIME == 20){
 			for(IAxleHandler gear : rotaryMembers){
 				gear.resetAngle();
 			}
@@ -324,7 +349,7 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 		@Override
 		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
 			if(DefaultAxisHandler.contains(slaveHandler, handler)){
-				world.setBlockState(pos, Blocks.AIR.getDefaultState());
+				world.destroyBlock(pos, true);
 				return;
 			}
 			slaves.add(Pair.of(handler, side));

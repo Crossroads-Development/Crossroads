@@ -18,7 +18,14 @@ public class ModelGearOctagon{
 	private final float sHalfT = .5F / (1F + (float) Math.sqrt(2F));
 	
 	/**
-	 * Translate to position + .5*scale blocks in x,y,z first, then scale, then translate .5*scale - .5 in x,y,z, then rotate facing, then rotate angle. 
+	 * Finally worked out the actual modus operandi. 
+	 * First: Translate to pos as if centered at (0, 0, 0) in the block.
+	 * Second: Rotate so it faces the correct direction.
+	 * Third: Rotate for spinning along the y axis. 
+	 * Fourth: Scale
+	 * Fifth: Translate to (0, .4375, 0).
+	 * Sixth: Render the model.
+	 * Any step can be skipped except for steps 5 & 6.
 	 */
 	public void render(ResourceLocation res, Color color){
 

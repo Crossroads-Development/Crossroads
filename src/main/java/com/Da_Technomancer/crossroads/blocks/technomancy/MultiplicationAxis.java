@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -48,18 +49,31 @@ public class MultiplicationAxis extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
+		return new BlockStateContainer(this, new IProperty[] {Properties.FACING, Properties.REDSTONE_BOOL});
+	}
+	
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+		if(worldIn.isBlockPowered(pos)){
+			if(!state.getValue(Properties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+			}
+		}else{
+			if(state.getValue(Properties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
+			}
+		}
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
-		return this.getDefaultState().withProperty(Properties.FACING, facing);
+		EnumFacing facing = EnumFacing.getFront(meta & 7);
+		return getDefaultState().withProperty(Properties.FACING, facing).withProperty(Properties.REDSTONE_BOOL, (meta & 8) == 8);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.FACING).getIndex();
+		return state.getValue(Properties.FACING).getIndex() + (state.getValue(Properties.REDSTONE_BOOL) ? 8 : 0);
 	}
 
 	@Override

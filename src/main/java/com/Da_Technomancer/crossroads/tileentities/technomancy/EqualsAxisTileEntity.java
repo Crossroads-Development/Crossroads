@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.rotary.DefaultAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
@@ -286,6 +287,10 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 		
 		@Override
 		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
+			if(DefaultAxisHandler.contains(slaveHandler, handler)){
+				world.destroyBlock(pos, true);
+				return;
+			}
 			slaves.add(Pair.of(handler, side));
 		}
 		

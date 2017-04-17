@@ -19,6 +19,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -179,7 +180,7 @@ public class SidedGearHolder extends BlockContainer{
 					}
 				}
 				CommonProxy.masterKey++;
-				worldIn.destroyBlock(pos, false);
+				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 				return true;
 			}else{
 				if(canHarvest){
@@ -188,7 +189,7 @@ public class SidedGearHolder extends BlockContainer{
 				gear.setMembers(null, out);
 				CommonProxy.masterKey++;
 				if(gear.getMembers()[0] == null && gear.getMembers()[1] == null && gear.getMembers()[2] == null && gear.getMembers()[3] == null && gear.getMembers()[4] == null && gear.getMembers()[5] == null){
-					worldIn.destroyBlock(pos, false);
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 					return true;
 				}
 

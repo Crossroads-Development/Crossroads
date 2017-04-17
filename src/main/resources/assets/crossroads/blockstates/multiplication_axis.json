@@ -1,10 +1,16 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:multiplication_axis"},
-		"facing=south": { "model": "crossroads:multiplication_axis", "y": 180 },
-		"facing=east": { "model": "crossroads:multiplication_axis", "y": 90 },
-		"facing=west": { "model": "crossroads:multiplication_axis", "y": 270 },
-		"facing=up": { "model": "crossroads:multiplication_axis"},
-		"facing=down": { "model": "crossroads:multiplication_axis"}
+		"facing=north,redstone_bool=false": { "model": "crossroads:multiplication_axis"},
+		"facing=south,redstone_bool=false": { "model": "crossroads:multiplication_axis", "y": 180 },
+		"facing=east,redstone_bool=false": { "model": "crossroads:multiplication_axis", "y": 90 },
+		"facing=west,redstone_bool=false": { "model": "crossroads:multiplication_axis", "y": 270 },
+		"facing=up,redstone_bool=false": { "model": "crossroads:multiplication_axis"},
+		"facing=down,redstone_bool=false": { "model": "crossroads:multiplication_axis"},
+		"facing=north,redstone_bool=true": { "model": "crossroads:multiplication_axis"},
+		"facing=south,redstone_bool=true": { "model": "crossroads:multiplication_axis", "y": 180 },
+		"facing=east,redstone_bool=true": { "model": "crossroads:multiplication_axis", "y": 90 },
+		"facing=west,redstone_bool=true": { "model": "crossroads:multiplication_axis", "y": 270 },
+		"facing=up,redstone_bool=true": { "model": "crossroads:multiplication_axis"},
+		"facing=down,redstone_bool=true": { "model": "crossroads:multiplication_axis"}
 	}
 }

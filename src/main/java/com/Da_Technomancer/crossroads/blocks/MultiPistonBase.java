@@ -246,7 +246,7 @@ public class MultiPistonBase extends Block{
 			//The back has to be checked before the sides or the list ordering gets messed up.
 			//Likewise, the sides have to be sent before the front
 			if(canPush(buf.getBlockState(pos.offset(dir.getOpposite())), false)){
-				if(propogate(list, buf, pos.offset(dir.getOpposite()), dir, pos) || list.size() > PUSH_LIMIT){
+				if(list.size() > PUSH_LIMIT || propogate(list, buf, pos.offset(dir.getOpposite()), dir, pos)){
 					return true;
 				}
 			}
@@ -254,7 +254,7 @@ public class MultiPistonBase extends Block{
 			for(EnumFacing checkDir : EnumFacing.VALUES){
 				if(checkDir != dir && checkDir != dir.getOpposite()){
 					if(canPush(buf.getBlockState(pos.offset(checkDir)), false)){
-						if(propogate(list, buf, pos.offset(checkDir), dir, pos) || list.size() > PUSH_LIMIT){
+						if(list.size() > PUSH_LIMIT || propogate(list, buf, pos.offset(checkDir), dir, pos)){
 							return true;
 						}
 					}
@@ -263,7 +263,7 @@ public class MultiPistonBase extends Block{
 		}
 		
 		if(canPush(buf.getBlockState(pos.offset(dir)), false)){
-			if(propogate(list, buf, pos.offset(dir), dir, null) || list.size() > PUSH_LIMIT){
+			if(list.size() > PUSH_LIMIT || propogate(list, buf, pos.offset(dir), dir, null)){
 				return true;
 			}
 		}
