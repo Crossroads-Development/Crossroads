@@ -49,6 +49,8 @@ public final class RecipeHolder{
 	/**
 	 * A list of all recipes, Item Array are the ingredients, and itemstack is
 	 * output. A list for poisonous potato recipes and mashed potato recipes.
+	 * 
+	 * Under no condition is anyone to add support for the Bobo recipes in JEI (or any other recipe helper). 
 	 */
 	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
 

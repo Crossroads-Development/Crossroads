@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/flux_manipulator",
+	"parent": "crossroads:block/prototype",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

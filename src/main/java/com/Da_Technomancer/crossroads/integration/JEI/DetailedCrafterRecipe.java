@@ -10,7 +10,7 @@ public class DetailedCrafterRecipe{
 	/**
 	 * 
 	 * @param recipe
-	 * @param type Technomancy: 0, Alchemy: NYI, Witchcraft: NYI
+	 * @param type Technomancy: 0, Alchemy: NYI (1), Witchcraft: NYI (2)
 	 */
 	public DetailedCrafterRecipe(IRecipe recipe, int type){
 		this.recipe = recipe;

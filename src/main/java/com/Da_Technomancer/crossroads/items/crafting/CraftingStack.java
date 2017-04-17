@@ -54,7 +54,7 @@ public class CraftingStack implements ICraftingStack{
 
 	@Override
 	public boolean softMatch(ItemStack stack){
-		if(stack == null){
+		if(stack.isEmpty()){
 			return false;
 		}
 
@@ -76,18 +76,6 @@ public class CraftingStack implements ICraftingStack{
 		return list;
 	}
 	
-	protected Item getItem(){
-		return item;
-	}
-	
-	protected int getCount(){
-		return count;
-	}
-	
-	protected int getMeta(){
-		return meta;
-	}
-	
 	@Override
 	public boolean equals(Object other){
 		if(other == this){
@@ -95,7 +83,7 @@ public class CraftingStack implements ICraftingStack{
 		}
 		if(other instanceof CraftingStack){
 			CraftingStack otherStack = (CraftingStack) other;
-			return item == otherStack.getItem() && meta == otherStack.getMeta() && count == otherStack.getCount();
+			return item == otherStack.item && meta == otherStack.meta && count == otherStack.count;
 		}
 		
 		return false;

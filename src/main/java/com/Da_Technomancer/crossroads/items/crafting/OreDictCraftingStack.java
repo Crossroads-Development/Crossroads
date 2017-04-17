@@ -37,7 +37,7 @@ public class OreDictCraftingStack implements ICraftingStack{
 	 */
 	@Override
 	public boolean softMatch(ItemStack stack){
-		if(stack == null){
+		if(stack.isEmpty()){
 			return false;
 		}
 
@@ -55,14 +55,6 @@ public class OreDictCraftingStack implements ICraftingStack{
 	public List<ItemStack> getMatchingList(){
 		return OreDictionary.getOres(oreDict, false);
 	}
-	
-	protected String getOreDict(){
-		return oreDict;
-	}
-	
-	protected int getCount(){
-		return count;
-	}
 
 	@Override
 	public boolean equals(Object other){
@@ -71,7 +63,7 @@ public class OreDictCraftingStack implements ICraftingStack{
 		}
 		if(other instanceof OreDictCraftingStack){
 			OreDictCraftingStack otherStack = (OreDictCraftingStack) other;
-			return oreDict.equals(otherStack.getOreDict()) && count == otherStack.getCount();
+			return oreDict.equals(otherStack.oreDict) && count == otherStack.count;
 		}
 		
 		return false;

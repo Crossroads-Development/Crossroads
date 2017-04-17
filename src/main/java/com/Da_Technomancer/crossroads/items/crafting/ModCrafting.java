@@ -47,7 +47,7 @@ public final class ModCrafting{
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("blockRedstone", 1), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("cobblestone", 1), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("ingotCopper", 1), new ItemStack[] {new ItemStack(ModItems.dustCopper, 1)});
-		
+
 		// Heating, order of decreasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D));
 		RecipeHolder.envirHeatSource.put(Blocks.MAGMA, Triple.of(Blocks.NETHERRACK.getDefaultState(), 500D, 2000D));
@@ -62,7 +62,7 @@ public final class ModCrafting{
 		RecipeHolder.fluidCoolingRecipes.put(BlockDistilledWater.getDistilledWater(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE, 1), -20D, 2D)));
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE, 1), -10D, 1D)));
 		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopshowium.getMoltenCopshowium(), Pair.of(144, Triple.of(new ItemStack(OreSetUp.ingotCopshowium, 1), 1000D, 100D)));
-		
+
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Blocks.HOPPER, 1, 0), new OreDictCraftingStack("wool", 1), new CraftingStack(ModBlocks.fluidTube, 1, 0)}, getFilledHopper()));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new OreDictCraftingStack("dyeMagenta", 1), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
 		if(ModConfig.weatherControl.getBoolean()){
@@ -73,12 +73,68 @@ public final class ModCrafting{
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BLAZE_POWDER, 1, 0), new OreDictCraftingStack("leather", 1), new CraftingStack(Items.PORKCHOP, 1, 0)}, new ItemStack(ModItems.pigZombieChestplate, 1)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.MILK_BUCKET, 1, 0), new OreDictCraftingStack("leather", 1), new CraftingStack(Items.BEEF, 1, 0)}, new ItemStack(ModItems.cowLeggings, 1)));
 		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BLAZE_ROD, 1, 0), new CraftingStack(Items.DRAGON_BREATH, 1, 0), new CraftingStack(Items.GOLDEN_APPLE, 1, -1)}, new ItemStack(ModItems.chaosRod, 1)));
+		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Blocks.SPONGE, 1, 0), new CraftingStack(ModBlocks.fluidTube, 1, 0), new CraftingStack(ModItems.voidCrystal, 1, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
+		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new EdibleBlobCraftingStack(4, 2, 1), new OreDictCraftingStack("stickIron", 1), new OreDictCraftingStack("nuggetCopshowium", 1)}, new ItemStack(ModBlocks.hamsterWheel, 1)));
 		
 		RecipeHolder.magExtractRecipes.put(Items.REDSTONE, new MagicUnit(24, 36, 0, 0));
 		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));
 		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(36, 24, 0, 0));
 		RecipeHolder.magExtractRecipes.put(Items.GLOWSTONE_DUST, new MagicUnit(1, 1, 1, 0));
 
+		//Copshowium Creation Chamber
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModBlocks.fluidCoolingChamber));
+		//Chunk Unlocker
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.chunkUnlocker, 1), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', ModItems.lensArray));
+		//Gateway Frame
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.gatewayFrame, 1), "***", "^^^", "%^%", '*', Blocks.STONE, '^', "ingotCopshowium", '%', "obsidian"));
+		//Mechanical Beam Splitter
+		RecipeHolder.technomancyRecipes.add(new ShapelessOreRecipe(new ItemStack(ModBlocks.mechanicalBeamSplitter, 1), ModBlocks.beamSplitter, "ingotCopshowium", "ingotCopshowium", "stickIron"));
+		//Beam Cage
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModItems.beamCage, 1), "*&*", '*', ModBlocks.largeQuartzStabilizer, '&', "ingotCopshowium"));
+		//Cage Charger
+		RecipeHolder.technomancyRecipes.add(new ShapelessOreRecipe(new ItemStack(ModBlocks.cageCharger, 1), "ingotBronze", "ingotBronze", "ingotCopshowium", ModItems.pureQuartz));
+		//Beam Staff
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModItems.staffTechnomancy, 1), "*&*", " & ", " | ", '*', ModItems.lensArray, '&', "ingotCopshowium", '|', "stickIron"));
+		//Modular Goggles
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModItems.moduleGoggles, 1), "***", "^&^", '&', "ingotCopshowium", '*', "ingotBronze", '^', "blockGlass"));
+		//Redstone Keyboard
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.redstoneKeyboard, 1), " * ", "*&*", " * ", '*', "ingotBronze", '&', "dustRedstone"));
+		//Prototype Port
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.prototypePort, 1), "*&*", "& &", "*&*", '*', "ingotBronze", '&', "nuggetCopshowium"));
+		//Prototyping Table
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.prototypingTable, 1), "*&*", "&%&", "*&*", '*', "ingotBronze", '&', "ingotCopshowium", '%', ModBlocks.detailedCrafter));
+		//Redstone Axis
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.redstoneAxis, 1), "*^*", "^&^", "*^*", '*', "dustRedstone", '^', "nuggetBronze", '&', ModBlocks.masterAxis));
+		//Multiplication Axis
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.multiplicationAxis, 1), "***", "%^&", "***", '*', "nuggetBronze", '%', "gearCopshowium", '^', "wool", '&', "stickIron"));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.multiplicationAxis, 1), "***", "%^&", "***", '*', "nuggetBronze", '%', "gearCopshowium", '^', "leather", '&', "stickIron"));
+		//Addition Axis
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.additionAxis, 1), "***", "&^&", "***", '*', "nuggetBronze", '&', "stickIron", '^', "gearCopshowium"));
+		//Equals Axis
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.equalsAxis, 1), "***", " & ", "***", '*', "nuggetBronze", '&', ModBlocks.masterAxis));
+		//Greater Than Axis
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.greaterThanAxis, 1), false, "** ", " &*", "** ", '*', "nuggetBronze", '&', ModBlocks.masterAxis));
+		//Less Than Axis
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.lessThanAxis, 1), false, " **", "*& ", " **", '*', "nuggetBronze", '&', ModBlocks.masterAxis));
+		//Square Root Axis
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.squareRootAxis, 1), " **", "*& ", " * ", '*', "nuggetBronze", '&', ModBlocks.masterAxis));
+		//Sin Axis
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.sinAxis, 1), " **", " & ", "** ", '*', "nuggetBronze", '&', ModBlocks.masterAxis));
+		//Cos Axis
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.cosAxis, 1), " * ", "*&*", "* *", '*', "nuggetBronze", '&', ModBlocks.masterAxis));
+		//ArcSin Axis
+		RecipeHolder.technomancyRecipes.add(new ShapelessOreRecipe(new ItemStack(ModBlocks.arcsinAxis, 1), ModBlocks.sinAxis));
+		//ArcCos Axis
+		RecipeHolder.technomancyRecipes.add(new ShapelessOreRecipe(new ItemStack(ModBlocks.arccosAxis, 1), ModBlocks.cosAxis));
+		//Flux Regulated Axis
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.fluxReaderAxis, 1), "***", "*&*", "***", '*', "nuggetCopshowium", '&', ModBlocks.masterAxis));
+		//Master Axis (Cheap Technomancy recipe)
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.masterAxis, 1), "***", "*#*", "*&*", '*', "nuggetIron", '#', "nuggetCopshowium", '&', "stickIron"));
+		//Rate Manipulator
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.rateManipulator, 2), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', "gemEmerald"));
+		//Flux Manipulator
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.fluxManipulator, 2), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', "gemRuby"));
+		
 		// Axle
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));
 		// Bronze
@@ -218,6 +274,12 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.beaconHarness, 1), "*&*", "&^&", "*&*", '*', ModItems.pureQuartz, '&', ModItems.lensArray, '^', ModItems.luminescentQuartz));
 		//Fat Feeder
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fatFeeder, 1), "*^*", "#&#", "*^*", '*', "ingotBronze", '#', "netherrack", '^', "stickIron", '&', "ingotTin"));
+		//Detailed Crafter
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.detailedCrafter, 1), "*^*", "^&^", "*^*", '*', "ingotIron", '^', "ingotTin", '&', Blocks.CRAFTING_TABLE));
+		//Basic Fluid Splitter
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.basicFluidSplitter, 1), "*^*", "&&&", "*^*", '*', "nuggetTin", '^', ModBlocks.fluidTube, '&', "ingotBronze"));
+		//Redstone Fluid Splitter
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.fluidSplitter, 1), ModBlocks.basicFluidSplitter, "dustRedstone", "dustRedstone", "dustRedstone"));
 	}
 
 	private static ItemStack getFilledHopper(){
@@ -231,7 +293,7 @@ public final class ModCrafting{
 		nbttag.appendTag(nbttagcompound);
 		nbt.setTag("Items", nbttag);
 		stack.setTagInfo("BlockEntityTag", nbt);
-		
+
 		NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 		NBTTagList nbttaglist = new NBTTagList();
 		nbttaglist.appendTag(new NBTTagString("(+NBT)"));

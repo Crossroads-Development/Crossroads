@@ -124,7 +124,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.4375D, .1875D, .5D);
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.rotate(-angleTwo + 22.5F, 0, 1F, 0);
+		GlStateManager.rotate(angleTwo + 22.5F, 0, 1F, 0);
 		GlStateManager.scale(1D / 3D, .25D, 1D / 3D);
 		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
@@ -161,7 +161,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.171875D, .51953125D, .38D);
 		GlStateManager.rotate(-15, 0, 1, 0);
 		GlStateManager.rotate(90, 1, 0, 0);
-		GlStateManager.rotate(angleTwoPos, 0, 1F, 0);
+		GlStateManager.rotate(-angleTwoPos, 0, 1F, 0);
 		GlStateManager.scale(1D / 3D, .365D, 1D / 3D);
 		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
@@ -277,7 +277,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.1796875D, .1875D, .5D);
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.rotate(angleTwoPos + 22.5F, 0, 1F, 0);
+		GlStateManager.rotate(-angleTwoPos + 22.5F, 0, 1F, 0);
 		GlStateManager.scale(.125D, .125D, .125D);
 		GlStateManager.translate(0, .4375D, 0);
 		modelGear.render(textureGear, col);
@@ -287,7 +287,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.1796875D, .1875D, .75D);
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.rotate(angleTwoPos + 22.5F, 0, 1F, 0);
+		GlStateManager.rotate(-angleTwoPos + 22.5F, 0, 1F, 0);
 		GlStateManager.scale(.125D, .125D, .125D);
 		GlStateManager.translate(0, .4375D, 0);
 		modelGear.render(textureGear, col);
@@ -307,7 +307,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.375D, .1875D, .55859375D);
 		GlStateManager.rotate(90, 1, 0, 0);
-		GlStateManager.rotate(angleTwoPos, 0, 1F, 0);
+		GlStateManager.rotate(angleTwoPos + 22.5F, 0, 1F, 0);
 		GlStateManager.scale(.125D, .125D, .125D);
 		GlStateManager.translate(0, .4375D, 0);
 		modelGear.render(textureGear, col);
@@ -327,7 +327,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.1796875D, .1875D, .625D);
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.rotate(-angleTwoPos, 0, 1F, 0);
+		GlStateManager.rotate(angleTwoPos, 0, 1F, 0);
 		GlStateManager.scale(.125D, .125D, .125D);
 		GlStateManager.translate(0, .4375D, 0);
 		modelGear.render(textureGear, col);
@@ -336,7 +336,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		//ratchet to arm
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.1171875D, .25D, .625D);
-		GlStateManager.rotate(-angleTwoPos + 22.5F, 0, 1F, 0);
+		GlStateManager.rotate(angleTwoPos + 22.5F, 0, 1F, 0);
 		GlStateManager.scale(.125D, .125D, .125D);
 		GlStateManager.translate(0, .4375D, 0);
 		modelGear.render(textureGear, col);
@@ -347,7 +347,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.225D, .51953125D, .1875D);
 		GlStateManager.rotate(90, 1, 0, 0);
 		GlStateManager.rotate(15, 0, 0, 1);
-		GlStateManager.rotate(angleTwoPos, 0, 1F, 0);
+		GlStateManager.rotate(-angleTwoPos, 0, 1F, 0);
 		GlStateManager.scale(.15D, .625D, .15D);
 		GlStateManager.translate(0, .4375D, 0);
 		modelGear.render(textureGear, col);
@@ -356,7 +356,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		//arm top
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.1171875D, .45703125D, .625D);
-		GlStateManager.rotate(-angleTwoPos + 22.5F, 0, 1F, 0);
+		GlStateManager.rotate(angleTwoPos + 22.5F, 0, 1F, 0);
 		GlStateManager.scale(.125D, .125D, .125D);
 		GlStateManager.translate(0, .4375D, 0);
 		modelGear.render(textureGear, col);
@@ -367,7 +367,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.1171875D, .51953125D, .5625D);
 		GlStateManager.rotate(90, 1, 0, 0);
 		GlStateManager.rotate(15, 0, 0, 1);
-		GlStateManager.rotate(angleTwoPos, 0, 1F, 0);
+		GlStateManager.rotate(-angleTwoPos, 0, 1F, 0);
 		GlStateManager.scale(.125D, .125D, .125D);
 		GlStateManager.translate(0, .4375D, 0);
 		modelGear.render(textureGear, col);
@@ -381,7 +381,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(-.5D, -.5D, -.5D);
 		GlStateManager.translate(.5D, .49D, .55D);
 		GlStateManager.scale(.125D, .125D, .125D);
-		GlStateManager.rotate(-angleTwo + 45F, 0, 1F, 0);
+		GlStateManager.rotate(-angleTwo, 0, 1F, 0);
 		modelGear.render(textureGear, col);
 		GlStateManager.popMatrix();
 
