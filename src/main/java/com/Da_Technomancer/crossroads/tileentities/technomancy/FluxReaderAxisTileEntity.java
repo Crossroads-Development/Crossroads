@@ -49,15 +49,12 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 		double sumIRot = 0;
 		sumEnergy = 0;
 		
-		double cost = 0;
-		
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
-			sumEnergy += MiscOp.posOrNeg(gear.getRotationRatio()) * gear.getMotionData()[1];
-			cost += Math.abs(gear.getMotionData()[1] * Math.pow(1.001D, -Math.abs(gear.getMotionData()[0])));
+			sumEnergy += MiscOp.posOrNeg(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(1.001D, -Math.abs(gear.getMotionData()[0]));
 		}
 		
-		cost += sumIRot * Math.pow(baseSpeed, 2) / 2D;
+		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
 		
 		double availableEnergy = Math.abs(sumEnergy) + Math.abs(world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] : 0);
 		if(availableEnergy - cost < 0){

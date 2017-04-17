@@ -2,11 +2,11 @@
 	"parent": "block/cube_all",
 	"textures": {
 		"north": "crossroads:blocks/master_axis_front",
-		"south": "crossroads:blocks/master_axis",
-		"east": "crossroads:blocks/master_axis",
-		"west": "crossroads:blocks/master_axis",
-		"up": "crossroads:blocks/master_axis",
-		"down": "crossroads:blocks/master_axis",
-		"particle": "crossroads:blocks/master_axis"
+		"south": "crossroads:blocks/master_axis_crystal",
+		"east": "crossroads:blocks/master_axis_crystal",
+		"west": "crossroads:blocks/master_axis_crystal",
+		"up": "crossroads:blocks/master_axis_crystal",
+		"down": "crossroads:blocks/master_axis_crystal",
+		"particle": "crossroads:blocks/master_axis_crystal"
 	}
 }
