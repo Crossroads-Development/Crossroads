@@ -227,6 +227,8 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		public void propogate(IAxisHandler masterIn, byte keyIn, double rotRatioIn, double lastRadius){
 			if(lastRadius != 0){
 				rotRatioIn *= -lastRadius / .5D;
+			}else if(rotRatioIn == 0){
+				rotRatioIn = 1;
 			}
 			
 			//If true, this has already been checked.
@@ -249,30 +251,35 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			}
 			key = keyIn;
 			
-			if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
-				world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP).trigger(masterIn, key);
+			TileEntity downTE = world.getTileEntity(pos.offset(EnumFacing.DOWN));
+			if(downTE != null){
+				if(downTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
+					downTE.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP).trigger(masterIn, key);
+				}
+				if(downTE.hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
+					masterIn.addAxisToList(downTE.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.UP), EnumFacing.UP);
+				}
+				if(downTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
+					downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).propogate(masterIn, key, rotRatio, 0);
+				}
 			}
-			if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
-				masterIn.addAxisToList(world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, EnumFacing.UP), EnumFacing.UP);
-			}
+			
 
 			if(world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 				for(int i = 2; i < 6; ++i){
 					EnumFacing facing = EnumFacing.getFront(i);
 					// Adjacent gears
-					if(world.getTileEntity(pos.offset(facing)) != null && world.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-						world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.DOWN).connect(masterIn, key, rotRatio, .5D);
+					TileEntity adjTE = world.getTileEntity(pos.offset(facing));
+					if(adjTE != null && adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.DOWN).connect(masterIn, key, rotRatio, .5D);
 					}
 
 					// Diagonal gears
-					if(!world.getBlockState(pos.offset(facing)).isNormalCube() && world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
-						world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, rotRatio, .5D);
+					TileEntity diagTE = world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN));
+					if(!world.getBlockState(pos.offset(facing)).isNormalCube() && diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, rotRatio, .5D);
 					}
 				}
-			}
-
-			if(world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null && world.getTileEntity(pos.offset(EnumFacing.DOWN)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
-				world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).propogate(masterIn, key, rotRatio, 0);
 			}
 		}
 		

@@ -8,6 +8,8 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CounterGearTileEntity;
 
 import net.minecraft.block.Block;
@@ -18,12 +20,14 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -31,6 +35,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class CounterGear extends BlockContainer{
 	
@@ -50,6 +55,7 @@ public class CounterGear extends BlockContainer{
 		setHardness(3);
 		ModItems.itemAddQue(Item.getItemFromBlock(this), 0, LOCAT);
 		setSoundType(SoundType.METAL);
+		RecipeHolder.technomancyRecipes.add(new ShapelessOreRecipe(new ItemStack(this, 1), GearFactory.TOGGLE_GEARS.get(type), "ingotTin"));
 	}
 	
 	@Override
@@ -85,7 +91,7 @@ public class CounterGear extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
+		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
 	}
 
 	@Override
@@ -115,6 +121,12 @@ public class CounterGear extends BlockContainer{
 			return;
 		}
 		CommonProxy.masterKey++;
+	}
+	
+	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		CommonProxy.masterKey++;
+		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, worldIn.isBlockPowered(pos));
 	}
 	
 	@Override

@@ -50,7 +50,7 @@ public class PlayerDimensionMapSavedData extends WorldSavedData{
 		for(int i = 0; i < nbt.getInteger("length"); i++){
 			GameProfile profile = new GameProfile(nbt.hasKey(i + "_id") ? nbt.getUniqueId(i + "_id") : null, nbt.hasKey(i + "_name") ? nbt.getString(i + "_name") : null);
 			if(cache != null && profile.getId() == null){
-				Main.logger.info(Main.MODID + ": Attempting to complete player profile in dimension map. This is not an error. Profile: " + profile.toString());
+				Main.logger.info("Attempting to complete player profile in dimension map. This is not an error. Profile: " + profile.toString());
 				GameProfile search = cache.getGameProfileForUsername(profile.getName());
 				profile = search == null ? profile : search;
 			}

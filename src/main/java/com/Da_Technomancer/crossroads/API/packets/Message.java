@@ -86,8 +86,9 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 			Field[] clFields = getClassFields(clazz);
 			for(Field f : clFields){
 				Class<?> type = f.getType();
-				if(acceptField(f, type))
+				if(acceptField(f, type)){
 					writeField(f, type, buf);
+				}
 			}
 		}catch(Exception e){
 			throw new RuntimeException("Error at writing packet " + this, e);

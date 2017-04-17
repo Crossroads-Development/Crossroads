@@ -73,7 +73,7 @@ public class ToggleGear extends BlockContainer{
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		CommonProxy.masterKey++;
-		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, false);
+		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, worldIn.isBlockPowered(pos));
 	}
 	
 	@Override

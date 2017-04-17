@@ -46,7 +46,7 @@ public final class Main{
 	@Mod.EventHandler
     public void onMissingMapping(FMLMissingMappingsEvent event) {
         for (FMLMissingMappingsEvent.MissingMapping mapping : event.get()) {
-        	logger.info(MODID + ": Repairing missing mapping: " + mapping.resourceLocation.toString());
+        	logger.info("Repairing missing mapping: " + mapping.resourceLocation.toString());
         	switch(mapping.type){
 				case BLOCK:
 					switch(mapping.resourceLocation.getResourcePath().toLowerCase()){

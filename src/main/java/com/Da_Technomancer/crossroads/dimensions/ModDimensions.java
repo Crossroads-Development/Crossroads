@@ -65,9 +65,9 @@ public class ModDimensions{
 				if(playerDim != null){
 					playerDim.clear();
 				}
-				Main.logger.fatal(Main.MODID + ": Something went wrong while loading the player dimension mappings. Attempting to wipe the mappings. Shutting down. It should work if you restart now.", ex);
+				Main.logger.fatal("Something went wrong while loading the player dimension mappings. Attempting to wipe the mappings. Shutting down. It should work if you restart now.", ex);
 			}else{
-				Main.logger.fatal(Main.MODID + ": Something went wrong while loading the player dimension mappings. Shutting down. If you would like to wipe the mappings completely, there is a config option.", ex);
+				Main.logger.fatal("Something went wrong while loading the player dimension mappings. Shutting down. If you would like to wipe the mappings completely, there is a config option.", ex);
 			}
 			throw ex;
 		}

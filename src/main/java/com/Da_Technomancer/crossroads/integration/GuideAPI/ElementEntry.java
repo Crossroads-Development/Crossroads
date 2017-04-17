@@ -51,7 +51,7 @@ public class ElementEntry extends EntryItemStack{
 			case ENCHANTMENT:
 				return new PageText(elem.toString() + ": Enchants nearby items on the ground randomly. Higher power beams increase enchanting level. Can create treasure enchants with power >= 32.");
 			case ENERGY:
-				return new PageText(elem.toString() + ": Adds (power)°C/5 ticks to whatever heat devices it hits. In a Crystalling Master Axis is adds 10 energy/tick in the direction gears are currently spinning.");
+				return new PageText(elem.toString() + ": Adds (power)Â°C/5 ticks to whatever heat devices it hits. In a Crystalling Master Axis is adds 10 energy/tick in the direction gears are currently spinning.");
 			case EQUALIBRIUM:
 				return new PageText(elem.toString() + ": The force of a stalemate, where equal powers fight against eachother leading to no net change. Does nothing on its own. In a Crystalline Master Axis it reduces the change in energy each tick by 75%.");
 			case EXPANSION:
@@ -84,7 +84,7 @@ public class ElementEntry extends EntryItemStack{
 			case ENCHANTMENT:
 				return new PageText(elem.toString() + ": Enchants nearby items on the ground randomly. Higher power beams increase enchanting level. Can create treasure enchants when power >= 32.");
 			case ENERGY:
-				return new PageText(elem.toString() + ": Adds (power)°C/5 ticks to whatever heat devices it hits. In a Crystalling Master Axis is adds 10 energy/tick in the direction gears are currently spinning.");
+				return new PageText(elem.toString() + ": Adds (power)Â°C/5 ticks to whatever heat devices it hits. In a Crystalline Master Axis is adds 10 energy/tick in the direction gears are currently spinning.");
 			case EQUALIBRIUM:
 				return new PageText(elem.toString() + ": Does nothing on its own. In a Crystalline Master Axis it reduces the change in energy each tick by 75%.");
 			case EXPANSION:
