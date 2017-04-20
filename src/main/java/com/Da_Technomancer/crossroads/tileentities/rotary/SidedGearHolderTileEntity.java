@@ -29,19 +29,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SidedGearHolderTileEntity extends TileEntity implements ITickable, IStringReceiver, IDoubleReceiver{
 	
-	private double[] clientW = new double[6];
-
-	private double[] angle = new double[6];
+	private final double[] clientW = new double[6];
+	private final double[] angle = new double[6];
 
 	// D-U-N-S-W-E
 	// [0]=w, [1]=E, [2]=P, [3]=lastE
-	private double[][] motionData = new double[6][4];
+	private final double[][] motionData = new double[6][4];
 
 	// D-U-N-S-W-E
 	// [0]=m, [1]=I
-	private double[][] physData = new double[6][2];
-
-	private GearTypes[] members = new GearTypes[6];
+	private final double[][] physData = new double[6][2];
+	private final GearTypes[] members = new GearTypes[6];
 
 	public GearTypes[] getMembers(){
 		return members;
@@ -414,7 +412,6 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 		@Override
 		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
-
 			if(allowInvert && absolute){
 				motionData[side][1] += energy;
 			}else if(allowInvert){

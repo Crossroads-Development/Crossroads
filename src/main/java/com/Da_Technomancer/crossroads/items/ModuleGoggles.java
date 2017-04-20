@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
@@ -42,7 +43,7 @@ public class ModuleGoggles extends ItemArmor{
 			ArrayList<String> chat = new ArrayList<String>();
 			for(GoggleLenses lens : GoggleLenses.values()){
 				if(stack.getTagCompound().hasKey(lens.name())){
-					lens.doEffect(world, player, chat);
+					lens.doEffect(world, player, chat, MiscOp.rayTrace(player, 8));
 				}
 			}
 			if(!chat.isEmpty()){

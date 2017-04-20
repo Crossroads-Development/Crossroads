@@ -7,9 +7,12 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,6 +28,8 @@ import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntReceiver{
 
@@ -32,34 +37,35 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	private int progress = 0;
 	private int lastProgress = 0;
 
+	private final double[] motionData = new double[4];
+	private final double[] physData = new double[] {375, 8};
+
 	@Override
 	public void update(){
 		if(world.isRemote){
 			return;
 		}
 
-		if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			//If anyone knows a builtin way to simplify this if statement, be my guest. It's so long it scares me...
-			if(FluidRegistry.lookupFluidForBlock(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()) != null && (world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockFluidClassic && ((BlockFluidClassic) world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()).isSourceBlock(world, pos.offset(EnumFacing.DOWN)) || world.getBlockState(pos.offset(EnumFacing.DOWN)).getValue(BlockLiquid.LEVEL) == 0) && (content == null || (CAPACITY - content.amount >= 1000 && content.getFluid() == FluidRegistry.lookupFluidForBlock(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())))){
-				IAxleHandler te = world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
-
-				double holder = MiscOp.findEfficiency(te.getMotionData()[0], .2D, 8) * Math.abs(te.getMotionData()[1]);
-				te.addEnergy(-holder, false, false);
-				progress += Math.round(holder);
-			}else{
-				progress = 0;
-			}
+		IBlockState fluidBlockstate = world.getBlockState(pos.offset(EnumFacing.DOWN));
+		Block fluidBlock = fluidBlockstate.getBlock();
+		//If anyone knows a builtin way to simplify this if statement, be my guest. It's so long it scares me...
+		if(FluidRegistry.lookupFluidForBlock(fluidBlock) != null && (fluidBlock instanceof BlockFluidClassic && ((BlockFluidClassic) fluidBlock).isSourceBlock(world, pos.offset(EnumFacing.DOWN)) || fluidBlockstate.getValue(BlockLiquid.LEVEL) == 0) && (content == null || (CAPACITY - content.amount >= 1000 && content.getFluid() == FluidRegistry.lookupFluidForBlock(fluidBlock)))){
+			double holder = motionData[1] < 0 ? 0 : Math.floor(motionData[1]);
+			axleHandler.addEnergy(-holder, false, false);
+			progress += holder;
+		}else{
+			progress = 0;
 		}
 
 		if(progress >= REQUIRED){
 			progress = 0;
-			content = new FluidStack(FluidRegistry.lookupFluidForBlock(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()), 1000 + (content == null ? 0 : content.amount));
+			content = new FluidStack(FluidRegistry.lookupFluidForBlock(fluidBlock), 1000 + (content == null ? 0 : content.amount));
 			world.setBlockToAir(pos.offset(EnumFacing.DOWN));
 		}
 
 		if(lastProgress != progress){
-			SendIntToClient msg = new SendIntToClient("prog", progress, this.getPos());
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 512));
+			SendIntToClient msg = new SendIntToClient("prog", progress, pos);
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			lastProgress = progress;
 		}
 	}
@@ -101,12 +107,16 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	}
 
 	private final IFluidHandler pumpedHandler = new PumpedFluidHandler();
+	private final IAxleHandler axleHandler = new AxleHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) pumpedHandler;
+		}
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.UP){
+			return (T) axleHandler;
 		}
 
 		return super.getCapability(capability, facing);
@@ -117,7 +127,80 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return true;
 		}
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.UP){
+			return true;
+		}
 		return super.hasCapability(capability, facing);
+	}
+
+	private class AxleHandler implements IAxleHandler{
+
+		@Override
+		public double[] getMotionData(){
+			return motionData;
+		}
+
+		private double rotRatio;
+		private byte updateKey;
+
+		@Override
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+			//If true, this has already been checked.
+			if(key == updateKey || masterIn.addToList(this)){
+				return;
+			}
+
+			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
+			updateKey = key;
+		}
+
+		@Override
+		public double[] getPhysData(){
+			return physData;
+		}
+
+		@Override
+		public double getRotationRatio(){
+			return rotRatio;
+		}
+
+		@Override
+		public void resetAngle(){
+
+		}
+
+		@SideOnly(Side.CLIENT)
+		@Override
+		public double getAngle(){
+			return 0;
+		}
+
+		@Override
+		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
+			if(allowInvert && absolute){
+				motionData[1] += energy;
+			}else if(allowInvert){
+				motionData[1] += energy * MiscOp.posOrNeg(motionData[1]);
+			}else if(absolute){
+				int sign = (int) MiscOp.posOrNeg(motionData[1]);
+				motionData[1] += energy;
+				if(sign != 0 && MiscOp.posOrNeg(motionData[1]) != sign){
+					motionData[1] = 0;
+				}
+			}else{
+				int sign = (int) MiscOp.posOrNeg(motionData[1]);
+				motionData[1] += energy * ((double) sign);
+				if(MiscOp.posOrNeg(motionData[1]) != sign){
+					motionData[1] = 0;
+				}
+			}
+			markDirty();
+		}
+
+		@Override
+		public void markChanged(){
+			markDirty();
+		}
 	}
 
 	private class PumpedFluidHandler implements IFluidHandler{

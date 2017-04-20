@@ -66,6 +66,10 @@ public class OmniMeter extends Item{
 			pass = false;
 			IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
 			playerIn.sendMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]));
+		}else if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
+			pass = false;
+			IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing);
+			playerIn.sendMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]));
 		}
 
 		if(te instanceof BeamRenderTE){

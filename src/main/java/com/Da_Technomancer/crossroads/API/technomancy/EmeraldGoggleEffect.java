@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileE
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.ChunkPos;
@@ -22,21 +23,30 @@ import net.minecraft.world.World;
 public class EmeraldGoggleEffect implements IGoggleEffect{
 
 	@Override
-	public void armorTick(World world, EntityPlayer player, ArrayList<String> chat){
-		RayTraceResult ray = MiscOp.rayTrace(player, 8);
-		if(ray != null && world.getTileEntity(ray.getBlockPos()) != null){
-			if(world.getTileEntity(ray.getBlockPos()).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit.getOpposite())){
-				IAxleHandler axle = world.getTileEntity(ray.getBlockPos()).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit.getOpposite());
-				chat.add("Speed: " + axle.getMotionData()[0]);
-				chat.add("Energy: " + axle.getMotionData()[1]);
-				chat.add("Power: " + axle.getMotionData()[2]);
-				chat.add("I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio());
-			}else if(world.getTileEntity(ray.getBlockPos()).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
-				chat.add("Total Energy: " + world.getTileEntity(ray.getBlockPos()).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy());
-			}else if(world.getBlockState(ray.getBlockPos()) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
-				GatewayFrameTileEntity frame = (GatewayFrameTileEntity) world.getTileEntity(ray.getBlockPos());
-				if(frame.dialedCoord(Axis.X) != null){
-					chat.add("Dialed: " + frame.dialedCoord(Axis.X).getCoord() + ", " + frame.getCoord() + ", " + frame.dialedCoord(Axis.Z).getCoord());
+	public void armorTick(World world, EntityPlayer player, ArrayList<String> chat, RayTraceResult ray){
+		if(ray != null){
+			TileEntity te = world.getTileEntity(ray.getBlockPos());
+			if(te != null){
+
+				if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit.getOpposite())){
+					IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit.getOpposite());
+					chat.add("Speed: " + axle.getMotionData()[0]);
+					chat.add("Energy: " + axle.getMotionData()[1]);
+					chat.add("Power: " + axle.getMotionData()[2]);
+					chat.add("I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio());
+				}else if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit)){
+					IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit);
+					chat.add("Speed: " + axle.getMotionData()[0]);
+					chat.add("Energy: " + axle.getMotionData()[1]);
+					chat.add("Power: " + axle.getMotionData()[2]);
+					chat.add("I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio());
+				}else if(te.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
+					chat.add("Total Energy: " + te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy());
+				}else if(world.getBlockState(ray.getBlockPos()) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
+					GatewayFrameTileEntity frame = (GatewayFrameTileEntity) te;
+					if(frame.dialedCoord(Axis.X) != null){
+						chat.add("Dialed: " + frame.dialedCoord(Axis.X).getCoord() + ", " + frame.getCoord() + ", " + frame.dialedCoord(Axis.Z).getCoord());
+					}
 				}
 			}
 		}

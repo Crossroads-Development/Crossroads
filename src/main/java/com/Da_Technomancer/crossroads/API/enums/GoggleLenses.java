@@ -15,6 +15,7 @@ import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public enum GoggleLenses{
@@ -49,8 +50,8 @@ public enum GoggleLenses{
 	/**
 	 * Call on the server side ONLY.
 	 */
-	public void doEffect(World world, EntityPlayer player, ArrayList<String> chat){
-		effect.armorTick(world, player, chat);
+	public void doEffect(World world, EntityPlayer player, ArrayList<String> chat, RayTraceResult ray){
+		effect.armorTick(world, player, chat, ray);
 	}
 	
 	/**This will return the name with all but the first char being lowercase,

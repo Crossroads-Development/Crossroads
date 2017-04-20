@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -17,11 +18,13 @@ import net.minecraft.world.World;
 public class RubyGoggleEffect implements IGoggleEffect{
 
 	@Override
-	public void armorTick(World world, EntityPlayer player, ArrayList<String> chat){
-		RayTraceResult ray = MiscOp.rayTrace(player, 8);
+	public void armorTick(World world, EntityPlayer player, ArrayList<String> chat, RayTraceResult ray){
 		//Notice that null side is used for finding the capability. This is because most blocks with heat support only have one side with the capability, which would normally be inaccessible. 
-		if(ray != null && world.getTileEntity(ray.getBlockPos()) != null && world.getTileEntity(ray.getBlockPos()).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
-			chat.add("Temp: " + world.getTileEntity(ray.getBlockPos()).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "*C, Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(ray.getBlockPos()).getFloatTemperature(ray.getBlockPos()) + "*C");
+		if(ray != null){
+			TileEntity te = world.getTileEntity(ray.getBlockPos());
+			if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
+				chat.add("Temp: " + te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "°C, Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(ray.getBlockPos()).getFloatTemperature(ray.getBlockPos()) + "°C");
+			}
 		}
 
 		if(world.getTotalWorldTime() % 5 == 1){

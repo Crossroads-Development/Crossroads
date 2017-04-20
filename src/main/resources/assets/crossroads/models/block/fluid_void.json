@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "blocks/sponge"
+		"all": "crossroads:blocks/fluid_void"
 	}
 }

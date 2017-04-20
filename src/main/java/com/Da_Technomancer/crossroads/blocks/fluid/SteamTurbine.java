@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import java.util.List;
+
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 
@@ -7,7 +9,9 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -62,5 +66,12 @@ public class SteamTurbine extends BlockContainer{
 	@Override
 	public boolean isSideSolid(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return side == EnumFacing.UP;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+		tooltip.add("Mass: 375");
+		tooltip.add("I: 8");
 	}
 }

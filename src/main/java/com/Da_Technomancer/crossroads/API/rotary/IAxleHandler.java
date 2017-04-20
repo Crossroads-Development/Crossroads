@@ -34,6 +34,10 @@ public interface IAxleHandler{
 
 	public void resetAngle();
 
+	/**
+	 * To be used for rendering.
+	 */
+	@SideOnly(Side.CLIENT)
 	public double getAngle();
 	
 	/**

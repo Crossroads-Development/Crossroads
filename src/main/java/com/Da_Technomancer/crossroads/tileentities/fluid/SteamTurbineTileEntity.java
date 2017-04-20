@@ -4,6 +4,8 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
@@ -18,6 +20,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 
@@ -26,41 +30,42 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 	private static final int CAPACITY = 10_000;
 	private static final int LIMIT = 5;
 
+	private final double[] motionData = new double[4];
+	private final double[] physData = new double[] {375, 8};
+	
 	@Override
 	public void update(){
 		if(world.isRemote){
+			IAxleHandler gear = null;
+			TileEntity te = world.getTileEntity(pos.offset(EnumFacing.UP));
+			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+				gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
+			}
+			completion = (float) (gear == null ? 0 : gear.getAngle());
 			return;
 		}
 
 		if(steamContent != null){
 			runMachine();
 		}
-
 	}
-
+	
+	private float completion;
+	
+	/**
+	 * This uses the angle of the attached gear instead of calculating it's own for a few reasons. It will always be attached when it should spin, and should always have the same angle as the attached gear (no point calculating).
+	 */
+	@SideOnly(Side.CLIENT)
 	public float getCompletion(){
-		IAxleHandler gear = getGear();
-		return (float) (gear == null ? 0 : gear.getAngle());
-	}
-
-	private IAxleHandler getGear(){
-		TileEntity te = world.getTileEntity(pos.offset(EnumFacing.UP));
-		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			return te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
-		}
-		return null;
+		return completion;
 	}
 
 	private void runMachine(){
-		if(getGear() == null){
-			return;
-		}
-
 		int limit = steamContent.amount / 100;
 		limit = Math.min(limit, (CAPACITY - (waterContent == null ? 0 : waterContent.amount)) / 100);
 		limit = Math.min(limit, LIMIT);
 		if(limit != 0){
-			getGear().addEnergy(limit * .1D * EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE, true, true);
+			axleHandler.addEnergy(limit * .1D * EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE, true, true);
 			steamContent.amount -= limit * 100;
 			if(steamContent.amount <= 0){
 				steamContent = null;
@@ -74,7 +79,6 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 		super.readFromNBT(nbt);
 
 		steamContent = FluidStack.loadFluidStackFromNBT(nbt);
-
 		waterContent = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("water"));
 	}
 
@@ -95,24 +99,26 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 		return nbt;
 	}
 
+	private final IFluidHandler waterHandler = new WaterFluidHandler();
+	private final IFluidHandler steamHandler = new SteamFluidHandler();
+	private final IFluidHandler innerHandler = new InnerFluidHandler();
+	private final IAxleHandler axleHandler = new AxleHandler();
+	
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.UP){
 			return true;
 		}
-
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.UP){
+			return true;
+		}
 		return super.hasCapability(capability, facing);
 	}
-
-	private final IFluidHandler waterHandler = new WaterFluidHandler();
-	private final IFluidHandler steamHandler = new SteamFluidHandler();
-	private final IFluidHandler innerHandler = new InnerFluidHandler();
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-
 			if(facing == null){
 				return (T) innerHandler;
 			}
@@ -123,10 +129,83 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 				return (T) waterHandler;
 			}
 		}
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.UP){
+			return (T) axleHandler;
+		}
 
 		return super.getCapability(capability, facing);
 	}
 
+	private class AxleHandler implements IAxleHandler{
+
+		@Override
+		public double[] getMotionData(){
+			return motionData;
+		}
+
+		private double rotRatio;
+		private byte updateKey;
+
+		@Override
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+			//If true, this has already been checked.
+			if(key == updateKey || masterIn.addToList(this)){
+				return;
+			}
+
+			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
+			updateKey = key;
+		}
+
+		@Override
+		public double[] getPhysData(){
+			return physData;
+		}
+
+		@Override
+		public double getRotationRatio(){
+			return rotRatio;
+		}
+
+		@Override
+		public void resetAngle(){
+
+		}
+
+		@SideOnly(Side.CLIENT)
+		@Override
+		public double getAngle(){
+			return 0;
+		}
+
+		@Override
+		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
+			if(allowInvert && absolute){
+				motionData[1] += energy;
+			}else if(allowInvert){
+				motionData[1] += energy * MiscOp.posOrNeg(motionData[1]);
+			}else if(absolute){
+				int sign = (int) MiscOp.posOrNeg(motionData[1]);
+				motionData[1] += energy;
+				if(sign != 0 && MiscOp.posOrNeg(motionData[1]) != sign){
+					motionData[1] = 0;
+				}
+			}else{
+				int sign = (int) MiscOp.posOrNeg(motionData[1]);
+				motionData[1] += energy * ((double) sign);
+				if(MiscOp.posOrNeg(motionData[1]) != sign){
+					motionData[1] = 0;
+				}
+			}
+			markDirty();
+		}
+
+		@Override
+		public void markChanged(){
+			markDirty();
+		}
+	}
+	
 	private class WaterFluidHandler implements IFluidHandler{
 
 		@Override

@@ -21,8 +21,7 @@ import net.minecraft.world.World;
 public class QuartzGoggleEffect implements IGoggleEffect{
 
 	@Override
-	public void armorTick(World world, EntityPlayer player, ArrayList<String> chat){
-		RayTraceResult ray = MiscOp.rayTrace(player, 8);
+	public void armorTick(World world, EntityPlayer player, ArrayList<String> chat, RayTraceResult ray){
 		if(ray == null){
 			return;
 		}
