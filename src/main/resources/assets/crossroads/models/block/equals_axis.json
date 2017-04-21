@@ -3,8 +3,8 @@
 	"textures": {
 		"north": "crossroads:blocks/master_axis_front",
 		"south": "crossroads:blocks/master_axis_equals",
-		"east": "crossroads:blocks/master_axis_equals",
-		"west": "crossroads:blocks/master_axis_equals",
+		"east": "crossroads:blocks/master_axis_input",
+		"west": "crossroads:blocks/master_axis_input",
 		"up": "crossroads:blocks/master_axis_equals",
 		"down": "crossroads:blocks/master_axis_equals",
 		"particle": "crossroads:blocks/master_axis_equals"

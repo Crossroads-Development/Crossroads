@@ -94,7 +94,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 
 		//upper height control
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(.5D, .75D, .5D);
+		GlStateManager.translate(.5D, .749D, .5D);
 		GlStateManager.scale(1D, .5D, 1D);
 		GlStateManager.rotate(-angleTwo, 0, 1F, 0);
 		modelAx.render(textureAx, textureAx, Color.WHITE);

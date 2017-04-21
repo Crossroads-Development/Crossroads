@@ -18,11 +18,13 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheelTileEntity>{
 
 	private final ResourceLocation textureAx = new ResourceLocation(Main.MODID, "textures/model/axle.png");
-	private final ResourceLocation textureHam = new ResourceLocation("textures/blocks/snow.png");
+	private final ResourceLocation textureHam = new ResourceLocation(Main.MODID, "textures/model/hamster.png");
 	private final ModelAxle modelAxle = new ModelAxle();
 	
 	private final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));
@@ -30,60 +32,31 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 	
 	@Override
 	public void renderTileEntityAt(HamsterWheelTileEntity wheel, double x, double y, double z, float partialTicks, int destroyStage){
-		if(!wheel.getWorld().isBlockLoaded(wheel.getPos(), false) || wheel.getWorld().getBlockState(wheel.getPos()).getBlock() != ModBlocks.hamsterWheel){
+		World world = wheel.getWorld();
+		BlockPos pos = wheel.getPos();
+		if(!world.isBlockLoaded(pos, false) || world.getBlockState(pos).getBlock() != ModBlocks.hamsterWheel){
 			return;
 		}
-		EnumFacing facing = wheel.getWorld().getBlockState(wheel.getPos()).getValue(Properties.FACING);
+		EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
 		GlStateManager.disableLighting();
-		GlStateManager.translate(x + .5F, y + .5F, z + .5F);
-		GlStateManager.rotate(facing.getAxisDirection() == (facing.getAxis() == EnumFacing.Axis.Z ? EnumFacing.AxisDirection.POSITIVE : EnumFacing.AxisDirection.NEGATIVE) ? -90F : 90F, facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0, 0, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0);
-		
+		GlStateManager.translate(x + .5D, y + .5D, z + .5D);
+		GlStateManager.rotate(-facing.getHorizontalAngle() + 180, 0, 1, 0);
+		GlStateManager.rotate(90, 1, 0, 0);
 		VertexBuffer vb = Tessellator.getInstance().getBuffer();
 		
-		GlStateManager.pushMatrix();
-		if(facing.getAxis() == EnumFacing.Axis.X){
-			GlStateManager.rotate(facing.getHorizontalIndex() * 90, 0, 1, 0);
-		}else if(facing == EnumFacing.SOUTH){
-			GlStateManager.rotate(180, 0, 1, 0);
-		}
+		float angle = wheel.nextAngle - wheel.angle;
+		angle *= partialTicks;
+		angle += wheel.angle;
 		
-		//Body
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, -.25D, .19D);
-		GlStateManager.scale(3.5D, .2D, 1.5D);
-		modelAxle.render(textureHam, textureHam, Color.WHITE);
-		GlStateManager.popMatrix();
-		
-		//Head
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(-.2D, -.25D, .12D);
-		GlStateManager.scale(1D, .15D, 1D);
-		modelAxle.render(textureHam, textureHam, Color.WHITE);
-		GlStateManager.popMatrix();
-		
-		//Eye
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(-.2D, -.18D, .08D);
-		GlStateManager.scale(.2D, .05D, .2D);
-		modelAxle.render(textureHam, textureHam, Color.BLACK);
-		GlStateManager.popMatrix();
-
-		//Nose
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(-.27D, -.25D, .12D);
-		GlStateManager.scale(.2D, .05D, .2D);
-		modelAxle.render(textureHam, textureHam, Color.PINK);
-		GlStateManager.popMatrix();
-
 		//Feet
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(-.2D, -.25D, .30D);
-		int peakAngle = 60;
-		int ticksPerCycle = 25;
-		float feetAngle = Math.abs((4 * peakAngle * wheel.getWorld().getTotalWorldTime() / ticksPerCycle) % (4 * peakAngle) - (2 * peakAngle)) - peakAngle;
+		float peakAngle = 60;
+		float degreesPerCycle = 50;
+		float feetAngle = Math.abs((4 * peakAngle * Math.abs(angle) / degreesPerCycle) % (4 * peakAngle) - (2 * peakAngle)) - peakAngle;
 		for(int i = 0; i < 2; i++){
 			for(int j = 0; j < 2; j++){
 				GlStateManager.pushMatrix();
@@ -96,14 +69,12 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		}
 		
 		GlStateManager.popMatrix();
-		
-		GlStateManager.popMatrix();
 		GlStateManager.color(1, 1, 1);
 
 		//Wheel
 		GlStateManager.pushMatrix();
 		GlStateManager.disableCull();
-		GlStateManager.rotate(wheel.angle, 0F, 1F, 0F);
+		GlStateManager.rotate(angle, 0F, 1F, 0F);
 
 		//Axle Support
 		GlStateManager.pushMatrix();

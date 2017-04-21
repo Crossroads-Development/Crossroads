@@ -2,7 +2,7 @@
 	"parent": "block/cube_all",
 	"textures": {
 		"north": "crossroads:blocks/master_axis_front",
-		"south": "crossroads:blocks/master_axis_sin",
+		"south": "crossroads:blocks/master_axis_input",
 		"east": "crossroads:blocks/master_axis_sin",
 		"west": "crossroads:blocks/master_axis_sin",
 		"up": "crossroads:blocks/master_axis_sin",

@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/multiplication_axis",
+	"parent": "crossroads:block/addition_axis",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],
