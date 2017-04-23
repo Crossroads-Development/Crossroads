@@ -34,10 +34,10 @@ public class EntityBullet extends EntityThrowable{
 			if(result.entityHit != null){
 				result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), (float) damage);
 			}
-			if(mag != null && result.getBlockPos() != null){
+			if(mag != null && (result.getBlockPos() != null || result.entityHit != null)){
 				IEffect effect = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
 				if(effect != null){
-					effect.doEffect(world, result.getBlockPos(), mag.getPower());
+					effect.doEffect(world, result.getBlockPos() == null ? result.entityHit.getPosition() : result.getBlockPos(), mag.getPower());
 				}
 			}
 			world.setEntityState(this, (byte) 3);

@@ -46,12 +46,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PrototypePistol extends MagicUsingItem{
-	
+
 	/**
 	 * Stores the IPrototypeOwners of active pistols to prevent them from being garbage collected. 
 	 */
 	private static final HashMap<Integer, PistolPrototypeOwner> pistolMap = new HashMap<Integer, PistolPrototypeOwner>();
-	
+
 	public PrototypePistol(){
 		String name = "prototype_pistol";
 		setUnlocalizedName(name);
@@ -59,9 +59,9 @@ public class PrototypePistol extends MagicUsingItem{
 		GameRegistry.register(this);
 		setCreativeTab(ModItems.tabCrossroads);
 	}
-	
+
 	private boolean wasSneaking = false;
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
@@ -75,7 +75,7 @@ public class PrototypePistol extends MagicUsingItem{
 		}
 		super.addInformation(stack, playerIn, tooltip, advanced);
 	}
-	
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand){
 		if(!worldIn.isRemote && playerIn.isSneaking() && hand == EnumHand.MAIN_HAND && playerIn.getHeldItem(hand).hasTagCompound() && !playerIn.getHeldItem(hand).getTagCompound().getBoolean("loaded")){
@@ -87,26 +87,26 @@ public class PrototypePistol extends MagicUsingItem{
 					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 				}
 			}
-			
+
 			return new ActionResult<ItemStack>(EnumActionResult.FAIL, playerIn.getHeldItem(hand));
 		}
 		return super.onItemRightClick(worldIn, playerIn, hand);
 	}
-	
+
 	private static final double MASS_OF_BULLET = .035D;
-	
+
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
 		super.onUsingTick(stack, player, count);
 		if(!player.world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot") && player.getActiveHand() == EnumHand.MAIN_HAND){
 			NBTTagCompound prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
 			int index = prototypeNBT.getInteger("index");
-			
+
 			if(getMaxItemUseDuration(stack) == count || wasSneaking != player.isSneaking()){
 				if(pistolMap.containsKey(index)){
 					pistolMap.get(index).mouseActive = true;
 					wasSneaking = player.isSneaking();
-					
+
 					EnumFacing dir = EnumFacing.SOUTH;
 					WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 					PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
@@ -116,30 +116,34 @@ public class PrototypePistol extends MagicUsingItem{
 					}
 				}
 			}
-			if(getMaxItemUseDuration(stack) - count >= 15 && stack.getTagCompound().getBoolean("loaded") && !player.isSneaking() && pistolMap.containsKey(index)){
+			if(pistolMap.containsKey(index)){
 				PistolPrototypeOwner owner = pistolMap.get(index);
-				if(owner.axle.getMotionData()[1] > 0){
-					//In blocks(meters)/s Yes, this would be the IRL formula if all energy were losslessly transfered. And yes, I am insane.
-					double speed = Math.sqrt(owner.axle.getMotionData()[1] * 2D / MASS_OF_BULLET);
-					EntityBullet bullet = new EntityBullet(player.world, player, (int) Math.round(speed / 20D), owner.magic.lastOut);
-					bullet.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-					bullet.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, (float) speed / 20F /*In blocks/tick*/, 0);
-					player.world.spawnEntity(bullet);
-					stack.getTagCompound().setBoolean("loaded", false);
-					player.resetActiveHand();
-					player.world.playSound(null, player.getPosition(), SoundEvents.BLOCK_METAL_PRESSPLATE_CLICK_ON, SoundCategory.PLAYERS, 15, ((float) speed) % 1F);
+				if(getMaxItemUseDuration(stack) - count >= 15 && stack.getTagCompound().getBoolean("loaded") && !player.isSneaking()){
+					if(owner.axle.getMotionData()[1] > 0){
+						//In blocks(meters)/s Yes, this would be the IRL formula if all energy were losslessly transfered. And yes, I am insane.
+						double speed = Math.sqrt(owner.axle.getMotionData()[1] * 2D / MASS_OF_BULLET);
+						EntityBullet bullet = new EntityBullet(player.world, player, (int) Math.round(speed / 20D), owner.magic.lastOut);
+						bullet.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
+						bullet.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, (float) speed / 20F /*In blocks/tick*/, 0);
+						player.world.spawnEntity(bullet);
+						stack.getTagCompound().setBoolean("loaded", false);
+						player.resetActiveHand();
+						player.world.playSound(null, player.getPosition(), SoundEvents.BLOCK_METAL_PRESSPLATE_CLICK_ON, SoundCategory.PLAYERS, 15, ((float) speed) % 1F);
+					}
 				}
-				
-				owner.magic.lastOut = null;
+
+				if(player.world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+					owner.magic.lastOut = null;
+				}
 			}
 		}
 	}
-	
+
 	@Override
 	public void preChanged(ItemStack stack, EntityPlayer player){
 		onPlayerStoppedUsing(stack, player.world, player, 0);
 	}
-	
+
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected){
 		if(isSelected && !worldIn.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot")){
@@ -157,8 +161,8 @@ public class PrototypePistol extends MagicUsingItem{
 			}else{
 				pistolMap.get(index).lifetimeBuffer = true;
 			}
-			
-			if(entityIn instanceof EntityPlayer && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage){
+
+			if(entityIn instanceof EntityPlayer && worldIn.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage){
 				NBTTagCompound cageNbt = ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getTagCompound();
 				NBTTagCompound nbt = stack.getTagCompound();
 				PrototypeInfo info = data.prototypes.get(index);
@@ -175,7 +179,7 @@ public class PrototypePistol extends MagicUsingItem{
 				if(!port.hasCapPrototype(Capabilities.MAGIC_HANDLER_CAPABILITY)){
 					return;
 				}
-				
+
 				int energy = nbt.getInteger(MagicElements.ENERGY.name());
 				int potential = nbt.getInteger(MagicElements.POTENTIAL.name());
 				int stability = nbt.getInteger(MagicElements.STABILITY.name());
@@ -192,7 +196,7 @@ public class PrototypePistol extends MagicUsingItem{
 			}
 		}
 	}
-	
+
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft){
 		if(!worldIn.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot")){
@@ -203,7 +207,7 @@ public class PrototypePistol extends MagicUsingItem{
 			}
 		}
 	}
-	
+
 	private static class PistolPrototypeOwner implements IPrototypeOwner{
 
 		private boolean lifetimeBuffer = true;
@@ -211,16 +215,16 @@ public class PrototypePistol extends MagicUsingItem{
 		private final int index;
 		private boolean mouseActive = false;
 		private final Entity user;
-		
+
 		private PistolPrototypeOwner(int index, Entity user){
 			this.index = index;
 			this.user = user;
 		}
-		
+
 		private final IAxleHandler axle = new AxleHandler();
 		private final IAdvancedRedstoneHandler redstone = new RedstoneHandler();
 		private final MagicHandler magic = new MagicHandler();
-		
+
 		@Override
 		public boolean hasCap(Capability<?> cap, EnumFacing side){
 			if(!active){
@@ -261,7 +265,7 @@ public class PrototypePistol extends MagicUsingItem{
 
 		@Override
 		public void neighborChanged(EnumFacing fromSide, Block blockIn){
-			
+
 		}
 
 		@Override
@@ -275,18 +279,18 @@ public class PrototypePistol extends MagicUsingItem{
 			CommonProxy.masterKey++;
 			return true;
 		}
-		
+
 		private class MagicHandler implements IMagicHandler{
-			
+
 			private MagicUnit lastOut;
-			
+
 			@Override
 			public void setMagic(MagicUnit mag){
 				if(mouseActive){
 					lastOut = mag;
 					return;
 				}
-				
+
 				if(mag != null && user instanceof EntityLivingBase){
 					EntityLivingBase ent = (EntityLivingBase) user;
 					ItemStack offhand = ent.getHeldItem(EnumHand.OFF_HAND);
@@ -299,17 +303,17 @@ public class PrototypePistol extends MagicUsingItem{
 						energy += mag.getEnergy();
 						energy = Math.min(1024, energy);
 						nbt.setInteger("stored_" + MagicElements.ENERGY.name(), energy);
-						
+
 						int potential = nbt.getInteger("stored_" + MagicElements.POTENTIAL.name());
 						potential += mag.getPotential();
 						potential = Math.min(1024, potential);
 						nbt.setInteger("stored_" + MagicElements.POTENTIAL.name(), potential);
-						
+
 						int stability = nbt.getInteger("stored_" + MagicElements.STABILITY.name());
 						stability += mag.getStability();
 						stability = Math.min(1024, stability);
 						nbt.setInteger("stored_" + MagicElements.STABILITY.name(), stability);
-						
+
 						int voi = nbt.getInteger("stored_" + MagicElements.VOID.name());
 						voi += mag.getVoid();
 						voi = Math.min(1024, voi);
@@ -318,20 +322,20 @@ public class PrototypePistol extends MagicUsingItem{
 				}
 			}
 		}
-		
+
 		private class RedstoneHandler implements IAdvancedRedstoneHandler{
-			
+
 			@Override
 			public double getOutput(boolean measure){
 				return mouseActive ? (user.isSneaking() ? 1 : 2) : 0;
 			}
 		}
-		
+
 		private class AxleHandler implements IAxleHandler{
 
 			private final double[] motionData = new double[4];
 			private final double[] physData = new double[] {2 * MASS_OF_BULLET, 10};
-			
+
 			@Override
 			public double[] getMotionData(){
 				return motionData;
