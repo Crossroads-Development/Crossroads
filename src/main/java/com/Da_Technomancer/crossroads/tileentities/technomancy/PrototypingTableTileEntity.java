@@ -85,15 +85,14 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 				copyTo.setBlockState(new BlockPos(x, 15, z), Blocks.BARRIER.getDefaultState());
 				copyTo.setBlockState(new BlockPos(x, 16 + lengthY, z), Blocks.BARRIER.getDefaultState());
 				for(int y = 16; y < lengthY + 16; y++){
-					BlockPos pos = new BlockPos(x, y, z);
 					BlockPos oldPos = startPos.add(x, y - 16, z);
 					try{
-						copyTo.setBlockState(pos, fromWorld.getBlockState(oldPos));
+						BlockPos newPos = copyTo.getPos().getBlock(x, y, z);
+						copyTo.getWorld().setBlockState(newPos, fromWorld.getBlockState(oldPos), 0);
 						TileEntity oldTe = fromWorld.getTileEntity(oldPos);
 						if(oldTe != null){
 							NBTTagCompound nbt = new NBTTagCompound();
-							oldTe.writeToNBT(nbt);
-							BlockPos newPos = pos.add(copyTo.getPos().getBlock(0, 0, 0));
+							nbt = oldTe.writeToNBT(nbt).copy(); //Copied to prevent tile entities sharing instances of NBTTagCompound (can happen if nested).
 							nbt.setInteger("x", newPos.getX());
 							nbt.setInteger("y", newPos.getY());
 							nbt.setInteger("z", newPos.getZ());
@@ -401,6 +400,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + out, 64));
 				infoList.set(ind, null);
 				PrototypeWorldSavedData.get().markDirty();
+				//TODO logging
 			}
 		}
 	}

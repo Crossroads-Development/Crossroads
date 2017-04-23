@@ -26,6 +26,8 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickable{
 				return;
 			}
 			axle.addEnergy(facing.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE && world.getBlockState(pos.offset(facing)).getBlock() == ModBlocks.axle ? -2 : 2, true, true);
+		}else if(world.isRemote){
+			nextAngle = angle;//
 		}
 	}
 }

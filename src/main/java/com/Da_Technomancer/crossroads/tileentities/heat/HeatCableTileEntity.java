@@ -99,8 +99,8 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 
 		init = nbt.getBoolean("init");
 		temp = nbt.getDouble("temp");
-		conductor = nbt.hasKey("cond") ? HeatConductors.valueOf(nbt.getString("cond")) : null;
-		insulator = nbt.hasKey("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : null;
+		conductor = nbt.hasKey("cond") ? HeatConductors.valueOf(nbt.getString("cond")) : HeatConductors.COPPER;
+		insulator = nbt.hasKey("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
 
 	}
 

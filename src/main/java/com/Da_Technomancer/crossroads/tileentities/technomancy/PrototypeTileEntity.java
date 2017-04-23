@@ -163,6 +163,11 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	public <T> T getCap(Capability<T> cap, EnumFacing side){
 		return world.getTileEntity(pos.offset(side)).getCapability(cap, side.getOpposite());
 	}
+	
+	@Override
+	public boolean loadTick(){
+		return false;
+	}
 
 	@Override
 	public void neighborChanged(EnumFacing fromSide, Block blockIn){

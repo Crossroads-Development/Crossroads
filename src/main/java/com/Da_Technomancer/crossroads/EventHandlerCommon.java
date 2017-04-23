@@ -71,7 +71,7 @@ public final class EventHandlerCommon{
 			loadingTicket = ForgeChunkManager.requestTicket(Main.instance, world, ForgeChunkManager.Type.NORMAL);
 			
 			for(PrototypeInfo info : data.prototypes){
-				if(info != null && info.owner != null && info.owner.get() != null){
+				if(info != null && info.owner != null && info.owner.get() != null && !info.owner.get().loadTick()){
 					ForgeChunkManager.forceChunk(loadingTicket, info.chunk);
 				}
 			}

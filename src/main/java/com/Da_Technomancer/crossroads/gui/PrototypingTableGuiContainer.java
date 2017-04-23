@@ -22,10 +22,10 @@ import net.minecraft.util.ResourceLocation;
 public class PrototypingTableGuiContainer extends GuiContainer implements ILogUser{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID, "textures/gui/container/prototype_table_gui.png");
-	
+
 	private PrototypingTableTileEntity te;
 	private IInventory playerInv;
-	
+
 	private TextBarGuiObject textBar;
 	private ButtonGuiObject button;
 	private OutputLogGuiObject log;
@@ -38,7 +38,7 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 		this.xSize = 176;
 		this.ySize = 214;
 	}
-	
+
 	@Override
 	public void initGui(){
 		super.initGui();
@@ -55,7 +55,7 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
 		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
-		
+
 		textBar.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
 		button.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
 		log.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
@@ -64,7 +64,7 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		fontRendererObj.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 120, 4210752);
-		
+
 		textBar.drawFore(mouseX, mouseY, fontRendererObj);
 		log.drawFore(mouseX, mouseY, fontRendererObj);
 		button.drawFore(mouseX, mouseY, fontRendererObj);
@@ -76,12 +76,16 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 		if(textBar.mouseClicked(x, y, button)){
 			return;
 		}
-		
-		if(this.button.mouseClicked(x, y, button) && inventorySlots.getSlot(0).getHasStack() && !inventorySlots.getSlot(2).getHasStack()){
-			if(!textBar.getText().isEmpty()){
-				ModPackets.network.sendToServer(new SendStringToServer("create", textBar.getText(), te.getPos(), te.getWorld().provider.getDimension()));
+
+		if(this.button.mouseClicked(x, y, button) && !inventorySlots.getSlot(2).getHasStack()){
+			if(inventorySlots.getSlot(0).getHasStack()){
+				if(!textBar.getText().isEmpty()){
+					ModPackets.network.sendToServer(new SendStringToServer("create", textBar.getText(), te.getPos(), te.getWorld().provider.getDimension()));
+				}else{
+					log.addText("Name required.", null);
+				}
 			}else{
-				log.addText("Name required.", null);
+				log.addText("Insufficient Copshowium.", null);
 			}
 		}
 	}
@@ -92,7 +96,7 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 			super.keyTyped(key, keyCode);
 		}
 	}
-	
+
 	public OutputLogGuiObject getLog(String name){
 		return name.equals("prototypeCreate") ? log : null;
 	}

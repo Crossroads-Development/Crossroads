@@ -198,13 +198,13 @@ public class Prototype extends BlockContainer{
 			return;
 		}
 		PrototypeTileEntity prTe = (PrototypeTileEntity) te;
-		BlockPos dirPos = pos.subtract(fromPos);
+		BlockPos dirPos = fromPos.subtract(pos);
 		EnumFacing dir = EnumFacing.getFacingFromVector(dirPos.getX(), dirPos.getY(), dirPos.getZ());
 		WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(prTe.getIndex());
 		if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
 			BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
-			worldDim.getBlockState(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ())).neighborChanged(worldIn, relPos, blockIn, relPos.offset(dir.getOpposite()));
+			worldDim.getBlockState(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ())).neighborChanged(worldDim, relPos, blockIn, relPos.offset(dir.getOpposite()));
 		}
 	}
 }

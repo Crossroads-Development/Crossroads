@@ -146,12 +146,19 @@ public class ModTileEntity{
 	}
 
 	/**
-	 * 
-	 * @param locat
-	 * @param ID For all new TileEntities, this should be lowercase just in case they limit this to lowercase in a later update (future-proofing). Pre-existing TileEntities should keep their old ID.
+	 * @deprecated a single character was wrong. Changing it will destroy all Crossroads stuff in existing worlds. All new tile entities should use the other method. 
 	 */
+	@Deprecated
 	private static void register(Class<? extends TileEntity> locat, String ID){
 		GameRegistry.registerTileEntity(locat, Main.MODID + "_" + ID);
 	}
-
+	
+	/**
+	 * 
+	 * @param clazz The class of the tileentity being registered. 
+	 * @param ID Should be lowercase.
+	 */
+	private static void registerNew(Class<? extends TileEntity> clazz, String ID){
+		GameRegistry.registerTileEntity(clazz, Main.MODID + ":" + ID);
+	}
 }

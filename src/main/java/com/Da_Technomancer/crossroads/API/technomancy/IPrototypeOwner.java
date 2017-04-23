@@ -28,8 +28,17 @@ public interface IPrototypeOwner{
 	public void neighborChanged(@Nonnull EnumFacing fromSide, Block blockIn);
 	
 	/**
+	 * Called once every 20 ticks for all IPrototypeOwners that would be loaded. 
+	 * If this IPrototypeOwner needs to prematurely stop itself from loading, it can remove itself from the main map.
+	 * @return True if this is no longer valid.
+	 */
+	public boolean loadTick();
+	
+	/**
 	 * Returns the prototype port types for each side. This cannot be used to fetch capabilities, it mainly exists for rendering purposes.
 	 */
 	@SideOnly(Side.CLIENT)
-	public PrototypePortTypes[] getTypes();
+	public default PrototypePortTypes[] getTypes(){
+		return new PrototypePortTypes[6];
+	}
 }

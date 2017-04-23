@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
+import com.Da_Technomancer.crossroads.entity.ModEntities;
 import com.Da_Technomancer.crossroads.fluids.ModFluids;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.integration.ModIntegration;
@@ -40,6 +41,7 @@ public class CommonProxy{
 		ModPackets.preInit();
 		GearFactory.init();
 		ModDimensions.init();
+		ModEntities.init();
 	}
 
 	protected void init(FMLInitializationEvent e){
