@@ -98,7 +98,7 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.ORIENT, (meta & 1) == 1).withProperty(Properties.TEXTURE_7, (meta & 14) >> 1);
+		return getDefaultState().withProperty(Properties.ORIENT, (meta & 1) == 1).withProperty(Properties.TEXTURE_7, (meta & 14) >> 1);
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class LensHolder extends BlockContainer{
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
 		if(state.getValue(Properties.TEXTURE_7) != 0){
 			int i = state.getValue(Properties.TEXTURE_7);
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(i == 1 ? Item.getByNameOrId(Main.MODID + ":gemRuby") : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : ModItems.luminescentQuartz, 1));
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(i == 1 ? OreSetUp.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1));
 		}
 		if(world.getTileEntity(pos) instanceof BeamRenderTE){
 			((BeamRenderTE) world.getTileEntity(pos)).refresh();

@@ -232,6 +232,7 @@ tile.prototyping_table.name=Prototyping Table
 tile.prototype_port.name=Prototype Port
 tile.prototype.name=Prototype
 item.beam_cage.name=Beam Cage
+item.prototype_pistol.name=Prototyped Pistol
 
 #GuideAPI documentation
 #Mysterious Journal

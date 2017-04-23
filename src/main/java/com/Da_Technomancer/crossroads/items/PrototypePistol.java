@@ -121,7 +121,6 @@ public class PrototypePistol extends MagicUsingItem{
 				if(owner.axle.getMotionData()[1] > 0){
 					//In blocks(meters)/s Yes, this would be the IRL formula if all energy were losslessly transfered. And yes, I am insane.
 					double speed = Math.sqrt(owner.axle.getMotionData()[1] * 2D / MASS_OF_BULLET);
-					System.out.println(speed);
 					EntityBullet bullet = new EntityBullet(player.world, player, (int) Math.round(speed / 20D), owner.magic.lastOut);
 					bullet.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
 					bullet.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, (float) speed / 20F /*In blocks/tick*/, 0);
@@ -134,6 +133,11 @@ public class PrototypePistol extends MagicUsingItem{
 				owner.magic.lastOut = null;
 			}
 		}
+	}
+	
+	@Override
+	public void preChanged(ItemStack stack, EntityPlayer player){
+		onPlayerStoppedUsing(stack, player.world, player, 0);
 	}
 	
 	@Override
@@ -182,7 +186,6 @@ public class PrototypePistol extends MagicUsingItem{
 						cageNbt.setInteger("stored_" + MagicElements.POTENTIAL.name(), cageNbt.getInteger("stored_" + MagicElements.POTENTIAL.name()) - potential);
 						cageNbt.setInteger("stored_" + MagicElements.STABILITY.name(), cageNbt.getInteger("stored_" + MagicElements.STABILITY.name()) - stability);
 						cageNbt.setInteger("stored_" + MagicElements.VOID.name(), cageNbt.getInteger("stored_" + MagicElements.VOID.name()) - voi);
-						
 						port.getCapPrototype(Capabilities.MAGIC_HANDLER_CAPABILITY).setMagic(new MagicUnit(energy, potential, stability, voi));
 					}
 				}

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.items.MagicUsingItem;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -56,10 +57,12 @@ public class SendMagicItemToServer extends Message<SendMagicItemToServer>{
 		if(hand == null){
 			return;
 		}
-		if(player.getHeldItem(hand).getTagCompound() == null){
-			player.getHeldItem(hand).setTagCompound(new NBTTagCompound());
+		ItemStack stack = player.getHeldItem(hand);
+		((MagicUsingItem) stack.getItem()).preChanged(stack, player);
+		if(stack.getTagCompound() == null){
+			stack.setTagCompound(new NBTTagCompound());
 		}
-		NBTTagCompound nbt = player.getHeldItem(hand).getTagCompound();
+		NBTTagCompound nbt = stack.getTagCompound();
 		int i = nbt.getInteger(element);
 		i += decrease ? -1 : 1;
 		i = Math.min(8, Math.max(i, 0));

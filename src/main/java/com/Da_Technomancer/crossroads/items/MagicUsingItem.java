@@ -26,7 +26,7 @@ public abstract class MagicUsingItem extends Item{
 	
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
-		if(player.world.isRemote && getMaxItemUseDuration(stack) - count == 1){
+		if(player.world.isRemote && getMaxItemUseDuration(stack) == count){
 			MagicElements elemChanged = null;
 			if(Keys.controlEnergy.isKeyDown()){
 				elemChanged = MagicElements.ENERGY;
@@ -73,4 +73,9 @@ public abstract class MagicUsingItem extends Item{
 		playerIn.setActiveHand(hand);
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}
+	
+	/**
+	 * Called BEFORE this item's nbt is changed via packet for the magic use settings.
+	 */
+	public abstract void preChanged(ItemStack stack, EntityPlayer player);
 }
