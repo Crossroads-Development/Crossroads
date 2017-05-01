@@ -31,8 +31,8 @@ public class SlottedChestGuiContainer extends GuiContainer{
 	 */
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		fontRendererObj.drawString(te.iInv.getDisplayName().getUnformattedText(), 8, 6, 4210752);
-		fontRendererObj.drawString(playerInventory.getDisplayName().getUnformattedText(), 8, ySize - 94, 4210752);
+		fontRenderer.drawString(te.iInv.getDisplayName().getUnformattedText(), 8, 6, 4210752);
+		fontRenderer.drawString(playerInventory.getDisplayName().getUnformattedText(), 8, ySize - 94, 4210752);
 		GlStateManager.pushAttrib();
 		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.disableLighting();
@@ -41,7 +41,7 @@ public class SlottedChestGuiContainer extends GuiContainer{
 			Slot renderSlot = inventorySlots.getSlot(i);
 			if(!filter.isEmpty() && !renderSlot.getHasStack()){
 				itemRender.renderItemAndEffectIntoGUI(mc.player, filter, renderSlot.xPos, renderSlot.yPos);
-	            itemRender.renderItemOverlayIntoGUI(fontRendererObj, filter, renderSlot.xPos, renderSlot.yPos, "0");
+	            itemRender.renderItemOverlayIntoGUI(fontRenderer, filter, renderSlot.xPos, renderSlot.yPos, "0");
 			}
 		}
 		GlStateManager.enableLighting();

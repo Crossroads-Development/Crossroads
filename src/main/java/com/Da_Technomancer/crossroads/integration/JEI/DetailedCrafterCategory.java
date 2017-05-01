@@ -17,9 +17,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterRecipeWrapper>{
+public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterRecipe>{
 
-	protected static final String ID = Main.MODID + ".detailed_crafter";
+	public static final String ID = Main.MODID + ".detailed_crafter";
 	private final IDrawable back;
 	private final IDrawable gear;
 	private final IDrawable flask;
@@ -66,7 +66,7 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 	private int type;
 	
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, DetailedCrafterRecipeWrapper recipeWrapper, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout recipeLayout, DetailedCrafterRecipe recipeWrapper, IIngredients ingredients){
 		if(recipeWrapper == null){
 			return;
 		}
@@ -91,5 +91,4 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 	public List<String> getTooltipStrings(int mouseX, int mouseY){
 		return ImmutableList.of();
 	}
-
 }

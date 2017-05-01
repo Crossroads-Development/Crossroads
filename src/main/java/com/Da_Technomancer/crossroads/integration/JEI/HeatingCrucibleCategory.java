@@ -18,9 +18,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
-public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleRecipeWrapper>{
+public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleRecipe>{
 
-	protected static final String id = Main.MODID + ".heatingCrucible";
+	public static final String ID = Main.MODID + ".heating_crucible";
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
@@ -36,7 +36,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 
 	@Override
 	public String getUid(){
-		return id;
+		return ID;
 	}
 
 	@Override
@@ -61,10 +61,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, HeatingCrucibleRecipeWrapper recipeWrapper, IIngredients ingredients){
-		if(!(recipeWrapper instanceof HeatingCrucibleRecipeWrapper)){
-			return;
-		}
+	public void setRecipe(IRecipeLayout recipeLayout, HeatingCrucibleRecipe recipeWrapper, IIngredients ingredients){
 		recipeLayout.getFluidStacks().init(0, false, 90, 42, 32, 32, 200, false, null);
 		recipeLayout.getFluidStacks().set(0, ingredients.getOutputs(FluidStack.class).get(0));
 		recipeLayout.getItemStacks().init(0, true, 40, 50);

@@ -1,18 +1,22 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Triple;
 
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class HeatExchangerRecipe{
+public class HeatExchangerRecipe implements IRecipeWrapper{
 
 	private final ItemStack input;
 	private final ItemStack stack;
@@ -44,28 +48,30 @@ public class HeatExchangerRecipe{
 		max = entry.getValue().getRight();
 	}
 
-	protected ItemStack getInput(){
-		return input;
+	@Override
+	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY){
+		minecraft.fontRenderer.drawString((add < 0 ? "Minimum temp: " : "Maximum temp: ") + max + "°C", 10, 10, 4210752);
+		minecraft.fontRenderer.drawString("Heat Added: " + add + "°C", 10, 20, 4210752);
+		if(inputFluid != null){
+			minecraft.fontRenderer.drawString("Does not require source block", 10, 30, 4210752);
+		}
 	}
 
-	protected ItemStack getStack(){
-		return stack;
-	}
-	
-	protected FluidStack getInputFluid(){
-		return inputFluid;
+	@Override
+	public List<String> getTooltipStrings(int mouseX, int mouseY){
+		return null;
 	}
 
-	protected FluidStack getOutputFluid(){
-		return outputFluid;
+	@Override
+	public boolean handleClick(Minecraft minecraft, int mouseX, int mouseY, int mouseButton){
+		return false;
 	}
 
-	protected double getMax(){
-		return max;
+	@Override
+	public void getIngredients(IIngredients ingredients){
+		ingredients.setOutput(ItemStack.class, stack);
+		ingredients.setInput(ItemStack.class, input);
+		ingredients.setOutput(FluidStack.class, outputFluid);
+		ingredients.setInput(FluidStack.class, inputFluid);
 	}
-
-	protected double getAdd(){
-		return add;
-	}
-
 }

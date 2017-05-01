@@ -1,15 +1,19 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-public class FluidCoolingRecipe{
+public class FluidCoolingRecipe implements IRecipeWrapper{
 
 	private final FluidStack fluid;
 	private final ItemStack stack;
@@ -23,20 +27,25 @@ public class FluidCoolingRecipe{
 		add = entry.getValue().getRight().getRight();
 	}
 
-	protected FluidStack getFluid(){
-		return fluid;
+	@Override
+	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY){
+		minecraft.fontRenderer.drawString("Maximum temp: " + max + "°C", 10, 10, 4210752);
+		minecraft.fontRenderer.drawString("Heat Added: " + add + "°C", 10, 20, 4210752);
 	}
 
-	protected ItemStack getStack(){
-		return stack;
+	@Override
+	public List<String> getTooltipStrings(int mouseX, int mouseY){
+		return null;
 	}
 
-	protected double getMax(){
-		return max;
+	@Override
+	public boolean handleClick(Minecraft minecraft, int mouseX, int mouseY, int mouseButton){
+		return false;
 	}
 
-	protected double getAdd(){
-		return add;
+	@Override
+	public void getIngredients(IIngredients ingredients){
+		ingredients.setOutput(ItemStack.class, stack);
+		ingredients.setInput(FluidStack.class, fluid);
 	}
-
 }

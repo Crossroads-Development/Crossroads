@@ -20,9 +20,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipeWrapper>{
+public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipe>{
 
-	protected static final String id = Main.MODID + ".grindstone";
+	public static final String ID = Main.MODID + ".grindstone";
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
@@ -37,7 +37,7 @@ public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipeWrapp
 
 	@Override
 	public String getUid(){
-		return id;
+		return ID;
 	}
 
 	@Override
@@ -65,11 +65,7 @@ public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipeWrapp
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, GrindstoneRecipeWrapper recipeWrapper, IIngredients ingredients){
-		if(!(recipeWrapper instanceof GrindstoneRecipeWrapper)){
-			return;
-		}
-
+	public void setRecipe(IRecipeLayout recipeLayout, GrindstoneRecipe recipeWrapper, IIngredients ingredients){
 		if (ingredients.getInputs(ItemStack.class).get(0).isEmpty()) {
 			// Might happen if MineTweaker added a wrong recipe
 			return;

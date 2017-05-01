@@ -25,24 +25,24 @@ public class HeatingChamberGuiContainer extends GuiContainer{
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+		mc.getTextureManager().bindTexture(GUI_TEXTURES);
 
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
+		drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 
-		this.drawTexturedModalRect(i + 79, j + 34, 176, 0, getBurnLeftScaled(24), 17);
+		drawTexturedModalRect(i + 79, j + 34, 176, 0, getBurnLeftScaled(24), 17);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		String s = this.te.getDisplayName().getUnformattedText();
-		this.fontRendererObj.drawString(s, 88 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-		this.fontRendererObj.drawString(this.playerInv.getDisplayName().getUnformattedText(), 8, 72, 4210752);
+		fontRenderer.drawString(s, 88 - fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		fontRenderer.drawString(this.playerInv.getDisplayName().getUnformattedText(), 8, 72, 4210752);
 	}
 
 	private int getBurnLeftScaled(int pixels){
-		return this.te.getField(0) * pixels / HeatingChamberTileEntity.REQUIRED;
+		return te.getField(0) * pixels / HeatingChamberTileEntity.REQUIRED;
 	}
 
 }

@@ -35,8 +35,8 @@ public class GrindstoneGuiContainer extends GuiContainer{
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		String s = te.getDisplayName().getUnformattedText();
-		fontRendererObj.drawString(s, 88 - fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-		fontRendererObj.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 72, 4210752);
+		fontRenderer.drawString(s, 88 - fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		fontRenderer.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 72, 4210752);
 	}
 
 	private int getScaledProgress(){

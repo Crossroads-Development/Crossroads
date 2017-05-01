@@ -10,12 +10,17 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.integration.JEI.DetailedCrafterCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.DetailedCrafterRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
-
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -66,27 +71,37 @@ public final class RecipeHolder{
 	 */
 	public static final ArrayList<IRecipe> technomancyRecipes = new ArrayList<IRecipe>();
 
-	public static final ArrayList<Object> JEIWrappers = new ArrayList<Object>();
+	public static final HashMap<String, ArrayList<IRecipeWrapper>> JEIWrappers = new HashMap<String, ArrayList<IRecipeWrapper>>();
 
 	/**
 	 * Converts the versions of the recipes used internally into fake recipes
 	 * for JEI. Not called unless JEI is installed.
 	 */
 	public static void rebind(){
+		ArrayList<IRecipeWrapper> currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<ICraftingStack, ItemStack[]> rec : grindRecipes.entrySet()){
-			JEIWrappers.add(new GrindstoneRecipe(rec));
+			currentRecipes.add(new GrindstoneRecipe(rec));
 		}
+		JEIWrappers.put(GrindstoneCategory.ID, currentRecipes);
+		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> rec : fluidCoolingRecipes.entrySet()){
-			JEIWrappers.add(new FluidCoolingRecipe(rec));
+			currentRecipes.add(new FluidCoolingRecipe(rec));
 		}
+		JEIWrappers.put(FluidCoolingCategory.ID, currentRecipes);
+		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<Block, Triple<IBlockState, Double, Double>> rec : envirHeatSource.entrySet()){
-			JEIWrappers.add(new HeatExchangerRecipe(rec));
+			currentRecipes.add(new HeatExchangerRecipe(rec));
 		}
+		JEIWrappers.put(HeatExchangerCategory.ID, currentRecipes);
+		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(IRecipe rec : technomancyRecipes){
-			JEIWrappers.add(new DetailedCrafterRecipe(rec, 0));
+			currentRecipes.add(new DetailedCrafterRecipe(rec, 0));
 		}
-		JEIWrappers.add(new HeatingCrucibleRecipe(true));
-		JEIWrappers.add(new HeatingCrucibleRecipe(false));
+		JEIWrappers.put(DetailedCrafterCategory.ID, currentRecipes);
+		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes.add(new HeatingCrucibleRecipe(true));
+		currentRecipes.add(new HeatingCrucibleRecipe(false));
+		JEIWrappers.put(HeatingCrucibleCategory.ID, currentRecipes);
 	}
 
 	@Nonnull

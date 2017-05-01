@@ -19,9 +19,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
-public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipeWrapper>{
+public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipe>{
 
-	protected static final String id = Main.MODID + ".fluidCooling";
+	public static final String ID = Main.MODID + ".fluid_cooling";
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
@@ -36,7 +36,7 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipeW
 
 	@Override
 	public String getUid(){
-		return id;
+		return ID;
 	}
 
 	@Override
@@ -61,10 +61,7 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipeW
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, FluidCoolingRecipeWrapper recipeWrapper, IIngredients ingredients){
-		if(!(recipeWrapper instanceof FluidCoolingRecipeWrapper)){
-			return;
-		}
+	public void setRecipe(IRecipeLayout recipeLayout, FluidCoolingRecipe recipeWrapper, IIngredients ingredients){
 		recipeLayout.getFluidStacks().init(0, true, 21, 30, 16, 64, 1000, true, null);
 		recipeLayout.getFluidStacks().set(0, ingredients.getInputs(FluidStack.class).get(0));
 		recipeLayout.getItemStacks().init(0, false, 80, 55);

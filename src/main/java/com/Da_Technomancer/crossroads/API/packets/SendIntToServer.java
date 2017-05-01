@@ -38,7 +38,7 @@ public class SendIntToServer extends Message<SendIntToServer>{
 		DimensionManager.getWorld(dim).addScheduledTask(new Runnable(){
 			@Override
 			public void run(){
-				processMessage(DimensionManager.getWorld(dim), sContext, message, pos, context.getServerHandler().playerEntity);
+				processMessage(DimensionManager.getWorld(dim), sContext, message, pos, context.getServerHandler().player);
 			}
 		});
 

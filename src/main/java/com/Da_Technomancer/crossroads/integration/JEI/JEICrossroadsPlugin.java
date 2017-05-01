@@ -1,5 +1,8 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import java.util.ArrayList;
+import java.util.Map.Entry;
+
 import javax.annotation.Nonnull;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -11,6 +14,7 @@ import mezz.jei.api.IModRegistry;
 import mezz.jei.api.ISubtypeRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
 
 @JEIPlugin
@@ -20,16 +24,16 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	public void register(@Nonnull IModRegistry registry){
 
 		registry.addRecipeCategories(new GrindstoneCategory(registry.getJeiHelpers().getGuiHelper()), new FluidCoolingCategory(registry.getJeiHelpers().getGuiHelper()), new HeatingCrucibleCategory(registry.getJeiHelpers().getGuiHelper()), new HeatExchangerCategory(registry.getJeiHelpers().getGuiHelper()), new DetailedCrafterCategory(registry.getJeiHelpers().getGuiHelper()));
-		registry.addRecipeHandlers(new GrindstoneRecipeHandler(), new FluidCoolingRecipeHandler(), new HeatingCrucibleRecipeHandler(), new HeatExchangerRecipeHandler(), new DetailedCrafterRecipeHandler());
-
-		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.grindstone, 1), GrindstoneCategory.id);
-		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.fluidCoolingChamber, 1), FluidCoolingCategory.id);
-		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.heatingCrucible, 1), HeatingCrucibleCategory.id);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.grindstone, 1), GrindstoneCategory.ID);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.fluidCoolingChamber, 1), FluidCoolingCategory.ID);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.heatingCrucible, 1), HeatingCrucibleCategory.ID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.heatExchanger, 1), HeatExchangerCategory.ID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.insulHeatExchanger, 1), HeatExchangerCategory.ID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.detailedCrafter, 1), DetailedCrafterCategory.ID);
 		
-		registry.addRecipes(RecipeHolder.JEIWrappers);
+		for(Entry<String, ArrayList<IRecipeWrapper>> recipeGroup : RecipeHolder.JEIWrappers.entrySet()){
+			registry.addRecipes(recipeGroup.getValue(), recipeGroup.getKey());
+		}
 	}
 
 	@Override

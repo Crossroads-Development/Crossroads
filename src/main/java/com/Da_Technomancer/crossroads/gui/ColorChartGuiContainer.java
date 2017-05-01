@@ -44,13 +44,13 @@ public class ColorChartGuiContainer extends GuiContainer{
 		int j = (height - ySize) / 2;
 		drawModalRectWithCustomSizedTexture(i, j, 0, 0, xSize, ySize, 300, 300);
 		
-		searchBar.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
+		searchBar.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		String search = searchBar.getText().toUpperCase();
-		searchBar.drawFore(mouseX, mouseY, fontRendererObj);
+		searchBar.drawFore(mouseX, mouseY, fontRenderer);
 		if(!search.isEmpty()){
 			mc.getTextureManager().bindTexture(BLOCKED);
 			for(Slot slot : inventorySlots.inventorySlots){

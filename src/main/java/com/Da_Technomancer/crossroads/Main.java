@@ -38,111 +38,110 @@ public final class Main{
 	}
 
 	public static Logger logger;
-	
+
 	/**
-	 * 
 	 * I am fully aware that this takes up a huge amount of space. It will be removed eventually. 
 	 */
 	@Mod.EventHandler
-    public void onMissingMapping(FMLMissingMappingsEvent event) {
-        for (FMLMissingMappingsEvent.MissingMapping mapping : event.get()) {
-        	logger.info("Repairing missing mapping: " + mapping.resourceLocation.toString());
-        	switch(mapping.type){
+	public void onMissingMapping(FMLMissingMappingsEvent event) {
+		for (FMLMissingMappingsEvent.MissingMapping mapping : event.get()) {
+			logger.info("Repairing missing mapping: " + mapping.resourceLocation.toString());
+			switch(mapping.type){
 				case BLOCK:
 					switch(mapping.resourceLocation.getResourcePath().toLowerCase()){
 						case("blocksalt"):
 							mapping.remap(ModBlocks.blockSalt);
-							break;
+						break;
 						case("candlelilypad"):
 							mapping.remap(ModBlocks.candleLilyPad);
-							break;
+						break;
 						case("fertilesoil"):
 							mapping.remap(ModBlocks.fertileSoil);
-							break;
+						break;
 						case("itemchute"):
 							mapping.remap(ModBlocks.itemChute);
-							break;
+						break;
 						case("blockpurequartz"):
 							mapping.remap(ModBlocks.blockPureQuartz);
-							break;
+						break;
 						case("multipiston"):
 							mapping.remap(ModBlocks.multiPiston);
-							break;
+						break;
 						case("multipistonsticky"):
 							mapping.remap(ModBlocks.multiPistonSticky);
-							break;
+						break;
 						case("multipistonextend"):
 							mapping.remap(ModBlocks.multiPistonExtend);
-							break;
+						break;
 						case("multipistonextendsticky"):
 							mapping.remap(ModBlocks.multiPistonExtendSticky);
-							break;
+						break;
 						case("slottedchest"):
 							mapping.remap(ModBlocks.slottedChest);
-							break;
+						break;
 						case("sortinghopper"):
 							mapping.remap(ModBlocks.sortingHopper);
-							break;
+						break;
 						case("fatcollector"):
 							mapping.remap(ModBlocks.fatCollector);
-							break;
+						break;
 						case("fatcongealer"):
 							mapping.remap(ModBlocks.fatCongealer);
-							break;
+						break;
 						case("fatfeeder"):
 							mapping.remap(ModBlocks.fatFeeder);
-							break;
+						break;
 						case("fluidtank"):
 							mapping.remap(ModBlocks.fluidTank);
-							break;
+						break;
 						case("fluidtube"):
 							mapping.remap(ModBlocks.fluidTube);
-							break;
+						break;
 						case("fluidvoid"):
 							mapping.remap(ModBlocks.fluidVoid);
-							break;
+						break;
 						case("redstonefluidtube"):
 							mapping.remap(ModBlocks.redstoneFluidTube);
-							break;
+						break;
 						case("rotarypump"):
 							mapping.remap(ModBlocks.rotaryPump);
-							break;
+						break;
 						case("steamboiler"):
 							mapping.remap(ModBlocks.steamBoiler);
-							break;
+						break;
 						case("steamturbine"):
 							mapping.remap(ModBlocks.steamTurbine);
-							break;
+						break;
 						case("watercentrifuge"):
 							mapping.remap(ModBlocks.waterCentrifuge);
-							break;
+						break;
 						case("coalheater"):
 							mapping.remap(ModBlocks.coalHeater);
-							break;
+						break;
 						case("fluidcoolingchamber"):
 							mapping.remap(ModBlocks.fluidCoolingChamber);
-							break;
+						break;
 						case("insulatedheatexchanger"):
 							mapping.remap(ModBlocks.insulHeatExchanger);
-							break;
+						break;
 						case("heatexchanger"):
 							mapping.remap(ModBlocks.heatExchanger);
-							break;
+						break;
 						case("heatingchamber"):
 							mapping.remap(ModBlocks.heatingChamber);
-							break;
+						break;
 						case("heatingcrucible"):
 							mapping.remap(ModBlocks.heatingCrucible);
-							break;
+						break;
 						case("saltreactor"):
 							mapping.remap(ModBlocks.saltReactor);
-							break;
+						break;
 						case("arcaneextractor"):
 							mapping.remap(ModBlocks.arcaneExtractor);
-							break;
+						break;
 						case("arcanereflector"):
 							mapping.remap(ModBlocks.arcaneReflector);
-							break;
+						break;
 						case("beaconharness"):
 							mapping.remap(ModBlocks.beaconHarness);
 						break;
@@ -317,133 +316,133 @@ public final class Main{
 					switch(mapping.resourceLocation.getResourcePath().toLowerCase()){
 						case("blocksalt"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.blockSalt));
-							break;
+						break;
 						case("candlelilypad"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.candleLilyPad));
-							break;
+						break;
 						case("fertilesoil"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fertileSoil));
-							break;
+						break;
 						case("itemchute"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.itemChute));
-							break;
+						break;
 						case("blockpurequartz"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.blockPureQuartz));
-							break;
+						break;
 						case("multipiston"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.multiPiston));
-							break;
+						break;
 						case("multipistonsticky"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.multiPistonSticky));
-							break;
+						break;
 						case("multipistonextend"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.multiPistonExtend));
-							break;
+						break;
 						case("multipistonextendsticky"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.multiPistonExtendSticky));
-							break;
+						break;
 						case("slottedchest"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.slottedChest));
-							break;
+						break;
 						case("sortinghopper"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.sortingHopper));
-							break;
+						break;
 						case("fatcollector"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fatCollector));
-							break;
+						break;
 						case("fatcongealer"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fatCongealer));
-							break;
+						break;
 						case("fatfeeder"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fatFeeder));
-							break;
+						break;
 						case("fluidtank"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fluidTank));
-							break;
+						break;
 						case("fluidtube"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fluidTube));
-							break;
+						break;
 						case("fluidvoid"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fluidVoid));
-							break;
+						break;
 						case("redstonefluidtube"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.redstoneFluidTube));
-							break;
+						break;
 						case("rotarypump"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.rotaryPump));
-							break;
+						break;
 						case("steamboiler"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.steamBoiler));
-							break;
+						break;
 						case("steamturbine"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.steamTurbine));
-							break;
+						break;
 						case("watercentrifuge"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.waterCentrifuge));
-							break;
+						break;
 						case("coalheater"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.coalHeater));
-							break;
+						break;
 						case("fluidcoolingchamber"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fluidCoolingChamber));
-							break;
+						break;
 						case("insulatedheatexchanger"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.insulHeatExchanger));
-							break;
+						break;
 						case("heatexchanger"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.heatExchanger));
-							break;
+						break;
 						case("heatingchamber"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.heatingChamber));
-							break;
+						break;
 						case("heatingcrucible"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.heatingCrucible));
-							break;
+						break;
 						case("saltreactor"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.saltReactor));
-							break;
+						break;
 						case("arcaneextractor"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.arcaneExtractor));
-							break;
+						break;
 						case("arcanereflector"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.arcaneReflector));
-							break;
+						break;
 						case("beaconharness"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.beaconHarness));
-							break;
+						break;
 						case("beamsplitter"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.beamSplitter));
-							break;
+						break;
 						case("beamsplitterbasic"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.beamSplitterBasic));
-							break;
+						break;
 						case("colorchart"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.colorChart));
-							break;
+						break;
 						case("crystallineprism"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.crystallinePrism));
-							break;
+						break;
 						case("masteraxiscrystal"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.crystalMasterAxis));
-							break;
+						break;
 						case("lensholder"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.lensHolder));
-							break;
+						break;
 						case("largequartzstabilizer"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.largeQuartzStabilizer));
-							break;
+						break;
 						case("smallquartzstabilizer"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.smallQuartzStabilizer));
-							break;
+						break;
 						case("itemchuteport"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.itemChutePort));
-							break;
+						break;
 						case("masteraxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.masterAxis));
-							break;
+						break;
 						case("rotarydrill"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.rotaryDrill));
-							break;
+						break;
 						case("togglegeariron"):
 							mapping.remap(Item.getItemFromBlock(GearFactory.TOGGLE_GEARS.get(GearTypes.IRON)));
 						break;
@@ -464,7 +463,7 @@ public final class Main{
 						break;
 						case("additionaxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.additionAxis));
-							break;
+						break;
 						case("backcountergeariron"):
 							mapping.remap(Item.getItemFromBlock(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.IRON)));
 						break;
@@ -482,7 +481,7 @@ public final class Main{
 						break;
 						case("backcountergearcopshowium"):
 							mapping.remap(Item.getItemFromBlock(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.COPSHOWIUM)));
-							break;
+						break;
 						case("countergeariron"):
 							mapping.remap(Item.getItemFromBlock(GearFactory.COUNTER_GEARS.get(GearTypes.IRON)));
 						break;
@@ -500,40 +499,40 @@ public final class Main{
 						break;
 						case("countergearcopshowium"):
 							mapping.remap(Item.getItemFromBlock(GearFactory.COUNTER_GEARS.get(GearTypes.COPSHOWIUM)));
-							break;
+						break;
 						case("chunkunlocker"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.chunkUnlocker));
-							break;
+						break;
 						case("equalsaxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.equalsAxis));
-							break;
+						break;
 						case("fluxmanipulator"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fluxManipulator));
-							break;
+						break;
 						case("fluxreaderaxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.fluxReaderAxis));
-							break;
+						break;
 						case("greaterthanaxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.greaterThanAxis));
-							break;
+						break;
 						case("lessthanaxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.lessThanAxis));
-							break;
+						break;
 						case("mechanicalbeamsplitter"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.mechanicalBeamSplitter));
-							break;
+						break;
 						case("multiplicationaxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.multiplicationAxis));
-							break;
+						break;
 						case("ratemanipulator"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.rateManipulator));
-							break;
+						break;
 						case("redstoneaxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.redstoneAxis));
-							break;
+						break;
 						case("squarerootaxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.squareRootAxis));
-							break;
+						break;
 						case("blockcopper"):
 							mapping.remap(Item.getItemFromBlock(OreSetUp.blockCopper));
 						break;
@@ -596,7 +595,7 @@ public final class Main{
 						break;
 						case("gearcopshowium"):
 							mapping.remap(GearFactory.BASIC_GEARS.get(GearTypes.COPSHOWIUM));
-							break;
+						break;
 						case("largegeariron"):
 							mapping.remap(GearFactory.LARGE_GEARS.get(GearTypes.IRON));
 						break;
@@ -614,80 +613,80 @@ public final class Main{
 						break;
 						case("largegearcopshowium"):
 							mapping.remap(GearFactory.LARGE_GEARS.get(GearTypes.COPSHOWIUM));
-							break;
+						break;
 						case("debuggearwriter"):
 							mapping.remap(ModItems.debugGearWriter);
-							break;
+						break;
 						case("debugheatwriter"):
 							mapping.remap(ModItems.debugHeatWriter);
-							break;
+						break;
 						case("handcrank"):
 							mapping.remap(ModItems.handCrank);
-							break;
+						break;
 						case("dustcopper"):
 							mapping.remap(ModItems.dustCopper);
-							break;
+						break;
 						case("dustsalt"):
 							mapping.remap(ModItems.dustSalt);
-							break;
+						break;
 						case("obsidiancuttingkit"):
 							mapping.remap(ModItems.obsidianKit);
-							break;
+						break;
 						case("mashedpotato"):
 							mapping.remap(ModItems.mashedPotato);
-							break;
+						break;
 						case("fluidgauge"):
 							mapping.remap(ModItems.fluidGauge);
-							break;
+						break;
 						case("magentabread"):
 							mapping.remap(ModItems.magentaBread);
-							break;
+						break;
 						case("edibleblob"):
 							mapping.remap(ModItems.edibleBlob);
-							break;
+						break;
 						case("diamondwire"):
 							mapping.remap(ModItems.diamondWire);
-							break;
+						break;
 						case("rainidol"):
 							mapping.remap(ModItems.rainIdol);
-							break;
+						break;
 						case("purequartz"):
 							mapping.remap(ModItems.pureQuartz);
-							break;
+						break;
 						case("luminescentquartz"):
 							mapping.remap(ModItems.luminescentQuartz);
-							break;
+						break;
 						case("lensarray"):
 							mapping.remap(ModItems.lensArray);
-							break;
+						break;
 						case("invisitem"):
 							mapping.remap(ModItems.invisItem);
-							break;
+						break;
 						case("squidhelmet"):
 							mapping.remap(ModItems.squidHelmet);
-							break;
+						break;
 						case("pigzombiechestplate"):
 							mapping.remap(ModItems.pigZombieChestplate);
-							break;
+						break;
 						case("cowleggings"):
 							mapping.remap(ModItems.cowLeggings);
-							break;
+						break;
 						case("chickenboots"):
 							mapping.remap(ModItems.chickenBoots);
-							break;
+						break;
 						case("chaosrod"):
 							mapping.remap(ModItems.chaosRod);
-							break;
+						break;
 						case("voidcrystal"):
 							mapping.remap(ModItems.voidCrystal);
-							break;
+						break;
 						case("modulegoggles"):
 							mapping.remap(ModItems.moduleGoggles);
-							break;
+						break;
 						case("stafftechnomancy"):
 							mapping.remap(ModItems.staffTechnomancy);
-							break;
-							
+						break;
+
 						default:
 							String oldMap = mapping.resourceLocation.getResourcePath().toLowerCase();
 							if(oldMap.contains("redstoneheatcable")){
@@ -698,10 +697,10 @@ public final class Main{
 							break;
 					}
 					break;
-        	}
-        }
+			}
+		}
 	}
-	
+
 	@SidedProxy(clientSide = "com.Da_Technomancer.crossroads.ClientProxy", serverSide = "com.Da_Technomancer.crossroads.ServerProxy")
 	public static CommonProxy proxy;
 
@@ -723,18 +722,18 @@ public final class Main{
 	public void postInit(FMLPostInitializationEvent e){
 		proxy.postInit(e);
 	}
-	
+
 	@Mod.EventHandler
 	public void serverLoading(FMLServerStartingEvent e){
 		e.registerServerCommand(new WorkspaceDimTeleport());
 	}
-	
+
 	@Mod.EventHandler
 	public void serverStarted(FMLServerStartedEvent e){
 		CommonProxy.masterKey = 1;
 		ModDimensions.loadDims();
 	}
-	
+
 	@Mod.EventHandler
 	public void serverEnded(FMLServerStoppingEvent e){
 		ForgeChunkManager.releaseTicket(EventHandlerCommon.loadingTicket);

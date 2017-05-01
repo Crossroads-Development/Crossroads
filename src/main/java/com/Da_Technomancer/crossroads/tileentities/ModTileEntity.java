@@ -73,83 +73,83 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ModTileEntity{
 
 	public static void init(){
-		register(HeatCableTileEntity.class, "heatCable");
-		register(SidedGearHolderTileEntity.class, "sidedGearHolder");
-		register(MasterAxisTileEntity.class, "masterAxis");
-		register(GrindstoneTileEntity.class, "grindstone");
-		register(HeatingCrucibleTileEntity.class, "heatingCrucible");
-		register(FluidTubeTileEntity.class, "fluidTube");
-		register(SteamBoilerTileEntity.class, "steamBoiler");
-		register(RotaryPumpTileEntity.class, "rotaryPump");
-		register(BrazierTileEntity.class, "brazier");
-		register(SteamTurbineTileEntity.class, "steamTurbine");
-		register(FluidVoidTileEntity.class, "fluidVoid");
-		register(HeatExchangerTileEntity.class, "heatExchanger");
-		register(FluidTankTileEntity.class, "fluidTank");
-		register(CoalHeaterTileEntity.class, "coalHeater");
-		register(HeatingChamberTileEntity.class, "heatingChamber");
-		register(SaltReactorTileEntity.class, "saltReactor");
-		register(FluidCoolingChamberTileEntity.class, "fluidCoolingChamber");
-		register(SlottedChestTileEntity.class, "slottedChest");
-		register(SortingHopperTileEntity.class, "sortingHopper");
-		register(LargeGearSlaveTileEntity.class, "largeGearSlave");
-		register(LargeGearMasterTileEntity.class, "largeGearMaster");
-		register(ItemChutePortTileEntity.class, "itemChutePort");
-		register(RadiatorTileEntity.class, "radiator");
-		register(RotaryDrillTileEntity.class, "rotaryDrill");
-		register(FatCollectorTileEntity.class, "fatCollector");
-		register(FatCongealerTileEntity.class, "fatCongealer");
-		register(RedstoneHeatCableTileEntity.class, "redstoneHeatCable");
-		register(ToggleGearTileEntity.class, "toggleGear");
-		register(RedstoneFluidTubeTileEntity.class, "redstoneFluidTube");
-		register(WaterCentrifugeTileEntity.class, "waterCentrifuge");
-		register(ArcaneExtractorTileEntity.class, "arcaneExtractor");
-		register(QuartzStabilizerTileEntity.class, "quartzStabilizer");
-		register(CrystallinePrismTileEntity.class, "crystalPrism");
-		register(ArcaneReflectorTileEntity.class, "arcaneReflector");
-		register(LensHolderTileEntity.class, "lensHolder");
-		register(BeamSplitterTileEntity.class, "beamSplitter");
-		register(BeamSplitterBasicTileEntity.class, "beamSplitterBasic");
-		register(CrystalMasterAxisTileEntity.class, "crystalMasterAxis");
-		register(AxleTileEntity.class, "axle");
-		register(RatiatorTileEntity.class, "ratiator");
-		register(BeaconHarnessTileEntity.class, "beaconHarness");
-		register(FatFeederTileEntity.class, "fatFeeder");
-		register(ChunkUnlockerTileEntity.class, "chunkUnlocker");
-		register(RateManipulatorTileEntity.class, "rateManipulator");
-		register(FluxManipulatorTileEntity.class, "fluxManipulator");
-		register(FluxReaderAxisTileEntity.class, "fluxReaderAxis");
-		register(MultiplicationAxisTileEntity.class, "multiplicationAxis");
-		register(CounterGearTileEntity.class, "counterGear");
-		register(BackCounterGearTileEntity.class, "backCounterGear");
-		register(AdditionAxisTileEntity.class, "additionAxis");
-		register(EqualsAxisTileEntity.class, "equalsAxis");
-		register(GreaterThanAxisTileEntity.class, "greaterThanAxis");
-		register(LessThanAxisTileEntity.class, "lessThanAxis");
-		register(RedstoneAxisTileEntity.class, "redstoneAxis");
-		register(SquareRootAxisTileEntity.class, "squareRootAxis");
-		register(MechanicalBeamSplitterTileEntity.class, "mechanicalBeamSplitter");
-		register(CageChargerTileEntity.class, "cage_charger");
-		register(HamsterWheelTileEntity.class, "hamster_wheel");
-		register(FluidSplitterTileEntity.class, "fluid_splitter");
-		register(BasicFluidSplitterTileEntity.class, "basic_fluid_splitter");
-		register(CopshowiumCreationChamberTileEntity.class, "copshowium_creation_chamber");
-		register(SinAxisTileEntity.class, "sin_axis");
-		register(CosAxisTileEntity.class, "cos_axis");
-		register(ArcSinAxisTileEntity.class, "arcsin_axis");
-		register(ArcCosAxisTileEntity.class, "arccos_axis");
-		register(GatewayFrameTileEntity.class, "gateway_frame");
-		register(RedstoneKeyboardTileEntity.class, "redstone_keyboard");
-		register(PrototypingTableTileEntity.class, "prototyping_table");
-		register(PrototypeTileEntity.class, "prototype");
-		register(PrototypePortTileEntity.class, "prototype_port");
+		registerOld(HeatCableTileEntity.class, "heatCable");
+		registerOld(SidedGearHolderTileEntity.class, "sidedGearHolder");
+		registerOld(MasterAxisTileEntity.class, "masterAxis");
+		registerOld(GrindstoneTileEntity.class, "grindstone");
+		registerOld(HeatingCrucibleTileEntity.class, "heatingCrucible");
+		registerOld(FluidTubeTileEntity.class, "fluidTube");
+		registerOld(SteamBoilerTileEntity.class, "steamBoiler");
+		registerOld(RotaryPumpTileEntity.class, "rotaryPump");
+		registerOld(BrazierTileEntity.class, "brazier");
+		registerOld(SteamTurbineTileEntity.class, "steamTurbine");
+		registerOld(FluidVoidTileEntity.class, "fluidVoid");
+		registerOld(HeatExchangerTileEntity.class, "heatExchanger");
+		registerOld(FluidTankTileEntity.class, "fluidTank");
+		registerOld(CoalHeaterTileEntity.class, "coalHeater");
+		registerOld(HeatingChamberTileEntity.class, "heatingChamber");
+		registerOld(SaltReactorTileEntity.class, "saltReactor");
+		registerOld(FluidCoolingChamberTileEntity.class, "fluidCoolingChamber");
+		registerOld(SlottedChestTileEntity.class, "slottedChest");
+		registerOld(SortingHopperTileEntity.class, "sortingHopper");
+		registerOld(LargeGearSlaveTileEntity.class, "largeGearSlave");
+		registerOld(LargeGearMasterTileEntity.class, "largeGearMaster");
+		registerOld(ItemChutePortTileEntity.class, "itemChutePort");
+		registerOld(RadiatorTileEntity.class, "radiator");
+		registerOld(RotaryDrillTileEntity.class, "rotaryDrill");
+		registerOld(FatCollectorTileEntity.class, "fatCollector");
+		registerOld(FatCongealerTileEntity.class, "fatCongealer");
+		registerOld(RedstoneHeatCableTileEntity.class, "redstoneHeatCable");
+		registerOld(ToggleGearTileEntity.class, "toggleGear");
+		registerOld(RedstoneFluidTubeTileEntity.class, "redstoneFluidTube");
+		registerOld(WaterCentrifugeTileEntity.class, "waterCentrifuge");
+		registerOld(ArcaneExtractorTileEntity.class, "arcaneExtractor");
+		registerOld(QuartzStabilizerTileEntity.class, "quartzStabilizer");
+		registerOld(CrystallinePrismTileEntity.class, "crystalPrism");
+		registerOld(ArcaneReflectorTileEntity.class, "arcaneReflector");
+		registerOld(LensHolderTileEntity.class, "lensHolder");
+		registerOld(BeamSplitterTileEntity.class, "beamSplitter");
+		registerOld(BeamSplitterBasicTileEntity.class, "beamSplitterBasic");
+		registerOld(CrystalMasterAxisTileEntity.class, "crystalMasterAxis");
+		registerOld(AxleTileEntity.class, "axle");
+		registerOld(RatiatorTileEntity.class, "ratiator");
+		registerOld(BeaconHarnessTileEntity.class, "beaconHarness");
+		registerOld(FatFeederTileEntity.class, "fatFeeder");
+		registerOld(ChunkUnlockerTileEntity.class, "chunkUnlocker");
+		registerOld(RateManipulatorTileEntity.class, "rateManipulator");
+		registerOld(FluxManipulatorTileEntity.class, "fluxManipulator");
+		registerOld(FluxReaderAxisTileEntity.class, "fluxReaderAxis");
+		registerOld(MultiplicationAxisTileEntity.class, "multiplicationAxis");
+		registerOld(CounterGearTileEntity.class, "counterGear");
+		registerOld(BackCounterGearTileEntity.class, "backCounterGear");
+		registerOld(AdditionAxisTileEntity.class, "additionAxis");
+		registerOld(EqualsAxisTileEntity.class, "equalsAxis");
+		registerOld(GreaterThanAxisTileEntity.class, "greaterThanAxis");
+		registerOld(LessThanAxisTileEntity.class, "lessThanAxis");
+		registerOld(RedstoneAxisTileEntity.class, "redstoneAxis");
+		registerOld(SquareRootAxisTileEntity.class, "squareRootAxis");
+		registerOld(MechanicalBeamSplitterTileEntity.class, "mechanicalBeamSplitter");
+		registerOld(CageChargerTileEntity.class, "cage_charger");
+		registerOld(HamsterWheelTileEntity.class, "hamster_wheel");
+		registerOld(FluidSplitterTileEntity.class, "fluid_splitter");
+		registerOld(BasicFluidSplitterTileEntity.class, "basic_fluid_splitter");
+		registerOld(CopshowiumCreationChamberTileEntity.class, "copshowium_creation_chamber");
+		registerOld(SinAxisTileEntity.class, "sin_axis");
+		registerOld(CosAxisTileEntity.class, "cos_axis");
+		registerOld(ArcSinAxisTileEntity.class, "arcsin_axis");
+		registerOld(ArcCosAxisTileEntity.class, "arccos_axis");
+		registerOld(GatewayFrameTileEntity.class, "gateway_frame");
+		registerOld(RedstoneKeyboardTileEntity.class, "redstone_keyboard");
+		registerOld(PrototypingTableTileEntity.class, "prototyping_table");
+		registerOld(PrototypeTileEntity.class, "prototype");
+		registerOld(PrototypePortTileEntity.class, "prototype_port");
 	}
 
 	/**
 	 * @deprecated a single character was wrong. Changing it will destroy all Crossroads stuff in existing worlds. All new tile entities should use the other method. 
 	 */
 	@Deprecated
-	private static void register(Class<? extends TileEntity> locat, String ID){
+	private static void registerOld(Class<? extends TileEntity> locat, String ID){
 		GameRegistry.registerTileEntity(locat, Main.MODID + "_" + ID);
 	}
 	
@@ -158,7 +158,7 @@ public class ModTileEntity{
 	 * @param clazz The class of the tileentity being registered. 
 	 * @param ID Should be lowercase.
 	 */
-	private static void registerNew(Class<? extends TileEntity> clazz, String ID){
+	private static void register(Class<? extends TileEntity> clazz, String ID){
 		GameRegistry.registerTileEntity(clazz, Main.MODID + ":" + ID);
 	}
 }

@@ -67,16 +67,16 @@ public class PrototypePortGuiContainer extends GuiContainer{
 		int j = (height - ySize) / 2;
 		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
 		
-		types.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
-		in_out.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
-		side.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
+		types.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		in_out.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		side.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		types.drawFore(mouseX, mouseY, fontRendererObj);
-		in_out.drawFore(mouseX, mouseY, fontRendererObj);
-		side.drawFore(mouseX, mouseY, fontRendererObj);
+		types.drawFore(mouseX, mouseY, fontRenderer);
+		in_out.drawFore(mouseX, mouseY, fontRenderer);
+		side.drawFore(mouseX, mouseY, fontRenderer);
 	}
 	
 	@Override

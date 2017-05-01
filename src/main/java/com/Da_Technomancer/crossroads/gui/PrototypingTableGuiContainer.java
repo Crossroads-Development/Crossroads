@@ -56,18 +56,18 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 		int j = (height - ySize) / 2;
 		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
 
-		textBar.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
-		button.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
-		log.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
+		textBar.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		button.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		log.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		fontRendererObj.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 120, 4210752);
+		fontRenderer.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 120, 4210752);
 
-		textBar.drawFore(mouseX, mouseY, fontRendererObj);
-		log.drawFore(mouseX, mouseY, fontRendererObj);
-		button.drawFore(mouseX, mouseY, fontRendererObj);
+		textBar.drawFore(mouseX, mouseY, fontRenderer);
+		log.drawFore(mouseX, mouseY, fontRenderer);
+		button.drawFore(mouseX, mouseY, fontRenderer);
 	}
 
 	@Override

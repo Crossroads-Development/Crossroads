@@ -38,12 +38,12 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		textBar.drawBack(partialTicks, mouseX, mouseY, fontRendererObj);
+		textBar.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		textBar.drawFore(mouseX, mouseY, fontRendererObj);
+		textBar.drawFore(mouseX, mouseY, fontRenderer);
 	}
 
 	@Override

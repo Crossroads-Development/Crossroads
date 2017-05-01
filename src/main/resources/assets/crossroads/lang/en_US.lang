@@ -233,6 +233,7 @@ tile.prototype_port.name=Prototype Port
 tile.prototype.name=Prototype
 item.beam_cage.name=Beam Cage
 item.prototype_pistol.name=Prototyped Pistol
+tile.molten_copshowium.name=Molten Copshowium Source
 
 #GuideAPI documentation
 #Mysterious Journal

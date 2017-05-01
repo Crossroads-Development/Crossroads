@@ -249,7 +249,7 @@ public final class EventHandlerClient{
 				buf.pos(0, 60, -1).tex(0, 0).endVertex();
 				tes.draw();
 				
-				Minecraft.getMinecraft().fontRendererObj.drawString(offStack.getDisplayName(), 16, 65, Color.DARK_GRAY.getRGB());
+				Minecraft.getMinecraft().fontRenderer.drawString(offStack.getDisplayName(), 16, 65, Color.DARK_GRAY.getRGB());
 				GlStateManager.color(1, 1, 1);
 				GlStateManager.disableBlend();
 				GlStateManager.popAttrib();
@@ -290,7 +290,7 @@ public final class EventHandlerClient{
 				buf.pos(0, 0, -1).tex(0, 0).endVertex();
 				tes.draw();
 				
-				Minecraft.getMinecraft().fontRendererObj.drawString(mainStack.getDisplayName(), 16, 5, Color.DARK_GRAY.getRGB());
+				Minecraft.getMinecraft().fontRenderer.drawString(mainStack.getDisplayName(), 16, 5, Color.DARK_GRAY.getRGB());
 				
 				GlStateManager.disableBlend();
 				GlStateManager.popAttrib();

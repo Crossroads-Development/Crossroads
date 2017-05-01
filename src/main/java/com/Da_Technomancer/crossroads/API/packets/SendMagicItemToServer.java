@@ -32,7 +32,7 @@ public class SendMagicItemToServer extends Message<SendMagicItemToServer>{
 			System.err.println("MessageToServer received on wrong side:" + context.side);
 			return null;
 		}
-		EntityPlayerMP player = context.getServerHandler().playerEntity;
+		EntityPlayerMP player = context.getServerHandler().player;
 		if(player == null){
 			System.err.println("Player was null on packet arrival");
 			return null;

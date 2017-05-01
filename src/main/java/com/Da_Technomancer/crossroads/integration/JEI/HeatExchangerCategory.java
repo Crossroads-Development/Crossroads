@@ -19,9 +19,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
-public class HeatExchangerCategory implements IRecipeCategory<HeatExchangerRecipeWrapper>{
+public class HeatExchangerCategory implements IRecipeCategory<HeatExchangerRecipe>{
 
-	protected static final String ID = Main.MODID + ".heatExchanger";
+	public static final String ID = Main.MODID + ".heat_exchanger";
 	private final IDrawable back;
 	private final IDrawable slotOut;
 	private final IDrawable slotIn;
@@ -64,7 +64,7 @@ public class HeatExchangerCategory implements IRecipeCategory<HeatExchangerRecip
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, HeatExchangerRecipeWrapper recipeWrapper, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout recipeLayout, HeatExchangerRecipe recipeWrapper, IIngredients ingredients){
 		recipeLayout.getFluidStacks().init(0, true, 22, 56, 17, 17, 1, false, null);
 		recipeLayout.getFluidStacks().set(0, ingredients.getInputs(FluidStack.class).get(0));
 		recipeLayout.getItemStacks().init(0, true, 21, 55);
@@ -84,5 +84,4 @@ public class HeatExchangerCategory implements IRecipeCategory<HeatExchangerRecip
 	public List<String> getTooltipStrings(int mouseX, int mouseY){
 		return ImmutableList.of();
 	}
-
 }
