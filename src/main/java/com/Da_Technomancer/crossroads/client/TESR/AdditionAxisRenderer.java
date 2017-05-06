@@ -39,7 +39,7 @@ public class AdditionAxisRenderer extends TileEntitySpecialRenderer<AdditionAxis
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x, y, z);
 		GlStateManager.translate(.5D, .5D, .5D);
-		GlStateManager.rotate(orient ? 90 : 0, 0, 1, 0);
+		GlStateManager.rotate(orient ? 270 : 0, 0, 1, 0);
 		GlStateManager.translate(-.5D, -.5D, -.5D);
 
 		//Some of the scaling is a tiny bit less than expected values to avoid z-fighting.

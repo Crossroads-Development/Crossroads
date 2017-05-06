@@ -42,7 +42,7 @@ public final class EnergyConverters{
 	
 	/**
 	 * The number of mB of molten copshowium produced from 1mb of molten copper OR 1mb of distilled water.
-	 * Based on balance and convenientce. 
+	 * Based on balance and convenience. 
 	 */
 	public static final double COPSHOWIUM_PER_COPPER = 1.8D;
 }

@@ -26,10 +26,10 @@ public class SlottedChestTileEntity extends TileEntity{
 			lockedInv[i] = ItemStack.EMPTY;
 		}
 	}
-	
+
 	private ItemStack[] inv = new ItemStack[54];
 	public ItemStack[] lockedInv = new ItemStack[54];
-	
+
 	public void filterChanged(){
 		if(world.isRemote){
 			return;
@@ -74,7 +74,7 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		return nbt;
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
@@ -118,7 +118,7 @@ public class SlottedChestTileEntity extends TileEntity{
 	public boolean isInventoryType(IInventory inv){
 		return inv instanceof Inventory;
 	}
-	
+
 	private class InventoryHandler implements IItemHandler{
 
 		@Override
@@ -157,11 +157,11 @@ public class SlottedChestTileEntity extends TileEntity{
 			int change = Math.min(inv[slot].getCount(), amount);
 			ItemStack out = inv[slot].copy();
 			out.setCount(change);
-			
+
 			if(!simulate){
 				inv[slot].shrink(change);
 			}
-			
+
 			return change == 0 ? ItemStack.EMPTY : out;
 		}
 

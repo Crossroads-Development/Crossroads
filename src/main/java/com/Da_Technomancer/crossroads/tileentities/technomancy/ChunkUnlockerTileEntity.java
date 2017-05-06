@@ -21,7 +21,7 @@ public class ChunkUnlockerTileEntity extends TileEntity{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side == EnumFacing.UP){
 			return true;
 		}
 
@@ -31,7 +31,7 @@ public class ChunkUnlockerTileEntity extends TileEntity{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side == EnumFacing.UP){
 			return (T) magicHandler;
 		}
 
@@ -39,7 +39,7 @@ public class ChunkUnlockerTileEntity extends TileEntity{
 	}
 
 	private int timer = COOLDOWN;
-	private static final int COOLDOWN = 40;
+	private static final int COOLDOWN = 40;//8 seconds
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
@@ -60,6 +60,7 @@ public class ChunkUnlockerTileEntity extends TileEntity{
 		public void setMagic(MagicUnit mag){
 			if(MagicElements.getElement(mag) == MagicElements.TIME && mag.getVoid() == 0){
 				if(!FieldWorldSavedData.get(world).fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos))) && --timer <= 0){
+					//This is routed through to the block via world in order to easily add a 1 tick delay.
 					world.updateBlockTick(pos, ModBlocks.chunkUnlocker, 1, 1);
 					timer = COOLDOWN;
 				}

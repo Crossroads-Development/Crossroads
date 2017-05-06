@@ -77,6 +77,7 @@ public final class ModItems{
 	public static StaffTechnomancy staffTechnomancy;
 	public static BeamCage beamCage;
 	public static PrototypePistol pistol;
+	public static PrototypeWatch watch;
 
 	private static ArrayList<Triple<Item, Integer, ModelResourceLocation>> modelQue = new ArrayList<Triple<Item, Integer, ModelResourceLocation>>();
 
@@ -120,6 +121,7 @@ public final class ModItems{
 		itemAddQue(staffTechnomancy = new StaffTechnomancy());
 		itemAddQue(beamCage = new BeamCage());
 		itemAddQue(pistol = new PrototypePistol());
+		itemAddQue(watch = new PrototypeWatch());
 	}
 
 	@SideOnly(Side.CLIENT)

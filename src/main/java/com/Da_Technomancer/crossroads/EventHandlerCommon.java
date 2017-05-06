@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -15,10 +16,13 @@ import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityWitch;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.WorldServer;
@@ -27,11 +31,9 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
@@ -55,49 +57,35 @@ public final class EventHandlerCommon{
 	private static final Random RAND = new Random();
 	private static final ArrayList<Chunk> TO_RETROGEN = new ArrayList<Chunk>();
 	protected static Ticket loadingTicket;
-	
+	private final float adjacentRateCoefficient= .5F;
+
 	@SubscribeEvent
 	public void runRetrogenAndLoadChunks(WorldTickEvent e){
+		//Retrogen
 		if(TO_RETROGEN.size() != 0){
 			Chunk chunk = TO_RETROGEN.get(0);
 			CommonProxy.WORLD_GEN.generate(RAND, chunk.xPosition, chunk.zPosition, chunk.getWorld(), null, null);
 			TO_RETROGEN.remove(0);
 		}
+
+		//Prototype chunk loading
 		//Only should be called on the server side. Not called every tick, as that would be excessive
 		if(!e.world.isRemote && e.world.provider.getDimension() == 0 && e.world.getTotalWorldTime() % 20 == 0){
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get();
 			WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			ForgeChunkManager.releaseTicket(loadingTicket);
 			loadingTicket = ForgeChunkManager.requestTicket(Main.instance, world, ForgeChunkManager.Type.NORMAL);
-			
+
 			for(PrototypeInfo info : data.prototypes){
 				if(info != null && info.owner != null && info.owner.get() != null && !info.owner.get().loadTick()){
 					ForgeChunkManager.forceChunk(loadingTicket, info.chunk);
 				}
 			}
 		}
-	}
 
-	@SubscribeEvent
-	public void buildRetrogenList(ChunkDataEvent.Load e) {
-		if (!ModConfig.retrogen.getString().isEmpty()) {
-			NBTTagCompound tag = e.getData().getCompoundTag(Main.MODID);
-			e.getData().setTag(Main.MODID, tag);
-
-			if (!tag.hasKey(ModConfig.retrogen.getString())) {
-				tag.setBoolean(ModConfig.retrogen.getString(), true);
-				TO_RETROGEN.add(e.getChunk());
-			}
-		}
-	}
-
-	private final float longRange = 1F/3F;
-	private final float shortRange = 2F/3F;
-
-	@SubscribeEvent
-	public void calcFields(WorldTickEvent e){
+		//Field calculations
 		if(!e.world.isRemote && e.world.getTotalWorldTime() % 5 == 0){
-			e.world.profiler.startSection("CrossroadsFieldCalculations");
+			e.world.profiler.startSection(Main.MODNAME + ": Field Calculations");
 			FieldWorldSavedData data = FieldWorldSavedData.get(e.world);
 			if(e.phase == TickEvent.Phase.START){
 				data.nodeForces.clear();
@@ -114,18 +102,10 @@ public final class EventHandlerCommon{
 								for(int k = 0; k < 8; k++){
 									float netForce = data.nodeForces.get(datum.getKey())[i][j][k];
 									if(i == 1){
-										netForce += j == 0 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k];
-										netForce += k == 0 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j][k - 1];
-										netForce += j == 7 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k];
-										netForce += k == 7 ? 0 : shortRange * (float) data.nodeForces.get(datum.getKey())[i][j][k + 1];
-										netForce += j == 0 || k == 0 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k - 1];
-										netForce += j == 7 || k == 0 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k - 1];
-										netForce += j == 7 || k == 7 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k + 1];
-										netForce += j == 0 || k == 7 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k + 1];
-										netForce += j <= 1 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j - 2][k];
-										netForce += k <= 1 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j][k - 2];
-										netForce += j >= 6 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j + 2][k];
-										netForce += k >= 6 ? 0 : longRange * (float) data.nodeForces.get(datum.getKey())[i][j][k + 2];
+										netForce += j == 0 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k];
+										netForce += k == 0 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j][k - 1];
+										netForce += j == 7 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k];
+										netForce += k == 7 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j][k + 1];
 									}
 									if(i == 0){
 										if(datum.getValue()[0][j][k] < datum.getValue()[1][j][k]){
@@ -163,40 +143,98 @@ public final class EventHandlerCommon{
 			}
 			e.world.profiler.endSection();
 		}
-	}
 
-	private boolean dilatingTime = false;
+		//Time dilation
+		if(!e.world.isRemote){
+			e.world.profiler.startSection(Main.MODNAME + ": Entity Time Dilation");
+			HashMap<Long, byte[][][]> fields = FieldWorldSavedData.get(e.world).fieldNodes;
+			ArrayList<PrototypeInfo> prototypes = PrototypeWorldSavedData.get().prototypes;
+			HashMap<Long, byte[][][]> fieldsProt = FieldWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).fieldNodes;
+			for(Entity ent : e.world.loadedEntityList){
+				NBTTagCompound entNBT = ent.getEntityData();
+				if(!entNBT.hasKey("fStop")){
+					ent.updateBlocked = false;
+				}else{
+					entNBT.removeTag("fStop");
+				}
 
-	/**
-	 * TODO make this work on A) Players, and B) entities other than EntityLiving (Ex. Arrows)
-	 */
-	@SubscribeEvent(priority=EventPriority.HIGHEST)
-	public void dilateEntityTime(LivingUpdateEvent e){
-		BlockPos entityPos = e.getEntity().getPosition();
-		long entityChunk = MiscOp.getLongFromChunkPos(new ChunkPos(entityPos));
-		if(e.getEntity().world.isRemote || dilatingTime || !FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.containsKey(entityChunk)){
-			return;
-		}
+				int potential = 8;
 
-		int potential = 1 + FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(entityChunk)[1][MiscOp.getChunkRelativeCoord(entityPos.getX()) / 2][MiscOp.getChunkRelativeCoord(entityPos.getZ()) / 2];
-		dilatingTime = true;
-		if(FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(entityChunk)[1][MiscOp.getChunkRelativeCoord(entityPos.getX()) / 2][MiscOp.getChunkRelativeCoord(entityPos.getZ()) / 2] > FieldWorldSavedData.get(e.getEntity().getEntityWorld()).fieldNodes.get(entityChunk)[0][MiscOp.getChunkRelativeCoord(entityPos.getX()) / 2][MiscOp.getChunkRelativeCoord(entityPos.getZ()) / 2]){
-			potential = 0;
-		}
-		for(int i = 1; i < potential / 8; i++){
-			e.getEntity().onUpdate();
-		}
-		if(RAND.nextInt(8) < potential % 8){
-			if(potential > 8){
-				e.getEntity().onUpdate();
+				BlockPos entityPos = ent.getPosition();
+				long entityChunk = MiscOp.getLongFromChunkPos(new ChunkPos(entityPos));
+				if(fields.containsKey(entityChunk)){
+					byte[][][] entFields = fields.get(entityChunk);
+					int chunkRelX = MiscOp.getChunkRelativeCoord(entityPos.getX()) / 2;
+					int chunkRelZ = MiscOp.getChunkRelativeCoord(entityPos.getZ()) / 2;
+					potential = 1 + entFields[1][chunkRelX][chunkRelZ];
+					if(entFields[1][chunkRelX][chunkRelZ] > entFields[0][chunkRelX][chunkRelZ]){
+						potential = 0;
+					}
+				}
+
+				for(EntityPlayer play : e.world.playerEntities){
+					ItemStack heldStack = play.getHeldItem(EnumHand.MAIN_HAND);
+					int offsetX = 7 + entityPos.getX() - play.getPosition().getX();
+					int offsetZ = 7 + entityPos.getZ() - play.getPosition().getZ();
+					if(heldStack.getItem() == ModItems.watch && heldStack.hasTagCompound() && offsetX < 16 && offsetZ < 16){
+						NBTTagCompound watchNBT = heldStack.getTagCompound().getCompoundTag("prot");
+						if(!watchNBT.hasKey("index")){
+							continue;
+						}
+						int index = watchNBT.getInteger("index");
+						if(prototypes.size() <= index || prototypes.get(index) == null){
+							heldStack.getTagCompound().removeTag("prot");
+							continue;
+						}
+						
+						byte[][][] watchFields = fieldsProt.get(MiscOp.getLongFromChunkPos(prototypes.get(index).chunk));
+						if(watchFields != null){
+							offsetX /= 2;
+							offsetZ /=2;
+							potential *= 1 + watchFields[1][offsetX][offsetZ];
+							potential /= 8;
+							if(watchFields[1][offsetX][offsetZ] > watchFields[0][offsetX][offsetZ]){
+								potential = 0;
+							}
+						}
+					}
+				}
+
+				if(potential == 8){
+					continue;
+				}
+				for(int i = 1; i < potential / 8; i++){
+					ent.onUpdate();
+				}
+				if(RAND.nextInt(8) < potential % 8){
+					if(potential > 8){
+						ent.onUpdate();
+					}
+				}else if(potential < 8){
+					if(ent.updateBlocked){
+						entNBT.setBoolean("fStop", true);
+					}else{
+						ent.updateBlocked = true;
+					}
+				}
 			}
-		}else if(potential < 8){
-			e.setCanceled(true);
+			e.world.profiler.endSection();
 		}
-
-		dilatingTime = false;
 	}
+	
+	@SubscribeEvent
+	public void buildRetrogenList(ChunkDataEvent.Load e) {
+		if (!ModConfig.retrogen.getString().isEmpty()) {
+			NBTTagCompound tag = e.getData().getCompoundTag(Main.MODID);
+			e.getData().setTag(Main.MODID, tag);
 
+			if (!tag.hasKey(ModConfig.retrogen.getString())) {
+				tag.setBoolean(ModConfig.retrogen.getString(), true);
+				TO_RETROGEN.add(e.getChunk());
+			}
+		}
+	}
+	
 	@SubscribeEvent
 	public void craftGoggles(AnvilUpdateEvent e){
 		if(e.getLeft().getItem() == ModItems.moduleGoggles){

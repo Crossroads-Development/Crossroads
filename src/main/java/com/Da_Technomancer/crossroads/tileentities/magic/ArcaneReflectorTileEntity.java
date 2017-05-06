@@ -16,10 +16,8 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -30,13 +28,13 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 
 	private Triple<Color, Integer, Integer> trip;
 	private BeamManager beamer;
-	
+
 	@Override
 	@Nullable
 	public MagicUnit[] getLastFullSent(){
 		return beamer == null || beamer.getLastFullSent() == null ? null : new MagicUnit[] {beamer.getLastFullSent()};
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
@@ -47,7 +45,7 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 		out[facing.getIndex()] = trip;
 		return out;
 	}
-	
+
 	@Override
 	public void refresh(){
 		if(beamer != null){
@@ -56,21 +54,17 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 	}
 
 	private EnumFacing facing;
-	
+
 	@Override
 	public void update(){
 		if(facing == null){
-			facing = world.getBlockState(pos).getBlock() == ModBlocks.arcaneReflector ? world.getBlockState(pos).getValue(Properties.FACING) : null;
-			if(facing == null){
-				world.setBlockState(pos, Blocks.AIR.getDefaultState());
-				return;
-			}
+			facing = world.getBlockState(pos).getValue(Properties.FACING);
 		}
-		
+
 		if(world.isRemote){
 			return;
 		}
-		
+
 		if(beamer == null){
 			beamer = new BeamManager(facing, pos, world);
 		}
@@ -85,44 +79,44 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 			recieved.clear();
 		}
 	}
-	
+
 	@Override
 	public void receiveInt(String context, int message, EntityPlayerMP player){
 		if(context.equals("beam")){
 			trip = BeamManager.getTriple(message);
 		}
 	}
-	
+
 	private final IMagicHandler magicHandler = new MagicHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != facing){
 			return true;
 		}
-		
+
 		return super.hasCapability(cap, side);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != facing){
 			return (T) magicHandler;
 		}
-		
+
 		return super.getCapability(cap, side);
 	}
 
 	private int memTrip;
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
 		nbt.setInteger("beam", memTrip);
 		return nbt;
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -131,7 +125,7 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -142,10 +136,10 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 			trip = BeamManager.getTriple(nbt.getInteger("beam"));
 		}
 	}
-	
+
 	private MagicUnitStorage recieved = new MagicUnitStorage();
 	private MagicUnitStorage toSend = new MagicUnitStorage();
-	
+
 	private class MagicHandler implements IMagicHandler{
 		@Override
 		public void setMagic(MagicUnit mag){

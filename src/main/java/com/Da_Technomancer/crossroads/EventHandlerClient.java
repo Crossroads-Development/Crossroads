@@ -42,7 +42,7 @@ public final class EventHandlerClient{
 	public void drawFieldsAndBeams(RenderWorldLastEvent e){
 		Minecraft game = Minecraft.getMinecraft();
 		if(game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == ModItems.moduleGoggles && game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).hasTagCompound()){
-			game.mcProfiler.startSection("crossroadsFieldRender");
+			game.mcProfiler.startSection(Main.MODNAME + ": Field Render");
 			Chunk chunk = game.world.getChunkFromBlockCoords(game.player.getPosition());
 			byte[][][] fields = FieldWorldSavedData.get(game.world).fieldNodes.get(MiscOp.getLongFromChunk(chunk));
 			if(fields != null){
@@ -185,19 +185,20 @@ public final class EventHandlerClient{
 	@SubscribeEvent
 	public void voidGoggleGlow(RenderWorldLastEvent e){
 		WorldClient world = Minecraft.getMinecraft().world;
-		EntityPlayer play = Minecraft.getMinecraft().player;
 		if(world.getTotalWorldTime() % 5 == 0){
-			boolean glow = play.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && play.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == ModItems.moduleGoggles && play.getItemStackFromSlot(EntityEquipmentSlot.HEAD).hasTagCompound() && play.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(GoggleLenses.VOID.name());
+			ItemStack helmet = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+			boolean glow = helmet != null && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().hasKey(GoggleLenses.VOID.name());
 			for(Entity ent : world.getLoadedEntityList()){
-				if(!ent.getEntityData().hasKey("glow")){
+				NBTTagCompound entNBT = ent.getEntityData();
+				if(!entNBT.hasKey("glow")){
 					ent.setGlowing(false);
 				}else{
-					ent.getEntityData().removeTag("glow");
+					entNBT.removeTag("glow");
 				}
 
 				if(glow){
 					if(ent.isGlowing()){
-						ent.getEntityData().setBoolean("glow", true);
+						entNBT.setBoolean("glow", true);
 					}else{
 						ent.setGlowing(true);
 					}

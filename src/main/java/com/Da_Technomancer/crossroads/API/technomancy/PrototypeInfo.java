@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 
 import java.lang.ref.WeakReference;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
@@ -29,7 +30,7 @@ public class PrototypeInfo{
 	public final BlockPos[] portPos = new BlockPos[6];
 	
 	/**
-	 * The prototype dimension chunk should only be force loaded if this is A: Not null, and B: Does not contain null.
+	 * The prototype dimension chunk should only be force loaded if this A: Is not null, and B: Does not contain null.
 	 */
 	@Nullable
 	public WeakReference<IPrototypeOwner> owner;
@@ -37,10 +38,11 @@ public class PrototypeInfo{
 	public final ChunkPos chunk;
 	
 	/**
-	 * 
-	 * @param ports Needs to have a capacity of 6.
+	 * @param ports Needs to have a capacity of 6. May contain null.
+	 * @param portPos The chunk relative position of each port. Must contain null if, and only if, ports contains null at the same index. Must have a capacity of 6.
+	 * @param chunk The ChunkPos of this Prototype's chunk within the prototype dimension.
 	 */
-	public PrototypeInfo(PrototypePortTypes[] ports, BlockPos[] portPos, ChunkPos chunk){
+	public PrototypeInfo(@Nonnull PrototypePortTypes[] ports, @Nonnull BlockPos[] portPos, @Nonnull ChunkPos chunk){
 		for(int i = 0; i < 6; i++){
 			this.ports[i] = ports[i];
 			this.portPos[i] = portPos[i];

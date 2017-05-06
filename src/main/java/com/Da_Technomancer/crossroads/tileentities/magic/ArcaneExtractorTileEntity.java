@@ -31,20 +31,20 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 
 	private ItemStack inv = ItemStack.EMPTY;
 	private Triple<Color, Integer, Integer> visual;
-	
+
 	@Override
 	public void refresh(){
 		if(beamer != null){
 			beamer.emit(null);
 		}
 	}
-	
+
 	@Override
 	@Nullable
 	public MagicUnit[] getLastFullSent(){
 		return beamer == null || beamer.getLastFullSent() == null ? null : new MagicUnit[] {beamer.getLastFullSent()};
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
@@ -55,17 +55,17 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		out[world.getBlockState(pos).getValue(Properties.FACING).getIndex()] = visual;
 		return out;
 	}
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){
 			return;
 		}
-		
+
 		if(beamer == null){
 			beamer = new BeamManager(world.getBlockState(pos).getValue(Properties.FACING), pos, world);
 		}
-		
+
 		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
 			if(!inv.isEmpty() && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
 				MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
@@ -81,33 +81,45 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 			}
 		}
 	}
-	
+
 	private BeamManager beamer;
-	
+
 	@Override
 	public void receiveInt(String context, int message, EntityPlayerMP player){
 		if(context.equals("beam")){
 			visual = BeamManager.getTriple(message);
 		}
 	}
-	
+
+	private int memTrip;
+
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setInteger("beam", memTrip);
+		return nbt;
+	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		
 		if(!inv.isEmpty()){
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
+		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		
+		memTrip = nbt.getInteger("memTrip");
 		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
+		if(nbt.hasKey("beam")){
+			visual = BeamManager.getTriple(nbt.getInteger("beam"));
+		}
 	}
-	
+
 	private final IItemHandler itemHandler = new ItemHandler();
 
 	@SuppressWarnings("unchecked")

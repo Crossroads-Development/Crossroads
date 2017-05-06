@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ChunkUnlocker extends BlockContainer{
-	
+
 	public ChunkUnlocker(){
 		super(Material.IRON);
 		String name = "chunk_unlocker";
@@ -28,8 +28,8 @@ public class ChunkUnlocker extends BlockContainer{
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 		setSoundType(SoundType.METAL);
 	}
 
@@ -40,13 +40,19 @@ public class ChunkUnlocker extends BlockContainer{
 
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
-		FieldWorldSavedData.get(worldIn).fieldNodes.put(MiscOp.getLongFromChunkPos(new ChunkPos(pos)), FieldWorldSavedData.getDefaultChunkFlux());
-		FieldWorldSavedData.get(worldIn).nodeForces.put(MiscOp.getLongFromChunkPos(new ChunkPos(pos)), FieldWorldSavedData.getDefaultChunkForce());
+		FieldWorldSavedData data = FieldWorldSavedData.get(worldIn);
+		data.fieldNodes.put(MiscOp.getLongFromChunkPos(new ChunkPos(pos)), FieldWorldSavedData.getDefaultChunkFlux());
+		data.nodeForces.put(MiscOp.getLongFromChunkPos(new ChunkPos(pos)), FieldWorldSavedData.getDefaultChunkForce());
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
 
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state){
+		FieldWorldSavedData.get(world).fieldNodes.remove(MiscOp.getLongFromChunkPos(new ChunkPos(pos)));
+		super.breakBlock(world, pos, state);
+	}
 }

@@ -48,7 +48,7 @@ public class CounterGearRenderer extends TileEntitySpecialRenderer<CounterGearTi
 		GlStateManager.disableLighting();
 		GlStateManager.color(1, 1, 1);
 		GlStateManager.translate(x + .5F, y + .375F, z + .5F);
-		GlStateManager.scale(1D, .75D, 1D);
+		GlStateManager.scale(1D, .76D, 1D);
 		GlStateManager.rotate((float) -gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getAngle(), 0F, 1F, 0F);
 		modelAx.render(textureSc, textureAx, Color.WHITE);
 		GlStateManager.enableLighting();
