@@ -101,7 +101,6 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 						return;
 					}
 					if(content.getFluid() == BlockDistilledWater.getDistilledWater()){
-
 						if(power > (content.amount / 72) + 1){
 							content = null;
 						}else if(power >= (content.amount / 72) - 1){

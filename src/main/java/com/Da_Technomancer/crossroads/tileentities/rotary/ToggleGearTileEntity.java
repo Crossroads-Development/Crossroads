@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
@@ -28,36 +29,36 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
-	
+
 	private GearTypes type;
 	private double[] motionData = new double[4];
 	private double[] physData = new double[2];
 	private double angle;
 	private double clientW;
 	private double compOut = 0;
-	
+
 	public ToggleGearTileEntity(){
 		super();
 	}
-	
+
 	public ToggleGearTileEntity(GearTypes type){
 		super();
 		this.type = type;
 		physData[0] = type.getDensity() / 8D;
 		physData[1] = type.getDensity() / 64D;
 	}
-	
+
 	public GearTypes getMember(){
 		return type;
 	}
-	
+
 	private final int tiers = ModConfig.speedTiers.getInt();
-	
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return (oldState.getBlock() != newState.getBlock());
 	}
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -79,7 +80,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			}
 		}
 	}
-	
+
 	private void sendWPacket(){
 		boolean flag = false;
 		if(clientW == Double.POSITIVE_INFINITY || clientW == Double.NEGATIVE_INFINITY){
@@ -105,9 +106,9 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 
 		// motionData
 		NBTTagCompound motionTags = new NBTTagCompound();
-			for(int i = 0; i < 3; i++){
-				if(motionData[i] != 0)
-					motionTags.setDouble(i + "motion", motionData[i]);
+		for(int i = 0; i < 3; i++){
+			if(motionData[i] != 0)
+				motionTags.setDouble(i + "motion", motionData[i]);
 		}
 		compound.setTag("motionData", motionTags);
 
@@ -136,7 +137,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			physData[1] = type.getDensity() / 64D;
 		}
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
@@ -145,23 +146,23 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		}
 		return nbt;
 	}
-	
+
 	@Override
 	public void receiveDouble(String context, double message){
 		if(context.equals("w")){
 			clientW = message;
 		}
 	}
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		return Block.FULL_BLOCK_AABB.offset(pos);
 	}
-	
+
 	private final IAxleHandler axleHandler = new AxleHandler();
 	private final ICogHandler cogHandler = new CogHandler();
 	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.DOWN){
@@ -175,7 +176,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		}
 		return super.hasCapability(capability, facing);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
@@ -188,10 +189,10 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
 			return (T) redstoneHandler;
 		}
-		
+
 		return super.getCapability(capability, facing);
 	}
-	
+
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{
 
 		@Override
@@ -199,7 +200,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			return measure ? 15D * Math.pow(motionData[0], 2) / 2D : 0;
 		}
 	}
-	
+
 	private class CogHandler implements ICogHandler{
 
 		@Override
@@ -212,12 +213,12 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			return axleHandler;
 		}
 	}
-	
+
 	private class AxleHandler implements IAxleHandler{
 
 		private byte key;
 		private double rotRatio;
-		
+
 		@Override
 		public double[] getMotionData(){
 			return motionData;
@@ -230,7 +231,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			}else if(rotRatioIn == 0){
 				rotRatioIn = 1;
 			}
-			
+
 			//If true, this has already been checked.
 			if(key == keyIn){
 				//If true, there is rotation conflict.
@@ -239,18 +240,18 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 				}
 				return;
 			}
-			
+
 			if(masterIn.addToList(this)){
 				return;
 			}
 
 			rotRatio = rotRatioIn;
-			
+
 			if(key == 0){
 				resetAngle();
 			}
 			key = keyIn;
-			
+
 			TileEntity downTE = world.getTileEntity(pos.offset(EnumFacing.DOWN));
 			if(downTE != null){
 				if(downTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
@@ -263,7 +264,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 					downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).propogate(masterIn, key, rotRatio, 0);
 				}
 			}
-			
+
 
 			if(world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 				for(int i = 2; i < 6; ++i){
@@ -276,13 +277,13 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 
 					// Diagonal gears
 					TileEntity diagTE = world.getTileEntity(pos.offset(facing).offset(EnumFacing.DOWN));
-					if(!world.getBlockState(pos.offset(facing)).isNormalCube() && diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()) && DefaultAxleHandler.canConnectThrough(world, pos.offset(facing), facing.getOpposite(), EnumFacing.DOWN)){
 						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, rotRatio, .5D);
 					}
 				}
 			}
 		}
-		
+
 		@Override
 		public double[] getPhysData(){
 			return physData;
@@ -326,7 +327,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		public double getRotationRatio(){
 			return rotRatio;
 		}
-		
+
 		@Override
 		public void markChanged(){
 			markDirty();

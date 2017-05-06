@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
+import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
@@ -40,7 +41,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	 * 0: angle, 1: clientW
 	 */
 	private double[] angleW = new double[2];
-	
+
 	public void initSetup(GearTypes typ){
 		type = typ;
 
@@ -58,14 +59,14 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		//IRON is returned instead of null to prevent edge case crashes.
 		return type == null ? GearTypes.IRON : type;
 	}
-	
+
 	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -1, -1, 2, 2, 2);
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		return RENDER_BOX.offset(pos);
 	}
-	
+
 	public void breakGroup(EnumFacing side, boolean drop){
 		if(borken){
 			return;
@@ -94,12 +95,12 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		}
 
 		valid = true;
-		
+
 		if(!world.isRemote){
 			sendWPacket();
 		}
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -138,7 +139,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 		return nbt;
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
@@ -204,10 +205,10 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	}
 
 	private class AxleHandler implements IAxleHandler{
-		
+
 		private byte updateKey;
 		private double rotRatio;
-		
+
 		@Override
 		public double[] getMotionData(){
 			return motionData;
@@ -218,9 +219,9 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			if(type == null || !valid){
 				return;
 			}
-			
+
 			EnumFacing sid = world.getBlockState(pos).getValue(Properties.FACING);
-			
+
 			if(lastRadius != 0){
 				rotRatioIn *= -lastRadius / 1.5D;
 			}else if(rotRatioIn == 0){
@@ -228,7 +229,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			}else if(sid.getAxisDirection() == AxisDirection.POSITIVE){
 				rotRatioIn *= -1D;
 			}
-			
+
 			//If true, this has already been checked.
 			if(key == updateKey){
 				//If true, there is rotation conflict.
@@ -237,41 +238,46 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 				}
 				return;
 			}
-			
+
 			if(masterIn.addToList(this)){
 				return;
 			}
 
 			rotRatio = rotRatioIn;
-			
+
 			if(updateKey == 0){
 				resetAngle();
 			}
 			updateKey = key;
 
-			if(world.getTileEntity(pos.offset(sid)) != null && world.getTileEntity(pos.offset(sid)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, sid.getOpposite())){
-				world.getTileEntity(pos.offset(sid)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, sid.getOpposite()).trigger(masterIn, key);
-			}
-			if(world.getTileEntity(pos.offset(sid)) != null && world.getTileEntity(pos.offset(sid)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, sid.getOpposite())){
-				masterIn.addAxisToList(world.getTileEntity(pos.offset(sid)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, sid.getOpposite()), sid.getOpposite());
+			TileEntity connectTE = world.getTileEntity(pos.offset(sid));
+			if(connectTE != null){
+				if(connectTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, sid.getOpposite())){
+					connectTE.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, sid.getOpposite()).trigger(masterIn, key);
+				}
+				if(connectTE.hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, sid.getOpposite())){
+					masterIn.addAxisToList(connectTE.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, sid.getOpposite()), sid.getOpposite());
+				}
+
+				if(connectTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite())){
+					connectTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite()).propogate(masterIn, key, sid.getAxisDirection() == AxisDirection.POSITIVE ? -rotRatio : rotRatio, 0);
+				}
 			}
 
 			for(EnumFacing sideN : EnumFacing.values()){
 				if(sideN != sid && sideN != sid.getOpposite()){
 					// Adjacent gears
-					if(world.getTileEntity(pos.offset(sideN, 2)) != null && world.getTileEntity(pos.offset(sideN, 2)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sid)){
-						world.getTileEntity(pos.offset(sideN, 2)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, sid).connect(masterIn, key, rotRatio, 1.5D);
+					TileEntity adjTE = world.getTileEntity(pos.offset(sideN, 2));
+					if(adjTE != null && adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sid)){
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sid).connect(masterIn, key, rotRatio, 1.5D);
 					}
 
 					// Diagonal gears
-					if(!world.getBlockState(pos.offset(sideN, 2)).getBlock().isNormalCube(world.getBlockState(pos.offset(sideN, 2)), world, pos.offset(sideN, 2)) && world.getTileEntity(pos.offset(sideN, 2).offset(sid)) != null && world.getTileEntity(pos.offset(sideN, 2).offset(sid)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite())){
-						world.getTileEntity(pos.offset(sideN, 2).offset(sid)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()).connect(masterIn, key, rotRatio, 1.5D);
+					TileEntity diagTE = world.getTileEntity(pos.offset(sideN, 2).offset(sid));
+					if(diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()) && DefaultAxleHandler.canConnectThrough(world, pos.offset(sideN, 2), sideN.getOpposite(), sid) && diagTE != null){
+						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()).connect(masterIn, key, rotRatio, 1.5D);
 					}
 				}
-			}
-			
-			if(world.getTileEntity(pos.offset(sid)) != null && world.getTileEntity(pos.offset(sid)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite())){
-				world.getTileEntity(pos.offset(sid)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite()).propogate(masterIn, key, sid.getAxisDirection() == AxisDirection.POSITIVE ? -rotRatio : rotRatio, 0);
 			}
 		}
 
@@ -318,7 +324,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		public double getRotationRatio(){
 			return rotRatio;
 		}
-		
+
 		@Override
 		public void markChanged(){
 			markDirty();

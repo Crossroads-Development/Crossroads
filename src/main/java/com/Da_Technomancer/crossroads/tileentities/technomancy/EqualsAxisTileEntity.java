@@ -41,10 +41,10 @@ public class EqualsAxisTileEntity extends TileEntity implements ITickable{
 	}
 	
 	private void runCalc(){
-		TileEntity teCounter = world.getTileEntity(pos.offset(facing.rotateYCCW()));
-		double speedCounterClock = teCounter != null && teCounter.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateY()) ? teCounter.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateY()).getMotionData()[0] : 0;
-		TileEntity teClock = world.getTileEntity(pos.offset(facing.rotateY()));
-		double speedClock = teClock != null && teClock.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateYCCW()) ? teClock.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateYCCW()).getMotionData()[0] : 0;
+		TileEntity counterTE = world.getTileEntity(pos.offset(facing.rotateYCCW()));
+		double speedCounterClock = counterTE != null && counterTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateY()) ? counterTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateY()).getMotionData()[0] : 0;
+		TileEntity clockTE = world.getTileEntity(pos.offset(facing.rotateY()));
+		double speedClock = clockTE != null && clockTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateYCCW()) ? clockTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.rotateYCCW()).getMotionData()[0] : 0;
 		double margin = .01D;
 		double baseSpeed = speedCounterClock > speedClock - margin && speedCounterClock < speedClock + margin ? speedClock : 0;
 		
@@ -57,8 +57,8 @@ public class EqualsAxisTileEntity extends TileEntity implements ITickable{
 		}
 		
 		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
-		
-		double availableEnergy = Math.abs(sumEnergy) + Math.abs(world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] : 0);
+		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));
+		double availableEnergy = Math.abs(sumEnergy) + Math.abs(backTE != null && backTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] : 0);
 		if(availableEnergy - cost < 0){
 			baseSpeed = 0;
 			cost = 0;
@@ -82,8 +82,8 @@ public class EqualsAxisTileEntity extends TileEntity implements ITickable{
 			gear.markChanged();
 		}
 		
-		if(world.getTileEntity(pos.offset(facing.getOpposite())) != null && world.getTileEntity(pos.offset(facing.getOpposite())).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
-			world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(world.getTileEntity(pos.offset(facing.getOpposite())).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1], 1);
+		if(backTE != null && backTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
+			backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1], 1);
 		}
 	}
 

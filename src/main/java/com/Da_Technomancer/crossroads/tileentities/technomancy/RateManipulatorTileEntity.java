@@ -23,7 +23,7 @@ public class RateManipulatorTileEntity extends TileEntity implements ITickable{
 				if(upTE != null && upTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 					FieldWorldSavedData data = FieldWorldSavedData.get(world);
 					if(data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))){
-						data.nodeForces.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[1][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] += upTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] / EnergyConverters.SPEED_PER_RATE;
+						data.nodeForces.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[1][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] += upTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] * EnergyConverters.RATE_PER_SPEED;
 					}
 				}
 				run = true;

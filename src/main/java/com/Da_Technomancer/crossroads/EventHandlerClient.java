@@ -216,8 +216,8 @@ public final class EventHandlerClient{
 		if(e.getType() == ElementType.HOTBAR){
 			EntityPlayer player = Minecraft.getMinecraft().player;
 			ItemStack offStack = player.getHeldItem(EnumHand.OFF_HAND);
-			if(offStack.getItem() == ModItems.beamCage && offStack.hasTagCompound()){
-				NBTTagCompound nbt = offStack.getTagCompound();
+			if(offStack.getItem() == ModItems.beamCage){
+				NBTTagCompound nbt = offStack.hasTagCompound() ? offStack.getTagCompound() : new NBTTagCompound();
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
 				GlStateManager.enableBlend();
@@ -251,14 +251,15 @@ public final class EventHandlerClient{
 				tes.draw();
 				
 				Minecraft.getMinecraft().fontRenderer.drawString(offStack.getDisplayName(), 16, 65, Color.DARK_GRAY.getRGB());
+				GlStateManager.disableAlpha();
 				GlStateManager.color(1, 1, 1);
 				GlStateManager.disableBlend();
 				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();
 			}
 			ItemStack mainStack = player.getHeldItem(EnumHand.MAIN_HAND);
-			if(mainStack.getItem() instanceof MagicUsingItem && mainStack.hasTagCompound()){
-				NBTTagCompound nbt = mainStack.getTagCompound();
+			if(mainStack.getItem() instanceof MagicUsingItem){
+				NBTTagCompound nbt = mainStack.hasTagCompound() ? mainStack.getTagCompound() : new NBTTagCompound();
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
 				GlStateManager.enableBlend();
@@ -292,7 +293,8 @@ public final class EventHandlerClient{
 				tes.draw();
 				
 				Minecraft.getMinecraft().fontRenderer.drawString(mainStack.getDisplayName(), 16, 5, Color.DARK_GRAY.getRGB());
-				
+				GlStateManager.disableAlpha();
+				GlStateManager.color(1, 1, 1);
 				GlStateManager.disableBlend();
 				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();

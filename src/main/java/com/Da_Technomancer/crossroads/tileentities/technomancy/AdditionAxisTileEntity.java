@@ -64,9 +64,11 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 	public double angleThree;
 	
 	private void runCalc(){
-		double inPos = world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))) != null && world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)) ? world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis))).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)).getMotionData()[0] : 0;
-		double inNeg = world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))) != null && world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)) ? world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)).getMotionData()[0] : 0;
-		if(world.getBlockState(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))) != null && world.getBlockState(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).getBlock() == ModBlocks.axle){
+		TileEntity posTE = world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)));
+		double inPos = posTE != null && posTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)) ? posTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)).getMotionData()[0] : 0;
+		TileEntity negTE = world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)));
+		double inNeg = negTE != null && negTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)) ? negTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)).getMotionData()[0] : 0;
+		if(world.getBlockState(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis))).getBlock() == ModBlocks.axle){
 			inNeg *= -1D;
 		}
 		double baseSpeed = inPos + inNeg;

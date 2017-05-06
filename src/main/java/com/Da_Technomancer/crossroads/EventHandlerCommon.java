@@ -101,12 +101,6 @@ public final class EventHandlerCommon{
 							for(int j = 0; j < 8; j++){
 								for(int k = 0; k < 8; k++){
 									float netForce = data.nodeForces.get(datum.getKey())[i][j][k];
-									if(i == 1){
-										netForce += j == 0 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k];
-										netForce += k == 0 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j][k - 1];
-										netForce += j == 7 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k];
-										netForce += k == 7 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j][k + 1];
-									}
 									if(i == 0){
 										if(datum.getValue()[0][j][k] < datum.getValue()[1][j][k]){
 											datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) (Math.max(1, 32 * Math.pow(2, (int) netForce)) + (int) datum.getValue()[0][j][k])));
@@ -119,10 +113,15 @@ public final class EventHandlerCommon{
 												continue fluxEvent;
 											}
 										}else{
-											netForce += datum.getValue()[0][j][k] == 7 ? 0 : ((float) (RAND.nextInt(8) - 1));
+											netForce += datum.getValue()[0][j][k] == 7 ? 0 : ((float) RAND.nextInt(8));
 											datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) netForce + (int) datum.getValue()[0][j][k]));
 										}
 									}else{
+										netForce += j == 0 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k];
+										netForce += k == 0 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j][k - 1];
+										netForce += j == 7 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k];
+										netForce += k == 7 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j][k + 1];
+										
 										byte newValue = (byte) Math.max(0, Math.min((int) netForce + 7, 127));
 										data.nodeForces.get(datum.getKey())[0][j][k] += Math.abs(newValue - datum.getValue()[1][j][k]) / 2;
 										datum.getValue()[1][j][k] = newValue;
@@ -144,13 +143,15 @@ public final class EventHandlerCommon{
 			e.world.profiler.endSection();
 		}
 
-		//Time dilation
+		//Time dilation TODO make it work on players (needs to do stuff client side to work on players)
 		if(!e.world.isRemote){
 			e.world.profiler.startSection(Main.MODNAME + ": Entity Time Dilation");
 			HashMap<Long, byte[][][]> fields = FieldWorldSavedData.get(e.world).fieldNodes;
 			ArrayList<PrototypeInfo> prototypes = PrototypeWorldSavedData.get().prototypes;
 			HashMap<Long, byte[][][]> fieldsProt = FieldWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).fieldNodes;
-			for(Entity ent : e.world.loadedEntityList){
+			ArrayList<Entity> entities = new ArrayList<Entity>();
+			entities.addAll(e.world.loadedEntityList); //A copy of the original list is used to avoid ConcurrentModificationExceptions that arise from entities removing themselves when ticked. 
+			for(Entity ent : entities){
 				NBTTagCompound entNBT = ent.getEntityData();
 				if(!entNBT.hasKey("fStop")){
 					ent.updateBlocked = false;
@@ -174,9 +175,9 @@ public final class EventHandlerCommon{
 
 				for(EntityPlayer play : e.world.playerEntities){
 					ItemStack heldStack = play.getHeldItem(EnumHand.MAIN_HAND);
-					int offsetX = 7 + entityPos.getX() - play.getPosition().getX();
-					int offsetZ = 7 + entityPos.getZ() - play.getPosition().getZ();
-					if(heldStack.getItem() == ModItems.watch && heldStack.hasTagCompound() && offsetX < 16 && offsetZ < 16){
+					int offsetX = 8 + entityPos.getX() - play.getPosition().getX();
+					int offsetZ = 8 + entityPos.getZ() - play.getPosition().getZ();
+					if(heldStack.getItem() == ModItems.watch && heldStack.hasTagCompound() && offsetX < 16 && offsetZ < 16 && offsetX >= 0 && offsetZ >= 0){
 						NBTTagCompound watchNBT = heldStack.getTagCompound().getCompoundTag("prot");
 						if(!watchNBT.hasKey("index")){
 							continue;
@@ -190,7 +191,7 @@ public final class EventHandlerCommon{
 						byte[][][] watchFields = fieldsProt.get(MiscOp.getLongFromChunkPos(prototypes.get(index).chunk));
 						if(watchFields != null){
 							offsetX /= 2;
-							offsetZ /=2;
+							offsetZ /= 2;
 							potential *= 1 + watchFields[1][offsetX][offsetZ];
 							potential /= 8;
 							if(watchFields[1][offsetX][offsetZ] > watchFields[0][offsetX][offsetZ]){

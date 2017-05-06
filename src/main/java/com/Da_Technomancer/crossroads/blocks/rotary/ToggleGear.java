@@ -122,6 +122,9 @@ public class ToggleGear extends BlockContainer{
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos prevPos){
+		if(worldIn.isRemote){
+			return;
+		}
 		if(worldIn.isBlockPowered(pos)){
 			if(!state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
@@ -130,9 +133,6 @@ public class ToggleGear extends BlockContainer{
 			if(state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
 			}
-		}
-		if(worldIn.isRemote){
-			return;
 		}
 		CommonProxy.masterKey++;
 	}

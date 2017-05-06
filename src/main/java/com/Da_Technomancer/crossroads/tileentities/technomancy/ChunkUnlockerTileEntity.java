@@ -39,7 +39,7 @@ public class ChunkUnlockerTileEntity extends TileEntity{
 	}
 
 	private int timer = COOLDOWN;
-	private static final int COOLDOWN = 40;//8 seconds
+	private static final int COOLDOWN = 32;//8 seconds
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
