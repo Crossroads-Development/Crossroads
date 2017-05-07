@@ -126,7 +126,7 @@ public class PrototypePort extends BlockContainer{
 			return;
 		}
 		PrototypePortTileEntity prTe = (PrototypePortTileEntity) te;
-		BlockPos dirPos = pos.subtract(fromPos);
+		BlockPos dirPos = fromPos.subtract(pos);
 		EnumFacing dir = EnumFacing.getFacingFromVector(dirPos.getX(), dirPos.getY(), dirPos.getZ());
 		if(prTe.getIndex() == -1 || prTe.getType() != PrototypePortTypes.REDSTONE_OUT || prTe.getSide() != dir){
 			return;

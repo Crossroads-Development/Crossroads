@@ -99,7 +99,7 @@ public class PrototypePistol extends MagicUsingItem{
 		if(!player.world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot") && player.getActiveHand() == EnumHand.MAIN_HAND){
 			NBTTagCompound prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
 			int index = prototypeNBT.getInteger("index");
-			
+
 			NBTTagCompound playerNBT = player.getEntityData();
 			if(getMaxItemUseDuration(stack) == count || playerNBT.getBoolean("wasSneak") != player.isSneaking()){
 				if(pistolMap.containsKey(index)){
@@ -111,7 +111,8 @@ public class PrototypePistol extends MagicUsingItem{
 					PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
 					if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
 						BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
-						worldDim.getBlockState(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ())).neighborChanged(worldDim, relPos, ModBlocks.prototypePort, relPos.offset(dir.getOpposite()));
+						relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());
+						worldDim.getBlockState(relPos).neighborChanged(worldDim, relPos, ModBlocks.prototypePort, relPos.offset(dir.getOpposite()));
 					}
 				}
 			}
@@ -119,7 +120,7 @@ public class PrototypePistol extends MagicUsingItem{
 				PistolPrototypeOwner owner = pistolMap.get(index);
 				if(getMaxItemUseDuration(stack) - count >= 15 && stack.getTagCompound().getBoolean("loaded") && !player.isSneaking()){
 					if(owner.axle.getMotionData()[1] > 0){
-						//In blocks(meters)/s Yes, this would be the IRL formula if all energy were losslessly transfered. And yes, I am insane.
+						//In blocks(meters)/s This would be the IRL formula if all energy were losslessly transfered.
 						double speed = Math.sqrt(owner.axle.getMotionData()[1] * 2D / MASS_OF_BULLET);
 						EntityBullet bullet = new EntityBullet(player.world, player, (int) Math.round(speed / 20D), owner.magic.lastOut);
 						bullet.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
@@ -203,6 +204,16 @@ public class PrototypePistol extends MagicUsingItem{
 			int index = prototypeNBT.getInteger("index");
 			if(pistolMap.containsKey(index)){
 				pistolMap.get(index).mouseActive = false;
+
+				//Disable redstone
+				EnumFacing dir = EnumFacing.SOUTH;
+				WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+				PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
+				if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
+					BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
+					relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());
+					worldDim.getBlockState(relPos).neighborChanged(worldDim, relPos, ModBlocks.prototypePort, relPos.offset(dir.getOpposite()));
+				}
 			}
 		}
 	}

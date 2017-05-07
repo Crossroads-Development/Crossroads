@@ -175,8 +175,8 @@ public final class EventHandlerCommon{
 
 				for(EntityPlayer play : e.world.playerEntities){
 					ItemStack heldStack = play.getHeldItem(EnumHand.MAIN_HAND);
-					int offsetX = 8 + entityPos.getX() - play.getPosition().getX();
-					int offsetZ = 8 + entityPos.getZ() - play.getPosition().getZ();
+					int offsetX = 7 + entityPos.getX() - play.getPosition().getX();
+					int offsetZ = 7 + entityPos.getZ() - play.getPosition().getZ();
 					if(heldStack.getItem() == ModItems.watch && heldStack.hasTagCompound() && offsetX < 16 && offsetZ < 16 && offsetX >= 0 && offsetZ >= 0){
 						NBTTagCompound watchNBT = heldStack.getTagCompound().getCompoundTag("prot");
 						if(!watchNBT.hasKey("index")){

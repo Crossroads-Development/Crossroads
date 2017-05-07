@@ -204,7 +204,8 @@ public class Prototype extends BlockContainer{
 		PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(prTe.getIndex());
 		if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
 			BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
-			worldDim.getBlockState(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ())).neighborChanged(worldDim, relPos, blockIn, relPos.offset(dir.getOpposite()));
+			relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());
+			worldDim.getBlockState(relPos).neighborChanged(worldDim, relPos, blockIn, relPos.offset(dir.getOpposite()));
 		}
 	}
 }

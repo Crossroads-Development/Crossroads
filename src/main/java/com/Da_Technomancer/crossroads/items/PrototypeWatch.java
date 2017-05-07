@@ -86,7 +86,8 @@ public class PrototypeWatch extends MagicUsingItem{
 					PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
 					if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
 						BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
-						worldDim.getBlockState(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ())).neighborChanged(worldDim, relPos, ModBlocks.prototypePort, relPos.offset(dir.getOpposite()));
+						relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());
+						worldDim.getBlockState(relPos).neighborChanged(worldDim, relPos, ModBlocks.prototypePort, relPos.offset(dir.getOpposite()));
 					}
 				}
 			}
@@ -158,6 +159,16 @@ public class PrototypeWatch extends MagicUsingItem{
 			int index = prototypeNBT.getInteger("index");
 			if(watchMap.containsKey(index)){
 				watchMap.get(index).mouseActive = false;
+
+				//Disable redstone
+				EnumFacing dir = EnumFacing.SOUTH;
+				WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+				PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
+				if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
+					BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
+					relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());
+					worldDim.getBlockState(relPos).neighborChanged(worldDim, relPos, ModBlocks.prototypePort, relPos.offset(dir.getOpposite()));
+				}
 			}
 		}
 	}

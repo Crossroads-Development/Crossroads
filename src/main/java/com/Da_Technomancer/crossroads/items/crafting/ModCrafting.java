@@ -142,6 +142,8 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModItems.pistol, 1), "CBB", "CA ", 'C', "ingotCopshowium", 'B', "ingotBronze", 'A', ModItems.lensArray));
 		GameRegistry.addRecipe(new PrototypeItemSetRecipe(ModItems.pistol, "prot"));
 		GameRegistry.addRecipe(new PrototypeItemClearRecipe(ModItems.pistol, "prot"));
+		//Watch
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModItems.watch, 1), " * ", "*&*", " * ", '*', "ingotBronze", '&', "ingotCopshowium"));
 		GameRegistry.addRecipe(new PrototypeItemSetRecipe(ModItems.watch, "prot"));
 		GameRegistry.addRecipe(new PrototypeItemClearRecipe(ModItems.watch, "prot"));
 		

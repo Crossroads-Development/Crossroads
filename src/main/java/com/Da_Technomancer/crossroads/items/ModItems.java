@@ -121,7 +121,14 @@ public final class ModItems{
 		itemAddQue(staffTechnomancy = new StaffTechnomancy());
 		itemAddQue(beamCage = new BeamCage());
 		itemAddQue(pistol = new PrototypePistol());
-		itemAddQue(watch = new PrototypeWatch());
+		itemAddQue(watch = new PrototypeWatch(), 0, new ModelResourceLocation(Main.MODID + ":watch_0"));
+		itemAddQue(watch, 1, new ModelResourceLocation(Main.MODID + ":watch_1"));
+		itemAddQue(watch, 2, new ModelResourceLocation(Main.MODID + ":watch_2"));
+		itemAddQue(watch, 3, new ModelResourceLocation(Main.MODID + ":watch_3"));
+		itemAddQue(watch, 4, new ModelResourceLocation(Main.MODID + ":watch_4"));
+		itemAddQue(watch, 5, new ModelResourceLocation(Main.MODID + ":watch_5"));
+		itemAddQue(watch, 6, new ModelResourceLocation(Main.MODID + ":watch_6"));
+		itemAddQue(watch, 7, new ModelResourceLocation(Main.MODID + ":watch_7"));
 	}
 
 	@SideOnly(Side.CLIENT)

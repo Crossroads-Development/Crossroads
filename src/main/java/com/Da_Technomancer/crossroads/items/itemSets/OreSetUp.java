@@ -11,6 +11,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -35,7 +37,7 @@ public final class OreSetUp{
 	public static BasicItem gemRuby;
 	public static BasicBlock blockRuby;
 	public static BasicBlock oreRuby;
-	
+
 	public static BasicItem ingotCopshowium;
 	public static BasicItem nuggetCopshowium;
 	public static BasicBlock blockCopshowium;
@@ -43,12 +45,22 @@ public final class OreSetUp{
 	public static void init(){
 		boolean oreDict = ModConfig.registerOres.getBoolean();
 		ingotTin = new BasicItem("ingot_tin", oreDict ? "ingotTin" : null);
-		blockTin = new BasicBlock("block_tin", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockTin" : null);
+		blockTin = new BasicBlock("block_tin", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockTin" : null){
+			@Override
+			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
+				return true;
+			}
+		};
 		nuggetTin = new BasicItem("nugget_tin", oreDict ? "nuggetTin" : null);
 		oreTin = new BasicBlock("ore_tin", Material.ROCK, 2, "pickaxe", 3, null, oreDict ? "oreTin" : null);
 
 		ingotCopper = new BasicItem("ingot_copper", oreDict ? "ingotCopper" : null);
-		blockCopper = new BasicBlock("block_copper", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockCopper" : null);
+		blockCopper = new BasicBlock("block_copper", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockCopper" : null){
+			@Override
+			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
+				return true;
+			}
+		};
 		nuggetCopper = new BasicItem("nugget_copper", oreDict ? "nuggetCopper" : null);
 		oreCopper = new BasicBlock("ore_copper", Material.ROCK, 2, "pickaxe", 3, null, oreDict ? "oreCopper" : null);
 		oreNativeCopper = new BasicBlock("ore_native_copper", Material.ROCK, 1, "pickaxe", 3){
@@ -64,11 +76,21 @@ public final class OreSetUp{
 		};
 
 		ingotBronze = new BasicItem("ingot_bronze", oreDict ? "ingotBronze" : null);
-		blockBronze = new BasicBlock("block_bronze", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockBronze" : null);
+		blockBronze = new BasicBlock("block_bronze", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, oreDict ? "blockBronze" : null){
+			@Override
+			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
+				return true;
+			}
+		};
 		nuggetBronze = new BasicItem("nugget_bronze", oreDict ? "nuggetBronze" : null);
 
 		gemRuby = new BasicItem("gem_ruby", "gemRuby");
-		blockRuby = new BasicBlock("block_ruby", Material.ROCK, 3, "pickaxe", 5, null, "blockRuby");
+		blockRuby = new BasicBlock("block_ruby", Material.ROCK, 3, "pickaxe", 5, null, "blockRuby"){
+			@Override
+			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
+				return true;
+			}
+		};
 		oreRuby = new BasicBlock("ore_ruby", Material.ROCK, 3, "pickaxe", 3, null, "oreRuby"){
 			@Override
 			public int quantityDroppedWithBonus(int fortune, Random random){
@@ -83,9 +105,14 @@ public final class OreSetUp{
 				return gemRuby;
 			}
 		};
-		
+
 		ingotCopshowium = new BasicItem("ingot_copshowium", "ingotCopshowium");
-		blockCopshowium = new BasicBlock("block_copshowium", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockCopshowium");
+		blockCopshowium = new BasicBlock("block_copshowium", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockCopshowium"){
+			@Override
+			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
+				return true;
+			}
+		};
 		nuggetCopshowium = new BasicItem("nugget_copshowium", "nuggetCopshowium");
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetTin, 9), "ingotTin"));
@@ -107,7 +134,7 @@ public final class OreSetUp{
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(gemRuby, 4), "blockRuby"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockRuby, 1), "**", "**", '*', "gemRuby"));
 		GameRegistry.addSmelting(new ItemStack(oreRuby, 1), new ItemStack(gemRuby, 1), 1F);
-		
+
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetCopshowium, 9), "ingotCopshowium"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotCopshowium, 9), "blockCopshowium"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotCopshowium, 1), "***", "***", "***", '*', "nuggetCopshowium"));
