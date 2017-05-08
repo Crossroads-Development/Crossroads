@@ -8,8 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CraftingStack implements ICraftingStack{
 
@@ -65,7 +63,6 @@ public class CraftingStack implements ICraftingStack{
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public List<ItemStack> getMatchingList(){
 		if(meta != -1 || !item.getHasSubtypes()){

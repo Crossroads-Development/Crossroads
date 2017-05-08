@@ -36,7 +36,7 @@ public class SafeCallable{
 					break;
 				}
 			}
-			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment with this method, so the above for loop is used instead.
+			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with this method, so the above for loop is used instead.
 			//holder = ReflectionHelper.findMethod(GuiNewChat.class, "setChatLine", "func_146237_a", ITextComponent.class, int.class, int.class, boolean.class);
 		}catch(Exception e){
 			Main.logger.catching(e);

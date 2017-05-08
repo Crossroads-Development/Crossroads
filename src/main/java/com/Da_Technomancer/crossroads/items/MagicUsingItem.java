@@ -10,7 +10,6 @@ import com.Da_Technomancer.crossroads.API.packets.SendMagicItemToServer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -51,11 +50,6 @@ public abstract class MagicUsingItem extends Item{
 	}
 	
 	@Override
-	public EnumAction getItemUseAction(ItemStack stack){
-		return EnumAction.NONE;
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
 		NBTTagCompound nbt = stack.getTagCompound();
@@ -70,6 +64,7 @@ public abstract class MagicUsingItem extends Item{
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand){
+		
 		playerIn.setActiveHand(hand);
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}

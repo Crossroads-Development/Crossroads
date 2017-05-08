@@ -7,8 +7,6 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EdibleBlobCraftingStack implements ICraftingStack{
 
@@ -53,7 +51,6 @@ public class EdibleBlobCraftingStack implements ICraftingStack{
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public List<ItemStack> getMatchingList(){
 		ItemStack out = new ItemStack(ModItems.edibleBlob, count);

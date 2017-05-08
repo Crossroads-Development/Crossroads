@@ -46,8 +46,7 @@ public class PrototypeWatch extends MagicUsingItem{
 	 */
 	private static final HashMap<Integer, WatchPrototypeOwner> watchMap = new HashMap<Integer, WatchPrototypeOwner>();
 
-	//TODO dial
-	public PrototypeWatch(){
+	public PrototypeWatch(){//The overall handling needs re-writes to reduce unintended behavior.
 		String name = "prototype_watch";
 		setUnlocalizedName(name);
 		setRegistryName(name);
@@ -68,6 +67,10 @@ public class PrototypeWatch extends MagicUsingItem{
 		super.addInformation(stack, playerIn, tooltip, advanced);
 	}
 
+	/**
+	 * Calls super.onUsingTick (controls magic input).
+	 * Activates redstone, controls strength based on sneaking.
+	 */
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
 		super.onUsingTick(stack, player, count);
@@ -94,11 +97,21 @@ public class PrototypeWatch extends MagicUsingItem{
 		}
 	}
 
+	/**
+	 * Stops the activation state. 
+	 * Calls onPlayerStoppedUsing.
+	 */
 	@Override
 	public void preChanged(ItemStack stack, EntityPlayer player){
-		onPlayerStoppedUsing(stack, player.world, player, 0);
+		player.stopActiveHand();
 	}
 
+	/**
+	 * Verifies watch. 
+	 * Stores owner to map/refreshes owner.
+	 * Controls dial angle.
+	 * Inserts beams from cage.
+	 */
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected){
 		if(isSelected && !worldIn.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot")){
@@ -114,7 +127,23 @@ public class PrototypeWatch extends MagicUsingItem{
 				watchMap.put(index, owner);
 				data.prototypes.get(index).owner = new WeakReference<IPrototypeOwner>(owner);
 			}else{
-				watchMap.get(index).lifetimeBuffer = true;
+				WatchPrototypeOwner owner = watchMap.get(index);
+				owner.lifetimeBuffer = true;
+				//TODO dial Still malfunctioning. Movement speed is a problem.
+				double newAngle = stack.getTagCompound().getDouble("angle") + (owner.axle.getMotionData()[0] / 20D);
+				int metadata = (int) (8 + (Math.round(newAngle * 4D / Math.PI) % 8)) % 8;
+
+				if(entityIn instanceof EntityLivingBase && ((EntityLivingBase) entityIn).getActiveItemStack().isItemEqualIgnoreDurability(stack)){
+					stack.getTagCompound().setDouble("angle", newAngle);
+					EntityLivingBase entityLiving = ((EntityLivingBase) entityIn);
+					setDamage(stack, metadata);
+					EnumHand hand = entityLiving.getActiveHand();
+					entityLiving.resetActiveHand();
+					entityLiving.setActiveHand(hand);
+				}else{
+					stack.getTagCompound().setDouble("angle", newAngle);
+					setDamage(stack, metadata);
+				}
 			}
 
 			if(entityIn instanceof EntityPlayer && worldIn.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage){
@@ -152,6 +181,10 @@ public class PrototypeWatch extends MagicUsingItem{
 		}
 	}
 
+	/**
+	 * Sets mouseActive to false in the WatchPrototypeOwner.
+	 * Disables any outputed redstone signal.
+	 */
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft){
 		if(!worldIn.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot")){
