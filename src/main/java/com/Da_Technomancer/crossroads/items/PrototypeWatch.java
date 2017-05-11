@@ -129,7 +129,7 @@ public class PrototypeWatch extends MagicUsingItem{
 			}else{
 				WatchPrototypeOwner owner = watchMap.get(index);
 				owner.lifetimeBuffer = true;
-				//TODO dial Still malfunctioning. Movement speed is a problem.
+				//TODO dial Still malfunctioning. Movement speed is a problem. See issue #60 on the GitHub.
 				double newAngle = stack.getTagCompound().getDouble("angle") + (owner.axle.getMotionData()[0] / 20D);
 				int metadata = (int) (8 + (Math.round(newAngle * 4D / Math.PI) % 8)) % 8;
 
