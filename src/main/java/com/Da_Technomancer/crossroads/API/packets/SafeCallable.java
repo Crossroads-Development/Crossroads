@@ -61,4 +61,6 @@ public class SafeCallable{
 			}
 		}
 	}
+	
+	public static int playerTickCount = 1;
 }

@@ -9,6 +9,8 @@ import java.util.Random;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
@@ -19,6 +21,7 @@ import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -36,6 +39,7 @@ import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 public final class EventHandlerCommon{
@@ -70,7 +74,7 @@ public final class EventHandlerCommon{
 
 		//Prototype chunk loading
 		//Only should be called on the server side. Not called every tick, as that would be excessive
-		if(!e.world.isRemote && e.world.provider.getDimension() == 0 && e.world.getTotalWorldTime() % 20 == 0){
+		if(!e.world.isRemote && e.phase == Phase.START && e.world.provider.getDimension() == 0 && e.world.getTotalWorldTime() % 20 == 0){
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get();
 			WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			ForgeChunkManager.releaseTicket(loadingTicket);
@@ -121,7 +125,7 @@ public final class EventHandlerCommon{
 										netForce += k == 0 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j][k - 1];
 										netForce += j == 7 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k];
 										netForce += k == 7 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j][k + 1];
-										
+
 										byte newValue = (byte) Math.max(0, Math.min((int) netForce + 7, 127));
 										data.nodeForces.get(datum.getKey())[0][j][k] += Math.abs(newValue - datum.getValue()[1][j][k]) / 2;
 										datum.getValue()[1][j][k] = newValue;
@@ -143,8 +147,8 @@ public final class EventHandlerCommon{
 			e.world.profiler.endSection();
 		}
 
-		//Time dilation TODO make it work on players (needs to do stuff client side to work on players)
-		if(!e.world.isRemote){
+		//Time Dilation
+		if(!e.world.isRemote && e.phase == Phase.START){
 			e.world.profiler.startSection(Main.MODNAME + ": Entity Time Dilation");
 			HashMap<Long, byte[][][]> fields = FieldWorldSavedData.get(e.world).fieldNodes;
 			ArrayList<PrototypeInfo> prototypes = PrototypeWorldSavedData.get().prototypes;
@@ -187,7 +191,7 @@ public final class EventHandlerCommon{
 							heldStack.getTagCompound().removeTag("prot");
 							continue;
 						}
-						
+
 						byte[][][] watchFields = fieldsProt.get(MiscOp.getLongFromChunkPos(prototypes.get(index).chunk));
 						if(watchFields != null){
 							offsetX /= 2;
@@ -201,17 +205,18 @@ public final class EventHandlerCommon{
 					}
 				}
 
-				if(potential == 8){
+				int totalRuns = (potential / 8) + (RAND.nextInt(8) < potential % 8 ? 1 : 0);
+				
+				if(totalRuns == 1){
 					continue;
 				}
-				for(int i = 1; i < potential / 8; i++){
+				if(ent instanceof EntityPlayerMP){
+					ModPackets.network.sendTo(new SendPlayerTickCountToClient(totalRuns), (EntityPlayerMP) ent);
+				}
+				for(int i = 1; i < totalRuns; i++){
 					ent.onUpdate();
 				}
-				if(RAND.nextInt(8) < potential % 8){
-					if(potential > 8){
-						ent.onUpdate();
-					}
-				}else if(potential < 8){
+				if(totalRuns == 0){
 					if(ent.updateBlocked){
 						entNBT.setBoolean("fStop", true);
 					}else{
@@ -222,7 +227,7 @@ public final class EventHandlerCommon{
 			e.world.profiler.endSection();
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void buildRetrogenList(ChunkDataEvent.Load e) {
 		if (!ModConfig.retrogen.getString().isEmpty()) {
@@ -235,7 +240,7 @@ public final class EventHandlerCommon{
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void craftGoggles(AnvilUpdateEvent e){
 		if(e.getLeft().getItem() == ModItems.moduleGoggles){

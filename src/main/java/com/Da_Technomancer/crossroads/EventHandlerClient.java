@@ -33,6 +33,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public final class EventHandlerClient{
 
@@ -210,7 +212,7 @@ public final class EventHandlerClient{
 	private static final ResourceLocation MAGIC_BAR_BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/magic_info_back.png");
 	private static final ResourceLocation MAGIC_BAR_FOREGROUND = new ResourceLocation(Main.MODID, "textures/gui/magic_info_front.png");
 	private static final ResourceLocation COLOR_SHEET = new ResourceLocation(Main.MODID, "textures/blocks/color_sheet.png");
-	
+
 	@SubscribeEvent
 	public void magicUsingItemOverlay(RenderGameOverlayEvent e){
 		if(e.getType() == ElementType.HOTBAR){
@@ -230,7 +232,7 @@ public final class EventHandlerClient{
 				buf.pos(117, 60, -3).tex(1, 0).endVertex();
 				buf.pos(0, 60, -3).tex(0, 0).endVertex();
 				tes.draw();
-				
+
 				Minecraft.getMinecraft().getTextureManager().bindTexture(COLOR_SHEET);
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 				for(int i = 0; i < 4; i++){
@@ -241,7 +243,7 @@ public final class EventHandlerClient{
 					buf.pos(24, 78 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), 0).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
 				}
 				tes.draw();
-				
+
 				Minecraft.getMinecraft().getTextureManager().bindTexture(MAGIC_BAR_FOREGROUND);
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				buf.pos(0, 120, -1).tex(0, 1).endVertex();
@@ -249,7 +251,7 @@ public final class EventHandlerClient{
 				buf.pos(117, 60, -1).tex(1, 0).endVertex();
 				buf.pos(0, 60, -1).tex(0, 0).endVertex();
 				tes.draw();
-				
+
 				Minecraft.getMinecraft().fontRenderer.drawString(offStack.getDisplayName(), 16, 65, Color.DARK_GRAY.getRGB());
 				GlStateManager.disableAlpha();
 				GlStateManager.color(1, 1, 1);
@@ -272,7 +274,7 @@ public final class EventHandlerClient{
 				buf.pos(117, 0, -3).tex(1, 0).endVertex();
 				buf.pos(0, 0, -3).tex(0, 0).endVertex();
 				tes.draw();
-				
+
 				Minecraft.getMinecraft().getTextureManager().bindTexture(COLOR_SHEET);
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 				for(int i = 0; i < 4; i++){
@@ -283,7 +285,7 @@ public final class EventHandlerClient{
 					buf.pos(24, 18 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), 0).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
 				}
 				tes.draw();
-				
+
 				Minecraft.getMinecraft().getTextureManager().bindTexture(MAGIC_BAR_FOREGROUND);
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				buf.pos(0, 60, -1).tex(0, 1).endVertex();
@@ -291,7 +293,7 @@ public final class EventHandlerClient{
 				buf.pos(117, 0, -1).tex(1, 0).endVertex();
 				buf.pos(0, 0, -1).tex(0, 0).endVertex();
 				tes.draw();
-				
+
 				Minecraft.getMinecraft().fontRenderer.drawString(mainStack.getDisplayName(), 16, 5, Color.DARK_GRAY.getRGB());
 				GlStateManager.disableAlpha();
 				GlStateManager.color(1, 1, 1);
@@ -299,6 +301,37 @@ public final class EventHandlerClient{
 				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void dilatePlayerTime(ClientTickEvent e){
+		if(e.phase == Phase.END){
+			EntityPlayer player = Minecraft.getMinecraft().player;
+			if(player == null){
+				return;
+			}
+			NBTTagCompound entNBT = player.getEntityData();
+			if(!entNBT.hasKey("fStop")){
+				player.updateBlocked = false;
+			}else{
+				entNBT.removeTag("fStop");
+			}
+			if(SafeCallable.playerTickCount == 0){
+				if(player.updateBlocked){
+					entNBT.setBoolean("fStop", true);
+				}else{
+					player.updateBlocked = true;
+				}
+			}else{
+				player.updateBlocked = false;
+				int extraTicks = SafeCallable.playerTickCount - 1;
+				for(int i = 0; i < extraTicks; i++){
+					player.onUpdate();
+				}
+			}
+
+			SafeCallable.playerTickCount = 1;
 		}
 	}
 }
