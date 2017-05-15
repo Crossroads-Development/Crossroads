@@ -42,13 +42,19 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 	private final double[][] physData = new double[6][2];
 	private final GearTypes[] members = new GearTypes[6];
 
+	private boolean updateMembers = false;
+	
 	public GearTypes[] getMembers(){
 		return members;
 	}
 	
-	public void setMembers(GearTypes type, int side){
+	public void setMembers(GearTypes type, int side, boolean newTE){
 		members[side] = type;
-		axleHandlers[side].updateStates();
+		if(newTE){
+			updateMembers = true;
+		}else{
+			axleHandlers[side].updateStates(true);
+		}
 	}
 	
 	@Override
@@ -93,6 +99,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		NBTTagCompound innerMemb = compound.getCompoundTag("members");
 		for(int i = 0; i < 6; i++){
 			this.members[i] = innerMemb.hasKey(i + "memb") ? GearTypes.valueOf(innerMemb.getString(i + "memb")) : null;
+			axleHandlers[i].updateStates(false);
 		}
 	}
 	
@@ -141,18 +148,16 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 	}
 
-	private int ticksExisted = 0;
-
-	private static final int tiers = ModConfig.speedTiers.getInt();
+	private static final int TIERS = ModConfig.speedTiers.getInt();
 
 	private void sendWPacket(){
 		boolean flag = false;
 		for(int i = 0; i < 6; i++){
 			if(clientW[i] == Double.POSITIVE_INFINITY || clientW[i] == Double.NEGATIVE_INFINITY){
 				flag = true;
-			}else if(MiscOp.tiersRound(motionData[i][0], tiers) != clientW[i]){
+			}else if(MiscOp.tiersRound(motionData[i][0], TIERS) != clientW[i]){
 				flag = true;
-				clientW[i] = MiscOp.tiersRound(motionData[i][0], tiers);
+				clientW[i] = MiscOp.tiersRound(motionData[i][0], TIERS);
 			}
 		}
 
@@ -171,37 +176,37 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public void receiveString(String context, String message, EntityPlayerMP player){
+	public void receiveString(String context, String message, @Nullable EntityPlayerMP player){
 		if(context.contains("memb")){
 			switch(context){
 				case "memb0":{
 					members[0] = message.equals("") ? null : GearTypes.valueOf(message);
-					axleHandlers[0].updateStates();
+					axleHandlers[0].updateStates(false);
 					break;
 				}
 				case "memb1":{
 					members[1] = message.equals("") ? null : GearTypes.valueOf(message);
-					axleHandlers[1].updateStates();
+					axleHandlers[1].updateStates(false);
 					break;
 				}
 				case "memb2":{
 					members[2] = message.equals("") ? null : GearTypes.valueOf(message);
-					axleHandlers[2].updateStates();
+					axleHandlers[2].updateStates(false);
 					break;
 				}
 				case "memb3":{
 					members[3] = message.equals("") ? null : GearTypes.valueOf(message);
-					axleHandlers[3].updateStates();
+					axleHandlers[3].updateStates(false);
 					break;
 				}
 				case "memb4":{
 					members[4] = message.equals("") ? null : GearTypes.valueOf(message);
-					axleHandlers[4].updateStates();
+					axleHandlers[4].updateStates(false);
 					break;
 				}
 				case "memb5":{
 					members[5] = message.equals("") ? null : GearTypes.valueOf(message);
-					axleHandlers[5].updateStates();
+					axleHandlers[5].updateStates(false);
 					break;
 				}
 			}
@@ -224,13 +229,13 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		}
 
 		if(!world.isRemote){
-			sendWPacket();
-		}
-
-		if(++ticksExisted % 200 == 1){
-			for(SidedAxleHandler handler : axleHandlers){
-				handler.updateStates();
+			if(updateMembers){
+				for(SidedAxleHandler handler : axleHandlers){
+					handler.updateStates(true);
+					updateMembers = false;
+				}
 			}
+			sendWPacket();
 		}
 	}
 
@@ -301,7 +306,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 
 		@Override
 		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
-			if(members[side] == null || ticksExisted == 0){
+			if(members[side] == null){
 				return;
 			}
 
@@ -387,11 +392,10 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			return angle[side];
 		}
 
-		public void updateStates(){
+		private void updateStates(boolean sendPacket){
 			// assume each gear is 1/8 of a cubic meter and has a radius of 1/2
 			// meter.
 			// mass is rounded to make things nicer for everyone
-
 			if(members[side] == null){
 				physData[side][0] = 0;
 				physData[side][1] = 0;
@@ -405,9 +409,9 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 				physData[side][1] = physData[side][0] * .125D;
 			}
 
-			if(!world.isRemote){
+			if(sendPacket && !world.isRemote){
 				SendStringToClient msg = new SendStringToClient("memb" + side, members[side] == null ? "" : members[side].name(), pos);
-				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 256));
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 

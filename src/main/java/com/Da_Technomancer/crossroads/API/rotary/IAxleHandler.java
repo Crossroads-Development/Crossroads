@@ -15,7 +15,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface IAxleHandler{
 
 	/**
-	 * [0]=w, [1]=E, [2]=P, [3]=lastE
+	 * [0]=w, [1]=E, [2]=P, [3]=lastE.
+	 * Must be mutable and allow modification of the original values through it.
 	 */
 	public double[] getMotionData();
 

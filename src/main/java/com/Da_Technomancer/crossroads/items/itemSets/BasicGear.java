@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -56,13 +57,14 @@ public class BasicGear extends Item{
 		if(worldIn.isRemote){
 			return EnumActionResult.SUCCESS;
 		}
-
-		if(worldIn.getTileEntity(pos.offset(side)) instanceof SidedGearHolderTileEntity && !worldIn.getTileEntity(pos.offset(side)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()) && worldIn.isSideSolid(pos, side)){
+		
+		TileEntity te = worldIn.getTileEntity(pos.offset(side));
+		if(te instanceof SidedGearHolderTileEntity && !te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()) && worldIn.isSideSolid(pos, side)){
 			if(!playerIn.capabilities.isCreativeMode){
 				playerIn.getHeldItem(hand).shrink(1);
 			}
 
-			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).setMembers(type, side.getOpposite().getIndex());
+			((SidedGearHolderTileEntity) te).setMembers(type, side.getOpposite().getIndex(), false);
 			CommonProxy.masterKey++;
 		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && worldIn.isSideSolid(pos, side)){
 			if(!playerIn.capabilities.isCreativeMode){
@@ -70,7 +72,8 @@ public class BasicGear extends Item{
 			}
 
 			worldIn.setBlockState(pos.offset(side), ModBlocks.sidedGearHolder.getDefaultState(), 3);
-			((SidedGearHolderTileEntity) worldIn.getTileEntity(pos.offset(side))).setMembers(type, side.getOpposite().getIndex());
+			te = worldIn.getTileEntity(pos.offset(side));
+			((SidedGearHolderTileEntity) te).setMembers(type, side.getOpposite().getIndex(), true);
 			CommonProxy.masterKey++;
 		}
 

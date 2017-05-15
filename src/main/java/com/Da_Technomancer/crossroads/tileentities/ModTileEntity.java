@@ -55,6 +55,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTil
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GreaterThanAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.LessThanAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
@@ -143,6 +144,7 @@ public class ModTileEntity{
 		registerOld(PrototypingTableTileEntity.class, "prototyping_table");
 		registerOld(PrototypeTileEntity.class, "prototype");
 		registerOld(PrototypePortTileEntity.class, "prototype_port");
+		register(MechanicalArmTileEntity.class, "mechanical_arm");
 	}
 
 	/**
@@ -152,9 +154,8 @@ public class ModTileEntity{
 	private static void registerOld(Class<? extends TileEntity> locat, String ID){
 		GameRegistry.registerTileEntity(locat, Main.MODID + "_" + ID);
 	}
-	
+
 	/**
-	 * 
 	 * @param clazz The class of the tileentity being registered. 
 	 * @param ID Should be lowercase.
 	 */

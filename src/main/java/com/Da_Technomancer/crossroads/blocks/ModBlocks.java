@@ -47,6 +47,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
 import com.Da_Technomancer.crossroads.blocks.technomancy.AdditionAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.ArcCosAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.ArcSinAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.CageCharger;
 import com.Da_Technomancer.crossroads.blocks.technomancy.ChunkUnlocker;
 import com.Da_Technomancer.crossroads.blocks.technomancy.CopshowiumCreationChamber;
 import com.Da_Technomancer.crossroads.blocks.technomancy.CosAxis;
@@ -56,6 +57,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.FluxReaderAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.GatewayFrame;
 import com.Da_Technomancer.crossroads.blocks.technomancy.GreaterThanAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.LessThanAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalArm;
 import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalBeamSplitter;
 import com.Da_Technomancer.crossroads.blocks.technomancy.MultiplicationAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.Prototype;
@@ -66,7 +68,6 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneKeyboard;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SinAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SquareRootAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.CageCharger;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
@@ -157,6 +158,7 @@ public final class ModBlocks{
 	public static PrototypingTable prototypingTable;
 	public static Prototype prototype;
 	public static PrototypePort prototypePort;
+	public static MechanicalArm mechanicalArm;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -248,6 +250,7 @@ public final class ModBlocks{
 		blockAddQue(prototypingTable = new PrototypingTable());
 		blockAddQue(prototype = new Prototype());
 		blockAddQue(prototypePort = new PrototypePort());
+		blockAddQue(mechanicalArm = new MechanicalArm());
 	}
 
 	@SideOnly(Side.CLIENT)

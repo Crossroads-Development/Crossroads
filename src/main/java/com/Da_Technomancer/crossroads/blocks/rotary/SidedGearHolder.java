@@ -148,7 +148,7 @@ public class SidedGearHolder extends BlockContainer{
 		for(EnumFacing side : EnumFacing.VALUES){
 			if(te.getMembers()[side.getIndex()] != null && !worldIn.isSideSolid(pos.offset(side), side.getOpposite(), false)){
 				spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.BASIC_GEARS.get(te.getMembers()[side.getIndex()]), 1));
-				te.setMembers(null, side.getIndex());
+				te.setMembers(null, side.getIndex(), false);
 			}
 		}
 		if(te.getMembers()[0] == null && te.getMembers()[1] == null && te.getMembers()[2] == null && te.getMembers()[3] == null && te.getMembers()[4] == null && te.getMembers()[5] == null){
@@ -186,7 +186,7 @@ public class SidedGearHolder extends BlockContainer{
 				if(canHarvest){
 					spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.BASIC_GEARS.get(gear.getMembers()[out]), 1));
 				}
-				gear.setMembers(null, out);
+				gear.setMembers(null, out, false);
 				CommonProxy.masterKey++;
 				if(gear.getMembers()[0] == null && gear.getMembers()[1] == null && gear.getMembers()[2] == null && gear.getMembers()[3] == null && gear.getMembers()[4] == null && gear.getMembers()[5] == null){
 					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());

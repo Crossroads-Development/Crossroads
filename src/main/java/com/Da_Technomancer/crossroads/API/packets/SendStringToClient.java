@@ -44,7 +44,7 @@ public class SendStringToClient extends Message<SendStringToClient>{
 
 	public void processMessage(WorldClient worldClient, String context, String message, BlockPos pos){
 		TileEntity te = worldClient.getTileEntity(pos);
-
+		
 		if(te instanceof IStringReceiver){
 			((IStringReceiver) te).receiveString(context, message, null);
 		}
