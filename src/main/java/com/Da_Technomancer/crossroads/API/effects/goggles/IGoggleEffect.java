@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.technomancy;
+package com.Da_Technomancer.crossroads.API.effects.goggles;
 
 import java.util.ArrayList;
 

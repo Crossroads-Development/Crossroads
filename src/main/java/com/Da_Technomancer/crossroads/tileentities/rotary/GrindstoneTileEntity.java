@@ -225,7 +225,7 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || (!inventory[0].isEmpty() && !stack.isEmpty() && !ItemStack.areItemStacksEqual(stack, inventory[0]))){
+			if(slot != 0 || (!inventory[0].isEmpty() && !stack.isEmpty() && !ItemStack.areItemsEqual(stack, inventory[0]) && !ItemStack.areItemStackTagsEqual(stack, inventory[0]))){
 				return stack;
 			}
 			int oldCount = inventory[0].getCount();

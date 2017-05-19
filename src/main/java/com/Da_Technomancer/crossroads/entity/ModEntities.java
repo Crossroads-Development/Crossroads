@@ -17,6 +17,7 @@ public final class ModEntities{
 	public static void init(){
 		int id = 1;
 		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "bullet"), EntityBullet.class, "bullet", id++, Main.instance, 64, 10, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "arm_ridable"), EntityArmRidable.class, "arm_ridable", id++, Main.instance, 0, 0, false);
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.technomancy;
+package com.Da_Technomancer.crossroads.API.effects.goggles;
 
 import java.util.ArrayList;
 
@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 

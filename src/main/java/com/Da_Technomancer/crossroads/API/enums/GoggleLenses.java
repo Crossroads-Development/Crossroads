@@ -2,12 +2,12 @@ package com.Da_Technomancer.crossroads.API.enums;
 
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.technomancy.DiamondGoggleEffect;
-import com.Da_Technomancer.crossroads.API.technomancy.EmeraldGoggleEffect;
-import com.Da_Technomancer.crossroads.API.technomancy.IGoggleEffect;
-import com.Da_Technomancer.crossroads.API.technomancy.QuartzGoggleEffect;
-import com.Da_Technomancer.crossroads.API.technomancy.RubyGoggleEffect;
-import com.Da_Technomancer.crossroads.API.technomancy.VoidGoggleEffect;
+import com.Da_Technomancer.crossroads.API.effects.goggles.DiamondGoggleEffect;
+import com.Da_Technomancer.crossroads.API.effects.goggles.EmeraldGoggleEffect;
+import com.Da_Technomancer.crossroads.API.effects.goggles.IGoggleEffect;
+import com.Da_Technomancer.crossroads.API.effects.goggles.QuartzGoggleEffect;
+import com.Da_Technomancer.crossroads.API.effects.goggles.RubyGoggleEffect;
+import com.Da_Technomancer.crossroads.API.effects.goggles.VoidGoggleEffect;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;

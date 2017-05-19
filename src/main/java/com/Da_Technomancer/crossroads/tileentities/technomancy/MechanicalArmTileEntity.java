@@ -3,11 +3,15 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.effects.mechArm.IMechArmEffect;
+import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupBlockEffect;
+import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupEntityEffect;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,8 +29,9 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	private static final double MINIMUM_LOWER_ANGLE = Math.PI / 12D;//In radians, from horizontal.
 	private static final double MAXIMUM_UPPER_ANGLE = .75D * Math.PI;//In radians, from straight down.
 	private static final double MINIMUM_UPPER_ANGLE = .25D * Math.PI;//In radians, from straight down.
-
 	private static final int TIERS = ModConfig.speedTiers.getInt();
+
+	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect()};//TODO add the other effects.
 
 	private double[][] motionData = new double[3][3];
 	/** In radians. */
@@ -35,11 +40,12 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	private double[] speedRecord = new double[3];
 	private static final double[] PHYS_DATA = new double[2];
 	/**
-	 * ((redstone - 1) % 7) + 1 corresponds to action type, which are:
-	 * 0: None, 1: Pickup entity, 2: Pickup block, 3: Pickup from inventory, 4: Use, 5: Deposit into inventory, 6: Drop entity, 7: Drop entity with momentum.
-	 * (redstone - 1) / 7 corresponds to an EnumFacing. Only some action types (3, 4, 5) vary based on EnumFacing. 
+	 * Math.min((redstone - 2) / 6, EFFECTS.length) corresponds to action type, which are:
+	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Drop entity with momentum.
+	 * EnumFacing.getFront((redstone - 2) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4) vary based on EnumFacing. 
 	 */
 	private int redstone = 0;
+	public EntityArmRidable ridable;
 
 	@Override
 	public void update(){
@@ -60,22 +66,38 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 			}
 		}
 
+		if(!world.isRemote){
+			if(ridable == null || ridable.isDead){
+				ridable = new EntityArmRidable(world);
+				ridable.setPosition(.5D + (double) pos.getX(), 1D + (double) pos.getY(), .5D + (double) pos.getZ());
+				world.spawnEntity(ridable);
+			}
+			int actionType = -1;
+			if(redstone == 1){
+				angle[0] = 0;
+				angle[1] = MAXIMUM_LOWER_ANGLE;
+				angle[2] = MINIMUM_UPPER_ANGLE;
+				ModPackets.network.sendToAllAround(new SendDoubleToClient("a_reset", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}else if(redstone != 0){
+				actionType = Math.min((redstone - 2) / 6, EFFECTS.length);
+			}
 
-		int actionType = ((redstone - 1) % 7) + 1;
-		if(actionType == 0){
-			return;
+			EnumFacing side = EnumFacing.getFront((redstone - 2) % 6);
+
+			double lengthCross = Math.sqrt(Math.pow(LOWER_ARM_LENGTH, 2) + Math.pow(UPPER_ARM_LENGTH, 2) - (2D * LOWER_ARM_LENGTH * UPPER_ARM_LENGTH * Math.cos(angle[2])));
+			double thetaD = angle[1] + angle[2] + Math.asin(Math.sin(angle[2] * LOWER_ARM_LENGTH / lengthCross));
+			double holder = -Math.cos(thetaD) * lengthCross;
+
+			double posX = (holder * Math.cos(angle[0])) + .5D + (double) pos.getX();
+			double posY = (-Math.sin(thetaD) * lengthCross) + 1D + (double) pos.getY();
+			double posZ = (holder * Math.sin(angle[0])) + .5D + (double) pos.getZ();
+			BlockPos endPos = new BlockPos(posX, posY, posZ);
+
+			ridable.setPosition(posX, posY, posZ);
+			if(actionType != -1 && EFFECTS[actionType].onTriggered(world, endPos, posX, posY, posZ, side, ridable)){
+				//TODO play noise.
+			}
 		}
-		EnumFacing side = EnumFacing.getFront((redstone - 1) / 7);
-		
-		double lengthCross = Math.sqrt(Math.pow(LOWER_ARM_LENGTH, 2) + Math.pow(UPPER_ARM_LENGTH, 2) - (2D * LOWER_ARM_LENGTH * UPPER_ARM_LENGTH * Math.cos(angle[2])));
-		double thetaD = angle[1] + angle[2] + Math.asin(Math.sin(angle[2] * LOWER_ARM_LENGTH / lengthCross));
-		double holder = -Math.cos(thetaD) * lengthCross;
-		
-		double posX = holder * Math.cos(angle[0]);
-		double posY = -Math.sin(thetaD) * lengthCross;
-		double posZ = holder * Math.sin(angle[0]);
-		BlockPos endPos = new BlockPos(Math.round(posX), Math.round(posY), Math.round(posZ));
-		//TODO
 	}
 
 	@Override
@@ -86,6 +108,12 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 			int i = char1 == '0' ? 0 : char1 == '1' ? 1 : 2;
 			motionData[i][0] = message;
 		}else if(char0 == 'a'){
+			if(context.equals("a_reset")){
+				angle[0] = 0;
+				angle[1] = MAXIMUM_LOWER_ANGLE;
+				angle[2] = MINIMUM_UPPER_ANGLE;
+				return;
+			}
 			int i = char1 == '0' ? 0 : char1 == '1' ? 1 : 2;
 			angle[i] = message;
 		}

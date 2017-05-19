@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.technomancy;
+package com.Da_Technomancer.crossroads.API.effects.goggles;
 
 import java.util.ArrayList;
 
@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
+import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

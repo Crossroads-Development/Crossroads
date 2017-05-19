@@ -46,4 +46,18 @@ public class MechanicalArm extends BlockContainer{
 		 //Redstone controlled by north side.
 		((MechanicalArmTileEntity) worldIn.getTileEntity(pos)).setRedstone(ModBlocks.ratiator.getPowerOnSide(worldIn, pos, EnumFacing.NORTH, false));
 	}
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+	
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		if(worldIn.getTileEntity(pos) instanceof MechanicalArmTileEntity){
+			((MechanicalArmTileEntity) worldIn.getTileEntity(pos)).ridable.setDead();
+		}
+		
+		super.breakBlock(worldIn, pos, state);
+	}
 }
