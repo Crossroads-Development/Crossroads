@@ -4,8 +4,13 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.IMechArmEffect;
+import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmDepositEffect;
+import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmDropEntityEffect;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupBlockEffect;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupEntityEffect;
+import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupFromInvEffect;
+import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmReleaseEntityEffect;
+import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmUseEffect;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
@@ -13,35 +18,37 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class MechanicalArmTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
 
-	private static final double LOWER_ARM_LENGTH = 3;
-	private static final double UPPER_ARM_LENGTH = 5;
+	public static final double LOWER_ARM_LENGTH = 3;
+	public static final double UPPER_ARM_LENGTH = 5;
 	private static final double MAXIMUM_LOWER_ANGLE = 17D * Math.PI / 36D;//In radians, from horizontal.
 	private static final double MINIMUM_LOWER_ANGLE = Math.PI / 12D;//In radians, from horizontal.
 	private static final double MAXIMUM_UPPER_ANGLE = .75D * Math.PI;//In radians, from straight down.
 	private static final double MINIMUM_UPPER_ANGLE = .25D * Math.PI;//In radians, from straight down.
 	private static final int TIERS = ModConfig.speedTiers.getInt();
 
-	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect()};//TODO add the other effects.
+	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect(), new MechArmPickupFromInvEffect(), new MechArmUseEffect(), new MechArmDepositEffect(), new MechArmDropEntityEffect(), new MechArmReleaseEntityEffect()};
 
-	private double[][] motionData = new double[3][3];
+	public double[][] motionData = new double[3][3];
 	/** In radians. */
-	private double[] angle = {0, MAXIMUM_LOWER_ANGLE, MINIMUM_UPPER_ANGLE};
+	public double[] angle = {0, MAXIMUM_LOWER_ANGLE, MINIMUM_UPPER_ANGLE};
 	/** A record of the last speeds sent to the client.*/
 	private double[] speedRecord = new double[3];
 	private static final double[] PHYS_DATA = new double[2];
 	/**
 	 * Math.min((redstone - 2) / 6, EFFECTS.length) corresponds to action type, which are:
-	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Drop entity with momentum.
+	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Release entity with momentum.
 	 * EnumFacing.getFront((redstone - 2) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4) vary based on EnumFacing. 
 	 */
 	private int redstone = 0;
@@ -94,8 +101,8 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 			BlockPos endPos = new BlockPos(posX, posY, posZ);
 
 			ridable.setPosition(posX, posY, posZ);
-			if(actionType != -1 && EFFECTS[actionType].onTriggered(world, endPos, posX, posY, posZ, side, ridable)){
-				//TODO play noise.
+			if(actionType != -1 && EFFECTS[actionType].onTriggered(world, endPos, posX, posY, posZ, side, ridable, this)){
+				world.playSound(posX, posY, posZ, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 1, (float) Math.random(), true);
 			}
 		}
 	}

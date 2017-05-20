@@ -21,6 +21,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.AdditionAxisTileE
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BackCounterGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CounterGearTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 
@@ -59,6 +60,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(MechanicalBeamSplitterTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(HamsterWheelTileEntity.class, new HamsterWheelRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(GatewayFrameTileEntity.class, new GatewayFrameRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(MechanicalArmTileEntity.class, new MechanicalArmRenderer());
 	}
 
 	public static void reg(Block block){

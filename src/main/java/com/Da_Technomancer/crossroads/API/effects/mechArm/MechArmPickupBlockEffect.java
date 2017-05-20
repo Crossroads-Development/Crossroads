@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects.mechArm;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -15,7 +16,7 @@ import net.minecraft.world.World;
 public class MechArmPickupBlockEffect implements IMechArmEffect{
 
 	@Override
-	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, EnumFacing side, EntityArmRidable ent){
+	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, EnumFacing side, EntityArmRidable ent, MechanicalArmTileEntity te){
 		IBlockState state = world.getBlockState(pos);
 		List<ItemStack> drops = state.getBlock().getDrops(world, pos, state, 0);
 		if(!drops.isEmpty()){

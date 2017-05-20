@@ -235,6 +235,7 @@ item.beam_cage.name=Beam Cage
 item.prototype_pistol.name=Prototyped Pistol
 tile.molten_copshowium.name=Molten Copshowium Source
 item.prototype_watch.name=Prototyped Watch
+tile.mechanical_arm.name=Mechanical Arm
 
 #GuideAPI documentation
 #Mysterious Journal
