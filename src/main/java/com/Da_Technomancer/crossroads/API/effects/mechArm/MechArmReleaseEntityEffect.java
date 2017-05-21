@@ -29,6 +29,7 @@ public class MechArmReleaseEntityEffect implements IMechArmEffect{
 			double newPosZ = (holder * Math.sin(newAngle0)) + .5D + (double) pos.getZ();
 			
 			passenger.setVelocity(20D * (newPosX - posX), 20D * (newPosY - posY), 20D * (newPosZ - posZ));
+			passenger.velocityChanged = true;
 			return true;
 		}
 		return false;

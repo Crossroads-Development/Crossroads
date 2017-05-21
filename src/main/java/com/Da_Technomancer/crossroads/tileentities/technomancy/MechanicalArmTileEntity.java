@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 
 import net.minecraft.init.SoundEvents;
@@ -24,6 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -33,14 +35,14 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	public static final double LOWER_ARM_LENGTH = 3;
 	public static final double UPPER_ARM_LENGTH = 5;
 	private static final double MAXIMUM_LOWER_ANGLE = 17D * Math.PI / 36D;//In radians, from horizontal.
-	private static final double MINIMUM_LOWER_ANGLE = Math.PI / 12D;//In radians, from horizontal.
+	private static final double MINIMUM_LOWER_ANGLE = Math.PI / 6D;//In radians, from horizontal.
 	private static final double MAXIMUM_UPPER_ANGLE = .75D * Math.PI;//In radians, from straight down.
-	private static final double MINIMUM_UPPER_ANGLE = .25D * Math.PI;//In radians, from straight down.
+	private static final double MINIMUM_UPPER_ANGLE = Math.PI / 4D;//In radians, from straight down.
 	private static final int TIERS = ModConfig.speedTiers.getInt();
 
 	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect(), new MechArmPickupFromInvEffect(), new MechArmUseEffect(), new MechArmDepositEffect(), new MechArmDropEntityEffect(), new MechArmReleaseEntityEffect()};
 
-	public double[][] motionData = new double[3][3];
+	public double[][] motionData = new double[3][4];
 	/** In radians. */
 	public double[] angle = {0, MAXIMUM_LOWER_ANGLE, MINIMUM_UPPER_ANGLE};
 	/** A record of the last speeds sent to the client.*/
@@ -51,7 +53,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Release entity with momentum.
 	 * EnumFacing.getFront((redstone - 2) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4) vary based on EnumFacing. 
 	 */
-	private int redstone = 0;
+	private int redstone = -1;
 	public EntityArmRidable ridable;
 
 	@Override
@@ -72,8 +74,11 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 				}
 			}
 		}
-
+		
 		if(!world.isRemote){
+			if(redstone == -1){
+				setRedstone(ModBlocks.ratiator.getPowerOnSide(world, pos, EnumFacing.NORTH, false));
+			}
 			if(ridable == null || ridable.isDead){
 				ridable = new EntityArmRidable(world);
 				ridable.setPosition(.5D + (double) pos.getX(), 1D + (double) pos.getY(), .5D + (double) pos.getZ());
@@ -100,9 +105,9 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 			double posZ = (holder * Math.sin(angle[0])) + .5D + (double) pos.getZ();
 			BlockPos endPos = new BlockPos(posX, posY, posZ);
 
-			ridable.setPosition(posX, posY, posZ);
+			ridable.setPositionAndUpdate(posX, posY, posZ);
 			if(actionType != -1 && EFFECTS[actionType].onTriggered(world, endPos, posX, posY, posZ, side, ridable, this)){
-				world.playSound(posX, posY, posZ, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 1, (float) Math.random(), true);
+				world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, .5F, .75F);
 			}
 		}
 	}
@@ -156,11 +161,18 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		angle[0] = nbt.getDouble("angle0");
 		angle[1] = nbt.getDouble("angle1");
 		angle[2] = nbt.getDouble("angle2");
-		if(!world.isRemote){
-			speedRecord[0] = motionData[0][0];
-			speedRecord[1] = motionData[1][0];
-			speedRecord[2] = motionData[2][0];
-		}
+		
+		//Only necessary on server side
+		speedRecord[0] = motionData[0][0];
+		speedRecord[1] = motionData[1][0];
+		speedRecord[2] = motionData[2][0];
+	}
+	
+	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-LOWER_ARM_LENGTH - UPPER_ARM_LENGTH - 1, -LOWER_ARM_LENGTH - UPPER_ARM_LENGTH - 1, -LOWER_ARM_LENGTH - UPPER_ARM_LENGTH - 1, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 1, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 1, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 1);
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return RENDER_BOX.offset(pos);
 	}
 
 	//Down: Rotation about y-axis, East: Base bar angle, West: Upper bar angle.
@@ -214,7 +226,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 				return;
 			}
 
-			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
+			rotRatio = rotRatioIn == 0 ? 1 : -rotRatioIn;
 			updateKey = key;
 		}
 

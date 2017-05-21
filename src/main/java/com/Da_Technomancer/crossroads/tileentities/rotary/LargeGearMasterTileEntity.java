@@ -274,7 +274,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 					// Diagonal gears
 					TileEntity diagTE = world.getTileEntity(pos.offset(sideN, 2).offset(sid));
-					if(diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()) && DefaultAxleHandler.canConnectThrough(world, pos.offset(sideN, 2), sideN.getOpposite(), sid) && diagTE != null){
+					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()) && DefaultAxleHandler.canConnectThrough(world, pos.offset(sideN, 2), sideN.getOpposite(), sid) && diagTE != null){
 						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()).connect(masterIn, key, rotRatio, 1.5D);
 					}
 				}

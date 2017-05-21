@@ -18,14 +18,7 @@ public class ModelGearOctagon{
 	private final float sHalfT = .5F / (1F + (float) Math.sqrt(2F));
 	
 	/**
-	 * Finally worked out the actual modus operandi. 
-	 * First: Translate to pos as if centered at (0, 0, 0) in the block.
-	 * Second: Rotate so it faces the correct direction.
-	 * Third: Rotate for spinning along the y axis. 
-	 * Fourth: Scale
-	 * Fifth: Translate to (0, .4375, 0).
-	 * Sixth: Render the model.
-	 * Any step can be skipped except for steps 5 & 6.
+	 * TODO Change it to render about the origin, without the offset. This will require going back and changing everything that uses this.
 	 */
 	public void render(ResourceLocation res, Color color){
 

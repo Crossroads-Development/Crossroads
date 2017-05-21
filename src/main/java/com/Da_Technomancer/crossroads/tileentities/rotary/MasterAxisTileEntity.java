@@ -48,16 +48,16 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
 		}
-		
+
 		if(sumIRot == 0 || sumIRot != sumIRot){
 			return;
 		}
-		
+
 		sumEnergy = runLoss(rotaryMembers, 1.001D);
 		if(sumEnergy < 1 && sumEnergy > -1){
 			sumEnergy = 0;
 		}
-		
+
 		for(IAxleHandler gear : rotaryMembers){
 			double newEnergy = 0;
 
@@ -70,14 +70,14 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
-			
+
 			gear.markChanged();
 		}
 	}
 
 	/**
 	 * base should always be equal or greater than one. 1 means no loss. 
-	*/
+	 */
 	private static double runLoss(ArrayList<IAxleHandler> gears, double base){
 		double sumEnergy = 0;
 
@@ -92,7 +92,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("facing", this.facing.getIndex());
-		
+
 		return nbt;
 	}
 
@@ -104,9 +104,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
 	private int lastKey = 0;
 	private boolean forceUpdate;
-	
+
 	private static final int updateTime = ModConfig.gearResetTime.getInt();
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -118,7 +118,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		if(ticksExisted % updateTime == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
-		
+
 		forceUpdate = CommonProxy.masterKey != lastKey;
 
 		if(ticksExisted % updateTime == 20){
@@ -126,7 +126,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 				gear.resetAngle();
 			}
 		}
-		
+
 		lastKey = CommonProxy.masterKey;
 
 		if(!locked && !rotaryMembers.isEmpty()){
@@ -134,7 +134,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			triggerSlaves();
 		}
 	}
-	
+
 	private void triggerSlaves(){
 		HashSet<Pair<ISlaveAxisHandler, EnumFacing>> toRemove = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
 		for(Pair<ISlaveAxisHandler, EnumFacing> slave : slaves){
@@ -146,9 +146,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		}
 		slaves.removeAll(toRemove);
 	}
-	
+
 	private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
@@ -156,9 +156,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		}
 		return super.hasCapability(cap, side);
 	}
-	
+
 	private final IAxisHandler handler = new AxisHandler();
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
@@ -167,7 +167,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		}
 		return super.getCapability(cap, side);
 	}
-	
+
 	private class AxisHandler implements IAxisHandler{
 
 		@Override
@@ -197,7 +197,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 					keyNew = (byte) (rand.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
-				
+
 				world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
@@ -232,12 +232,12 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 				return true;
 			}
 		}
-		
+
 		@Override
 		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
 			slaves.add(Pair.of(handler, side));
 		}
-		
+
 		@Override
 		public double getTotalEnergy(){
 			return sumEnergy;

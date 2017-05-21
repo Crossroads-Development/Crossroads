@@ -21,7 +21,6 @@ public class AxleRenderer extends TileEntitySpecialRenderer<AxleTileEntity>{
 
 	@Override
 	public void renderTileEntityAt(AxleTileEntity axle, double x, double y, double z, float partialTicks, int destroyStage){
-
 		if(!axle.getWorld().isBlockLoaded(axle.getPos(), false) || axle.getWorld().getBlockState(axle.getPos()).getBlock() != ModBlocks.axle){
 			return;
 		}
