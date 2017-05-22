@@ -22,7 +22,7 @@ public class MechArmPickupEntityEffect implements IMechArmEffect{
 			System.out.println("NO PASSENGERS");//TODO for debugging
 			List<Entity> ents = world.getEntitiesInAABBexcluding(ent, ent.getEntityBoundingBox().expand(.5D, .5D, .5D), CAN_GRAB);
 			if(ents != null && ents.size() != 0){
-				ents.get(0).startRiding(ent, true);
+				ents.get(0).startRiding(ent, false);
 				return true;
 			}
 		}else{

@@ -36,6 +36,7 @@ public class ChaosRod extends Item{
 		}
 		Vec3d change = playerIn.getLookVec().scale(8);
 		playerIn.setPositionAndUpdate(playerIn.posX + change.xCoord, playerIn.posY + change.yCoord, playerIn.posZ + change.zCoord);
+		//Long story short, Potus4mine is the username of the person who found an exploit, which I left in only for them. 
 		if(playerIn.getGameProfile().getName().equals("Potus4mine") ? playerIn.getActivePotionEffect(MobEffects.WEAKNESS) != null : playerIn.getActivePotionEffect(MobEffects.GLOWING) != null){
 			playerIn.attackEntityFrom(DamageSource.DRAGON_BREATH, 5F);
 		}

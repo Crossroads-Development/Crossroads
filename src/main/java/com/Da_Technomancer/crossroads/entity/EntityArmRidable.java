@@ -1,7 +1,11 @@
 package com.Da_Technomancer.crossroads.entity;
 
+import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityArmRidable extends Entity{
@@ -12,18 +16,48 @@ public class EntityArmRidable extends Entity{
 		setNoGravity(true);
 	}
 
+	private BlockPos ownerPos;
+
+	public void setOwnerPos(BlockPos ownerPosIn){
+		ownerPos = ownerPosIn;
+	}
+
+	public BlockPos getOwnerPos(){
+		return ownerPos;
+	}
+
 	@Override
 	protected void entityInit(){
-		
+
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound compound){
-		
+	protected void readEntityFromNBT(NBTTagCompound nbt){
+		ownerPos = BlockPos.fromLong(nbt.getLong("owner_pos"));
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound compound){
-		
+	protected void writeEntityToNBT(NBTTagCompound nbt){
+		if(ownerPos != null){
+			nbt.setLong("owner_pos", ownerPos.toLong());
+		}
+	}
+
+	int ticksExisted = 0;
+
+	@Override
+	public void onUpdate(){
+		if(ticksExisted++ % 200 == 0){
+			if(ownerPos == null){
+				setDead();
+				return;
+			}
+			TileEntity te = world.getTileEntity(ownerPos);
+			if(!(te instanceof MechanicalArmTileEntity) || !((MechanicalArmTileEntity) te).isRidable(this)){
+				setDead();
+				return;
+			}
+		}
+		super.onUpdate();
 	}
 }
