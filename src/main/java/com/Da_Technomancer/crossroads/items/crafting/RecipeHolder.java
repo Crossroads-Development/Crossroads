@@ -20,6 +20,7 @@ import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
+
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

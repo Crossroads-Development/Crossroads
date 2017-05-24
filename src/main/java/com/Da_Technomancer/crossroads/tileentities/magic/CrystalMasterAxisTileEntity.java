@@ -9,7 +9,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -71,7 +70,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		}
 		
 		sumEnergy = runLoss(rotaryMembers, currentElement == MagicElements.STABILITY ? (voi ? 1.5D : 1D) : 1.001D);
-		sumEnergy += MiscOp.posOrNeg(sumEnergy) * (currentElement == MagicElements.ENERGY ? (voi ? -10 : 10) : 0);
+		sumEnergy += Math.signum(sumEnergy) * (currentElement == MagicElements.ENERGY ? (voi ? -10 : 10) : 0);
 		sumEnergy += currentElement == MagicElements.CHARGE ? (voi ? -10 : 10) : 0;
 		sumEnergy = currentElement == MagicElements.EQUALIBRIUM ? (voi ? ((7D * sumEnergy) - (3D * lastSumEnergy)) / 4D : (sumEnergy + (3D * lastSumEnergy)) / 4D) : sumEnergy;
 		
@@ -85,9 +84,9 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 			double newEnergy = 0;
 
 			// set w
-			gear.getMotionData()[0] = MiscOp.posOrNeg(sumEnergy) * MiscOp.posOrNeg(gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
+			gear.getMotionData()[0] = Math.signum(sumEnergy) * Math.signum(gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
 			// set energy
-			newEnergy = MiscOp.posOrNeg(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
+			newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
 			gear.getMotionData()[1] = newEnergy;
 			// set power
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
@@ -105,7 +104,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		double sumEnergy = 0;
 
 		for(IAxleHandler gear : gears){
-			sumEnergy += MiscOp.posOrNeg(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(base, -Math.abs(gear.getMotionData()[0]));
+			sumEnergy += Math.signum(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(base, -Math.abs(gear.getMotionData()[0]));
 		}
 		return sumEnergy;
 	}

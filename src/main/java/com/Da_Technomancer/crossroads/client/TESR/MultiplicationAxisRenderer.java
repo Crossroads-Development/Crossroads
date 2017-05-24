@@ -5,7 +5,6 @@ import java.awt.Color;
 import org.lwjgl.opengl.GL11;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -86,9 +85,9 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 
 		//second transformer
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(.6875D, .5D - (MiscOp.posOrNeg(speedTwo) * .1328125D), .25D);
+		GlStateManager.translate(.6875D, .5D - (Math.signum(speedTwo) * .1328125D), .25D);
 		GlStateManager.scale(1D, .453125D, 1D);
-		GlStateManager.rotate(angleThree * (float) -MiscOp.posOrNeg(speedTwo), 0, 1F, 0);
+		GlStateManager.rotate(angleThree * (float) -Math.signum(speedTwo), 0, 1F, 0);
 		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
@@ -212,17 +211,17 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 
 		//second transformer top
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(.6875D, .8203125D - (MiscOp.posOrNeg(speedTwo) * .1328125D), .25D);
+		GlStateManager.translate(.6875D, .8203125D - (Math.signum(speedTwo) * .1328125D), .25D);
 		GlStateManager.scale(.1875D, .1875D, .1875D);
-		GlStateManager.rotate(angleThree * (float) -MiscOp.posOrNeg(speedTwo), 0, 1F, 0);
+		GlStateManager.rotate(angleThree * (float) -Math.signum(speedTwo), 0, 1F, 0);
 		modelGear.render(textureGear, col);
 		GlStateManager.popMatrix();
 
 		//second transformer bottom
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(.6875D, .34375D - (MiscOp.posOrNeg(speedTwo) * .1328125D), .25D);
+		GlStateManager.translate(.6875D, .34375D - (Math.signum(speedTwo) * .1328125D), .25D);
 		GlStateManager.scale(.1875D, .1875D, .1875D);
-		GlStateManager.rotate(angleThree * (float) -MiscOp.posOrNeg(speedTwo), 0, 1F, 0);
+		GlStateManager.rotate(angleThree * (float) -Math.signum(speedTwo), 0, 1F, 0);
 		modelGear.render(textureGear, col);
 		GlStateManager.popMatrix();
 
@@ -426,8 +425,8 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 
 		//second transformer bottom
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(.6875D, .16D - (MiscOp.posOrNeg(speedTwo) * .1328125D / 2D), .25D);
-		GlStateManager.scale(1D, .1875D * (1 - (MiscOp.posOrNeg(speedTwo) * .70833333333D)), 1D);
+		GlStateManager.translate(.6875D, .16D - (Math.signum(speedTwo) * .1328125D / 2D), .25D);
+		GlStateManager.scale(1D, .1875D * (1 - (Math.signum(speedTwo) * .70833333333D)), 1D);
 		modelAx.render(textureSpr, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
@@ -440,8 +439,8 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 
 		//second transformer top
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(.6875D, .84D - (MiscOp.posOrNeg(speedTwo) * .1328125D / 2D), .25D);
-		GlStateManager.scale(1D, .1875D * (1 + (MiscOp.posOrNeg(speedTwo) * .70833333333D)), 1D);
+		GlStateManager.translate(.6875D, .84D - (Math.signum(speedTwo) * .1328125D / 2D), .25D);
+		GlStateManager.scale(1D, .1875D * (1 + (Math.signum(speedTwo) * .70833333333D)), 1D);
 		modelAx.render(textureSpr, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 

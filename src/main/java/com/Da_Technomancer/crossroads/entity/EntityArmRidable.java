@@ -28,16 +28,16 @@ public class EntityArmRidable extends Entity{
 
 	@Override
 	protected void entityInit(){
-
+		
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt){
+	public void readEntityFromNBT(NBTTagCompound nbt){
 		ownerPos = BlockPos.fromLong(nbt.getLong("owner_pos"));
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt){
+	public void writeEntityToNBT(NBTTagCompound nbt){
 		if(ownerPos != null){
 			nbt.setLong("owner_pos", ownerPos.toLong());
 		}

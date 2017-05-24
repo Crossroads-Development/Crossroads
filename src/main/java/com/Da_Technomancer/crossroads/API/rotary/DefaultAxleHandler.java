@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -50,17 +48,17 @@ public class DefaultAxleHandler implements IAxleHandler{
 		if(allowInvert && absolute){
 			motionData[1] += energy;
 		}else if(allowInvert){
-			motionData[1] += energy * MiscOp.posOrNeg(motionData[1]);
+			motionData[1] += energy * Math.signum(motionData[1]);
 		}else if(absolute){
-			int sign = (int) MiscOp.posOrNeg(motionData[1]);
+			int sign = (int) Math.signum(motionData[1]);
 			motionData[1] += energy;
-			if(sign != 0 && MiscOp.posOrNeg(motionData[1]) != sign){
+			if(sign != 0 && Math.signum(motionData[1]) != sign){
 				motionData[1] = 0;
 			}
 		}else{
-			int sign = (int) MiscOp.posOrNeg(motionData[1]);
-			motionData[1] += energy * MiscOp.posOrNeg(motionData[1]);
-			if(MiscOp.posOrNeg(motionData[1]) != sign){
+			int sign = (int) Math.signum(motionData[1]);
+			motionData[1] += energy * Math.signum(motionData[1]);
+			if(Math.signum(motionData[1]) != sign){
 				motionData[1] = 0;
 			}
 		}

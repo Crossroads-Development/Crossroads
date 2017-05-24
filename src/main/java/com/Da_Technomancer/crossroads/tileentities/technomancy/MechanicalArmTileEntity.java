@@ -287,17 +287,17 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 			if(allowInvert && absolute){
 				motionData[index][1] += energy;
 			}else if(allowInvert){
-				motionData[index][1] += energy * MiscOp.posOrNeg(motionData[index][1]);
+				motionData[index][1] += energy * Math.signum(motionData[index][1]);
 			}else if(absolute){
-				int sign = (int) MiscOp.posOrNeg(motionData[index][1]);
+				int sign = (int) Math.signum(motionData[index][1]);
 				motionData[index][1] += energy;
-				if(sign != 0 && MiscOp.posOrNeg(motionData[index][1]) != sign){
+				if(sign != 0 && Math.signum(motionData[index][1]) != sign){
 					motionData[index][1] = 0;
 				}
 			}else{
-				int sign = (int) MiscOp.posOrNeg(motionData[index][1]);
+				int sign = (int) Math.signum(motionData[index][1]);
 				motionData[index][1] += energy * ((double) sign);
-				if(MiscOp.posOrNeg(motionData[index][1]) != sign){
+				if(Math.signum(motionData[index][1]) != sign){
 					motionData[index][1] = 0;
 				}
 			}

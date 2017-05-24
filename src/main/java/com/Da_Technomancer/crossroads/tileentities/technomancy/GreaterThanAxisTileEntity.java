@@ -19,8 +19,8 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class GreaterThanAxisTileEntity extends TileEntity implements ITickable{
@@ -57,7 +57,7 @@ public class GreaterThanAxisTileEntity extends TileEntity implements ITickable{
 
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
-			sumEnergy += MiscOp.posOrNeg(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(1.001D, -Math.abs(gear.getMotionData()[0]));
+			sumEnergy += Math.signum(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(1.001D, -Math.abs(gear.getMotionData()[0]));
 		}
 
 		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
@@ -75,7 +75,7 @@ public class GreaterThanAxisTileEntity extends TileEntity implements ITickable{
 			// set w
 			gear.getMotionData()[0] = gear.getRotationRatio() * baseSpeed;
 			// set energy
-			newEnergy = MiscOp.posOrNeg(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
+			newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
 			gear.getMotionData()[1] = newEnergy;
 			sumEnergy += newEnergy;
 			// set power

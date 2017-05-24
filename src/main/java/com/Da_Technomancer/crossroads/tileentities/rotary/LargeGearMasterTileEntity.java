@@ -289,7 +289,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		@Override
 		public void resetAngle(){
 			if(!world.isRemote){
-				angleW[1] = (MiscOp.posOrNeg(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
+				angleW[1] = (Math.signum(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
 			}
 		}
 
@@ -303,17 +303,17 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			if(allowInvert && absolute){
 				motionData[1] += energy;
 			}else if(allowInvert){
-				motionData[1] += energy * MiscOp.posOrNeg(motionData[1]);
+				motionData[1] += energy * Math.signum(motionData[1]);
 			}else if(absolute){
-				int sign = (int) MiscOp.posOrNeg(motionData[1]);
+				int sign = (int) Math.signum(motionData[1]);
 				motionData[1] += energy;
-				if(sign != 0 && MiscOp.posOrNeg(motionData[1]) != sign){
+				if(sign != 0 && Math.signum(motionData[1]) != sign){
 					motionData[1] = 0;
 				}
 			}else{
-				int sign = (int) MiscOp.posOrNeg(motionData[1]);
+				int sign = (int) Math.signum(motionData[1]);
 				motionData[1] += energy * ((double) sign);
-				if(MiscOp.posOrNeg(motionData[1]) != sign){
+				if(Math.signum(motionData[1]) != sign){
 					motionData[1] = 0;
 				}
 			}

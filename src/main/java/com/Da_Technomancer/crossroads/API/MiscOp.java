@@ -39,17 +39,9 @@ public final class MiscOp{
 	}
 
 	public static int posOrNeg(int in){
-		return posOrNeg(in, 0);
-	}
-	
-	public static int posOrNeg(int in, int zeroCase){
-		return in == 0 ? zeroCase : (in < 0 ? -1 : 1);
+		return in == 0 ? 0 : (in < 0 ? -1 : 1);
 	}
 
-	public static double posOrNeg(double in){
-		return posOrNeg(in, 0);
-	}
-	
 	public static double posOrNeg(double in, double zeroCase){
 		return in == 0 ? zeroCase : (in < 0 ? -1 : 1);
 	}

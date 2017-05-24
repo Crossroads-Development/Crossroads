@@ -45,6 +45,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.AdditionAxisTileE
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ArcCosAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ArcSinAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BackCounterGearTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkUnlockerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CopshowiumCreationChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CosAxisTileEntity;
@@ -66,7 +67,6 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileE
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SinAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SquareRootAxisTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEntity;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;

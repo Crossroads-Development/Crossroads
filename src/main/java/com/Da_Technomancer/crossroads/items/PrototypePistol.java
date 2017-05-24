@@ -7,7 +7,6 @@ import java.util.List;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
@@ -391,17 +390,17 @@ public class PrototypePistol extends MagicUsingItem{
 				if(allowInvert && absolute){
 					motionData[1] += energy;
 				}else if(allowInvert){
-					motionData[1] += energy * MiscOp.posOrNeg(motionData[1]);
+					motionData[1] += energy * Math.signum(motionData[1]);
 				}else if(absolute){
-					int sign = (int) MiscOp.posOrNeg(motionData[1]);
+					int sign = (int) Math.signum(motionData[1]);
 					motionData[1] += energy;
-					if(sign != 0 && MiscOp.posOrNeg(motionData[1]) != sign){
+					if(sign != 0 && Math.signum(motionData[1]) != sign){
 						motionData[1] = 0;
 					}
 				}else{
-					int sign = (int) MiscOp.posOrNeg(motionData[1]);
+					int sign = (int) Math.signum(motionData[1]);
 					motionData[1] += energy * ((double) sign);
-					if(MiscOp.posOrNeg(motionData[1]) != sign){
+					if(Math.signum(motionData[1]) != sign){
 						motionData[1] = 0;
 					}
 				}

@@ -383,7 +383,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		@Override
 		public void resetAngle(){
 			if(!world.isRemote){
-				clientW[side] = (MiscOp.posOrNeg(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
+				clientW[side] = (Math.signum(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
 			}
 		}
 
@@ -420,17 +420,17 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			if(allowInvert && absolute){
 				motionData[side][1] += energy;
 			}else if(allowInvert){
-				motionData[side][1] += energy * MiscOp.posOrNeg(motionData[side][1]);
+				motionData[side][1] += energy * Math.signum(motionData[side][1]);
 			}else if(absolute){
-				int sign = (int) MiscOp.posOrNeg(motionData[side][1]);
+				int sign = (int) Math.signum(motionData[side][1]);
 				motionData[side][1] += energy;
-				if(sign != 0 && MiscOp.posOrNeg(motionData[side][1]) != sign){
+				if(sign != 0 && Math.signum(motionData[side][1]) != sign){
 					motionData[side][1] = 0;
 				}
 			}else{
-				int sign = (int) MiscOp.posOrNeg(motionData[side][1]);
+				int sign = (int) Math.signum(motionData[side][1]);
 				motionData[side][1] += energy * ((double) sign);
-				if(MiscOp.posOrNeg(motionData[side][1]) != sign){
+				if(Math.signum(motionData[side][1]) != sign){
 					motionData[side][1] = 0;
 				}
 			}
