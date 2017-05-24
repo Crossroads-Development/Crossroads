@@ -83,7 +83,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			return;
 		}
 		
-		double holder = Math.max(beamer == null || beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()) / 3D, beamerUp == null || beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()) / 3D);
+		double holder = Math.max(beamer == null || beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()), beamerUp == null || beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()));
 		if(holder != lastRedstone){
 			lastRedstone = holder;
 			world.updateComparatorOutputLevel(pos, ModBlocks.lensHolder);

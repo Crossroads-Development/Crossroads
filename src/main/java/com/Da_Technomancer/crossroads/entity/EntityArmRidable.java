@@ -47,7 +47,7 @@ public class EntityArmRidable extends Entity{
 
 	@Override
 	public void onUpdate(){
-		if(ticksExisted++ % 200 == 0){
+		if(!world.isRemote && ticksExisted++ % 200 == 0){
 			if(ownerPos == null){
 				setDead();
 				return;
@@ -58,6 +58,7 @@ public class EntityArmRidable extends Entity{
 				return;
 			}
 		}
+		
 		super.onUpdate();
 	}
 }

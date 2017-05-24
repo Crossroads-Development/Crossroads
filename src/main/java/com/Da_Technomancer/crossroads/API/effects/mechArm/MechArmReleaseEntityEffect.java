@@ -21,7 +21,7 @@ public class MechArmReleaseEntityEffect implements IMechArmEffect{
 			double newAngle2 = te.angle[2] + (te.motionData[2][0] / 20D);
 			
 			double lengthCross = Math.sqrt(Math.pow(MechanicalArmTileEntity.LOWER_ARM_LENGTH, 2) + Math.pow(MechanicalArmTileEntity.UPPER_ARM_LENGTH, 2) - (2D * MechanicalArmTileEntity.LOWER_ARM_LENGTH * MechanicalArmTileEntity.UPPER_ARM_LENGTH * Math.cos(newAngle2)));
-			double thetaD = newAngle1 + newAngle2 + Math.asin(Math.sin(newAngle2 * MechanicalArmTileEntity.LOWER_ARM_LENGTH / lengthCross));
+			double thetaD = newAngle1 + newAngle2 + Math.asin(Math.sin(newAngle2) * MechanicalArmTileEntity.LOWER_ARM_LENGTH / lengthCross);
 			double holder = -Math.cos(thetaD) * lengthCross;
 
 			double newPosX = (holder * Math.cos(newAngle0)) + .5D + (double) pos.getX();

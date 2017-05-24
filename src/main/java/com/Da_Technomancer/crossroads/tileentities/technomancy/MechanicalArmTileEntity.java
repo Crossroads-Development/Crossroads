@@ -21,7 +21,6 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -82,20 +81,22 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 				setRedstone(ModBlocks.ratiator.getPowerOnSide(world, pos, EnumFacing.NORTH, false));
 			}
 
-			if(ridable == null && ridableID != null){
-				for(Entity ent : world.getLoadedEntityList()){
-					if(ent instanceof EntityArmRidable && ridableID.equals(ent.getUniqueID())){
-						ridable = (EntityArmRidable) ent;
-						break;
+			if(ridable == null || ridable.isDead){
+				if(ridableID != null){
+					for(EntityArmRidable ent : world.getEntities(EntityArmRidable.class, (EntityArmRidable filter) -> true)){
+						if(ridableID.equals(ent.getUniqueID())){
+							ridable = ent;
+							break;
+						}
 					}
 				}
-			}
-			if(ridable == null || ridable.isDead || !pos.equals(ridable.getOwnerPos())){//The position not matching could occur due to things like this block being copied with prototyping.
-				ridable = new EntityArmRidable(world);
-				ridableID = ridable.getUniqueID();
-				ridable.setOwnerPos(pos);
-				ridable.setPosition(.5D + (double) pos.getX(), 1D + (double) pos.getY(), .5D + (double) pos.getZ());
-				world.spawnEntity(ridable);
+				if(ridable == null || ridable.isDead || !pos.equals(ridable.getOwnerPos())){//The position not matching could occur due to things like this block being copied with prototyping.
+					ridable = new EntityArmRidable(world);
+					ridableID = ridable.getUniqueID();
+					ridable.setOwnerPos(pos);
+					ridable.setPosition(.5D + (double) pos.getX(), 1D + (double) pos.getY(), .5D + (double) pos.getZ());
+					world.spawnEntity(ridable);
+				}
 			}
 
 			int actionType = -1;
@@ -120,7 +121,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 			BlockPos endPos = new BlockPos(posX, posY, posZ);
 
 			ridable.setPositionAndUpdate(posX, posY, posZ);
-			
+
 			if(actionType != -1 && EFFECTS[actionType].onTriggered(world, endPos, posX, posY, posZ, side, ridable, this)){
 				world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, .5F, .75F);
 			}
@@ -175,7 +176,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		nbt.setDouble("angle0", angle[0]);
 		nbt.setDouble("angle1", angle[1]);
 		nbt.setDouble("angle2", angle[2]);
-		
+
 		if(ridableID != null){
 			nbt.setLong("id_greater", ridableID.getMostSignificantBits());
 			nbt.setLong("id_lesser", ridableID.getLeastSignificantBits());
@@ -196,11 +197,11 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		speedRecord[0] = motionData[0][0];
 		speedRecord[1] = motionData[1][0];
 		speedRecord[2] = motionData[2][0];
-		
+
 		ridableID = nbt.hasKey("id_lesser") ? new UUID(nbt.getLong("id_greater"), nbt.getLong("id_lesser")) : null;
 	}
 
-	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-LOWER_ARM_LENGTH - UPPER_ARM_LENGTH - 1, -LOWER_ARM_LENGTH - UPPER_ARM_LENGTH - 1, -LOWER_ARM_LENGTH - UPPER_ARM_LENGTH - 1, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 1, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 1, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 1);
+	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-LOWER_ARM_LENGTH - UPPER_ARM_LENGTH - 2, -LOWER_ARM_LENGTH - UPPER_ARM_LENGTH - 1, -LOWER_ARM_LENGTH - UPPER_ARM_LENGTH - 2, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 2, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 2, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 2);
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){

@@ -197,7 +197,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 
 		@Override
 		public double getOutput(boolean measure){
-			return measure ? 15D * Math.pow(motionData[0], 2) / 2D : 0;
+			return measure ? Math.abs(motionData[0]) / 2D : 0;
 		}
 	}
 
