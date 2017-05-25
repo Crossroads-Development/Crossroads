@@ -5,8 +5,8 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.ServerProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -29,7 +29,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class BackCounterGearTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
-	
+
 	private GearTypes type;
 	private double[] motionData = new double[4];
 	private double[] physData = new double[2];
@@ -38,33 +38,37 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 	private double height = .625D;
 	private double lastSentHeight;
 	private static final double MAX_COUNT = 4;
-	
+
 	public BackCounterGearTileEntity(){
 		super();
 	}
-	
+
 	public BackCounterGearTileEntity(GearTypes type){
 		super();
 		this.type = type;
 		physData[0] = type.getDensity() / 8D;
 		physData[1] = type.getDensity() / 64D;
 	}
-	
+
 	public double getHeight(){
 		return height;
 	}
-	
+
+	public void resetHeight(){
+		height = .625D;
+	}
+
 	public GearTypes getMember(){
 		return type;
 	}
-	
+
 	private final int tiers = ModConfig.speedTiers.getInt();
-	
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return (oldState.getBlock() != newState.getBlock());
 	}
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -80,11 +84,7 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 
 		if(!world.isRemote){
 			boolean bottom = height == 0;
-			if(motionData[0] < 0 && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
-				height = .625D;
-			}else{
-				height -= .625D * motionData[0] / (2D * Math.PI * 20D * MAX_COUNT);
-			}
+			height -= .625D * motionData[0] / (2D * Math.PI * 20D * MAX_COUNT);
 			height = Math.min(.625, Math.max(0, height));
 			if(bottom != (height == 0)){
 				++ServerProxy.masterKey;
@@ -92,7 +92,7 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 			sendWPacket();
 		}
 	}
-	
+
 	private void sendWPacket(){
 		boolean flag = false;
 		if(clientW == Double.POSITIVE_INFINITY || clientW == Double.NEGATIVE_INFINITY){
@@ -110,7 +110,7 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 				clientW = 0;
 			}
 		}
-		
+
 		if(lastSentHeight != MiscOp.tiersRound(height, tiers)){
 			lastSentHeight = MiscOp.tiersRound(height, tiers);
 			SendDoubleToClient msg = new SendDoubleToClient("height", height, pos);
@@ -124,9 +124,9 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 
 		// motionData
 		NBTTagCompound motionTags = new NBTTagCompound();
-			for(int i = 0; i < 3; i++){
-				if(motionData[i] != 0)
-					motionTags.setDouble(i + "motion", motionData[i]);
+		for(int i = 0; i < 3; i++){
+			if(motionData[i] != 0)
+				motionTags.setDouble(i + "motion", motionData[i]);
 		}
 		nbt.setTag("motionData", motionTags);
 
@@ -156,7 +156,7 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 		}
 		height = nbt.getDouble("height");
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
@@ -165,7 +165,7 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 		}
 		return nbt;
 	}
-	
+
 	@Override
 	public void receiveDouble(String context, double message){
 		if(context.equals("w")){
@@ -174,15 +174,16 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 			height = message;
 		}
 	}
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		return Block.FULL_BLOCK_AABB.offset(pos);
 	}
-	
+
 	private final IAxleHandler axleHandler = new AxleHandler();
 	private final ICogHandler cogHandler = new CogHandler();
-	
+	private final IAdvancedRedstoneHandler redsHandler = new RedstoneHandler();
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.DOWN){
@@ -191,9 +192,12 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && height != 0){
 			return true;
 		}
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+			return true;
+		}
 		return super.hasCapability(capability, facing);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
@@ -203,10 +207,20 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && height != 0){
 			return (T) cogHandler;
 		}
-		
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+			return (T) redsHandler;
+		}
 		return super.getCapability(capability, facing);
 	}
-	
+
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(boolean measure){
+			return measure ? 2D * Math.PI * MAX_COUNT * height / .625D : 0;
+		}
+	}
+
 	private class CogHandler implements ICogHandler{
 
 		@Override
@@ -219,12 +233,12 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 			return axleHandler;
 		}
 	}
-	
+
 	private class AxleHandler implements IAxleHandler{
 
 		private byte key;
 		private double rotRatio;
-		
+
 		@Override
 		public double[] getMotionData(){
 			return motionData;
@@ -237,7 +251,7 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 			}else if(rotRatioIn == 0){
 				rotRatioIn = 1;
 			}
-			
+
 			//If true, this has already been checked.
 			if(key == keyIn){
 				//If true, there is rotation conflict.
@@ -246,18 +260,18 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 				}
 				return;
 			}
-			
+
 			if(masterIn.addToList(this)){
 				return;
 			}
 
 			rotRatio = rotRatioIn;
-			
+
 			if(key == 0){
 				resetAngle();
 			}
 			key = keyIn;
-			
+
 			TileEntity downTE = world.getTileEntity(pos.offset(EnumFacing.DOWN));
 			if(downTE != null){
 				if(downTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.UP)){
@@ -270,7 +284,7 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 					downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).propogate(masterIn, key, rotRatio, 0);
 				}
 			}
-			
+
 
 			if(height != 0){
 				for(int i = 2; i < 6; ++i){
@@ -289,7 +303,7 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 				}
 			}
 		}
-		
+
 		@Override
 		public double[] getPhysData(){
 			return physData;
@@ -333,7 +347,7 @@ public class BackCounterGearTileEntity extends TileEntity implements ITickable, 
 		public double getRotationRatio(){
 			return rotRatio;
 		}
-		
+
 		@Override
 		public void markChanged(){
 			markDirty();

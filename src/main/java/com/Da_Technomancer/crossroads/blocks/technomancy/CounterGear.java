@@ -111,6 +111,10 @@ public class CounterGear extends BlockContainer{
 		if(worldIn.isBlockPowered(pos)){
 			if(!state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(te instanceof CounterGearTileEntity){
+					((CounterGearTileEntity) te).resetHeight();
+				}
 			}
 		}else{
 			if(state.getValue(Properties.REDSTONE_BOOL)){

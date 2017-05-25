@@ -56,6 +56,7 @@ public class BackCounterGear extends BlockContainer{
 		setSoundType(SoundType.METAL);
 		ModItems.itemAddQue(Item.getItemFromBlock(this), 0, LOCAT);
 		RecipeHolder.technomancyRecipes.add(new ShapelessOreRecipe(new ItemStack(this, 1), GearFactory.COUNTER_GEARS.get(type)));
+		RecipeHolder.technomancyRecipes.add(new ShapelessOreRecipe(new ItemStack(GearFactory.COUNTER_GEARS.get(type), 1), this));
 	}
 	
 	@Override
@@ -117,6 +118,10 @@ public class BackCounterGear extends BlockContainer{
 		if(worldIn.isBlockPowered(pos)){
 			if(!state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(te instanceof BackCounterGearTileEntity){
+					((BackCounterGearTileEntity) te).resetHeight();
+				}
 			}
 		}else{
 			if(state.getValue(Properties.REDSTONE_BOOL)){

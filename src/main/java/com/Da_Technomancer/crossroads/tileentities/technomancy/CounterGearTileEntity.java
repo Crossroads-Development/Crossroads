@@ -5,8 +5,8 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.ServerProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -54,6 +54,10 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 		return height;
 	}
 	
+	public void resetHeight(){
+		height = .625D;
+	}
+	
 	public GearTypes getMember(){
 		return type;
 	}
@@ -80,11 +84,7 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 
 		if(!world.isRemote){
 			boolean bottom = height == 0;
-			if(motionData[0] < 0 && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
-				height = .625D;
-			}else{
-				height -= .625D * motionData[0] / (2D * Math.PI * 20D * MAX_COUNT);
-			}
+			height -= .625D * motionData[0] / (2D * Math.PI * 20D * MAX_COUNT);
 			height = Math.min(.625, Math.max(0, height));
 			if(bottom != (height == 0)){
 				++ServerProxy.masterKey;
@@ -182,6 +182,7 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 	
 	private final IAxleHandler axleHandler = new AxleHandler();
 	private final ICogHandler cogHandler = new CogHandler();
+	private final IAdvancedRedstoneHandler redsHandler = new RedstoneHandler();
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
@@ -189,6 +190,9 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 			return true;
 		}
 		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && height == 0){
+			return true;
+		}
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -203,8 +207,18 @@ public class CounterGearTileEntity extends TileEntity implements ITickable, IDou
 		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && height == 0){
 			return (T) cogHandler;
 		}
-		
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+			return (T) redsHandler;
+		}
 		return super.getCapability(capability, facing);
+	}
+	
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(boolean measure){
+			return measure ? 2D * Math.PI * MAX_COUNT * height / .625D : 0;
+		}
 	}
 	
 	private class CogHandler implements ICogHandler{
