@@ -27,9 +27,17 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 		super.initGui();
 
 		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 0, 300, 25, null, (Character key) -> Character.isAlphabetic(key) || key == '.' || Character.isDigit(key));
-		textBar.setText(te.output == Math.PI ? "PI" : Double.toString(te.output));
+		textBar.setText(te.output == Math.PI ? "PI" : doubleToString(te.output));
 	}
 
+	private static String doubleToString(double d){
+		String out = Double.toString(d);
+		if(out.endsWith(".0")){
+			out = out.substring(0, out.length() - 2);
+		}
+		return out;
+	}
+	
 	@Override
 	public void onGuiClosed(){
 		super.onGuiClosed();

@@ -131,7 +131,8 @@ public class TextBarGuiObject implements IGuiObject{
 		if(text.isEmpty() && emptyText == null){
 			return false;
 		}
-		fontRenderer.drawStringWithShadow(text.isEmpty() ? emptyText : text.substring(0, index) + ':' + text.substring(index), 5 + baseX, 7 + baseY, text.isEmpty() ? Color.GRAY.getRGB() : Color.WHITE.getRGB());
+		char indexChar = index == text.length() ? '_' : '|';
+		fontRenderer.drawStringWithShadow(text.isEmpty() ? emptyText : text.substring(0, index) + indexChar + text.substring(index), 5 + baseX, 7 + baseY, text.isEmpty() ? Color.GRAY.getRGB() : Color.WHITE.getRGB());
 		GlStateManager.color(1, 1, 1);
 		return true;
 	}
