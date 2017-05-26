@@ -21,7 +21,7 @@ public class ElementEntry extends EntryItemStack{
 	private final boolean lore;
 	
 	public ElementEntry(List<IPage> pageList, String unlocEntryName, ItemStack stack, boolean lore){
-		super(pageList, unlocEntryName, stack, GuideBooks.smallText);
+		super(pageList, unlocEntryName, stack, true);
 		this.lore = lore;
 	}
 	
@@ -30,16 +30,12 @@ public class ElementEntry extends EntryItemStack{
 	public void onInit(Book book, CategoryAbstract category, GuiCategory guiCategory, EntityPlayer player, ItemStack bookStack){
 		pageList.clear();
 		pageList.add(new PageText("Information about the various elements will be added to this entry as you discover them. To add an element to this entry, discover it then close and re-open this entry."));
-		if(GuideBooks.smallText){
-			((PageText) pageList.get(0)).setUnicodeFlag(true);
-		}
+		((PageText) pageList.get(0)).setUnicodeFlag(true);
 		for(MagicElements elem : MagicElements.values()){
 			if(elem == MagicElements.ENERGY || elem == MagicElements.POTENTIAL || elem == MagicElements.STABILITY || StoreNBTToClient.storedNBT.hasKey(elem.name())){
 				//Reverse order, because for the most part the more basic elements are at the bottom of the list.
 				pageList.add(1, lore ? getPage(elem) : getPageNoLore(elem));
-				//if(GuideBooks.smallText){ Ignores the config because otherwise it doesn't all fit on the page.
-					((PageText) pageList.get(1)).setUnicodeFlag(true);
-				//}
+				((PageText) pageList.get(1)).setUnicodeFlag(true);
 			}
 		}
 	}

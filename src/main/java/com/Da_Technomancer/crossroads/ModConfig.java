@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public final class ModConfig{
 
 	public static Configuration config;
-	
+
 	public static Property genCopperOre;
 	public static Property genTinOre;
 	public static Property genRubyOre;
@@ -15,7 +15,6 @@ public final class ModConfig{
 	public static Property speedTiers;
 	public static Property weatherControl;
 	public static Property rotateBeam;
-	public static Property smallText;
 	public static Property retrogen;
 	public static Property heatEffects;
 	public static Property allowAllSingle;
@@ -26,6 +25,7 @@ public final class ModConfig{
 	public static Property voidChunk;
 	public static Property resetChunk;
 	public static Property magicChunk;
+	public static Property blastChunk;
 	public static Property fieldLinesEnergy;
 	public static Property fieldLinesPotential;
 	public static Property disableSlaves;
@@ -34,7 +34,7 @@ public final class ModConfig{
 	public static Property wipeInvalidMappings;
 	public static Property blockedPrototype;
 	public static Property allowPrototype;
-	
+
 	private static final String CAT_INTERNAL = "Internal";
 	private static final String CAT_ORES = "Ores";
 	private static final String CAT_MISC = "Misc";
@@ -44,7 +44,7 @@ public final class ModConfig{
 
 		config = new Configuration(e.getSuggestedConfigurationFile());
 		config.load();
-		
+
 		genCopperOre = config.get(CAT_ORES, "Generate Copper Ore?", true);
 		genTinOre = config.get(CAT_ORES, "Generate Tin Ore?", true);
 		genRubyOre = config.get(CAT_ORES, "Generate Ruby Ore?", true);
@@ -53,7 +53,6 @@ public final class ModConfig{
 		speedTiers = config.get(CAT_INTERNAL, "Speed Tiers", 50, "Higher value means smoother gear rotation and less clipping, but more packets sent AKA lag. (Range 1-1000, Default 50)", 1, 1000);
 		weatherControl = config.get(CAT_MISC, "Enable rain idol? (Default true)", true);
 		rotateBeam = config.get(CAT_MISC, "Rotate Beams", true, "Should magic beams rotate? (Default true)");
-		smallText = config.get(CAT_MISC, "Use small text in the guide book? (Default true)", true);
 		heatEffects = config.get(CAT_MISC, "Cable Overheat Effects", true, "If false, all heat cable overheating effects are replaced with burning (Default true)");
 		allowAllSingle = config.get(CAT_SPECIALIZATION, "Allow Multiple specializations per player in SinglePlayer? (Default true)", true);
 		allowAllServer = config.get(CAT_SPECIALIZATION, "Allow Multiple specializations per player in MultiPlayer? (Default false)", false);
@@ -63,6 +62,7 @@ public final class ModConfig{
 		voidChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Voiding disaster from Technomancy? (Default true)", true);
 		resetChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Reset disaster from Technomancy? (Default true)", true);
 		magicChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Magic-ifying disaster from Technomancy? (Default true)", true);
+		blastChunk = config.get(CAT_TECHNOMANCY, "Allow Explosion disaster from Technomancy? (Default true)", true);
 		fieldLinesEnergy = config.get(CAT_TECHNOMANCY, "Draw energy fields with lines (True: lines, False: planes)? (Default true)", true);
 		fieldLinesPotential = config.get(CAT_TECHNOMANCY, "Draw potential fields with lines (True: lines, False: planes)? (Default false)", false);
 		disableSlaves = config.get(CAT_INTERNAL, "If you are crashing from StackOverflow errors and you either have a tiny amount of RAM or built an insanely large & complicated rotary setup, then set this to true, destroy the setup, and set this to false. Also maybe send me a picture of the setup.", false);

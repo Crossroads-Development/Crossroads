@@ -2,15 +2,24 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import java.util.Random;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
+import org.apache.logging.log4j.Level;
 
+import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.dimensions.WorkspaceWorldProvider;
+
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.ChunkProviderServer;
 
 public class TimeEffect implements IEffect{
 
@@ -44,11 +53,11 @@ public class TimeEffect implements IEffect{
 
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, double mult){
-			//TODO temporary for testing
-			System.out.println("------------------------FLUX_EVENT-----------------------------");
-			/*
-
-			int severity = worldIn.provider instanceof WorkspaceWorldProvider ? 3 : RAND.nextInt((int) Math.min(mult, 128)) + 1;
+			if(worldIn.provider instanceof WorkspaceWorldProvider){
+				return;
+			}
+			
+			int severity = RAND.nextInt((int) Math.min(mult, 128)) + 1;
 
 			if(severity >= 100 && ModConfig.voidChunk.getBoolean()){
 				ChunkPos chunkPos = new ChunkPos(pos);
@@ -78,9 +87,11 @@ public class TimeEffect implements IEffect{
 					}while(element == MagicElements.TIME || element.getEffect() == null);
 					element.getEffect().doEffect(worldIn, effectPos, severity);
 				}
-			}else{
+			}else if(ModConfig.blastChunk.getBoolean()){
 				worldIn.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), severity, false);
-			}*/
+			}else{
+				Main.logger.info("There would have been a flux event at " + pos.toString() + " in dimension " + worldIn.provider.getDimension() + " of severity " + severity + ", but the relevant flux event is disabled in the config. Lucky you.");
+			}
 		}
 
 		private static void setChunk(Chunk copyTo, Chunk copyFrom){
