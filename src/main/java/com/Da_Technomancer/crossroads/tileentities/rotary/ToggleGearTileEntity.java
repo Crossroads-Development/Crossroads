@@ -56,7 +56,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return (oldState.getBlock() != newState.getBlock());
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	@Override

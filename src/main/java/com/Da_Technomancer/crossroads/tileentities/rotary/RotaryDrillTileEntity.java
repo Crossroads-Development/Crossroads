@@ -6,13 +6,11 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -47,7 +45,6 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 		if(Math.abs(motionData[1]) >= ENERGY_USE){
 			axleHandler.addEnergy(-ENERGY_USE, false, false);
 			if(++ticksExisted % 10 == 0){
-				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.BLOCKS, .2F, .5F);
 				if(!world.isAirBlock(pos.offset(facing))){
 					if(Math.abs(motionData[0]) >= world.getBlockState(pos.offset(facing)).getBlockHardness(world, pos.offset(facing)) * SPEED_PER_HARDNESS){
 						world.destroyBlock(pos.offset(facing), true);

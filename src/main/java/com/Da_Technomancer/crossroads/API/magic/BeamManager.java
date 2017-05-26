@@ -22,12 +22,10 @@ public class BeamManager{
 	private final EnumFacing dir;
 	private final World world;
 	private final BlockPos pos;
-
+	
 	private BlockPos end;
-
-	private int dist;//I know this can be calculated from pos and end, But this is simpler and doesn't require using Math.sqrt
+	private int dist;//This can be calculated from pos and end, But this way it doesn't require using Math.sqrt().
 	private MagicUnit lastSent;
-
 	private MagicUnit lastFullSent;
 
 	public BeamManager(@Nonnull EnumFacing dir, @Nonnull BlockPos pos, @Nonnull World world){
@@ -91,7 +89,7 @@ public class BeamManager{
 	}
 
 	public int getPacket(){
-		return lastSent == null || lastSent.getRGB() == null ? 0 : ((dist - 1) << 24) + (lastSent.getRGB().getRGB() & 16777215) + (Math.min((int) Math.pow((lastSent.getPower()) - 1, 1D / 3D), 7) << 28);
+		return lastSent == null || lastSent.getRGB() == null ? 0 : ((dist - 1) << 24) + (lastSent.getRGB().getRGB() & 16777215) + ((lastSent.getPower() >= 512 ? 0 : (int) Math.pow(lastSent.getPower(), 1D / 3D) - 1) << 28);
 	}
 
 	@Nullable

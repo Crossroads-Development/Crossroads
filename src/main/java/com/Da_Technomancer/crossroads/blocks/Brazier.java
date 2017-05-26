@@ -41,7 +41,7 @@ public class Brazier extends BlockContainer{
 		setUnlocalizedName(name);
 		setHardness(2);
 		setRegistryName(name);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 	}

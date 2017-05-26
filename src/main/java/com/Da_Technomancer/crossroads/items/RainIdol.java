@@ -67,8 +67,8 @@ public class RainIdol extends Item{
 						worldIn.getWorldInfo().setThundering(true);
 						worldIn.getWorldInfo().setCleanWeatherTime(0);
 						worldIn.getWorldInfo().setRainTime(24000);
-						worldIn.playSound(null, play.posX, play.posY, play.posZ, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.PLAYERS, 20F, 1F);
-						play.setHeldItem(EnumHand.MAIN_HAND, null);
+						worldIn.playSound(null, play.posX, play.posY, play.posZ, SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1F, 1F);
+						play.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 						count = 0;
 					}else{
 						play.getEntityData().setLong("rIdolTime", System.currentTimeMillis());
@@ -84,8 +84,8 @@ public class RainIdol extends Item{
 						worldIn.getWorldInfo().setRaining(false);
 						worldIn.getWorldInfo().setCleanWeatherTime(24000);
 						worldIn.getWorldInfo().setRainTime(0);
-						worldIn.playSound(null, play.posX, play.posY, play.posZ, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.PLAYERS, 3F, 1F);
-						play.setHeldItem(EnumHand.MAIN_HAND, null);
+						worldIn.playSound(null, play.posX, play.posY, play.posZ, SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1F, 1F);
+						play.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 						count = 0;
 					}else{
 						play.getEntityData().setLong("rIdolTime", System.currentTimeMillis());

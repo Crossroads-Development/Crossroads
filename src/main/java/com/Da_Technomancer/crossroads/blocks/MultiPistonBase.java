@@ -139,7 +139,7 @@ public class MultiPistonBase extends Block{
 
 		if(distance == 0){
 			if(world.hasChanges()){
-				worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 1, 1);
+				worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, .5F, (worldIn.rand.nextFloat() * .15F) + .6F);
 			}
 			world.doChanges();
 			return;
@@ -151,14 +151,14 @@ public class MultiPistonBase extends Block{
 			if(canPush(world.getBlockState(pos.offset(dir, i)), false)){
 				if(propogate(list, world, pos.offset(dir, i), dir, null)){
 					if(world.hasChanges()){
-						worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
+						worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, .5F, (worldIn.rand.nextFloat() * .25F) + .6F);
 					}
 					world.doChanges();
 					return;
 				}
 			}else if(!canPush(world.getBlockState(pos.offset(dir, i)), true)){
 				if(world.hasChanges()){
-					worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
+					worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, .5F, (worldIn.rand.nextFloat() * .25F) + .6F);
 				}
 				world.doChanges();
 				return;
@@ -211,7 +211,7 @@ public class MultiPistonBase extends Block{
 			}
 		}
 		if(world.hasChanges()){
-			worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
+			worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, .5F, (worldIn.rand.nextFloat() * .25F) + .6F);
 		}
 		world.doChanges();
 	}

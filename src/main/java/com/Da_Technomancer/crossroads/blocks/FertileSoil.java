@@ -46,25 +46,23 @@ public class FertileSoil extends Block{
 		GameRegistry.register(new ItemMultiTexture(this, this, new ItemMultiTexture.Mapper(){
 			@Override
 			@Nullable
-			public String apply(@Nullable ItemStack stack){
+			public String apply(ItemStack stack){
 				return (stack.getMetadata() == 0 ? "wheat" : stack.getMetadata() == 1 ? "potato" : stack.getMetadata() == 2 ? "carrot" : stack.getMetadata() == 3 ? "beet" : stack.getMetadata() == 4 ? "oak" : stack.getMetadata() == 5 ? "birch" : stack.getMetadata() == 6 ? "spruce" : stack.getMetadata() == 7 ? "jungle" : stack.getMetadata() == 8 ? "acacia" : "dark");
 			}
 		}).setRegistryName(name));
 		setTickRandomly(true);
-		setDefaultState(blockState.getBaseState().withProperty(Properties.PLANT, 0));
 	}
 
 	@Override
 	public boolean isToolEffective(String type, IBlockState state){
 		return "shovel".equals(type);
-
 	}
 
 	@Override
 	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable){
 		return true;
 	}
-	
+
 	@Override
 	public boolean isFertile(World world, BlockPos pos){
 		return true;
@@ -74,24 +72,7 @@ public class FertileSoil extends Block{
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(state.getValue(Properties.PLANT) >= 4){
 			updateTick(worldIn, pos, state, RANDOM);
-		}else{
-			for(EnumFacing side : EnumFacing.values()){
-				if(side != EnumFacing.UP && worldIn.getBlockState(pos.offset(side)).getBlock() != this){
-					worldIn.getBlockState(pos.offset(side)).neighborChanged(worldIn, pos.offset(side), this, pos);
-				}
-			}
 		}
-	}
-	
-	@Override
-	public int getWeakPower(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-		return state.getValue(Properties.PLANT) >= 4 ? 0 : worldIn.getBlockState(pos.offset(EnumFacing.UP)).getBlock() instanceof IPlantable ? 15 : 0;
-
-	}
-
-	@Override
-	public boolean canProvidePower(IBlockState state){
-		return state.getValue(Properties.PLANT) < 4;
 	}
 
 	@Override
@@ -99,7 +80,7 @@ public class FertileSoil extends Block{
 		if(worldIn.isRemote){
 			return;
 		}
-		
+
 		if(worldIn.isAirBlock(pos.offset(EnumFacing.UP))){
 			switch(state.getValue(Properties.PLANT)){
 				case 0:
@@ -162,5 +143,4 @@ public class FertileSoil extends Block{
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(Properties.PLANT);
 	}
-
 }
