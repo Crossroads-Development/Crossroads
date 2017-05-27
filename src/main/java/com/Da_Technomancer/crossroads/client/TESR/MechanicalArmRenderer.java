@@ -25,7 +25,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || te.getWorld().getBlockState(te.getPos()).getBlock() != ModBlocks.mechanicalArm){
 			return;
 		}
-		
+
 		Color colorGear = GearTypes.COPSHOWIUM.getColor();
 
 		GlStateManager.pushMatrix();
@@ -79,25 +79,38 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		GlStateManager.translate(0, .4375D, 0);
 		modelGear.render(textureGear, colorGear);
 		GlStateManager.popMatrix();
+		
 		//Axle
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, -.09375, 0);
 		GlStateManager.scale(1, .3125D, 1);
 		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
-		
+
 		//Upper Arm
+		GlStateManager.pushMatrix();
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.translate(0, MechanicalArmTileEntity.UPPER_ARM_LENGTH / 2D, 0);
 		GlStateManager.scale(.8D, MechanicalArmTileEntity.UPPER_ARM_LENGTH, .8D);
+		GlStateManager.translate(0, .5D, 0);
+		modelAx.render(textureAx, textureAx, Color.WHITE);
+		GlStateManager.popMatrix();
+
+		//Claw Base
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-MechanicalArmTileEntity.UPPER_ARM_LENGTH, 0, 0);
+		GlStateManager.scale(1, .5D, 1);
+		modelAx.render(textureAx, textureAx, Color.WHITE);
+		GlStateManager.popMatrix();
+
+		//Claw Prongs
+		GlStateManager.rotate(90, 0, 0, 1);
+		GlStateManager.translate(.1875D, MechanicalArmTileEntity.UPPER_ARM_LENGTH + .1875D, 0);
+		GlStateManager.scale(1, .25D, 1);
+		modelAx.render(textureAx, textureAx, Color.WHITE);
+		GlStateManager.translate(-.375D, 0, 0);
 		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 		GlStateManager.popMatrix();
-
-		//Claw
-		//TODO
-
-
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}

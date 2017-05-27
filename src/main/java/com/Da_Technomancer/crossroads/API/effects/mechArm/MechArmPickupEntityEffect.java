@@ -17,16 +17,12 @@ public class MechArmPickupEntityEffect implements IMechArmEffect{
 
 	@Override
 	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, EnumFacing side, EntityArmRidable ent, MechanicalArmTileEntity te){
-		System.out.println(posX + ", " + posY + ", " + posZ);//TODO for debugging
 		if(ent.getPassengers().size() == 0){
-			System.out.println("NO PASSENGERS");//TODO for debugging
 			List<Entity> ents = world.getEntitiesInAABBexcluding(ent, ent.getEntityBoundingBox().expand(.5D, .5D, .5D), CAN_GRAB);
 			if(ents != null && ents.size() != 0){
 				ents.get(0).startRiding(ent, false);
 				return true;
 			}
-		}else{
-			System.out.println(ent.getPassengers().get(0).getName());//TODO for debugging
 		}
 		return false;
 	}

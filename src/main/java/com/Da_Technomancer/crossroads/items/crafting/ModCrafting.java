@@ -146,6 +146,8 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModItems.watch, 1), " * ", "*&*", " * ", '*', "ingotBronze", '&', "ingotCopshowium"));
 		GameRegistry.addRecipe(new PrototypeItemSetRecipe(ModItems.watch, "prot"));
 		GameRegistry.addRecipe(new PrototypeItemClearRecipe(ModItems.watch, "prot"));
+		//Mechanical Arm
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.mechanicalArm, 1), " * ", " ||", "***", '|', "stickIron", '*', "gearCopshowium"));
 		
 		// Axle
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));

@@ -15,7 +15,7 @@ public class MechArmReleaseEntityEffect implements IMechArmEffect{
 		if(ent.getPassengers().size() != 0){
 			Entity passenger = ent.getPassengers().get(0);
 			passenger.dismountRidingEntity();
-			
+			//The principle used here is to calculate the next end position given constant arm speed over a small amount of time, find the distance and direction between the two positions, and use that to set the velocity. 
 			double newAngle0 = te.angle[0] + (te.motionData[0][0] / 20D);
 			double newAngle1 = te.angle[1] + (te.motionData[1][0] / 20D);
 			double newAngle2 = te.angle[2] + (te.motionData[2][0] / 20D);
@@ -24,11 +24,11 @@ public class MechArmReleaseEntityEffect implements IMechArmEffect{
 			double thetaD = newAngle1 + newAngle2 + Math.asin(Math.sin(newAngle2) * MechanicalArmTileEntity.LOWER_ARM_LENGTH / lengthCross);
 			double holder = -Math.cos(thetaD) * lengthCross;
 
-			double newPosX = (holder * Math.cos(newAngle0)) + .5D + (double) pos.getX();
-			double newPosY = (-Math.sin(thetaD) * lengthCross) + 1D + (double) pos.getY();
-			double newPosZ = (holder * Math.sin(newAngle0)) + .5D + (double) pos.getZ();
+			double newPosX = (holder * Math.cos(newAngle0)) + .5D + (double) te.getPos().getX();
+			double newPosY = (-Math.sin(thetaD) * lengthCross) + 1D + (double) te.getPos().getY();
+			double newPosZ = (holder * Math.sin(newAngle0)) + .5D + (double) te.getPos().getZ();
 			
-			passenger.setVelocity(20D * (newPosX - posX), 20D * (newPosY - posY), 20D * (newPosZ - posZ));
+			passenger.setVelocity(newPosX - posX, newPosY - posY, newPosZ - posZ);
 			passenger.velocityChanged = true;
 			return true;
 		}

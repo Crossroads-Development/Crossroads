@@ -28,7 +28,7 @@ public class EntityArmRidable extends Entity{
 
 	@Override
 	protected void entityInit(){
-		
+
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class EntityArmRidable extends Entity{
 
 	@Override
 	public void onUpdate(){
-		if(!world.isRemote && ticksExisted++ % 200 == 0){
+		if(!world.isRemote && ticksExisted++ % 200 == 1){
 			if(ownerPos == null){
 				setDead();
 				return;
@@ -58,7 +58,12 @@ public class EntityArmRidable extends Entity{
 				return;
 			}
 		}
-		
+
 		super.onUpdate();
+	}
+
+	@Override
+	public boolean canTriggerWalking(){
+		return false;
 	}
 }
