@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
+import java.util.List;
+
 import com.Da_Technomancer.crossroads.ModConfig;
 
 import net.minecraft.entity.Entity;
@@ -9,9 +11,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RainIdol extends Item{
 
@@ -26,6 +29,14 @@ public class RainIdol extends Item{
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+		if(!ModConfig.getConfigBool(ModConfig.weatherControl, true)){
+			tooltip.add("This item has been disabled in the config. It does nothing.");
+		}
+	}
+
+	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected){
 		if(worldIn.isRemote){
 			return;
@@ -33,8 +44,7 @@ public class RainIdol extends Item{
 
 		if(isSelected && entityIn instanceof EntityPlayer){
 			EntityPlayer play = (EntityPlayer) entityIn;
-			if(!ModConfig.weatherControl.getBoolean()){
-				play.sendMessage(new TextComponentString("This item was disabled in the config."));
+			if(!ModConfig.getConfigBool(ModConfig.weatherControl, false)){
 				return;
 			}
 
