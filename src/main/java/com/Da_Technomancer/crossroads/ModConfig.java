@@ -176,7 +176,6 @@ public final class ModConfig{
 		NBTTagCompound out = new NBTTagCompound();
 		int i = 0;
 		for(Property prop : SYNCED_PROPERTIES){
-			i++;
 			switch(prop.getType()){
 				case BOOLEAN:
 					if(!prop.isList()){
@@ -214,6 +213,7 @@ public final class ModConfig{
 				default:
 					break;
 			}
+			i++;
 		}
 		return out;
 	}
