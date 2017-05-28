@@ -19,7 +19,6 @@ public class DetailedCrafterRecipe implements IRecipeWrapper{
 	private final int type;
 
 	/**
-	 * 
 	 * @param recipe
 	 * @param type Technomancy: 0, Alchemy: NYI (1), Witchcraft: NYI (2)
 	 */

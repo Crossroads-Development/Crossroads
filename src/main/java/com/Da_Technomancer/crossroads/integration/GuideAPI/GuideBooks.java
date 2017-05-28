@@ -456,6 +456,7 @@ public final class GuideBooks{
 			GameRegistry.addShapelessRecipe(bookStack, GuideAPI.getStackFromBook(GuideBooks.MAIN));
 		}
 	}
+	
 	/**
 	 * Splits up a long string into pages. I can't use PageHelper for this
 	 * because of the § symbol.
@@ -487,6 +488,10 @@ public final class GuideBooks{
 		}
 	}
 
+	/**
+	 * @deprecated Use a {@link SmartEntry} instead.
+	 */
+	@Deprecated
 	private static void createPages(ArrayList<IPage> pages, Object... parts){
 		for(Object obj : parts){
 			if(obj instanceof String){
