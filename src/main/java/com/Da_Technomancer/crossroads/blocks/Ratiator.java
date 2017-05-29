@@ -107,7 +107,6 @@ public class Ratiator extends BlockContainer{
 			if(BlockRedstoneDiode.isDiode(worldIn.getBlockState(pos.offset(state.getValue(Properties.FACING))))){
 				i = -3;
 			}
-
 			worldIn.updateBlockTick(pos, this, 2, i);
 		}
 	}
@@ -172,7 +171,7 @@ public class Ratiator extends BlockContainer{
 			boolean oldValue = state.getValue(Properties.REDSTONE_BOOL);
 			worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, !oldValue));
 			worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, oldValue ? .55F : .5F);
-			neighborChanged(state.withProperty(Properties.REDSTONE_BOOL, !state.getValue(Properties.REDSTONE_BOOL)), worldIn, pos, null, null);
+			neighborChanged(state.withProperty(Properties.REDSTONE_BOOL, !state.getValue(Properties.REDSTONE_BOOL)), worldIn, pos, this, pos);
 		}
 		return true;
 	}

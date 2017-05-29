@@ -32,19 +32,26 @@ public class MechArmUseEffect implements IMechArmEffect{
 			FakePlayer user = FakePlayerFactory.get((WorldServer) world, new GameProfile(null, Main.MODID + "-arm_use_effect-" + world.provider.getDimension()));
 			user.setHeldItem(EnumHand.MAIN_HAND, heldStack);
 			user.setPositionAndRotation(posX, posY, posZ, side.getHorizontalAngle(), 0);
+			user.eyeHeight = 0;
 			Vec3d posVec = new Vec3d(posX, posY, posZ);
-			RayTraceResult trace = world.rayTraceBlocks(posVec, posVec.add(new Vec3d(side.getDirectionVec())), false, false, true);
 			EnumActionResult result = EnumActionResult.PASS;
-			if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK){
-				Vec3d hitVec = trace.hitVec.subtract(new Vec3d(trace.getBlockPos()));
-				result = heldStack.onItemUse(user, world, trace.getBlockPos(), EnumHand.MAIN_HAND, trace.sideHit, (float) hitVec.xCoord, (float) hitVec.yCoord, (float) hitVec.zCoord);
+			if(heldStack.getItem() instanceof ItemBlock){
+				//Blocks can be placed in midair by this device. 
+				boolean offsetPos = !world.getBlockState(pos.offset(side)).getBlock().isReplaceable(world, pos.offset(side));
+				result = heldStack.onItemUse(user, world, offsetPos ? pos.offset(side) : pos, EnumHand.MAIN_HAND, side.getOpposite(), side == EnumFacing.WEST ? 1 : 0, side == EnumFacing.DOWN ? 1 : 0, side == EnumFacing.NORTH ? 1 : 0);
+			}else{
+				RayTraceResult trace = world.rayTraceBlocks(posVec, posVec.add(new Vec3d(side.getDirectionVec())), false, false, true);
+				if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK){
+					Vec3d hitVec = trace.hitVec.subtract(new Vec3d(trace.getBlockPos()));
+					result = heldStack.onItemUse(user, world, trace.getBlockPos(), EnumHand.MAIN_HAND, trace.sideHit, (float) hitVec.xCoord, (float) hitVec.yCoord, (float) hitVec.zCoord);
+				}
 			}
 			if(result == EnumActionResult.PASS){
 				ActionResult<ItemStack> actionResult = heldStack.useItemRightClick(world, user, EnumHand.MAIN_HAND);
 				result = actionResult.getType();
 				itemEnt.setEntityItemStack(actionResult.getResult());
 			}
-			
+
 			return result == EnumActionResult.SUCCESS && (!itemBlock || itemEnt.getEntityItem().getCount() != oldSize);
 		}
 		return false;

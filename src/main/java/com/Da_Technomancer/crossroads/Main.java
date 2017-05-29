@@ -208,42 +208,6 @@ public final class Main{
 						case("additionaxis"):
 							mapping.remap(ModBlocks.additionAxis);
 						break;
-						case("backcountergeariron"):
-							mapping.remap(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.IRON));
-						break;
-						case("backcountergeargold"):
-							mapping.remap(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.GOLD));
-						break;
-						case("backcountergearcopper"):
-							mapping.remap(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.COPPER));
-						break;
-						case("backcountergeartin"):
-							mapping.remap(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.TIN));
-						break;
-						case("backcountergearbronze"):
-							mapping.remap(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.BRONZE));
-						break;
-						case("backcountergearcopshowium"):
-							mapping.remap(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.COPSHOWIUM));
-						break;
-						case("countergeariron"):
-							mapping.remap(GearFactory.COUNTER_GEARS.get(GearTypes.IRON));
-						break;
-						case("countergeargold"):
-							mapping.remap(GearFactory.COUNTER_GEARS.get(GearTypes.GOLD));
-						break;
-						case("countergearcopper"):
-							mapping.remap(GearFactory.COUNTER_GEARS.get(GearTypes.COPPER));
-						break;
-						case("countergeartin"):
-							mapping.remap(GearFactory.COUNTER_GEARS.get(GearTypes.TIN));
-						break;
-						case("countergearbronze"):
-							mapping.remap(GearFactory.COUNTER_GEARS.get(GearTypes.BRONZE));
-						break;
-						case("countergearcopshowium"):
-							mapping.remap(GearFactory.COUNTER_GEARS.get(GearTypes.COPSHOWIUM));
-						break;
 						case("chunkunlocker"):
 							mapping.remap(ModBlocks.chunkUnlocker);
 						break;
@@ -463,42 +427,6 @@ public final class Main{
 						break;
 						case("additionaxis"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.additionAxis));
-						break;
-						case("backcountergeariron"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.IRON)));
-						break;
-						case("backcountergeargold"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.GOLD)));
-						break;
-						case("backcountergearcopper"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.COPPER)));
-						break;
-						case("backcountergeartin"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.TIN)));
-						break;
-						case("backcountergearbronze"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.BRONZE)));
-						break;
-						case("backcountergearcopshowium"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.BACK_COUNTER_GEARS.get(GearTypes.COPSHOWIUM)));
-						break;
-						case("countergeariron"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.COUNTER_GEARS.get(GearTypes.IRON)));
-						break;
-						case("countergeargold"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.COUNTER_GEARS.get(GearTypes.GOLD)));
-						break;
-						case("countergearcopper"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.COUNTER_GEARS.get(GearTypes.COPPER)));
-						break;
-						case("countergeartin"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.COUNTER_GEARS.get(GearTypes.TIN)));
-						break;
-						case("countergearbronze"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.COUNTER_GEARS.get(GearTypes.BRONZE)));
-						break;
-						case("countergearcopshowium"):
-							mapping.remap(Item.getItemFromBlock(GearFactory.COUNTER_GEARS.get(GearTypes.COPSHOWIUM)));
 						break;
 						case("chunkunlocker"):
 							mapping.remap(Item.getItemFromBlock(ModBlocks.chunkUnlocker));

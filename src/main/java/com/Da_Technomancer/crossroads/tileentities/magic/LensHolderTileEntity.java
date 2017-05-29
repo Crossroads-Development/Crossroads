@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -25,7 +24,6 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -259,7 +257,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 				case 0:
 					return ItemStack.EMPTY;
 				case 1:
-					return new ItemStack(Item.getByNameOrId(Main.MODID + ":gemRuby"), 1);
+					return new ItemStack(OreSetUp.gemRuby, 1);
 				case 2:
 					return new ItemStack(Items.EMERALD, 1);
 				case 3:
@@ -269,7 +267,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 				case 5:
 					return new ItemStack(ModItems.luminescentQuartz, 1);
 				default: 
-					return null;
+					return ItemStack.EMPTY;
 			}
 		}
 		
@@ -298,8 +296,8 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			if(slot != 0 || amount < 1 || getLens() == null){
-				return null;
+			if(slot != 0 || amount < 1 || getLens() == ItemStack.EMPTY){
+				return ItemStack.EMPTY;
 			}
 			ItemStack holder = getLens();
 			if(!simulate){

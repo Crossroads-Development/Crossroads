@@ -64,6 +64,11 @@ public class MultiplicationAxis extends BlockContainer{
 			}
 		}
 	}
+	
+	@Override
+	public boolean getWeakChanges(IBlockAccess world, BlockPos pos){
+		return true;
+	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
