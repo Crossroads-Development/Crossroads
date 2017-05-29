@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -33,6 +34,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int CRAFTER_GUI = 6;
 	public static final int PROTOTYPING_GUI = 7;
 	public static final int PROTOTYPE_PORT_GUI = 8;
+	public static final int REDSTONE_REGISTRY_GUI = 9;//TODO
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -55,6 +57,8 @@ public class GuiHandler implements IGuiHandler{
 				return new PrototypingTableContainer(player.inventory, ((PrototypingTableTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case PROTOTYPE_PORT_GUI:
 				return new PrototypePortContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case REDSTONE_REGISTRY_GUI:
+				return new RedstoneKeyboardContainer();//Shares Container with the RedstoneKeyboard because their Container function is identical.
 		}
 
 		return null;
@@ -81,6 +85,8 @@ public class GuiHandler implements IGuiHandler{
 				return new PrototypingTableGuiContainer(player.inventory, ((PrototypingTableTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case PROTOTYPE_PORT_GUI:
 				return new PrototypePortGuiContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case REDSTONE_REGISTRY_GUI:
+				return new RedstoneRegistryGuiContainer(((RedstoneRegistryTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 
 		return null;

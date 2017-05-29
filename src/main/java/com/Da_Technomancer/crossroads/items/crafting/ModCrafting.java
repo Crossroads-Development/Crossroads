@@ -102,7 +102,7 @@ public final class ModCrafting{
 		//Modular Goggles
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModItems.moduleGoggles, 1), "***", "^&^", '&', "ingotCopshowium", '*', "ingotBronze", '^', "blockGlass"));
 		//Redstone Keyboard
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.redstoneKeyboard, 1), " * ", "*&*", " * ", '*', "ingotBronze", '&', "dustRedstone"));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"));
 		//Prototype Port
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.prototypePort, 1), "*&*", "& &", "*&*", '*', "ingotBronze", '&', "nuggetCopshowium"));
 		//Prototyping Table
@@ -148,6 +148,8 @@ public final class ModCrafting{
 		GameRegistry.addRecipe(new PrototypeItemClearRecipe(ModItems.watch, "prot"));
 		//Mechanical Arm
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.mechanicalArm, 1), " * ", " ||", "***", '|', "stickIron", '*', "gearCopshowium"));
+		//Redstone Registry
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.redstoneRegistry, 1), "*&*", "&^&", "*&*", '*', "nuggetTin", '&', ModBlocks.redstoneKeyboard, '^', "ingotCopshowium"));
 		
 		// Axle
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));

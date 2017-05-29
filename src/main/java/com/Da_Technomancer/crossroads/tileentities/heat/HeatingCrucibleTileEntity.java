@@ -127,7 +127,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		}
 
 		byte type = getType();
-		
+
 		if(!inventory.isEmpty() && ticksExisted % 10 == 0 && Math.random() < MiscOp.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= (getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
 
 			if(content == null){
@@ -191,7 +191,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing != EnumFacing.UP){
 			return (T) heatHandler;
 		}
-		
+
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return (T) itemHandler;
 		}
@@ -208,11 +208,11 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing != EnumFacing.UP){
 			return true;
 		}
-		
+
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return true;
 		}
-		
+
 		return super.hasCapability(capability, facing);
 	}
 
@@ -233,14 +233,14 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 			if(slot != 0 || !recipeIsValid(stack)){
 				return stack;
 			}
-			
+
 			int amount = Math.min(16 - inventory.getCount(), stack.getCount());
-			
+
 			if(!simulate){
 				inventory = new ItemStack(stack.getItem(), amount + inventory.getCount(), stack.getMetadata());
 				markDirty();
 			}
-			
+
 			return amount == stack.getCount() ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - amount, stack.getMetadata());
 		}
 

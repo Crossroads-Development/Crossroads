@@ -65,6 +65,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableT
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SinAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SquareRootAxisTileEntity;
 
@@ -145,6 +146,7 @@ public class ModTileEntity{
 		registerOld(PrototypeTileEntity.class, "prototype");
 		registerOld(PrototypePortTileEntity.class, "prototype_port");
 		register(MechanicalArmTileEntity.class, "mechanical_arm");
+		register(RedstoneRegistryTileEntity.class, "redstone_registry");
 	}
 
 	/**

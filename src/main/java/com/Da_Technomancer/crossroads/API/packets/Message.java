@@ -52,6 +52,7 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		map(BlockPos.class, Message::readBlockPos, Message::writeBlockPos);
 		map(byte[][].class, Message::readByte2DArray, Message::writeByte2DArray);
 		map(int[].class, Message::readIntArray, Message::writeIntArray);
+		map(double[].class, Message::readDoubleArray, Message::writeDoubleArray);
 	}
 
 	// The thing you override!
@@ -233,6 +234,22 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		buf.writeInt(ints.length);
 		for(int inner : ints){
 			buf.writeInt(inner);
+		}
+	}
+	
+	private static double[] readDoubleArray(ByteBuf buf){
+		int size = buf.readInt();
+		double[] out = new double[size];
+		for(int i = 0; i < size; i++){
+			out[i] = buf.readDouble();
+		}
+		return out;
+	}
+
+	private static void writeDoubleArray(double[] doubles, ByteBuf buf){
+		buf.writeInt(doubles.length);
+		for(double inner : doubles){
+			buf.writeDouble(inner);
 		}
 	}
 

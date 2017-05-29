@@ -66,6 +66,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.PrototypingTable;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneKeyboard;
+import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneRegistry;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SinAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SquareRootAxis;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -159,6 +160,7 @@ public final class ModBlocks{
 	public static Prototype prototype;
 	public static PrototypePort prototypePort;
 	public static MechanicalArm mechanicalArm;
+	public static RedstoneRegistry redstoneRegistry;
 
 	public static void blockAddQue(Block block){
 		ModItems.itemAddQue(Item.getItemFromBlock(block));
@@ -251,6 +253,7 @@ public final class ModBlocks{
 		blockAddQue(prototype = new Prototype());
 		blockAddQue(prototypePort = new PrototypePort());
 		blockAddQue(mechanicalArm = new MechanicalArm());
+		blockAddQue(redstoneRegistry = new RedstoneRegistry());
 	}
 
 	@SideOnly(Side.CLIENT)

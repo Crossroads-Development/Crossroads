@@ -159,7 +159,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
+		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
 	}
 
 	@Override
