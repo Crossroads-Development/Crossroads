@@ -84,7 +84,7 @@ public class DetailedCrafterContainer extends Container{
 		if(!world.isRemote && !MiscOp.getPlayerTag(playerInv.player).hasKey("path")){
 			MiscOp.getPlayerTag(playerInv.player).setTag("path", new NBTTagCompound());
 		}
-		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.storedNBT : MiscOp.getPlayerTag(playerInv.player);
+		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscOp.getPlayerTag(playerInv.player);
 		if(nbt.getCompoundTag("path").getBoolean("technomancy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.technomancyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
@@ -282,7 +282,7 @@ public class DetailedCrafterContainer extends Container{
 			if(!player.world.isRemote && !MiscOp.getPlayerTag(player).hasKey("path")){
 				MiscOp.getPlayerTag(player).setTag("path", new NBTTagCompound());
 			}
-			NBTTagCompound nbt = player.world.isRemote ? StoreNBTToClient.storedNBT : MiscOp.getPlayerTag(player).getCompoundTag("path");
+			NBTTagCompound nbt = player.world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscOp.getPlayerTag(player).getCompoundTag("path");
 			IRecipe recipe = null;
 			if(nbt.getBoolean("technomancy")){
 				recipe = findMatchingSpecialRecipe(craftMatrix, player.world, RecipeHolder.technomancyRecipes);

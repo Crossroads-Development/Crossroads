@@ -1,8 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -38,7 +36,7 @@ public class DetailedCrafter extends Block{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			ModPackets.network.sendTo(new StoreNBTToClient(MiscOp.getPlayerTag(playerIn)), (EntityPlayerMP) playerIn);
+			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerIn, false);
 			playerIn.openGui(Main.instance, GuiHandler.CRAFTER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;

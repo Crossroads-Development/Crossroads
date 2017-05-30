@@ -34,6 +34,7 @@ import amerifrance.guideapi.page.PageFurnaceRecipe;
 import amerifrance.guideapi.page.PageIRecipe;
 import amerifrance.guideapi.page.PageImage;
 import amerifrance.guideapi.page.PageText;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -70,9 +71,9 @@ public final class GuideBooks{
 			ArrayList<CategoryAbstract> categories = new ArrayList<CategoryAbstract>();
 
 			// INTRO
-			createPages(pages, "lore.first_read");
-			entries.put(new ResourceLocation(Main.MODID, "first_read"), new EntryItemStack(pages, "READ ME FIRST", new ItemStack(Items.BOOK, 1), true));
-			pages = new ArrayList<IPage>();
+			entries.put(new ResourceLocation(Main.MODID, "first_read"), new SmartEntry("READ ME FIRST", new ItemStack(Items.BOOK, 1), "lore.first_read"));
+			
+			//TODO
 			createPages(pages, "lore.intro.start", new ShapelessOreRecipe(Items.WRITTEN_BOOK, Items.BOOK, Items.COMPASS), "lore.intro.end");
 			entries.put(new ResourceLocation(Main.MODID, "intro"), new EntryItemStack(pages, "Introduction", new ItemStack(Items.PAPER, 1), true));
 			pages = new ArrayList<IPage>();
@@ -436,6 +437,16 @@ public final class GuideBooks{
 			categories.add(new CategoryItemStack(entries, "Magic", new ItemStack(ModItems.lensArray, 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
+			//TECHNOMANCY TODO
+			
+			categories.add(new CategoryItemStack(entries, "Technomancy", new ItemStack(ModBlocks.redstoneKeyboard, 1)){
+				@Override
+			    public boolean canSee(EntityPlayer player, ItemStack bookStack) {
+			        return true;
+			    }
+			});
+			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
+			
 			INFO.setTitle("Main Menu");
 			INFO.setWelcomeMessage("Welcome to Crossroads");
 			INFO.setDisplayName("technician_manual");

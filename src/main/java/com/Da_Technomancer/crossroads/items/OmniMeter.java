@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
@@ -88,7 +87,7 @@ public class OmniMeter extends Item{
 						if(!nbt.hasKey(MagicElements.getElement(check).name())){
 							nbt.setBoolean(MagicElements.getElement(check).name(), true);
 							playerIn.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
-							ModPackets.network.sendTo(new StoreNBTToClient(nbt), (EntityPlayerMP) playerIn);
+							StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerIn, false);
 						}
 
 						playerIn.sendMessage(new TextComponentString(EnumFacing.getFront(i).toString() + ": " + check.toString()));

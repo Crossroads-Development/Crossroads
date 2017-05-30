@@ -20,9 +20,9 @@ public class ColorChartGuiContainer extends GuiContainer{
 
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/color_chart_gui.png");
 	private static final ResourceLocation BLOCKED = new ResourceLocation("textures/items/barrier.png");
-	
+
 	private TextBarGuiObject searchBar;
-	
+
 	public ColorChartGuiContainer(EntityPlayer player, World world, BlockPos pos){
 		super(new ColorChartContainer(player, world, pos));
 		xSize = 300;
@@ -32,10 +32,10 @@ public class ColorChartGuiContainer extends GuiContainer{
 	@Override
 	public void initGui(){
 		super.initGui();
-		
+
 		searchBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 300, 300, 25, "Filter", (Character key) -> Character.isAlphabetic(key));
 	}
-	
+
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1, 1, 1);
@@ -43,7 +43,7 @@ public class ColorChartGuiContainer extends GuiContainer{
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
 		drawModalRectWithCustomSizedTexture(i, j, 0, 0, xSize, ySize, 300, 300);
-		
+
 		searchBar.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 	}
 
@@ -60,7 +60,7 @@ public class ColorChartGuiContainer extends GuiContainer{
 			}
 		}
 	}
-@Override
+	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException {
 		super.mouseClicked(x, y, button);
 		searchBar.mouseClicked(x, y, button);

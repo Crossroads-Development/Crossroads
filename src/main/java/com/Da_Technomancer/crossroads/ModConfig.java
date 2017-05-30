@@ -172,7 +172,7 @@ public final class ModConfig{
 		return out;
 	}
 	
-	protected static NBTTagCompound nbtToSyncConfig(){
+	public static NBTTagCompound nbtToSyncConfig(){
 		NBTTagCompound out = new NBTTagCompound();
 		int i = 0;
 		for(Property prop : SYNCED_PROPERTIES){

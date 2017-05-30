@@ -4,14 +4,11 @@ import java.awt.Color;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -36,9 +33,6 @@ public class ColorChartContainer extends Container{
 	private final World world;
 
 	public ColorChartContainer(EntityPlayer player, World world, BlockPos pos){
-		if(!world.isRemote){
-			ModPackets.network.sendTo(new StoreNBTToClient(MiscOp.getPlayerTag(player).getCompoundTag("elements")), (EntityPlayerMP) player);
-		}
 		this.world = world;
 		ChartInventory inv = new ChartInventory();
 		for(int i = 0; i < 32; i++){
@@ -101,14 +95,15 @@ public class ColorChartContainer extends Container{
 			if(!world.isRemote){
 				return ItemStack.EMPTY;
 			}
-			ItemStack item = new ItemStack(StoreNBTToClient.storedNBT.hasKey(MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name()) ? ModItems.invisItem : Item.getItemFromBlock(Blocks.BARRIER), 1);
+			NBTTagCompound elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
+			ItemStack item = new ItemStack(elementTag.hasKey(MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name()) ? ModItems.invisItem : Item.getItemFromBlock(Blocks.BARRIER), 1);
 			NBTTagCompound nbt = new NBTTagCompound();
 			NBTTagList nbtlist = new NBTTagList();
 			Color col = getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos);
 			nbtlist.appendTag(new NBTTagString("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
 			nbt.setTag("Lore", nbtlist);
 			item.setTagInfo("display", nbt);
-			item.setStackDisplayName(StoreNBTToClient.storedNBT.hasKey(MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name()) ? MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name() : "UNDISCOVERED");
+			item.setStackDisplayName(elementTag.hasKey(MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name()) ? MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name() : "UNDISCOVERED");
 
 			return item;
 		}

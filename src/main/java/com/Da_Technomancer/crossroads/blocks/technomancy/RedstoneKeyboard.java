@@ -49,6 +49,17 @@ public class RedstoneKeyboard extends BlockContainer{
 	}
 	
 	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		return Math.min(15, (int) Math.round(((RedstoneKeyboardTileEntity) te).output));
+	}
+	
+	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}

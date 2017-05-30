@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
+import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
@@ -34,6 +35,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -206,7 +208,7 @@ public final class EventHandlerCommon{
 				}
 
 				int totalRuns = (potential / 8) + (RAND.nextInt(8) < potential % 8 ? 1 : 0);
-				
+
 				if(totalRuns == 1){
 					continue;
 				}
@@ -257,6 +259,15 @@ public final class EventHandlerCommon{
 					break;
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void syncPlayerTagToClient(EntityJoinWorldEvent e){
+		//The down-side of using this event is that every time the player switches dimension, the update data has to be resent. 
+		
+		if(e.getEntity() instanceof EntityPlayerMP){
+			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) e.getEntity(), false);
 		}
 	}
 }

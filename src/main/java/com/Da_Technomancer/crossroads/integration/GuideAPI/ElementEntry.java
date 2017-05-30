@@ -13,6 +13,7 @@ import amerifrance.guideapi.gui.GuiCategory;
 import amerifrance.guideapi.page.PageText;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -32,7 +33,8 @@ public class ElementEntry extends EntryItemStack{
 		pageList.add(new PageText("Information about the various elements will be added to this entry as you discover them. To add an element to this entry, discover it then close and re-open this entry."));
 		((PageText) pageList.get(0)).setUnicodeFlag(true);
 		for(MagicElements elem : MagicElements.values()){
-			if(elem == MagicElements.ENERGY || elem == MagicElements.POTENTIAL || elem == MagicElements.STABILITY || StoreNBTToClient.storedNBT.hasKey(elem.name())){
+			NBTTagCompound elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
+			if(elem == MagicElements.ENERGY || elem == MagicElements.POTENTIAL || elem == MagicElements.STABILITY || elementTag.hasKey(elem.name())){
 				//Reverse order, because for the most part the more basic elements are at the bottom of the list.
 				pageList.add(1, lore ? getPage(elem) : getPageNoLore(elem));
 				((PageText) pageList.get(1)).setUnicodeFlag(true);
@@ -47,7 +49,7 @@ public class ElementEntry extends EntryItemStack{
 			case ENCHANTMENT:
 				return new PageText(elem.toString() + ": Enchants nearby items on the ground randomly. Higher power beams increase enchanting level. Can create treasure enchants with power >= 32.");
 			case ENERGY:
-				return new PageText(elem.toString() + ": Adds (power)°C/5 ticks to whatever heat devices it hits. In a Crystalling Master Axis is adds 10 energy/tick in the direction gears are currently spinning.");
+				return new PageText(elem.toString() + ": Adds (power)°C/5 ticks to whatever heat devices it hits. In a Crystalline Master Axis is adds 10 energy/tick in the direction gears are currently spinning.");
 			case EQUALIBRIUM:
 				return new PageText(elem.toString() + ": The force of a stalemate, where equal powers fight against eachother leading to no net change. Does nothing on its own. In a Crystalline Master Axis it reduces the change in energy each tick by 75%.");
 			case EXPANSION:

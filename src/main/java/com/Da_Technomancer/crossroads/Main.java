@@ -660,7 +660,9 @@ public final class Main{
 	public void serverStarted(FMLServerStartedEvent e){
 		CommonProxy.masterKey = 1;
 		ModDimensions.loadDims();
-		ModConfig.syncPropNBT = ModConfig.nbtToSyncConfig();//For singleplayer.
+		
+		//For singleplayer.
+		ModConfig.syncPropNBT = ModConfig.nbtToSyncConfig();
 	}
 
 	@Mod.EventHandler

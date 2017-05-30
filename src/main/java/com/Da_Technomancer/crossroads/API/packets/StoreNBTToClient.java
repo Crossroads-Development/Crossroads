@@ -1,6 +1,10 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
+import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.API.MiscOp;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -13,16 +17,28 @@ import net.minecraftforge.fml.relauncher.Side;
 @SuppressWarnings("serial")
 public class StoreNBTToClient extends Message<StoreNBTToClient>{
 
-	public StoreNBTToClient(){
-		
+	/**
+	 * Syncs the NBTTagCompound from MiscOp.getPlayerTag(player), as well as the synced configs if config is true.
+	 */
+	public static void syncNBTToClient(EntityPlayerMP player, boolean config){
+		ModPackets.network.sendTo(new StoreNBTToClient(MiscOp.getPlayerTag(player), false), player);
+		if(config){
+			ModPackets.network.sendTo(new StoreNBTToClient(ModConfig.nbtToSyncConfig(), true), player);
+		}
 	}
 	
-	public static NBTTagCompound storedNBT = new NBTTagCompound();
-	
-	public NBTTagCompound nbt;
+	public StoreNBTToClient(){
 
-	public StoreNBTToClient(NBTTagCompound nbt){
+	}
+
+	public static NBTTagCompound clientPlayerTag = new NBTTagCompound();
+
+	public NBTTagCompound nbt;
+	public boolean config;
+
+	public StoreNBTToClient(NBTTagCompound nbt, boolean config){
 		this.nbt = nbt;
+		this.config = config;
 	}
 
 	@Override
@@ -33,15 +49,13 @@ public class StoreNBTToClient extends Message<StoreNBTToClient>{
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
-		minecraft.addScheduledTask(new Runnable(){
-			public void run(){
-				processMessage(nbt);
+		minecraft.addScheduledTask(() -> {
+			if(config){
+				ModConfig.syncPropNBT = nbt;
+			}else{
+				clientPlayerTag = nbt;
 			}
 		});
 		return null;
-	}
-
-	public void processMessage(NBTTagCompound nbt){
-		storedNBT = nbt;
 	}
 }

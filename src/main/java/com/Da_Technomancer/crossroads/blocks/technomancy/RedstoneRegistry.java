@@ -52,6 +52,17 @@ public class RedstoneRegistry extends BlockContainer{
 	}
 
 	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		return Math.min(15, (int) Math.round(((RedstoneRegistryTileEntity) te).getOutput()[((RedstoneRegistryTileEntity) te).getIndex()]));
+	}
+	
+	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new RedstoneRegistryTileEntity();
 	}
