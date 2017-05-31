@@ -19,7 +19,6 @@ public class ModPackets{
 		network.registerMessage(SendPosToClient.class, SendPosToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendDoubleToClient.class, SendDoubleToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(StoreNBTToClient.class, StoreNBTToClient.class, packetId++, Side.CLIENT);
-		network.registerMessage(SendLightningToClient.class, SendLightningToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendBoolToClient.class, SendBoolToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendChatToClient.class, SendChatToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendFieldsToClient.class, SendFieldsToClient.class, packetId++, Side.CLIENT);

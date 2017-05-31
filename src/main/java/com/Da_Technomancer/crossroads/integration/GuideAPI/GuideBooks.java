@@ -3,16 +3,19 @@ package com.Da_Technomancer.crossroads.integration.GuideAPI;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
@@ -52,7 +55,7 @@ public final class GuideBooks{
 
 	public static final Book MAIN = new Book();
 	public static final Book INFO = new Book();
-	
+
 	@GuideBook
 	public static class MainGuide implements IGuideBook{
 
@@ -72,7 +75,7 @@ public final class GuideBooks{
 
 			// INTRO
 			entries.put(new ResourceLocation(Main.MODID, "first_read"), new SmartEntry("READ ME FIRST", new ItemStack(Items.BOOK, 1), "lore.first_read"));
-			
+
 			//TODO
 			createPages(pages, "lore.intro.start", new ShapelessOreRecipe(Items.WRITTEN_BOOK, Items.BOOK, Items.COMPASS), "lore.intro.end");
 			entries.put(new ResourceLocation(Main.MODID, "intro"), new EntryItemStack(pages, "Introduction", new ItemStack(Items.PAPER, 1), true));
@@ -268,7 +271,7 @@ public final class GuideBooks{
 			LinkedHashMap<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 			ArrayList<IPage> pages = new ArrayList<IPage>();
 			ArrayList<CategoryAbstract> categories = new ArrayList<CategoryAbstract>();
-			
+
 			// INTRO
 			createPages(pages, "info.first_read");
 			entries.put(new ResourceLocation(Main.MODID, "first_read"), new EntryItemStack(pages, "READ ME FIRST", new ItemStack(Items.BOOK, 1), true));
@@ -288,13 +291,13 @@ public final class GuideBooks{
 			createPages(pages, "info.steam.pre_recipe", new ShapedOreRecipe(new ItemStack(ModBlocks.fluidTube, 8), "###", "   ", "###", '#', "ingotBronze"), "info.steam.mid_recipe", new ShapedOreRecipe(new ItemStack(ModBlocks.fluidTank, 1), " $ ", "$#$", " $ ", '#', "ingotGold", '$', "ingotBronze"), "info.steam.pre_boiler_recipe", new ShapedOreRecipe(new ItemStack(ModBlocks.steamBoiler, 1), "###", "# #", "&&&", '#', "ingotBronze", '&', "ingotCopper"), Pair.of("info.steam.boiler", new Object[] {Math.round(EnergyConverters.DEG_PER_BUCKET_STEAM * 1.1D), EnergyConverters.DEG_PER_BUCKET_STEAM}), new ShapedOreRecipe(new ItemStack(ModItems.fluidGauge, 1), " * ", "*#*", " *$", '#', "blockGlass", '*', "ingotIron", '$', ModBlocks.fluidTube));
 			entries.put(new ResourceLocation(Main.MODID, "steam"), new EntryItemStack(pages, "Basics of Steam", new ItemStack(ModItems.fluidGauge, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "info.rotary.pre_recipe", new ShapedOreRecipe(new ItemStack(ModBlocks.masterAxis, 1), "###", "# #", "#$#", '#', "ingotIron", '$', "stickIron"), "info.rotary.mid_recipe", new ShapedOreRecipe(new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.GOLD), 9), " * ", "*&*", " * ", '*', "ingotGold", '&', "blockGold"), new ShapedOreRecipe(new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.GOLD), 1), " * ", "*&*", " * ", '*', "nuggetGold", '&', "ingotGold"), "info.rotary.large_gear", new ShapedOreRecipe(new ItemStack(GearFactory.LARGE_GEARS.get(GearTypes.GOLD), 1), "***", "*&*", "***", '*', GearFactory.BASIC_GEARS.get(GearTypes.GOLD), '&', "blockGold"), "info.rotary.gear_connections", new ShapedOreRecipe(new ItemStack(ModItems.handCrank, 1), " ?", "##", "$ ", '?', Blocks.LEVER, '#', "stickWood", '$', "cobblestone"), "info.rotary.hand_crank", new ShapedOreRecipe(new ItemStack(ModItems.speedometer, 1), "#", "$", '#', "string", '$', Items.COMPASS), "info.rotary.omnimeter", new ShapedOreRecipe(new ItemStack(ModItems.omnimeter, 1), " # ", "&$%", " ? ", '#', ModItems.fluidGauge, '&', ModItems.thermometer, '$', "gemEmerald", '%', ModItems.speedometer, '?', Items.CLOCK));
+			createPages(pages, "info.rotary.pre_recipe", new ShapedOreRecipe(new ItemStack(ModBlocks.masterAxis, 1), "###", "# #", "#$#", '#', "ingotIron", '$', "stickIron"), "info.rotary.mid_recipe", new ShapedOreRecipe(new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.GOLD), 9), " * ", "*&*", " * ", '*', "ingotGold", '&', "blockGold"), new ShapedOreRecipe(new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.GOLD), 1), " * ", "*&*", " * ", '*', "nuggetGold", '&', "ingotGold"), "info.rotary.large_gear", new ShapedOreRecipe(new ItemStack(GearFactory.LARGE_GEARS.get(GearTypes.GOLD), 1), "***", "*&*", "***", '*', GearFactory.BASIC_GEARS.get(GearTypes.GOLD), '&', "blockGold"), "info.rotary.gear_connections", new ShapedOreRecipe(new ItemStack(ModItems.handCrank, 1), " ?", "##", "$ ", '?', Blocks.LEVER, '#', "stickWood", '$', "cobblestone"), "info.rotary.hand_crank", new ShapedOreRecipe(new ItemStack(ModItems.speedometer, 1), "#", "$", '#', "string", '$', Items.COMPASS), "info.rotary.omnimeter", new ShapedOreRecipe(new ItemStack(ModItems.omnimeter, 1), " # ", "&$%", " ? ", '#', ModItems.fluidGauge, '&', ModItems.thermometer, '$', "ingotBronze", '%', ModItems.speedometer, '?', Items.CLOCK));
 			entries.put(new ResourceLocation(Main.MODID, "rotary"), new EntryItemStack(pages, "Basics of Rotary", new ItemStack(ModItems.speedometer, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, "info.copper", new ResourceLocation(Main.MODID, "textures/book/copper_process.png"));
 			entries.put(new ResourceLocation(Main.MODID, "copper"), new EntryItemStack(pages, "Copper Processing", new ItemStack(OreSetUp.ingotCopper, 1), true));
 			pages = new ArrayList<IPage>();
-
+			entries.put(new ResourceLocation(Main.MODID, "intro_path"), new SmartEntry("info.intro_path", new ItemStack(ModItems.watch), "info.path_intro.start", (Supplier<Object>) () -> {return StoreNBTToClient.clientPlayerTag.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, true) ? "info.intro_path.locked" : null : ModConfig.getConfigBool(ModConfig.allowAllSingle, true) ? "info.intro_path.locked" : null;}, "info.intro_path.continue", new ShapedOreRecipe(new ItemStack(ModBlocks.detailedCrafter, 1), "*^*", "^&^", "*^*", '*', "ingotIron", '^', "ingotTin", '&', Blocks.CRAFTING_TABLE)));
 
 			categories.add(new CategoryItemStack(entries, "The Basics", new ItemStack(OreSetUp.oreCopper, 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
@@ -344,7 +347,7 @@ public final class GuideBooks{
 
 			categories.add(new CategoryItemStack(entries, "Rotary Machines", new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.BRONZE), 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
-			
+
 			// FLUIDS
 			createPages(pages,  "info.rotary_pump", new ShapedOreRecipe(new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "#$#", "&$&", '#', "ingotBronze", '&', "blockGlass", '$', "stickIron"));
 			entries.put(new ResourceLocation(Main.MODID, "rotary_pump"), new EntryItemStack(pages, "Rotary Pump", new ItemStack(ModBlocks.rotaryPump, 1), true));
@@ -438,15 +441,15 @@ public final class GuideBooks{
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
 			//TECHNOMANCY TODO
-			
+
 			categories.add(new CategoryItemStack(entries, "Technomancy", new ItemStack(ModBlocks.redstoneKeyboard, 1)){
 				@Override
-			    public boolean canSee(EntityPlayer player, ItemStack bookStack) {
-			        return true;
-			    }
+				public boolean canSee(EntityPlayer player, ItemStack bookStack){
+					return StoreNBTToClient.clientPlayerTag.getCompoundTag("path").getBoolean("technomancy");
+				}
 			});
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
-			
+
 			INFO.setTitle("Main Menu");
 			INFO.setWelcomeMessage("Welcome to Crossroads");
 			INFO.setDisplayName("technician_manual");
@@ -467,7 +470,7 @@ public final class GuideBooks{
 			GameRegistry.addShapelessRecipe(bookStack, GuideAPI.getStackFromBook(GuideBooks.MAIN));
 		}
 	}
-	
+
 	/**
 	 * Splits up a long string into pages. I can't use PageHelper for this
 	 * because of the § symbol.

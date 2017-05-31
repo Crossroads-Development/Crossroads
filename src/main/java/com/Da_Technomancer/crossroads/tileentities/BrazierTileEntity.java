@@ -3,8 +3,6 @@ package com.Da_Technomancer.crossroads.tileentities;
 import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendLightningToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
@@ -25,7 +23,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -80,8 +77,7 @@ public class BrazierTileEntity extends TileEntity implements ITickable{
 							item.setDead();
 						}
 
-						world.spawnEntity(new EntityLightningBolt(world, pos.getX(), pos.getY() + 1, pos.getZ(), true));
-						ModPackets.network.sendToAllAround(new SendLightningToClient(pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY() + 1, pos.getZ(), 512));
+						world.addWeatherEffect(new EntityLightningBolt(world, pos.getX(), pos.getY() + 1, pos.getZ(), false));
 						world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), out.copy()));
 					}
 					break;
