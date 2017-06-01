@@ -315,13 +315,13 @@ public final class GuideBooks{
 			createPages(pages, "info.heating_crucible.pre_recipe", new ShapedOreRecipe(new ItemStack(ModBlocks.heatingCrucible, 1), "# #", "#?#", "###", '#', Blocks.HARDENED_CLAY, '?', Items.CAULDRON), "info.heating_crucible.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "heating_crucible"), new EntryItemStack(pages, "Heating Crucible", new ItemStack(ModBlocks.heatingCrucible, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "info.fluid_cooling", new ShapedOreRecipe(new ItemStack(ModBlocks.fluidCoolingChamber, 1), "###", "# #", "%%%", '#', "ingotTin", '%', "ingotIron"));
+			createPages(pages, "info.fluid_cooling", new ShapedOreRecipe(new ItemStack(ModBlocks.fluidCoolingChamber, 1), "###", "# #", "#%#", '#', "ingotIron", '%', "ingotCopper"));
 			entries.put(new ResourceLocation(Main.MODID, "fluid_cooling"), new EntryItemStack(pages, "Fluid Cooling Chamber", new ItemStack(ModBlocks.fluidCoolingChamber, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, "info.redstone_cable.pre_recipe", new ShapedOreRecipe(new ItemStack(HeatCableFactory.REDSTONE_HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL), 1), "###", "#?#", "###", '#', "dustRedstone", '?', HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL)), "info.redstone_cable.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "redstone_cable"), new EntryItemStack(pages, "Redstone Heat Cable", new ItemStack(Items.REDSTONE, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "info.salt_reactor.pre_recipe", new ShapedOreRecipe(new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotTin", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper"), "info.salt_reactor.post_recipe");
+			createPages(pages, "info.salt_reactor.pre_recipe", new ShapedOreRecipe(new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotIron", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper"), "info.salt_reactor.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "salt_reactor"), new EntryItemStack(pages, "Salt Reactor", new ItemStack(ModBlocks.saltReactor, 1), true));
 			pages = new ArrayList<IPage>();
 
@@ -358,10 +358,10 @@ public final class GuideBooks{
 			createPages(pages, Pair.of("info.radiator", new Object[] {EnergyConverters.DEG_PER_BUCKET_STEAM}), new ShapedOreRecipe(new ItemStack(ModBlocks.radiator, 1), "#$#", "#$#", "#$#", '#', ModBlocks.fluidTube, '$', "ingotIron"));
 			entries.put(new ResourceLocation(Main.MODID, "radiator"), new EntryItemStack(pages, "Radiator", new ItemStack(ModBlocks.radiator, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, Pair.of("info.liquid_fat", new Object[] {EnergyConverters.FAT_PER_VALUE}), new ShapedOreRecipe(new ItemStack(ModBlocks.fatCollector, 1), "***", "# #", "*&*", '*', "ingotBronze", '#', "netherrack", '&', "ingotCopper"), new ShapedOreRecipe(new ItemStack(ModBlocks.fatCongealer, 1), "*^*", "# #", "* *", '*', "ingotBronze", '#', "netherrack", '^', "stickIron"));
+			createPages(pages, Pair.of("info.liquid_fat", new Object[] {EnergyConverters.FAT_PER_VALUE}), new ShapedOreRecipe(new ItemStack(ModBlocks.fatCollector, 1), "***", "# #", "*&*", '*', "ingotTin", '#', "netherrack", '&', "ingotCopper"), new ShapedOreRecipe(new ItemStack(ModBlocks.fatCongealer, 1), "*^*", "# #", "* *", '*', "ingotTin", '#', "netherrack", '^', "stickIron"));
 			entries.put(new ResourceLocation(Main.MODID, "liquid_fat"), new EntryItemStack(pages, "Basics of Liquid Fat", new ItemStack(ModItems.edibleBlob, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, Pair.of("info.fat_feeder", new Object[] {EnergyConverters.FAT_PER_VALUE}), new ShapedOreRecipe(new ItemStack(ModBlocks.fatFeeder, 1), "*^*", "#&#", "*^*", '*', "ingotBronze", '#', "netherrack", '^', "stickIron", '&', "ingotTin"));
+			createPages(pages, Pair.of("info.fat_feeder", new Object[] {EnergyConverters.FAT_PER_VALUE}), new ShapedOreRecipe(new ItemStack(ModBlocks.fatFeeder, 1), "*^*", "# #", "*^*", '*', "ingotTin", '#', "netherrack", '^', "stickIron"));
 			entries.put(new ResourceLocation(Main.MODID, "fat_feeder"), new EntryItemStack(pages, "Fat Feeder", new ItemStack(ModBlocks.fatFeeder, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, "info.redstone_tube", new ShapedOreRecipe(new ItemStack(ModBlocks.redstoneFluidTube, 1), "***", "*&*", "***", '*', "dustRedstone", '&', ModBlocks.fluidTube));

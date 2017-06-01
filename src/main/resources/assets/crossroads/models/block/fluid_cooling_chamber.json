@@ -2,7 +2,7 @@
 	"parent": "block/cube_bottom_top",
 	"textures": {
 		"side": "crossroads:blocks/cooling_chamber_side",
-		"top": "crossroads:blocks/cooling_chamber_top",
+		"top": "crossroads:blocks/iron_heat",
 		"bottom": "crossroads:blocks/cooling_chamber_bottom"
 	}
 }

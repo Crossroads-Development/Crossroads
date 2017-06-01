@@ -8,8 +8,6 @@ import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
 import com.Da_Technomancer.crossroads.tileentities.SlottedChestTileEntity;
 
 import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -42,9 +40,6 @@ public class SafeCallable{
 			Main.logger.catching(e);
 		}
 		printChatNoLog = holder;
-	}
-	protected static void summonLightning(WorldClient client, BlockPos pos){
-		client.spawnEntity(new EntityLightningBolt(client, pos.getX(), pos.getY(), pos.getZ(), true));
 	}
 
 	protected static void chestLock(World worldClient, NBTTagCompound nbt, BlockPos pos){
