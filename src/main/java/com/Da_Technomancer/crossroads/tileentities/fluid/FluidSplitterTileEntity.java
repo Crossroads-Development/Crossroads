@@ -14,33 +14,33 @@ public class FluidSplitterTileEntity extends TileEntity{
 
 	public int redstone;
 	private static final int CAPACITY = 10_000;
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return true;
 		}
-		
+
 		return super.hasCapability(cap, side);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return side == null || side.getAxis() != EnumFacing.Axis.Y ? (T) inHandler : side == EnumFacing.UP ? (T) upHandler : (T) downHandler;
 		}
-		
+
 		return super.getCapability(cap, side);
 	}
-	
+
 	private final OutHandler downHandler = new OutHandler(true);
 	private final OutHandler upHandler = new OutHandler(false);
 	private final InHandler inHandler = new InHandler();
-	
+
 	private FluidStack upFluid;
 	private FluidStack downFluid;
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -51,25 +51,27 @@ public class FluidSplitterTileEntity extends TileEntity{
 		if(downFluid != null){
 			nbt.setTag("downFluid", downFluid.writeToNBT(new NBTTagCompound()));
 		}
+		nbt.setInteger("transfered", transfered);
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		redstone = nbt.getInteger("reds");
 		upFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("upFluid"));
 		downFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("downFluid"));
+		transfered = nbt.getInteger("transfered");
 	}
-	
+
 	private class OutHandler implements IFluidHandler{
 
 		private final boolean down;
-		
+
 		private OutHandler(boolean down){
 			this.down = down;
 		}
-		
+
 		@Override
 		public IFluidTankProperties[] getTankProperties(){
 			return new IFluidTankProperties[] {new FluidTankProperties(down ? downFluid : upFluid, CAPACITY, false, true)};
@@ -87,7 +89,7 @@ public class FluidSplitterTileEntity extends TileEntity{
 				return null;
 			}
 			int drained = Math.min(resource.amount, workingWith.amount);
-			
+
 			if(doDrain){
 				workingWith.amount -= drained;
 				if(workingWith.amount <= 0){
@@ -98,7 +100,7 @@ public class FluidSplitterTileEntity extends TileEntity{
 					}
 				}
 			}
-			
+
 			return new FluidStack(resource.getFluid(), drained, resource.tag);
 		}
 
@@ -110,7 +112,7 @@ public class FluidSplitterTileEntity extends TileEntity{
 			}
 			int drained = Math.min(maxDrain, workingWith.amount);
 			FluidStack out = new FluidStack(workingWith.getFluid(), drained, workingWith.tag);
-			
+
 			if(doDrain){
 				workingWith.amount -= drained;
 				if(workingWith.amount <= 0){
@@ -121,11 +123,13 @@ public class FluidSplitterTileEntity extends TileEntity{
 					}
 				}
 			}
-			
+
 			return out;
 		}
 	}
-	
+
+	private int transfered = 0;
+
 	private class InHandler implements IFluidHandler{
 
 		@Override
@@ -138,21 +142,20 @@ public class FluidSplitterTileEntity extends TileEntity{
 			if(resource == null){
 				return 0;
 			}
-			int canAccept = redstone == 0 ? CAPACITY : (int) (downFluid != null && !downFluid.isFluidEqual(resource) ? 0 : (15D / ((double) redstone)) * (CAPACITY - (downFluid == null ? 0 : downFluid.amount)));
-			canAccept = Math.min(canAccept, redstone == 15 ? CAPACITY : (int) (upFluid != null && !upFluid.isFluidEqual(resource) ? 0 : (CAPACITY - (upFluid == null ? 0 : upFluid.amount)) * 15D / (15D - ((double) redstone))));
-			canAccept = Math.min(canAccept, resource.amount);
-			if(doFill && canAccept != 0){
-				int wentDown = 0;
-				if(redstone != 0){
-					wentDown = (int) (canAccept * (double) redstone / 15D);
-					downFluid = new FluidStack(resource.getFluid(), wentDown + (downFluid == null ? 0 : downFluid.amount), resource.tag);
-				}
-				if(redstone != 15){
-					upFluid = new FluidStack(resource.getFluid(), (int) (canAccept - wentDown) + (upFluid == null ? 0 : upFluid.amount), resource.tag);
-				}
-			}
+
+			int accepted = Math.max(0, Math.min(resource.amount, Math.min(downFluid != null && !downFluid.isFluidEqual(resource) ? 0 : ((15 * (CAPACITY - (downFluid == null ? 0 : downFluid.amount))) / redstone), upFluid != null && !upFluid.isFluidEqual(resource) ? 0 : ((15 * (CAPACITY - (upFluid == null ? 0 : upFluid.amount))) / (15 - redstone)))));
 			
-			return canAccept;
+			int goDown = (redstone * (accepted / 15)) + (transfered >= redstone ? 0 : Math.min(redstone - transfered, accepted % 15)) + Math.max(0, Math.min(redstone, (accepted % 15) + transfered - 15));
+			int goUp = accepted - goDown;
+
+			if(doFill && accepted != 0){
+				downFluid = new FluidStack(resource.getFluid(), goDown + (downFluid == null ? 0 : downFluid.amount), resource.tag);
+				upFluid = new FluidStack(resource.getFluid(), goUp + (upFluid == null ? 0 : upFluid.amount), resource.tag);
+				transfered += accepted % 15;;
+				transfered %= 15;
+			}
+
+			return accepted;
 		}
 
 		@Override
@@ -164,6 +167,6 @@ public class FluidSplitterTileEntity extends TileEntity{
 		public FluidStack drain(int maxDrain, boolean doDrain){
 			return null;
 		}
-		
+
 	}
 } 

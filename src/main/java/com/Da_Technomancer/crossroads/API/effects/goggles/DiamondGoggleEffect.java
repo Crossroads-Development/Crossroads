@@ -20,7 +20,7 @@ public class DiamondGoggleEffect implements IGoggleEffect{
 			if(te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
 				IFluidHandler fluids = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 				for(IFluidTankProperties tank : fluids.getTankProperties()){
-					chat.add("Type: " + (tank.getContents() == null ? "None" : tank.getContents().getLocalizedName()) + ", Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Capacity: " + tank.getCapacity() + ", Pressure: " + (tank.getContents() == null ? 0 : tank.getContents().amount) / tank.getCapacity());
+					chat.add("Type: " + (tank.getContents() == null ? "None" : tank.getContents().getLocalizedName()) + ", Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Capacity: " + tank.getCapacity() + ", Pressure: " + ((double) (tank.getContents() == null ? 0 : tank.getContents().amount)) / ((double) tank.getCapacity()));
 				}
 			}
 		}

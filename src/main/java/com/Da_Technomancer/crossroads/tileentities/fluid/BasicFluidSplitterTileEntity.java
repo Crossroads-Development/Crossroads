@@ -49,6 +49,7 @@ public class BasicFluidSplitterTileEntity extends TileEntity{
 		if(downFluid != null){
 			nbt.setTag("downFluid", downFluid.writeToNBT(new NBTTagCompound()));
 		}
+		nbt.setBoolean("wentUp", lastWentUp);
 		return nbt;
 	}
 	
@@ -57,6 +58,7 @@ public class BasicFluidSplitterTileEntity extends TileEntity{
 		super.readFromNBT(nbt);
 		upFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("upFluid"));
 		downFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("downFluid"));
+		lastWentUp = nbt.getBoolean("wentUp");
 	}
 	
 	private class OutHandler implements IFluidHandler{
@@ -123,6 +125,8 @@ public class BasicFluidSplitterTileEntity extends TileEntity{
 		}
 	}
 	
+	private boolean lastWentUp = false;
+	
 	private class InHandler implements IFluidHandler{
 
 		@Override
@@ -135,16 +139,20 @@ public class BasicFluidSplitterTileEntity extends TileEntity{
 			if(resource == null){
 				return 0;
 			}
-			int canAccept = (int) (downFluid != null && !downFluid.isFluidEqual(resource) ? 0 : (2 * (CAPACITY - (downFluid == null ? 0 : downFluid.amount))));
-			canAccept = Math.min(canAccept, (int) (upFluid != null && !upFluid.isFluidEqual(resource) ? 0 : (CAPACITY - (upFluid == null ? 0 : upFluid.amount)) * 2));
-			canAccept = Math.min(canAccept, resource.amount);
-			if(doFill && canAccept != 0){
-				int wentDown = (int) (canAccept * .5D);
-				downFluid = new FluidStack(resource.getFluid(), wentDown + (downFluid == null ? 0 : downFluid.amount), resource.tag);
-				upFluid = new FluidStack(resource.getFluid(), (int) (canAccept - wentDown) + (upFluid == null ? 0 : upFluid.amount), resource.tag);
+			
+			int accepted = Math.max(0, Math.min(resource.amount, Math.min(downFluid != null && !downFluid.isFluidEqual(resource) ? 0 : (2 * (CAPACITY - (downFluid == null ? 0 : downFluid.amount))) + (lastWentUp ? -(resource.amount % 2) : resource.amount % 2), upFluid != null && !upFluid.isFluidEqual(resource) ? 0 : (2 * (CAPACITY - (upFluid == null ? 0 : upFluid.amount))) + (lastWentUp ? resource.amount % 2 : -(resource.amount % 2)))));
+			
+			int goUp = (accepted / 2) + (lastWentUp ? 0 : accepted % 2);
+			int goDown = accepted - goUp;
+			
+			if(doFill && accepted != 0){
+				downFluid = new FluidStack(resource.getFluid(), goDown + (downFluid == null ? 0 : downFluid.amount), resource.tag);
+				upFluid = new FluidStack(resource.getFluid(), goUp + (upFluid == null ? 0 : upFluid.amount), resource.tag);
+				lastWentUp = accepted % 2 == 0 ? lastWentUp : !lastWentUp;
+				
 			}
 			
-			return canAccept;
+			return accepted;
 		}
 
 		@Override
