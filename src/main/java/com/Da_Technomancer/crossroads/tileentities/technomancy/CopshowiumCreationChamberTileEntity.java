@@ -29,7 +29,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 public class CopshowiumCreationChamberTileEntity extends TileEntity{
 
 	private FluidStack content = null;
-	private final int CAPACITY = 1_296;
+	private static final int CAPACITY = 1_296;
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){

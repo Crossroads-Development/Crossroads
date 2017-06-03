@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -97,6 +98,9 @@ public class DetailedCrafterContainer extends Container{
 				inInv.decrStackSize(i, 1);
 			}
 			nbt.getCompoundTag("path").setBoolean("technomancy", true);
+			if(!world.isRemote){
+				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
+			}
 		}
 		outInv.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(inInv, world));
 	}

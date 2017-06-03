@@ -442,6 +442,7 @@ public final class GuideBooks{
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
 			//TECHNOMANCY TODO
+			entries.put(new ResourceLocation(Main.MODID, "copshowium_chamber"), new SmartEntry("info.copshowium_chamber.name", new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "info.copshowium_chamber", new PageDetailedRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModBlocks.fluidCoolingChamber), 0)));
 
 			categories.add(new CategoryItemStack(entries, "Technomancy", new ItemStack(ModBlocks.redstoneKeyboard, 1)){
 				@Override

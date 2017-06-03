@@ -33,8 +33,8 @@ public class PageDetailedRecipe extends PageIRecipe{
 	@SideOnly(Side.CLIENT)
 	public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
 		super.draw(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
-		int iconX = (5 * 18) + (guiLeft + guiBase.xSize / 7);
-        int iconY = (3 * 18) + (guiTop + guiBase.xSize / 5);
+		int iconX = 90 + (guiLeft + guiBase.xSize / 7);
+        int iconY = 54 + (guiTop + guiBase.xSize / 5) + 1;
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(Main.MODID, "textures/gui/container/detailed_crafter.png"));
 		if(type == 0){
