@@ -51,7 +51,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	private double[] speedRecord = new double[3];
 	private static final double[] PHYS_DATA = new double[2];
 	/**
-	 * Math.min((redstone - 2) / 6, EFFECTS.length) corresponds to action type, which are:
+	 * Math.min((redstone - 2) / 6, EFFECTS.length - 1) corresponds to action type, which are:
 	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Release entity with momentum.
 	 * EnumFacing.getFront((redstone - 2) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4) vary based on EnumFacing. 
 	 */
@@ -106,7 +106,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 				angle[2] = MINIMUM_UPPER_ANGLE;
 				ModPackets.network.sendToAllAround(new SendDoubleToClient("a_reset", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}else if(redstone != 0){
-				actionType = Math.min((redstone - 2) / 6, EFFECTS.length);
+				actionType = Math.min((redstone - 2) / 6, EFFECTS.length - 1);
 			}
 
 			EnumFacing side = EnumFacing.getFront((redstone - 2) % 6);
