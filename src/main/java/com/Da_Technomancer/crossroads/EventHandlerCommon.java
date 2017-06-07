@@ -6,6 +6,10 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
+import org.apache.logging.log4j.Level;
+
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
@@ -63,7 +67,6 @@ public final class EventHandlerCommon{
 	private static final Random RAND = new Random();
 	private static final ArrayList<Chunk> TO_RETROGEN = new ArrayList<Chunk>();
 	protected static Ticket loadingTicket;
-	private final float adjacentRateCoefficient= .5F;
 
 	@SubscribeEvent
 	public void runRetrogenAndLoadChunks(WorldTickEvent e){
@@ -100,48 +103,21 @@ public final class EventHandlerCommon{
 				}
 			}else{
 				HashSet<Long> toRemove = new HashSet<Long>();
-				//This method has some labeled continues. Please don't hurt me...
-				fluxEvent:
-					for(Entry<Long, byte[][][]> datum : data.fieldNodes.entrySet()){
-						for(int i = 1; i >= 0; i--){
-							for(int j = 0; j < 8; j++){
-								for(int k = 0; k < 8; k++){
-									float netForce = data.nodeForces.get(datum.getKey())[i][j][k];
-									if(i == 0){
-										if(datum.getValue()[0][j][k] < datum.getValue()[1][j][k]){
-											datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) (Math.max(1, 32 * Math.pow(2, (int) netForce)) + (int) datum.getValue()[0][j][k])));
-											if(datum.getValue()[0][j][k] == 127){
-												MagicElements.TIME.getVoidEffect().doEffect(e.world, MiscOp.getChunkPosFromLong(datum.getKey()).getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
-												toRemove.add(datum.getKey());
-												continue fluxEvent;
-											}else if(datum.getValue()[0][j][k] >= datum.getValue()[1][j][k]){
-												toRemove.add(datum.getKey());
-												continue fluxEvent;
-											}
-										}else{
-											netForce += datum.getValue()[0][j][k] == 7 ? 0 : ((float) RAND.nextInt(8));
-											datum.getValue()[0][j][k] = (byte) Math.max(0, Math.min(127, (int) netForce + (int) datum.getValue()[0][j][k]));
-										}
-									}else{
-										netForce += j == 0 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j - 1][k];
-										netForce += k == 0 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j][k - 1];
-										netForce += j == 7 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j + 1][k];
-										netForce += k == 7 ? 0 : adjacentRateCoefficient * (float) data.nodeForces.get(datum.getKey())[i][j][k + 1];
 
-										byte newValue = (byte) Math.max(0, Math.min((int) netForce + 7, 127));
-										data.nodeForces.get(datum.getKey())[0][j][k] += Math.abs(newValue - datum.getValue()[1][j][k]) / 2;
-										datum.getValue()[1][j][k] = newValue;
-									}
-
-									if(i == 0 && datum.getValue()[0][j][k] == 127){
-										MagicElements.TIME.getVoidEffect().doEffect(e.world, MiscOp.getChunkPosFromLong(datum.getKey()).getBlock(1 + (2 * j), RAND.nextInt(250) + 1, 1 + (2 * k)), 128);
-										toRemove.add(datum.getKey());
-										continue fluxEvent;
-									}
-								}
-							}
+				for(Entry<Long, byte[][][]> datum : data.fieldNodes.entrySet()){
+					Long key = datum.getKey();
+					try{
+						BlockPos pos = calcFields(datum.getValue()[0], datum.getValue()[1], data.nodeForces.get(key)[0], data.nodeForces.get(key)[1]);
+						if(pos != null){
+							toRemove.add(key);
+							MagicElements.TIME.getVoidEffect().doEffect(e.world, MiscOp.getChunkPosFromLong(key).getBlock(pos.getX(), pos.getY(), pos.getZ()), 128);
 						}
+					}catch(Exception ex){
+						toRemove.add(key);
+						Main.logger.log(Level.ERROR, "Caught an exception while calculating fields in dim: " + e.world.provider.getDimension() + ", ChunkPos: " + MiscOp.getChunkPosFromLong(key).toString(), ex);
 					}
+				}
+
 				for(long remove : toRemove){
 					data.fieldNodes.remove(remove);
 				}
@@ -230,6 +206,53 @@ public final class EventHandlerCommon{
 		}
 	}
 
+	private static final float ADJACENT_RATE_COEFFICIENT = .5F;
+
+	/**
+	 * Performs the field calculations for one chunk. 
+	 * @return A non-null value if the chunk fields should be wiped and there should be a flux event at the returned position (which is relative to 0, 0, 0 in the chunk, not the world). 
+	 */
+	@Nullable
+	private static BlockPos calcFields(byte[][] fluxIn, byte[][] rateIn, short[][] fluxForceIn, short[][] rateForceIn){
+		for(int x = 0; x < 8; x++){
+			for(int z = 0; z < 8; z++){
+				int fluxForce = fluxForceIn[x][z];
+				int flux = ((int) fluxIn[x][z]) + 1;
+				int rate = ((int) rateIn[x][z]) + 1;
+
+				if(rate != 0){
+					float change = rateForceIn[x][z];
+					change += x == 0 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x - 1][z];
+					change += z == 0 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x][z - 1];
+					change += x == 7 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x + 1][z];
+					change += z == 7 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x][z + 1];
+
+					rate = (int) Math.max(1, Math.min(8 + change, 128));
+					flux += Math.abs(rate - rateIn[x][z]) / 2;
+				}
+				float holder = ((float) (flux - 8)) / 8F;
+				holder = holder == 0 ? 0 : RAND.nextInt((int) Math.copySign(Math.ceil(Math.abs(holder)), holder) + (int) (Math.abs(holder) / holder));
+
+				if(rate == 0 || flux + fluxForce + holder < rate){
+					flux += Math.max(1, 32 * Math.pow(2, fluxForce));
+					rate = 0;
+				}else{
+					flux += holder;
+					flux += fluxForce;
+				}
+
+				if(flux >= 128){
+					return new BlockPos(1 + (2 * x), RAND.nextInt(256), 1 + (2 * z));
+				}
+
+				fluxIn[x][z] = (byte) Math.min(127, Math.max(0, flux - 1));
+				rateIn[x][z] = (byte) Math.min(127, Math.max(-1, rate - 1));
+			}
+		}
+
+		return null;
+	}
+
 	@SubscribeEvent
 	public void buildRetrogenList(ChunkDataEvent.Load e) {
 		if (!ModConfig.retrogen.getString().isEmpty()) {
@@ -265,7 +288,7 @@ public final class EventHandlerCommon{
 	@SubscribeEvent
 	public void syncPlayerTagToClient(EntityJoinWorldEvent e){
 		//The down-side of using this event is that every time the player switches dimension, the update data has to be resent. 
-		
+
 		if(e.getEntity() instanceof EntityPlayerMP){
 			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) e.getEntity(), false);
 		}
