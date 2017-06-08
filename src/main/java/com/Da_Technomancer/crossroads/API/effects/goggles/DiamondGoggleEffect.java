@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.API.effects.goggles;
 
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.RayTraceResult;
@@ -22,6 +24,9 @@ public class DiamondGoggleEffect implements IGoggleEffect{
 				for(IFluidTankProperties tank : fluids.getTankProperties()){
 					chat.add("Type: " + (tank.getContents() == null ? "None" : tank.getContents().getLocalizedName()) + ", Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Capacity: " + tank.getCapacity() + ", Pressure: " + ((double) (tank.getContents() == null ? 0 : tank.getContents().amount)) / ((double) tank.getCapacity()));
 				}
+			}
+			if(te instanceof IGoggleInfoTE){
+				((IGoggleInfoTE) te).addInfo(chat, GoggleLenses.DIAMOND, player, ray.sideHit);
 			}
 		}
 	}

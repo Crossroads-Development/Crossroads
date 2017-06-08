@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.effects.goggles.IGoggleInfoTE;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -16,13 +20,21 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable{
+public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable, IGoggleInfoTE{
+
+	@Override
+	public void addInfo(ArrayList<String> chat, GoggleLenses lens, EntityPlayer player, @Nullable EnumFacing side){
+		if(lens == GoggleLenses.QUARTZ){
+			chat.add("Element: " + (currentElement == null ? "NONE" : currentElement.toString() + (voi ? " (VOID), " : ", ") + "Time: " + time));
+		}
+	}
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
 
@@ -39,11 +51,11 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 	public MagicElements getElement(){
 		return currentElement;
 	}
-	
+
 	public boolean isVoid(){
 		return voi;
 	}
-	
+
 	public int getTime(){
 		return time;
 	}
@@ -54,7 +66,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 	}
 
 	private double lastSumEnergy;
-	
+
 	private void runCalc(){
 		double sumIRot = 0;
 		sumEnergy = 0;
@@ -64,22 +76,22 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
 		}
-		
+
 		if(sumIRot == 0 || sumIRot != sumIRot){
 			return;
 		}
-		
+
 		sumEnergy = runLoss(rotaryMembers, currentElement == MagicElements.STABILITY ? (voi ? 1.5D : 1D) : 1.001D);
 		sumEnergy += Math.signum(sumEnergy) * (currentElement == MagicElements.ENERGY ? (voi ? -10 : 10) : 0);
 		sumEnergy += currentElement == MagicElements.CHARGE ? (voi ? -10 : 10) : 0;
 		sumEnergy = currentElement == MagicElements.EQUALIBRIUM ? (voi ? ((7D * sumEnergy) - (3D * lastSumEnergy)) / 4D : (sumEnergy + (3D * lastSumEnergy)) / 4D) : sumEnergy;
-		
+
 		if(sumEnergy < 1 && sumEnergy > -1){
 			sumEnergy = 0;
 		}
-		
+
 		lastSumEnergy = sumEnergy;
-		
+
 		for(IAxleHandler gear : rotaryMembers){
 			double newEnergy = 0;
 
@@ -92,14 +104,14 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
-			
+
 			gear.markChanged();
 		}
 	}
 
 	/**
 	 * base should always be equal or greater than one. 1 means no loss. 
-	*/
+	 */
 	private static double runLoss(ArrayList<IAxleHandler> gears, double base){
 		double sumEnergy = 0;
 
@@ -133,7 +145,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 	private int lastKey = 0;
 	private boolean forceUpdate;
 	private static final int updateTime = ModConfig.gearResetTime.getInt();
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -141,11 +153,11 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		}
 
 		ticksExisted++;
-		
+
 		if(ticksExisted % updateTime == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
-		
+
 		forceUpdate = CommonProxy.masterKey != lastKey;
 
 		if(ticksExisted % updateTime == 20){
@@ -153,7 +165,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 				gear.resetAngle();
 			}
 		}
-		
+
 		lastKey = CommonProxy.masterKey;
 
 		if(currentElement != null && time-- <= 0){
@@ -161,13 +173,13 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 			time = 0;
 			voi = false;
 		}
-		
+
 		if(!locked && !rotaryMembers.isEmpty()){
 			runCalc();
 			triggerSlaves();
 		}
 	}
-	
+
 	private void triggerSlaves(){
 		HashSet<Pair<ISlaveAxisHandler, EnumFacing>> toRemove = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
 		for(Pair<ISlaveAxisHandler, EnumFacing> slave : slaves){
@@ -179,11 +191,11 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		}
 		slaves.removeAll(toRemove);
 	}
-	
+
 	private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
 	private final IMagicHandler magicHandler = new MagicHandler();
 	private final IAxisHandler handler = new AxisHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != facing){
@@ -192,10 +204,10 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
 			return true;
 		}
-		
+
 		return super.hasCapability(cap, side);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
@@ -208,11 +220,11 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 
 		return super.getCapability(cap, side);
 	}
-	
+
 	private MagicElements currentElement;
 	private boolean voi;
 	private int time;
-	
+
 	private class MagicHandler implements IMagicHandler{
 
 		@Override
@@ -229,7 +241,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 			}
 		}
 	}
-	
+
 	private class AxisHandler implements IAxisHandler{
 
 		@Override
@@ -259,7 +271,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 					keyNew = (byte) (rand.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
-				
+
 				world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){

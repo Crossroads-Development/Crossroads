@@ -3,11 +3,11 @@ package com.Da_Technomancer.crossroads.API.effects.goggles;
 import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.CrystalMasterAxisTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,10 +48,9 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 			}
 		}
 
-		if(te instanceof CrystalMasterAxisTileEntity){
-			chat.add("Element: " + ((((CrystalMasterAxisTileEntity) te).getElement() == null) ? "NONE" : (((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime())));
+		if(te instanceof IGoggleInfoTE){
+			((IGoggleInfoTE) te).addInfo(chat, GoggleLenses.QUARTZ, player, ray.sideHit);
 		}
-
 		if(te instanceof RatiatorTileEntity){
 			chat.add("Output Signal: " + ((RatiatorTileEntity) te).getOutput());
 		}

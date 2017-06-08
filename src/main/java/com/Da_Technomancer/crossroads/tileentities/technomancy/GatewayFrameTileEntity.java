@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,8 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.effects.goggles.IGoggleInfoTE;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -18,6 +21,7 @@ import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -34,7 +38,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class GatewayFrameTileEntity extends TileEntity implements ITickable{
+public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGoggleInfoTE{
 
 
 	private final IMagicHandler magicHandler = new MagicHandler();
@@ -44,6 +48,16 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable{
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return (oldState.getBlock() != newState.getBlock());
+	}
+	
+	@Override
+	public void addInfo(ArrayList<String> chat, GoggleLenses lens, EntityPlayer player, @Nullable EnumFacing side){
+		if(lens == GoggleLenses.EMERALD && world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
+			GatewayFrameTileEntity xTE = dialedCoord(Axis.X);
+			if(xTE != null){
+				chat.add("Dialed: " + xTE.getCoord() + ", " + getCoord() + ", " + dialedCoord(Axis.Z).getCoord());
+			}
+		}
 	}
 
 	private boolean cacheValid;

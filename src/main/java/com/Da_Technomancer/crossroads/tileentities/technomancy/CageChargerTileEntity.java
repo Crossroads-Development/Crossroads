@@ -1,11 +1,18 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import java.util.ArrayList;
+
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.effects.goggles.IGoggleInfoTE;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -14,9 +21,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class CageChargerTileEntity extends TileEntity{
+public class CageChargerTileEntity extends TileEntity implements IGoggleInfoTE{
 
-
+	@Override
+	public void addInfo(ArrayList<String> chat, GoggleLenses lens, EntityPlayer player, @Nullable EnumFacing side){
+		if(lens == GoggleLenses.QUARTZ && !cage.isEmpty()){
+			if(cage.getTagCompound() == null){
+				cage.setTagCompound(new NBTTagCompound());
+			}
+			NBTTagCompound nbt = cage.getTagCompound();
+			chat.add("Stored: [Energy: " + nbt.getInteger("stored_" + MagicElements.ENERGY.name()) + ", Potential: " + nbt.getInteger("stored_" + MagicElements.POTENTIAL.name()) + ", Stability: " + nbt.getInteger("stored_" + MagicElements.STABILITY.name()) + ", Void: " + nbt.getInteger("stored_" + MagicElements.VOID.name()) + "]");
+		}
+	}
+	
 	private final IMagicHandler magicHandler = new MagicHandler();
 	private ItemStack cage = ItemStack.EMPTY;
 
