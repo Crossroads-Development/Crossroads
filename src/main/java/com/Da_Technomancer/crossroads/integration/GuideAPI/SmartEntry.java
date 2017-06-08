@@ -1,7 +1,10 @@
 package com.Da_Technomancer.crossroads.integration.GuideAPI;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,20 +30,40 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class SmartEntry extends EntryItemStack{
 
 	private final Object[] contents;
+	private final Predicate<EntityPlayer> canSee;
 
 	/**
 	 * @param unlocalizedName The unlocalized name of this entry.
 	 * @param icon The ItemStack displayed on this entry in the category.
-	 * @param contents Determines what this entry contains. IPages will be stitched in, Strings will be localized, wrapped, and added (with formatting), IRecipes will be converted to a recipe page, ResourceLocations converted to an image page, Pair<String, Object[]> will be treated as a String with the Object[] formatted in, a true boolean value will cause a page break, an Object[] will have each member interpreted in order, null or a false boolean value will be ignored, and a {@link java.util.function.Supplier}{@literal <Object>} will act as whatever is returned by the get() method.
+	 * @param contents Determines what this entry contains. IPages will be stitched in, Strings will be localized, wrapped, and added (with formatting), IRecipes will be converted to a recipe page, ResourceLocations converted to an image page, Pair{@literal<String, Object[]>} will be treated as a String with the Object[] formatted in, a true boolean value will cause a page break, an Object[] will have each member interpreted in order, null or a false boolean value will be ignored, and a {@link java.util.function.Supplier}{@literal <Object>} will act as whatever is returned by the get() method.
 	 * Any time formatting is used, it should be specified as §r§(formatting character). It will last until either the next formatting code or forced page break (due to ex. recipes). It will be carried over across true values.
 	 * 
 	 * This updates its contents every time it is reopened. 
 	 */
 	public SmartEntry(String unlocalizedName, ItemStack icon, Object... contents){
+		this(unlocalizedName, null, icon, contents);
+	}
+	
+	/**
+	 * @param unlocalizedName The unlocalized name of this entry.
+	 * @param canSee Controls whether the player can see this entry at all. A null value means this can always be seen.
+	 * @param icon The ItemStack displayed on this entry in the category.
+	 * @param contents Determines what this entry contains. IPages will be stitched in, Strings will be localized, wrapped, and added (with formatting), IRecipes will be converted to a recipe page, ResourceLocations converted to an image page, Pair{@literal<String, Object[]>} will be treated as a String with the Object[] formatted in, a true boolean value will cause a page break, an Object[] will have each member interpreted in order, null or a false boolean value will be ignored, and a {@link java.util.function.Supplier}{@literal <Object>} will act as whatever is returned by the get() method.
+	 * Any time formatting is used, it should be specified as §r§(formatting character). It will last until either the next formatting code or forced page break (due to ex. recipes). It will be carried over across true values.
+	 * 
+	 * This updates its contents every time it is reopened. 
+	 */
+	public SmartEntry(String unlocalizedName, @Nullable Predicate<EntityPlayer> canSee, ItemStack icon, Object... contents){
 		super(new ArrayList<IPage>(), unlocalizedName, icon, true);
 		this.contents = contents;
+		this.canSee = canSee;
 	}
 
+	@Override
+	public boolean canSee(EntityPlayer player, ItemStack bookStack){
+		return canSee == null || canSee.test(player);
+	}
+	
 	private String active;
 
 	@Override
