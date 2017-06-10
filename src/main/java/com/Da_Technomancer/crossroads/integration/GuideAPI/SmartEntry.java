@@ -43,7 +43,7 @@ public class SmartEntry extends EntryItemStack{
 	public SmartEntry(String unlocalizedName, ItemStack icon, Object... contents){
 		this(unlocalizedName, null, icon, contents);
 	}
-	
+
 	/**
 	 * @param unlocalizedName The unlocalized name of this entry.
 	 * @param canSee Controls whether the player can see this entry at all. A null value means this can always be seen.
@@ -63,7 +63,12 @@ public class SmartEntry extends EntryItemStack{
 	public boolean canSee(EntityPlayer player, ItemStack bookStack){
 		return canSee == null || canSee.test(player);
 	}
-	
+
+	@Override
+	public String getLocalizedName() {
+		return TextHelper.localize(name);
+	}
+
 	private String active;
 
 	@Override
@@ -161,7 +166,7 @@ public class SmartEntry extends EntryItemStack{
 					continue;
 				}
 			}
-			
+
 			if(start != i && (i == active.length() - 1 || (length >= PERPAGE && active.charAt(i) == ' '))){
 				//The .replace is to fix a bug where somehow (no clue how) some of the § symbols get turned to character 157. This turns them back.
 				pageList.add(new PageText((format + active.substring(start, i + 1)).replace((char) 157, symbol)));
@@ -174,7 +179,7 @@ public class SmartEntry extends EntryItemStack{
 				length += formatTemp.equals("§r§l") ? 1.34D : 1;
 			}
 		}
-		
+
 		active = "";
 	}
 }
