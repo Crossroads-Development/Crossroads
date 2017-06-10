@@ -58,7 +58,7 @@ public final class RecipeHolder{
 	 * 
 	 * Under no condition is anyone to add support for the Bobo recipes in JEI (or any other recipe helper). 
 	 */
-	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
+	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> brazierBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
 
 	/**
 	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
@@ -124,7 +124,7 @@ public final class RecipeHolder{
 			return ItemStack.EMPTY;
 		}
 
-		for(Pair<ICraftingStack[], ItemStack> craft : poisonBoboRecipes){
+		for(Pair<ICraftingStack[], ItemStack> craft : brazierBoboRecipes){
 			ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
 			itemCop.addAll(items);
 

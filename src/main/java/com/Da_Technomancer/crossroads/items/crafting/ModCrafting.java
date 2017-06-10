@@ -67,18 +67,18 @@ public final class ModCrafting{
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE, 1), -10D, 1D)));
 		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopshowium.getMoltenCopshowium(), Pair.of(144, Triple.of(new ItemStack(OreSetUp.ingotCopshowium, 1), 1000D, 100D)));
 
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Blocks.HOPPER, 1, 0), new OreDictCraftingStack("wool", 1), new CraftingStack(ModBlocks.fluidTube, 1, 0)}, getFilledHopper()));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new OreDictCraftingStack("dyeMagenta", 1), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Blocks.HOPPER, 1, 0), new OreDictCraftingStack("wool", 1), new CraftingStack(ModBlocks.fluidTube, 1, 0)}, getFilledHopper()));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new OreDictCraftingStack("dyeMagenta", 1), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
 		if(ModConfig.weatherControl.getBoolean()){
-			RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("gemLapis", 1), new OreDictCraftingStack("cobblestone", 1), new OreDictCraftingStack("nuggetGold", 1)}, new ItemStack(ModItems.rainIdol, 1)));
+			RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("gemLapis", 1), new OreDictCraftingStack("cobblestone", 1), new OreDictCraftingStack("nuggetGold", 1)}, new ItemStack(ModItems.rainIdol, 1)));
 		}
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.DYE, 1, EnumDyeColor.BLACK.getDyeDamage()), new CraftingStack(Items.FISH, 1, 3), new OreDictCraftingStack("leather", 1)}, new ItemStack(ModItems.squidHelmet, 1)));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BLAZE_POWDER, 1, 0), new OreDictCraftingStack("leather", 1), new CraftingStack(Items.PORKCHOP, 1, 0)}, new ItemStack(ModItems.pigZombieChestplate, 1)));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.MILK_BUCKET, 1, 0), new OreDictCraftingStack("leather", 1), new CraftingStack(Items.BEEF, 1, 0)}, new ItemStack(ModItems.cowLeggings, 1)));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BLAZE_ROD, 1, 0), new CraftingStack(Items.DRAGON_BREATH, 1, 0), new CraftingStack(Items.GOLDEN_APPLE, 1, -1)}, new ItemStack(ModItems.chaosRod, 1)));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Blocks.SPONGE, 1, 0), new CraftingStack(ModBlocks.fluidTube, 1, 0), new CraftingStack(ModItems.voidCrystal, 1, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
-		RecipeHolder.poisonBoboRecipes.add(Pair.of(new ICraftingStack[] {new EdibleBlobCraftingStack(4, 2, 1), new OreDictCraftingStack("stickIron", 1), new OreDictCraftingStack("nuggetCopshowium", 1)}, new ItemStack(ModBlocks.hamsterWheel, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.DYE, 1, EnumDyeColor.BLACK.getDyeDamage()), new CraftingStack(Items.FISH, 1, 3), new OreDictCraftingStack("leather", 1)}, new ItemStack(ModItems.squidHelmet, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BLAZE_POWDER, 1, 0), new OreDictCraftingStack("leather", 1), new CraftingStack(Items.PORKCHOP, 1, 0)}, new ItemStack(ModItems.pigZombieChestplate, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.MILK_BUCKET, 1, 0), new OreDictCraftingStack("leather", 1), new CraftingStack(Items.BEEF, 1, 0)}, new ItemStack(ModItems.cowLeggings, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BLAZE_ROD, 1, 0), new CraftingStack(Items.DRAGON_BREATH, 1, 0), new CraftingStack(Items.GOLDEN_APPLE, 1, -1)}, new ItemStack(ModItems.chaosRod, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Blocks.SPONGE, 1, 0), new CraftingStack(ModBlocks.fluidTube, 1, 0), new CraftingStack(ModItems.voidCrystal, 1, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new EdibleBlobCraftingStack(4, 2, 1), new OreDictCraftingStack("stickIron", 1), new OreDictCraftingStack("nuggetCopshowium", 1)}, new ItemStack(ModBlocks.hamsterWheel, 1)));
 
 		RecipeHolder.magExtractRecipes.put(Items.REDSTONE, new MagicUnit(24, 36, 0, 0));
 		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));

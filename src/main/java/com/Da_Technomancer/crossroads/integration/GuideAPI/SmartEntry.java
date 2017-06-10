@@ -149,12 +149,13 @@ public class SmartEntry extends EntryItemStack{
 		int start = 0;
 		double length = 0;
 		for(int i = 0; i < active.length(); i++){
-			if(length - i >= 4){
+			if(active.length() - i >= 4){
 				if(active.charAt(i) == symbol){
 					formatTemp = active.substring(i, i + 4);
 					i += 4;
 					continue;
 				}
+				
 				if(active.substring(i, i + 4).equals(pageSkip)){
 					//The .replace is to fix a bug where somehow (no clue how) some of the § symbols get turned to character 157. This turns them back.
 					pageList.add(new PageText((format + active.substring(start, i)).replace((char) 157, symbol)));
