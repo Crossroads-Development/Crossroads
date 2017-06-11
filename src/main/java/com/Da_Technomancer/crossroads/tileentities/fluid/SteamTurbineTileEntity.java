@@ -52,7 +52,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 	private float completion;
 	
 	/**
-	 * This uses the angle of the attached gear instead of calculating it's own for a few reasons. It will always be attached when it should spin, and should always have the same angle as the attached gear (no point calculating).
+	 * This uses the angle of the attached gear instead of calculating its own for a few reasons. It will always be attached when it should spin, and should always have the same angle as the attached gear (no point calculating).
 	 */
 	@SideOnly(Side.CLIENT)
 	public float getCompletion(){
@@ -64,7 +64,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 		limit = Math.min(limit, (CAPACITY - (waterContent == null ? 0 : waterContent.amount)) / 100);
 		limit = Math.min(limit, LIMIT);
 		if(limit != 0){
-			axleHandler.addEnergy(limit * .1D * EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE, true, true);
+			axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE, true, true);
 			steamContent.amount -= limit * 100;
 			if(steamContent.amount <= 0){
 				steamContent = null;

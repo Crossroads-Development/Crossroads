@@ -25,7 +25,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 
 	private ItemStack inventory = ItemStack.EMPTY;
 	private final double[] motionData = new double[4];
-	private final double[] physData = new double[] {500, 2};
+	private final double[] physData = new double[] {500, 8};
 
 	@Override
 	public void update(){

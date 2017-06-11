@@ -45,7 +45,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 		if(Math.abs(motionData[1]) >= ENERGY_USE){
 			axleHandler.addEnergy(-ENERGY_USE, false, false);
 			if(++ticksExisted % 10 == 0){
-				if(!world.isAirBlock(pos.offset(facing))){
+				if(world.getBlockState(pos.offset(facing)).getBlock().canCollideCheck(world.getBlockState(pos.offset(facing)), false)){
 					if(Math.abs(motionData[0]) >= world.getBlockState(pos.offset(facing)).getBlockHardness(world, pos.offset(facing)) * SPEED_PER_HARDNESS){
 						world.destroyBlock(pos.offset(facing), true);
 					}

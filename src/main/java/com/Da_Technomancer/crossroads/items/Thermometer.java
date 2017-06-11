@@ -25,7 +25,7 @@ public class Thermometer extends Item{
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		if(worldIn.getTileEntity(pos) != null && !worldIn.isRemote && worldIn.getTileEntity(pos).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
-			playerIn.sendMessage(new TextComponentString("Temp: " + worldIn.getTileEntity(pos).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "*C"));
+			playerIn.sendMessage(new TextComponentString("Temp: " + worldIn.getTileEntity(pos).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "°C"));
 			return EnumActionResult.SUCCESS;
 		}
 		return EnumActionResult.PASS;

@@ -6,4 +6,6 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/integration/GuideAPI/Smar
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/FluidCoolingRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatExchangerRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatingCrucibleRecipe.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/items/OmniMeter.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/items/Thermometer.java=UTF-8
 encoding//src/main/resources/assets/crossroads/lang/en_US.lang=UTF-8
