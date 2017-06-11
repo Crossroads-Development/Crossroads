@@ -49,8 +49,8 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		Block fluidBlock = fluidBlockstate.getBlock();
 		//If anyone knows a builtin way to simplify this if statement, be my guest. It's so long it scares me...
 		if(FluidRegistry.lookupFluidForBlock(fluidBlock) != null && (fluidBlock instanceof BlockFluidClassic && ((BlockFluidClassic) fluidBlock).isSourceBlock(world, pos.offset(EnumFacing.DOWN)) || fluidBlockstate.getValue(BlockLiquid.LEVEL) == 0) && (content == null || (CAPACITY - content.amount >= 1000 && content.getFluid() == FluidRegistry.lookupFluidForBlock(fluidBlock)))){
-			double holder = motionData[1] < 0 ? 0 : Math.floor(motionData[1]);
-			axleHandler.addEnergy(-holder, false, false);
+			double holder = motionData[1] < 0 ? 0 : Math.min(Math.floor(motionData[1]), REQUIRED - progress);
+			motionData[1] -= holder;
 			progress += holder;
 		}else{
 			progress = 0;
