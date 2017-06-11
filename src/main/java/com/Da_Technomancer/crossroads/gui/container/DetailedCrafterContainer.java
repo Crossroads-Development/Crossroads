@@ -85,8 +85,8 @@ public class DetailedCrafterContainer extends Container{
 		if(!world.isRemote && !MiscOp.getPlayerTag(playerInv.player).hasKey("path")){
 			MiscOp.getPlayerTag(playerInv.player).setTag("path", new NBTTagCompound());
 		}
-		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscOp.getPlayerTag(playerInv.player);
-		if(nbt.getCompoundTag("path").getBoolean("technomancy")){
+		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag.getCompoundTag("path") : MiscOp.getPlayerTag(playerInv.player).getCompoundTag("path");
+		if(nbt.getBoolean("technomancy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.technomancyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
 			if(out != ItemStack.EMPTY){
@@ -97,7 +97,7 @@ public class DetailedCrafterContainer extends Container{
 			for(int i = 0; i < 9; i++){
 				inInv.decrStackSize(i, 1);
 			}
-			nbt.getCompoundTag("path").setBoolean("technomancy", true);
+			nbt.setBoolean("technomancy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
 			}
@@ -286,7 +286,7 @@ public class DetailedCrafterContainer extends Container{
 			if(!player.world.isRemote && !MiscOp.getPlayerTag(player).hasKey("path")){
 				MiscOp.getPlayerTag(player).setTag("path", new NBTTagCompound());
 			}
-			NBTTagCompound nbt = player.world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscOp.getPlayerTag(player).getCompoundTag("path");
+			NBTTagCompound nbt = player.world.isRemote ? StoreNBTToClient.clientPlayerTag.getCompoundTag("path") : MiscOp.getPlayerTag(player).getCompoundTag("path");
 			IRecipe recipe = null;
 			if(nbt.getBoolean("technomancy")){
 				recipe = findMatchingSpecialRecipe(craftMatrix, player.world, RecipeHolder.technomancyRecipes);
@@ -307,7 +307,7 @@ public class DetailedCrafterContainer extends Container{
 
 				if(!itemstack.isEmpty()){
 					craftMatrix.decrStackSize(i, 1);
-					itemstack = this.craftMatrix.getStackInSlot(i);
+					itemstack = craftMatrix.getStackInSlot(i);
 				}
 
 				if(!itemstack1.isEmpty()){
@@ -317,7 +317,7 @@ public class DetailedCrafterContainer extends Container{
 						itemstack1.grow(itemstack.getCount());
 						craftMatrix.setInventorySlotContents(i, itemstack1);
 					}else if(!player.inventory.addItemStackToInventory(itemstack1)){
-						this.player.dropItem(itemstack1, false);
+						player.dropItem(itemstack1, false);
 					}
 				}
 			}

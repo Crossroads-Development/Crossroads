@@ -29,7 +29,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 	 */
 	private float angle = 0;
 	private final double[] motionData = new double[4];
-	private final double[] physData = new double[] {520, 9.75D};
+	private final double[] physData = new double[] {520, 50D};
 
 	@Override
 	public void update(){

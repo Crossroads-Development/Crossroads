@@ -109,6 +109,6 @@ public class RotaryDrill extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
 		tooltip.add("Mass: 520");
-		tooltip.add("I: 9.75");
+		tooltip.add("I: 50");
 	}
 }
