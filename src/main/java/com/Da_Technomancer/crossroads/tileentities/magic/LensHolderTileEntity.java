@@ -75,10 +75,21 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		}
 	}
 	
+	private MagicUnit lastSentPosNBT;
+	private MagicUnit lastSentNegNBT;
+	
 	@Override
 	public void update(){
 		if(world.isRemote){
 			return;
+		}
+		if(beamer == null){
+			beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
+			beamer.setLastSent(lastSentNegNBT);
+		}
+		if(beamerUp == null){
+			beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
+			beamerUp.setLastSent(lastSentPosNBT);
 		}
 		
 		double holder = Math.max(beamer == null || beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()), beamerUp == null || beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()));
@@ -86,15 +97,6 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			lastRedstone = holder;
 			world.updateComparatorOutputLevel(pos, ModBlocks.lensHolder);
 		}
-
-		if(beamer == null){
-			beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
-		}
-		if(beamerUp == null){
-			beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
-		}
-		
-		
 	}
 	
 	private BeamManager beamer;
@@ -125,6 +127,13 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		super.writeToNBT(nbt);
 		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
 		nbt.setInteger("memTripUp", beamerUp == null ? 0 : beamerUp.getPacket());
+		nbt.setDouble("reds", lastRedstone);
+		if(beamer.getLastSent() != null){
+			beamer.getLastSent().setNBT(nbt, "beamLast");
+		}
+		if(beamerUp.getLastSent() != null){
+			beamerUp.getLastSent().setNBT(nbt, "beamLastUp");
+		}
 		return nbt;
 	}
 
@@ -133,12 +142,17 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		super.readFromNBT(nbt);
 		memTrip = nbt.getInteger("memTrip");
 		memTripUp = nbt.getInteger("memTripUp");
+		lastRedstone = nbt.getDouble("reds");
 		if(nbt.hasKey("beam")){
 			trip = BeamManager.getTriple(nbt.getInteger("beam"));
 		}
 		if(nbt.hasKey("beamUp")){
 			tripUp = BeamManager.getTriple(nbt.getInteger("beamUp"));
 		}
+		
+		//This device needs to save lastSent for the comparator/ratiator integration to work properly. 
+		lastSentNegNBT = MagicUnit.loadNBT(nbt, "beamLast");
+		lastSentPosNBT = MagicUnit.loadNBT(nbt, "beamLastUp");
 	}
 	
 	@Override

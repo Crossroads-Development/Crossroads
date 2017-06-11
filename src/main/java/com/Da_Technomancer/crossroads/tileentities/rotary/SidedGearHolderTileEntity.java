@@ -64,6 +64,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		// motionData
 		NBTTagCompound motionTags = new NBTTagCompound();
 		for(int i = 0; i < 6; i++){
+			compound.setDouble(i + "_clientW", clientW[i]);
 			for(int j = 0; j < 3; j++){
 				if(motionData[i][j] != 0)
 					motionTags.setDouble(i + "," + j + "motion", motionData[i][j]);
@@ -90,15 +91,16 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		// motionData
 		NBTTagCompound innerMot = compound.getCompoundTag("motionData");
 		for(int i = 0; i < 6; i++){
+			clientW[i] = compound.getDouble(i + "_clientW");
 			for(int j = 0; j < 4; j++){
-				this.motionData[i][j] = (innerMot.hasKey(i + "," + j + "motion")) ? innerMot.getDouble(i + "," + j + "motion") : 0;
+				motionData[i][j] = (innerMot.hasKey(i + "," + j + "motion")) ? innerMot.getDouble(i + "," + j + "motion") : 0;
 			}
 		}
 
 		// members
 		NBTTagCompound innerMemb = compound.getCompoundTag("members");
 		for(int i = 0; i < 6; i++){
-			this.members[i] = innerMemb.hasKey(i + "memb") ? GearTypes.valueOf(innerMemb.getString(i + "memb")) : null;
+			members[i] = innerMemb.hasKey(i + "memb") ? GearTypes.valueOf(innerMemb.getString(i + "memb")) : null;
 			axleHandlers[i].updateStates(false);
 		}
 	}
@@ -108,6 +110,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		NBTTagCompound nbt = super.getUpdateTag();
 		NBTTagCompound membTags = new NBTTagCompound();
 		for(int i = 0; i < 6; i++){
+			nbt.setDouble(i + "_clientW", clientW[i]);
 			if(members[i] != null){
 				membTags.setString(i + "memb", members[i].name());
 			}

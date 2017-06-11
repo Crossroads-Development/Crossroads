@@ -111,11 +111,13 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			this.motionData[j] = (innerMot.hasKey(j + "motion")) ? innerMot.getDouble(j + "motion") : 0;
 		}
 		// member
-		this.type = nbt.hasKey("memb") ? GearTypes.valueOf(nbt.getString("memb")) : null;
+		type = nbt.hasKey("memb") ? GearTypes.valueOf(nbt.getString("memb")) : null;
 		valid = true;
 		physData[0] = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D, 2);
 		physData[1] = physData[0] * 1.125D;
 		//1.125 because r*r/2 so 1.5*1.5/2
+		
+		angleW[1] = nbt.getDouble("clientW");
 	}
 
 	@Override
@@ -136,7 +138,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		}
 
 		nbt.setBoolean("new", true);
-
+		nbt.setDouble("clientW", angleW[1]);
 		return nbt;
 	}
 
@@ -147,6 +149,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			nbt.setString("memb", type.name());
 		}
 		nbt.setBoolean("new", true);
+		nbt.setDouble("clientW", angleW[1]);
 		return nbt;
 	}
 

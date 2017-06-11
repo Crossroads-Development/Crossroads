@@ -27,6 +27,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
 
@@ -111,11 +113,12 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 				motionTags.setDouble(i + "motion", motionData[i]);
 		}
 		compound.setTag("motionData", motionTags);
-
+		compound.setDouble("clientW", clientW);
 		// member
 		if(type != null){
 			compound.setString("type", type.name());
 		}
+		compound.setDouble("comp", compOut);
 
 		return compound;
 	}
@@ -127,15 +130,17 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		// motionData
 		NBTTagCompound innerMot = compound.getCompoundTag("motionData");
 		for(int i = 0; i < 4; i++){
-			this.motionData[i] = (innerMot.hasKey(i + "motion")) ? innerMot.getDouble(i + "motion") : 0;
+			motionData[i] = (innerMot.hasKey(i + "motion")) ? innerMot.getDouble(i + "motion") : 0;
 		}
 
 		//type
-		this.type = compound.hasKey("type") ? GearTypes.valueOf(compound.getString("type")) : null;
+		type = compound.hasKey("type") ? GearTypes.valueOf(compound.getString("type")) : null;
 		if(type != null){
 			physData[0] = type.getDensity() / 8D;
 			physData[1] = type.getDensity() / 64D;
 		}
+		compOut = compound.getDouble("comp");
+		clientW = compound.getDouble("clientW");
 	}
 
 	@Override
@@ -144,6 +149,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		if(type != null){
 			nbt.setString("type", type.name());
 		}
+		nbt.setDouble("clientW", clientW);
 		return nbt;
 	}
 
@@ -331,6 +337,12 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+		
+		@SideOnly(Side.CLIENT)
+		@Override
+		public double getNextAngle(){
+			return Double.isFinite(clientW) ? angle + (clientW * 9D / Math.PI) : angle;
 		}
 	}
 }

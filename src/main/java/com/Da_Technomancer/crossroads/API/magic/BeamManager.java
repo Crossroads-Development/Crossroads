@@ -24,7 +24,7 @@ public class BeamManager{
 	private final BlockPos pos;
 	
 	private BlockPos end;
-	private int dist;//This can be calculated from pos and end, But this way it doesn't require using Math.sqrt().
+	private int dist;//This can be calculated from pos and end, but this way it doesn't require using Math.sqrt().
 	private MagicUnit lastSent;
 	private MagicUnit lastFullSent;
 
@@ -109,5 +109,12 @@ public class BeamManager{
 	@Nullable
 	public MagicUnit getLastSent(){
 		return lastSent;
+	}
+	
+	/**
+	 * Use is (mostly) optional. 
+	 */
+	public void setLastSent(MagicUnit lastSentIn){
+		lastSent = lastSentIn;
 	}
 }
