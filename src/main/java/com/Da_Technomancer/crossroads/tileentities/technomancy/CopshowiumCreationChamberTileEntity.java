@@ -57,7 +57,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return facing == EnumFacing.DOWN ? (T) downHandler : (T) mainHandler;
+			return facing == EnumFacing.DOWN ? (T) downHandler : facing == EnumFacing.UP || facing == null ? (T) mainHandler : null;
 		}
 
 		if(capability == Capabilities.MAGIC_HANDLER_CAPABILITY && (facing == null || facing.getAxis() != EnumFacing.Axis.Y)){
@@ -69,7 +69,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (facing == null || facing.getAxis() == EnumFacing.Axis.Y)){
 			return true;
 		}
 		if(capability == Capabilities.MAGIC_HANDLER_CAPABILITY && (facing == null || facing.getAxis() != EnumFacing.Axis.Y)){

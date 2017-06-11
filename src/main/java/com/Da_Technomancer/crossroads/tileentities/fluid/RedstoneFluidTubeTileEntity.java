@@ -4,10 +4,13 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,6 +25,11 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 	private FluidStack content = null;
 
 	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return (oldState.getBlock() != newState.getBlock());
+	}
+
+	@Override
 	public void update(){
 		if(world.isRemote){
 			return;
@@ -29,8 +37,9 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 
 		if(world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			for(EnumFacing dir : EnumFacing.values()){
-				if(world.getTileEntity(pos.offset(dir)) != null && world.getTileEntity(pos.offset(dir)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())){
-					transfer(world.getTileEntity(pos.offset(dir)).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()));
+				TileEntity offsetTE = world.getTileEntity(pos.offset(dir));
+				if(offsetTE != null && offsetTE.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())){
+					transfer(offsetTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()));
 				}
 			}
 		}
@@ -213,5 +222,4 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 			return new FluidStack(fluid, change);
 		}
 	}
-
 }
