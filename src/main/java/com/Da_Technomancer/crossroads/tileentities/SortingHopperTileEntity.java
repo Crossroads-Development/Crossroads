@@ -327,7 +327,7 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 
 		for(int i = 0; i < hopper.getSizeInventory(); i++){
 			ItemStack stackInSlot = hopper.getStackInSlot(i);
-			if(stackInSlot != null){
+			if(!stackInSlot.isEmpty()){
 				ItemStack insert = stackInSlot.copy();
 				insert.setCount(1);
 				ItemStack newStack = ItemHandlerHelper.insertItem(handler, insert, true);
@@ -449,7 +449,7 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	private static boolean pullItemFromSlot(IHopper hopper, IInventory inventoryIn, int index, EnumFacing direction){
 		ItemStack itemstack = inventoryIn.getStackInSlot(index);
 
-		if(itemstack != null && canExtractItemFromSlot(inventoryIn, itemstack, index, direction)){
+		if(!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction)){
 			ItemStack itemstack1 = itemstack.copy();
 			ItemStack itemstack2 = putStackInInventoryAllSlots(hopper, inventoryIn.decrStackSize(index, 1), (EnumFacing) null);
 
