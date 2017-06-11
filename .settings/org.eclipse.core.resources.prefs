@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/effects/goggles/RubyGoggleEffect.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/gui/RedstoneRegistryGuiContainer.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/GuideAPI/GuideBooks.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/integration/GuideAPI/SmartEntry.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/FluidCoolingRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatExchangerRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatingCrucibleRecipe.java=UTF-8

@@ -36,7 +36,7 @@ public class SmartEntry extends EntryItemStack{
 	 * @param unlocalizedName The unlocalized name of this entry.
 	 * @param icon The ItemStack displayed on this entry in the category.
 	 * @param contents Determines what this entry contains. IPages will be stitched in, Strings will be localized, wrapped, and added (with formatting), IRecipes will be converted to a recipe page, ResourceLocations converted to an image page, Pair{@literal<String, Object[]>} will be treated as a String with the Object[] formatted in, a true boolean value will cause a page break, an Object[] will have each member interpreted in order, null or a false boolean value will be ignored, and a {@link java.util.function.Supplier}{@literal <Object>} will act as whatever is returned by the get() method.
-	 * Any time formatting is used, it should be specified as §r§(formatting character). It will last until either the next formatting code or forced page break (due to ex. recipes). It will be carried over across true values.
+	 * Any time formatting is used, it should be specified as ï¿½rï¿½(formatting character). It will last until either the next formatting code or forced page break (due to ex. recipes). It will be carried over across true values.
 	 * 
 	 * This updates its contents every time it is reopened. 
 	 */
@@ -49,7 +49,7 @@ public class SmartEntry extends EntryItemStack{
 	 * @param canSee Controls whether the player can see this entry at all. A null value means this can always be seen.
 	 * @param icon The ItemStack displayed on this entry in the category.
 	 * @param contents Determines what this entry contains. IPages will be stitched in, Strings will be localized, wrapped, and added (with formatting), IRecipes will be converted to a recipe page, ResourceLocations converted to an image page, Pair{@literal<String, Object[]>} will be treated as a String with the Object[] formatted in, a true boolean value will cause a page break, an Object[] will have each member interpreted in order, null or a false boolean value will be ignored, and a {@link java.util.function.Supplier}{@literal <Object>} will act as whatever is returned by the get() method.
-	 * Any time formatting is used, it should be specified as §r§(formatting character). It will last until either the next formatting code or forced page break (due to ex. recipes). It will be carried over across true values.
+	 * Any time formatting is used, it should be specified as Â§rÂ§(formatting character). It will last until either the next formatting code or forced page break (due to ex. recipes). It will be carried over across true values.
 	 * 
 	 * This updates its contents every time it is reopened. 
 	 */
@@ -136,7 +136,7 @@ public class SmartEntry extends EntryItemStack{
 
 	/**
 	 * Splits up a long string into pages. Uses the String active, will add a page break at each {@literal </n>}.
-	 * PageHelper doesn't work for this because of the § symbol and {@literal </n>}.
+	 * PageHelper doesn't work for this because of the ï¿½ symbol and {@literal </n>}.
 	 */
 	private void createTextPages(){
 
@@ -157,7 +157,7 @@ public class SmartEntry extends EntryItemStack{
 				}
 				
 				if(active.substring(i, i + 4).equals(pageSkip)){
-					//The .replace is to fix a bug where somehow (no clue how) some of the § symbols get turned to character 157. This turns them back.
+					//The .replace is to fix a bug where somehow (no clue how) some of the Â§ symbols get turned to character 157. This turns them back.
 					pageList.add(new PageText((format + active.substring(start, i)).replace((char) 157, symbol)));
 					((Page) pageList.get(pageList.size() - 1)).setUnicodeFlag(true);
 					format = formatTemp;
@@ -169,7 +169,7 @@ public class SmartEntry extends EntryItemStack{
 			}
 
 			if(start != i && (i == active.length() - 1 || (length >= PERPAGE && active.charAt(i) == ' '))){
-				//The .replace is to fix a bug where somehow (no clue how) some of the § symbols get turned to character 157. This turns them back.
+				//The .replace is to fix a bug where somehow (no clue how) some of the Â§ symbols get turned to character 157. This turns them back.
 				pageList.add(new PageText((format + active.substring(start, i + 1)).replace((char) 157, symbol)));
 				((Page) pageList.get(pageList.size() - 1)).setUnicodeFlag(true);
 				format = formatTemp;
@@ -177,7 +177,7 @@ public class SmartEntry extends EntryItemStack{
 				start = i + 1;
 			}else{
 				//Bold text is thicker than normal text.
-				length += formatTemp.equals("§r§l") ? 1.34D : 1;
+				length += formatTemp.equals("Â§rÂ§l") ? 1.34D : 1;
 			}
 		}
 
