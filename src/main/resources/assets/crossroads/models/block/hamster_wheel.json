@@ -3,7 +3,7 @@
 	"textures": {
 		"fur": "crossroads:model/hamster",
 		"color": "crossroads:blocks/color_sheet",
-		"particle": "crossroads:blocks/block_bronze"
+		"particle": "blocks/iron_block"
 	},
 	"elements": [
 		{
