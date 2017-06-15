@@ -59,6 +59,11 @@ public class ToggleGear extends BlockContainer{
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(this, 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.BASIC_GEARS.get(type)));
 		setSoundType(SoundType.METAL);
 	}
+	
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		neighborChanged(state, worldIn, pos, null, null);
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)

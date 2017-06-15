@@ -196,6 +196,7 @@ public class RedstoneFluidTube extends BlockContainer implements IConduitModel{
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		world.markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
+		neighborChanged(state, world, pos, null, null);
 	}
 	
 	@Override
