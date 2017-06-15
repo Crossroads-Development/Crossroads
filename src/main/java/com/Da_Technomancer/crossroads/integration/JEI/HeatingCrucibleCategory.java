@@ -77,4 +77,9 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 	public List<String> getTooltipStrings(int mouseX, int mouseY){
 		return ImmutableList.of();
 	}
+	
+	@Override
+	public String getModName(){
+		return Main.MODNAME;
+	}
 }

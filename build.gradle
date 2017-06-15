@@ -21,7 +21,7 @@ tasks.withType(JavaCompile) {
 }
 
 minecraft {
-	version = "1.11.2-13.20.0.2286"
+	version = "1.11.2-13.20.0.2315"
 	runDir = "run"
 		
 	mappings = "snapshot_20170501"
@@ -37,8 +37,8 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.11-2.1.0-51"
-	deobfCompile "mezz.jei:jei_1.11.2:4.3.3.270"
+	deobfCompile "info.amerifrance.guideapi:Guide-API:1.11.2-2.1.1-52"
+	deobfCompile "mezz.jei:jei_1.11.2:4.5.0.287"
 	deobfCompile "MineTweaker3:MineTweaker3-MC1112-Main:1.11.2-3.0.24.82"
 }
 

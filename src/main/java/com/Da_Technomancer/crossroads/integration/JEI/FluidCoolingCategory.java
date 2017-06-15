@@ -78,4 +78,8 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipe>
 		return ImmutableList.of();
 	}
 
+	@Override
+	public String getModName(){
+		return Main.MODNAME;
+	}
 }

@@ -84,4 +84,9 @@ public class HeatExchangerCategory implements IRecipeCategory<HeatExchangerRecip
 	public List<String> getTooltipStrings(int mouseX, int mouseY){
 		return ImmutableList.of();
 	}
+	
+	@Override
+	public String getModName(){
+		return Main.MODNAME;
+	}
 }

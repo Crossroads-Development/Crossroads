@@ -92,4 +92,8 @@ public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipe>{
 		return ImmutableList.of();
 	}
 
+	@Override
+	public String getModName(){
+		return Main.MODNAME;
+	}
 }

@@ -24,7 +24,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -33,7 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FluidTank extends BlockContainer{
-	
+
 	public FluidTank(){
 		super(Material.IRON);
 		String name = "fluid_tank";
@@ -82,17 +81,12 @@ public class FluidTank extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			FluidActionResult result = FluidUtil.interactWithFluidHandler(playerIn.getHeldItem(hand), worldIn.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), playerIn);
-			if(result.isSuccess()){
-				playerIn.setHeldItem(hand, result.result);
-				return true;
-			}
-			return false;
+			return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
 		}
 
 		return FluidUtil.getFluidHandler(playerIn.getHeldItem(hand)) != null;
 	}
-	
+
 	@Override
 	public int damageDropped(IBlockState state){
 		return 0;
