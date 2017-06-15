@@ -125,7 +125,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.UP)){
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).getValue(Properties.FACING)){
 			return (T) itemHandler;
 		}
 
@@ -134,7 +134,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.UP)){
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).getValue(Properties.FACING)){
 			return true;
 		}
 		return super.hasCapability(capability, facing);
