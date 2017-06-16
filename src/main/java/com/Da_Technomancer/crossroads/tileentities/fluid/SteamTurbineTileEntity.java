@@ -79,6 +79,10 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 
 		steamContent = FluidStack.loadFluidStackFromNBT(nbt);
 		waterContent = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("water"));
+		
+		for(int i = 0; i < 4; i++){
+			motionData[i] = nbt.getDouble("motion" + i);
+		}
 	}
 
 	@Override
@@ -94,6 +98,10 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 			waterContent.writeToNBT(waterHolder);
 		}
 		nbt.setTag("water", waterHolder);
+		
+		for(int i = 0; i < 4; i++){
+			nbt.setDouble("motion" + i, motionData[i]);
+		}
 		
 		return nbt;
 	}

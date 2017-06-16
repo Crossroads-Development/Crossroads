@@ -92,6 +92,9 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		super.readFromNBT(nbt);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
 		progress = nbt.getInteger("prog");
+		for(int i = 0; i < 4; i++){
+			motionData[i] = nbt.getDouble("motion" + i);
+		}
 	}
 
 	@Override
@@ -101,7 +104,9 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 			content.writeToNBT(nbt);
 		}
 		nbt.setInteger("prog", progress);
-
+		for(int i = 0; i < 4; i++){
+			nbt.setDouble("motion" + i, motionData[i]);
+		}
 		return nbt;
 	}
 

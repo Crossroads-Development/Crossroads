@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
@@ -58,6 +59,23 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 		}
 	}
 
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
+		for(int i = 0; i < 4; i++){
+			nbt.setDouble("motion" + i, motionData[i]);
+		}
+		return nbt;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
+		for(int i = 0; i < 4; i++){
+			motionData[i] = nbt.getDouble("motion" + i);
+		}
+	}
+	
 	public float getAngle(){
 		return angle;
 	}

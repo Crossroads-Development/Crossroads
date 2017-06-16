@@ -418,6 +418,7 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 				NBTTagCompound stackTag = new NBTTagCompound();
 				inventory[i].writeToNBT(stackTag);
 				nbt.setTag("inv" + i, stackTag);
+				nbt.setDouble("motion" + i, motionData[i]);
 			}
 		}
 		return nbt;
@@ -431,6 +432,7 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 			if(nbt.hasKey("inv" + i)){
 				inventory[i] = new ItemStack(nbt.getCompoundTag("inv" + i));
 			}
+			motionData[i] = nbt.getDouble("motion" + i);
 		}
 	}
 
