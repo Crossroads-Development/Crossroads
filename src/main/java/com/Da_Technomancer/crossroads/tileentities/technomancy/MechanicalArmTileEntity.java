@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmDropEntityEffec
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupBlockEffect;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupEntityEffect;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupFromInvEffect;
+import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupOneFromInvEffect;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmReleaseEntityEffect;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmUseEffect;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
@@ -42,7 +43,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	private static final double MINIMUM_UPPER_ANGLE = Math.PI / 4D;//In radians, from straight down.
 	private static final int TIERS = ModConfig.speedTiers.getInt();
 
-	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect(), new MechArmPickupFromInvEffect(), new MechArmUseEffect(), new MechArmDepositEffect(), new MechArmDropEntityEffect(), new MechArmReleaseEntityEffect()};
+	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect(), new MechArmPickupFromInvEffect(), new MechArmUseEffect(), new MechArmDepositEffect(), new MechArmDropEntityEffect(), new MechArmReleaseEntityEffect(), new MechArmPickupOneFromInvEffect()};
 
 	public double[][] motionData = new double[3][4];
 	/** In radians. */
@@ -52,7 +53,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	private static final double[] PHYS_DATA = new double[2];
 	/**
 	 * Math.min((redstone - 2) / 6, EFFECTS.length - 1) corresponds to action type, which are:
-	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Release entity with momentum.
+	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Release entity with momentum, 7: Pickup one from inventory.
 	 * EnumFacing.getFront((redstone - 2) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4) vary based on EnumFacing. 
 	 */
 	private int redstone = -1;
