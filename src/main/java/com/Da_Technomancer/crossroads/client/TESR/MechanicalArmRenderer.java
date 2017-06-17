@@ -114,4 +114,9 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}
+	
+	@Override
+	public boolean isGlobalRenderer(MechanicalArmTileEntity te){
+		return true;
+	}
 }

@@ -157,7 +157,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return (oldState.getBlock() != newState.getBlock());
+		return ModBlocks.lensHolder != newState.getBlock();
 	}
 	
 	private final IMagicHandler magicHandler = new MagicHandler(AxisDirection.NEGATIVE);
@@ -167,7 +167,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (side.getAxis() == Axis.X) == world.getBlockState(pos).getValue(Properties.ORIENT))){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (world.getBlockState(pos).getValue(Properties.ORIENT) ? side.getAxis() == Axis.X : side.getAxis() == Axis.Y))){
 			return true;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
@@ -181,8 +181,8 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (side.getAxis() == Axis.X) == world.getBlockState(pos).getValue(Properties.ORIENT))){
-			return side == null ? (T) magicHandler : side.getAxisDirection() == AxisDirection.NEGATIVE ? (T) magicHandlerNeg : (T) magicHandler;
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (world.getBlockState(pos).getValue(Properties.ORIENT) ? side.getAxis() == Axis.X : side.getAxis() == Axis.Y))){
+			return side == null || side.getAxisDirection() == AxisDirection.POSITIVE ? (T) magicHandler : (T) magicHandlerNeg;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) lensHandler;

@@ -202,11 +202,9 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		ridableID = nbt.hasKey("id_lesser") ? new UUID(nbt.getLong("id_greater"), nbt.getLong("id_lesser")) : null;
 	}
 
-	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-(LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 2), -(LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 1), -(LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 2), LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 2, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 2, LOWER_ARM_LENGTH + UPPER_ARM_LENGTH + 2);
-
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
-		return RENDER_BOX.offset(pos);
+		return INFINITE_EXTENT_AABB;
 	}
 
 	//Down: Rotation about y-axis, East: Base bar angle, West: Upper bar angle.

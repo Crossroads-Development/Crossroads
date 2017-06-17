@@ -93,7 +93,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		for(int i = 0; i < 6; i++){
 			clientW[i] = compound.getDouble(i + "_clientW");
 			for(int j = 0; j < 4; j++){
-				motionData[i][j] = (innerMot.hasKey(i + "," + j + "motion")) ? innerMot.getDouble(i + "," + j + "motion") : 0;
+				motionData[i][j] = innerMot.getDouble(i + "," + j + "motion");
 			}
 		}
 

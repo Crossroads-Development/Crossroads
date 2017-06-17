@@ -41,7 +41,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 		if(world.isRemote){
 			return;
 		}
-
+		
 		ticksExisted++;
 
 		if(!init){

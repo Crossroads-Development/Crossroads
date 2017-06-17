@@ -68,7 +68,7 @@ public class ArcaneReflector extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override

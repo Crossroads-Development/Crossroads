@@ -76,8 +76,8 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 
 		if(!world.isRemote){
 			sendWPacket();
-			if(compOut != (Math.abs(motionData[1] / physData[1])) * 15D){
-				world.updateComparatorOutputLevel(pos, this.blockType);
+			if(compOut != Math.abs(motionData[1] / physData[1]) * 15D){
+				world.updateComparatorOutputLevel(pos, blockType);
 				compOut = Math.abs(motionData[1] / physData[1]) * 15D;
 			}
 		}
@@ -103,8 +103,8 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound){
-		super.writeToNBT(compound);
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
 
 		// motionData
 		NBTTagCompound motionTags = new NBTTagCompound();
@@ -112,35 +112,35 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			if(motionData[i] != 0)
 				motionTags.setDouble(i + "motion", motionData[i]);
 		}
-		compound.setTag("motionData", motionTags);
-		compound.setDouble("clientW", clientW);
+		nbt.setTag("motionData", motionTags);
+		nbt.setDouble("clientW", clientW);
 		// member
 		if(type != null){
-			compound.setString("type", type.name());
+			nbt.setString("type", type.name());
 		}
-		compound.setDouble("comp", compOut);
+		nbt.setDouble("comp", compOut);
 
-		return compound;
+		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound){
-		super.readFromNBT(compound);
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
 
 		// motionData
-		NBTTagCompound innerMot = compound.getCompoundTag("motionData");
+		NBTTagCompound innerMot = nbt.getCompoundTag("motionData");
 		for(int i = 0; i < 4; i++){
-			motionData[i] = (innerMot.hasKey(i + "motion")) ? innerMot.getDouble(i + "motion") : 0;
+			motionData[i] = innerMot.getDouble(i + "motion");
 		}
 
 		//type
-		type = compound.hasKey("type") ? GearTypes.valueOf(compound.getString("type")) : null;
+		type = nbt.hasKey("type") ? GearTypes.valueOf(nbt.getString("type")) : null;
 		if(type != null){
 			physData[0] = type.getDensity() / 8D;
 			physData[1] = type.getDensity() / 64D;
 		}
-		compOut = compound.getDouble("comp");
-		clientW = compound.getDouble("clientW");
+		compOut = nbt.getDouble("comp");
+		clientW = nbt.getDouble("clientW");
 	}
 
 	@Override

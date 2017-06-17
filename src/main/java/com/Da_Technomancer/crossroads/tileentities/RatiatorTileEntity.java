@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +19,7 @@ public class RatiatorTileEntity extends TileEntity{
 	
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return newState.getBlock() != oldState.getBlock();
+		return newState.getBlock() != ModBlocks.ratiator;
 	}
 	
 	public double getOutput(){
