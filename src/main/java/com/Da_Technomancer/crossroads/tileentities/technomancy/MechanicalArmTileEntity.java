@@ -77,7 +77,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 			}
 		}
 
-		if(!world.isRemote){
+		if(!world.isRemote && world.getTotalWorldTime() % 2 == 0){
 			if(redstone == -1){
 				setRedstone(ModBlocks.ratiator.getPowerOnSide(world, pos, EnumFacing.NORTH, false));
 			}
@@ -153,7 +153,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	}
 
 	public void setRedstone(double redstoneIn){
-		redstone = Math.min((int) Math.round(redstoneIn), 42);
+		redstone = (int) Math.round(redstoneIn);
 	}
 
 	@Override

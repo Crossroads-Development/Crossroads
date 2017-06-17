@@ -90,21 +90,21 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		//Upper Arm
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.scale(.8D, MechanicalArmTileEntity.UPPER_ARM_LENGTH, .8D);
+		GlStateManager.scale(.8D, MechanicalArmTileEntity.UPPER_ARM_LENGTH - .375D, .8D);
 		GlStateManager.translate(0, .5D, 0);
 		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//Claw Base
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(-MechanicalArmTileEntity.UPPER_ARM_LENGTH, 0, 0);
+		GlStateManager.translate(-MechanicalArmTileEntity.UPPER_ARM_LENGTH + .375D, 0, 0);
 		GlStateManager.scale(1, .5D, 1);
 		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//Claw Prongs
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.translate(.1875D, MechanicalArmTileEntity.UPPER_ARM_LENGTH + .1875D, 0);
+		GlStateManager.translate(.1875D, MechanicalArmTileEntity.UPPER_ARM_LENGTH - .1875D, 0);
 		GlStateManager.scale(1, .25D, 1);
 		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.translate(-.375D, 0, 0);
