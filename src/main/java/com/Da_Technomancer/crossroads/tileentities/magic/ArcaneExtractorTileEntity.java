@@ -67,15 +67,15 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		}
 
 		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
-			if(!inv.isEmpty()){
-				if(RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
-					MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
-					inv.shrink(1);
-					markDirty();
-					if(beamer.emit(mag)){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					}
-				}else{
+			if(!inv.isEmpty() && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
+				MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
+				inv.shrink(1);
+				markDirty();
+				if(beamer.emit(mag)){
+					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				}
+			}else{
+				if(!inv.isEmpty()){
 					inv = ItemStack.EMPTY;
 					markDirty();
 				}
