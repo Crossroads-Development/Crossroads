@@ -67,14 +67,18 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		}
 
 		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
-			if(!inv.isEmpty() && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
-				MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
-				inv.shrink(1);
-				if(beamer.emit(mag)){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			if(!inv.isEmpty()){
+				if(RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
+					MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
+					inv.shrink(1);
+					markDirty();
+					if(beamer.emit(mag)){
+						ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					}
+				}else{
+					inv = ItemStack.EMPTY;
+					markDirty();
 				}
-			}else{
-				inv = ItemStack.EMPTY;
 				if(beamer.emit(null)){
 					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
@@ -169,7 +173,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 				}else{
 					inv.grow(limit);
 				}
-
+				markDirty();
 			}
 
 			return stack.getCount() == limit ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - limit, stack.getMetadata());

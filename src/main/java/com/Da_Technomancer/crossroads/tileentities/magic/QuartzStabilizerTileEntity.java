@@ -98,10 +98,12 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}
+			markDirty();
 		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			MagicUnit magAdd = recieved.isEmpty() ? null : recieved.getOutput().mult(Math.min(((double) (LIMIT[large ? 1 : 0] - (toSend.isEmpty() ? 0 : toSend.getOutput().getPower()))) / ((double) recieved.getOutput().getPower()), 1), false);
 			toSend.addMagic(magAdd);
 			recieved.clear();
+			markDirty();
 		}
 	}
 	
@@ -171,6 +173,9 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 		@Override
 		public void setMagic(MagicUnit mag){
 			recieved.addMagic(mag);
+			if(mag != null){
+				markDirty();
+			}
 		}
 	}
 } 

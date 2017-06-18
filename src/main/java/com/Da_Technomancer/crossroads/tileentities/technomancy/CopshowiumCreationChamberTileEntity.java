@@ -86,6 +86,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 				if(content != null){
 					if(content.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium()){
 						content = null;
+						markDirty();
 						return;
 					}
 					int power = mag.getPower();
@@ -94,6 +95,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 							content = null;
 						}else if(power >= (content.amount / 72) - 1){
 							content = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) content.amount) * EnergyConverters.COPSHOWIUM_PER_COPPER));
+							markDirty();
 							if(content.amount > CAPACITY){
 								world.setBlockState(pos, ModFluids.moltenCopshowium.getDefaultState());
 							}
@@ -113,6 +115,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 								data.nodeForces.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[0][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] -= 8 * (content.amount / 72);
 
 								content = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) content.amount) * EnergyConverters.COPSHOWIUM_PER_COPPER));
+								markDirty();
 								if(content.amount > CAPACITY){
 									world.setBlockState(pos, ModFluids.moltenCopshowium.getDefaultState());
 								}
@@ -137,6 +140,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 				if(content.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium() || resource.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium() && resource.getFluid() != content.getFluid()){
 					if(content.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium()){
 						content = null;
+						markDirty();
 					}else{
 						return resource.amount;
 					}
@@ -148,6 +152,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 
 				if(doFill && amount != 0){
 					content = new FluidStack(resource.getFluid(), amount + (content == null ? 0 : content.amount), resource.tag);
+					markDirty();
 				}
 
 				return amount;
@@ -168,6 +173,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 				if(content.amount <= 0){
 					content = null;
 				}
+				markDirty();
 			}
 
 			return new FluidStack(resource.getFluid(), amount);
@@ -187,6 +193,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 				if(content.amount <= 0){
 					content = null;
 				}
+				markDirty();
 			}
 
 			return new FluidStack(fluid, amount);
@@ -217,6 +224,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 				if(content.amount <= 0){
 					content = null;
 				}
+				markDirty();
 			}
 
 			return new FluidStack(resource.getFluid(), amount);
@@ -236,6 +244,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 				if(content.amount <= 0){
 					content = null;
 				}
+				markDirty();
 			}
 
 			return new FluidStack(fluid, amount);

@@ -29,7 +29,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -37,22 +36,22 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIntReceiver{
-	
+public class LensHolderTileEntity extends BeamRenderTE implements IIntReceiver{
+
 	private Triple<Color, Integer, Integer> trip;
 	private Triple<Color, Integer, Integer> tripUp;
-	
+
 	@Override
 	@Nullable
 	public MagicUnit[] getLastFullSent(){
 		return new MagicUnit[] {beamer == null ? null : beamer.getLastFullSent(), beamerUp == null ? null : beamerUp.getLastFullSent()};
 	}
-	
+
 	public double getRedstone(){
 		return lastRedstone;
 	}
 	private double lastRedstone;
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
@@ -74,31 +73,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			beamerUp.emit(null);
 		}
 	}
-	
-	private MagicUnit lastSentPosNBT;
-	private MagicUnit lastSentNegNBT;
-	
-	@Override
-	public void update(){
-		if(world.isRemote){
-			return;
-		}
-		if(beamer == null){
-			beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
-			beamer.setLastSent(lastSentNegNBT);
-		}
-		if(beamerUp == null){
-			beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
-			beamerUp.setLastSent(lastSentPosNBT);
-		}
-		
-		double holder = Math.max(beamer == null || beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()), beamerUp == null || beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()));
-		if(holder != lastRedstone){
-			lastRedstone = holder;
-			world.updateComparatorOutputLevel(pos, ModBlocks.lensHolder);
-		}
-	}
-	
+
 	private BeamManager beamer;
 	private BeamManager beamerUp;
 
@@ -110,7 +85,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			tripUp = BeamManager.getTriple(message);
 		}
 	}
-	
+
 	private int memTrip;
 	private int memTripUp;
 
@@ -121,19 +96,13 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		nbt.setInteger("beamUp", memTripUp);
 		return nbt;
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
 		nbt.setInteger("memTripUp", beamerUp == null ? 0 : beamerUp.getPacket());
 		nbt.setDouble("reds", lastRedstone);
-		if(beamer.getLastSent() != null){
-			beamer.getLastSent().setNBT(nbt, "beamLast");
-		}
-		if(beamerUp.getLastSent() != null){
-			beamerUp.getLastSent().setNBT(nbt, "beamLastUp");
-		}
 		return nbt;
 	}
 
@@ -149,39 +118,35 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		if(nbt.hasKey("beamUp")){
 			tripUp = BeamManager.getTriple(nbt.getInteger("beamUp"));
 		}
-		
-		//This device needs to save lastSent for the comparator/ratiator integration to work properly. 
-		lastSentNegNBT = MagicUnit.loadNBT(nbt, "beamLast");
-		lastSentPosNBT = MagicUnit.loadNBT(nbt, "beamLastUp");
 	}
-	
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return ModBlocks.lensHolder != newState.getBlock();
 	}
-	
+
 	private final IMagicHandler magicHandler = new MagicHandler(AxisDirection.NEGATIVE);
 	private final IMagicHandler magicHandlerNeg = new MagicHandler(AxisDirection.POSITIVE);
 	private final IItemHandler lensHandler = new LensHandler();
 	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (world.getBlockState(pos).getValue(Properties.ORIENT) ? side.getAxis() == Axis.X : side.getAxis() == Axis.Y))){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (world.getBlockState(pos).getValue(Properties.ORIENT) ? side.getAxis() == Axis.X : side.getAxis() == Axis.Z))){
 			return true;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
 			return true;
 		}
-		
-		
+
+
 		return super.hasCapability(cap, side);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (world.getBlockState(pos).getValue(Properties.ORIENT) ? side.getAxis() == Axis.X : side.getAxis() == Axis.Y))){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (world.getBlockState(pos).getValue(Properties.ORIENT) ? side.getAxis() == Axis.X : side.getAxis() == Axis.Z))){
 			return side == null || side.getAxisDirection() == AxisDirection.POSITIVE ? (T) magicHandler : (T) magicHandlerNeg;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
@@ -190,10 +155,10 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
 			return (T) redstoneHandler;
 		}
-		
+
 		return super.getCapability(cap, side);
 	}
-	
+
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{
 
 		@Override
@@ -201,11 +166,11 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			return read ? lastRedstone : 0;
 		}
 	}
-	
+
 	private class MagicHandler implements IMagicHandler{
 
 		private final AxisDirection dir;
-		
+
 		private MagicHandler(AxisDirection dir){
 			this.dir = dir;
 		}
@@ -213,14 +178,21 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 		@Override
 		public void setMagic(MagicUnit mag){
 			if(beamer == null || beamerUp == null){
-				return;
+				beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
+				beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
 			}
+
 			if(mag != null && mag.getVoid() != 0 && world.getBlockState(pos).getValue(Properties.TEXTURE_7) != 0){
-				world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
+				world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.TEXTURE_7, 0));
 				(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag);
+				double holder = Math.max(beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()), beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()));
+				if(holder != lastRedstone){
+					lastRedstone = holder;
+				}
+				markDirty();
 				return;
 			}
-			
+
 			switch(world.getBlockState(pos).getValue(Properties.TEXTURE_7)){
 				case 0:
 					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
@@ -261,9 +233,14 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 					}
 					break;
 			}
+			double holder = Math.max(beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()), beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()));
+			if(holder != lastRedstone){
+				lastRedstone = holder;
+			}
+			markDirty();
 		}
 	}
-	
+
 	private class LensHandler implements IItemHandler{
 
 		private ItemStack getLens(){
@@ -284,7 +261,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 					return ItemStack.EMPTY;
 			}
 		}
-		
+
 		@Override
 		public int getSlots(){
 			return 1;
@@ -300,11 +277,12 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			if(slot != 0 || !getLens().isEmpty() || stack.isEmpty() || (stack.getItem() != Items.DIAMOND && stack.getItem() != Items.EMERALD && stack.getItem() != ModItems.pureQuartz && stack.getItem() != OreSetUp.gemRuby)){
 				return stack;
 			}
-			
+
 			if(!simulate){
 				world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == Items.DIAMOND ? 3 : 1));
+				markDirty();
 			}
-			
+
 			return stack.getCount() - 1 <= 0 ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - 1);
 		}
 
@@ -316,6 +294,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements ITickable, IIn
 			ItemStack holder = getLens();
 			if(!simulate){
 				world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
+				markDirty();
 			}
 			return holder;
 		}

@@ -65,9 +65,10 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		NBTTagCompound motionTags = new NBTTagCompound();
 		for(int i = 0; i < 6; i++){
 			compound.setDouble(i + "_clientW", clientW[i]);
-			for(int j = 0; j < 3; j++){
-				if(motionData[i][j] != 0)
+			for(int j = 0; j < 4; j++){
+				if(motionData[i][j] != 0){
 					motionTags.setDouble(i + "," + j + "motion", motionData[i][j]);
+				}
 			}
 		}
 		compound.setTag("motionData", motionTags);

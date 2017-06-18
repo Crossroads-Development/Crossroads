@@ -29,15 +29,22 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 	private Triple<Color, Integer, Integer> tripUp;
 	private BeamManager beamer;
 	private BeamManager beamerUp;
-	
-	public int redstone;
-	
+
+	private int redstone;
+
+	public void setRedstone(int redstone){
+		if(this.redstone != redstone){
+			this.redstone = redstone;
+			markDirty();
+		}
+	}
+
 	@Override
 	@Nullable
 	public MagicUnit[] getLastFullSent(){
 		return new MagicUnit[] {beamer == null ? null : beamer.getLastFullSent(), beamerUp == null ? null : beamerUp.getLastFullSent()};
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
@@ -89,9 +96,11 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamUp", beamerUp.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
+			markDirty();
 		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
+			markDirty();
 		}
 	}
 
@@ -103,31 +112,31 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 			tripUp = BeamManager.getTriple(message);
 		}
 	}
-	
+
 	private final IMagicHandler magicHandler = new MagicHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != EnumFacing.UP && side != EnumFacing.DOWN){
 			return true;
 		}
-		
+
 		return super.hasCapability(cap, side);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != EnumFacing.UP && side != EnumFacing.DOWN){
 			return (T) magicHandler;
 		}
-		
+
 		return super.getCapability(cap, side);
 	}
 
 	private int memTrip;
 	private int memTripUp;
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
@@ -135,7 +144,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 		nbt.setInteger("beamUp", memTripUp);
 		return nbt;
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -146,7 +155,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 		nbt.setInteger("reds", redstone);
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -160,15 +169,18 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 		}
 		redstone = nbt.getInteger("reds");
 	}
-	
+
 	private MagicUnitStorage recieved = new MagicUnitStorage();
 	private MagicUnitStorage toSend = new MagicUnitStorage();
-	
+
 	private class MagicHandler implements IMagicHandler{
 
 		@Override
 		public void setMagic(MagicUnit mag){
 			recieved.addMagic(mag);
+			if(mag != null){
+				markDirty();
+			}
 		}
 	}
 } 

@@ -105,6 +105,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					magStor.clear();
+					markDirty();
 					return;
 				}
 				magStor.clear();
@@ -114,6 +115,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 					if(beamer.emit(out)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((beamer.getDist() - 1) << 24) + (beamer.getLastSent().getRGB().getRGB() & 16777215), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
+					markDirty();
 				}
 			}
 		}

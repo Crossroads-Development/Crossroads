@@ -87,9 +87,11 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamUp", beamerUp.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
+			markDirty();
 		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
+			markDirty();
 		}
 	}
 
@@ -165,6 +167,9 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 		@Override
 		public void setMagic(MagicUnit mag){
 			recieved.addMagic(mag);
+			if(mag != null){
+				markDirty();
+			}
 		}
 	}
 } 

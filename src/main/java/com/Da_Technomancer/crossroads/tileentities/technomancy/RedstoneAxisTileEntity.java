@@ -64,7 +64,7 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 		availableEnergy -= cost;
 		
 		for(IAxleHandler gear : rotaryMembers){
-			double newEnergy = 0;
+			double newEnergy;
 
 			// set w
 			gear.getMotionData()[0] = gear.getRotationRatio() * baseSpeed;
@@ -101,7 +101,7 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 
 	private int lastKey = 0;
 	private boolean forceUpdate;
-	private static final int updateTime = ModConfig.gearResetTime.getInt();
+	private static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
 	
 	@Override
 	public void update(){
@@ -111,13 +111,13 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 
 		ticksExisted++;
 
-		if(ticksExisted % updateTime == 20 || forceUpdate){
+		if(ticksExisted % UPDATE_TIME == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
 		
 		forceUpdate = CommonProxy.masterKey != lastKey;
 
-		if(ticksExisted % updateTime == 20){
+		if(ticksExisted % UPDATE_TIME == 20){
 			for(IAxleHandler gear : rotaryMembers){
 				gear.resetAngle();
 			}
