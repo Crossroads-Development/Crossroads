@@ -27,21 +27,21 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickable, IIntReceiver{
-	
+
 	private Triple<Color, Integer, Integer> tripR;
 	private Triple<Color, Integer, Integer> tripG;
 	private Triple<Color, Integer, Integer> tripB;
-	
+
 	private BeamManager beamerR;
 	private BeamManager beamerG;
 	private BeamManager beamerB;
-	
+
 	@Override
 	@Nullable
 	public MagicUnit[] getLastFullSent(){
 		return new MagicUnit[] {beamerR == null ? null : beamerR.getLastFullSent(), beamerG == null ? null : beamerG.getLastFullSent(), beamerB == null ? null : beamerB.getLastFullSent()};
 	}
-	
+
 	@Override
 	public void refresh(){
 		if(beamerR != null){
@@ -54,7 +54,7 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 			beamerB.emit(null);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
@@ -68,12 +68,14 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 		return out;
 	}
 
+	private boolean primed;
+	
 	@Override
 	public void update(){
 		if(world.isRemote){
 			return;
 		}
-		
+
 		if(beamerR == null){
 			beamerR = new BeamManager(world.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y).getOpposite(), pos, world);
 		}
@@ -84,10 +86,10 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 			beamerB = new BeamManager(world.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y), pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
 
 			MagicUnit out = toSend.getOutput();
-			
+
 			if(beamerR.emit(out == null || out.getEnergy() == 0 ? null : out.mult(1, 0, 0, 0, false)) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamR", beamerR.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
@@ -98,10 +100,12 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamB", beamerB.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
+			primed = false;
 			markDirty();
 		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
+			primed = true;
 			markDirty();
 		}
 	}
@@ -122,11 +126,11 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 				break;
 		}
 	}
-	
+
 	private int memTripR;
 	private int memTripG;
 	private int memTripB;
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
@@ -135,7 +139,7 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 		nbt.setInteger("beamB", memTripB);
 		return nbt;
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -144,9 +148,10 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 		nbt.setInteger("memTripR", beamerR == null ? 0 : beamerR.getPacket());
 		nbt.setInteger("memTripG", beamerG == null ? 0 : beamerG.getPacket());
 		nbt.setInteger("memTripB", beamerB == null ? 0 : beamerB.getPacket());
+		nbt.setBoolean("primed", primed);
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -160,34 +165,35 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 			tripG = BeamManager.getTriple(nbt.getInteger("beamG"));
 			tripB = BeamManager.getTriple(nbt.getInteger("beamB"));
 		}
+		primed = nbt.getBoolean("primed");
 	}
-	
+
 	private final IMagicHandler magicHandler = new MagicHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
 			return true;
 		}
-		
+
 		return super.hasCapability(cap, side);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
 			return (T) magicHandler;
 		}
-		
+
 		return super.getCapability(cap, side);
 	}
-	
+
 	private MagicUnitStorage recieved = new MagicUnitStorage();
 	private MagicUnitStorage toSend = new MagicUnitStorage();
-	
+
 	private class MagicHandler implements IMagicHandler{
-		
+
 		@Override
 		public void setMagic(MagicUnit mag){
 			recieved.addMagic(mag);

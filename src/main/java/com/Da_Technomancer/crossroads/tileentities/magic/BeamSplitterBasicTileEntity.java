@@ -55,6 +55,8 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 		}
 	}
 
+	private boolean primed;
+	
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -68,7 +70,7 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 			beamerUp = new BeamManager(EnumFacing.UP, pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
 			MagicUnit out = toSend.getOutput();
 			MagicUnit outMult = out == null ? null : out.mult(.5D, false);
 			if(outMult == null || outMult.getPower() == 0){
@@ -87,10 +89,12 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamUp", beamerUp.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
+			primed = false;
 			markDirty();
 		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
+			primed = true;
 			markDirty();
 		}
 	}
@@ -143,6 +147,7 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 		toSend.writeToNBT("sen", nbt);
 		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
 		nbt.setInteger("memTripUp", beamerUp == null ? 0 : beamerUp.getPacket());
+		nbt.setBoolean("primed", primed);
 		return nbt;
 	}
 	
@@ -157,6 +162,7 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 			trip = BeamManager.getTriple(nbt.getInteger("beam"));
 			tripUp = BeamManager.getTriple(nbt.getInteger("beamUp"));
 		}
+		primed = nbt.getBoolean("primed");
 	}
 	
 	private MagicUnitStorage recieved = new MagicUnitStorage();

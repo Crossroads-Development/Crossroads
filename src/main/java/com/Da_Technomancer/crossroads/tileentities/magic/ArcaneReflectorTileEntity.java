@@ -54,7 +54,8 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 	}
 
 	private EnumFacing facing;
-
+	private boolean primed;
+	
 	@Override
 	public void update(){
 		if(facing == null){
@@ -69,15 +70,17 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 			beamer = new BeamManager(facing, pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
 			if(beamer.emit(toSend.getOutput()) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
 				ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
+			primed = false;
 			markDirty();
 		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
+			primed = true;
 			markDirty();
 		}
 	}
@@ -125,6 +128,7 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 		recieved.writeToNBT("rec", nbt);
 		toSend.writeToNBT("sen", nbt);
 		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
+		nbt.setBoolean("primed", primed);
 		return nbt;
 	}
 
@@ -137,12 +141,14 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 		if(nbt.hasKey("beam")){
 			trip = BeamManager.getTriple(nbt.getInteger("beam"));
 		}
+		primed = nbt.getBoolean("primed");
 	}
 
 	private MagicUnitStorage recieved = new MagicUnitStorage();
 	private MagicUnitStorage toSend = new MagicUnitStorage();
 
 	private class MagicHandler implements IMagicHandler{
+
 		@Override
 		public void setMagic(MagicUnit mag){
 			recieved.addMagic(mag);

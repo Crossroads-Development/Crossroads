@@ -110,11 +110,4 @@ public class BeamManager{
 	public MagicUnit getLastSent(){
 		return lastSent;
 	}
-	
-	/**
-	 * Use is (mostly) optional. 
-	 */
-	public void setLastSent(MagicUnit lastSentIn){
-		lastSent = lastSentIn;
-	}
 }

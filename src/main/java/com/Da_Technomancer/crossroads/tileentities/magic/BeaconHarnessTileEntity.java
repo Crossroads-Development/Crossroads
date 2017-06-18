@@ -81,6 +81,8 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 		}
 	}
 	
+	private boolean primed;
+	
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -91,7 +93,9 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 			beamer = new BeamManager(EnumFacing.UP, pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
+			primed = false;
+			markDirty();
 			if(running){
 				++cycles;
 				cycles %= 120;
@@ -104,20 +108,25 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 					if(beamer.emit(null)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
+					
 					magStor.clear();
-					markDirty();
 					return;
 				}
 				magStor.clear();
 				if(cycles >= 0){
 					MagicUnit out = new MagicUnit(col.getRed(), col.getGreen(), col.getBlue(), 0);
 					out = out.mult(512D / ((double) out.getPower()), false);
+					
 					if(beamer.emit(out)){
 						ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((beamer.getDist() - 1) << 24) + (beamer.getLastSent().getRGB().getRGB() & 16777215), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
-					markDirty();
 				}
 			}
+		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+			magStor.addMagic(magIn.getOutput());
+			magIn.clear();
+			primed = true;
+			markDirty();
 		}
 	}
 
@@ -150,8 +159,12 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 		nbt.setBoolean("run", running);
 		nbt.setInteger("cycle", cycles);
 		if(magStor != null){
-			magStor.writeToNBT(null, nbt);
+			magStor.writeToNBT("stor", nbt);
 		}
+		if(magIn != null){
+			magIn.writeToNBT("in", nbt);
+		}
+		nbt.setBoolean("primed", primed);
 		return nbt;
 	}
 	
@@ -160,8 +173,10 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 		super.readFromNBT(nbt);
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInteger("cycle");
-		magStor = MagicUnitStorage.readFromNBT(null, nbt);
+		magStor = MagicUnitStorage.readFromNBT("stor", nbt);
+		magIn = MagicUnitStorage.readFromNBT("in", nbt);
 		inBeam = nbt.getBoolean("runC") ? Triple.of(Color.WHITE, 2, 1) : null;
+		primed = nbt.getBoolean("primed");
 	}
 	
 	private final IMagicHandler magicHandler = new MagicHandler();
@@ -185,12 +200,13 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 	}
 
 	private MagicUnitStorage magStor = new MagicUnitStorage();
+	private MagicUnitStorage magIn = new MagicUnitStorage();
 	
 	private class MagicHandler implements IMagicHandler{
 
 		@Override
 		public void setMagic(MagicUnit mag){
-			magStor.addMagic(mag);
+			magIn.addMagic(mag);
 		}
 	}
 }

@@ -186,9 +186,7 @@ public class LensHolderTileEntity extends BeamRenderTE implements IIntReceiver{
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.TEXTURE_7, 0));
 				(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag);
 				double holder = Math.max(beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()), beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()));
-				if(holder != lastRedstone){
-					lastRedstone = holder;
-				}
+				lastRedstone = holder;
 				markDirty();
 				return;
 			}
@@ -233,10 +231,8 @@ public class LensHolderTileEntity extends BeamRenderTE implements IIntReceiver{
 					}
 					break;
 			}
-			double holder = Math.max(beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()), beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()));
-			if(holder != lastRedstone){
-				lastRedstone = holder;
-			}
+
+			lastRedstone = Math.max(beamer.getLastSent() == null ? 0 : beamer.getLastSent().getPower(), beamerUp.getLastSent() == null ? 0 : beamerUp.getLastSent().getPower());
 			markDirty();
 		}
 	}

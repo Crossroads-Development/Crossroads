@@ -31,13 +31,13 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 	private Triple<Color, Integer, Integer> tripUp;
 	private BeamManager beamer;
 	private BeamManager beamerUp;
-	
+
 	@Override
 	@Nullable
 	public MagicUnit[] getLastFullSent(){
 		return new MagicUnit[] {beamer == null ? null : beamer.getLastFullSent(), beamerUp == null ? null : beamerUp.getLastFullSent()};
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
@@ -57,6 +57,8 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 		}
 	}
 
+	private boolean primed;
+	
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -70,7 +72,7 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 			beamerUp = new BeamManager(EnumFacing.UP, pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
 			MagicUnit out = toSend.getOutput();
 			EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
 			TileEntity te = world.getTileEntity(pos.offset(facing));
@@ -92,10 +94,12 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 				ModPackets.network.sendToAllAround(new SendIntToClient("beamUp", beamerUp.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
+			primed = false;
 			markDirty();
 		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
+			primed = true;
 			markDirty();
 		}
 	}
@@ -108,31 +112,31 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 			tripUp = BeamManager.getTriple(message);
 		}
 	}
-	
+
 	private final IMagicHandler magicHandler = new MagicHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != EnumFacing.UP && side != EnumFacing.DOWN){
 			return true;
 		}
-		
+
 		return super.hasCapability(cap, side);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != EnumFacing.UP && side != EnumFacing.DOWN){
 			return (T) magicHandler;
 		}
-		
+
 		return super.getCapability(cap, side);
 	}
 
 	private int memTrip;
 	private int memTripUp;
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
@@ -140,7 +144,7 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 		nbt.setInteger("beamUp", memTripUp);
 		return nbt;
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -148,9 +152,10 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 		toSend.writeToNBT("sen", nbt);
 		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
 		nbt.setInteger("memTripUp", beamerUp == null ? 0 : beamerUp.getPacket());
+		nbt.setBoolean("primed", primed);
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -162,11 +167,12 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 			trip = BeamManager.getTriple(nbt.getInteger("beam"));
 			tripUp = BeamManager.getTriple(nbt.getInteger("beamUp"));
 		}
+		primed = nbt.getBoolean("primed");
 	}
-	
+
 	private MagicUnitStorage recieved = new MagicUnitStorage();
 	private MagicUnitStorage toSend = new MagicUnitStorage();
-	
+
 	private class MagicHandler implements IMagicHandler{
 
 		@Override
@@ -177,4 +183,4 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 			}
 		}
 	}
-} 
+}

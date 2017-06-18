@@ -28,9 +28,9 @@ public class RatiatorTileEntity extends TileEntity{
 	
 	public void setOutput(double outputIn){
 		if(output != outputIn){
+			output = outputIn;
 			markDirty();
 		}
-		output = outputIn;
 	}
 	
 	@Override
