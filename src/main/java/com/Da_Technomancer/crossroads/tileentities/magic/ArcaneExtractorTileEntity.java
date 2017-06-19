@@ -72,7 +72,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 				inv.shrink(1);
 				markDirty();
 				if(beamer.emit(mag)){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendIntToClient(0, beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}else{
 				if(!inv.isEmpty()){
@@ -80,7 +80,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 					markDirty();
 				}
 				if(beamer.emit(null)){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendIntToClient(0, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}
 		}
@@ -89,8 +89,8 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 	private BeamManager beamer;
 
 	@Override
-	public void receiveInt(String context, int message, EntityPlayerMP player){
-		if(context.equals("beam")){
+	public void receiveInt(int identifier, int message, EntityPlayerMP player){
+		if(identifier == 0){
 			visual = BeamManager.getTriple(message);
 		}
 	}

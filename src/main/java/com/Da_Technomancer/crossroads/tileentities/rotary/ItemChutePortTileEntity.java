@@ -17,8 +17,6 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -175,17 +173,6 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public void resetAngle(){
-
-		}
-
-		@SideOnly(Side.CLIENT)
-		@Override
-		public double getAngle(){
-			return 0;
-		}
-
-		@Override
 		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
 			if(allowInvert && absolute){
 				motionData[1] += energy;
@@ -210,6 +197,11 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return false;
 		}
 	}
 

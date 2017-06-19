@@ -15,7 +15,7 @@ public final class ModConfig{
 	public static Property genTinOre;
 	public static Property genRubyOre;
 	public static Property genNativeCopperOre;
-	public static Property speedTiers;
+	public static Property speedPrecision;
 	public static Property weatherControl;
 	public static Property rotateBeam;
 	public static Property retrogen;
@@ -57,7 +57,7 @@ public final class ModConfig{
 		genRubyOre = config.get(CAT_ORES, "Generate Ruby Ore?", true);
 		genNativeCopperOre = config.get(CAT_ORES, "Generate Native Copper Ore?", true);
 		retrogen = config.get(CAT_ORES, "Retrogen Key", "", "Changing this value will cause retrogen. Leaving it blank disables retrogen. TURN THIS OFF WHEN YOU ARE DONE!");
-		speedTiers = config.get(CAT_INTERNAL, "Speed Tiers", 50, "Higher value means smoother gear rotation and less clipping, but more packets sent AKA lag. (Range 1-1000, Default 50)", 1, 1000);
+		speedPrecision = config.get(CAT_INTERNAL, "Speed Precision", .02F, "Lower value means smoother gear rotation and less clipping, but more packets sent AKA lag. (Range 0.0-1.0, Default .02)", 0F, 1F);
 		SYNCED_PROPERTIES.add(weatherControl = config.get(CAT_MISC, "Enable rain idol? (Default true)", true));
 		rotateBeam = config.get(CAT_MISC, "Rotate Beams", true, "Should magic beams rotate? (Default true)");
 		SYNCED_PROPERTIES.add(heatEffects = config.get(CAT_MISC, "Cable Overheat Effects", true, "If false, all heat cable overheating effects are replaced with burning (Default true)"));
@@ -74,7 +74,7 @@ public final class ModConfig{
 		fieldLinesPotential = config.get(CAT_TECHNOMANCY, "Draw potential fields with lines (True: lines, False: planes)? (Default false)", false);
 		disableSlaves = config.get(CAT_INTERNAL, "If you are crashing from StackOverflow errors and you either have a tiny amount of RAM or built an insanely large & complicated rotary setup, then set this to true, destroy the setup, and set this to false. Also maybe send me a picture of the setup.", false);
 		registerOres = config.get(CAT_ORES, "Register OreDictionary for copper/tin/bronze? (Default true)", true, "Disabling this will make Crossroads copper/tin/bronze completely useless. The recipes will need copper/tin/bronze from other mods. Don't ask me why you'd want this.");
-		gearResetTime = config.get(CAT_INTERNAL, "Gear Reset Time", 300, "Interval in ticks between gear network checks and visual angle resets. (Range 100-2400, Default 300)", 100, 2400);
+		gearResetTime = config.get(CAT_INTERNAL, "Gear Reset Time", 300, "Interval in ticks between gear network checks. (Range 100-2400, Default 300)", 100, 2400);
 		wipeInvalidMappings = config.get(CAT_INTERNAL, "Wipe internal per player dimension mappings on failure? (Default false)", false, "Only use this if needed, as the mappings between players and technomancy workspace dimensions will be lost. If doing this, delete the files for those dimensions. Also, make a backup of the world file before setting this to true.");
 		blockedPrototype = config.get(CAT_TECHNOMANCY, "Blocks disallowed to be used in prototypes. Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'.", new String[] {Main.MODID + ":large_gear_slave", Main.MODID + ":large_gear_master", Main.MODID + ":prototype", "minecraft:portal", "rftools:matter_transmitter", "bloodmagic:blockteleposer"}, "Use to prevent exploits, bugs, travel to the prototype dimension, griefing, and other naughty things. Also, most modded multiblocks should be blocked to prevent bugs.");
 		SYNCED_PROPERTIES.add(allowPrototype = config.get(CAT_TECHNOMANCY, "Restrictions on prototyping. (Default 0)", 0, "-1: Prototyping is disabled. May block large amounts of the mod. 0: Default value. 1: Prototyping destroys the template structure the prototype was made from instead of copying the template. (prevents unintended dupe exploits). 2: Prototyping works as normal, except prototype blocks themselves cannot be placed, only used within other compatable devices (such as the watch).", -1, 2));

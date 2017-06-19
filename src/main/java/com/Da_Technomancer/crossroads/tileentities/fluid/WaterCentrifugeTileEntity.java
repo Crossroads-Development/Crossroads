@@ -20,8 +20,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -158,17 +156,6 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public void resetAngle(){
-
-		}
-
-		@SideOnly(Side.CLIENT)
-		@Override
-		public double getAngle(){
-			return 0;
-		}
-
-		@Override
 		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
 			if(allowInvert && absolute){
 				motionData[1] += energy;
@@ -193,6 +180,11 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return false;
 		}
 	}
 

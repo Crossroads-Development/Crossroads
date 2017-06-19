@@ -34,5 +34,6 @@ public class ModPackets{
 		network.registerMessage(SendPlayerTickCountToClient.class, SendPlayerTickCountToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendDoubleArrayToServer.class, SendDoubleArrayToServer.class, packetId++, Side.SERVER);
 		network.registerMessage(SendDoubleArrayToClient.class, SendDoubleArrayToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendSpinToClient.class, SendSpinToClient.class, packetId++, Side.CLIENT);
 	}
 }

@@ -91,13 +91,13 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 			MagicUnit out = toSend.getOutput();
 
 			if(beamerR.emit(out == null || out.getEnergy() == 0 ? null : out.mult(1, 0, 0, 0, false)) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamR", beamerR.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient(0, beamerR.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			if(beamerG.emit(out == null || out.getPotential() == 0 ? null : out.mult(0, 1, 0, 0, false)) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamG", beamerG.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient(1, beamerG.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			if(beamerB.emit(out == null || out.getStability() == 0 ? null : out.mult(0, 0, 1, 0, false)) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamB", beamerB.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient(2, beamerB.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
 			primed = false;
@@ -111,15 +111,15 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 	}
 
 	@Override
-	public void receiveInt(String context, int message, EntityPlayerMP player){
-		switch(context){
-			case "beamR":
+	public void receiveInt(int identifier, int message, EntityPlayerMP player){
+		switch(identifier){
+			case 0:
 				tripR = BeamManager.getTriple(message);
 				break;
-			case "beamG":
+			case 1:
 				tripG = BeamManager.getTriple(message);
 				break;
-			case "beamB":
+			case 2:
 				tripB = BeamManager.getTriple(message);
 				break;
 			default:

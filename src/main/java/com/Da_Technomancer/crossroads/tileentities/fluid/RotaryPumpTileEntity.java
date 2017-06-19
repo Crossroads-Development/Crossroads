@@ -27,8 +27,6 @@ import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntReceiver{
 
@@ -63,7 +61,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		}
 
 		if(lastProgress != progress){
-			SendIntToClient msg = new SendIntToClient("prog", progress, pos);
+			SendIntToClient msg = new SendIntToClient(0, progress, pos);
 			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			lastProgress = progress;
 		}
@@ -77,13 +75,9 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	}
 
 	@Override
-	public void receiveInt(String context, int message, EntityPlayerMP player){
-		switch(context){
-			case "prog":
-				progress = message;
-				break;
-			default:
-				return;
+	public void receiveInt(int identifier, int message, EntityPlayerMP player){
+		if(identifier == 0){
+			progress = message;
 		}
 	}
 
@@ -169,17 +163,6 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		}
 
 		@Override
-		public void resetAngle(){
-
-		}
-
-		@SideOnly(Side.CLIENT)
-		@Override
-		public double getAngle(){
-			return 0;
-		}
-
-		@Override
 		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
 			if(allowInvert && absolute){
 				motionData[1] += energy;
@@ -204,6 +187,11 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return false;
 		}
 	}
 

@@ -33,24 +33,38 @@ public interface IAxleHandler{
 	
 	public double getRotationRatio();
 
-	public void resetAngle();
+	/**
+	 * Resets the angle based on sign of the rotation ratio (small gears go to 0 degrees if positive or 22.5 if negative). Use is optional.
+	 */
+	public default void resetAngle(){
+		
+	}
 
 	/**
-	 * To be used for rendering.
+	 * @return The angle of this axle in degrees. Use is optional. 
 	 */
-	@SideOnly(Side.CLIENT)
-	public double getAngle();
+	public default float getAngle(){
+		return 0;
+	}
+	
+	/**
+	 * Use is optional. 
+	 * @param angleIn Sets the angle value. 
+	 */
+	public default void setAngle(float angleIn){
+		
+	}
 	
 	/**
 	 * To be used for rendering with partial ticks. Use of this is completely optional. If it is used, then it should return a prediction for the next angle value (usually found by assuming the speed is constant).
 	 */
 	@SideOnly(Side.CLIENT)
-	public default double getNextAngle(){
+	public default float getNextAngle(){
 		return getAngle();
 	}
 
 	/**
-	 * negative value decreases energy. For non-gears (or axises) affecting the
+	 * negative value decreases energy. For non-gears (or axes) affecting the
 	 * network absolute controls whether the change is relative or absolute (to
 	 * spin direction)
 	 */
@@ -61,4 +75,23 @@ public interface IAxleHandler{
 	 * Used to markDirty() in tile entities. 
 	 */
 	public void markChanged();
+	
+	/**
+	 * @return The angular velocity the client is using to calculate angle. Use is optional. 
+	 */
+	public default float getClientW(){
+		return 0;
+	}
+	
+	/**
+	 * Synchronizes the angle and angular velocity to the client. Use is optional.
+	 */
+	public default void syncAngle(){
+		
+	}
+	
+	/**
+	 * @return Whether the Master Axis should keep the angle and clientW synchronized to client. If true, this should implement syncAngle, getAngle, setAngle, resetAngle, and getClientW. 
+	 */
+	public boolean shouldManageAngle();
 }

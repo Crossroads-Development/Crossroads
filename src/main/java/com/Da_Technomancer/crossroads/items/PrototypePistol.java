@@ -375,17 +375,6 @@ public class PrototypePistol extends MagicUsingItem{
 			}
 
 			@Override
-			public void resetAngle(){
-
-			}
-
-			@SideOnly(Side.CLIENT)
-			@Override
-			public double getAngle(){
-				return 0;
-			}
-
-			@Override
 			public void addEnergy(double energy, boolean allowInvert, boolean absolute){
 				if(allowInvert && absolute){
 					motionData[1] += energy;
@@ -412,6 +401,11 @@ public class PrototypePistol extends MagicUsingItem{
 				//markDirty();
 				//Storing the energy long term in this case is difficult. It could be done through nbt, but then there is a risk of gaining energy.
 				//Instead, this just loses all stored energy between loads. It should be a small amount in any case.
+			}
+
+			@Override
+			public boolean shouldManageAngle(){
+				return false;
 			}
 		}
 	}

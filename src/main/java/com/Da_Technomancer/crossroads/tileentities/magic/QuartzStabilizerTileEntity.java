@@ -93,11 +93,11 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 				MagicUnit mag = toSend.getOutput().mult(mult, true);
 				toSend.subtractMagic(mag);
 				if(beamer.emit(mag) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendIntToClient(0, beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}else{
 				if(beamer.emit(null) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-					ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendIntToClient(0, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}
 			primed = false;
@@ -114,8 +114,8 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 	private BeamManager beamer;
 
 	@Override
-	public void receiveInt(String context, int message, EntityPlayerMP player){
-		if(context.equals("beam")){
+	public void receiveInt(int identifier, int message, EntityPlayerMP player){
+		if(identifier == 0){
 			trip = BeamManager.getTriple(message);
 		}
 	}

@@ -2,15 +2,13 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
@@ -30,13 +28,13 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
+public class ToggleGearTileEntity extends TileEntity implements ITickable, ISpinReceiver{
 
 	private GearTypes type;
 	private double[] motionData = new double[4];
 	private double[] physData = new double[2];
-	private double angle;
-	private double clientW;
+	private float angle;
+	private float clientW;
 	private double compOut = 0;
 
 	public ToggleGearTileEntity(){
@@ -54,8 +52,6 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		return type;
 	}
 
-	private final int tiers = ModConfig.speedTiers.getInt();
-
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return oldState.getBlock() != newState.getBlock();
@@ -64,40 +60,14 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 	@Override
 	public void update(){
 		if(world.isRemote){
-			if(clientW == Double.POSITIVE_INFINITY){
-				angle = 0;
-			}else if(clientW == Double.NEGATIVE_INFINITY){
-				angle = 22.5;
-			}else{
-				// it's 9 / PI instead of 180 / PI because 20 ticks/second
-				angle += clientW * 9D / Math.PI;
-			}
+			// it's 9 / PI instead of 180 / PI because 20 ticks/second
+			angle += clientW * 9D / Math.PI;
 		}
 
 		if(!world.isRemote){
-			sendWPacket();
 			if(compOut != Math.abs(motionData[1] / physData[1]) * 15D){
 				world.updateComparatorOutputLevel(pos, blockType);
 				compOut = Math.abs(motionData[1] / physData[1]) * 15D;
-			}
-		}
-	}
-
-	private void sendWPacket(){
-		boolean flag = false;
-		if(clientW == Double.POSITIVE_INFINITY || clientW == Double.NEGATIVE_INFINITY){
-			flag = true;
-		}else if(MiscOp.tiersRound(motionData[0], tiers) != clientW){
-			flag = true;
-			clientW = MiscOp.tiersRound(motionData[0], tiers);
-		}
-
-		if(flag){
-			SendDoubleToClient msg = new SendDoubleToClient("w", clientW, pos);
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-
-			if(clientW == Double.POSITIVE_INFINITY || clientW == Double.NEGATIVE_INFINITY){
-				clientW = 0;
 			}
 		}
 	}
@@ -113,7 +83,8 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 				motionTags.setDouble(i + "motion", motionData[i]);
 		}
 		nbt.setTag("motionData", motionTags);
-		nbt.setDouble("clientW", clientW);
+		nbt.setFloat("clientW", clientW);
+		nbt.setFloat("angle", angle);
 		// member
 		if(type != null){
 			nbt.setString("type", type.name());
@@ -140,7 +111,8 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 			physData[1] = type.getDensity() / 64D;
 		}
 		compOut = nbt.getDouble("comp");
-		clientW = nbt.getDouble("clientW");
+		clientW = nbt.getFloat("clientW");
+		angle = nbt.getFloat("angle");
 	}
 
 	@Override
@@ -149,14 +121,16 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		if(type != null){
 			nbt.setString("type", type.name());
 		}
-		nbt.setDouble("clientW", clientW);
+		nbt.setFloat("clientW", clientW);
+		nbt.setFloat("angle", angle);
 		return nbt;
 	}
 
 	@Override
-	public void receiveDouble(String context, double message){
-		if(context.equals("w")){
-			clientW = message;
+	public void receiveSpin(int identifier, float clientW, float angle){
+		if(identifier == 0){
+			this.clientW = clientW;
+			this.angle = Math.abs(angle - this.angle) > 15F ? angle : this.angle;
 		}
 	}
 
@@ -298,12 +272,15 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		@Override
 		public void resetAngle(){
 			if(!world.isRemote){
-				clientW = (Math.signum(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
+				clientW = 0;
+				angle = Math.signum(rotRatio) == -1 ? 22.5F : 0F;
+				SendSpinToClient msg = new SendSpinToClient(0, clientW, angle, pos);
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 
 		@Override
-		public double getAngle(){
+		public float getAngle(){
 			return angle;
 		}
 
@@ -338,11 +315,33 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, IDoub
 		public void markChanged(){
 			markDirty();
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		@Override
-		public double getNextAngle(){
-			return Double.isFinite(clientW) ? angle + (clientW * 9D / Math.PI) : angle;
+		public float getNextAngle(){
+			return angle + (clientW * 9F / (float) Math.PI);
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return true;
+		}
+
+		@Override
+		public void setAngle(float angleIn){
+			angle = angleIn;
+		}
+
+		@Override
+		public float getClientW(){
+			return clientW;
+		}
+
+		@Override
+		public void syncAngle(){
+			clientW = (float) motionData[0];
+			SendSpinToClient msg = new SendSpinToClient(0, clientW, angle, pos);
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 }

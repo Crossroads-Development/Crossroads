@@ -142,9 +142,23 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		currentElement = nbt.hasKey("elem") ? MagicElements.valueOf(nbt.getString("elem")) : null;
 	}
 
+	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+
+	private void runAngleCalc(){
+		for(IAxleHandler axle : rotaryMembers){
+			if(axle.shouldManageAngle()){
+				float axleSpeed = ((float) axle.getMotionData()[0]);
+				axle.setAngle(axle.getAngle() + (axleSpeed * 9F / (float) Math.PI));
+				if(Math.abs(axleSpeed - axle.getClientW()) >= CLIENT_SPEED_MARGIN){
+					axle.syncAngle();
+				}
+			}
+		}
+	}
+
 	private int lastKey = 0;
 	private boolean forceUpdate;
-	private static final int updateTime = ModConfig.gearResetTime.getInt();
+	private static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
 
 	@Override
 	public void update(){
@@ -154,17 +168,11 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 
 		ticksExisted++;
 
-		if(ticksExisted % updateTime == 20 || forceUpdate){
+		if(ticksExisted % UPDATE_TIME == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
 
 		forceUpdate = CommonProxy.masterKey != lastKey;
-
-		if(ticksExisted % updateTime == 20){
-			for(IAxleHandler gear : rotaryMembers){
-				gear.resetAngle();
-			}
-		}
 
 		lastKey = CommonProxy.masterKey;
 
@@ -176,6 +184,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 
 		if(!locked && !rotaryMembers.isEmpty()){
 			runCalc();
+			runAngleCalc();
 			triggerSlaves();
 		}
 	}
@@ -275,7 +284,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 				world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
-				for(IAxleHandler gear : rotaryMembers){
+				for(IAxleHandler gear : memberCopy){
 					gear.resetAngle();
 				}
 			}

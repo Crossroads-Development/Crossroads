@@ -11,9 +11,9 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
@@ -31,7 +31,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class MultiplicationAxisTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
+public class MultiplicationAxisTileEntity extends TileEntity implements ITickable, ISpinReceiver{
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
 
@@ -56,17 +56,19 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	}
 	
 	@Override
-	public void receiveDouble(String context, double message){
-		if(context.equals("one")){
-			lastInOne = message;
-		}else if(context.equals("two")){
-			lastInTwo = message;
+	public void receiveSpin(int identifier, float clientW, float angle){
+		//No point in syncing angle. 
+		
+		if(identifier == 0){
+			lastInOne = clientW;
+		}else if(identifier == 1){
+			lastInTwo = clientW;
 		}
 	}
 	
 	//On the server side these serve as a record of what was sent to the client, but on the client this is the received data for rendering. 
-	public double lastInOne;
-	public double lastInTwo;
+	public float lastInOne;
+	public float lastInTwo;
 	public double angleOne;
 	public double angleTwo;
 	public double angleThree;
@@ -124,13 +126,29 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 		if(facing.getAxisDirection() == AxisDirection.NEGATIVE){
 			inOne *= -1D;
 		}
-		if(MiscOp.tiersRound(inOne, ModConfig.speedTiers.getInt()) != lastInOne){
-			lastInOne = MiscOp.tiersRound(inOne, ModConfig.speedTiers.getInt());
-			ModPackets.network.sendToAllAround(new SendDoubleToClient("one", lastInOne, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		if(Math.abs(inOne - lastInOne) >= CLIENT_SPEED_MARGIN){
+			lastInOne = (float) inOne;
+			ModPackets.network.sendToAllAround(new SendSpinToClient(1, lastInOne, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
-		if(MiscOp.tiersRound(inTwo, ModConfig.speedTiers.getInt()) != lastInTwo){
-			lastInTwo = MiscOp.tiersRound(inTwo, ModConfig.speedTiers.getInt());
-			ModPackets.network.sendToAllAround(new SendDoubleToClient("two", lastInTwo, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		if(Math.abs(inTwo - lastInTwo) >= CLIENT_SPEED_MARGIN){
+			lastInTwo = (float) inTwo;
+			ModPackets.network.sendToAllAround(new SendSpinToClient(1, lastInTwo, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		}
+		
+		runAngleCalc();
+	}
+	
+	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+
+	private void runAngleCalc(){
+		for(IAxleHandler axle : rotaryMembers){
+			if(axle.shouldManageAngle()){
+				float axleSpeed = ((float) axle.getMotionData()[0]);
+				axle.setAngle(axle.getAngle() + (axleSpeed * 9F / (float) Math.PI));
+				if(Math.abs(axleSpeed - axle.getClientW()) >= CLIENT_SPEED_MARGIN){
+					axle.syncAngle();
+				}
+			}
 		}
 	}
 
@@ -138,8 +156,8 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("facing", facing.getIndex());
-		nbt.setDouble("lastOne", lastInOne);
-		nbt.setDouble("lastTwo", lastInTwo);
+		nbt.setFloat("lastOne", lastInOne);
+		nbt.setFloat("lastTwo", lastInTwo);
 		return nbt;
 	}
 
@@ -147,15 +165,15 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
-		lastInOne = nbt.getDouble("lastOne");
-		lastInTwo = nbt.getDouble("lastTwo");
+		lastInOne = nbt.getFloat("lastOne");
+		lastInTwo = nbt.getFloat("lastTwo");
 	}
 	
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
-		nbt.setDouble("lastOne", lastInOne);
-		nbt.setDouble("lastTwo", lastInTwo);
+		nbt.setFloat("lastOne", lastInOne);
+		nbt.setFloat("lastTwo", lastInTwo);
 		return nbt;
 	}
 
@@ -181,12 +199,6 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 		}
 
 		forceUpdate = CommonProxy.masterKey != lastKey;
-
-		if(ticksExisted % UPDATE_TIME == 20){
-			for(IAxleHandler gear : rotaryMembers){
-				gear.resetAngle();
-			}
-		}
 
 		lastKey = CommonProxy.masterKey;
 	}
@@ -311,7 +323,7 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 				world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
-				for(IAxleHandler gear : rotaryMembers){
+				for(IAxleHandler gear : memberCopy){
 					gear.resetAngle();
 				}
 			}

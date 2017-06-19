@@ -2,13 +2,11 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 
@@ -19,54 +17,32 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class AxleTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
+public class AxleTileEntity extends TileEntity implements ITickable, ISpinReceiver{
 
-	private final int tiers = ModConfig.speedTiers.getInt();
 	private double[] motionData = new double[4];
 	private double[] physData = {125, .25D};
-	private double angle;
-	private double clientW;
-	
+	private float angle;
+	private float clientW;
+
 	@Override
 	public void update(){
 		if(world.isRemote){
-			if(clientW == Double.POSITIVE_INFINITY){
-				angle = 0;
-			}else if(clientW == Double.NEGATIVE_INFINITY){
-				angle = 22.5;
-			}else{
-				// it's 9 / PI instead of 180 / PI because 20 ticks/second
-				angle += clientW * 9D / Math.PI;
-			}
-		}
-
-		if(!world.isRemote){
-			sendWPacket();
-		}
-	}
-
-	private void sendWPacket(){
-		boolean flag = false;
-		if(clientW == Double.POSITIVE_INFINITY || clientW == Double.NEGATIVE_INFINITY){
-			flag = true;
-		}else if(MiscOp.tiersRound(motionData[0], tiers) != clientW){
-			flag = true;
-			clientW = MiscOp.tiersRound(motionData[0], tiers);
-		}
-
-		if(flag){
-			SendDoubleToClient msg = new SendDoubleToClient("w", clientW, pos);
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-
-			if(clientW == Double.POSITIVE_INFINITY || clientW == Double.NEGATIVE_INFINITY){
-				clientW = 0;
-			}
+			// it's 9 / PI instead of 180 / PI because 20 ticks/second
+			angle += clientW * 9D / Math.PI;
 		}
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound){
-		super.writeToNBT(compound);
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setFloat("clientW", clientW);
+		nbt.setFloat("angle", angle);
+		return nbt;
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
 
 		// motionData
 		NBTTagCompound motionTags = new NBTTagCompound();
@@ -74,31 +50,37 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 			if(motionData[i] != 0)
 				motionTags.setDouble(i + "motion", motionData[i]);
 		}
-		compound.setTag("motionData", motionTags);
+		nbt.setTag("motionData", motionTags);
 
-		return compound;
+		nbt.setFloat("clientW", clientW);
+		nbt.setFloat("angle", angle);
+		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound){
-		super.readFromNBT(compound);
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
 
 		// motionData
-		NBTTagCompound innerMot = compound.getCompoundTag("motionData");
+		NBTTagCompound innerMot = nbt.getCompoundTag("motionData");
 		for(int i = 0; i < 4; i++){
 			this.motionData[i] = (innerMot.hasKey(i + "motion")) ? innerMot.getDouble(i + "motion") : 0;
 		}
+
+		clientW = nbt.getFloat("clientW");
+		angle = nbt.getFloat("angle");
 	}
 
 	@Override
-	public void receiveDouble(String context, double message){
-		if(context.equals("w")){
-			clientW = message;
+	public void receiveSpin(int identifier, float clientW, float angle){
+		if(identifier == 0){
+			this.clientW = clientW;
+			this.angle = Math.abs(angle - this.angle) > 15F ? angle : this.angle;
 		}
 	}
 
 	private final IAxleHandler axleHandler = new AxleHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing != null && facing.getAxis() == world.getBlockState(pos).getValue(Properties.AXIS)){
@@ -153,25 +135,37 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 
 			EnumFacing endPos = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.AXIS));
 			EnumFacing endNeg = endPos.getOpposite();
-			
-			if(world.getTileEntity(pos.offset(endPos)) != null && world.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endNeg)){
-				world.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endNeg).trigger(masterIn, key);
-			}
-			if(world.getTileEntity(pos.offset(endNeg)) != null && world.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos)){
-				world.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos).trigger(masterIn, key);
-			}
-			if(world.getTileEntity(pos.offset(endPos)) != null && world.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endNeg)){
-				masterIn.addAxisToList(world.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endNeg), endNeg);
-			}
-			if(world.getTileEntity(pos.offset(endNeg)) != null && world.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endPos)){
-				masterIn.addAxisToList(world.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endPos), endPos);
+
+			TileEntity posTE = world.getTileEntity(pos.offset(endPos));
+
+			if(posTE != null){
+				if(posTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endNeg)){
+					posTE.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endNeg).trigger(masterIn, key);
+				}
+
+				if(posTE.hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endNeg)){
+					masterIn.addAxisToList(posTE.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endNeg), endNeg);
+				}
+
+				if(posTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endNeg)){
+					posTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endNeg).propogate(masterIn, key, rotRatio, 0);
+				}
 			}
 
-			if(world.getTileEntity(pos.offset(endNeg)) != null && world.getTileEntity(pos.offset(endNeg)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endPos)){
-				world.getTileEntity(pos.offset(endNeg)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endPos).propogate(masterIn, key, rotRatio, 0);
-			}
-			if(world.getTileEntity(pos.offset(endPos)) != null && world.getTileEntity(pos.offset(endPos)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endNeg)){
-				world.getTileEntity(pos.offset(endPos)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endNeg).propogate(masterIn, key, rotRatio, 0);
+			TileEntity negTE = world.getTileEntity(pos.offset(endPos));
+
+			if(negTE != null){
+				if(negTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos)){
+					negTE.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos).trigger(masterIn, key);
+				}
+
+				if(negTE.hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endPos)){
+					masterIn.addAxisToList(negTE.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, endPos), endPos);
+				}
+
+				if(negTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endPos)){
+					negTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, endPos).propogate(masterIn, key, rotRatio, 0);
+				}
 			}
 		}
 
@@ -183,12 +177,15 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 		@Override
 		public void resetAngle(){
 			if(!world.isRemote){
-				clientW = (Math.signum(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
+				clientW = 0;
+				angle = Math.signum(rotRatio) == -1 ? 22.5F : 0F;
+				SendSpinToClient msg = new SendSpinToClient(0, clientW, angle, pos);
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 
 		@Override
-		public double getAngle(){
+		public float getAngle(){
 			return angle;
 		}
 
@@ -222,6 +219,28 @@ public class AxleTileEntity extends TileEntity implements ITickable, IDoubleRece
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return true;
+		}
+
+		@Override
+		public void setAngle(float angleIn){
+			angle = angleIn;
+		}
+
+		@Override
+		public float getClientW(){
+			return clientW;
+		}
+
+		@Override
+		public void syncAngle(){
+			clientW = (float) motionData[0];
+			SendSpinToClient msg = new SendSpinToClient(0, clientW, angle, pos);
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 }

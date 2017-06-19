@@ -9,18 +9,21 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 @SuppressWarnings("serial")
-public class SendIntToClient extends Message<SendIntToClient>{
+public class SendSpinToClient extends Message<SendSpinToClient>{
 
-	public SendIntToClient(){
+	public SendSpinToClient(){
+
 	}
 
 	public int identifier;
-	public int message;
+	public float clientW;
+	public float angle;
 	public BlockPos pos;
 
-	public SendIntToClient(int identifier, int message, BlockPos pos){
+	public SendSpinToClient(int identifier, float clientW, float angle, BlockPos pos){
 		this.identifier = identifier;
-		this.message = message;
+		this.clientW = clientW;
+		this.angle = angle;
 		this.pos = pos;
 	}
 
@@ -32,24 +35,17 @@ public class SendIntToClient extends Message<SendIntToClient>{
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
-		final WorldClient worldClient = minecraft.world;
+		WorldClient worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
+			@Override
 			public void run(){
-				processMessage(worldClient, identifier, message, pos);
+				TileEntity te = worldClient.getTileEntity(pos);
+				if(te instanceof ISpinReceiver){
+					((ISpinReceiver) te).receiveSpin(identifier, clientW, angle);
+				}
 			}
 		});
 
 		return null;
-	}
-
-	public void processMessage(WorldClient worldClient, int identifier, int message, BlockPos pos){
-		if(worldClient == null){
-			return;
-		}
-		TileEntity te = worldClient.getTileEntity(pos);
-
-		if(te instanceof IIntReceiver){
-			((IIntReceiver) te).receiveInt(identifier, message, null);
-		}
 	}
 }

@@ -83,6 +83,22 @@ public class ArcSinAxisTileEntity extends TileEntity implements ITickable{
 		if(downTE != null && downTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
 			downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
 		}
+		
+		runAngleCalc();
+	}
+	
+	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+	
+	private void runAngleCalc(){
+		for(IAxleHandler axle : rotaryMembers){
+			if(axle.shouldManageAngle()){
+				float axleSpeed = ((float) axle.getMotionData()[0]);
+				axle.setAngle(axle.getAngle() + (axleSpeed * 9F / (float) Math.PI));
+				if(Math.abs(axleSpeed - axle.getClientW()) >= CLIENT_SPEED_MARGIN){
+					axle.syncAngle();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -101,7 +117,7 @@ public class ArcSinAxisTileEntity extends TileEntity implements ITickable{
 
 	private int lastKey = 0;
 	private boolean forceUpdate;
-	private static final int updateTime = ModConfig.gearResetTime.getInt();
+	private static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
 
 	@Override
 	public void update(){
@@ -111,17 +127,11 @@ public class ArcSinAxisTileEntity extends TileEntity implements ITickable{
 
 		ticksExisted++;
 
-		if(ticksExisted % updateTime == 20 || forceUpdate){
+		if(ticksExisted % UPDATE_TIME == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
 
 		forceUpdate = CommonProxy.masterKey != lastKey;
-
-		if(ticksExisted % updateTime == 20){
-			for(IAxleHandler gear : rotaryMembers){
-				gear.resetAngle();
-			}
-		}
 
 		lastKey = CommonProxy.masterKey;
 	}

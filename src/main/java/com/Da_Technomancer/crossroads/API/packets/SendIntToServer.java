@@ -16,13 +16,13 @@ public class SendIntToServer extends Message<SendIntToServer>{
 		
 	}
 
-	public String sContext;
+	public int identifier;
 	public int message;
 	public BlockPos pos;
 	public int dim;
 	
-	public SendIntToServer(String context, int message, BlockPos pos, int dim){
-		this.sContext = context;
+	public SendIntToServer(int identifier, int message, BlockPos pos, int dim){
+		this.identifier = identifier;
 		this.message = message;
 		this.pos = pos;
 		this.dim = dim;
@@ -38,18 +38,18 @@ public class SendIntToServer extends Message<SendIntToServer>{
 		DimensionManager.getWorld(dim).addScheduledTask(new Runnable(){
 			@Override
 			public void run(){
-				processMessage(DimensionManager.getWorld(dim), sContext, message, pos, context.getServerHandler().player);
+				processMessage(DimensionManager.getWorld(dim), identifier, message, pos, context.getServerHandler().player);
 			}
 		});
 
 		return null;
 	}
 
-	public void processMessage(World world, String context, int message, BlockPos pos, EntityPlayerMP sendingPlayer){
+	public void processMessage(World world, int identifier, int message, BlockPos pos, EntityPlayerMP sendingPlayer){
 		TileEntity te = world.getTileEntity(pos);
 
 		if(te instanceof IIntReceiver){
-			((IIntReceiver) te).receiveInt(context, message, sendingPlayer);
+			((IIntReceiver) te).receiveInt(identifier, message, sendingPlayer);
 		}
 	}
 }

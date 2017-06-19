@@ -41,19 +41,19 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 		super();
 		facing = facingIn;
 	}
-	
+
 	private void runCalc(){
 		FieldWorldSavedData data = FieldWorldSavedData.get(world);
 		double baseSpeed = data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos))) ? EnergyConverters.SPEED_PER_FLUX * data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[0][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] : 0;
-		
+
 		double sumIRot = 0;
 		sumEnergy = 0;
-		
+
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
 			sumEnergy += Math.signum(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(1.001D, -Math.abs(gear.getMotionData()[0]));
 		}
-		
+
 		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
 		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));
 		double availableEnergy = Math.abs(sumEnergy) + Math.abs(backTE != null && backTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] : 0);
@@ -62,7 +62,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 			cost = 0;
 		}
 		availableEnergy -= cost;
-		
+
 		for(IAxleHandler gear : rotaryMembers){
 			double newEnergy = 0;
 
@@ -76,12 +76,28 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
-			
+
 			gear.markChanged();
 		}
-		
+
 		if(backTE != null && backTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
 			backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1], 1);
+		}
+
+		runAngleCalc();
+	}
+
+	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+
+	private void runAngleCalc(){
+		for(IAxleHandler axle : rotaryMembers){
+			if(axle.shouldManageAngle()){
+				float axleSpeed = ((float) axle.getMotionData()[0]);
+				axle.setAngle(axle.getAngle() + (axleSpeed * 9F / (float) Math.PI));
+				if(Math.abs(axleSpeed - axle.getClientW()) >= CLIENT_SPEED_MARGIN){
+					axle.syncAngle();
+				}
+			}
 		}
 	}
 
@@ -89,7 +105,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("facing", this.facing.getIndex());
-		
+
 		return nbt;
 	}
 
@@ -101,8 +117,8 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 
 	private int lastKey = 0;
 	private boolean forceUpdate;
-	private static final int updateTime = ModConfig.gearResetTime.getInt();
-	
+	private static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -111,18 +127,12 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 
 		ticksExisted++;
 
-		if(ticksExisted % updateTime == 20 || forceUpdate){
+		if(ticksExisted % UPDATE_TIME == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
-		
+
 		forceUpdate = CommonProxy.masterKey != lastKey;
 
-		if(ticksExisted % updateTime == 20){
-			for(IAxleHandler gear : rotaryMembers){
-				gear.resetAngle();
-			}
-		}
-		
 		lastKey = CommonProxy.masterKey;
 
 		if(!locked && !rotaryMembers.isEmpty()){
@@ -130,7 +140,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 			triggerSlaves();
 		}
 	}
-	
+
 	private void triggerSlaves(){
 		HashSet<Pair<ISlaveAxisHandler, EnumFacing>> toRemove = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
 		for(Pair<ISlaveAxisHandler, EnumFacing> slave : slaves){
@@ -142,9 +152,9 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 		}
 		slaves.removeAll(toRemove);
 	}
-	
-private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
-	
+
+	private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
@@ -152,9 +162,9 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 		}
 		return super.hasCapability(cap, side);
 	}
-	
+
 	private final IAxisHandler handler = new AxisHandler();
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
@@ -163,7 +173,7 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 		}
 		return super.getCapability(cap, side);
 	}
-	
+
 	private class AxisHandler implements IAxisHandler{
 
 		@Override
@@ -193,11 +203,11 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 					keyNew = (byte) (rand.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
-				
+
 				world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
-				for(IAxleHandler gear : rotaryMembers){
+				for(IAxleHandler gear : memberCopy){
 					gear.resetAngle();
 				}
 			}
@@ -228,12 +238,12 @@ private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<
 				return true;
 			}
 		}
-		
+
 		@Override
 		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
 			slaves.add(Pair.of(handler, side));
 		}
-		
+
 		@Override
 		public double getTotalEnergy(){
 			return sumEnergy;

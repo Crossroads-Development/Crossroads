@@ -10,9 +10,9 @@ import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
@@ -28,7 +28,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
+public class AdditionAxisTileEntity extends TileEntity implements ITickable, ISpinReceiver{
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
 
@@ -48,21 +48,23 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 	}
 
 	@Override
-	public void receiveDouble(String context, double message){
-		if(context.equals("one")){
-			lastInPos = message;
-		}else if(context.equals("two")){
-			lastInNeg = message;
+	public void receiveSpin(int identifier, float clientW, float angle){
+		//No point synchronizing angle. 
+
+		if(identifier == 0){
+			lastInPos = clientW;
+		}else if(identifier == 1){
+			lastInNeg = clientW;
 		}
 	}
-	
+
 	//On the server side these serve as a record of what was sent to the client, but on the client this is the received data for rendering. 
-	public double lastInPos;
-	public double lastInNeg;
+	public float lastInPos;
+	public float lastInNeg;
 	public double angleOne;
 	public double angleTwo;
 	public double angleThree;
-	
+
 	private void runCalc(){
 		TileEntity posTE = world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis)));
 		double inPos = posTE != null && posTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)) ? posTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis)).getMotionData()[0] : 0;
@@ -72,7 +74,7 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 			inNeg *= -1D;
 		}
 		double baseSpeed = inPos + inNeg;
-		
+
 		double sumIRot = 0;
 		sumEnergy = 0;
 
@@ -85,9 +87,9 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 		}
 
 		cost += sumIRot * Math.pow(baseSpeed, 2) / 2D;
-		
+
 		TileEntity downTE = world.getTileEntity(pos.offset(EnumFacing.DOWN));
-		
+
 		double availableEnergy = Math.abs(sumEnergy) + Math.abs(downTE != null && downTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) ? downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] : 0);
 		if(availableEnergy - cost < 0){
 			baseSpeed = 0;
@@ -108,24 +110,26 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
-			
+
 			gear.markChanged();
 		}
 
 		if(downTE != null && downTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
 			downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
 		}
-		
+
 		inPos *= -1D;
-		
-		if(MiscOp.tiersRound(inPos, ModConfig.speedTiers.getInt()) != lastInPos){
-			lastInPos = MiscOp.tiersRound(inPos, ModConfig.speedTiers.getInt());
-			ModPackets.network.sendToAllAround(new SendDoubleToClient("one", lastInPos, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+
+		if(Math.abs(lastInPos - inPos) >= CLIENT_SPEED_MARGIN){
+			lastInPos = (float) inPos;
+			ModPackets.network.sendToAllAround(new SendSpinToClient(0, lastInPos, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
-		if(MiscOp.tiersRound(inNeg, ModConfig.speedTiers.getInt()) != lastInNeg){
-			lastInNeg = MiscOp.tiersRound(inNeg, ModConfig.speedTiers.getInt());
-			ModPackets.network.sendToAllAround(new SendDoubleToClient("two", lastInNeg, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		if(Math.abs(inNeg - lastInNeg) >= CLIENT_SPEED_MARGIN){
+			lastInNeg = (float) inNeg;
+			ModPackets.network.sendToAllAround(new SendSpinToClient(1, lastInNeg, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
+
+		runAngleCalc();
 	}
 
 	@Override
@@ -144,8 +148,22 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 
 	private int lastKey = 0;
 	private boolean forceUpdate;
-	private static final int updateTime = ModConfig.gearResetTime.getInt();
-	
+	private static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
+
+	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+
+	private void runAngleCalc(){
+		for(IAxleHandler axle : rotaryMembers){
+			if(axle.shouldManageAngle()){
+				float axleSpeed = ((float) axle.getMotionData()[0]);
+				axle.setAngle(axle.getAngle() + (axleSpeed * 9F / (float) Math.PI));
+				if(Math.abs(axleSpeed - axle.getClientW()) >= CLIENT_SPEED_MARGIN){
+					axle.syncAngle();
+				}
+			}
+		}
+	}
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -157,17 +175,11 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 
 		ticksExisted++;
 
-		if(ticksExisted % updateTime == 20 || forceUpdate){
+		if(ticksExisted % UPDATE_TIME == 20 || forceUpdate){
 			handler.requestUpdate();
 		}
 
 		forceUpdate = CommonProxy.masterKey != lastKey;
-
-		if(ticksExisted % updateTime == 20){
-			for(IAxleHandler gear : rotaryMembers){
-				gear.resetAngle();
-			}
-		}
 
 		lastKey = CommonProxy.masterKey;
 	}
@@ -293,7 +305,7 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, IDo
 				world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).propogate(this, key, 0, 0);
 			}
 			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
-				for(IAxleHandler gear : rotaryMembers){
+				for(IAxleHandler gear : memberCopy){
 					gear.resetAngle();
 				}
 			}

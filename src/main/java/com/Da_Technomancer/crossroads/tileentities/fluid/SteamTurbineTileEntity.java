@@ -175,17 +175,6 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public void resetAngle(){
-
-		}
-
-		@SideOnly(Side.CLIENT)
-		@Override
-		public double getAngle(){
-			return 0;
-		}
-
-		@Override
 		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
 			if(allowInvert && absolute){
 				motionData[1] += energy;
@@ -210,6 +199,11 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return false;
 		}
 	}
 	

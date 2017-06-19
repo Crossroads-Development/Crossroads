@@ -16,7 +16,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ModelGearIcositetragon{
 
-	//These contain trigonometry, so I don't want to calculate them every frame.
+	//These contain trigonometry, so shouldn't be calculated every frame.
 	//In some cases, these are going to be used in place of cos in order to store fewer variables. cos(X) = sin(90 - X), so this is allowed. 
 	private final double buffer = Math.pow(10, -3) * 3D;
 	private final double radius = 11F / 24F;
@@ -39,7 +39,7 @@ public class ModelGearIcositetragon{
 		double bottom = -.5F;
 
 		float extend = 25F / 48F;
-		float topProng = -.380F;
+		float topProng = -.376F;
 		float bottomProng = -.495F;
 		float widthProng = 1F / 48F;
 

@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.IMechArmEffect;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmDepositEffect;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmDropEntityEffect;
@@ -14,9 +13,9 @@ import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupFromInvEf
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupOneFromInvEffect;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmReleaseEntityEffect;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmUseEffect;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -33,7 +32,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class MechanicalArmTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
+public class MechanicalArmTileEntity extends TileEntity implements ITickable, ISpinReceiver{
 
 	public static final double LOWER_ARM_LENGTH = 3;
 	public static final double UPPER_ARM_LENGTH = 5;
@@ -41,7 +40,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	private static final double MINIMUM_LOWER_ANGLE = Math.PI / 6D;//In radians, from horizontal.
 	private static final double MAXIMUM_UPPER_ANGLE = .75D * Math.PI;//In radians, from straight down.
 	private static final double MINIMUM_UPPER_ANGLE = Math.PI / 4D;//In radians, from straight down.
-	private static final int TIERS = ModConfig.speedTiers.getInt();
+	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
 
 	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect(), new MechArmPickupFromInvEffect(), new MechArmUseEffect(), new MechArmDepositEffect(), new MechArmDropEntityEffect(), new MechArmReleaseEntityEffect(), new MechArmPickupOneFromInvEffect()};
 
@@ -68,11 +67,10 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 
 		if(!world.isRemote){
 			for(int i = 0; i < 3; i++){
-				if(MiscOp.tiersRound(motionData[i][0], TIERS) != speedRecord[i]){
-					speedRecord[i] = MiscOp.tiersRound(motionData[i][0], TIERS);
-					ModPackets.network.sendToAllAround(new SendDoubleToClient("w" + i, speedRecord[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					//The exact angle is of such importance to this device that it is synced in full each time the speed is synced. 
-					ModPackets.network.sendToAllAround(new SendDoubleToClient("a" + i, angle[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				if(Math.abs(motionData[i][0] - speedRecord[i]) >= CLIENT_SPEED_MARGIN){
+					speedRecord[i] = CLIENT_SPEED_MARGIN;
+
+					ModPackets.network.sendToAllAround(new SendSpinToClient(i, (float) speedRecord[i], (float) angle[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}
 		}
@@ -105,7 +103,10 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 				angle[0] = 0;
 				angle[1] = MAXIMUM_LOWER_ANGLE;
 				angle[2] = MINIMUM_UPPER_ANGLE;
-				ModPackets.network.sendToAllAround(new SendDoubleToClient("a_reset", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+
+				ModPackets.network.sendToAllAround(new SendSpinToClient(0, (float) speedRecord[0], (float) angle[0], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendSpinToClient(1, (float) speedRecord[1], (float) angle[1], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendSpinToClient(2, (float) speedRecord[2], (float) angle[2], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}else if(redstone != 0){
 				actionType = Math.min((redstone - 2) / 6, EFFECTS.length - 1);
 			}
@@ -134,21 +135,10 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	}
 
 	@Override
-	public void receiveDouble(String context, double message){
-		char char0 = context.charAt(0);
-		char char1 = context.charAt(1);
-		if(char0 == 'w'){
-			int i = char1 == '0' ? 0 : char1 == '1' ? 1 : 2;
-			motionData[i][0] = message;
-		}else if(char0 == 'a'){
-			if(context.equals("a_reset")){
-				angle[0] = 0;
-				angle[1] = MAXIMUM_LOWER_ANGLE;
-				angle[2] = MINIMUM_UPPER_ANGLE;
-				return;
-			}
-			int i = char1 == '0' ? 0 : char1 == '1' ? 1 : 2;
-			angle[i] = message;
+	public void receiveSpin(int identifier, float clientW, float angle){
+		if(identifier > -1 && identifier < 3){
+			motionData[identifier][0] = clientW;
+			this.angle[identifier] = angle;
 		}
 	}
 
@@ -278,8 +268,8 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		}
 
 		@Override
-		public double getAngle(){
-			return angle[index];
+		public float getAngle(){
+			return (float) angle[index];
 		}
 
 		@Override
@@ -307,6 +297,11 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return false;
 		}
 	}
 }

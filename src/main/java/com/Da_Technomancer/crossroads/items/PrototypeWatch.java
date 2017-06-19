@@ -356,17 +356,6 @@ public class PrototypeWatch extends MagicUsingItem{
 			}
 
 			@Override
-			public void resetAngle(){
-
-			}
-
-			@SideOnly(Side.CLIENT)
-			@Override
-			public double getAngle(){
-				return 0;
-			}
-
-			@Override
 			public void addEnergy(double energy, boolean allowInvert, boolean absolute){
 				if(allowInvert && absolute){
 					motionData[1] += energy;
@@ -391,6 +380,11 @@ public class PrototypeWatch extends MagicUsingItem{
 			@Override
 			public void markChanged(){
 
+			}
+
+			@Override
+			public boolean shouldManageAngle(){
+				return false;
 			}
 		}
 	}

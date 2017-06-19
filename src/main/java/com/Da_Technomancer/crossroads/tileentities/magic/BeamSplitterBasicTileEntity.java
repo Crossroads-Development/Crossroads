@@ -83,10 +83,10 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 				}
 			}
 			if(beamer.emit(outMult) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beam", beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient(0, beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			if(beamerUp.emit(out) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-				ModPackets.network.sendToAllAround(new SendIntToClient("beamUp", beamerUp.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient(1, beamerUp.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
 			primed = false;
@@ -100,10 +100,10 @@ public class BeamSplitterBasicTileEntity extends BeamRenderTE implements ITickab
 	}
 
 	@Override
-	public void receiveInt(String context, int message, EntityPlayerMP player){
-		if(context.equals("beam")){
+	public void receiveInt(int identifier, int message, EntityPlayerMP player){
+		if(identifier == 0){
 			trip = BeamManager.getTriple(message);
-		}else if(context.equals("beamUp")){
+		}else if(identifier == 1){
 			tripUp = BeamManager.getTriple(message);
 		}
 	}

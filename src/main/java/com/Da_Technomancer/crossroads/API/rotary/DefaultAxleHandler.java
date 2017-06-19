@@ -34,16 +34,6 @@ public class DefaultAxleHandler implements IAxleHandler{
 	}
 
 	@Override
-	public void resetAngle(){
-		
-	}
-
-	@Override
-	public double getAngle(){
-		return 0;
-	}
-
-	@Override
 	public void addEnergy(double energy, boolean allowInvert, boolean absolute){
 		if(allowInvert && absolute){
 			motionData[1] += energy;
@@ -77,5 +67,10 @@ public class DefaultAxleHandler implements IAxleHandler{
 	@Override
 	public void markChanged(){
 		
+	}
+
+	@Override
+	public boolean shouldManageAngle(){
+		return false;
 	}
 }

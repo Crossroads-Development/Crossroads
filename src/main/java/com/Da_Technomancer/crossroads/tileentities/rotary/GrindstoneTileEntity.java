@@ -15,8 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -282,17 +280,6 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 		}
 
 		@Override
-		public void resetAngle(){
-
-		}
-
-		@SideOnly(Side.CLIENT)
-		@Override
-		public double getAngle(){
-			return 0;
-		}
-
-		@Override
 		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
 			if(allowInvert && absolute){
 				motionData[1] += energy;
@@ -317,6 +304,11 @@ public class GrindstoneTileEntity extends AbstractInventory implements ITickable
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return false;
 		}
 	}
 

@@ -2,14 +2,13 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
@@ -28,10 +27,10 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SidedGearHolderTileEntity extends TileEntity implements ITickable, IStringReceiver, IDoubleReceiver{
-	
-	private final double[] clientW = new double[6];
-	private final double[] angle = new double[6];
+public class SidedGearHolderTileEntity extends TileEntity implements ITickable, IStringReceiver, ISpinReceiver{
+
+	private final float[] clientW = new float[6];
+	private final float[] angle = new float[6];
 
 	// D-U-N-S-W-E
 	// [0]=w, [1]=E, [2]=P, [3]=lastE
@@ -43,11 +42,11 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 	private final GearTypes[] members = new GearTypes[6];
 
 	private boolean updateMembers = false;
-	
+
 	public GearTypes[] getMembers(){
 		return members;
 	}
-	
+
 	public void setMembers(GearTypes type, int side, boolean newTE){
 		members[side] = type;
 		if(newTE){
@@ -56,22 +55,23 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			axleHandlers[side].updateStates(true);
 		}
 	}
-	
+
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound){
-		super.writeToNBT(compound);
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
 
 		// motionData
 		NBTTagCompound motionTags = new NBTTagCompound();
 		for(int i = 0; i < 6; i++){
-			compound.setDouble(i + "_clientW", clientW[i]);
+			nbt.setFloat(i + "_clientW", clientW[i]);
+			nbt.setFloat(i + "_angle", angle[i]);
 			for(int j = 0; j < 4; j++){
 				if(motionData[i][j] != 0){
 					motionTags.setDouble(i + "," + j + "motion", motionData[i][j]);
 				}
 			}
 		}
-		compound.setTag("motionData", motionTags);
+		nbt.setTag("motionData", motionTags);
 
 		// members
 		NBTTagCompound membTags = new NBTTagCompound();
@@ -80,38 +80,40 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 				membTags.setString(i + "memb", members[i].name());
 			}
 		}
-		compound.setTag("members", membTags);
+		nbt.setTag("members", membTags);
 
-		return compound;
+		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound){
-		super.readFromNBT(compound);
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
 
 		// motionData
-		NBTTagCompound innerMot = compound.getCompoundTag("motionData");
+		NBTTagCompound innerMot = nbt.getCompoundTag("motionData");
 		for(int i = 0; i < 6; i++){
-			clientW[i] = compound.getDouble(i + "_clientW");
+			clientW[i] = nbt.getFloat(i + "_clientW");
+			angle[i] = nbt.getFloat(i + "_angle");
 			for(int j = 0; j < 4; j++){
 				motionData[i][j] = innerMot.getDouble(i + "," + j + "motion");
 			}
 		}
 
 		// members
-		NBTTagCompound innerMemb = compound.getCompoundTag("members");
+		NBTTagCompound innerMemb = nbt.getCompoundTag("members");
 		for(int i = 0; i < 6; i++){
 			members[i] = innerMemb.hasKey(i + "memb") ? GearTypes.valueOf(innerMemb.getString(i + "memb")) : null;
 			axleHandlers[i].updateStates(false);
 		}
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
 		NBTTagCompound membTags = new NBTTagCompound();
 		for(int i = 0; i < 6; i++){
-			nbt.setDouble(i + "_clientW", clientW[i]);
+			nbt.setFloat(i + "_clientW", clientW[i]);
+			nbt.setFloat(i + "_angle", angle[i]);
 			if(members[i] != null){
 				membTags.setString(i + "memb", members[i].name());
 			}
@@ -119,63 +121,12 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		nbt.setTag("members", membTags);
 		return nbt;
 	}
-	
+
 	@Override
-	public void receiveDouble(String context, double message){
-		if(context.contains("w")){
-			switch(context){
-				case "w0":{
-					clientW[0] = message;
-					break;
-				}
-				case "w1":{
-					clientW[1] = message;
-					break;
-				}
-				case "w2":{
-					clientW[2] = message;
-					break;
-				}
-				case "w3":{
-					clientW[3] = message;
-					break;
-				}
-				case "w4":{
-					clientW[4] = message;
-					break;
-				}
-				case "w5":{
-					clientW[5] = message;
-					break;
-				}
-			}
-		}
-	}
-
-	private static final int TIERS = ModConfig.speedTiers.getInt();
-
-	private void sendWPacket(){
-		boolean flag = false;
-		for(int i = 0; i < 6; i++){
-			if(clientW[i] == Double.POSITIVE_INFINITY || clientW[i] == Double.NEGATIVE_INFINITY){
-				flag = true;
-			}else if(MiscOp.tiersRound(motionData[i][0], TIERS) != clientW[i]){
-				flag = true;
-				clientW[i] = MiscOp.tiersRound(motionData[i][0], TIERS);
-			}
-		}
-
-		if(flag){
-			for(int i = 0; i < 6; ++i){
-				SendDoubleToClient msg = new SendDoubleToClient("w" + i, clientW[i], pos);
-				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			}
-
-			for(int i = 0; i < 6; i++){
-				if(clientW[i] == Double.POSITIVE_INFINITY || clientW[i] == Double.NEGATIVE_INFINITY){
-					clientW[i] = 0;
-				}
-			}
+	public void receiveSpin(int identifier, float clientW, float angle){
+		if(identifier > -1 && identifier < 6){
+			this.angle[identifier] = Math.abs(angle - this.angle[identifier]) > 15F ? angle : this.angle[identifier];
+			this.clientW[identifier] = clientW;
 		}
 	}
 
@@ -221,31 +172,22 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 	public void update(){
 		if(world.isRemote){
 			for(int i = 0; i < 6; i++){
-				if(clientW[i] == Double.POSITIVE_INFINITY){
-					angle[i] = 0;
-				}else if(clientW[i] == Double.NEGATIVE_INFINITY){
-					angle[i] = 22.5;
-				}else{
-					// it's 9 / PI instead of 180 / PI because 20 ticks/second
-					angle[i] += clientW[i] * 9D / Math.PI;
-				}
+				// it's 9 / PI instead of 180 / PI because 20 ticks/second
+				angle[i] += clientW[i] * 9D / Math.PI;
 			}
 		}
 
-		if(!world.isRemote){
-			if(updateMembers){
-				for(SidedAxleHandler handler : axleHandlers){
+		if(updateMembers && !world.isRemote){
+			for(SidedAxleHandler handler : axleHandlers){
 					handler.updateStates(true);
 					updateMembers = false;
-				}
 			}
-			sendWPacket();
 		}
 	}
 
 	private final SidedAxleHandler[] axleHandlers = {new SidedAxleHandler(0), new SidedAxleHandler(1), new SidedAxleHandler(2), new SidedAxleHandler(3), new SidedAxleHandler(4), new SidedAxleHandler(5)};
 	private final ICogHandler[] cogHandlers = {new SidedCogHandler(0), new SidedCogHandler(1), new SidedCogHandler(2), new SidedCogHandler(3), new SidedCogHandler(4), new SidedCogHandler(5)};
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if((capability == Capabilities.AXLE_HANDLER_CAPABILITY || capability == Capabilities.COG_HANDLER_CAPABILITY) && facing != null && members[facing.getIndex()] != null){
@@ -275,13 +217,13 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 	}
 
 	private class SidedCogHandler implements ICogHandler{
-		
+
 		private final int side;
-		
+
 		private SidedCogHandler(int sideIn){
 			side = sideIn;
 		}
-		
+
 		@Override
 		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius){
 			axleHandlers[side].propogate(masterIn, key, rotationRatioIn, lastRadius);
@@ -292,7 +234,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			return axleHandlers[side];
 		}
 	}
-	
+
 	private class SidedAxleHandler implements IAxleHandler{
 
 		private final int side;
@@ -321,7 +263,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}else if(EnumFacing.getFront(side).getAxisDirection() == AxisDirection.POSITIVE){
 				rotRatioIn *= -1D;
 			}
-			
+
 			//If true, this has already been checked.
 			if(key == updateKey){
 				//If true, there is rotation conflict.
@@ -330,18 +272,18 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 				}
 				return;
 			}
-			
+
 			if(masterIn.addToList(this)){
 				return;
 			}
 
 			rotRatio = rotRatioIn;
-			
+
 			if(updateKey == 0){
 				resetAngle();
 			}
 			updateKey = key;
-			
+
 			TileEntity sideTE = world.getTileEntity(pos.offset(EnumFacing.getFront(side)));
 			if(sideTE != null){
 				if(sideTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, EnumFacing.getFront(side).getOpposite())){
@@ -387,12 +329,15 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		@Override
 		public void resetAngle(){
 			if(!world.isRemote){
-				clientW[side] = (Math.signum(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
+				clientW[side] = 0;
+				angle[side] = Math.signum(rotRatio) == -1 ? 22.5F : 0F;
+				SendSpinToClient msg = new SendSpinToClient(side, clientW[side], angle[side], pos);
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 
 		@Override
-		public double getAngle(){
+		public float getAngle(){
 			return angle[side];
 		}
 
@@ -450,11 +395,33 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 		public void markChanged(){
 			markDirty();
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		@Override
-		public double getNextAngle(){
-			return Double.isFinite(clientW[side]) ? angle[side] + (clientW[side] * 9D / Math.PI) : angle[side];
+		public float getNextAngle(){
+			return angle[side] + (clientW[side] * 9F / (float) Math.PI);
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return true;
+		}
+
+		@Override
+		public void setAngle(float angleIn){
+			angle[side] = angleIn;
+		}
+
+		@Override
+		public float getClientW(){
+			return clientW[side];
+		}
+
+		@Override
+		public void syncAngle(){
+			clientW[side] = (float) motionData[side][0];
+			SendSpinToClient msg = new SendSpinToClient(side, clientW[side], angle[side], pos);
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 }

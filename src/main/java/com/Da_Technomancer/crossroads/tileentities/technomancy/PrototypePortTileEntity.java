@@ -80,8 +80,8 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	}
 
 	@Override
-	public void receiveInt(String context, int message, EntityPlayerMP player){
-		if(context.equals("side_type")){
+	public void receiveInt(int identifier, int message, EntityPlayerMP player){
+		if(identifier == 0){
 			side = EnumFacing.getFront(message & 7);
 			type = PrototypePortTypes.values()[message >> 3];
 			markDirty();

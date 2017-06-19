@@ -2,15 +2,14 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
@@ -29,10 +28,11 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class LargeGearMasterTileEntity extends TileEntity implements IDoubleReceiver, ITickable, IStringReceiver{
-
-	private boolean valid = false;
+public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiver, ITickable, IStringReceiver{
+	
 	private GearTypes type;
 	private double[] motionData = new double[4];
 	private double[] physData = new double[2];
@@ -40,7 +40,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	/**
 	 * 0: angle, 1: clientW
 	 */
-	private double[] angleW = new double[2];
+	private float[] angleW = new float[2];
 
 	public void initSetup(GearTypes typ){
 		type = typ;
@@ -85,19 +85,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	@Override
 	public void update(){
 		if(world.isRemote){
-			if(angleW[1] == Double.POSITIVE_INFINITY){
-				angleW[0] = 0;
-			}else if(angleW[1] == Double.NEGATIVE_INFINITY){
-				angleW[0] = 22.5;
-			}else{
-				angleW[0] += angleW[1] * 9D / Math.PI;
-			}
-		}
-
-		valid = true;
-
-		if(!world.isRemote){
-			sendWPacket();
+			angleW[0] += angleW[1] * 9D / Math.PI;
 		}
 	}
 
@@ -108,16 +96,16 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		// motionData
 		NBTTagCompound innerMot = nbt.getCompoundTag("motionData");
 		for(int j = 0; j < 4; j++){
-			this.motionData[j] = (innerMot.hasKey(j + "motion")) ? innerMot.getDouble(j + "motion") : 0;
+			motionData[j] = (innerMot.hasKey(j + "motion")) ? innerMot.getDouble(j + "motion") : 0;
 		}
 		// member
 		type = nbt.hasKey("memb") ? GearTypes.valueOf(nbt.getString("memb")) : null;
-		valid = true;
 		physData[0] = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D, 2);
 		physData[1] = physData[0] * 1.125D;
 		//1.125 because r*r/2 so 1.5*1.5/2
-		
-		angleW[1] = nbt.getDouble("clientW");
+
+		angleW[0] = nbt.getFloat("angle");
+		angleW[1] = nbt.getFloat("clientW");
 	}
 
 	@Override
@@ -138,7 +126,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		}
 
 		nbt.setBoolean("new", true);
-		nbt.setDouble("clientW", angleW[1]);
+		nbt.setFloat("angle", angleW[0]);
+		nbt.setFloat("clientW", angleW[1]);
 		return nbt;
 	}
 
@@ -149,35 +138,16 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			nbt.setString("memb", type.name());
 		}
 		nbt.setBoolean("new", true);
-		nbt.setDouble("clientW", angleW[1]);
+		nbt.setFloat("angle", angleW[0]);
+		nbt.setFloat("clientW", angleW[1]);
 		return nbt;
 	}
 
-	private static final int tiers = ModConfig.speedTiers.getInt() * 3;
-
 	@Override
-	public void receiveDouble(String context, double message){
-		if(context.equals("w")){
-			angleW[1] = message;
-		}
-	}
-
-	private void sendWPacket(){
-		boolean flag = false;
-		if(angleW[1] == Double.POSITIVE_INFINITY || angleW[1] == Double.NEGATIVE_INFINITY){
-			flag = true;
-		}else if(MiscOp.tiersRound(motionData[0], tiers) != angleW[1]){
-			flag = true;
-			angleW[1] = MiscOp.tiersRound(motionData[0], tiers);
-		}
-
-		if(flag){
-			SendDoubleToClient msg = new SendDoubleToClient("w", angleW[1], pos);
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-
-			if(angleW[1] == Double.POSITIVE_INFINITY || angleW[1] == Double.NEGATIVE_INFINITY){
-				angleW[1] = 0;
-			}
+	public void receiveSpin(int identifier, float clientW, float angle){
+		if(identifier == 0){
+			angleW[0] = Math.abs(angle - angleW[0]) > 15F ? angle : angleW[0];
+			angleW[1] = clientW;
 		}
 	}
 
@@ -219,7 +189,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 		@Override
 		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
-			if(type == null || !valid){
+			if(type == null){
 				return;
 			}
 
@@ -292,13 +262,22 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		@Override
 		public void resetAngle(){
 			if(!world.isRemote){
-				angleW[1] = (Math.signum(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
+				angleW[1] = 0;
+				angleW[0] = Math.signum(rotRatio) == -1 ? 7.5F : 0F;
+				SendSpinToClient msg = new SendSpinToClient(0, angleW[1], angleW[0], pos);
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 
 		@Override
-		public double getAngle(){
+		public float getAngle(){
 			return angleW[0];
+		}
+		
+		@SideOnly(Side.CLIENT)
+		@Override
+		public float getNextAngle(){
+			return angleW[0] + (angleW[1] * 9F / (float) Math.PI);
 		}
 
 		@Override
@@ -331,6 +310,28 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+		
+		@Override
+		public boolean shouldManageAngle(){
+			return true;
+		}
+
+		@Override
+		public void setAngle(float angleIn){
+			angleW[0] = angleIn;
+		}
+
+		@Override
+		public float getClientW(){
+			return angleW[1];
+		}
+
+		@Override
+		public void syncAngle(){
+			angleW[1] = (float) motionData[0];
+			SendSpinToClient msg = new SendSpinToClient(0, angleW[1], angleW[0], pos);
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 }

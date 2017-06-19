@@ -229,7 +229,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		}
 		if(index != te.getIndex()){
 			te.setIndex(index);
-			ModPackets.network.sendToServer(new SendIntToServer("index", index, te.getPos(), te.getWorld().provider.getDimension()));
+			ModPackets.network.sendToServer(new SendIntToServer(0, index, te.getPos(), te.getWorld().provider.getDimension()));
 		}
 	}
 }

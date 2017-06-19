@@ -7,10 +7,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 public interface IIntReceiver{
 
 	/**
-	 * @param context What the message represents.
+	 * @param identifier Allows distinction between message purpose. 
 	 * @param message The actual value being sent. 
 	 * @param sendingPlayer The player who sent the packet. WILL BE NULL IF RECEIVED ON CLIENT SIDE. May also be null if received on server side. 
 	 */
-	public void receiveInt(String context, int message, @Nullable EntityPlayerMP sendingPlayer);
+	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer);
 
 }

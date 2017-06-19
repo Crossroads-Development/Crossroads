@@ -106,7 +106,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 					cycles = -9;
 					
 					if(beamer.emit(null)){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam", 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient(0, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 					
 					magStor.clear();
@@ -118,7 +118,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 					out = out.mult(512D / ((double) out.getPower()), false);
 					
 					if(beamer.emit(out)){
-						ModPackets.network.sendToAllAround(new SendIntToClient("beam", ((beamer.getDist() - 1) << 24) + (beamer.getLastSent().getRGB().getRGB() & 16777215), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						ModPackets.network.sendToAllAround(new SendIntToClient(0, ((beamer.getDist() - 1) << 24) + (beamer.getLastSent().getRGB().getRGB() & 16777215), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 				}
 			}
@@ -133,8 +133,8 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 	private BeamManager beamer;
 
 	@Override
-	public void receiveInt(String context, int message, EntityPlayerMP player){
-		if(context.equals("beam")){
+	public void receiveInt(int identifier, int message, EntityPlayerMP player){
+		if(identifier == 0){
 			 outBeam = BeamManager.getTriple(message);
 		}
 	}

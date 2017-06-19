@@ -14,8 +14,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 
@@ -128,17 +126,6 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public void resetAngle(){
-
-		}
-
-		@SideOnly(Side.CLIENT)
-		@Override
-		public double getAngle(){
-			return angle;
-		}
-
-		@Override
 		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
 			if(allowInvert && absolute){
 				motionData[1] += energy;
@@ -163,6 +150,11 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 		@Override
 		public void markChanged(){
 			markDirty();
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return false;
 		}
 	}
 }
