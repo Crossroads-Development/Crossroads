@@ -192,6 +192,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 	private void updateLog(){
 		focus = Math.max(Math.min(focus, output.length - 1), 0);
 		log.clearLog();
+		index = Math.min(index, output.length - 1);
 		
 		for(int i = 0; i < 3; i++){
 			if(focus + i < output.length){

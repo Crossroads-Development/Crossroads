@@ -33,6 +33,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	
 	public void setOutput(double[] output){
 		this.output = output == null ? new double[1] : output;
+		index = Math.min(index, output.length - 1);
 	}
 	
 	public int getIndex(){
@@ -57,11 +58,11 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		index = nbt.getInteger("index");
 		output = new double[nbt.getInteger("length")];
 		for(int i = 0; i < output.length; i++){
 			output[i] = nbt.getDouble("output_" + i);
 		}
+		setIndex(nbt.getInteger("index"));
 	}
 
 	@Override
