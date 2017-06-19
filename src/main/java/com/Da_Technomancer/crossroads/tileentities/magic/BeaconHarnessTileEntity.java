@@ -12,10 +12,8 @@ import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
-import com.Da_Technomancer.crossroads.API.packets.IBoolReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendBoolToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,7 +24,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, IIntReceiver, IBoolReceiver{
+public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, IIntReceiver{
 
 	private Triple<Color, Integer, Integer> outBeam;
 	private Triple<Color, Integer, Integer> inBeam;
@@ -77,7 +75,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 	public void trigger(){
 		if(!running && !invalid(null, true)){
 			running = true;
-			ModPackets.network.sendToAllAround(new SendBoolToClient("light", true, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendIntToClient(1, 1, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 	
@@ -102,7 +100,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 				Color col = Color.getHSBColor(((float) cycles) / 120F, 1, 1);
 				if(invalid(col, cycles < 0 || cycles % 40 < 8)){
 					running = false;
-					ModPackets.network.sendToAllAround(new SendBoolToClient("light", false, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendIntToClient(1, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					cycles = -9;
 					
 					if(beamer.emit(null)){
@@ -133,16 +131,11 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 	private BeamManager beamer;
 
 	@Override
-	public void receiveInt(int identifier, int message, EntityPlayerMP player){
+	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP player){
 		if(identifier == 0){
 			 outBeam = BeamManager.getTriple(message);
-		}
-	}
-	
-	@Override
-	public void receiveBool(String context, boolean message){
-		if(context.equals("light")){
-			 inBeam = message ? Triple.of(Color.WHITE, 2, 1) : null;
+		}else if(identifier == 1){
+			inBeam = message == 1 ? Triple.of(Color.WHITE, 2, 1) : null;
 		}
 	}
 
