@@ -133,14 +133,18 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot >= 54 || stack.isEmpty() || !ItemStack.areItemsEqual(stack, inv[slot])){
+			if(slot >= 54 || stack.isEmpty() || !ItemStack.areItemsEqual(stack, lockedInv[slot])){
 				return stack;
 			}
 
 			int change = Math.min(stack.getMaxStackSize() - inv[slot].getCount(), stack.getCount());
 
 			if(!simulate){
-				inv[slot].grow(change);
+				if(inv[slot].isEmpty()){
+					inv[slot] = stack.copy();
+				}else{
+					inv[slot].grow(change);
+				}
 			}
 
 			ItemStack out = stack.copy();
