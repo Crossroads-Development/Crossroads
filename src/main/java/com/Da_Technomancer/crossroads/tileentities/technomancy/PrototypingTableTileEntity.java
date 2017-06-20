@@ -151,7 +151,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 							}
 							return;
 						}
-						int cost = 3 + info.getTotalPorts();
+						int cost = 3;
 						if(cost > copshowium.getCount()){
 							if(player != null){
 								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Insufficient copshowium.", Color.YELLOW, false), player);
@@ -400,7 +400,6 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + out, 64));
 				infoList.set(ind, null);
 				PrototypeWorldSavedData.get().markDirty();
-				//TODO logging
 			}
 		}
 	}

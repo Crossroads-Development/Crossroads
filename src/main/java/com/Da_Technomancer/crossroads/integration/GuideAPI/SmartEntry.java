@@ -136,7 +136,7 @@ public class SmartEntry extends EntryItemStack{
 
 	/**
 	 * Splits up a long string into pages. Uses the String active, will add a page break at each {@literal </n>}.
-	 * PageHelper doesn't work for this because of the � symbol and {@literal </n>}.
+	 * PageHelper doesn't work for this because of the § symbol and {@literal </n>}.
 	 */
 	private void createTextPages(){
 
@@ -157,7 +157,7 @@ public class SmartEntry extends EntryItemStack{
 				}
 				
 				if(active.substring(i, i + 4).equals(pageSkip)){
-					//The .replace is to fix a bug where somehow (no clue how) some of the § symbols get turned to character 157. This turns them back.
+					//The .replace is to fix a bug where somehow some of the § symbols get turned to character 157. This turns them back.
 					pageList.add(new PageText((format + active.substring(start, i)).replace((char) 157, symbol)));
 					((Page) pageList.get(pageList.size() - 1)).setUnicodeFlag(true);
 					format = formatTemp;
@@ -169,7 +169,7 @@ public class SmartEntry extends EntryItemStack{
 			}
 
 			if(start != i && (i == active.length() - 1 || (length >= PERPAGE && active.charAt(i) == ' '))){
-				//The .replace is to fix a bug where somehow (no clue how) some of the § symbols get turned to character 157. This turns them back.
+				//The .replace is to fix a bug where somehow some of the § symbols get turned to character 157. This turns them back.
 				pageList.add(new PageText((format + active.substring(start, i + 1)).replace((char) 157, symbol)));
 				((Page) pageList.get(pageList.size() - 1)).setUnicodeFlag(true);
 				format = formatTemp;
