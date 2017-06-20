@@ -150,7 +150,9 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.mechanicalArm, 1), " * ", " ||", "***", '|', "stickIron", '*', "gearCopshowium"));
 		//Redstone Registry
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.redstoneRegistry, 1), "*&*", "&^&", "*&*", '*', "nuggetTin", '&', ModBlocks.redstoneKeyboard, '^', "ingotCopshowium"));
-
+		//Detailed Crafting Table (Cheap Technomancy Recipe)
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(new ItemStack(ModBlocks.detailedCrafter, 1), "*&*", "&#&", "*&*", '*', "nuggetIron", '&', "nuggetTin", '#', Blocks.CRAFTING_TABLE));
+		
 		// Axle
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));
 		// Bronze
