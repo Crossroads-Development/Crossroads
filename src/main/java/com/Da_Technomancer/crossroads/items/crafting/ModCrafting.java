@@ -253,7 +253,7 @@ public final class ModCrafting{
 		//Crystalline Prism
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.crystallinePrism, 1), "*^*", "^&^", "*&*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModItems.lensArray));
 		//Arcane Reflector
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.arcaneReflector, 1), "*^*", "^^^", "*^*", '*', "stone", '^', ModItems.pureQuartz));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.arcaneReflector, 1), "*^*", '*', "stone", '^', ModItems.pureQuartz));
 		//Lens Holder
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.lensHolder, 1), "***", "*&*", "***", '*', "stone", '&', ModItems.pureQuartz));
 		//Basic Beam Splitter
