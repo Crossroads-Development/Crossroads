@@ -206,7 +206,7 @@ public final class EventHandlerCommon{
 		}
 	}
 
-	private static final float ADJACENT_RATE_COEFFICIENT = .5F;
+	//private static final float ADJACENT_RATE_COEFFICIENT = .5F;
 
 	/**
 	 * Performs the field calculations for one chunk. 
@@ -222,10 +222,10 @@ public final class EventHandlerCommon{
 
 				if(rate != 0){
 					float change = rateForceIn[x][z];
-					change += x == 0 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x - 1][z];
-					change += z == 0 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x][z - 1];
-					change += x == 7 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x + 1][z];
-					change += z == 7 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x][z + 1];
+					//change += x == 0 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x - 1][z];
+					//change += z == 0 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x][z - 1];
+					//change += x == 7 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x + 1][z];
+					//change += z == 7 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x][z + 1];
 
 					rate = (int) Math.max(1, Math.min(8 + change, 128));
 					flux += Math.abs(rate - rateIn[x][z]) / 2;
