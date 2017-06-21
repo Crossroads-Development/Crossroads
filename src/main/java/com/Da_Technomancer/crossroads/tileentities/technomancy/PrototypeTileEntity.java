@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.EventHandlerCommon;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
@@ -44,6 +45,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 		if(!world.isRemote && index != -1){
 			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get().prototypes;
 			info.get(index).owner = new WeakReference<IPrototypeOwner>(this);
+			EventHandlerCommon.updateLoadedPrototypeChunks();
 		}
 	}
 

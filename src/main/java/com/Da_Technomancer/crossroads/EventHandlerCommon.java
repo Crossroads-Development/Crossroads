@@ -68,6 +68,22 @@ public final class EventHandlerCommon{
 	private static final ArrayList<Chunk> TO_RETROGEN = new ArrayList<Chunk>();
 	protected static Ticket loadingTicket;
 
+	/**
+	 * Only should be called on the virtual server side. 
+	 */
+	public static void updateLoadedPrototypeChunks(){
+		PrototypeWorldSavedData data = PrototypeWorldSavedData.get();
+		WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+		ForgeChunkManager.releaseTicket(loadingTicket);
+		loadingTicket = ForgeChunkManager.requestTicket(Main.instance, world, ForgeChunkManager.Type.NORMAL);
+
+		for(PrototypeInfo info : data.prototypes){
+			if(info != null && info.owner != null && info.owner.get() != null && !info.owner.get().loadTick()){
+				ForgeChunkManager.forceChunk(loadingTicket, info.chunk);
+			}
+		}
+	}
+	
 	@SubscribeEvent
 	public void runRetrogenAndLoadChunks(WorldTickEvent e){
 		//Retrogen
@@ -80,16 +96,7 @@ public final class EventHandlerCommon{
 		//Prototype chunk loading
 		//Only should be called on the server side. Not called every tick, as that would be excessive
 		if(!e.world.isRemote && e.phase == Phase.START && e.world.provider.getDimension() == 0 && e.world.getTotalWorldTime() % 20 == 0){
-			PrototypeWorldSavedData data = PrototypeWorldSavedData.get();
-			WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-			ForgeChunkManager.releaseTicket(loadingTicket);
-			loadingTicket = ForgeChunkManager.requestTicket(Main.instance, world, ForgeChunkManager.Type.NORMAL);
-
-			for(PrototypeInfo info : data.prototypes){
-				if(info != null && info.owner != null && info.owner.get() != null && !info.owner.get().loadTick()){
-					ForgeChunkManager.forceChunk(loadingTicket, info.chunk);
-				}
-			}
+			updateLoadedPrototypeChunks();
 		}
 
 		//Field calculations
