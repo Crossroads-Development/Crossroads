@@ -47,8 +47,6 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 
 	/** 
 	 * @return Pair<PrototypePortTypes[], BlockPos[]> representing ports if it passed, BlockPos if it failed with the actual pos of what it failed on.
-	 * 
-	 * If multiple ports have the same side set, it passes with the last one taking precedence.
 	 */
 	private static Object regionValid(World fromWorld, BlockPos startPos, int lengthX, int lengthY, int lengthZ){
 		List<String> blackList = Arrays.asList(ModConfig.blockedPrototype.getStringList());
@@ -66,6 +64,9 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 						if(teCheck instanceof IPrototypePort){
 							IPrototypePort port = (IPrototypePort) teCheck;
 							int facing = port.getSide().getIndex();
+							if(ports[facing] != null){
+								return pos;
+							}
 							ports[facing] = port.getType();
 							portPos[facing] = new BlockPos(x - startPos.getX(), 16 + y - startPos.getY(), z - startPos.getZ());
 						}
@@ -176,7 +177,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 								infoList.set(newChunk, null);
 								PrototypeWorldSavedData.get().markDirty();
 								if(player != null){
-									ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR WHILE COPYING! View logs for more info.", Color.RED, false), player);
+									ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View logs for info.", Color.RED, false), player);
 								}
 								return;
 							}
@@ -200,7 +201,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 					Object validityCheck = regionValid(world, pos.add(1, 1, 1), 16, 16, 16);
 					if(validityCheck instanceof BlockPos){
 						if(player != null){
-							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Blacklisted block at pos " + validityCheck.toString() + ".", Color.YELLOW, false), player);
+							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", world.getTileEntity((BlockPos) validityCheck) instanceof IPrototypePort ? "Only 1 port/side allowed." : "Blacklisted block at pos " + validityCheck.toString() + ".", Color.YELLOW, false), player);
 						}
 						return;
 					}
@@ -227,7 +228,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 							infoList.set(newChunk, null);
 							PrototypeWorldSavedData.get().markDirty();
 							if(player != null){
-								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR WHILE COPYING! View server logs for more info.", Color.RED, false), player);
+								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View server logs for info.", Color.RED, false), player);
 							}
 							return;
 						}
