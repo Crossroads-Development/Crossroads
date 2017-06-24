@@ -90,11 +90,24 @@ public class SinAxisTileEntity extends TileEntity implements ITickable{
 	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
 	
 	private void runAngleCalc(){
+		boolean syncSpin = false;
+		boolean work = false;
+		for(IAxleHandler axle : rotaryMembers){
+			if(axle.shouldManageAngle()){
+				syncSpin = Math.abs(axle.getMotionData()[0] - axle.getClientW()) >= CLIENT_SPEED_MARGIN * axle.getRotationRatio();
+				work = true;
+				break;
+			}
+		}
+		if(!work){
+			return;
+		}
+		
 		for(IAxleHandler axle : rotaryMembers){
 			if(axle.shouldManageAngle()){
 				float axleSpeed = ((float) axle.getMotionData()[0]);
 				axle.setAngle(axle.getAngle() + (axleSpeed * 9F / (float) Math.PI));
-				if(Math.abs(axleSpeed - axle.getClientW()) >= CLIENT_SPEED_MARGIN){
+				if(syncSpin){
 					axle.syncAngle();
 				}
 			}

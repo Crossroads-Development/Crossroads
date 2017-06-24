@@ -146,7 +146,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 	@Override
 	public void receiveSpin(int identifier, float clientW, float angle){
 		if(identifier == 0){
-			angleW[0] = Math.abs(angle - angleW[0]) > 15F ? angle : angleW[0];
+			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
 			angleW[1] = clientW;
 		}
 	}
