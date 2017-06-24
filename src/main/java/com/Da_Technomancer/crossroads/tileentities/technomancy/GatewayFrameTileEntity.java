@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.effects.goggles.IGoggleInfoTE;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -68,10 +69,10 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGo
 		if(world.isRemote){
 			alpha = (((float) Math.sin((double) world.getTotalWorldTime() / 10D) + 1F) / 6F) + (2F / 3F);
 		}
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		if(BeamManager.beamStage == 1){
 			cacheValid = false;
 		}
-		if(!world.isRemote && world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		if(!world.isRemote && BeamManager.beamStage == 1){
 			if(world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
 				if(owner != null && magicPassed && checkStructure() && world.provider.getDimension() != 1){
 					world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP));

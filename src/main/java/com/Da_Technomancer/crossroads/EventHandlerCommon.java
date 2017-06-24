@@ -13,6 +13,8 @@ import org.apache.logging.log4j.Level;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
+import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
@@ -83,7 +85,7 @@ public final class EventHandlerCommon{
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void runRetrogenAndLoadChunks(WorldTickEvent e){
 		//Retrogen
@@ -95,8 +97,12 @@ public final class EventHandlerCommon{
 
 		//Prototype chunk loading
 		//Only should be called on the server side. Not called every tick, as that would be excessive
-		if(!e.world.isRemote && e.phase == Phase.START && e.world.provider.getDimension() == 0 && e.world.getTotalWorldTime() % 20 == 0){
-			updateLoadedPrototypeChunks();
+		if(!e.world.isRemote && e.phase == Phase.START && e.world.provider.getDimension() == 0){
+			if(e.world.getTotalWorldTime() % 100 == 0){
+				updateLoadedPrototypeChunks();
+			}
+			++BeamManager.beamStage;
+			BeamManager.beamStage %= IMagicHandler.BEAM_TIME;
 		}
 
 		//Field calculations

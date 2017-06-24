@@ -72,7 +72,7 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 			beamerUp = new BeamManager(EnumFacing.UP, pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
+		if(BeamManager.beamStage == 0 && primed){
 			MagicUnit out = toSend.getOutput();
 			EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
 			TileEntity te = world.getTileEntity(pos.offset(facing));
@@ -96,7 +96,7 @@ public class MechanicalBeamSplitterTileEntity extends BeamRenderTE implements IT
 			toSend.clear();
 			primed = false;
 			markDirty();
-		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		}else if(BeamManager.beamStage == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
 			primed = true;

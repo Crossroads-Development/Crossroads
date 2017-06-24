@@ -70,14 +70,14 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE implements ITickable
 			beamer = new BeamManager(facing, pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
+		if(BeamManager.beamStage == 0 && primed){
 			if(beamer.emit(toSend.getOutput()) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
 				ModPackets.network.sendToAllAround(new SendIntToClient(0, beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 			toSend.clear();
 			primed = false;
 			markDirty();
-		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		}else if(BeamManager.beamStage == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
 			primed = true;

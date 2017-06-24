@@ -79,7 +79,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 			beamerUp = new BeamManager(EnumFacing.UP, pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
+		if(BeamManager.beamStage == 0 && primed){
 			MagicUnit out = toSend.getOutput();
 			MagicUnit outMult = out == null ? null : out.mult(((double) redstone) / 15D, false);
 			if(outMult == null || outMult.getPower() == 0){
@@ -100,7 +100,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements ITickable, I
 			toSend.clear();
 			primed = false;
 			markDirty();
-		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		}else if(BeamManager.beamStage == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
 			primed = true;

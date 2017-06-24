@@ -87,7 +87,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 			beamer = new BeamManager(facing, pos, world);
 		}
 		
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
+		if(BeamManager.beamStage == 0 && primed){
 			if(!toSend.isEmpty()){
 				double mult = Math.min(1, ((double) RATE[large ? 1 : 0]) / ((double) (toSend.getOutput().getPower())));
 				MagicUnit mag = toSend.getOutput().mult(mult, true);
@@ -102,7 +102,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements ITickabl
 			}
 			primed = false;
 			markDirty();
-		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		}else if(BeamManager.beamStage == 1){
 			MagicUnit magAdd = recieved.isEmpty() ? null : recieved.getOutput().mult(Math.min(((double) (LIMIT[large ? 1 : 0] - (toSend.isEmpty() ? 0 : toSend.getOutput().getPower()))) / ((double) recieved.getOutput().getPower()), 1), false);
 			toSend.addMagic(magAdd);
 			recieved.clear();

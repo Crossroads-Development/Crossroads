@@ -86,7 +86,7 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 			beamerB = new BeamManager(world.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y), pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
+		if(BeamManager.beamStage == 0 && primed){
 
 			MagicUnit out = toSend.getOutput();
 
@@ -102,7 +102,7 @@ public class CrystallinePrismTileEntity extends BeamRenderTE implements ITickabl
 			toSend.clear();
 			primed = false;
 			markDirty();
-		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		}else if(BeamManager.beamStage == 1){
 			toSend.addMagic(recieved.getOutput());
 			recieved.clear();
 			primed = true;

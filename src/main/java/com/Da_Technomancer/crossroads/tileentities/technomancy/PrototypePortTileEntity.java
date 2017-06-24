@@ -84,6 +84,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		if(identifier == 0){
 			side = EnumFacing.getFront(message & 7);
 			type = PrototypePortTypes.values()[message >> 3];
+			world.markBlockRangeForRenderUpdate(pos, pos);
 			markDirty();
 		}
 	}

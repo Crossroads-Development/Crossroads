@@ -9,7 +9,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -66,7 +65,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 			beamer = new BeamManager(world.getBlockState(pos).getValue(Properties.FACING), pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0){
+		if(BeamManager.beamStage == 0){
 			if(!inv.isEmpty() && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
 				MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
 				inv.shrink(1);

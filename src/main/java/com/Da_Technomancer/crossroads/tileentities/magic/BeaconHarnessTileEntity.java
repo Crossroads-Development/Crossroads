@@ -91,7 +91,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 			beamer = new BeamManager(EnumFacing.UP, pos, world);
 		}
 
-		if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && primed){
+		if(BeamManager.beamStage == 0 && primed){
 			primed = false;
 			markDirty();
 			if(running){
@@ -120,7 +120,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ITickable, 
 					}
 				}
 			}
-		}else if(world.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 1){
+		}else if(BeamManager.beamStage == 1){
 			magStor.addMagic(magIn.getOutput());
 			magIn.clear();
 			primed = true;

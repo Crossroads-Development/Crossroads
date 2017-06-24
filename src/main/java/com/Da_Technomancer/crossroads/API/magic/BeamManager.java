@@ -19,6 +19,8 @@ import net.minecraft.world.World;
 
 public class BeamManager{
 
+	public static int beamStage = 0;
+	
 	private final EnumFacing dir;
 	private final World world;
 	private final BlockPos pos;

@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.EventHandlerCommon;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
@@ -125,6 +127,7 @@ public class PrototypeWatch extends MagicUsingItem{
 				WatchPrototypeOwner owner = new WatchPrototypeOwner(index, entityIn);
 				watchMap.put(index, owner);
 				data.prototypes.get(index).owner = new WeakReference<IPrototypeOwner>(owner);
+				EventHandlerCommon.updateLoadedPrototypeChunks();
 			}else{
 				WatchPrototypeOwner owner = watchMap.get(index);
 				owner.lifetimeBuffer = true;
@@ -145,7 +148,7 @@ public class PrototypeWatch extends MagicUsingItem{
 				}
 			}
 
-			if(entityIn instanceof EntityPlayer && worldIn.getTotalWorldTime() % IMagicHandler.BEAM_TIME == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage){
+			if(entityIn instanceof EntityPlayer && BeamManager.beamStage == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage){
 				NBTTagCompound cageNbt = ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getTagCompound();
 				NBTTagCompound nbt = stack.getTagCompound();
 				PrototypeInfo info = data.prototypes.get(index);
