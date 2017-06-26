@@ -19,7 +19,8 @@ import net.minecraft.world.World;
 
 public class BeamManager{
 
-	public static int beamStage = 0;
+	public static int beamStage = 2;
+	public static boolean resetVisual = false;
 	
 	private final EnumFacing dir;
 	private final World world;
@@ -54,7 +55,7 @@ public class BeamManager{
 					}
 					return true;
 				}else{
-					return false;
+					return resetVisual;
 				}
 			}
 
@@ -74,11 +75,11 @@ public class BeamManager{
 				if(lastSent != null){
 					lastFullSent = lastSent;
 				}
-				return holder;
+				return holder || resetVisual;
 			}
 		}
 
-		return false;
+		return resetVisual;
 	}
 
 	private void wipe(BlockPos newEnd){

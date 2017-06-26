@@ -96,13 +96,13 @@ public final class EventHandlerCommon{
 		}
 
 		//Prototype chunk loading
-		//Only should be called on the server side. Not called every tick, as that would be excessive
+		//Only should be called on the server side.
 		if(!e.world.isRemote && e.phase == Phase.START && e.world.provider.getDimension() == 0){
-			if(e.world.getTotalWorldTime() % 100 == 0){
-				updateLoadedPrototypeChunks();
-			}
+			updateLoadedPrototypeChunks();
+			
 			++BeamManager.beamStage;
 			BeamManager.beamStage %= IMagicHandler.BEAM_TIME;
+			BeamManager.resetVisual = e.world.getTotalWorldTime() % 100 < 5;
 		}
 
 		//Field calculations

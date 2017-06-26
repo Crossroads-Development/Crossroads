@@ -16,6 +16,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -24,20 +25,45 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
+public class PrototypeTileEntity extends TileEntity implements ITickable, IPrototypeOwner{
 
 	private int index = -1;
 	public String name = "";
 	//For client side use only.
 	private PrototypePortTypes[] ports = new PrototypePortTypes[6];
-	
+
 	public void setIndex(int index){
 		this.index = index;
 		markDirty();
 	}
-	
+
 	public int getIndex(){
 		return index;
+	}
+
+	private long lastTick = -1;
+
+	@Override
+	public void update(){
+		if(!world.isRemote && index != -1){
+			lastTick = world.getTotalWorldTime();
+
+			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get().prototypes;
+			
+			if(info.get(index).owner == null || info.get(index).owner.get() == null){
+				info.get(index).owner = new WeakReference<IPrototypeOwner>(this);
+			}
+		}
+	}
+
+	@Override
+	public boolean loadTick(){
+		if(lastTick != -1 && world.getTotalWorldTime() - lastTick > 1){
+			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get().prototypes;
+			info.get(index).owner = null;
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -54,15 +80,16 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 		if(!world.isRemote && index != -1){
 			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get().prototypes;
 			info.get(index).owner = null;
+			EventHandlerCommon.updateLoadedPrototypeChunks();
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public PrototypePortTypes[] getTypes(){
 		return ports;
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -75,7 +102,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	public void setWorldCreate(World worldIn){
 		setWorld(worldIn);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -96,7 +123,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 			world.markBlockRangeForRenderUpdate(pos, pos);
 		}
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
@@ -164,11 +191,6 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 	@Override
 	public <T> T getCap(Capability<T> cap, EnumFacing side){
 		return world.getTileEntity(pos.offset(side)).getCapability(cap, side.getOpposite());
-	}
-	
-	@Override
-	public boolean loadTick(){
-		return false;
 	}
 
 	@Override
