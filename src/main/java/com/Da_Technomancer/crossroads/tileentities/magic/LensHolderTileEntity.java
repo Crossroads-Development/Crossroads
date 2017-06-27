@@ -11,12 +11,10 @@ import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
@@ -32,11 +30,10 @@ import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class LensHolderTileEntity extends BeamRenderTE implements IIntReceiver{
+public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiver{
 
 	private Triple<Color, Integer, Integer> trip;
 	private Triple<Color, Integer, Integer> tripUp;
@@ -64,25 +61,17 @@ public class LensHolderTileEntity extends BeamRenderTE implements IIntReceiver{
 		return out;
 	}
 
-	@Override
-	public void refresh(){
-		if(beamer != null){
-			beamer.emit(null);
-		}
-		if(beamerUp != null){
-			beamerUp.emit(null);
-		}
-	}
-
 	private BeamManager beamer;
 	private BeamManager beamerUp;
 
 	@Override
 	public void receiveInt(int identifier, int message, EntityPlayerMP player){
-		if(identifier == 0){
-			trip = BeamManager.getTriple(message);
-		}else if(identifier == 1){
-			tripUp = BeamManager.getTriple(message);
+		if(identifier < 6 && identifier > 1){
+			if(EnumFacing.getFront(identifier).getAxisDirection() == AxisDirection.NEGATIVE){
+				trip = BeamManager.getTriple(message);
+			}else{
+				tripUp = BeamManager.getTriple(message);
+			}
 		}
 	}
 
@@ -178,13 +167,13 @@ public class LensHolderTileEntity extends BeamRenderTE implements IIntReceiver{
 		@Override
 		public void setMagic(MagicUnit mag){
 			if(beamer == null || beamerUp == null){
-				beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
-				beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos, world);
+				beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos);
+				beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos);
 			}
 
 			if(mag != null && mag.getVoid() != 0 && world.getBlockState(pos).getValue(Properties.TEXTURE_7) != 0){
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.TEXTURE_7, 0));
-				(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag);
+				(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, world);
 				double holder = Math.max(beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()), beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()));
 				lastRedstone = holder;
 				markDirty();
@@ -193,42 +182,28 @@ public class LensHolderTileEntity extends BeamRenderTE implements IIntReceiver{
 
 			switch(world.getBlockState(pos).getValue(Properties.TEXTURE_7)){
 				case 0:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-						ModPackets.network.sendToAllAround(new SendIntToClient(dir == AxisDirection.POSITIVE ? 1 : 0, (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					}
+					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, world);
 					break;
 				case 1:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getEnergy() == 0 ? null : new MagicUnit(mag.getEnergy(), 0, 0, 0)) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-						ModPackets.network.sendToAllAround(new SendIntToClient(dir == AxisDirection.POSITIVE ? 1 : 0, (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					}
+					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getEnergy() == 0 ? null : new MagicUnit(mag.getEnergy(), 0, 0, 0), world);
 					break;
 				case 2:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getPotential() == 0 ? null : new MagicUnit(0, mag.getPotential(), 0, 0)) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-						ModPackets.network.sendToAllAround(new SendIntToClient(dir == AxisDirection.POSITIVE ? 1 : 0, (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					}
+					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getPotential() == 0 ? null : new MagicUnit(0, mag.getPotential(), 0, 0), world);
 					break;
 				case 3:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getStability() == 0 ? null : new MagicUnit(0, 0, mag.getStability(), 0)) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-						ModPackets.network.sendToAllAround(new SendIntToClient(dir == AxisDirection.POSITIVE ? 1 : 0, (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					}
+					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getStability() == 0 ? null : new MagicUnit(0, 0, mag.getStability(), 0), world);
 					break;
 				case 4:
 					if(MagicElements.getElement(mag) == MagicElements.LIGHT){
 						world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 5));
 					}
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-						ModPackets.network.sendToAllAround(new SendIntToClient(dir == AxisDirection.POSITIVE ? 1 : 0, (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					}
+					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, world);
 					break;
 				case 5:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-						ModPackets.network.sendToAllAround(new SendIntToClient(dir == AxisDirection.POSITIVE ? 1 : 0, (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					}
+					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, world);
 					break;
 				case 6:
-					if((dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || MagicElements.getElement(mag) != MagicElements.RIFT ? null : new MagicUnit(0, 0, 0, mag.getPower())) || world.getTotalWorldTime() % (IMagicHandler.BEAM_TIME * 20) == 0){
-						ModPackets.network.sendToAllAround(new SendIntToClient(dir == AxisDirection.POSITIVE ? 1 : 0, (dir == AxisDirection.POSITIVE ? beamerUp : beamer).getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					}
+					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || MagicElements.getElement(mag) != MagicElements.RIFT ? null : new MagicUnit(0, 0, 0, mag.getPower()), world);
 					break;
 			}
 

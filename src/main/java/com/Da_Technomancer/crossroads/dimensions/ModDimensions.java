@@ -104,18 +104,17 @@ public class ModDimensions{
 		// It creates a grid layout of chunks containing only barriers & air, with the remaining chunks being used for prototypes. The grid is centered on chunk 0,0 (non prototype).
 		// The grid created starts at (-100, -100) and goes to (100, -80).
 
-		WorldServer worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
-		PrototypeWorldSavedData data = PrototypeWorldSavedData.get();
+		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
 
 		if(data.prototypes.contains(null)){
 			// Recycles deleted prototypes if possible.
 			int available = data.prototypes.indexOf(null);
 			// Do to the grid, one row has capacity for 100 chunks
-			int x = (((available + 1) % 100) * 2) - 99;
-			int z = ((available + 1) / 50) - 99;
+			int x = ((available % 100) * 2) - 99;
+			int z = (available / 50) - 99;
 
 			data.prototypes.set(available, new PrototypeInfo(ports, portPos, new ChunkPos(x, z)));
-			data.setDirty(true);
+			data.markDirty();
 			return available;
 		}else{
 			int used = data.prototypes.size();
@@ -129,6 +128,8 @@ public class ModDimensions{
 			int z = (used / 50) - 99;
 
 			// This part may redundantly block already blocked chunks. This is a possible optimization point if it ends up mattering.
+			WorldServer worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
+			
 			blockChunk(new ChunkPos(x - 1, z - 1), worldDim);
 			blockChunk(new ChunkPos(x - 1, z), worldDim);
 			blockChunk(new ChunkPos(x, z - 1), worldDim);
@@ -137,7 +138,7 @@ public class ModDimensions{
 			blockChunk(new ChunkPos(x + 1, z + 1), worldDim);
 
 			data.prototypes.add(used, new PrototypeInfo(ports, portPos, new ChunkPos(x, z)));
-			data.setDirty(true);
+			data.markDirty();
 			return used;
 		}
 	}

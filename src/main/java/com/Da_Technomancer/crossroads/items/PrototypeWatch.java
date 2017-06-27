@@ -86,8 +86,8 @@ public class PrototypeWatch extends MagicUsingItem{
 					playerNBT.setBoolean("wasSneak", player.isSneaking());
 
 					EnumFacing dir = EnumFacing.SOUTH;
+					PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(index);
 					WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-					PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
 					if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
 						BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
 						relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());
@@ -118,7 +118,7 @@ public class PrototypeWatch extends MagicUsingItem{
 		if(isSelected && !worldIn.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot")){
 			NBTTagCompound prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
 			int index = prototypeNBT.getInteger("index");
-			PrototypeWorldSavedData data = PrototypeWorldSavedData.get();
+			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
 			if(!watchMap.containsKey(index)){
 				if(data.prototypes.size() <= index || data.prototypes.get(index) == null){
 					stack.getTagCompound().removeTag("prot");
@@ -197,8 +197,8 @@ public class PrototypeWatch extends MagicUsingItem{
 
 				//Disable redstone
 				EnumFacing dir = EnumFacing.SOUTH;
+				PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(index);
 				WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-				PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
 				if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
 					BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
 					relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());
@@ -269,15 +269,19 @@ public class PrototypeWatch extends MagicUsingItem{
 		}
 
 		@Override
-		public boolean loadTick(){
+		public void loadTick(){
 			if(lifetimeBuffer){
 				lifetimeBuffer = false;
-				return false;
+				return;
 			}
 			watchMap.remove(index);
 			active = false;
 			CommonProxy.masterKey++;
-			return true;
+		}
+		
+		@Override
+		public boolean shouldRun(){
+			return watchMap.containsKey(index);
 		}
 
 		private class MagicHandler implements IMagicHandler{

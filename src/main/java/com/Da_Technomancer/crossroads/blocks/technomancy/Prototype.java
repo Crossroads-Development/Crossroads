@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -87,6 +88,11 @@ public class Prototype extends BlockContainer{
 	protected BlockStateContainer createBlockState(){
 		return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] {Properties.PORT_TYPE});
 	}
+	
+	@Override
+	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
+		worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+	}
 
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
@@ -155,13 +161,17 @@ public class Prototype extends BlockContainer{
 		if(!world.isRemote){
 			if(stack.hasTagCompound()){
 				PrototypeTileEntity te = (PrototypeTileEntity) world.getTileEntity(pos);
-				if(PrototypeWorldSavedData.get().prototypes.size() > stack.getTagCompound().getInteger("index")){
+				if(PrototypeWorldSavedData.get(false).prototypes.size() > stack.getTagCompound().getInteger("index")){
 					te.setIndex(stack.getTagCompound().getInteger("index"));
 					te.name = stack.getTagCompound().getString("name");
 					//onLoad is normally called before onBlockPlacedBy, AKA before the index is set. It gets called again here so it can run with the index.
 					te.onLoad();
 					te.markDirty();
 					ModPackets.network.sendToAllAround(new SendNBTToClient(te.getUpdateTag(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					
+					for(EnumFacing side : EnumFacing.HORIZONTALS){
+						onNeighborChange(world, pos, pos.offset(side));//Updates the redstone-in ports with initial values. 
+					}
 				}else{
 					world.setBlockState(pos, Blocks.AIR.getDefaultState());
 				}
@@ -200,8 +210,8 @@ public class Prototype extends BlockContainer{
 		PrototypeTileEntity prTe = (PrototypeTileEntity) te;
 		BlockPos dirPos = fromPos.subtract(pos);
 		EnumFacing dir = EnumFacing.getFacingFromVector(dirPos.getX(), dirPos.getY(), dirPos.getZ());
+		PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(prTe.getIndex());
 		WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-		PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(prTe.getIndex());
 		if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
 			BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
 			relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());

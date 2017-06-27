@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
-import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
@@ -71,9 +71,9 @@ public class OmniMeter extends Item{
 			playerIn.sendMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]));
 		}
 
-		if(te instanceof BeamRenderTE){
+		if(te instanceof BeamRenderTEBase){
 			pass = false;
-			MagicUnit[] mag = ((BeamRenderTE) te).getLastFullSent();
+			MagicUnit[] mag = ((BeamRenderTEBase) te).getLastFullSent();
 			if(mag != null){
 				for(int i = 0; i < mag.length; i++){
 					MagicUnit check = mag[i];

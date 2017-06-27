@@ -6,7 +6,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
 import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,10 +18,10 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 /** All blocks using BeamRenderer MUST return false to isOpaqueCube */
-public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
+public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 
 	@Override
-	public void renderTileEntityAt(BeamRenderTE beam, double x, double y, double z, float partialTicks, int destroyStage){
+	public void renderTileEntityAt(BeamRenderTEBase beam, double x, double y, double z, float partialTicks, int destroyStage){
 		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false) || beam.getBeam() == null){
 			return;
 		}
@@ -109,7 +109,7 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTE>{
 	}
 
 	@Override
-	public boolean isGlobalRenderer(BeamRenderTE te){
+	public boolean isGlobalRenderer(BeamRenderTEBase te){
 		return true;
 	}
 }

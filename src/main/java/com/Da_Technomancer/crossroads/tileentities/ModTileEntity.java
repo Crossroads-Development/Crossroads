@@ -146,7 +146,7 @@ public class ModTileEntity{
 	}
 
 	/**
-	 * @deprecated a single character was wrong. Changing it will destroy all Crossroads stuff in existing worlds. All new tile entities should use the other method. 
+	 * @deprecated A single character was wrong. Changing it will destroy all Crossroads stuff in existing worlds. All new tile entities should use the other method. 
 	 */
 	@Deprecated
 	private static void registerOld(Class<? extends TileEntity> locat, String ID){
@@ -154,8 +154,8 @@ public class ModTileEntity{
 	}
 
 	/**
-	 * @param clazz The class of the tileentity being registered. 
-	 * @param ID Should be lowercase.
+	 * @param clazz The class of the TileEntity being registered. 
+	 * @param ID Should be lower-case.
 	 */
 	private static void register(Class<? extends TileEntity> clazz, String ID){
 		GameRegistry.registerTileEntity(clazz, Main.MODID + ":" + ID);

@@ -144,7 +144,7 @@ public class PrototypePort extends BlockContainer{
 		if(prTe.getIndex() == -1 || prTe.getType() != PrototypePortTypes.REDSTONE_OUT || prTe.getSide() != dir){
 			return;
 		}
-		PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(prTe.getIndex());
+		PrototypeInfo info = PrototypeWorldSavedData.get(false).prototypes.get(prTe.getIndex());
 		if(info != null && info.owner != null && info.owner.get() != null){
 			info.owner.get().neighborChanged(dir, ModBlocks.prototypePort);
 		}

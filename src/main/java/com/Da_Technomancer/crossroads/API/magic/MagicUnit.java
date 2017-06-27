@@ -55,14 +55,14 @@ public class MagicUnit{
 
 	/** Returns RGB with void.*/
 	public Color getRGB(){
-		if(getTrueRGB() == null && voi == 0){
-			return null;
+		if(getTrueRGB() == null){
+			return new Color(0, 0, 0);
 		}
 
 		double mult = ((double) (energy + potential + stability)) / (double) getPower();
 
 		Color col = getTrueRGB();
-		return col == null ? new Color(0, 0, 0) : new Color((int) Math.round(((double) col.getRed()) * mult), (int) Math.round(((double) col.getGreen()) * mult), (int) Math.round(((double) col.getBlue()) * mult));
+		return new Color((int) Math.round(((double) col.getRed()) * mult), (int) Math.round(((double) col.getGreen()) * mult), (int) Math.round(((double) col.getBlue()) * mult));
 	}
 
 	public MagicUnit mult(double multiplier, boolean floor){

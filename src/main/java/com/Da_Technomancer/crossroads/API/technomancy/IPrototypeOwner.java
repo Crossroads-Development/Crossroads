@@ -28,11 +28,19 @@ public interface IPrototypeOwner{
 	public void neighborChanged(@Nonnull EnumFacing fromSide, Block blockIn);
 	
 	/**
-	 * Called once every 20 ticks for all IPrototypeOwners that would be loaded. 
-	 * If this IPrototypeOwner needs to prematurely stop itself from loading, it can remove itself from the main map.
-	 * @return True if this is no longer valid.
+	 * Called once every 20 ticks on the virtual server for all IPrototypeOwners that would be loaded. 
+	 * If this IPrototypeOwner needs to prematurely stop itself from loading, it can remove itself from the main map in this method. 
 	 */
-	public boolean loadTick();
+	public default void loadTick(){
+		
+	}
+	
+	/**
+	 * Only call on the virtual server. 
+	 * 
+	 * @return True if this should be loaded/ticked. Returning false does not remove this from the prototype list. 
+	 */
+	public boolean shouldRun();
 	
 	/**
 	 * Returns the prototype port types for each side. This cannot be used to fetch capabilities, it mainly exists for rendering purposes.

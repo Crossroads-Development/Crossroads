@@ -92,7 +92,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(!world.isRemote && index != -1 && active && type.getCapability() == cap && type.exposeInternal() && side == this.side){
-			PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
+			PrototypeInfo info = PrototypeWorldSavedData.get(false).prototypes.get(index);
 			if(info != null && info.owner != null && info.owner.get() != null && info.owner.get().hasCap(cap, this.side)){
 				return true;
 			}
@@ -103,7 +103,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(!world.isRemote && index != -1 && active && type.getCapability() == cap && type.exposeInternal() && side == this.side){
-			PrototypeInfo info = PrototypeWorldSavedData.get().prototypes.get(index);
+			PrototypeInfo info = PrototypeWorldSavedData.get(false).prototypes.get(index);
 			if(info != null && info.owner != null && info.owner.get() != null && info.owner.get().hasCap(cap, this.side)){
 				return info.owner.get().getCap(cap, this.side);
 			}

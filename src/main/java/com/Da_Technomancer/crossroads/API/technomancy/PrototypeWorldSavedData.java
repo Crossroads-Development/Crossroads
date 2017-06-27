@@ -18,6 +18,8 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	//will cleanly self-destruct. 
 	
 	public static final String PROTOTYPE_ID = Main.MODID + "_prototype";
+	private static PrototypeWorldSavedData instance;
+	
 	public PrototypeWorldSavedData(){
 		super(PROTOTYPE_ID);
 	}
@@ -30,9 +32,17 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	 * DOES NOT call markDirty() by default unless just being created, modifiers should call it manually.
 	 * Do not call until after the overworld has been initialized.
 	 * Designed to lose all data if the prototype dimension file is deleted.
+	 * @param forceInitWorld If true, this will init (load) the prototype world even if this doesn't have to. 
 	 * @return The PrototypeWorldSavedData instance.
 	 */
-	public static PrototypeWorldSavedData get(){
+	public static PrototypeWorldSavedData get(boolean forceInitWorld){
+		if(instance != null){
+			if(forceInitWorld && DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID) == null){
+				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
+			}
+			return instance;
+		}
+		
 		WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		if(world == null){
 			DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
@@ -45,8 +55,9 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 		if (data == null) {
 			data = new PrototypeWorldSavedData();
 			storage.setData(PROTOTYPE_ID, data);
-			data.markDirty();
+			data.setDirty(true);
 		}
+		instance = data;
 		return data;
 	}
 	
@@ -55,12 +66,36 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	 */
 	public final ArrayList<PrototypeInfo> prototypes = new ArrayList<PrototypeInfo>();
 	
+	
+	/**
+	 * Also causes the dimension to load in order to force the data to save. Use instead of setDirty(true).
+	 */
+	@Override
+	public void markDirty(){
+		WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+		if(world == null){
+			DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
+			world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+		}
+		
+		MapStorage storage = world.getPerWorldStorage();
+		PrototypeWorldSavedData data = (PrototypeWorldSavedData) storage.getOrLoadData(PrototypeWorldSavedData.class, PROTOTYPE_ID);
+		
+		if (data == null) {
+			data = new PrototypeWorldSavedData();
+			storage.setData(PROTOTYPE_ID, data);
+		}
+		
+		data.setDirty(true);
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		int length = nbt.getInteger("length");
 		for(int i = 0; i < length; i++){
 			prototypes.add(nbt.hasKey("pro" + i) ? PrototypeInfo.readFromNBT(nbt.getCompoundTag("pro" + i)) : null);
 		}
+		System.out.println("READ_FROM");//TODO
 	}
 
 	@Override
@@ -73,6 +108,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 			}
 			i++;
 		}
+		System.out.println("WRITE_TO");//TODO
 		return nbt;
 	}
 }

@@ -1,107 +1,22 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
-import java.awt.Color;
-
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.tuple.Triple;
-
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable, IIntReceiver{
+public class ArcaneExtractorTileEntity extends BeamRenderTE{
 
 	private ItemStack inv = ItemStack.EMPTY;
-	private Triple<Color, Integer, Integer> visual;
-
-	@Override
-	public void refresh(){
-		if(beamer != null){
-			beamer.emit(null);
-		}
-	}
-
-	@Override
-	@Nullable
-	public MagicUnit[] getLastFullSent(){
-		return beamer == null || beamer.getLastFullSent() == null ? null : new MagicUnit[] {beamer.getLastFullSent()};
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Triple<Color, Integer, Integer>[] getBeam(){
-		Triple<Color, Integer, Integer>[] out = new Triple[6];
-		if(world.getBlockState(pos).getBlock() != ModBlocks.arcaneExtractor){
-			return null;
-		}
-		out[world.getBlockState(pos).getValue(Properties.FACING).getIndex()] = visual;
-		return out;
-	}
-
-	@Override
-	public void update(){
-		if(world.isRemote){
-			return;
-		}
-
-		if(beamer == null){
-			beamer = new BeamManager(world.getBlockState(pos).getValue(Properties.FACING), pos, world);
-		}
-
-		if(BeamManager.beamStage == 0){
-			if(!inv.isEmpty() && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
-				MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
-				inv.shrink(1);
-				markDirty();
-				if(beamer.emit(mag)){
-					ModPackets.network.sendToAllAround(new SendIntToClient(0, beamer.getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-				}
-			}else{
-				if(!inv.isEmpty()){
-					inv = ItemStack.EMPTY;
-					markDirty();
-				}
-				if(beamer.emit(null)){
-					ModPackets.network.sendToAllAround(new SendIntToClient(0, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-				}
-			}
-		}
-	}
-
-	private BeamManager beamer;
-
-	@Override
-	public void receiveInt(int identifier, int message, EntityPlayerMP player){
-		if(identifier == 0){
-			visual = BeamManager.getTriple(message);
-		}
-	}
-
-	private int memTrip;
-
-	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
-		nbt.setInteger("beam", memTrip);
-		return nbt;
-	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
@@ -109,18 +24,13 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		if(!inv.isEmpty()){
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
-		nbt.setInteger("memTrip", beamer == null ? 0 : beamer.getPacket());
 		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		memTrip = nbt.getInteger("memTrip");
 		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
-		if(nbt.hasKey("beam")){
-			visual = BeamManager.getTriple(nbt.getInteger("beam"));
-		}
 	}
 
 	private final IItemHandler itemHandler = new ItemHandler();
@@ -187,5 +97,31 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE implements ITickable
 		public int getSlotLimit(int slot){
 			return slot == 0 ? 64 : 0;
 		}
+	}
+
+	@Override
+	protected void doEmit(MagicUnit toEmit){
+		if(!inv.isEmpty() && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
+			MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
+			inv.shrink(1);
+			beamer[world.getBlockState(pos).getValue(Properties.FACING).getIndex()].emit(mag, world);
+		}else{
+			beamer[world.getBlockState(pos).getValue(Properties.FACING).getIndex()].emit(null, world);
+			if(!inv.isEmpty()){
+				inv = ItemStack.EMPTY;
+			}
+		}
+	}
+
+	@Override
+	protected boolean[] inputSides(){
+		return new boolean[6];
+	}
+
+	@Override
+	protected boolean[] outputSides(){
+		boolean[] out = new boolean[6];
+		out[world.getBlockState(pos).getValue(Properties.FACING).getIndex()] = true;
+		return out;
 	}
 }

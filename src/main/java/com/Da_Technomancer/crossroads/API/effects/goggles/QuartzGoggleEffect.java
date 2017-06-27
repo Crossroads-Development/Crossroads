@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
-import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
 
@@ -26,8 +26,8 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 			return;
 		}
 		TileEntity te = world.getTileEntity(ray.getBlockPos());
-		if(te instanceof BeamRenderTE){
-			MagicUnit[] mag = ((BeamRenderTE) te).getLastFullSent();
+		if(te instanceof BeamRenderTEBase){
+			MagicUnit[] mag = ((BeamRenderTEBase) te).getLastFullSent();
 			if(mag != null){
 				NBTTagCompound nbt = MiscOp.getPlayerTag(player);
 				if(!nbt.hasKey("elements")){

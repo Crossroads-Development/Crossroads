@@ -14,7 +14,6 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
@@ -74,15 +73,31 @@ public final class EventHandlerCommon{
 	 * Only should be called on the virtual server side. 
 	 */
 	public static void updateLoadedPrototypeChunks(){
-		PrototypeWorldSavedData data = PrototypeWorldSavedData.get();
-		WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-		ForgeChunkManager.releaseTicket(loadingTicket);
-		loadingTicket = ForgeChunkManager.requestTicket(Main.instance, world, ForgeChunkManager.Type.NORMAL);
+		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(false);
 
+		ArrayList<ChunkPos> toLoad = new ArrayList<ChunkPos>();
 		for(PrototypeInfo info : data.prototypes){
-			if(info != null && info.owner != null && info.owner.get() != null && !info.owner.get().loadTick()){
-				ForgeChunkManager.forceChunk(loadingTicket, info.chunk);
+			if(info != null && info.owner != null && info.owner.get() != null){
+				info.owner.get().loadTick();
+				if(info.owner.get().shouldRun()){
+					toLoad.add(info.chunk);
+				}
 			}
+		}
+
+		boolean emptyTicket = loadingTicket == null || loadingTicket.getChunkList().isEmpty();
+
+		if(!emptyTicket || !toLoad.isEmpty()){
+			if(emptyTicket){
+				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
+			}
+			ForgeChunkManager.releaseTicket(loadingTicket);
+			WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			loadingTicket = ForgeChunkManager.requestTicket(Main.instance, world, ForgeChunkManager.Type.NORMAL);
+		}
+
+		for(ChunkPos chunk : toLoad){
+			ForgeChunkManager.forceChunk(loadingTicket, chunk);
 		}
 	}
 
@@ -98,11 +113,15 @@ public final class EventHandlerCommon{
 		//Prototype chunk loading
 		//Only should be called on the server side.
 		if(!e.world.isRemote && e.phase == Phase.START && e.world.provider.getDimension() == 0){
-			updateLoadedPrototypeChunks();
-			
-			++BeamManager.beamStage;
-			BeamManager.beamStage %= IMagicHandler.BEAM_TIME;
-			BeamManager.resetVisual = e.world.getTotalWorldTime() % 100 < 5;
+			e.world.profiler.startSection(Main.MODNAME + ": Prototype Loading Control");
+			if(e.world.getTotalWorldTime() % 20 == 0){
+				updateLoadedPrototypeChunks();
+			}
+			e.world.profiler.endSection();
+
+			BeamManager.beamStage = (int) (e.world.getTotalWorldTime() % BeamManager.BEAM_TIME);
+			BeamManager.resetVisual = e.world.getTotalWorldTime() % (20 * BeamManager.BEAM_TIME) < BeamManager.BEAM_TIME;
+			BeamManager.cycleNumber = e.world.getTotalWorldTime() / BeamManager.BEAM_TIME;
 		}
 
 		//Field calculations
@@ -142,8 +161,9 @@ public final class EventHandlerCommon{
 		if(!e.world.isRemote && e.phase == Phase.START){
 			e.world.profiler.startSection(Main.MODNAME + ": Entity Time Dilation");
 			HashMap<Long, byte[][][]> fields = FieldWorldSavedData.get(e.world).fieldNodes;
-			ArrayList<PrototypeInfo> prototypes = PrototypeWorldSavedData.get().prototypes;
-			HashMap<Long, byte[][][]> fieldsProt = FieldWorldSavedData.get(DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID)).fieldNodes;
+			ArrayList<PrototypeInfo> prototypes = PrototypeWorldSavedData.get(false).prototypes;
+			WorldServer prototypeWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			HashMap<Long, byte[][][]> fieldsProt = prototypeWorld == null ? null : FieldWorldSavedData.get(prototypeWorld).fieldNodes;
 			ArrayList<Entity> entities = new ArrayList<Entity>();
 			entities.addAll(e.world.loadedEntityList); //A copy of the original list is used to avoid ConcurrentModificationExceptions that arise from entities removing themselves when ticked. 
 			for(Entity ent : entities){
@@ -183,7 +203,7 @@ public final class EventHandlerCommon{
 							continue;
 						}
 
-						byte[][][] watchFields = fieldsProt.get(MiscOp.getLongFromChunkPos(prototypes.get(index).chunk));
+						byte[][][] watchFields = fieldsProt == null ? FieldWorldSavedData.getDefaultChunkFlux() : fieldsProt.get(MiscOp.getLongFromChunkPos(prototypes.get(index).chunk));
 						if(watchFields != null){
 							offsetX /= 2;
 							offsetZ /= 2;

@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.effects.goggles.IGoggleInfoTE;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
@@ -256,9 +257,9 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 				if(newElem != currentElement || voi != (mag.getVoid() != 0)){
 					currentElement = newElem;
 					voi = mag.getVoid() != 0;
-					time = mag.getPower() * IMagicHandler.BEAM_TIME;
+					time = mag.getPower() * BeamManager.BEAM_TIME;
 				}else{
-					time += mag.getPower() * IMagicHandler.BEAM_TIME;
+					time += mag.getPower() * BeamManager.BEAM_TIME;
 				}
 			}
 		}

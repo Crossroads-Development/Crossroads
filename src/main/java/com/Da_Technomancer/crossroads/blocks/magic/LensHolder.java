@@ -2,9 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.magic;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
@@ -20,7 +18,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -54,7 +51,7 @@ public class LensHolder extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new LensHolderTileEntity();
 	}
-	
+
 	@Override
 	public boolean hasComparatorInputOverride(IBlockState state){
 		return true;
@@ -64,7 +61,7 @@ public class LensHolder extends BlockContainer{
 	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
 		return (int) ((LensHolderTileEntity) worldIn.getTileEntity(pos)).getRedstone() / 3;
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
@@ -80,7 +77,7 @@ public class LensHolder extends BlockContainer{
 	public boolean isFullCube(IBlockState state){
 		return false;
 	}
-	
+
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return getDefaultState().withProperty(Properties.ORIENT, (placer == null) ? true : placer.getHorizontalFacing().getAxis() == Axis.X).withProperty(Properties.TEXTURE_7, 0);
@@ -107,7 +104,7 @@ public class LensHolder extends BlockContainer{
 			ItemStack stack = playerIn.getHeldItem(hand);
 			if(state.getValue(Properties.TEXTURE_7) != 0){
 				int i = state.getValue(Properties.TEXTURE_7);
-				ItemStack gotten = new ItemStack(i == 1 ? Item.getByNameOrId(Main.MODID + ":gemRuby") : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1);
+				ItemStack gotten = new ItemStack(i == 1 ? OreSetUp.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1);
 				if(!playerIn.inventory.addItemStackToInventory(gotten)){
 					EntityItem dropped = playerIn.dropItem(gotten, false);
 					dropped.setNoPickupDelay();
@@ -124,32 +121,29 @@ public class LensHolder extends BlockContainer{
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
 		if(state.getValue(Properties.TEXTURE_7) != 0){
 			int i = state.getValue(Properties.TEXTURE_7);
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(i == 1 ? OreSetUp.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1));
 		}
-		if(world.getTileEntity(pos) instanceof BeamRenderTE){
-			((BeamRenderTE) world.getTileEntity(pos)).refresh();
-		}
 		super.breakBlock(world, pos, state);
 	}
-	
+
 	@Override
 	public int getMetaFromState(IBlockState state){
 		return (state.getValue(Properties.ORIENT) ? 1 : 0) + (state.getValue(Properties.TEXTURE_7) << 1);
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
-	
+
 	private static final AxisAlignedBB BB = new AxisAlignedBB(0, 0, .375D, 1, 1, .625D);
 	private static final AxisAlignedBB BBA = new AxisAlignedBB(.375D, 0, 0, .625D, 1, 1);
-	
+
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
 		return state.getValue(Properties.ORIENT) ? BBA : BB;
