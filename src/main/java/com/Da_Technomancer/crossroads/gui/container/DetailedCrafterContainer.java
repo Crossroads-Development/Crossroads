@@ -85,8 +85,8 @@ public class DetailedCrafterContainer extends Container{
 		if(!world.isRemote && !MiscOp.getPlayerTag(playerInv.player).hasKey("path")){
 			MiscOp.getPlayerTag(playerInv.player).setTag("path", new NBTTagCompound());
 		}
-		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag.getCompoundTag("path") : MiscOp.getPlayerTag(playerInv.player).getCompoundTag("path");
-		if(nbt.getBoolean("technomancy")){
+		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscOp.getPlayerTag(playerInv.player);
+		if(nbt.getCompoundTag("path").getBoolean("technomancy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.technomancyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
 			if(out != ItemStack.EMPTY){
@@ -97,7 +97,7 @@ public class DetailedCrafterContainer extends Container{
 			for(int i = 0; i < 9; i++){
 				inInv.decrStackSize(i, 1);
 			}
-			nbt.setBoolean("technomancy", true);
+			nbt.getCompoundTag("path").setBoolean("technomancy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
 			}

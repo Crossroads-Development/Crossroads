@@ -95,7 +95,6 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 		for(int i = 0; i < length; i++){
 			prototypes.add(nbt.hasKey("pro" + i) ? PrototypeInfo.readFromNBT(nbt.getCompoundTag("pro" + i)) : null);
 		}
-		System.out.println("READ_FROM");//TODO
 	}
 
 	@Override
@@ -108,7 +107,6 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 			}
 			i++;
 		}
-		System.out.println("WRITE_TO");//TODO
 		return nbt;
 	}
 }
