@@ -18,6 +18,7 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -26,7 +27,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
+public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, ITickable{
 
 	private int index = -1;
 	public String name = "";
@@ -44,16 +45,39 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner{
 		return index;
 	}
 
+	private long lastRunValid;//The non-obvious solution to a beam-related bug. If the dimension ID is less than the prototype dim ID and the chunk was first loaded this tick, without this the prototype gets an extra tick.
+	private boolean passNext;
+	
+	@Override
+	public void loadTick(){
+		passNext = true;
+	}
+	
+	@Override
+	public void update(){
+		lastRunValid = world.getTotalWorldTime();
+	}
+	
 	@Override
 	public boolean shouldRun(){
-		return MiscOp.isChunkTicking((WorldServer) world, pos);
+		if(MiscOp.isChunkTicking((WorldServer) world, pos)){
+			if(world.provider.getDimension() > ModDimensions.PROTOTYPE_DIM_ID || passNext){
+				passNext = false;
+				return true;
+			}
+			
+			return world.getTotalWorldTime() - lastRunValid <= 1;
+		}
+		
+		return false;
 	}
 
 	@Override
 	public void onLoad(){
 		if(!world.isRemote){
 			if(selfDestruct){
-				Main.logger.info("Removing an invalid Prototype at " + pos.toString());
+				Main.logger.info("Removing an invalid Prototype at " + pos.toString() + ", with index: " + index + ", out of list size: " + PrototypeWorldSavedData.get(false).prototypes.size());
+				index = -1;
 				world.scheduleUpdate(pos, ModBlocks.prototype, 1);
 			}else if(index != -1){
 				ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(false).prototypes;

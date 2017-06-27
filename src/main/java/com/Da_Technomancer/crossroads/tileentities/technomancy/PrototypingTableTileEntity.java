@@ -210,11 +210,6 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 					@SuppressWarnings("unchecked")
 					Pair<PrototypePortTypes[], BlockPos[]> portInfo = (Pair<PrototypePortTypes[], BlockPos[]>) validityCheck;
 					int cost = 3;
-					for(PrototypePortTypes type : portInfo.getLeft()){
-						if(type != null){
-							cost++;
-						}
-					}
 					if(cost > copshowium.getCount()){
 						if(player != null){
 							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Insufficient copshowium.", Color.YELLOW, false), player);
@@ -396,12 +391,6 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 					return;
 				}
 				int out = 3;
-				PrototypePortTypes[] types = infoList.get(ind).ports;
-				for(int i = 0; i < 6; i++){
-					if(types[i] != null){
-						out++;
-					}
-				}
 				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + out, 64));
 				infoList.set(ind, null);
 				data.markDirty();

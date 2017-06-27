@@ -210,6 +210,9 @@ public class Prototype extends BlockContainer{
 		PrototypeTileEntity prTe = (PrototypeTileEntity) te;
 		BlockPos dirPos = fromPos.subtract(pos);
 		EnumFacing dir = EnumFacing.getFacingFromVector(dirPos.getX(), dirPos.getY(), dirPos.getZ());
+		if(prTe.getIndex() == -1){
+			return;
+		}
 		PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(prTe.getIndex());
 		WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){

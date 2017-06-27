@@ -64,6 +64,11 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 			}
 			doEmit(out);
 			activeCycle = BeamManager.cycleNumber;
+			
+			/*FOR TESTING if(world.provider.getDimension() == 27 || pos.equals(new BlockPos(200, 71, 290))){
+				System.out.println("CYCLE #: " + activeCycle + ", dim: " + world.provider.getDimension());
+			}*/
+			
 			markDirty();
 		}
 	}
@@ -204,7 +209,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	protected boolean canRun(){
 		if(world.provider.getDimension() == ModDimensions.PROTOTYPE_DIM_ID){
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(false);
-			
+
 			//This calculates the prototype index based on the chunk's position. 
 			int index = ((pos.getZ() >> 4) * 50) + (99 * 50);
 			int holder = index - (index % 100) + (((pos.getX() >> 4) + 99) / 2);

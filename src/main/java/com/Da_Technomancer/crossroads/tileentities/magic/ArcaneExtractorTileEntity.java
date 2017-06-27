@@ -25,7 +25,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
 		return nbt;
-	}
+	}	
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){

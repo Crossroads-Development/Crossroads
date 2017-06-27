@@ -154,7 +154,6 @@ public final class MiscOp{
 	 * @return Whether the chunk can tick TileEntities (does not check if the chunk actually contains any TileEntities). 
 	 */
 	public static boolean isChunkTicking(WorldServer world, BlockPos pos){
-
 		if(!world.isBlockLoaded(pos, false)){
 			return false;
 		}
