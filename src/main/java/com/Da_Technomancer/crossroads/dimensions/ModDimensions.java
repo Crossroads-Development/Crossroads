@@ -31,7 +31,6 @@ public class ModDimensions{
 	public static DimensionType workspaceDimType;
 	public static DimensionType prototypeDimType;
 
-	private static HashMap<GameProfileNonPicky, Integer> playerDim;
 	public static final int PROTOTYPE_DIM_ID = 27;
 	public static final int PROTOTYPE_LIMIT = 500;
 
@@ -52,10 +51,11 @@ public class ModDimensions{
 		for(int i : DimensionManager.getDimensions(workspaceDimType)){
 			DimensionManager.unregisterDimension(i);
 		}
-		// This hasn't broken in testing, but there are far too many ways for this to go wrong. Better safe then sorry.
+		
+		PlayerDimensionMapSavedData data = PlayerDimensionMapSavedData.get(DimensionManager.getWorld(0), DimensionManager.getWorld(0).getMinecraftServer() == null ? null : DimensionManager.getWorld(0).getMinecraftServer().getPlayerProfileCache());
+		HashMap<GameProfileNonPicky, Integer> playerDim = null;
 		try{
-
-			playerDim = PlayerDimensionMapSavedData.get(DimensionManager.getWorld(0), DimensionManager.getWorld(0).getMinecraftServer() == null ? null : DimensionManager.getWorld(0).getMinecraftServer().getPlayerProfileCache()).playerDim;
+			playerDim = data.playerDim;
 			for(int id : playerDim.values()){
 				DimensionManager.registerDimension(id, workspaceDimType);
 			}
@@ -64,6 +64,7 @@ public class ModDimensions{
 			if(ModConfig.wipeInvalidMappings.getBoolean()){
 				if(playerDim != null){
 					playerDim.clear();
+					data.markDirty();
 				}
 				Main.logger.fatal("Something went wrong while loading the player dimension mappings. Attempting to wipe the mappings. Shutting down. It should work if you restart now.", ex);
 			}else{
@@ -82,6 +83,9 @@ public class ModDimensions{
 	/** This does not initialize the dimension. If needed, run
 	 * {@link DimensionManager#initDimension(int)} on the dimension if {@link DimensionManager#getWorld(int)} returns null for that dimension. */
 	public static int getDimForPlayer(GameProfileNonPicky play){
+		PlayerDimensionMapSavedData data = PlayerDimensionMapSavedData.get(DimensionManager.getWorld(0), null);
+		HashMap<GameProfileNonPicky, Integer> playerDim = data.playerDim;
+		
 		if(playerDim.containsKey(play)){
 			int dim = playerDim.get(play);
 			return dim;
@@ -90,7 +94,7 @@ public class ModDimensions{
 		int dim = DimensionManager.getNextFreeDimId();
 		DimensionManager.registerDimension(dim, workspaceDimType);
 		playerDim.put(play, dim);
-		PlayerDimensionMapSavedData.get(DimensionManager.getWorld(0), null).markDirty();
+		data.markDirty();
 		ModPackets.network.sendToAll(new SendDimLoadToClient(new int[] {dim}));
 		return dim;
 	}

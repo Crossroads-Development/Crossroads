@@ -31,8 +31,8 @@ public class GameProfileNonPicky extends GameProfile{
 
 		final GameProfileNonPicky that = (GameProfileNonPicky) other;
 
-		if (getId() != null && that.getId() != null && !getId().equals(that.getId())) {
-			return false;
+		if (getId() != null && that.getId() != null) {
+			return getId().equals(that.getId());
 		}
 		if (getName() != null && that.getName() != null && !getName().equals(that.getName())) {
 			return false;

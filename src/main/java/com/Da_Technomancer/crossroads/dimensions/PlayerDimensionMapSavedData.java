@@ -38,24 +38,24 @@ public class PlayerDimensionMapSavedData extends WorldSavedData{
 			data = new PlayerDimensionMapSavedData();
 			storage.setData(PLAYER_DIM_ID, data);
 		}
-		data.setDirty(true);
+		
 		cache = null;
 		return data;
 	}
 
 	protected final HashMap<GameProfileNonPicky, Integer> playerDim = new HashMap<GameProfileNonPicky, Integer>();
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		for(int i = 0; i < nbt.getInteger("length"); i++){
-			GameProfile profile = new GameProfile(nbt.hasKey(i + "_id") ? nbt.getUniqueId(i + "_id") : null, nbt.hasKey(i + "_name") ? nbt.getString(i + "_name") : null);
+			GameProfileNonPicky profile = new GameProfileNonPicky(nbt.hasKey(i + "_idMost") ? nbt.getUniqueId(i + "_id") : null, nbt.hasKey(i + "_name") ? nbt.getString(i + "_name") : null);
 			if(cache != null && profile.getId() == null){
-				Main.logger.info("Attempting to complete player profile in dimension map. This is not an error. Profile: " + profile.toString());
 				GameProfile search = cache.getGameProfileForUsername(profile.getName());
-				profile = search == null ? profile : search;
+				profile = search == null ? profile : new GameProfileNonPicky(search);
+				markDirty();
+				Main.logger.info("Attempting to complete player profile in dimension map. This is only an error if seen again for the same player in later launches. Profile: " + profile.toString());
 			}
-			playerDim.put(new GameProfileNonPicky(profile), nbt.getInteger(i + "_dim"));
-			
+			playerDim.put(profile, nbt.getInteger(i + "_dim"));
 		}
 	}
 
