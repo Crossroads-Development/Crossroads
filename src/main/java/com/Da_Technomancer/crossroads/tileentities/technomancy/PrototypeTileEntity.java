@@ -47,17 +47,17 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 
 	private long lastRunValid;//The non-obvious solution to a beam-related bug. If the dimension ID is less than the prototype dim ID and the chunk was first loaded this tick, without this the prototype gets an extra tick.
 	private boolean passNext;
-	
+
 	@Override
 	public void loadTick(){
 		passNext = true;
 	}
-	
+
 	@Override
 	public void update(){
 		lastRunValid = world.getTotalWorldTime();
 	}
-	
+
 	@Override
 	public boolean shouldRun(){
 		if(MiscOp.isChunkTicking((WorldServer) world, pos)){
@@ -65,10 +65,10 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 				passNext = false;
 				return true;
 			}
-			
+
 			return world.getTotalWorldTime() - lastRunValid <= 1;
 		}
-		
+
 		return false;
 	}
 
@@ -84,16 +84,6 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 				info.get(index).owner = new WeakReference<IPrototypeOwner>(this);
 				EventHandlerCommon.updateLoadedPrototypeChunks();
 			}
-
-		}
-	}
-
-	@Override
-	public void onChunkUnload(){
-		if(!world.isRemote && index != -1 && !selfDestruct){
-			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(false).prototypes;
-			info.get(index).owner = null;
-			EventHandlerCommon.updateLoadedPrototypeChunks();
 		}
 	}
 

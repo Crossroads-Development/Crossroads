@@ -149,6 +149,9 @@ public final class MiscOp{
 
 	/**
 	 * A chunk being loaded and a chunk ticking are two different things; in some cases, a loaded chunk (such as a spawn chunk) might not be able to actually tick tile entities. 
+	 * 
+	 * It should be noted that this method is sensitive to WHEN it is called in the server-tick cycle, and may give inaccurate results in certain cases if called at the wrong place (as the placement controls whether ln166 should be > or >=). 
+	 * 
 	 * @param world
 	 * @param pos
 	 * @return Whether the chunk can tick TileEntities (does not check if the chunk actually contains any TileEntities). 
@@ -160,7 +163,7 @@ public final class MiscOp{
 
 		if(world.getPersistentChunks().isEmpty() && world.playerEntities.isEmpty()){
 			try{
-				if(WORLD_LOADING_TIMER.getInt(world) >= 300){
+				if(WORLD_LOADING_TIMER.getInt(world) > 300){
 					return false;
 				}
 			}catch(IllegalArgumentException | IllegalAccessException e){

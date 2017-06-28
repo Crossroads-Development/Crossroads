@@ -87,17 +87,22 @@ public final class EventHandlerCommon{
 
 		boolean emptyTicket = loadingTicket == null || loadingTicket.getChunkList().isEmpty();
 
-		if(!emptyTicket || !toLoad.isEmpty()){
-			if(emptyTicket){
-				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
-			}
+		if(emptyTicket ? !toLoad.isEmpty() : !toLoad.containsAll(loadingTicket.getChunkList()) || !loadingTicket.getChunkList().containsAll(toLoad)){
 			ForgeChunkManager.releaseTicket(loadingTicket);
-			WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-			loadingTicket = ForgeChunkManager.requestTicket(Main.instance, world, ForgeChunkManager.Type.NORMAL);
-		}
-
-		for(ChunkPos chunk : toLoad){
-			ForgeChunkManager.forceChunk(loadingTicket, chunk);
+			if(toLoad.isEmpty()){
+				loadingTicket = null;
+			}else{
+				WorldServer protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+				if(protWorld == null){
+					DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
+					protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+				}
+				loadingTicket = ForgeChunkManager.requestTicket(Main.instance, protWorld, ForgeChunkManager.Type.NORMAL);
+			}
+			
+			for(ChunkPos chunk : toLoad){
+				ForgeChunkManager.forceChunk(loadingTicket, chunk);
+			}
 		}
 	}
 
