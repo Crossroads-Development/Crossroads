@@ -33,7 +33,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	/**
 	 * The queued MagicUnits to be emitted. Can contain null MagicUnits. 
 	 */
-	protected ArrayList<MagicUnit> outputQueue = new ArrayList<MagicUnit>();
+	protected ArrayList<MagicUnit> outputQueue = new ArrayList<MagicUnit>(2);
 	protected long activeCycle;
 
 	public BeamRenderTE(){
@@ -99,15 +99,19 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
-		nbt.setInteger("queue_size", outputQueue.size());
+		//nbt.setInteger("queue_size", outputQueue.size());
+		MagicUnit merged = new MagicUnit(0, 0, 0, 0);
 		for(int i = 0; i < outputQueue.size(); i++){
 			MagicUnit mag = outputQueue.get(i);
 			if(mag != null){
-				nbt.setInteger(i + "_r", mag.getEnergy());
-				nbt.setInteger(i + "_g", mag.getPotential());
-				nbt.setInteger(i + "_b", mag.getStability());
-				nbt.setInteger(i + "_v", mag.getVoid());
+				merged = new MagicUnit(merged.getEnergy() + mag.getEnergy(), merged.getPotential() + mag.getPotential(), merged.getStability() + mag.getStability(), merged.getVoid() + mag.getVoid());
 			}
+		}
+		if(merged.getPower() != 0){
+			nbt.setInteger("r", merged.getEnergy());
+			nbt.setInteger("g", merged.getPotential());
+			nbt.setInteger("b", merged.getStability());
+			nbt.setInteger("v", merged.getVoid());
 		}
 		nbt.setLong("cyc", activeCycle);
 		if(beamer != null){
@@ -121,14 +125,17 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		int size = nbt.getInteger("queue_size");
-		outputQueue.clear();
-		for(int i = 0; i < size; i++){
-			outputQueue.add(nbt.hasKey(i + "_r") ? new MagicUnit(nbt.getInteger(i + "_r"), nbt.getInteger(i + "_g"), nbt.getInteger(i + "_b"), nbt.getInteger(i + "_v")) : null);
+		//int size = nbt.getInteger("queue_size");
+		//for(int i = 0; i < size; i++){
+		
+		if(nbt.hasKey("r")){
+			outputQueue.clear();
+			outputQueue.add(new MagicUnit(nbt.getInteger("r"), nbt.getInteger("g"), nbt.getInteger("b"), nbt.getInteger("v")));
 		}
+		/*}
 		if(size == 0){
 			outputQueue.add(null);
-		}
+		}*/
 		activeCycle = nbt.getLong("cyc");
 
 		for(int i = 0; i < 6; i++){
@@ -188,10 +195,11 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 		@Override
 		public void setMagic(MagicUnit mag){
-			if(activeCycle == BeamManager.cycleNumber){
+			if(activeCycle == BeamManager.cycleNumber || outputQueue.size() == 2){
 				MagicUnit prev = outputQueue.remove(outputQueue.size() - 1);
 				MagicUnit combined = prev == null ? mag : mag == null ? prev : new MagicUnit(mag.getEnergy() + prev.getEnergy(), mag.getPotential() + prev.getPotential(), mag.getStability() + prev.getStability(), mag.getVoid() + prev.getVoid());
 				outputQueue.add(combined);
+				activeCycle = BeamManager.cycleNumber;
 				markDirty();
 				return;
 			}

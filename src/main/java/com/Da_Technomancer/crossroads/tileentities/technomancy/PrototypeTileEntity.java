@@ -45,7 +45,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		return index;
 	}
 
-	private long lastRunValid;//The non-obvious solution to a beam-related bug. If the dimension ID is less than the prototype dim ID and the chunk was first loaded this tick, without this the prototype gets an extra tick.
+	private long lastRunValid;
 	private boolean passNext;
 
 	@Override
