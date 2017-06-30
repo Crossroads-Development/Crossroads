@@ -44,11 +44,12 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 		return new MagicUnit[] {beamer == null ? null : beamer.getLastFullSent(), beamerUp == null ? null : beamerUp.getLastFullSent()};
 	}
 
+	private double lastRedstone;
+	
 	public double getRedstone(){
 		return lastRedstone;
 	}
-	private double lastRedstone;
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
