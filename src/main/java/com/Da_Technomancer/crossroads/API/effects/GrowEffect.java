@@ -16,6 +16,14 @@ public class GrowEffect implements IEffect{
 
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
+		double range = Math.sqrt(mult);
+		List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
+		if(ents != null){
+			for(EntityLivingBase ent : ents){
+				ent.heal((float) (mult / 2D));
+			}
+		}		
+		
 		for(int i = 0; i < mult; i++){
 			IBlockState state = worldIn.getBlockState(pos);
 			if(!(state.getBlock() instanceof IGrowable)){
@@ -24,14 +32,6 @@ public class GrowEffect implements IEffect{
 			IGrowable igrowable = (IGrowable) state.getBlock();
 			if(igrowable.canGrow(worldIn, pos, state, false)){
 				igrowable.grow(worldIn, worldIn.rand, pos, state);
-			}
-		}
-
-		double range = Math.sqrt(mult);
-		List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
-		if(ents != null){
-			for(EntityLivingBase ent : ents){
-				ent.heal((float) (mult / 2D));
 			}
 		}
 	}

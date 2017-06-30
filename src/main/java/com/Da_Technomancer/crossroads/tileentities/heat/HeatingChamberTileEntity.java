@@ -11,22 +11,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class HeatingChamberTileEntity extends AbstractInventory implements ITickable{
 
 	// 0 = Input, 1 = Output
-	private ItemStack[] inventory = new ItemStack[2];
+	private ItemStack[] inventory = {ItemStack.EMPTY, ItemStack.EMPTY};
 	private int progress = 0;
 	private double temp;
 	private boolean init = false;
 	public final static int REQUIRED = 100;
 	private final static int MINTEMP = 200;
 
-	public HeatingChamberTileEntity(){
-		inventory[0] = ItemStack.EMPTY;
-		inventory[1] = ItemStack.EMPTY;
-	}
-	
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -113,10 +110,15 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 	}
 
 	private IHeatHandler heatHandler = new HeatHandler();
+	private IItemHandler outputHandler = new OutputHandler();
+	private IItemHandler inputHandler = new InputHandler();
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == null)){
+			return true;
+		}
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != EnumFacing.UP){
 			return true;
 		}
 
@@ -124,9 +126,105 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
-		return (capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.UP)) ? (T) heatHandler : super.getCapability(capability, facing);
+	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == null)){
+			return (T) heatHandler;
+		}
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != EnumFacing.UP){
+			return (T) (side == EnumFacing.DOWN ? outputHandler : inputHandler);
+		}
+
+		return super.getCapability(cap, side);
 	}
+
+	private class InputHandler implements IItemHandler{
+
+		@Override
+		public int getSlots(){
+			return 1;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return slot == 0 ? inventory[0] : ItemStack.EMPTY;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			if(slot == 0 && !stack.isEmpty() && (inventory[0].isEmpty() || ItemStack.areItemsEqual(inventory[0], stack))){
+				int inserted = Math.min(stack.getCount(), stack.getMaxStackSize() - inventory[0].getCount());
+
+				if(!simulate && inserted != 0){
+					if(inventory[0].isEmpty()){
+						inventory[0] = stack.copy();
+						inventory[0].setCount(inserted);
+					}else{
+						inventory[0].grow(inserted);
+					}
+					markDirty();
+				}
+
+				if(inserted == stack.getCount()){
+					return ItemStack.EMPTY;
+				}
+
+				ItemStack returned = stack.copy();
+				returned.shrink(inserted);
+				return returned;
+			}
+
+			return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
+		}
+	}
+
+	private class OutputHandler implements IItemHandler{
+
+		@Override
+		public int getSlots(){
+			return 1;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return slot == 0 ? inventory[1] : ItemStack.EMPTY;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			if(slot == 0 && !inventory[1].isEmpty() && amount > 0){
+				int extracted = Math.min(amount, inventory[1].getCount());
+				ItemStack output = inventory[1].copy();
+				output.setCount(extracted);
+				if(!simulate && extracted != 0){
+					inventory[1].shrink(extracted);
+					markDirty();
+				}
+				return output;
+			}
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
+		}
+	}
+
 
 	@Override
 	public int getSizeInventory(){
