@@ -30,11 +30,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE{
 			}
 		}
 
-		if(world.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() == Blocks.BEACON && world.isAirBlock(pos.offset(EnumFacing.DOWN, 1))){
-			return false;
-		}
-
-		return true;
+		return world.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() != Blocks.BEACON || !world.isAirBlock(pos.offset(EnumFacing.DOWN, 1));
 	}
 
 	public void trigger(){

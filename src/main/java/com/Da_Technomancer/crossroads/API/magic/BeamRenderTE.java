@@ -59,7 +59,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 			}
 
 			MagicUnit out = outputQueue.remove(0);
-			if(activeCycle != BeamManager.cycleNumber || outputQueue.isEmpty()){
+			if((activeCycle != BeamManager.cycleNumber && outputQueue.size() < 2) || outputQueue.isEmpty()){
 				outputQueue.add(null);
 			}
 			doEmit(out);
@@ -195,7 +195,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 		@Override
 		public void setMagic(MagicUnit mag){
-			if(activeCycle == BeamManager.cycleNumber || outputQueue.size() == 2){
+			if(activeCycle == BeamManager.cycleNumber || outputQueue.size() >= 2){
 				MagicUnit prev = outputQueue.remove(outputQueue.size() - 1);
 				MagicUnit combined = prev == null ? mag : mag == null ? prev : new MagicUnit(mag.getEnergy() + prev.getEnergy(), mag.getPotential() + prev.getPotential(), mag.getStability() + prev.getStability(), mag.getVoid() + prev.getVoid());
 				outputQueue.add(combined);

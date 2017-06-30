@@ -60,8 +60,6 @@ public class FusionEffect implements IEffect{
 				worldIn.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
 			}else if(block == Blocks.STONEBRICK){
 				worldIn.setBlockState(pos, Blocks.STONE.getDefaultState());
-			}else if(block == Blocks.DIAMOND_BLOCK && mult >= 128){
-				worldIn.setBlockState(pos, Blocks.COAL_BLOCK.getDefaultState());
 			}else if(block == Blocks.PRISMARINE && state.getValue(BlockPrismarine.VARIANT) == BlockPrismarine.EnumType.BRICKS && mult >= 12){
 				worldIn.setBlockState(pos, Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.ROUGH));
 			}else if(block == Blocks.PRISMARINE && state.getValue(BlockPrismarine.VARIANT) == BlockPrismarine.EnumType.DARK && mult >= 16){

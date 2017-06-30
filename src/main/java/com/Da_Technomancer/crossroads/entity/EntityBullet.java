@@ -37,7 +37,7 @@ public class EntityBullet extends EntityThrowable{
 			if(mag != null && (result.getBlockPos() != null || result.entityHit != null)){
 				IEffect effect = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
 				if(effect != null){
-					effect.doEffect(world, result.getBlockPos() == null ? result.entityHit.getPosition() : result.getBlockPos(), mag.getPower());
+					effect.doEffect(world, result.getBlockPos() == null ? result.entityHit.getPosition() : result.getBlockPos(), Math.min(64, mag.getPower()));
 				}
 			}
 			world.setEntityState(this, (byte) 3);

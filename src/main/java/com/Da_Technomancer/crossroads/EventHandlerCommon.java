@@ -147,7 +147,7 @@ public final class EventHandlerCommon{
 						BlockPos pos = calcFields(datum.getValue()[0], datum.getValue()[1], data.nodeForces.get(key)[0], data.nodeForces.get(key)[1]);
 						if(pos != null){
 							toRemove.add(key);
-							MagicElements.TIME.getVoidEffect().doEffect(e.world, MiscOp.getChunkPosFromLong(key).getBlock(pos.getX(), pos.getY(), pos.getZ()), 128);
+							MagicElements.TIME.getVoidEffect().doEffect(e.world, MiscOp.getChunkPosFromLong(key).getBlock(pos.getX(), pos.getY(), pos.getZ()), 64);
 						}
 					}catch(Exception ex){
 						toRemove.add(key);

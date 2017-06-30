@@ -26,22 +26,30 @@ public class GrowEffect implements IEffect{
 				igrowable.grow(worldIn, worldIn.rand, pos, state);
 			}
 		}
+
+		double range = Math.sqrt(mult);
+		List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
+		if(ents != null){
+			for(EntityLivingBase ent : ents){
+				ent.heal((float) (mult / 2D));
+			}
+		}
 	}
-	
+
 	public static class KillEffect implements IEffect{
 
 		private static final DamageSource POTENTIALVOID = new DamageSource("potentialvoid").setMagicDamage().setDamageBypassesArmor();
-		
+
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, double mult){
 			if(worldIn.getBlockState(pos).getBlock() instanceof IGrowable && worldIn.getBlockState(pos).getBlock() != Blocks.DEADBUSH){
 				worldIn.setBlockState(pos, Blocks.DEADBUSH.getDefaultState());
 			}
-			int range = (int) Math.min(8, mult);
+			double range = Math.sqrt(mult);
 			List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
 			if(ents != null){
 				for(EntityLivingBase ent : ents){
-					ent.attackEntityFrom(POTENTIALVOID, (float) Math.min(128, mult));
+					ent.attackEntityFrom(POTENTIALVOID, (float) (mult / 2D));
 				}
 			}
 		}

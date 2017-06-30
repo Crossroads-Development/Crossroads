@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.dimensions.WorkspaceWorldProvider;
 
 import net.minecraft.init.Blocks;
@@ -27,14 +28,16 @@ public class TimeEffect implements IEffect{
 
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
-		if(worldIn.getTileEntity(pos) instanceof ITickable){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof ITickable){
 			for(EnumFacing dir : EnumFacing.values()){
-				if(worldIn.getTileEntity(pos).hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir)){
+				if(te.hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir)){
 					return;
 				}
 			}
 
-			for(int i = RAND.nextInt((int) mult); i < mult; i++){
+			for(int i = 0; i < mult * BeamManager.BEAM_TIME; i++){
+				//Each tick the TileEntity is queried again because some TileEntities destroy themselves on tick. 
 				((ITickable) worldIn.getTileEntity(pos)).update();
 				if(!(worldIn.getTileEntity(pos) instanceof ITickable)){
 					break;
@@ -43,7 +46,7 @@ public class TimeEffect implements IEffect{
 		}
 
 		if(worldIn.getBlockState(pos).getBlock().getTickRandomly()){
-			for(int i = RAND.nextInt((int) mult); i < mult; i++){
+			for(int i = 0; i < mult * BeamManager.BEAM_TIME; i++){
 				worldIn.getBlockState(pos).getBlock().randomTick(worldIn, pos, worldIn.getBlockState(pos), RAND);
 			}
 		}
@@ -57,9 +60,9 @@ public class TimeEffect implements IEffect{
 				return;
 			}
 			
-			int severity = RAND.nextInt((int) Math.min(mult, 128)) + 1;
+			int severity = RAND.nextInt((int) mult) + 1;
 
-			if(severity >= 100 && ModConfig.voidChunk.getBoolean()){
+			if(severity >= 50 && ModConfig.voidChunk.getBoolean()){
 				ChunkPos chunkPos = new ChunkPos(pos);
 				for(int x = 0; x < 16; x++){
 					for(int z = 0; z < 16; z++){
@@ -68,7 +71,7 @@ public class TimeEffect implements IEffect{
 						}
 					}
 				}
-			}else if(severity > 60 && ModConfig.resetChunk.getBoolean()){
+			}else if(severity > 30 && ModConfig.resetChunk.getBoolean()){
 				try{
 					Chunk swapWith = ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator.provideChunk(pos.getX() >> 4, pos.getZ() >> 4);
 					swapWith.populateChunk(worldIn.getChunkProvider(), ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator);
@@ -77,7 +80,7 @@ public class TimeEffect implements IEffect{
 				}catch(Exception e){
 					Main.logger.log(Level.ERROR, "Something went wrong while reseting a chunk. Disable this in the config if necessary. Please report this as a bug.", e);
 				}
-			}else if(severity > 10 && ModConfig.magicChunk.getBoolean()){
+			}else if(severity > 5 && ModConfig.magicChunk.getBoolean()){
 				ChunkPos base = worldIn.getChunkFromBlockCoords(pos).getPos();
 				for(int i = 0; i < severity; i++){
 					BlockPos effectPos = base.getBlock(RAND.nextInt(16), RAND.nextInt(256), RAND.nextInt(16));

@@ -75,7 +75,7 @@ public class BeamManager{
 				if(mag != null && mag.getRGB() != null){
 					IEffect e = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
 					if(e != null){
-						e.doEffect(world, pos.offset(dir, i), mag.getPower());
+						e.doEffect(world, pos.offset(dir, i), Math.min(64, mag.getPower()));
 					}
 				}
 				boolean holder = dist != i || (mag == null ? lastSent != null : !mag.equals(lastSent));

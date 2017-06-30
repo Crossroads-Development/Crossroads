@@ -61,11 +61,11 @@ public class StaffTechnomancy extends MagicUsingItem{
 					BlockPos endPos = ray == null ? player.getPosition().add(new Vec3i(lookVec.xCoord, lookVec.yCoord, lookVec.zCoord)) : ray.getBlockPos();
 					IEffect effect = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
 					if(effect != null){
-						effect.doEffect(player.world, endPos, mag.getPower());
+						effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()));
 					}
 					NBTTagCompound beamNBT = new NBTTagCompound();
 					double heldOffset = .1D * (player.getActiveHand() == EnumHand.MAIN_HAND ? 1D : -1D);
-					new LooseBeamRenderable(player.posX - (heldOffset * Math.cos(Math.toRadians(player.rotationYawHead))), player.posY + player.getEyeHeight(), player.posZ - (heldOffset * Math.sin(Math.toRadians(player.rotationYawHead))), (int) Math.sqrt(endPos.distanceSq(player.getPosition())), player.rotationPitch, player.rotationYawHead, ((byte) Math.pow(mag.getPower(), 1D / 3D)), mag.getRGB().getRGB()).saveToNBT(beamNBT);
+					new LooseBeamRenderable(player.posX - (heldOffset * Math.cos(Math.toRadians(player.rotationYawHead))), player.posY + player.getEyeHeight(), player.posZ - (heldOffset * Math.sin(Math.toRadians(player.rotationYawHead))), (int) Math.sqrt(endPos.distanceSq(player.getPosition())), player.rotationPitch, player.rotationYawHead, (byte) Math.sqrt(mag.getPower()), mag.getRGB().getRGB()).saveToNBT(beamNBT);
 					ModPackets.network.sendToAllAround(new SendLooseBeamToClient(beamNBT), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512));
 				}
 			}
