@@ -50,7 +50,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGo
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return (oldState.getBlock() != newState.getBlock());
 	}
-	
+
 	@Override
 	public void addInfo(ArrayList<String> chat, GoggleLenses lens, EntityPlayer player, @Nullable EnumFacing side){
 		if(lens == GoggleLenses.EMERALD && world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
@@ -72,91 +72,99 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGo
 		if(BeamManager.beamStage == 1){
 			cacheValid = false;
 		}
-		if(!world.isRemote && BeamManager.beamStage == 1){
-			if(world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
-				if(owner != null && magicPassed && checkStructure() && world.provider.getDimension() != 1){
-					world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP));
-					List<Entity> toTransport = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() - 1, pos.getY() - 3, pos.getZ() - 1, pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1), EntitySelectors.IS_ALIVE);
-					if(toTransport != null && !toTransport.isEmpty()){
-						int dim = ModDimensions.getDimForPlayer(owner);
-						if(DimensionManager.getWorld(dim) == null){
-							DimensionManager.initDimension(dim);
-						}
-						int currentDim = world.provider.getDimension();
-						boolean inDim = dim == currentDim;
-						GatewayTeleporter porter = inDim ? new GatewayTeleporter(DimensionManager.getWorld(0), dialedCoord(Axis.X).savedCoord, savedCoord, dialedCoord(Axis.Z).savedCoord) : new GatewayTeleporter(DimensionManager.getWorld(dim), .5D, 33, .5D);
 
-						for(Entity ent : toTransport){
-							if(ent instanceof EntityPlayerMP){
-								DimensionManager.getWorld(0).getMinecraftServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) ent, inDim ? 0 : dim, porter);
-							}else{
-								DimensionManager.getWorld(0).getMinecraftServer().getPlayerList().transferEntityToWorld(ent, currentDim, (WorldServer) world, DimensionManager.getWorld(inDim ? 0 : dim), porter);
+		if(!world.isRemote){
+			if(BeamManager.beamStage == 1){
+				if(world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
+					if(owner != null && magicPassed && checkStructure() && world.provider.getDimension() != 1){
+						world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP));
+						List<Entity> toTransport = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() - 1, pos.getY() - 3, pos.getZ() - 1, pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1), EntitySelectors.IS_ALIVE);
+						if(toTransport != null && !toTransport.isEmpty()){
+							int dim = ModDimensions.getDimForPlayer(owner);
+							if(DimensionManager.getWorld(dim) == null){
+								DimensionManager.initDimension(dim);
+							}
+							int currentDim = world.provider.getDimension();
+							boolean inDim = dim == currentDim;
+							GatewayTeleporter porter = inDim ? new GatewayTeleporter(DimensionManager.getWorld(0), dialedCoord(Axis.X).savedCoord, savedCoord, dialedCoord(Axis.Z).savedCoord) : new GatewayTeleporter(DimensionManager.getWorld(dim), .5D, 33, .5D);
+
+							for(Entity ent : toTransport){
+								if(ent instanceof EntityPlayerMP){
+									DimensionManager.getWorld(0).getMinecraftServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) ent, inDim ? 0 : dim, porter);
+								}else{
+									DimensionManager.getWorld(0).getMinecraftServer().getPlayerList().transferEntityToWorld(ent, currentDim, (WorldServer) world, DimensionManager.getWorld(inDim ? 0 : dim), porter);
+								}
 							}
 						}
+					}else{
+						world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.DOWN));
 					}
-				}else{
-					world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.DOWN));
 				}
+				magicPassed = false;
 			}
-			magicPassed = false;
-		}
 
-		if(!world.isRemote && owner != null){
-			IBlockState active = ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP);
-			switch(world.getBlockState(pos).getValue(Properties.FACING)){
-				case EAST:
-					if(world.getBlockState(pos.offset(EnumFacing.EAST, 2).offset(EnumFacing.UP, 2)) == active){
-						TileEntity te = world.getTileEntity(pos.offset(EnumFacing.WEST));
-						if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST)){
-							savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST).getMotionData()[0] / 20D;
+			if(owner != null){
+				IBlockState active = ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP);
+				double prevCoord = savedCoord;
+				
+				switch(world.getBlockState(pos).getValue(Properties.FACING)){
+					case EAST:
+						if(world.getBlockState(pos.offset(EnumFacing.EAST, 2).offset(EnumFacing.UP, 2)) == active){
+							TileEntity te = world.getTileEntity(pos.offset(EnumFacing.WEST));
+							if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST)){
+								savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST).getMotionData()[0] / 20D;
+							}
+						}else{
+							savedCoord = 0;
 						}
-					}else{
+						break;
+					case NORTH:
+						if(world.getBlockState(pos.offset(EnumFacing.NORTH, 2).offset(EnumFacing.UP, 2)) == active){
+							TileEntity te = world.getTileEntity(pos.offset(EnumFacing.SOUTH));
+							if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH)){
+								savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH).getMotionData()[0] / 20D;
+							}
+						}else{
+							savedCoord = 0;
+						}
+						break;
+					case SOUTH:
+						if(world.getBlockState(pos.offset(EnumFacing.SOUTH, 2).offset(EnumFacing.UP, 2)) == active){
+							TileEntity te = world.getTileEntity(pos.offset(EnumFacing.NORTH));
+							if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
+								savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH).getMotionData()[0] / 20D;
+							}
+						}else{
+							savedCoord = 0;
+						}
+						break;
+					case UP:
+						for(EnumFacing dir : EnumFacing.HORIZONTALS){
+							TileEntity te = world.getTileEntity(pos.offset(dir));
+							if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite())){
+								savedCoord = Math.max(0, Math.min(250, savedCoord + te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite()).getMotionData()[0] / 20D));
+								break;
+							}
+						}
+						break;
+					case WEST:
+						if(world.getBlockState(pos.offset(EnumFacing.WEST, 2).offset(EnumFacing.UP, 2)) == active){
+							TileEntity te = world.getTileEntity(pos.offset(EnumFacing.EAST));
+							if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST)){
+								savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST).getMotionData()[0] / 20D;
+							}
+						}else{
+							savedCoord = 0;
+						}
+						break;
+					default:
 						savedCoord = 0;
-					}
-					break;
-				case NORTH:
-					if(world.getBlockState(pos.offset(EnumFacing.NORTH, 2).offset(EnumFacing.UP, 2)) == active){
-						TileEntity te = world.getTileEntity(pos.offset(EnumFacing.SOUTH));
-						if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH)){
-							savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.NORTH).getMotionData()[0] / 20D;
-						}
-					}else{
-						savedCoord = 0;
-					}
-					break;
-				case SOUTH:
-					if(world.getBlockState(pos.offset(EnumFacing.SOUTH, 2).offset(EnumFacing.UP, 2)) == active){
-						TileEntity te = world.getTileEntity(pos.offset(EnumFacing.NORTH));
-						if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH)){
-							savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH).getMotionData()[0] / 20D;
-						}
-					}else{
-						savedCoord = 0;
-					}
-					break;
-				case UP:
-					for(EnumFacing dir : EnumFacing.HORIZONTALS){
-						TileEntity te = world.getTileEntity(pos.offset(dir));
-						if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite())){
-							savedCoord = Math.max(0, Math.min(250, savedCoord + te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite()).getMotionData()[0] / 20D));
-							break;
-						}
-					}
-					break;
-				case WEST:
-					if(world.getBlockState(pos.offset(EnumFacing.WEST, 2).offset(EnumFacing.UP, 2)) == active){
-						TileEntity te = world.getTileEntity(pos.offset(EnumFacing.EAST));
-						if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST)){
-							savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST).getMotionData()[0] / 20D;
-						}
-					}else{
-						savedCoord = 0;
-					}
-					break;
-				default:
-					savedCoord = 0;
-					break;
+						break;
 
+				}
+				if(savedCoord != prevCoord){
+					markDirty();
+				}
 			}
 		}
 	}
@@ -302,6 +310,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGo
 		public void setMagic(MagicUnit mag){
 			if(MagicElements.getElement(mag) == MagicElements.RIFT){
 				magicPassed = true;
+				markDirty();
 			}
 		}
 	}
