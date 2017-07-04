@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.magic;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
@@ -12,6 +11,7 @@ import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
+import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEntity;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,24 +30,32 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		return trip;
 	}
 
-	/**
-	 * The queued MagicUnits to be emitted. Can contain null MagicUnits. 
-	 */
-	protected ArrayList<MagicUnit> outputQueue = new ArrayList<MagicUnit>(2);
-	protected long activeCycle;
-
-	public BeamRenderTE(){
-		super();
-		outputQueue.add(null);
+	@Override
+	public void refresh(){
+		if(beamer != null){
+			for(BeamManager beam : beamer){
+				if(beam != null){
+					beam.emit(null, world);
+				}
+			}
+		}
 	}
 
+	protected int ticksExisted = 0;
+	protected int outputTime = -1;
+	protected MagicUnit queued = null;
+	protected long lastTick = -1;
+
 	@Override
-	public void update(){
-		if(world.isRemote){
+	public void update(){	
+		if(world.isRemote || lastTick == world.getTotalWorldTime() || !canRun()){
 			return;
 		}
 
-		if(BeamManager.beamStage == 0 && canRun()){
+		ticksExisted++;
+		lastTick = world.getTotalWorldTime();
+
+		if(outputTime <= ticksExisted){
 			if(beamer == null){
 				beamer = new BeamManager[6];
 				boolean[] outputs = outputSides();
@@ -57,20 +65,12 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 					}
 				}
 			}
-
-			MagicUnit out = outputQueue.remove(0);
-			if((activeCycle != BeamManager.cycleNumber && outputQueue.size() < 2) || outputQueue.isEmpty()){
-				outputQueue.add(null);
-			}
-			doEmit(out);
-			activeCycle = BeamManager.cycleNumber;
-			
-			/*FOR TESTING if(world.provider.getDimension() == 27 || pos.equals(new BlockPos(200, 71, 290))){
-				System.out.println("CYCLE #: " + activeCycle + ", dim: " + world.provider.getDimension());
-			}*/
-			
-			markDirty();
+			outputTime = ticksExisted + BeamManager.BEAM_TIME;
+			MagicUnit emit = queued;
+			queued = null;	
+			doEmit(emit);
 		}
+		markDirty();
 	}
 
 	protected abstract void doEmit(@Nullable MagicUnit toEmit);
@@ -98,22 +98,21 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-
-		//nbt.setInteger("queue_size", outputQueue.size());
-		MagicUnit merged = new MagicUnit(0, 0, 0, 0);
-		for(int i = 0; i < outputQueue.size(); i++){
-			MagicUnit mag = outputQueue.get(i);
-			if(mag != null){
-				merged = new MagicUnit(merged.getEnergy() + mag.getEnergy(), merged.getPotential() + mag.getPotential(), merged.getStability() + mag.getStability(), merged.getVoid() + mag.getVoid());
-			}
+		if(queued != null){
+			nbt.setInteger("r", queued.getEnergy());
+			nbt.setInteger("g", queued.getPotential());
+			nbt.setInteger("b", queued.getStability());
+			nbt.setInteger("v", queued.getVoid());
 		}
-		if(merged.getPower() != 0){
-			nbt.setInteger("r", merged.getEnergy());
-			nbt.setInteger("g", merged.getPotential());
-			nbt.setInteger("b", merged.getStability());
-			nbt.setInteger("v", merged.getVoid());
+		nbt.setInteger("existed", ticksExisted);
+		nbt.setInteger("outputTime", outputTime);
+		
+		nbt.setBoolean("TEST", world.provider.getDimensionType() == ModDimensions.workspaceDimType && this instanceof ArcaneReflectorTileEntity);//TODO
+		if(nbt.getBoolean("TEST")){//TODO TEMP FOR TESTING
+			System.out.println("SAVED: POS: " + pos.toString() + "; QUEUED: " + (queued == null ? "null" : queued.toString()) + "; EXISTED: " + ticksExisted + "; TIME_OUT: " + outputTime);
 		}
-		nbt.setLong("cyc", activeCycle);
+		
+		
 		if(beamer != null){
 			for(int i = 0; i < 6; i++){
 				nbt.setInteger(i + "_memTrip", beamer[i] == null ? 0 : beamer[i].getPacket());
@@ -125,19 +124,14 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		//int size = nbt.getInteger("queue_size");
-		//for(int i = 0; i < size; i++){
-		
-		if(nbt.hasKey("r")){
-			outputQueue.clear();
-			outputQueue.add(new MagicUnit(nbt.getInteger("r"), nbt.getInteger("g"), nbt.getInteger("b"), nbt.getInteger("v")));
-		}
-		/*}
-		if(size == 0){
-			outputQueue.add(null);
-		}*/
-		activeCycle = nbt.getLong("cyc");
+		queued = nbt.hasKey("r") ? new MagicUnit(nbt.getInteger("r"), nbt.getInteger("g"), nbt.getInteger("b"), nbt.getInteger("v")) : null;
+		ticksExisted = nbt.getInteger("existed");
+		outputTime = nbt.getInteger("outputTime");
 
+		if(nbt.getBoolean("TEST")){//TODO TEMP FOR TESTING
+			System.out.println("LOADED: POS: " + pos.toString() + "; QUEUED: " + (queued == null ? "null" : queued.toString()) + "; EXISTED: " + ticksExisted + "; TIME_OUT: " + outputTime);
+		}
+		
 		for(int i = 0; i < 6; i++){
 			memTrip[i] = nbt.getInteger(i + "_memTrip");
 			if(nbt.hasKey(i + "_beamToClient")){
@@ -195,17 +189,20 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 		@Override
 		public void setMagic(MagicUnit mag){
-			if(activeCycle == BeamManager.cycleNumber || outputQueue.size() >= 2){
-				MagicUnit prev = outputQueue.remove(outputQueue.size() - 1);
-				MagicUnit combined = prev == null ? mag : mag == null ? prev : new MagicUnit(mag.getEnergy() + prev.getEnergy(), mag.getPotential() + prev.getPotential(), mag.getStability() + prev.getStability(), mag.getVoid() + prev.getVoid());
-				outputQueue.add(combined);
-				activeCycle = BeamManager.cycleNumber;
+			if(mag != null){
+				if(lastTick != world.getTotalWorldTime()){
+					update();
+				}
+				if(queued == null){
+					queued = mag;
+					outputTime = ticksExisted + BeamManager.BEAM_TIME;
+					markDirty();
+					return;
+				}
+
+				queued = new MagicUnit(mag.getEnergy() + queued.getEnergy(), mag.getPotential() + queued.getPotential(), mag.getStability() + queued.getStability(), mag.getVoid() + queued.getVoid());
 				markDirty();
-				return;
 			}
-			outputQueue.add(mag);
-			activeCycle = BeamManager.cycleNumber;
-			markDirty();
 		}
 	}
 

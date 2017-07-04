@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSplitterTileEntity;
 
@@ -69,6 +70,16 @@ public class MechanicalBeamSplitter extends BlockContainer{
 		return EnumBlockRenderType.MODEL;
 	}
 
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof BeamRenderTEBase){
+			((BeamRenderTEBase) te).refresh();
+		}
+
+		super.breakBlock(worldIn, pos, state);
+	}
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;

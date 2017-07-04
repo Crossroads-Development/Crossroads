@@ -123,10 +123,8 @@ public final class EventHandlerCommon{
 				updateLoadedPrototypeChunks();
 			}
 			e.world.profiler.endSection();
-
-			BeamManager.beamStage = (int) (e.world.getTotalWorldTime() % BeamManager.BEAM_TIME);
+			
 			BeamManager.resetVisual = e.world.getTotalWorldTime() % (20 * BeamManager.BEAM_TIME) < BeamManager.BEAM_TIME;
-			BeamManager.cycleNumber = e.world.getTotalWorldTime() / BeamManager.BEAM_TIME;
 		}
 
 		//Field calculations

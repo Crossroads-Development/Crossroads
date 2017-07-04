@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.magic;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
 
@@ -35,15 +36,25 @@ public class ArcaneExtractor extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new ArcaneExtractorTileEntity();
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
+
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
+	}
+
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof BeamRenderTE){
+			((BeamRenderTE) te).refresh();
+		}
+
+		super.breakBlock(worldIn, pos, state);
 	}
 
 	@Override
@@ -65,7 +76,7 @@ public class ArcaneExtractor extends BlockContainer{
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(Properties.FACING).getIndex();
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;

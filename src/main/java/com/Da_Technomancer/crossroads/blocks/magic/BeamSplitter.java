@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.magic;
 
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterTileEntity;
 
@@ -43,6 +44,16 @@ public class BeamSplitter extends BlockContainer{
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		neighborChanged(state, world, pos, this, pos);
+	}
+
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof BeamRenderTE){
+			((BeamRenderTE) te).refresh();
+		}
+
+		super.breakBlock(worldIn, pos, state);
 	}
 	
 	@Override

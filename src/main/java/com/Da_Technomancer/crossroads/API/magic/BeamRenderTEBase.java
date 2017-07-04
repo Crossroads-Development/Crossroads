@@ -13,6 +13,8 @@ public abstract class BeamRenderTEBase extends TileEntity{
 	
 	public abstract Triple<Color, Integer, Integer>[] getBeam();
 
+	public abstract void refresh();
+	
 	/**
 	 * For informational displays. 
 	 */

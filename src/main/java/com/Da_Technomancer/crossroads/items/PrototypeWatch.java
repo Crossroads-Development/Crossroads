@@ -148,7 +148,7 @@ public class PrototypeWatch extends MagicUsingItem{
 				}
 			}
 
-			if(entityIn instanceof EntityPlayer && BeamManager.beamStage == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage){
+			if(entityIn instanceof EntityPlayer && worldIn.getTotalWorldTime() % BeamManager.BEAM_TIME == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage){
 				NBTTagCompound cageNbt = ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getTagCompound();
 				NBTTagCompound nbt = stack.getTagCompound();
 				PrototypeInfo info = data.prototypes.get(index);
