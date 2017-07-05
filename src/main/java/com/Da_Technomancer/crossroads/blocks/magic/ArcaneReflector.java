@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.magic;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEntity;
 
@@ -45,16 +44,6 @@ public class ArcaneReflector extends BlockContainer{
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer));
-	}
-	
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(te instanceof BeamRenderTE){
-			((BeamRenderTE) te).refresh();
-		}
-
-		super.breakBlock(worldIn, pos, state);
 	}
 
 	@Override

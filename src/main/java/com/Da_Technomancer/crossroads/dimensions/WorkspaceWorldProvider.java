@@ -10,21 +10,14 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorkspaceWorldProvider extends WorldProvider{
-	
-	@Override
-	public void init(){
-		biomeProvider = new BiomeProviderSingle(Biomes.VOID);
-		hasSkyLight = false;
-		hasNoSky = true;
-	}
 
 	@Override
 	public DimensionType getDimensionType(){
@@ -35,10 +28,20 @@ public class WorkspaceWorldProvider extends WorldProvider{
 	public boolean canRespawnHere(){
 		return false;
 	}
+	
+	@Override
+	public boolean hasSkyLight(){
+		return false;
+	}
 
 	@Override
 	public float calculateCelestialAngle(long worldTime, float partialTicks){
 		return 0;
+	}
+	
+	@Override
+	public boolean hasNoSky(){
+		return true;
 	}
 
 	@Override
@@ -63,6 +66,11 @@ public class WorkspaceWorldProvider extends WorldProvider{
 	}
 
 	@Override
+	public BiomeProvider getBiomeProvider(){
+		return new BiomeProviderSingle(Biomes.VOID);
+	}
+
+	@Override
 	public IChunkGenerator createChunkGenerator(){
 		return new EmptyGenerator(world);
 	}
@@ -77,12 +85,10 @@ public class WorkspaceWorldProvider extends WorldProvider{
 
 		@Override
 		public Chunk provideChunk(int x, int z){
-			ChunkPrimer primer = new ChunkPrimer();
-			
+			Chunk chunk = new Chunk(world, x, z);
 			if(x == 0 && z == 0){
-				primer.setBlockState(0, 30, 0, Blocks.STONEBRICK.getDefaultState());
+				chunk.setBlockState(new BlockPos(0, 30, 0), Blocks.STONEBRICK.getDefaultState());
 			}
-			Chunk chunk = new Chunk(world, primer, x, z);
 			chunk.generateSkylightMap();
 			return chunk;
 		}

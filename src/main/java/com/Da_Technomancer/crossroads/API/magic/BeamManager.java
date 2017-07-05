@@ -22,7 +22,9 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class BeamManager{
 
+	public static int beamStage = 2;
 	public static boolean resetVisual = false;
+	public static long cycleNumber;
 
 	private final EnumFacing dir;
 	private final BlockPos pos;
@@ -44,12 +46,11 @@ public class BeamManager{
 			TileEntity checkTE = world.getTileEntity(pos.offset(dir, i));
 			if(checkTE != null && checkTE.hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite())){
 				if(!pos.offset(dir, i).equals(end)){
-					wipe(world);
+					//wipe(pos.offset(dir, i));
 					end = pos.offset(dir, i);
 				}
 
 				checkTE.getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).setMagic(mag);
-
 				if(dist != i || (mag == null ? lastSent != null : !mag.equals(lastSent))){
 					dist = i;
 					lastSent = mag;
@@ -69,7 +70,7 @@ public class BeamManager{
 
 			IBlockState checkState = world.getBlockState(pos.offset(dir, i));
 			if(i == BeamManager.MAX_DISTANCE || !checkState.getBlock().isAir(checkState, world, pos.offset(dir, i))){
-				wipe(world);
+				//wipe(pos.offset(dir, i));
 				end = pos.offset(dir, i);
 				if(mag != null && mag.getRGB() != null){
 					IEffect e = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
@@ -92,15 +93,6 @@ public class BeamManager{
 
 		if(resetVisual){
 			ModPackets.network.sendToAllAround(new SendIntToClient(dir.getIndex(), getPacket(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		}
-	}
-
-	private void wipe(World world){
-		if(end != null){
-			TileEntity te = world.getTileEntity(end);
-			if(te != null && te.hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite())){
-				te.getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).setMagic(null);
-			}
 		}
 	}
 

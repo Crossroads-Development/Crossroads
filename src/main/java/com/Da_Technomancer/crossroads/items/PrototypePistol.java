@@ -133,7 +133,7 @@ public class PrototypePistol extends MagicUsingItem{
 					}
 				}
 
-				if(owner.magic.expireTime < player.world.getTotalWorldTime()){
+				if(BeamManager.beamStage == 0){
 					owner.magic.lastOut = null;
 				}
 			}
@@ -164,7 +164,7 @@ public class PrototypePistol extends MagicUsingItem{
 				pistolMap.get(index).lifetimeBuffer = true;
 			}
 
-			if(entityIn instanceof EntityPlayer && worldIn.getTotalWorldTime() % BeamManager.BEAM_TIME == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage){
+			if(entityIn instanceof EntityPlayer && BeamManager.beamStage == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage){
 				NBTTagCompound cageNbt = ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getTagCompound();
 				NBTTagCompound nbt = stack.getTagCompound();
 				PrototypeInfo info = data.prototypes.get(index);
@@ -299,13 +299,11 @@ public class PrototypePistol extends MagicUsingItem{
 		private class MagicHandler implements IMagicHandler{
 
 			private MagicUnit lastOut;
-			private long expireTime;
 
 			@Override
 			public void setMagic(MagicUnit mag){
 				if(mouseActive){
 					lastOut = mag;
-					expireTime = user.world.getTotalWorldTime() + BeamManager.BEAM_TIME;
 					return;
 				}
 
