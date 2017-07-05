@@ -42,6 +42,17 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	}
 
 	@Override
+	public void refresh(){
+		if(beamer != null){
+			for(BeamManager beam : beamer){
+				if(beam != null){
+					beam.emit(null, world);
+				}
+			}
+		}
+	}
+	
+	@Override
 	public void update(){
 		if(world.isRemote){
 			return;

@@ -10,15 +10,22 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorkspaceWorldProvider extends WorldProvider{
 
+	@Override
+	public void init(){
+		biomeProvider = new BiomeProviderSingle(Biomes.VOID);
+		hasSkyLight = false;
+		hasNoSky = true;
+	}
+	
 	@Override
 	public DimensionType getDimensionType(){
 		return world != null && world.provider.getDimension() == ModDimensions.PROTOTYPE_DIM_ID ? ModDimensions.prototypeDimType : ModDimensions.workspaceDimType;
@@ -30,20 +37,10 @@ public class WorkspaceWorldProvider extends WorldProvider{
 	}
 	
 	@Override
-	public boolean hasSkyLight(){
-		return false;
-	}
-
-	@Override
 	public float calculateCelestialAngle(long worldTime, float partialTicks){
 		return 0;
 	}
 	
-	@Override
-	public boolean hasNoSky(){
-		return true;
-	}
-
 	@Override
 	public boolean canDoLightning(Chunk chunk){
 		return false;
@@ -66,11 +63,6 @@ public class WorkspaceWorldProvider extends WorldProvider{
 	}
 
 	@Override
-	public BiomeProvider getBiomeProvider(){
-		return new BiomeProviderSingle(Biomes.VOID);
-	}
-
-	@Override
 	public IChunkGenerator createChunkGenerator(){
 		return new EmptyGenerator(world);
 	}
@@ -85,10 +77,13 @@ public class WorkspaceWorldProvider extends WorldProvider{
 
 		@Override
 		public Chunk provideChunk(int x, int z){
-			Chunk chunk = new Chunk(world, x, z);
+			ChunkPrimer primer = new ChunkPrimer();
+			
 			if(x == 0 && z == 0){
-				chunk.setBlockState(new BlockPos(0, 30, 0), Blocks.STONEBRICK.getDefaultState());
+				primer.setBlockState(0, 30, 0, Blocks.STONEBRICK.getDefaultState());
 			}
+			
+			Chunk chunk = new Chunk(world, primer, x, z);
 			chunk.generateSkylightMap();
 			return chunk;
 		}

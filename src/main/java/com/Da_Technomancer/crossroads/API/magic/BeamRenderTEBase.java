@@ -23,4 +23,6 @@ public abstract class BeamRenderTEBase extends TileEntity{
 	public AxisAlignedBB getRenderBoundingBox(){
 		return INFINITE_EXTENT_AABB;
 	}
+	
+	public abstract void refresh();
 }

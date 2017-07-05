@@ -39,6 +39,16 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 	private Triple<Color, Integer, Integer> tripUp;
 
 	@Override
+	public void refresh(){
+		if(beamerUp != null){
+			beamerUp.emit(null, world);
+		}
+		if(beamer != null){
+			beamer.emit(null, world);
+		}
+	}
+	
+	@Override
 	@Nullable
 	public MagicUnit[] getLastFullSent(){
 		return new MagicUnit[] {beamer == null ? null : beamer.getLastFullSent(), beamerUp == null ? null : beamerUp.getLastFullSent()};
