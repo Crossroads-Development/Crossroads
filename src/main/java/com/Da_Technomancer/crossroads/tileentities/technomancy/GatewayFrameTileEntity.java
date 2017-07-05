@@ -301,6 +301,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGo
 			entity.motionX = 0.0f;
 			entity.motionY = 0.0f;
 			entity.motionZ = 0.0f;
+			if(entity instanceof EntityPlayer){
+				((EntityPlayer) entity).addExperienceLevel(0);
+			}
 		}
 	}
 
