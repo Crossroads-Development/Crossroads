@@ -669,6 +669,7 @@ public final class Main{
 
 	@Mod.EventHandler
 	public void serverEnded(FMLServerStoppingEvent e){
+		//TODO
 		WorldServer protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		if(protWorld != null){
 			logger.info("Forcing final Prototype tick.");

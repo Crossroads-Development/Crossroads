@@ -35,6 +35,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	 */
 	protected ArrayList<MagicUnit> outputQueue = new ArrayList<MagicUnit>(2);
 	protected long activeCycle;
+	protected int nextStage = 0;
 
 	public BeamRenderTE(){
 		super();
@@ -58,6 +59,13 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 			return;
 		}
 
+		if(nextStage != BeamManager.beamStage){
+			return;
+		}else{
+			nextStage++;
+			nextStage %= BeamManager.BEAM_TIME;
+		}
+		
 		if(BeamManager.beamStage == 0 && canRun()){
 			if(beamer == null){
 				beamer = new BeamManager[6];
@@ -125,11 +133,14 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 			nbt.setInteger("v", merged.getVoid());
 		}
 		nbt.setLong("cyc", activeCycle);
+		nbt.setInteger("nextStage", nextStage);
+		
 		if(beamer != null){
 			for(int i = 0; i < 6; i++){
 				nbt.setInteger(i + "_memTrip", beamer[i] == null ? 0 : beamer[i].getPacket());
 			}
 		}
+		
 		return nbt;
 	}
 
@@ -148,7 +159,8 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 			outputQueue.add(null);
 		}*/
 		activeCycle = nbt.getLong("cyc");
-
+		nextStage = nbt.getInteger("nextStage");
+		
 		for(int i = 0; i < 6; i++){
 			memTrip[i] = nbt.getInteger(i + "_memTrip");
 			if(nbt.hasKey(i + "_beamToClient")){
