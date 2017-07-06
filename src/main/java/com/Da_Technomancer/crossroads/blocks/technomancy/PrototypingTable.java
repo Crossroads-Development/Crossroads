@@ -45,6 +45,15 @@ public class PrototypingTable extends BlockContainer{
 	}
 	
 	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof PrototypingTableTileEntity){
+			((PrototypingTableTileEntity) te).dropItems();
+		}
+		super.breakBlock(world, pos, blockstate);
+	}
+	
+	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}

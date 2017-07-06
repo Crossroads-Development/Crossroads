@@ -23,6 +23,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -45,6 +46,16 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 	private ItemStack template = ItemStack.EMPTY;
 	private ItemStack output = ItemStack.EMPTY;
 
+	public void dropItems(){
+		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), copshowium);
+		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), template);
+		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), output);
+		copshowium = ItemStack.EMPTY;
+		template = ItemStack.EMPTY;
+		output = ItemStack.EMPTY;
+		markDirty();
+	}
+	
 	/** 
 	 * @return Pair<PrototypePortTypes[], BlockPos[]> representing ports if it passed, BlockPos if it failed with the actual pos of what it failed on.
 	 */
