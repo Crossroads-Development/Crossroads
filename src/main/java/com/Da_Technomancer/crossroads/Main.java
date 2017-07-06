@@ -14,8 +14,6 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
 
 import net.minecraft.item.Item;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -662,21 +660,14 @@ public final class Main{
 	public void serverStarted(FMLServerStartedEvent e){
 		CommonProxy.masterKey = 1;
 		ModDimensions.loadDims();
-		
+
 		//For singleplayer.
 		ModConfig.syncPropNBT = ModConfig.nbtToSyncConfig();
 	}
 
 	@Mod.EventHandler
 	public void serverEnded(FMLServerStoppingEvent e){
-		//TODO
-		WorldServer protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-		if(protWorld != null){
-			logger.info("Forcing final Prototype tick.");
-			//TODO protWorld.updateEntities();
-		}
 		ForgeChunkManager.releaseTicket(EventHandlerCommon.loadingTicket);
 		EventHandlerCommon.loadingTicket = null;
-		
 	}
 }

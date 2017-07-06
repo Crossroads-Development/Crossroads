@@ -2,7 +2,13 @@ package com.Da_Technomancer.crossroads.API;
 
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
+import com.Da_Technomancer.crossroads.Main;
 import com.mojang.authlib.GameProfile;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.management.PlayerProfileCache;
 
 /**
  * 
@@ -12,6 +18,8 @@ import com.mojang.authlib.GameProfile;
  */
 public class GameProfileNonPicky extends GameProfile{
 
+	private boolean newlyCompleted = false;
+	
 	public GameProfileNonPicky(UUID id, String name){
 		super(id, name);
 	}
@@ -19,7 +27,11 @@ public class GameProfileNonPicky extends GameProfile{
 	public GameProfileNonPicky(GameProfile prof){
 		super(prof.getId(), prof.getName());
 	}
-
+	
+	public boolean isNewlyCompleted(){
+		return newlyCompleted;
+	}
+	
 	@Override
 	public boolean equals(Object other){
 		if (this == other) {
@@ -39,5 +51,44 @@ public class GameProfileNonPicky extends GameProfile{
 		}
 
 		return true;
+	}
+	
+	public void writeToNBT(NBTTagCompound nbt, String name){
+		String profName = getName();
+		UUID id = getId();
+		if(profName != null){
+			nbt.setString(name + "_name", profName);
+		}
+		if(id != null){
+			nbt.setUniqueId(name + "_id", id);
+		}
+	}
+	
+	/**
+	 * If cache is not null and the loaded profile is missing a UUID, the cache will be used to attempt to complete the profile.
+	 * 
+	 * Returns null if no profile was stored to nbt. 
+	 */
+	@Nullable
+	public static GameProfileNonPicky readFromNBT(NBTTagCompound nbt, String name, @Nullable PlayerProfileCache cache){
+		String profName = nbt.getString(name + "_name");
+		if(profName.isEmpty()){
+			return null;
+		}
+		UUID id = nbt.hasKey(name + "_idMost") ? nbt.getUniqueId(name + "_id") : null;
+		boolean loadedID = false;
+		
+		if(id == null && cache != null){
+			GameProfile search = cache.getGameProfileForUsername(profName);
+			if(search != null){
+				id = search.getId();
+				loadedID = true;
+			}
+			Main.logger.info("Attempting to complete player profile for " + profName + (loadedID ? ". Failed (not severe). " : ". Succeeded. UUID is " + id.toString()));
+		}
+		
+		GameProfileNonPicky out = new GameProfileNonPicky(id, profName);
+		out.newlyCompleted = loadedID;
+		return out;
 	}
 }

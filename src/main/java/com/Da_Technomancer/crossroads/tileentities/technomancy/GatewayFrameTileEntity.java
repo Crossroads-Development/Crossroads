@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -106,7 +105,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGo
 			if(owner != null){
 				IBlockState active = ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP);
 				double prevCoord = savedCoord;
-				
+
 				switch(world.getBlockState(pos).getValue(Properties.FACING)){
 					case EAST:
 						if(world.getBlockState(pos.offset(EnumFacing.EAST, 2).offset(EnumFacing.UP, 2)) == active){
@@ -260,11 +259,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGo
 		super.writeToNBT(nbt);
 		nbt.setDouble("coord", savedCoord);
 		if(owner != null){
-			nbt.setString("name", owner.getName());
-			if(owner.getId() != null){
-				nbt.setLong("id_least", owner.getId().getLeastSignificantBits());
-				nbt.setLong("id_most", owner.getId().getMostSignificantBits());
-			}
+			owner.writeToNBT(nbt, "own");
 		}
 
 		return nbt;
@@ -274,7 +269,10 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGo
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		savedCoord = nbt.getDouble("coord");
-		owner = nbt.hasKey("id_least") || nbt.hasKey("name") ? new GameProfileNonPicky(nbt.hasKey("id_least") ? new UUID(nbt.getLong("id_most"), nbt.getLong("id_least")) : null, nbt.hasKey("name") ? nbt.getString("name") : null) : null;
+		owner = GameProfileNonPicky.readFromNBT(nbt, "own", world.getMinecraftServer() == null ? null : world.getMinecraftServer().getPlayerProfileCache());
+		if(owner != null && owner.isNewlyCompleted()){
+			markDirty();
+		}
 	}
 
 	private boolean magicPassed = false;
@@ -298,9 +296,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGo
 		public void placeInPortal(@Nonnull Entity entity, float rotationYaw) {
 			worldOther.getBlockState(new BlockPos(coordX, coordY, coordZ));
 			entity.setPosition(coordX, coordY, coordZ);
-			entity.motionX = 0.0f;
-			entity.motionY = 0.0f;
-			entity.motionZ = 0.0f;
+			entity.motionX = 0;
+			entity.motionY = 0;
+			entity.motionZ = 0;
 			if(entity instanceof EntityPlayer){
 				((EntityPlayer) entity).addExperienceLevel(0);
 			}

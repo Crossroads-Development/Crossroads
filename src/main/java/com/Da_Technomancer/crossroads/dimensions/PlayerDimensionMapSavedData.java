@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
-import com.mojang.authlib.GameProfile;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.management.PlayerProfileCache;
@@ -26,9 +25,9 @@ public class PlayerDimensionMapSavedData extends WorldSavedData{
 	public PlayerDimensionMapSavedData(String name){
 		super(name);
 	}
-	
+
 	private static PlayerProfileCache cache = null;
-	
+
 	public static PlayerDimensionMapSavedData get(World world, @Nullable PlayerProfileCache playerCache){
 		cache = playerCache;
 		MapStorage storage = world.getMapStorage();
@@ -38,22 +37,19 @@ public class PlayerDimensionMapSavedData extends WorldSavedData{
 			data = new PlayerDimensionMapSavedData();
 			storage.setData(PLAYER_DIM_ID, data);
 		}
-		
+
 		cache = null;
 		return data;
 	}
 
 	protected final HashMap<GameProfileNonPicky, Integer> playerDim = new HashMap<GameProfileNonPicky, Integer>();
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		for(int i = 0; i < nbt.getInteger("length"); i++){
-			GameProfileNonPicky profile = new GameProfileNonPicky(nbt.hasKey(i + "_idMost") ? nbt.getUniqueId(i + "_id") : null, nbt.hasKey(i + "_name") ? nbt.getString(i + "_name") : null);
-			if(cache != null && profile.getId() == null){
-				GameProfile search = cache.getGameProfileForUsername(profile.getName());
-				profile = search == null ? profile : new GameProfileNonPicky(search);
+			GameProfileNonPicky profile = GameProfileNonPicky.readFromNBT(nbt, "" + i, cache);
+			if(profile.isNewlyCompleted()){
 				markDirty();
-				Main.logger.info("Attempting to complete player profile in dimension map. This is only an error if seen again for the same player in later launches. Profile: " + profile.toString());
 			}
 			playerDim.put(profile, nbt.getInteger(i + "_dim"));
 		}
@@ -64,13 +60,7 @@ public class PlayerDimensionMapSavedData extends WorldSavedData{
 		int counter = 0;
 		nbt.setInteger("length", playerDim.size());
 		for(Entry<GameProfileNonPicky, Integer> dim : playerDim.entrySet()){
-			
-			if(dim.getKey().getName() != null){
-				nbt.setString(counter + "_name", dim.getKey().getName());
-			}
-			if(dim.getKey().getId() != null){
-				nbt.setUniqueId(counter + "_id", dim.getKey().getId());
-			}
+			dim.getKey().writeToNBT(nbt, "" + counter);
 			nbt.setInteger(counter + "_dim", dim.getValue());
 			counter++;
 		}

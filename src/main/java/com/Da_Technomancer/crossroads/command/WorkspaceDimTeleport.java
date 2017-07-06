@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 /**
- * This command teleports the player to (0, 30, 0) in their personal Workspace Dimension. If none exists, one is created. 
+ * This command teleports the player to (0, 33, 0) in their personal Workspace Dimension. If none exists, one is created. 
  */
 public class WorkspaceDimTeleport extends CommandBase{
 
@@ -57,9 +57,9 @@ public class WorkspaceDimTeleport extends CommandBase{
 		public void placeInPortal(@Nonnull Entity entity, float rotationYaw) {
 			world.getBlockState(new BlockPos(0, 33, 0));
 			entity.setPosition(.5D, 33, .5D);
-			entity.motionX = 0.0f;
-			entity.motionY = 0.0f;
-			entity.motionZ = 0.0f;
+			entity.motionX = 0;
+			entity.motionY = 0;
+			entity.motionZ = 0;
 
 			if(entity instanceof EntityPlayer){
 				((EntityPlayer) entity).addExperienceLevel(0);
