@@ -1,9 +1,9 @@
-package com.Da_Technomancer.crossroads.API.technomancy;
+package com.Da_Technomancer.crossroads.dimensions;
 
 import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
+import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldSavedData;

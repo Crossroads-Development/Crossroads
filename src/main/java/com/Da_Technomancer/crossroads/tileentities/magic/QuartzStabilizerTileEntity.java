@@ -28,7 +28,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE{
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("large", large);
-		storage.writeToNBT(null, nbt);
+		storage.writeToNBT("stabMag", nbt);
 		return nbt;
 	}
 
@@ -36,7 +36,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE{
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		large = nbt.getBoolean("large");
-		storage = MagicUnitStorage.readFromNBT(null, nbt);
+		storage = MagicUnitStorage.readFromNBT("stabMag", nbt);
 	}
 
 	@Override

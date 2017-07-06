@@ -4,34 +4,32 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
-import net.minecraft.util.EnumFacing;
-
 public class ArcaneReflectorTileEntity extends BeamRenderTE{
 
-	private EnumFacing facing;
+	private int facing = -1;
 	
 	@Override
 	protected void doEmit(MagicUnit toEmit){
-		beamer[facing.getIndex()].emit(toEmit, world);
+		beamer[facing].emit(toEmit, world);
 	}
 
 	@Override
 	protected boolean[] inputSides(){
-		if(facing == null){
-			facing = world.getBlockState(pos).getValue(Properties.FACING);
+		if(facing == -1){
+			facing = world.getBlockState(pos).getValue(Properties.FACING).getIndex();
 		}
 		boolean[] out = {true, true, true, true, true, true};
-		out[facing.getIndex()] = false;
+		out[facing] = false;
 		return out;
 	}
 
 	@Override
 	protected boolean[] outputSides(){
-		if(facing == null){
-			facing = world.getBlockState(pos).getValue(Properties.FACING);
+		if(facing == -1){
+			facing = world.getBlockState(pos).getValue(Properties.FACING).getIndex();
 		}
 		boolean[] out = {false, false, false, false, false, false};
-		out[facing.getIndex()] = true;
+		out[facing] = true;
 		return out;
 	}
 } 

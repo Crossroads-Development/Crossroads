@@ -64,7 +64,7 @@ public class PrototypeInfo{
 		return count;
 	}
 	
-	protected NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		for(int i = 0; i < 6; i++){
 			if(ports[i] != null){
 				nbt.setString("port" + i, ports[i].name());
@@ -75,7 +75,7 @@ public class PrototypeInfo{
 		return nbt;
 	}
 	
-	protected static PrototypeInfo readFromNBT(NBTTagCompound nbt){
+	public static PrototypeInfo readFromNBT(NBTTagCompound nbt){
 		PrototypePortTypes[] ports = new PrototypePortTypes[6];
 		BlockPos[] portPos = new BlockPos[6];
 		for(int i = 0; i < 6; i++){

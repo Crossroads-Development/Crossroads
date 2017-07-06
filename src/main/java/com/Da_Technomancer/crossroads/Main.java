@@ -673,7 +673,7 @@ public final class Main{
 		WorldServer protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		if(protWorld != null){
 			logger.info("Forcing final Prototype tick.");
-			protWorld.updateEntities();
+			//TODO protWorld.updateEntities();
 		}
 		ForgeChunkManager.releaseTicket(EventHandlerCommon.loadingTicket);
 		EventHandlerCommon.loadingTicket = null;

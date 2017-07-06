@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.magic;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
@@ -9,9 +8,6 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
-import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
-import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,18 +25,10 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	public Triple<Color, Integer, Integer>[] getBeam(){
 		return trip;
 	}
-
-	/**
-	 * The queued MagicUnits to be emitted. Can contain null MagicUnits. 
-	 */
-	protected ArrayList<MagicUnit> outputQueue = new ArrayList<MagicUnit>(2);
+	
+	protected MagicUnitStorage[] queued = {new MagicUnitStorage(), new MagicUnitStorage()};
 	protected long activeCycle;
-	protected int nextStage = 0;
-
-	public BeamRenderTE(){
-		super();
-		outputQueue.add(null);
-	}
+	protected int nextStage = 0;//TODO
 
 	@Override
 	public void refresh(){
@@ -52,21 +40,23 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 			}
 		}
 	}
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){
 			return;
 		}
 
+		/*TODO
 		if(nextStage != BeamManager.beamStage){
 			return;
 		}else{
 			nextStage++;
 			nextStage %= BeamManager.BEAM_TIME;
-		}
+			markDirty();
+		}*/
 		
-		if(BeamManager.beamStage == 0 && canRun()){
+		if(BeamManager.beamStage == 0){
 			if(beamer == null){
 				beamer = new BeamManager[6];
 				boolean[] outputs = outputSides();
@@ -77,19 +67,24 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 				}
 			}
 
-			MagicUnit out = outputQueue.remove(0);
-			if((activeCycle != BeamManager.cycleNumber && outputQueue.size() < 2) || outputQueue.isEmpty()){
-				outputQueue.add(null);
-			}
-			doEmit(out);
+			MagicUnit out = shiftStorage();
 			activeCycle = BeamManager.cycleNumber;
-			
-			/*FOR TESTING if(world.provider.getDimension() == 27 || pos.equals(new BlockPos(200, 71, 290))){
-				System.out.println("CYCLE #: " + activeCycle + ", dim: " + world.provider.getDimension());
-			}*/
-			
-			markDirty();
+			doEmit(out);
 		}
+	}
+
+	/**
+	 * Moves over the magic in queued from index 1 to 0.
+	 * @return The magic previously stored in queued[0].
+	 */
+	@Nullable
+	protected MagicUnit shiftStorage(){
+		MagicUnit out = queued[0].getOutput();
+		queued[0].clear();
+		queued[0].addMagic(queued[1]);
+		queued[1].clear();
+		markDirty();
+		return out;
 	}
 
 	protected abstract void doEmit(@Nullable MagicUnit toEmit);
@@ -118,49 +113,28 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
-		//nbt.setInteger("queue_size", outputQueue.size());
-		MagicUnit merged = new MagicUnit(0, 0, 0, 0);
-		for(int i = 0; i < outputQueue.size(); i++){
-			MagicUnit mag = outputQueue.get(i);
-			if(mag != null){
-				merged = new MagicUnit(merged.getEnergy() + mag.getEnergy(), merged.getPotential() + mag.getPotential(), merged.getStability() + mag.getStability(), merged.getVoid() + mag.getVoid());
-			}
-		}
-		if(merged.getPower() != 0){
-			nbt.setInteger("r", merged.getEnergy());
-			nbt.setInteger("g", merged.getPotential());
-			nbt.setInteger("b", merged.getStability());
-			nbt.setInteger("v", merged.getVoid());
-		}
+		queued[0].writeToNBT("queue0", nbt);
+		queued[1].writeToNBT("queue1", nbt);
 		nbt.setLong("cyc", activeCycle);
 		nbt.setInteger("nextStage", nextStage);
-		
+
 		if(beamer != null){
 			for(int i = 0; i < 6; i++){
 				nbt.setInteger(i + "_memTrip", beamer[i] == null ? 0 : beamer[i].getPacket());
 			}
 		}
-		
+
 		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		//int size = nbt.getInteger("queue_size");
-		//for(int i = 0; i < size; i++){
-		
-		if(nbt.hasKey("r")){
-			outputQueue.clear();
-			outputQueue.add(new MagicUnit(nbt.getInteger("r"), nbt.getInteger("g"), nbt.getInteger("b"), nbt.getInteger("v")));
-		}
-		/*}
-		if(size == 0){
-			outputQueue.add(null);
-		}*/
+		queued[0] = MagicUnitStorage.readFromNBT("queue0", nbt);
+		queued[1] = MagicUnitStorage.readFromNBT("queue1", nbt);
 		activeCycle = nbt.getLong("cyc");
 		nextStage = nbt.getInteger("nextStage");
-		
+
 		for(int i = 0; i < 6; i++){
 			memTrip[i] = nbt.getInteger(i + "_memTrip");
 			if(nbt.hasKey(i + "_beamToClient")){
@@ -218,45 +192,10 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 		@Override
 		public void setMagic(MagicUnit mag){
-			if(activeCycle == BeamManager.cycleNumber || outputQueue.size() >= 2){
-				MagicUnit prev = outputQueue.remove(outputQueue.size() - 1);
-				MagicUnit combined = prev == null ? mag : mag == null ? prev : new MagicUnit(mag.getEnergy() + prev.getEnergy(), mag.getPotential() + prev.getPotential(), mag.getStability() + prev.getStability(), mag.getVoid() + prev.getVoid());
-				outputQueue.add(combined);
-				activeCycle = BeamManager.cycleNumber;
+			if(mag != null){
+				queued[BeamManager.cycleNumber == activeCycle ? 0 : 1].addMagic(mag);
 				markDirty();
-				return;
 			}
-			outputQueue.add(mag);
-			activeCycle = BeamManager.cycleNumber;
-			markDirty();
 		}
-	}
-
-	/**
-	 * @return Whether this device should be able to run. 
-	 * 
-	 * Several parts of the magic system are extremely sensitive to loading delays, especially through prototypes. This helps with that by returning false if a device should pretend it isn't loaded. 
-	 */
-	protected boolean canRun(){
-		if(world.provider.getDimension() == ModDimensions.PROTOTYPE_DIM_ID){
-			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(false);
-
-			//This calculates the prototype index based on the chunk's position. 
-			int index = ((pos.getZ() >> 4) * 50) + (99 * 50);
-			int holder = index - (index % 100) + (((pos.getX() >> 4) + 99) / 2);
-			if(holder < index){
-				holder += 100;
-			}
-			index = holder;
-
-			if(data.prototypes.size() <= index){
-				return false;
-			}
-			PrototypeInfo datum = data.prototypes.get(index);
-
-			return datum != null && datum.owner != null && datum.owner.get() != null && datum.owner.get().shouldRun();
-		}
-
-		return true;
 	}
 }

@@ -19,8 +19,8 @@ import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
-import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
+import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
 
@@ -118,7 +118,7 @@ public final class EventHandlerCommon{
 		//Prototype chunk loading
 		//Only should be called on the server side.
 		if(!e.world.isRemote && e.phase == Phase.START && e.world.provider.getDimension() == 0){
-			e.world.profiler.startSection(Main.MODNAME + ": Prototype Loading Control");
+			e.world.profiler.startSection(Main.MODNAME + "-Prototype Loading Control");
 			if(e.world.getTotalWorldTime() % 20 == 0){
 				updateLoadedPrototypeChunks();
 			}
@@ -131,7 +131,7 @@ public final class EventHandlerCommon{
 
 		//Field calculations
 		if(!e.world.isRemote && e.world.getTotalWorldTime() % 5 == 0){
-			e.world.profiler.startSection(Main.MODNAME + ": Field Calculations");
+			e.world.profiler.startSection(Main.MODNAME + "-Field Calculations");
 			FieldWorldSavedData data = FieldWorldSavedData.get(e.world);
 			if(e.phase == TickEvent.Phase.START){
 				data.nodeForces.clear();

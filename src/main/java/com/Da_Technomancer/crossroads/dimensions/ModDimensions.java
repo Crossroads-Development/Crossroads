@@ -12,7 +12,6 @@ import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDimLoadToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
-import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -36,7 +35,7 @@ public class ModDimensions{
 
 	public static void init(){
 		workspaceDimType = DimensionType.register(Main.MODID, "_workspace", 567, WorkspaceWorldProvider.class, false);
-		prototypeDimType = DimensionType.register(Main.MODID, "_prototype", 568, WorkspaceWorldProvider.class, false);
+		prototypeDimType = DimensionType.register(Main.MODID, "_prototype", 568, PrototypeWorldProvider.class, false);
 		DimensionManager.registerDimension(PROTOTYPE_DIM_ID, prototypeDimType);
 		ForgeChunkManager.setForcedChunkLoadingCallback(Main.instance, new LoadingCallback(){
 

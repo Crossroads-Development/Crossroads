@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.API;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import javax.annotation.Nonnull;
@@ -12,16 +11,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-/**This class is for holding operations that I use often.*/
+/**This class is for holding operations that are used often.*/
 public final class MiscOp{
 
 	public static double betterRound(double numIn, int decPlac){
@@ -145,51 +142,5 @@ public final class MiscOp{
 	 */
 	public static long getLongFromChunkPos(@Nonnull ChunkPos pos){
 		return (((long) pos.chunkXPos << 32) | (pos.chunkZPos & 0xffffffffL));
-	}
-
-	/**
-	 * A chunk being loaded and a chunk ticking are two different things; in some cases, a loaded chunk (such as a spawn chunk) might not be able to actually tick tile entities. 
-	 * 
-	 * It should be noted that this method is sensitive to WHEN it is called in the server-tick cycle, and may give inaccurate results in certain cases if called at the wrong place (as the placement controls whether ln166 should be > or >=). 
-	 * 
-	 * @param world
-	 * @param pos
-	 * @return Whether the chunk can tick TileEntities (does not check if the chunk actually contains any TileEntities). 
-	 */
-	public static boolean isChunkTicking(WorldServer world, BlockPos pos){
-		if(!world.isBlockLoaded(pos, false)){
-			return false;
-		}
-
-		if(world.getPersistentChunks().isEmpty() && world.playerEntities.isEmpty()){
-			try{
-				if(WORLD_LOADING_TIMER.getInt(world) > 300){
-					return false;
-				}
-			}catch(IllegalArgumentException | IllegalAccessException e){
-				Main.logger.catching(e);
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private static final Field WORLD_LOADING_TIMER;
-
-	static{
-		Field holder = null;
-		try{
-			for(Field f : WorldServer.class.getDeclaredFields()){
-				if("field_80004_Q".equals(f.getName()) || "updateEntityTick".equals(f.getName())){
-					holder = f;
-					holder.setAccessible(true);
-					break;
-				}
-			}
-			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with the normal method, so the above for loop is used instead.
-		}catch(Exception e){
-			Main.logger.catching(e);
-		}
-		WORLD_LOADING_TIMER = holder;
 	}
 }

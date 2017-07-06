@@ -40,7 +40,9 @@ public interface IPrototypeOwner{
 	 * 
 	 * @return True if this should be loaded/ticked. Returning false does not remove this from the prototype list. 
 	 */
-	public boolean shouldRun();
+	public default boolean shouldRun(){
+		return true;
+	}
 	
 	/**
 	 * Returns the prototype port types for each side. This cannot be used to fetch capabilities, it mainly exists for rendering purposes.

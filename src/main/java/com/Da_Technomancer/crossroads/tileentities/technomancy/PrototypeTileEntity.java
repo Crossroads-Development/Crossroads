@@ -5,14 +5,14 @@ import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
-import com.Da_Technomancer.crossroads.API.technomancy.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
+import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
+import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -33,7 +34,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 	public String name = "";
 	//For client side use only.
 	private PrototypePortTypes[] ports = new PrototypePortTypes[6];
-
+	private ChunkPos chunk = null;
 	private boolean selfDestruct = false;
 
 	public void setIndex(int index){
@@ -45,31 +46,16 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		return index;
 	}
 
-	private long lastRunValid;
-	private boolean passNext;
-
-	@Override
-	public void loadTick(){
-		passNext = true;
-	}
-
 	@Override
 	public void update(){
-		lastRunValid = world.getTotalWorldTime();
-	}
-
-	@Override
-	public boolean shouldRun(){
-		if(MiscOp.isChunkTicking((WorldServer) world, pos)){
-			if(world.provider.getDimension() > ModDimensions.PROTOTYPE_DIM_ID || passNext){
-				passNext = false;
-				return true;
-			}
-
-			return world.getTotalWorldTime() - lastRunValid <= 1;
+		if(world.isRemote){
+			return;
 		}
-
-		return false;
+		if(chunk == null){
+			chunk = new ChunkPos(((index % 100) * 2) - 99, (index / 50) - 99);
+		}
+		
+		PrototypeWorldProvider.tickChunk(chunk);
 	}
 
 	@Override
