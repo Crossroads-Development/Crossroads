@@ -94,7 +94,7 @@ public class PrototypeWorldProvider extends WorldProvider{
 				protWorld.loadedTileEntityList.remove(ticking);
 
 				if(protWorld.isBlockLoaded(ticking.getPos())){
-					// Forge: Bugfix: If we set the tile entity it immediately sets it in the chunk, so we could be desyned
+					// Forge: Bugfix: If we set the tile entity it immediately sets it in the chunk, so we could be desynced
 					Chunk chunkWorld = protWorld.getChunkFromChunkCoords(chunkX, chunkZ);
 					if(chunkWorld.getTileEntity(ticking.getPos(), Chunk.EnumCreateEntityType.CHECK) == ticking){
 						chunkWorld.removeTileEntity(ticking.getPos());
@@ -112,8 +112,6 @@ public class PrototypeWorldProvider extends WorldProvider{
 		tickingTE.removeIf((TileEntity te) -> {
 			return !world.loadedTileEntityList.contains(te);
 		});
-
-		// TODO
 		world.profiler.endSection();
 	}
 
