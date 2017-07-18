@@ -18,7 +18,7 @@ public class BlockSteam extends BlockFluidClassic{
 		super(STEAM, Material.WATER);
 		STEAM.setBlock(this);
 		setUnlocalizedName("blockSteam");
-		this.setRegistryName("blockSteam");
+		setRegistryName("blockSteam");
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName("blockSteam"));
 

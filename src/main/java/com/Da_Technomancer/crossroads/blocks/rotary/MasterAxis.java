@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -26,19 +25,20 @@ public class MasterAxis extends BlockContainer{
 	
 	public MasterAxis(){
 		super(Material.IRON);
-		setUnlocalizedName("masterAxis");
-		setRegistryName("masterAxis");
+		String name = "master_axis";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("masterAxis"));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 		setSoundType(SoundType.METAL);
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : BlockPistonBase.getFacingFromEntity(pos, placer);
-		return this.getDefaultState().withProperty(Properties.FACING, enumfacing);
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer);
+		return getDefaultState().withProperty(Properties.FACING, enumfacing);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class MasterAxis extends BlockContainer{
 	@Override
 	public IBlockState getStateFromMeta(int meta){
 		EnumFacing facing = EnumFacing.getFront(meta);
-		return this.getDefaultState().withProperty(Properties.FACING, facing);
+		return getDefaultState().withProperty(Properties.FACING, facing);
 	}
 
 	@Override

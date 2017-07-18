@@ -24,7 +24,7 @@ public class MultiPistonExtend extends Block{
 	protected MultiPistonExtend(boolean sticky){
 		super(Material.PISTON);
 		this.sticky = sticky;
-		String name = "multiPistonExtend" + (sticky ? "Sticky" : "");
+		String name = "multi_piston_extend" + (sticky ? "_sticky" : "");
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(0.5F);

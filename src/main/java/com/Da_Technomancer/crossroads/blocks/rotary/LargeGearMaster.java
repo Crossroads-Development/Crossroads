@@ -38,7 +38,7 @@ public class LargeGearMaster extends BlockContainer{
 	
 	public LargeGearMaster(){
 		super(Material.IRON);
-		String name = "largeGearMaster";
+		String name = "large_gear_master";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -56,9 +56,9 @@ public class LargeGearMaster extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
 		if(world.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
-			return new ItemStack(GearFactory.largeGears.get(((LargeGearMasterTileEntity) world.getTileEntity(pos)).getMember()), 1);
+			return new ItemStack(GearFactory.LARGE_GEARS.get(((LargeGearMasterTileEntity) world.getTileEntity(pos)).getMember()), 1);
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 	
 	@Override
@@ -68,7 +68,7 @@ public class LargeGearMaster extends BlockContainer{
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
@@ -104,11 +104,6 @@ public class LargeGearMaster extends BlockContainer{
 	public boolean isFullCube(IBlockState state){
 		return false;
 	}
-	
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
-		return true;
-	}
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
@@ -120,15 +115,23 @@ public class LargeGearMaster extends BlockContainer{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		LargeGearMasterTileEntity te = (LargeGearMasterTileEntity) world.getTileEntity(pos);
 		if(te.getMember() != null){
-			drops.add(new ItemStack(GearFactory.largeGears.get(te.getMember())));
+			drops.add(new ItemStack(GearFactory.LARGE_GEARS.get(te.getMember())));
 		}
 		return drops;
 	}
 
 	@Override
+	public boolean removedByPlayer(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, boolean canHarvest){
+		if(canHarvest && worldIn.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
+			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(Properties.FACING), true);
+		}
+		return super.removedByPlayer(state, worldIn, pos, player, canHarvest);
+	}
+	
+	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		if(worldIn.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
-			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(Properties.FACING));
+			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(Properties.FACING), false);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

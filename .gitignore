@@ -42,3 +42,4 @@ Crossroads_Client.launch
 Crossroads_Server.launch
 
 usercache.json
+Crossroads_Client NonLogin.launch

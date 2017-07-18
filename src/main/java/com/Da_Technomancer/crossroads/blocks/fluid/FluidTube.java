@@ -6,10 +6,10 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.IConduitModel;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.client.bakedModel.ConduitBakedModel;
+import com.Da_Technomancer.crossroads.client.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTubeTileEntity;
 
@@ -59,12 +59,13 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 	
 	public FluidTube(){
 		super(Material.IRON);
-		setUnlocalizedName("fluidTube");
-		setRegistryName("fluidTube");
+		String name = "fluid_tube";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("fluidTube"));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 		setSoundType(SoundType.METAL);
 	}
 
@@ -102,7 +103,7 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 		if(exState.getValue(Properties.CONNECT)[5]){
 			list.add(EAST);
 		}
-		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
@@ -147,7 +148,7 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean nobodyKnows){
 		addCollisionBoxToList(pos, mask, list, BB);
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
 		
@@ -184,7 +185,7 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 
 	@Override
 	public ResourceLocation getTexture(){
-		return new ResourceLocation(Main.MODID + ":blocks/blockBronze");
+		return new ResourceLocation(Main.MODID, "blocks/block_bronze");
 	}
 
 	@Override

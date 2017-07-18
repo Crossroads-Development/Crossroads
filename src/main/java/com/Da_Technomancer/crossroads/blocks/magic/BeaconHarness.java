@@ -19,13 +19,13 @@ public class BeaconHarness extends BlockContainer{
 
 	public BeaconHarness(){
 		super(Material.GLASS);
-		String name = "beaconHarness";
+		String name = "beacon_harness";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
@@ -39,19 +39,19 @@ public class BeaconHarness extends BlockContainer{
 	}
 	
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
-		if(worldIn.getTileEntity(pos) instanceof BeamRenderTE){
-			((BeamRenderTE) worldIn.getTileEntity(pos)).refresh();
-		}
-		
-		super.breakBlock(worldIn, pos, state);
-	}
-	
-	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isBlockPowered(pos) && worldIn.getTileEntity(pos) instanceof BeaconHarnessTileEntity){
 			((BeaconHarnessTileEntity) worldIn.getTileEntity(pos)).trigger();
 		}
+	}
+	
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof BeamRenderTE){
+			((BeamRenderTE) te).refresh();
+		}
+		super.breakBlock(worldIn, pos, state);
 	}
 	
 	@Override

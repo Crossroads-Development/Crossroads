@@ -2,23 +2,22 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
+import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ITileMasterAxis;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -26,12 +25,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class LargeGearMasterTileEntity extends TileEntity implements IDoubleReceiver, ITickable, IStringReceiver{
-
-	private boolean valid = false;
+public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiver, ITickable, IStringReceiver{
+	
 	private GearTypes type;
 	private double[] motionData = new double[4];
 	private double[] physData = new double[2];
@@ -39,17 +40,14 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	/**
 	 * 0: angle, 1: clientW
 	 */
-	private double[] angleW = new double[2];
-	
-	private boolean old = false;
-	private EnumFacing side;
-	
+	private float[] angleW = new float[2];
+
 	public void initSetup(GearTypes typ){
 		type = typ;
 
-		if(!worldObj.isRemote){
+		if(!world.isRemote){
 			SendStringToClient msg = new SendStringToClient("memb", type == null ? "" : type.name(), pos);
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 
 		physData[0] = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D, 2);
@@ -61,66 +59,36 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		//IRON is returned instead of null to prevent edge case crashes.
 		return type == null ? GearTypes.IRON : type;
 	}
-	
-	@Deprecated
-	public EnumFacing getSide(){
-		return worldObj.getBlockState(pos).getValue(Properties.FACING);
+
+	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -1, -1, 2, 2, 2);
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return RENDER_BOX.offset(pos);
 	}
-	
-	public void breakGroup(EnumFacing side){
+
+	public void breakGroup(EnumFacing side, boolean drop){
 		if(borken){
 			return;
 		}
 		borken = true;
 		for(int i = -1; i < 2; ++i){
 			for(int j = -1; j < 2; ++j){
-				worldObj.setBlockToAir(pos.offset(side.getAxis() == Axis.X ? EnumFacing.UP : EnumFacing.EAST, i).offset(side.getAxis() == Axis.Z ? EnumFacing.UP : EnumFacing.NORTH, j));
+				world.setBlockToAir(pos.offset(side.getAxis() == Axis.X ? EnumFacing.UP : EnumFacing.EAST, i).offset(side.getAxis() == Axis.Z ? EnumFacing.UP : EnumFacing.NORTH, j));
 			}
 		}
-		worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(GearFactory.largeGears.get(type), 1)));
+		if(drop){
+			world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(GearFactory.LARGE_GEARS.get(type), 1)));
+		}
 	}
 
 	@Override
 	public void update(){
-		//This is to convert old gears to the new metadata version. This conversion probably is a bit buggy.
-		if(old){
-			System.out.println("Converting large gear at " + pos.toString() + " to new format. Bugs may occur.");
-			worldObj.setBlockState(pos, ModBlocks.largeGearMaster.getDefaultState().withProperty(Properties.FACING, side), 2);
-			((LargeGearMasterTileEntity) worldObj.getTileEntity(pos)).initSetup(type);
-			double[] data = worldObj.getTileEntity(pos).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side).getMotionData();
-			data[0] = motionData[0];
-			data[1] = motionData[1];
-			data[2] = motionData[2];
-			data[3] = motionData[3];
-			for(int i = -1; i < 2; ++i){
-				for(int j = -1; j < 2; ++j){
-					if(i != 0 || j != 0){
-						worldObj.setBlockState(pos.offset(side.getAxis() == Axis.X ? EnumFacing.UP : EnumFacing.EAST, i).offset(side.getAxis() == Axis.Z ? EnumFacing.UP : EnumFacing.NORTH, j), ModBlocks.largeGearSlave.getDefaultState().withProperty(Properties.FACING, side), 2);
-						((LargeGearSlaveTileEntity) worldObj.getTileEntity(pos.offset(side.getAxis() == Axis.X ? EnumFacing.UP : EnumFacing.EAST, i).offset(side.getAxis() == Axis.Z ? EnumFacing.UP : EnumFacing.NORTH, j))).setInitial(pos);
-					}
-				}
-			}
-			CommonProxy.masterKey++;
-			old = false;
-		}
-		
-		if(worldObj.isRemote){
-			if(angleW[1] == Double.POSITIVE_INFINITY){
-				angleW[0] = 0;
-			}else if(angleW[1] == Double.NEGATIVE_INFINITY){
-				angleW[0] = 22.5;
-			}else{
-				angleW[0] += angleW[1] * 9D / Math.PI;
-			}
-		}
-
-		valid = true;
-		
-		if(!worldObj.isRemote){
-			sendWPacket();
+		if(world.isRemote){
+			angleW[0] += angleW[1] * 9D / Math.PI;
 		}
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -128,20 +96,16 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		// motionData
 		NBTTagCompound innerMot = nbt.getCompoundTag("motionData");
 		for(int j = 0; j < 4; j++){
-			this.motionData[j] = (innerMot.hasKey(j + "motion")) ? innerMot.getDouble(j + "motion") : 0;
+			motionData[j] = (innerMot.hasKey(j + "motion")) ? innerMot.getDouble(j + "motion") : 0;
 		}
 		// member
-		this.type = nbt.hasKey("memb") ? GearTypes.valueOf(nbt.getString("memb")) : null;
-		valid = true;
+		type = nbt.hasKey("memb") ? GearTypes.valueOf(nbt.getString("memb")) : null;
 		physData[0] = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D, 2);
 		physData[1] = physData[0] * 1.125D;
 		//1.125 because r*r/2 so 1.5*1.5/2
-		
-		//This is in order to convert old large gears to the new system which uses metadata to store the side.
-		if(!nbt.hasKey("new") && nbt.hasKey("side")){
-			old = true;
-			side = EnumFacing.getFront(nbt.getByte("side"));
-		}
+
+		angleW[0] = nbt.getFloat("angle");
+		angleW[1] = nbt.getFloat("clientW");
 	}
 
 	@Override
@@ -162,10 +126,11 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 		}
 
 		nbt.setBoolean("new", true);
-
+		nbt.setFloat("angle", angleW[0]);
+		nbt.setFloat("clientW", angleW[1]);
 		return nbt;
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
@@ -173,39 +138,21 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			nbt.setString("memb", type.name());
 		}
 		nbt.setBoolean("new", true);
+		nbt.setFloat("angle", angleW[0]);
+		nbt.setFloat("clientW", angleW[1]);
 		return nbt;
 	}
 
-	private final int tiers = ModConfig.speedTiers.getInt();
-
 	@Override
-	public void receiveDouble(String context, double message){
-		if(context.equals("w")){
-			angleW[1] = message;
-		}
-	}
-
-	private void sendWPacket(){
-		boolean flag = false;
-		if(angleW[1] == Double.POSITIVE_INFINITY || angleW[1] == Double.NEGATIVE_INFINITY){
-			flag = true;
-		}else if(MiscOp.tiersRound(motionData[0], tiers) != angleW[1]){
-			flag = true;
-			angleW[1] = MiscOp.tiersRound(motionData[0], tiers);
-		}
-
-		if(flag){
-			SendDoubleToClient msg = new SendDoubleToClient("w", angleW[1], pos);
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-
-			if(angleW[1] == Double.POSITIVE_INFINITY || angleW[1] == Double.NEGATIVE_INFINITY){
-				angleW[1] = 0;
-			}
+	public void receiveSpin(int identifier, float clientW, float angle){
+		if(identifier == 0){
+			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
+			angleW[1] = clientW;
 		}
 	}
 
 	@Override
-	public void receiveString(String context, String message){
+	public void receiveString(String context, String message, EntityPlayerMP player){
 		if(context.equals("memb")){
 			type = message.equals("") ? null : GearTypes.valueOf(message);
 		}
@@ -215,7 +162,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == worldObj.getBlockState(pos).getValue(Properties.FACING)){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(Properties.FACING)){
 			return type != null;
 		}
 		return super.hasCapability(capability, facing);
@@ -224,36 +171,38 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == worldObj.getBlockState(pos).getValue(Properties.FACING)){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(Properties.FACING)){
 			return (T) handlerMain;
 		}
 		return super.getCapability(capability, facing);
 	}
 
 	private class AxleHandler implements IAxleHandler{
-		
+
 		private byte updateKey;
 		private double rotRatio;
-		
+
 		@Override
 		public double[] getMotionData(){
 			return motionData;
 		}
 
 		@Override
-		public void propogate(ITileMasterAxis masterIn, byte key, double rotRatioIn, double lastRadius){
-			if(type == null || !valid){
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+			if(type == null){
 				return;
 			}
-			
-			EnumFacing sid = worldObj.getBlockState(pos).getValue(Properties.FACING);
-			
+
+			EnumFacing sid = world.getBlockState(pos).getValue(Properties.FACING);
+
 			if(lastRadius != 0){
 				rotRatioIn *= -lastRadius / 1.5D;
+			}else if(rotRatioIn == 0){
+				rotRatioIn = 1D;
 			}else if(sid.getAxisDirection() == AxisDirection.POSITIVE){
 				rotRatioIn *= -1D;
 			}
-			
+
 			//If true, this has already been checked.
 			if(key == updateKey){
 				//If true, there is rotation conflict.
@@ -262,38 +211,46 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 				}
 				return;
 			}
-			
+
 			if(masterIn.addToList(this)){
 				return;
 			}
 
 			rotRatio = rotRatioIn;
-			
+
 			if(updateKey == 0){
 				resetAngle();
 			}
 			updateKey = key;
 
-			if(worldObj.getTileEntity(pos.offset(sid)) instanceof ITileMasterAxis){
-				((ITileMasterAxis) worldObj.getTileEntity(pos.offset(sid))).trigger(key, masterIn, sid.getOpposite());
+			TileEntity connectTE = world.getTileEntity(pos.offset(sid));
+			if(connectTE != null){
+				if(connectTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, sid.getOpposite())){
+					connectTE.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, sid.getOpposite()).trigger(masterIn, key);
+				}
+				if(connectTE.hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, sid.getOpposite())){
+					masterIn.addAxisToList(connectTE.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, sid.getOpposite()), sid.getOpposite());
+				}
+
+				if(connectTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite())){
+					connectTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite()).propogate(masterIn, key, sid.getAxisDirection() == AxisDirection.POSITIVE ? -rotRatio : rotRatio, 0);
+				}
 			}
 
 			for(EnumFacing sideN : EnumFacing.values()){
 				if(sideN != sid && sideN != sid.getOpposite()){
 					// Adjacent gears
-					if(worldObj.getTileEntity(pos.offset(sideN, 2)) != null && worldObj.getTileEntity(pos.offset(sideN, 2)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sid)){
-						worldObj.getTileEntity(pos.offset(sideN, 2)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, sid).connect(masterIn, key, rotRatio, 1.5D);
+					TileEntity adjTE = world.getTileEntity(pos.offset(sideN, 2));
+					if(adjTE != null && adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sid)){
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sid).connect(masterIn, key, rotRatio, 1.5D);
 					}
 
 					// Diagonal gears
-					if(!worldObj.getBlockState(pos.offset(sideN, 2)).getBlock().isNormalCube(worldObj.getBlockState(pos.offset(sideN, 2)), worldObj, pos.offset(sideN, 2)) && worldObj.getTileEntity(pos.offset(sideN, 2).offset(sid)) != null && worldObj.getTileEntity(pos.offset(sideN, 2).offset(sid)).hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite())){
-						worldObj.getTileEntity(pos.offset(sideN, 2).offset(sid)).getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()).connect(masterIn, key, rotRatio, 1.5D);
+					TileEntity diagTE = world.getTileEntity(pos.offset(sideN, 2).offset(sid));
+					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()) && DefaultAxleHandler.canConnectThrough(world, pos.offset(sideN, 2), sideN.getOpposite(), sid) && diagTE != null){
+						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()).connect(masterIn, key, rotRatio, 1.5D);
 					}
 				}
-			}
-			
-			if(worldObj.getTileEntity(pos.offset(sid)) != null && worldObj.getTileEntity(pos.offset(sid)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite())){
-				worldObj.getTileEntity(pos.offset(sid)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite()).propogate(masterIn, key, sid.getAxisDirection() == AxisDirection.POSITIVE ? -rotRatio : rotRatio, 0);
 			}
 		}
 
@@ -304,14 +261,23 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 
 		@Override
 		public void resetAngle(){
-			if(!worldObj.isRemote){
-				angleW[1] = (MiscOp.posOrNeg(rotRatio) == -1 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
+			if(!world.isRemote){
+				angleW[1] = 0;
+				angleW[0] = Math.signum(rotRatio) == -1 ? 7.5F : 0F;
+				SendSpinToClient msg = new SendSpinToClient(0, angleW[1], angleW[0], pos);
+				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 
 		@Override
-		public double getAngle(){
+		public float getAngle(){
 			return angleW[0];
+		}
+		
+		@SideOnly(Side.CLIENT)
+		@Override
+		public float getNextAngle(){
+			return angleW[0] + (angleW[1] * 9F / (float) Math.PI);
 		}
 
 		@Override
@@ -319,25 +285,53 @@ public class LargeGearMasterTileEntity extends TileEntity implements IDoubleRece
 			if(allowInvert && absolute){
 				motionData[1] += energy;
 			}else if(allowInvert){
-				motionData[1] += energy * MiscOp.posOrNeg(motionData[1]);
+				motionData[1] += energy * Math.signum(motionData[1]);
 			}else if(absolute){
-				int sign = (int) MiscOp.posOrNeg(motionData[1]);
+				int sign = (int) Math.signum(motionData[1]);
 				motionData[1] += energy;
-				if(sign != 0 && MiscOp.posOrNeg(motionData[1]) != sign){
+				if(sign != 0 && Math.signum(motionData[1]) != sign){
 					motionData[1] = 0;
 				}
 			}else{
-				int sign = (int) MiscOp.posOrNeg(motionData[1]);
+				int sign = (int) Math.signum(motionData[1]);
 				motionData[1] += energy * ((double) sign);
-				if(MiscOp.posOrNeg(motionData[1]) != sign){
+				if(Math.signum(motionData[1]) != sign){
 					motionData[1] = 0;
 				}
 			}
+			markDirty();
 		}
 
 		@Override
 		public double getRotationRatio(){
 			return rotRatio;
+		}
+
+		@Override
+		public void markChanged(){
+			markDirty();
+		}
+		
+		@Override
+		public boolean shouldManageAngle(){
+			return true;
+		}
+
+		@Override
+		public void setAngle(float angleIn){
+			angleW[0] = angleIn;
+		}
+
+		@Override
+		public float getClientW(){
+			return angleW[1];
+		}
+
+		@Override
+		public void syncAngle(){
+			angleW[1] = (float) motionData[0];
+			SendSpinToClient msg = new SendSpinToClient(0, angleW[1], angleW[0], pos);
+			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 }

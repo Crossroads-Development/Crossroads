@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=up": { "model": "crossroads:item_chute_port"},
+		"facing=down": { "model": "crossroads:item_chute_port"},
+		"facing=north": { "model": "crossroads:item_chute_port"},
+		"facing=south": { "model": "crossroads:item_chute_port", "y": 180 },
+		"facing=east": { "model": "crossroads:item_chute_port", "y": 90 },
+		"facing=west": { "model": "crossroads:item_chute_port", "y": 270 }
+	}
+}

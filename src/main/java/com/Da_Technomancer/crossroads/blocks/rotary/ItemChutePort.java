@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import java.util.List;
+
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ItemChutePortTileEntity;
@@ -11,7 +13,9 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -20,16 +24,18 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemChutePort extends BlockContainer{
 
 	public ItemChutePort(){
 		super(Material.IRON);
-		String name = "itemChutePort";
+		String name = "item_chute_port";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(2);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setSoundType(SoundType.METAL);
@@ -46,9 +52,9 @@ public class ItemChutePort extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite();
-		return this.getDefaultState().withProperty(Properties.FACING, enumfacing);
+		return getDefaultState().withProperty(Properties.FACING, enumfacing);
 	}
 
 	@Override
@@ -65,6 +71,13 @@ public class ItemChutePort extends BlockContainer{
 	public int damageDropped(IBlockState state){
 		return 0;
 	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+		tooltip.add("Mass: 500");
+		tooltip.add("I: 2");
+	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
@@ -74,7 +87,7 @@ public class ItemChutePort extends BlockContainer{
 	@Override
 	public IBlockState getStateFromMeta(int meta){
 		EnumFacing facing = EnumFacing.getFront(meta);
-		return this.getDefaultState().withProperty(Properties.FACING, facing);
+		return getDefaultState().withProperty(Properties.FACING, facing);
 	}
 
 	@Override

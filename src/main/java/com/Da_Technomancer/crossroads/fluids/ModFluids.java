@@ -21,9 +21,9 @@ public final class ModFluids{
 	public static BlockSteam steam;
 	public static BlockMoltenCopper moltenCopper;
 	public static BlockLiquidFat liquidFat;
-	
-	public static void init(){
+	public static BlockMoltenCopshowium moltenCopshowium;
 
+	public static void init(){
 		FluidRegistry.registerFluid(BlockSteam.STEAM);
 		steam = new BlockSteam();
 		FluidRegistry.addBucketForFluid(BlockSteam.STEAM);
@@ -39,6 +39,19 @@ public final class ModFluids{
 		FluidRegistry.registerFluid(BlockLiquidFat.LIQUID_FAT);
 		liquidFat = new BlockLiquidFat();
 		FluidRegistry.addBucketForFluid(BlockLiquidFat.LIQUID_FAT);
+
+		FluidRegistry.registerFluid(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
+		moltenCopshowium = new BlockMoltenCopshowium();
+		FluidRegistry.addBucketForFluid(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void registerRenderers(){
+		registerFluidBlockRendering(BlockSteam.STEAM);
+		registerFluidBlockRendering(BlockMoltenCopper.MOLTEN_COPPER);
+		registerFluidBlockRendering(BlockDistilledWater.DISTILLED_WATER);
+		registerFluidBlockRendering(BlockLiquidFat.LIQUID_FAT);
+		registerFluidBlockRendering(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
 	}
 
 	/*
@@ -80,13 +93,5 @@ public final class ModFluids{
 		if(block != null){
 			ModelLoader.setCustomStateMapper(block, mapper);
 		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void registerRenderers(){
-		registerFluidBlockRendering(BlockSteam.STEAM);
-		registerFluidBlockRendering(BlockMoltenCopper.MOLTEN_COPPER);
-		registerFluidBlockRendering(BlockDistilledWater.DISTILLED_WATER);
-		registerFluidBlockRendering(BlockLiquidFat.LIQUID_FAT);
 	}
 }

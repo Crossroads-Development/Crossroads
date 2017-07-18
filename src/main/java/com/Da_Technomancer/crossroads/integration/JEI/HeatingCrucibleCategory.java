@@ -1,6 +1,9 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import java.util.List;
+
 import com.Da_Technomancer.crossroads.Main;
+import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -9,17 +12,15 @@ import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
-@SuppressWarnings("rawtypes")
-public class HeatingCrucibleCategory implements IRecipeCategory{
+public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleRecipe>{
 
-	protected static final String id = Main.MODID + ".heatingCrucible";
+	public static final String ID = Main.MODID + ".heating_crucible";
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
@@ -35,7 +36,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory{
 
 	@Override
 	public String getUid(){
-		return id;
+		return ID;
 	}
 
 	@Override
@@ -54,40 +55,31 @@ public class HeatingCrucibleCategory implements IRecipeCategory{
 		GlStateManager.enableBlend();
 		slot.draw(minecraft, 40, 50);
 		arrowStatic.draw(minecraft, 62, 50);
-		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
-	}
-
-	@Override
-	public void drawAnimations(Minecraft minecraft){
-		GlStateManager.enableAlpha();
-		GlStateManager.enableBlend();
 		arrow.draw(minecraft, 62, 50);
 		GlStateManager.disableBlend();
 		GlStateManager.disableAlpha();
 	}
 
 	@Override
-	@Deprecated
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper){
-		if(!(recipeWrapper instanceof HeatingCrucibleRecipeWrapper)){
-			return;
-		}
-		HeatingCrucibleRecipeWrapper wrapper = ((HeatingCrucibleRecipeWrapper) recipeWrapper);
+	public void setRecipe(IRecipeLayout recipeLayout, HeatingCrucibleRecipe recipeWrapper, IIngredients ingredients){
 		recipeLayout.getFluidStacks().init(0, false, 90, 42, 32, 32, 200, false, null);
-		recipeLayout.getFluidStacks().set(0, wrapper.getFluidOutputs());
+		recipeLayout.getFluidStacks().set(0, ingredients.getOutputs(FluidStack.class).get(0));
 		recipeLayout.getItemStacks().init(0, true, 40, 50);
-		recipeLayout.getItemStacks().set(0, wrapper.getInputs());
+		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients){
-		if(!(recipeWrapper instanceof HeatingCrucibleRecipeWrapper)){
-			return;
-		}
-		recipeLayout.getFluidStacks().init(0, false, 90, 42, 32, 32, 200, false, null);
-		recipeLayout.getFluidStacks().set(0, ingredients.getOutputs(FluidStack.class));
-		recipeLayout.getItemStacks().init(0, true, 40, 50);
-		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
+	public IDrawable getIcon(){
+		return null;
+	}
+
+	@Override
+	public List<String> getTooltipStrings(int mouseX, int mouseY){
+		return ImmutableList.of();
+	}
+	
+	@Override
+	public String getModName(){
+		return Main.MODNAME;
 	}
 }

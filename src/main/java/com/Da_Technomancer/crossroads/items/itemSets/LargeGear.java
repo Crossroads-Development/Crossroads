@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -11,6 +12,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,16 +28,19 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class LargeGear extends Item{
 
-	private GearTypes type;
+	private final GearTypes type;
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
+	
 
 	public LargeGear(GearTypes typeIn){
-		setUnlocalizedName("largeGear" + typeIn.toString());
-		setRegistryName("largeGear" + typeIn.toString());
+		String name = "large_gear_" + typeIn.toString().toLowerCase();
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		this.setCreativeTab(ModItems.tabGear);
 		type = typeIn;
-		ModItems.itemAddQue(this);
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), "###", "#$#", "###", '#', GearFactory.basicGears.get(typeIn), '$', "block" + typeIn.toString()));
+		ModItems.itemAddQue(this, 0, LOCAT);
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), "###", "#$#", "###", '#', GearFactory.BASIC_GEARS.get(typeIn), '$', "block" + typeIn.toString()));
 	}
 
 	@Override
@@ -46,7 +51,7 @@ public class LargeGear extends Item{
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		pos = pos.offset(side);
 
 		for(BlockPos cPos : section(pos, side)){
@@ -55,8 +60,8 @@ public class LargeGear extends Item{
 			}
 		}
 
-		if(!playerIn.capabilities.isCreativeMode && --playerIn.getHeldItem(hand).stackSize <= 0){
-			playerIn.setHeldItem(hand, null);
+		if(!playerIn.capabilities.isCreativeMode){
+			playerIn.getHeldItem(hand).shrink(1);
 		}
 
 		for(BlockPos cPos : section(pos, side)){

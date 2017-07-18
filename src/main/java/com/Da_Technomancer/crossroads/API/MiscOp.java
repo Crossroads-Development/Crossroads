@@ -2,17 +2,23 @@ package com.Da_Technomancer.crossroads.API;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
-/**This class is for holding mathematical operations that I use often.*/
+/**This class is for holding operations that are used often.*/
 public final class MiscOp{
 
 	public static double betterRound(double numIn, int decPlac){
@@ -38,10 +44,10 @@ public final class MiscOp{
 		return in == 0 ? 0 : (in < 0 ? -1 : 1);
 	}
 
-	public static double posOrNeg(double in){
-		return in == 0 ? 0 : (in < 0 ? -1D : 1D);
+	public static double posOrNeg(double in, double zeroCase){
+		return in == 0 ? zeroCase : (in < 0 ? -1 : 1);
 	}
-	
+
 	/**
 	 * The same as Math.round except if the decimal
 	 * is exactly .5 then it rounds down.
@@ -58,37 +64,83 @@ public final class MiscOp{
 		}
 	}
 
+	/**
+	 * Call on server side only.
+	 * @param playerIn The player whose tag is being retrieved.
+	 * @return The player's persistent NBT tag. Also sets a boolean for if this is multiplayer.
+	 */
 	public static NBTTagCompound getPlayerTag(EntityPlayer playerIn){
 		NBTTagCompound tag = playerIn.getEntityData();
 		if(!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)){
 			tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
 		}
 		tag = tag.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-	
+
 		if(!tag.hasKey(Main.MODID)){
 			tag.setTag(Main.MODID, new NBTTagCompound());
 		}
-	
-		return tag.getCompoundTag(Main.MODID);
+		NBTTagCompound out = tag.getCompoundTag(Main.MODID);
+		out.setBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the client side is to get it on server side and send it via packet. Feel free to replace this with a better way. 
+		return out;
 	}
-	
+
+	/**
+	 * For finding which box within a block is being moused over. Used for example by gear breaking.
+	 */
 	@Nullable
 	public static AxisAlignedBB rayTraceMulti(ArrayList<AxisAlignedBB> boxes, Vec3d start, Vec3d end){
 		if(boxes == null || boxes.size() == 0){
 			return null;
 		}
-		
+
 		float dist = 0;
 		AxisAlignedBB closest = null;
-		
+
 		for(AxisAlignedBB box : boxes){
 			RayTraceResult raytraceresult = box.calculateIntercept(start, end);
-			if(raytraceresult != null && (dist > raytraceresult.hitVec.lengthSquared() || dist == 0)){
-				dist = (float) raytraceresult.hitVec.lengthSquared();
+			if(raytraceresult != null && (dist > raytraceresult.hitVec.subtract(start).lengthVector() || dist == 0)){
+				dist = (float) raytraceresult.hitVec.subtract(start).lengthVector();
 				closest = box;
 			}
 		}
-		
+
 		return closest;
+	}
+
+	/**
+	 * A server-side friendly version of {@link Entity#rayTrace(double, float)}
+	 */
+	@Nullable
+	public static RayTraceResult rayTrace(Entity ent, double blockReachDistance){
+		Vec3d vec3d = ent.getPositionVector().addVector(0, ent.getEyeHeight(), 0);
+		Vec3d vec3d2 = vec3d.add(ent.getLook(1F).scale(blockReachDistance));
+		return ent.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+	}
+
+	/**
+	 * Returns a long that contains the chunk's coordinates (In chunk coordinates). Suitable for HashMap keys. 
+	 * It should be noted that this is NOT the same as {@link ChunkPos#asLong(int, int)} in terms of results. 
+	 */
+	public static long getLongFromChunk(@Nonnull Chunk chunk){
+		return (((long) chunk.xPosition) << 32) | (chunk.zPosition & 0xffffffffL);
+	}
+
+	public static ChunkPos getChunkPosFromLong(long combinedCoord){
+		return new ChunkPos((int) (combinedCoord >> 32), (int) combinedCoord);
+	}
+
+	/**
+	 * @returns The coordinate in chunk relative form. NOT the same as coord % 16. Note that this value should be divided by 2 for use with fieldNodes and nodeForces.
+	 */
+	public static int getChunkRelativeCoord(int coord){
+		return coord - (16 * Math.floorDiv(coord, 16));
+	}
+
+	/**
+	 * Returns a long that contains the chunk's coordinates (In chunk coordinates). Suitable for HashMap keys. 
+	 * It should be noted that this is NOT the same as {@link ChunkPos#asLong(int, int)} in terms of results. 
+	 */
+	public static long getLongFromChunkPos(@Nonnull ChunkPos pos){
+		return (((long) pos.chunkXPos << 32) | (pos.chunkZPos & 0xffffffffL));
 	}
 }

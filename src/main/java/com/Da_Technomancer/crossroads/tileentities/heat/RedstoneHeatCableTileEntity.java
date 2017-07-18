@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
@@ -35,6 +36,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	}
 
 	public RedstoneHeatCableTileEntity(HeatConductors conductor, HeatInsulators insulator){
+		super();
 		this.conductor = conductor;
 		this.insulator = insulator;
 	}
@@ -46,7 +48,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
@@ -56,7 +58,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 			if(insulator == HeatInsulators.ICE){
 				temp = -10;
 			}else{
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 			}
 			init = true;
 		}
@@ -69,15 +71,15 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 
 		if(temp > insulator.getLimit()){
 			if(ModConfig.heatEffects.getBoolean()){
-				insulator.getEffect().doEffect(worldObj, pos, 1);
+				insulator.getEffect().doEffect(world, pos, 1);
 			}else{
-				worldObj.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
+				world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
 			}
 		}
 	}
 
 	public void transHeat(double rate){
-		if(!worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(!world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			return;
 		}
 		double reservePool = temp * rate;
@@ -85,8 +87,8 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		int members = 1;
 
 		for(EnumFacing side : EnumFacing.values()){
-			if(worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				IHeatHandler handler = worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
+			if(world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				IHeatHandler handler = world.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
 				reservePool += handler.getTemp() * rate;
 				handler.addHeat(-(handler.getTemp() * rate));
 				members++;
@@ -96,8 +98,8 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		reservePool /= members;
 
 		for(EnumFacing side : EnumFacing.values()){
-			if(worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
+			if(world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				world.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
 			}
 		}
 		temp += reservePool;
@@ -120,7 +122,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 
 		nbt.setBoolean("init", this.init);
 		nbt.setDouble("temp", this.temp);
-		if(!worldObj.isRemote){
+		if(!world.isRemote){
 			nbt.setString("cond", conductor.name());
 			nbt.setString("insul", insulator.name());
 		}
@@ -140,7 +142,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 			return;
 		}
 
-		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
+		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
 		newTemp /= (rate + 1);
 		temp = newTemp;
 	}
@@ -148,22 +150,43 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY){
-			return worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL);
+			return world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL);
+		}
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+			return true;
 		}
 		return super.hasCapability(capability, facing);
 	}
 
 	private final HeatHandler heatHandler = new HeatHandler();
+	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && worldObj.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			return (T) heatHandler;
+		}
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+			return (T) redstoneHandler;
 		}
 		return super.getCapability(capability, facing);
 	}
 
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(boolean read){
+			if(!read || !world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) || insulator == null){
+				return 0;
+			}
+			double holder = (temp + 273) / (insulator.getLimit() + 273);
+			holder *= 15D;
+			
+			return holder;
+		}
+	}
+	
 	private class HeatHandler implements IHeatHandler{
 
 		private void init(){
@@ -172,9 +195,9 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 				if(insulator == HeatInsulators.ICE){
 					temp = -10;
 				}else{
-					temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+					temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 				}
-				worldObj.updateComparatorOutputLevel(pos, null);
+				world.updateComparatorOutputLevel(pos, null);
 			}
 		}
 
@@ -188,14 +211,14 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		public void setTemp(double tempIn){
 			init = true;
 			temp = tempIn;
-			worldObj.updateComparatorOutputLevel(pos, null);
+			world.updateComparatorOutputLevel(pos, null);
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
 			temp += heat;
-			worldObj.updateComparatorOutputLevel(pos, null);
+			world.updateComparatorOutputLevel(pos, null);
 		}
 
 	}

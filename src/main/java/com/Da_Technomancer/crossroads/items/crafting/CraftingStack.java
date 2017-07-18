@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -8,8 +7,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.NonNullList;
 
 public class CraftingStack implements ICraftingStack{
 
@@ -17,15 +15,21 @@ public class CraftingStack implements ICraftingStack{
 	private final int count;
 	private final int meta;
 
-	/** A metadata of -1 means ignore metadata
+	/**
 	 * 
+	 * @param block
+	 * @param count
+	 * @param meta A value of -1 means to ignore metadata
 	 */
 	public CraftingStack(Block block, int count, int meta){
 		this(Item.getItemFromBlock(block), count, meta);
 	}
 
-	/** A metadata of -1 means ignore metadata
+	/**
 	 * 
+	 * @param item
+	 * @param count
+	 * @param meta A value of -1 means to ignore metadata
 	 */
 	public CraftingStack(Item item, int count, int meta){
 		this.item = item;
@@ -35,11 +39,11 @@ public class CraftingStack implements ICraftingStack{
 
 	@Override
 	public boolean match(ItemStack stack){
-		if(stack == null){
+		if(stack.isEmpty()){
 			return false;
 		}
 
-		if(stack.getItem() == item && stack.stackSize == count && (meta == -1 || stack.getMetadata() == meta)){
+		if(stack.getItem() == item && stack.getCount() == count && (meta == -1 || stack.getMetadata() == meta)){
 			return true;
 		}
 
@@ -48,7 +52,7 @@ public class CraftingStack implements ICraftingStack{
 
 	@Override
 	public boolean softMatch(ItemStack stack){
-		if(stack == null){
+		if(stack.isEmpty()){
 			return false;
 		}
 
@@ -59,27 +63,14 @@ public class CraftingStack implements ICraftingStack{
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public List<ItemStack> getMatchingList(){
 		if(meta != -1 || !item.getHasSubtypes()){
 			return ImmutableList.of(new ItemStack(item, count, meta));
 		}
-		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+		NonNullList<ItemStack> list = NonNullList.create();
 		item.getSubItems(item, null, list);
 		return list;
-	}
-	
-	protected Item getItem(){
-		return item;
-	}
-	
-	protected int getCount(){
-		return count;
-	}
-	
-	protected int getMeta(){
-		return meta;
 	}
 	
 	@Override
@@ -89,7 +80,7 @@ public class CraftingStack implements ICraftingStack{
 		}
 		if(other instanceof CraftingStack){
 			CraftingStack otherStack = (CraftingStack) other;
-			return item == otherStack.getItem() && meta == otherStack.getMeta() && count == otherStack.getCount();
+			return item == otherStack.item && meta == otherStack.meta && count == otherStack.count;
 		}
 		
 		return false;

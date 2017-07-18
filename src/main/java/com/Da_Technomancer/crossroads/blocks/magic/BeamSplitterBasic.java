@@ -18,7 +18,7 @@ public class BeamSplitterBasic extends BlockContainer{
 
 	public BeamSplitterBasic(){
 		super(Material.ROCK);
-		String name = "beamSplitterBasic";
+		String name = "beam_splitter_basic";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -38,16 +38,16 @@ public class BeamSplitterBasic extends BlockContainer{
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
-		if(worldIn.getTileEntity(pos) instanceof BeamRenderTE){
-			((BeamRenderTE) worldIn.getTileEntity(pos)).refresh();
-		}
-		
-		super.breakBlock(worldIn, pos, state);
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
 	}
 	
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
-		return false;
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof BeamRenderTE){
+			((BeamRenderTE) te).refresh();
+		}
+		super.breakBlock(worldIn, pos, state);
 	}
 }

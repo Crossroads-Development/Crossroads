@@ -24,7 +24,7 @@ import net.minecraftforge.fluids.IFluidBlock;
 
 public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTileEntity>{
 
-	private static final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/pump.png");
+	private static final ResourceLocation texture = new ResourceLocation(Main.MODID, "textures/model/pump.png");
 	private static final ModelPump model = new ModelPump();
 
 	@Override

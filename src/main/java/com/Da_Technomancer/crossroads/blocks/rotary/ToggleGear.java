@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import java.util.List;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -19,11 +19,16 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -33,24 +38,31 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public class ToggleGear extends BlockContainer implements IBlockCompare{
+public class ToggleGear extends BlockContainer{
 
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
 	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .5625D, 0D, 1D, .625D, 1D);
-	private GearTypes type;
+	private final GearTypes type;
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base_toggle", "inventory");
 	
 	public ToggleGear(GearTypes type){
 		super(Material.IRON);
 		this.type = type;
-		String name = "toggleGear" + type.toString();
+		String name = "toggle_gear_" + type.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
+		this.setCreativeTab(ModItems.tabGear);
 		this.setHardness(3);
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(this, 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.basicGears.get(type)));
+		ModItems.itemAddQue(Item.getItemFromBlock(this), 0, LOCAT);
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(this, 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.BASIC_GEARS.get(type)));
 		setSoundType(SoundType.METAL);
+	}
+	
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		neighborChanged(state, worldIn, pos, null, null);
 	}
 
 	@Override
@@ -63,6 +75,12 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new ToggleGearTileEntity(type);
+	}
+	
+	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		CommonProxy.masterKey++;
+		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, worldIn.isBlockPowered(pos));
 	}
 	
 	@Override
@@ -95,7 +113,7 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
+		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
 	}
 
 	@Override
@@ -110,18 +128,20 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 	}
 	
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos prevPos){
+		if(worldIn.isRemote){
+			return;
+		}
 		if(worldIn.isBlockPowered(pos)){
 			if(!state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+				worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, .3F, .6F);
 			}
 		}else{
 			if(state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
+				worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, .3F, .5F);
 			}
-		}
-		if(worldIn.isRemote){
-			return;
 		}
 		CommonProxy.masterKey++;
 	}
@@ -140,17 +160,4 @@ public class ToggleGear extends BlockContainer implements IBlockCompare{
 	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
 	}
-
-	@Override
-	public double getOutput(World worldIn, BlockPos pos){
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(!te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			return 0;
-		}
-		double holder = Math.pow(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0], 2) / 2D;
-		holder *= 15D;
-		
-		return holder;
-	}
-
 }

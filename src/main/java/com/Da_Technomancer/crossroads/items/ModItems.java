@@ -1,7 +1,8 @@
 package com.Da_Technomancer.crossroads.items;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -12,10 +13,13 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,19 +27,27 @@ public final class ModItems{
 
 	public static final CreativeTabs tabCrossroads = new CreativeTabs(Main.MODID){
 		@Override
-		public Item getTabIconItem(){
-			return GearFactory.basicGears.get(GearTypes.BRONZE);
+		public ItemStack getTabIconItem(){
+			return new ItemStack(omnimeter, 1);
 		}
 	};
 	public static final CreativeTabs tabHeatCable = new CreativeTabs("heatCable"){
 		@Override
-		public Item getTabIconItem(){
-			return Item.getItemFromBlock(HeatCableFactory.cableMap.get(HeatConductors.COPPER).get(HeatInsulators.WOOL));
+		public ItemStack getTabIconItem(){
+			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL), 1);
 		}
 	};
+	public static final CreativeTabs tabGear = new CreativeTabs("gear"){
+		@Override
+		public ItemStack getTabIconItem(){
+			return new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.BRONZE));
+		}
+	};
+	protected static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 100, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F).setRepairItem(new ItemStack(Items.POISONOUS_POTATO));
+	protected static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[4], 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
 
-	@Deprecated
-	public static BasicItem metalScrap;
+	public static DebugGearWriter debugGearWriter;
+	public static DebugHeatWriter debugHeatWriter;
 	public static BasicItem dustSalt;
 	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
@@ -45,7 +57,6 @@ public final class ModItems{
 	public static FluidGauge fluidGauge;
 	public static Speedometer speedometer;
 	public static OmniMeter omnimeter;
-	public static DebugReader debugReader;
 	public static Vacuum vacuum;
 	public static MagentaBread magentaBread;
 	public static ItemCandleLily itemCandleLilypad;
@@ -62,27 +73,28 @@ public final class ModItems{
 	public static ChickenBoots chickenBoots;
 	public static ChaosRod chaosRod;
 	public static BasicItem voidCrystal;
+	public static ModuleGoggles moduleGoggles;
+	public static StaffTechnomancy staffTechnomancy;
+	public static BeamCage beamCage;
+	public static PrototypePistol pistol;
+	public static PrototypeWatch watch;
 
-	private static ArrayList<Item> modelQue = new ArrayList<Item>();
+	private static ArrayList<Triple<Item, Integer, ModelResourceLocation>> modelQue = new ArrayList<Triple<Item, Integer, ModelResourceLocation>>();
 
 	public static void itemAddQue(Item item){
-		modelQue.add(item);
+		modelQue.add(Triple.of(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory")));
+	}
+	
+	public static void itemAddQue(Item item, int meta, ModelResourceLocation location){
+		modelQue.add(Triple.of(item, meta, location));
 	}
 
 	public static final void init(){
-		metalScrap = new BasicItem("metalScrap"){
-			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-				tooltip.add("THIS ITEM IS BEING REMOVED! PLEASE USE IT UP!");
-			}
-		};
-		itemAddQue(new DebugGearWriter());
-		itemAddQue(debugReader = new DebugReader());
+		itemAddQue(debugGearWriter = new DebugGearWriter());
 		itemAddQue(handCrank = new HandCrank());
-		itemAddQue(new DebugHeatWriter());
-		dustCopper = new BasicItem("dustCopper", "dustCopper");
-		dustSalt = new BasicItem("dustSalt", "dustSalt");
+		itemAddQue(debugHeatWriter = new DebugHeatWriter());
+		dustCopper = new BasicItem("dust_copper", "dustCopper");
+		dustSalt = new BasicItem("dust_salt", "dustSalt");
 		itemAddQue(obsidianKit = new ObsidianCuttingKit());
 		itemAddQue(mashedPotato = new MashedPotato());
 		itemAddQue(thermometer = new Thermometer());
@@ -93,32 +105,36 @@ public final class ModItems{
 		itemAddQue(magentaBread = new MagentaBread());
 		itemAddQue(itemCandleLilypad = new ItemCandleLily());
 		itemAddQue(edibleBlob = new EdibleBlob());
-		itemAddQue(diamondWire = new BasicItem("diamondWire", "wireDiamond"));
+		itemAddQue(diamondWire = new BasicItem("diamond_wire", "wireDiamond"));
 		itemAddQue(rainIdol = new RainIdol());
-		pureQuartz = new BasicItem("pureQuartz", "gemQuartz");
-		luminescentQuartz = new BasicItem("luminescentQuartz");
-		lensArray = new BasicItem("lensArray");
-		invisItem = new BasicItem("invisItem", null, false);
+		pureQuartz = new BasicItem("pure_quartz", "gemQuartz");
+		luminescentQuartz = new BasicItem("luminescent_quartz");
+		lensArray = new BasicItem("lens_array");
+		invisItem = new BasicItem("invis_item", null, false);
 		itemAddQue(squidHelmet = new SquidHelmet());
 		itemAddQue(pigZombieChestplate = new PigZombieChestsplate());
 		itemAddQue(cowLeggings = new CowLeggings());
 		itemAddQue(chickenBoots = new ChickenBoots());
 		itemAddQue(chaosRod = new ChaosRod());
-		voidCrystal = new BasicItem("voidCrystal");
+		voidCrystal = new BasicItem("void_crystal");
+		itemAddQue(moduleGoggles = new ModuleGoggles());
+		itemAddQue(staffTechnomancy = new StaffTechnomancy());
+		itemAddQue(beamCage = new BeamCage());
+		itemAddQue(pistol = new PrototypePistol());
+		itemAddQue(watch = new PrototypeWatch(), 0, new ModelResourceLocation(Main.MODID + ":watch_0"));
+		itemAddQue(watch, 1, new ModelResourceLocation(Main.MODID + ":watch_1"));
+		itemAddQue(watch, 2, new ModelResourceLocation(Main.MODID + ":watch_2"));
+		itemAddQue(watch, 3, new ModelResourceLocation(Main.MODID + ":watch_3"));
+		itemAddQue(watch, 4, new ModelResourceLocation(Main.MODID + ":watch_4"));
+		itemAddQue(watch, 5, new ModelResourceLocation(Main.MODID + ":watch_5"));
+		itemAddQue(watch, 6, new ModelResourceLocation(Main.MODID + ":watch_6"));
+		itemAddQue(watch, 7, new ModelResourceLocation(Main.MODID + ":watch_7"));
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void initModels(){
-		// Any items that need models initialized without metadata other than 0,
-		// add it to modelQue. If it has metadata, add it manually.
-
-		for(Item modeling : modelQue){
-			register(modeling, 0);
+		for(Triple<Item, Integer, ModelResourceLocation> modeling : modelQue){
+			ModelLoader.setCustomModelResourceLocation(modeling.getLeft(), modeling.getMiddle(), modeling.getRight());
 		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	private static void register(Item item, int subtype){
-		ModelLoader.setCustomModelResourceLocation(item, subtype, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 }

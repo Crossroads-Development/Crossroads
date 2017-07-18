@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
@@ -23,19 +25,19 @@ public class FluidTankTileEntity extends TileEntity{
 
 	private FluidStack content = null;
 	private final int CAPACITY = 20_000;
-	
+
 	private void fixState(){
 		int i = content == null ? 0 : ((int) Math.ceil(15D * content.amount / CAPACITY));
-		if(i != worldObj.getBlockState(pos).getValue(Properties.REDSTONE)){
-			worldObj.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i));
+		if(i != world.getBlockState(pos).getValue(Properties.REDSTONE)){
+			world.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i < 0 ? 0 : i > 15 ? 15 : i));
 		}
 	}
-	
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return (oldState.getBlock() != newState.getBlock());
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -53,7 +55,7 @@ public class FluidTankTileEntity extends TileEntity{
 
 		return nbt;
 	}
-	
+
 	/*
 	 * For setting the fluidstack on placement.
 	 */
@@ -63,6 +65,7 @@ public class FluidTankTileEntity extends TileEntity{
 	}
 
 	private final IFluidHandler mainHandler = new MainHandler();
+	private final IAdvancedRedstoneHandler redstoneHandler = new RedstoneHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -70,18 +73,29 @@ public class FluidTankTileEntity extends TileEntity{
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) mainHandler;
 		}
-
+		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+			return (T) redstoneHandler;
+		}
+		
 		return super.getCapability(capability, facing);
 	}
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
 			return true;
 		}
 		return super.hasCapability(capability, facing);
 	}
 
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(boolean read){
+			return read ? content == null ? 0 : 15D * (double) content.amount / (double) CAPACITY : 0;
+		}
+	}
+	
 	private class MainHandler implements IFluidHandler{
 
 		@Override
@@ -91,11 +105,11 @@ public class FluidTankTileEntity extends TileEntity{
 
 		@Override
 		public int fill(FluidStack resource, boolean doFill){
-			if(resource != null && (content == null || resource.getFluid() == content.getFluid())){
+			if(resource != null && (content == null || resource.isFluidEqual(content))){
 				int amount = Math.min(resource.amount, CAPACITY - (content == null ? 0 : content.amount));
 
 				if(doFill && amount != 0){
-					content = new FluidStack(resource.getFluid(), amount + (content == null ? 0 : content.amount));
+					content = new FluidStack(resource.getFluid(), amount + (content == null ? 0 : content.amount), resource.tag);
 					fixState();
 				}
 
@@ -125,7 +139,6 @@ public class FluidTankTileEntity extends TileEntity{
 
 		@Override
 		public FluidStack drain(int maxDrain, boolean doDrain){
-
 			if(maxDrain <= 0 || content == null){
 				return null;
 			}

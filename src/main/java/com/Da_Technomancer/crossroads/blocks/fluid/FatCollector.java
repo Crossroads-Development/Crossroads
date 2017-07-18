@@ -20,7 +20,7 @@ public class FatCollector extends BlockContainer{
 
 	public FatCollector(){
 		super(Material.IRON);
-		String name = "fatCollector";
+		String name = "fat_collector";
 		setSoundType(SoundType.METAL);
 		setUnlocalizedName(name);
 		setRegistryName(name);

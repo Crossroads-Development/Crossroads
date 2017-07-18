@@ -14,12 +14,12 @@ public class SendIntToClient extends Message<SendIntToClient>{
 	public SendIntToClient(){
 	}
 
-	public String sContext;
+	public int identifier;
 	public int message;
 	public BlockPos pos;
 
-	public SendIntToClient(String context, int message, BlockPos pos){
-		this.sContext = context;
+	public SendIntToClient(int identifier, int message, BlockPos pos){
+		this.identifier = identifier;
 		this.message = message;
 		this.pos = pos;
 	}
@@ -32,24 +32,24 @@ public class SendIntToClient extends Message<SendIntToClient>{
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
-		final WorldClient worldClient = minecraft.theWorld;
+		final WorldClient worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
 			public void run(){
-				processMessage(worldClient, sContext, message, pos);
+				processMessage(worldClient, identifier, message, pos);
 			}
 		});
 
 		return null;
 	}
 
-	public void processMessage(WorldClient worldClient, String context, int message, BlockPos pos){
+	public void processMessage(WorldClient worldClient, int identifier, int message, BlockPos pos){
 		if(worldClient == null){
 			return;
 		}
 		TileEntity te = worldClient.getTileEntity(pos);
 
 		if(te instanceof IIntReceiver){
-			((IIntReceiver) te).receiveInt(context, message);
+			((IIntReceiver) te).receiveInt(identifier, message, null);
 		}
 	}
 }

@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.google.common.base.Function;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeetroot;
@@ -25,6 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -37,63 +36,43 @@ public class FertileSoil extends Block{
 
 	protected FertileSoil(){
 		super(Material.GROUND);
-		String name = "fertileSoil";
+		String name = "fertile_soil";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setSoundType(SoundType.GROUND);
 		setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
-		GameRegistry.register(new ItemMultiTexture(this, this, new Function<ItemStack, String>(){
+		GameRegistry.register(new ItemMultiTexture(this, this, new ItemMultiTexture.Mapper(){
 			@Override
 			@Nullable
-			public String apply(@Nullable ItemStack stack){
+			public String apply(ItemStack stack){
 				return (stack.getMetadata() == 0 ? "wheat" : stack.getMetadata() == 1 ? "potato" : stack.getMetadata() == 2 ? "carrot" : stack.getMetadata() == 3 ? "beet" : stack.getMetadata() == 4 ? "oak" : stack.getMetadata() == 5 ? "birch" : stack.getMetadata() == 6 ? "spruce" : stack.getMetadata() == 7 ? "jungle" : stack.getMetadata() == 8 ? "acacia" : "dark");
 			}
 		}).setRegistryName(name));
 		setTickRandomly(true);
-		setDefaultState(blockState.getBaseState().withProperty(Properties.PLANT, 0));
 	}
 
 	@Override
 	public boolean isToolEffective(String type, IBlockState state){
 		return "shovel".equals(type);
-
 	}
 
 	@Override
 	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable){
 		return true;
 	}
-	
+
 	@Override
 	public boolean isFertile(World world, BlockPos pos){
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(state.getValue(Properties.PLANT) >= 4){
-			updateTick(worldIn, pos, state, new Random());
-		}else{
-			for(EnumFacing side : EnumFacing.values()){
-				if(side != EnumFacing.UP && worldIn.getBlockState(pos.offset(side)).getBlock() != this){
-					worldIn.getBlockState(pos.offset(side)).getBlock().neighborChanged(worldIn.getBlockState(pos.offset(side)), worldIn, pos.offset(side), this);
-				}
-			}
+			updateTick(worldIn, pos, state, RANDOM);
 		}
-	}
-	
-	@Override
-	public int getWeakPower(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-		return state.getValue(Properties.PLANT) >= 4 ? 0 : worldIn.getBlockState(pos.offset(EnumFacing.UP)).getBlock() instanceof IPlantable ? 15 : 0;
-
-	}
-
-	@Override
-	public boolean canProvidePower(IBlockState state){
-		return state.getValue(Properties.PLANT) < 4;
 	}
 
 	@Override
@@ -101,7 +80,7 @@ public class FertileSoil extends Block{
 		if(worldIn.isRemote){
 			return;
 		}
-		
+
 		if(worldIn.isAirBlock(pos.offset(EnumFacing.UP))){
 			switch(state.getValue(Properties.PLANT)){
 				case 0:
@@ -144,7 +123,7 @@ public class FertileSoil extends Block{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list){
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list){
 		for(int i = 0; i < 10; i++){
 			list.add(new ItemStack(itemIn, 1, i));
 		}
@@ -157,12 +136,11 @@ public class FertileSoil extends Block{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.PLANT, meta);
+		return getDefaultState().withProperty(Properties.PLANT, meta);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(Properties.PLANT);
 	}
-
 }

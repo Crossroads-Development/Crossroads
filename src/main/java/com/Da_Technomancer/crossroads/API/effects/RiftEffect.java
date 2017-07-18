@@ -24,7 +24,7 @@ public class RiftEffect implements IEffect{
 			EntityShulker shulker = new EntityShulker(worldIn);
 			shulker.setAttachmentPos(pos);
 			shulker.setPosition(pos.getX(), pos.getY(), pos.getZ());
-			worldIn.spawnEntityInWorld(shulker);
+			worldIn.spawnEntity(shulker);
 			return;
 		}
 		
@@ -42,7 +42,7 @@ public class RiftEffect implements IEffect{
 		}
 		
 		WorldServer worldServ = (WorldServer) worldIn;
-		if(worldServ.countEntities(EnumCreatureType.MONSTER, true) <= 3 * EnumCreatureType.MONSTER.getMaxNumberOfCreature() && rand.nextInt(128) <= mult){
+		if(worldServ.countEntities(EnumCreatureType.MONSTER, true) <= worldServ.playerEntities.size() * 3 * EnumCreatureType.MONSTER.getMaxNumberOfCreature() && rand.nextInt(64) < mult){
 			Biome.SpawnListEntry spawn = worldServ.getSpawnListEntryForTypeAt(EnumCreatureType.MONSTER, pos);
 			if(spawn != null){
 				EntityLiving ent = null;
@@ -52,7 +52,7 @@ public class RiftEffect implements IEffect{
 					e.printStackTrace();
 				}
 				ent.setPosition(pos.getX(), pos.getY(), pos.getZ());
-				worldServ.spawnEntityInWorld(ent);
+				worldServ.spawnEntity(ent);
 			}
 		}
 	}
@@ -62,7 +62,7 @@ public class RiftEffect implements IEffect{
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, double mult){
 			WorldServer worldServ = (WorldServer) worldIn;
-			if(worldServ.countEntities(EnumCreatureType.CREATURE, true) <= 3 * EnumCreatureType.CREATURE.getMaxNumberOfCreature() && rand.nextInt(128) <= mult){
+			if(worldServ.countEntities(EnumCreatureType.CREATURE, true) <= worldServ.playerEntities.size() * 10 * EnumCreatureType.CREATURE.getMaxNumberOfCreature() && rand.nextInt(64) < mult){
 				Biome.SpawnListEntry spawn = worldServ.getSpawnListEntryForTypeAt(EnumCreatureType.CREATURE, pos);
 				if(spawn != null){
 					EntityLiving ent = null;
@@ -72,7 +72,7 @@ public class RiftEffect implements IEffect{
 						e.printStackTrace();
 					}
 					ent.setPosition(pos.getX(), pos.getY(), pos.getZ());
-					worldServ.spawnEntityInWorld(ent);
+					worldServ.spawnEntity(ent);
 				}
 			}
 		}

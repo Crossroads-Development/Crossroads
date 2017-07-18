@@ -12,20 +12,21 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class SquidHelmet extends ItemArmor{
 
 	public SquidHelmet(){
-		super(ChickenBoots.BOBO, 1, EntityEquipmentSlot.HEAD);
-		this.setMaxStackSize(1);
-		String name = "squidHelmet";
+		super(ModItems.BOBO, 1, EntityEquipmentSlot.HEAD);
+		setMaxStackSize(1);
+		String name = "squid_helmet";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabCrossroads);
 	}
 
 	@Override
-	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack){
-		if(player.getAir() <= 10){
-			player.setAir(20);
+	public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
+		if(stack.getItemDamage() != getMaxDamage(stack) && player.getAir() <= 150){
+			player.setAir(300);
 			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_SQUID_DEATH, SoundCategory.PLAYERS, 2.5F, 1F);
+			stack.damageItem(1, player);
 		}
 	}
 }

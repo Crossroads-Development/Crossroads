@@ -23,7 +23,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -52,7 +51,7 @@ public class SortingHopper extends BlockContainer{
 
 	protected SortingHopper(){
 		super(Material.IRON);
-		String name = "sortingHopper";
+		String name = "sorting_hopper";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(2);
@@ -69,7 +68,7 @@ public class SortingHopper extends BlockContainer{
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean somethingOrOther){
 		addCollisionBoxToList(pos, entityBox, collidingBoxes, BASE_AABB);
 		addCollisionBoxToList(pos, entityBox, collidingBoxes, EAST_AABB);
 		addCollisionBoxToList(pos, entityBox, collidingBoxes, WEST_AABB);
@@ -78,14 +77,14 @@ public class SortingHopper extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = facing.getOpposite();
 
 		if(enumfacing == EnumFacing.UP){
 			enumfacing = EnumFacing.DOWN;
 		}
 
-		return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(ENABLED, Boolean.valueOf(true));
+		return getDefaultState().withProperty(FACING, enumfacing).withProperty(ENABLED, true);
 	}
 
 	@Override
@@ -104,7 +103,7 @@ public class SortingHopper extends BlockContainer{
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			TileEntity tileentity = worldIn.getTileEntity(pos);
 
@@ -117,8 +116,8 @@ public class SortingHopper extends BlockContainer{
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
-		this.updateState(worldIn, pos, state);
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+		updateState(worldIn, pos, state);
 	}
 
 	private void updateState(World worldIn, BlockPos pos, IBlockState state){

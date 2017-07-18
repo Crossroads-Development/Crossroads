@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/item_chute_port",
+		"south": "blocks/iron_block",
+		"east": "crossroads:blocks/iron_block_shaft",
+		"west": "blocks/iron_block",
+		"up": "blocks/iron_block",
+		"down": "blocks/iron_block",
+		"particle": "blocks/iron_block"
+	}
+}

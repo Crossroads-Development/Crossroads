@@ -1,0 +1,67 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"fur": "crossroads:model/hamster",
+		"color": "crossroads:blocks/color_sheet",
+		"particle": "blocks/iron_block"
+	},
+	"elements": [
+		{
+			"from": [ 4.5, 3.5, 2.5 ],
+			"to": [ 11.5, 6.5, 5.5 ],
+			"faces": {
+				"down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"},
+				"up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"},
+				"north": { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"},
+				"south": { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"},
+				"west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"},
+				"east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"}
+			}
+		},
+		{
+			"from": [ 3.5, 5.3, 3 ],
+			"to": [ 5.5, 7.3, 5 ],
+			"faces": {
+				"down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"},
+				"up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"},
+				"north": { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"},
+				"south": { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"},
+				"west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"},
+				"east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#fur"}
+			}
+		},
+		{
+			"from": [ 3.25, 5.8, 3.75 ],
+			"to": [ 3.5, 6.3, 4.25 ],
+			"faces": {
+				"down":  { "uv": [ 3, 0, 4, 1 ], "texture": "#color"},
+				"up":    { "uv": [ 3, 0, 4, 1 ], "texture": "#color"},
+				"north": { "uv": [ 3, 0, 4, 1 ], "texture": "#color"},
+				"west":  { "uv": [ 3, 0, 4, 1 ], "texture": "#color"},
+				"south":  { "uv": [ 3, 0, 4, 1 ], "texture": "#color"}
+			}
+		},
+		{
+			"from": [ 3.75, 6.6, 5 ],
+			"to": [ 4.25, 7.1, 5.25 ],
+			"faces": {
+				"down":  { "uv": [ 2, 0, 3, 1 ], "texture": "#color"},
+				"up":    { "uv": [ 2, 0, 3, 1 ], "texture": "#color"},
+				"south": { "uv": [ 2, 0, 3, 1 ], "texture": "#color"},
+				"west":  { "uv": [ 2, 0, 3, 1 ], "texture": "#color"},
+				"east":  { "uv": [ 2, 0, 3, 1 ], "texture": "#color"}
+			}
+		},
+		{
+			"from": [ 3.75, 6.6, 2.75 ],
+			"to": [ 4.25, 7.1, 3 ],
+			"faces": {
+				"down":  { "uv": [ 2, 0, 3, 1 ], "texture": "#color"},
+				"up":    { "uv": [ 2, 0, 3, 1 ], "texture": "#color"},
+				"north": { "uv": [ 2, 0, 3, 1 ], "texture": "#color"},
+				"west":  { "uv": [ 2, 0, 3, 1 ], "texture": "#color"},
+				"east":  { "uv": [ 2, 0, 3, 1 ], "texture": "#color"}
+			}
+		}
+		]
+}

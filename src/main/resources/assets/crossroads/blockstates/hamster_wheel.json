@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:hamster_wheel"},
+		"facing=south": { "model": "crossroads:hamster_wheel", "y": 180 },
+		"facing=east": { "model": "crossroads:hamster_wheel", "y": 90 },
+		"facing=west": { "model": "crossroads:hamster_wheel", "y": 270 },
+		"facing=up": { "model": "crossroads:hamster_wheel"},
+		"facing=down": { "model": "crossroads:hamster_wheel"}
+	}
+}

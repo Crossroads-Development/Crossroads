@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.AxleTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -40,8 +39,8 @@ public class Axle extends BlockContainer{
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 		setSoundType(SoundType.METAL);
 		OreDictionary.registerOre("stickIron", this);
 	}
@@ -64,8 +63,9 @@ public class Axle extends BlockContainer{
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.AXIS, BlockPistonBase.getFacingFromEntity(pos, placer).getAxis());
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		CommonProxy.masterKey++;
+		return getDefaultState().withProperty(Properties.AXIS, EnumFacing.getDirectionFromEntityLiving(pos, placer).getAxis());
 	}
 	
 	@Override
@@ -80,7 +80,15 @@ public class Axle extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.AXIS, EnumFacing.getFront(2 * meta).getAxis());
+		return getDefaultState().withProperty(Properties.AXIS, EnumFacing.getFront(2 * meta).getAxis());
+	}
+	
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+		if(worldIn.isRemote){
+			return;
+		}
+		CommonProxy.masterKey++;
 	}
 
 	@Override
@@ -101,13 +109,6 @@ public class Axle extends BlockContainer{
 	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
 		return side.getAxis() == world.getBlockState(pos).getValue(Properties.AXIS);
-	}
-	
-	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
-		if(!worldIn.isRemote){
-			CommonProxy.masterKey++;
-		}
 	}
 
 	private static final AxisAlignedBB XBOX = new AxisAlignedBB(0, .4375D, .4375D, 1, .5625D, .5625D);

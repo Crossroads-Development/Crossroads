@@ -4,19 +4,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.integration.JEI.DetailedCrafterCategory;
+import com.Da_Technomancer.crossroads.integration.JEI.DetailedCrafterRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerCategory;
+import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
 
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fluids.Fluid;
 
 public final class RecipeHolder{
@@ -44,50 +55,76 @@ public final class RecipeHolder{
 	/**
 	 * A list of all recipes, Item Array are the ingredients, and itemstack is
 	 * output. A list for poisonous potato recipes and mashed potato recipes.
+	 * 
+	 * Under no condition is anyone to add support for the Bobo recipes in JEI (or any other recipe helper). 
 	 */
-	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> poisonBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
+	protected static final ArrayList<Pair<ICraftingStack[], ItemStack>> brazierBoboRecipes = new ArrayList<Pair<ICraftingStack[], ItemStack>>();
 
 	/**
 	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
 	 */
 	public static final HashMap<Item, MagicUnit> magExtractRecipes = new HashMap<Item, MagicUnit>();
-	
-	public static final ArrayList<Object> JEIWrappers = new ArrayList<Object>();
+
+	/**
+	 * The recipes for the Detailed Crafter that require technomancy to be unlocked.
+	 * 
+	 * ONLY USE ShapedOreRecipe and ShapelessOreRecipe. Using any other type require changing the JEI integration (DetailedCrafterRecipeWrapper) or it will crash.
+	 */
+	public static final ArrayList<IRecipe> technomancyRecipes = new ArrayList<IRecipe>();
+
+	public static final HashMap<String, ArrayList<IRecipeWrapper>> JEIWrappers = new HashMap<String, ArrayList<IRecipeWrapper>>();
 
 	/**
 	 * Converts the versions of the recipes used internally into fake recipes
 	 * for JEI. Not called unless JEI is installed.
 	 */
 	public static void rebind(){
+		ArrayList<IRecipeWrapper> currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<ICraftingStack, ItemStack[]> rec : grindRecipes.entrySet()){
-			JEIWrappers.add(new GrindstoneRecipe(rec));
+			currentRecipes.add(new GrindstoneRecipe(rec));
 		}
+		JEIWrappers.put(GrindstoneCategory.ID, currentRecipes);
+		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> rec : fluidCoolingRecipes.entrySet()){
-			JEIWrappers.add(new FluidCoolingRecipe(rec));
+			currentRecipes.add(new FluidCoolingRecipe(rec));
 		}
-		JEIWrappers.add(new HeatingCrucibleRecipe(true));
-		JEIWrappers.add(new HeatingCrucibleRecipe(false));
+		JEIWrappers.put(FluidCoolingCategory.ID, currentRecipes);
+		currentRecipes = new ArrayList<IRecipeWrapper>();
+		for(Entry<Block, Triple<IBlockState, Double, Double>> rec : envirHeatSource.entrySet()){
+			currentRecipes.add(new HeatExchangerRecipe(rec));
+		}
+		JEIWrappers.put(HeatExchangerCategory.ID, currentRecipes);
+		currentRecipes = new ArrayList<IRecipeWrapper>();
+		for(IRecipe rec : technomancyRecipes){
+			currentRecipes.add(new DetailedCrafterRecipe(rec, 0));
+		}
+		JEIWrappers.put(DetailedCrafterCategory.ID, currentRecipes);
+		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes.add(new HeatingCrucibleRecipe(true));
+		currentRecipes.add(new HeatingCrucibleRecipe(false));
+		JEIWrappers.put(HeatingCrucibleCategory.ID, currentRecipes);
 	}
 
+	@Nonnull
 	public static ItemStack recipeMatch(ArrayList<EntityItem> itemEnt){
 		if(itemEnt == null){
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 
 		for(EntityItem it : itemEnt){
-			if(it.getEntityItem() == null || it.getEntityItem().stackSize != 1){
-				return null;
+			if(it.getEntityItem() == null || it.getEntityItem().getCount() != 1){
+				return ItemStack.EMPTY;
 			}
 			items.add(it.getEntityItem());
 		}
 
 		if(items.size() != 3){
-			return null;
+			return ItemStack.EMPTY;
 		}
 
-		for(Pair<ICraftingStack[], ItemStack> craft : poisonBoboRecipes){
+		for(Pair<ICraftingStack[], ItemStack> craft : brazierBoboRecipes){
 			ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
 			itemCop.addAll(items);
 
@@ -105,6 +142,6 @@ public final class RecipeHolder{
 			}
 		}
 
-		return null;
+		return ItemStack.EMPTY;
 	}
 }

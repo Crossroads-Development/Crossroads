@@ -1,14 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
+import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCongealer;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatFeeder;
+import com.Da_Technomancer.crossroads.blocks.fluid.FluidSplitter;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidTank;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidTube;
 import com.Da_Technomancer.crossroads.blocks.fluid.FluidVoid;
@@ -32,26 +31,51 @@ import com.Da_Technomancer.crossroads.blocks.magic.BeaconHarness;
 import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitter;
 import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitterBasic;
 import com.Da_Technomancer.crossroads.blocks.magic.ColorChart;
+import com.Da_Technomancer.crossroads.blocks.magic.CrystalMasterAxis;
 import com.Da_Technomancer.crossroads.blocks.magic.CrystallinePrism;
 import com.Da_Technomancer.crossroads.blocks.magic.LensHolder;
 import com.Da_Technomancer.crossroads.blocks.magic.QuartzStabilizer;
 import com.Da_Technomancer.crossroads.blocks.rotary.Axle;
-import com.Da_Technomancer.crossroads.blocks.rotary.CrystalMasterAxis;
 import com.Da_Technomancer.crossroads.blocks.rotary.Grindstone;
+import com.Da_Technomancer.crossroads.blocks.rotary.ItemChute;
 import com.Da_Technomancer.crossroads.blocks.rotary.ItemChutePort;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
 import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxis;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
+import com.Da_Technomancer.crossroads.blocks.technomancy.AdditionAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.ArcCosAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.ArcSinAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.CageCharger;
+import com.Da_Technomancer.crossroads.blocks.technomancy.ChunkUnlocker;
+import com.Da_Technomancer.crossroads.blocks.technomancy.CopshowiumCreationChamber;
+import com.Da_Technomancer.crossroads.blocks.technomancy.CosAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.EqualsAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.FluxManipulator;
+import com.Da_Technomancer.crossroads.blocks.technomancy.FluxReaderAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.GatewayFrame;
+import com.Da_Technomancer.crossroads.blocks.technomancy.GreaterThanAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.LessThanAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalArm;
+import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalBeamSplitter;
+import com.Da_Technomancer.crossroads.blocks.technomancy.MultiplicationAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.Prototype;
+import com.Da_Technomancer.crossroads.blocks.technomancy.PrototypePort;
+import com.Da_Technomancer.crossroads.blocks.technomancy.PrototypingTable;
+import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
+import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneKeyboard;
+import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneRegistry;
+import com.Da_Technomancer.crossroads.blocks.technomancy.SinAxis;
+import com.Da_Technomancer.crossroads.blocks.technomancy.SquareRootAxis;
+import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,7 +88,8 @@ public final class ModBlocks{
 	public static Grindstone grindstone;
 	public static SteamBoiler steamBoiler;
 	public static BlockSalt blockSalt;
-	public static BlockBrazier brazier;
+	public static Brazier brazier;
+	public static FluidVoid fluidVoid;
 	public static RotaryPump rotaryPump;
 	public static SteamTurbine steamTurbine;
 	public static HeatExchanger heatExchanger;
@@ -96,7 +121,6 @@ public final class ModBlocks{
 	public static BasicBlock blockPureQuartz;
 	public static BeamSplitter beamSplitter;
 	public static ColorChart colorChart;
-	public static GlowGlass glowGlass;
 	public static FertileSoil fertileSoil;
 	public static MultiPistonExtend multiPistonExtend;
 	public static MultiPistonExtend multiPistonExtendSticky;
@@ -106,20 +130,47 @@ public final class ModBlocks{
 	public static CrystalMasterAxis crystalMasterAxis;
 	public static Axle axle;
 	public static Ratiator ratiator;
-	public static BasicBlock blockSaltTile;
 	public static BeaconHarness beaconHarness;
 	public static FatFeeder fatFeeder;
-
-	private static final ArrayList<Block> modelQue = new ArrayList<Block>();
-	private static final ArrayList<Pair<Block, Integer>> modelQuePair = new ArrayList<Pair<Block, Integer>>();
+	public static ChunkUnlocker chunkUnlocker; 
+	public static RateManipulator rateManipulator;
+	public static FluxManipulator fluxManipulator;
+	public static FluxReaderAxis fluxReaderAxis;
+	public static MultiplicationAxis multiplicationAxis;
+	public static AdditionAxis additionAxis;
+	public static EqualsAxis equalsAxis;
+	public static GreaterThanAxis greaterThanAxis;
+	public static LessThanAxis lessThanAxis;
+	public static RedstoneAxis redstoneAxis;
+	public static SquareRootAxis squareRootAxis;
+	public static MechanicalBeamSplitter mechanicalBeamSplitter;
+	public static CageCharger cageCharger;
+	public static HamsterWheel hamsterWheel;
+	public static FluidSplitter fluidSplitter;
+	public static BasicFluidSplitter basicFluidSplitter;
+	public static CopshowiumCreationChamber copshowiumCreationChamber;
+	public static SinAxis sinAxis;
+	public static CosAxis cosAxis;
+	public static ArcSinAxis arcsinAxis;
+	public static ArcCosAxis arccosAxis;
+	public static GatewayFrame gatewayFrame;
+	public static RedstoneKeyboard redstoneKeyboard;
+	public static DetailedCrafter detailedCrafter;
+	public static PrototypingTable prototypingTable;
+	public static Prototype prototype;
+	public static PrototypePort prototypePort;
+	public static MechanicalArm mechanicalArm;
+	public static RedstoneRegistry redstoneRegistry;
 
 	public static void blockAddQue(Block block){
-		modelQue.add(block);
+		ModItems.itemAddQue(Item.getItemFromBlock(block));
 	}
 	
 	/** The integer is the end metadata value*/
-	public static void blockAddQueRange(Pair<Block, Integer> block){
-		modelQuePair.add(block);
+	public static void blockAddQueRange(Block block, int endMeta){
+		for(int i = 0; i <= endMeta; i++){
+			ModItems.itemAddQue(Item.getItemFromBlock(block), i, new ModelResourceLocation(block.getRegistryName(), "inventory"));
+		}
 	}
 
 	public static final void init(){
@@ -134,8 +185,8 @@ public final class ModBlocks{
 		rotaryPump = new RotaryPump();
 		steamTurbine = new SteamTurbine();
 		blockAddQue(blockSalt = new BlockSalt());
-		blockAddQue(brazier = new BlockBrazier());
-		blockAddQue(new FluidVoid());
+		blockAddQue(brazier = new Brazier());
+		blockAddQue(fluidVoid = new FluidVoid());
 		blockAddQue(heatExchanger = new HeatExchanger(false));
 		blockAddQue(insulHeatExchanger = new HeatExchanger(true));
 		blockAddQue(fluidTank = new FluidTank());
@@ -160,11 +211,10 @@ public final class ModBlocks{
 		blockAddQue(crystallinePrism = new CrystallinePrism());
 		blockAddQue(arcaneReflector = new ArcaneReflector());
 		blockAddQue(lensHolder = new LensHolder());
-		blockPureQuartz = new BasicBlock("blockPureQuartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz");
+		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz");
 		blockAddQue(beamSplitter = new BeamSplitter());
 		blockAddQue(colorChart = new ColorChart());
-		blockAddQue(glowGlass = new GlowGlass());
-		blockAddQueRange(Pair.of(fertileSoil = new FertileSoil(), 9));
+		blockAddQueRange(fertileSoil = new FertileSoil(), 9);
 		multiPistonExtend = new MultiPistonExtend(false);
 		multiPistonExtendSticky = new MultiPistonExtend(true);
 		blockAddQue(multiPiston = new MultiPistonBase(false));
@@ -173,32 +223,48 @@ public final class ModBlocks{
 		blockAddQue(crystalMasterAxis = new CrystalMasterAxis());
 		blockAddQue(axle = new Axle());
 		blockAddQue(ratiator = new Ratiator());
-		blockSaltTile = new BasicBlock("blockSaltTile", Material.SAND, 0, "shovel", .5F, SoundType.SAND, "blockSalt");
 		blockAddQue(beaconHarness = new BeaconHarness());
 		blockAddQue(fatFeeder = new FatFeeder());
+		blockAddQue(chunkUnlocker = new ChunkUnlocker());
+		blockAddQue(rateManipulator = new RateManipulator());
+		blockAddQue(fluxManipulator = new FluxManipulator());
+		blockAddQue(fluxReaderAxis = new FluxReaderAxis());
+		blockAddQue(multiplicationAxis = new MultiplicationAxis());
+		blockAddQue(additionAxis = new AdditionAxis());
+		blockAddQue(equalsAxis = new EqualsAxis());
+		blockAddQue(greaterThanAxis = new GreaterThanAxis());
+		blockAddQue(lessThanAxis = new LessThanAxis());
+		blockAddQue(redstoneAxis = new RedstoneAxis());
+		blockAddQue(squareRootAxis = new SquareRootAxis());
+		blockAddQue(mechanicalBeamSplitter = new MechanicalBeamSplitter());
+		blockAddQue(cageCharger = new CageCharger());
+		blockAddQue(hamsterWheel = new HamsterWheel());
+		blockAddQue(fluidSplitter = new FluidSplitter());
+		blockAddQue(basicFluidSplitter = new BasicFluidSplitter());
+		blockAddQue(copshowiumCreationChamber = new CopshowiumCreationChamber());
+		blockAddQue(sinAxis = new SinAxis());
+		blockAddQue(cosAxis = new CosAxis());
+		blockAddQue(arcsinAxis = new ArcSinAxis());
+		blockAddQue(arccosAxis = new ArcCosAxis());
+		blockAddQue(gatewayFrame = new GatewayFrame());
+		blockAddQue(redstoneKeyboard = new RedstoneKeyboard());
+		blockAddQue(detailedCrafter = new DetailedCrafter());
+		blockAddQue(prototypingTable = new PrototypingTable());
+		blockAddQue(prototype = new Prototype());
+		blockAddQue(prototypePort = new PrototypePort());
+		blockAddQue(mechanicalArm = new MechanicalArm());
+		blockAddQue(redstoneRegistry = new RedstoneRegistry());
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void preInitModels(){
-
-		for(Block modeling : modelQue){
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(modeling), 0, new ModelResourceLocation(modeling.getRegistryName(), "inventory"));
-
-		}
-		
-		for(Pair<Block, Integer> modeling : modelQuePair){
-			for(int i = 0; i <= modeling.getRight(); i++){
-				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(modeling.getLeft()), i, new ModelResourceLocation(modeling.getLeft().getRegistryName(), "inventory"));
-			}
-		}
-
-		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.cableMap.values()){
+		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.HEAT_CABLES.values()){
 			for(HeatCable cable : map.values()){
 				cable.initModel();
 			}
 		}
 		
-		for(HashMap<HeatInsulators, RedstoneHeatCable> map : HeatCableFactory.rCableMap.values()){
+		for(HashMap<HeatInsulators, RedstoneHeatCable> map : HeatCableFactory.REDSTONE_HEAT_CABLES.values()){
 			for(RedstoneHeatCable cable : map.values()){
 				cable.initModel();
 			}
@@ -206,5 +272,7 @@ public final class ModBlocks{
 
 		fluidTube.initModel();
 		redstoneFluidTube.initModel();
+		prototype.initModel();
+		prototypePort.initModel();
 	}
 }

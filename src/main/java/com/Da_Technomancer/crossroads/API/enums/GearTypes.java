@@ -12,7 +12,8 @@ public enum GearTypes{
 	GOLD(20000D, Color.YELLOW),
 	COPPER(9000D, new Color(255, 120, 60)),
 	TIN(7300D, new Color(240, 240, 240)),
-	BRONZE(8800D, new Color(255, 160, 60));
+	BRONZE(8800D, new Color(255, 160, 60)),
+	COPSHOWIUM(0, new Color(255, 130, 0));
 
 	private final double density;
 	private final Color color;
@@ -42,5 +43,4 @@ public enum GearTypes{
 		name = char1 + name;
 		return name;
 	}
-
 }

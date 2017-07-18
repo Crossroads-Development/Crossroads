@@ -10,7 +10,7 @@
  */
 
 /**
- * Let me be clear, Vazkii made this class and I take no credit for it. Using the class is permitted by the license.
+ * Let me, (Technomancer), be clear, Vazkii made this class and I take no credit for it. Using the class is permitted by the license.
  */
 package com.Da_Technomancer.crossroads.API.packets;
 
@@ -41,7 +41,7 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		map(byte.class, Message::readByte, Message::writeByte);
 		// map(short.class, Message::readShort, Message::writeShort);
 		map(int.class, Message::readInt, Message::writeInt);
-		//map(long.class, Message::readLong, Message::writeLong);
+		map(long.class, Message::readLong, Message::writeLong);
 		map(float.class, Message::readFloat, Message::writeFloat);
 		map(double.class, Message::readDouble, Message::writeDouble);
 		map(boolean.class, Message::readBoolean, Message::writeBoolean);
@@ -50,6 +50,9 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		map(NBTTagCompound.class, Message::readNBT, Message::writeNBT);
 		// map(ItemStack.class, Message::readItemStack, Message::writeItemStack);
 		map(BlockPos.class, Message::readBlockPos, Message::writeBlockPos);
+		map(byte[][].class, Message::readByte2DArray, Message::writeByte2DArray);
+		map(int[].class, Message::readIntArray, Message::writeIntArray);
+		map(double[].class, Message::readDoubleArray, Message::writeDoubleArray);
 	}
 
 	// The thing you override!
@@ -84,8 +87,9 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 			Field[] clFields = getClassFields(clazz);
 			for(Field f : clFields){
 				Class<?> type = f.getType();
-				if(acceptField(f, type))
+				if(acceptField(f, type)){
 					writeField(f, type, buf);
+				}
 			}
 		}catch(Exception e){
 			throw new RuntimeException("Error at writing packet " + this, e);
@@ -158,13 +162,13 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		buf.writeInt(i);
 	}
 
-	/*private static long readLong(ByteBuf buf) { 
+	private static long readLong(ByteBuf buf) { 
 		return buf.readLong(); 
 	}
 
 	private static void writeLong(long l, ByteBuf buf) {
 		buf.writeLong(l); 
-	}*/
+	}
 
 
 	private static float readFloat(ByteBuf buf){
@@ -196,6 +200,58 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 	 * 
 	 * private static void writeChar(char c, ByteBuf buf) { buf.writeChar(c); }
 	 */
+	
+	private static byte[][] readByte2DArray(ByteBuf buf){
+		int outerSize = buf.readInt();
+		int innerSize = buf.readInt();
+		byte[][] out = new byte[outerSize][innerSize];
+		for(int i = 0; i < outerSize; i++){
+			for(int j = 0; j < innerSize; j++){
+				out[i][j] = buf.readByte();
+			}
+		}
+		return out;
+	}
+
+	private static void writeByte2DArray(byte[][] bytes, ByteBuf buf){
+		buf.writeInt(bytes.length);
+		buf.writeInt(bytes[0].length);
+		for(byte[] inner : bytes){
+			buf.writeBytes(inner);
+		}
+	}
+	
+	private static int[] readIntArray(ByteBuf buf){
+		int size = buf.readInt();
+		int[] out = new int[size];
+		for(int i = 0; i < size; i++){
+			out[i] = buf.readInt();
+		}
+		return out;
+	}
+
+	private static void writeIntArray(int[] ints, ByteBuf buf){
+		buf.writeInt(ints.length);
+		for(int inner : ints){
+			buf.writeInt(inner);
+		}
+	}
+	
+	private static double[] readDoubleArray(ByteBuf buf){
+		int size = buf.readInt();
+		double[] out = new double[size];
+		for(int i = 0; i < size; i++){
+			out[i] = buf.readDouble();
+		}
+		return out;
+	}
+
+	private static void writeDoubleArray(double[] doubles, ByteBuf buf){
+		buf.writeInt(doubles.length);
+		for(double inner : doubles){
+			buf.writeDouble(inner);
+		}
+	}
 
 	private static String readString(ByteBuf buf){
 		return ByteBufUtils.readUTF8String(buf);

@@ -1,0 +1,8 @@
+{
+	"parent": "block/cube_bottom_top",
+	"textures": {
+		"side": "crossroads:blocks/heat_exchanger",
+		"top": "crossroads:blocks/heat_exchanger",
+		"bottom": "crossroads:blocks/heat_exchanger_bottom"
+	}
+}

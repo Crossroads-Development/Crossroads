@@ -22,7 +22,7 @@ public class EdibleBlob extends ItemFood{
 
 	public EdibleBlob(){
 		super(0, 0, true);
-		String name = "edibleBlob";
+		String name = "edible_blob";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -47,7 +47,7 @@ public class EdibleBlob extends ItemFood{
 	@Override
 	@Nullable
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving){
-		--stack.stackSize;
+		stack.shrink(1);
 
 		if (entityLiving instanceof EntityPlayer){
 			EntityPlayer entityplayer = (EntityPlayer) entityLiving;

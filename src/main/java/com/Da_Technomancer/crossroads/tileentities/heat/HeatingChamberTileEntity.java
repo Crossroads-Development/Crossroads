@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import com.Da_Technomancer.crossroads.API.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 
 import net.minecraft.item.ItemStack;
@@ -11,11 +11,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class HeatingChamberTileEntity extends AbstractInventory implements ITickable{
 
 	// 0 = Input, 1 = Output
-	private ItemStack[] inventory = new ItemStack[2];
+	private ItemStack[] inventory = {ItemStack.EMPTY, ItemStack.EMPTY};
 	private int progress = 0;
 	private double temp;
 	private boolean init = false;
@@ -24,46 +26,47 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
-		if(inventory[0] != null && getOutput() != null && temp >= 2 + MINTEMP){
-			temp -= 2;
-			if((progress += 2) >= REQUIRED){
-				progress = 0;
-				markDirty();
-				if(inventory[1] == null){
-					inventory[1] = getOutput();
-				}else{
-					inventory[1].stackSize += getOutput().stackSize;
-				}
-
-				if(--inventory[0].stackSize == 0){
-					inventory[0] = null;
+		if(!inventory[0].isEmpty() && !getOutput().isEmpty()){
+			if(temp >= 2 + MINTEMP){
+				temp -= 2;
+				if((progress += 2) >= REQUIRED){
+					progress = 0;
+					markDirty();
+					if(inventory[1].isEmpty()){
+						inventory[1] = getOutput();
+					}else{
+						inventory[1].grow(getOutput().getCount());
+					}
+					inventory[0].shrink(1);
 				}
 			}
+		}else{
+			progress = 0;
 		}
 	}
 
 	private ItemStack getOutput(){
 		ItemStack stack = FurnaceRecipes.instance().getSmeltingResult(inventory[0]);
 
-		if(stack == null){
-			return null;
+		if(stack.isEmpty()){
+			return ItemStack.EMPTY;
 		}
 
-		if(inventory[1] != null && !ItemStack.areItemsEqual(stack, inventory[1])){
-			return null;
+		if(!inventory[1].isEmpty() && !ItemStack.areItemsEqual(stack, inventory[1])){
+			return ItemStack.EMPTY;
 		}
 
-		if(inventory[1] != null && getInventoryStackLimit() - inventory[1].stackSize < stack.stackSize){
-			return null;
+		if(!inventory[1].isEmpty() && getInventoryStackLimit() - inventory[1].getCount() < stack.getCount()){
+			return ItemStack.EMPTY;
 		}
 
 		return stack.copy();
@@ -78,10 +81,10 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 		progress = nbt.getInteger("prog");
 
 		if(nbt.hasKey("inv")){
-			inventory[0] = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv"));
+			inventory[0] = new ItemStack(nbt.getCompoundTag("inv"));
 		}
 		if(nbt.hasKey("invO")){
-			inventory[1] = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("invO"));
+			inventory[1] = new ItemStack(nbt.getCompoundTag("invO"));
 		}
 	}
 
@@ -93,12 +96,12 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 		nbt.setDouble("temp", this.temp);
 		nbt.setInteger("prog", progress);
 
-		if(inventory[0] != null){
+		if(!inventory[0].isEmpty()){
 			NBTTagCompound invTag = new NBTTagCompound();
 			inventory[0].writeToNBT(invTag);
 			nbt.setTag("inv", invTag);
 		}
-		if(inventory[1] != null){
+		if(!inventory[1].isEmpty()){
 			NBTTagCompound invTagO = new NBTTagCompound();
 			inventory[1].writeToNBT(invTagO);
 			nbt.setTag("invO", invTagO);
@@ -107,10 +110,15 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 	}
 
 	private IHeatHandler heatHandler = new HeatHandler();
+	private IItemHandler outputHandler = new OutputHandler();
+	private IItemHandler inputHandler = new InputHandler();
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == null)){
+			return true;
+		}
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != EnumFacing.UP){
 			return true;
 		}
 
@@ -118,9 +126,105 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
-		return (capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.UP)) ? (T) heatHandler : super.getCapability(capability, facing);
+	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == null)){
+			return (T) heatHandler;
+		}
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != EnumFacing.UP){
+			return (T) (side == EnumFacing.DOWN ? outputHandler : inputHandler);
+		}
+
+		return super.getCapability(cap, side);
 	}
+
+	private class InputHandler implements IItemHandler{
+
+		@Override
+		public int getSlots(){
+			return 1;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return slot == 0 ? inventory[0] : ItemStack.EMPTY;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			if(slot == 0 && !stack.isEmpty() && (inventory[0].isEmpty() || ItemStack.areItemsEqual(inventory[0], stack))){
+				int inserted = Math.min(stack.getCount(), stack.getMaxStackSize() - inventory[0].getCount());
+
+				if(!simulate && inserted != 0){
+					if(inventory[0].isEmpty()){
+						inventory[0] = stack.copy();
+						inventory[0].setCount(inserted);
+					}else{
+						inventory[0].grow(inserted);
+					}
+					markDirty();
+				}
+
+				if(inserted == stack.getCount()){
+					return ItemStack.EMPTY;
+				}
+
+				ItemStack returned = stack.copy();
+				returned.shrink(inserted);
+				return returned;
+			}
+
+			return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
+		}
+	}
+
+	private class OutputHandler implements IItemHandler{
+
+		@Override
+		public int getSlots(){
+			return 1;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return slot == 0 ? inventory[1] : ItemStack.EMPTY;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			if(slot == 0 && !inventory[1].isEmpty() && amount > 0){
+				int extracted = Math.min(amount, inventory[1].getCount());
+				ItemStack output = inventory[1].copy();
+				output.setCount(extracted);
+				if(!simulate && extracted != 0){
+					inventory[1].shrink(extracted);
+					markDirty();
+				}
+				return output;
+			}
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
+		}
+	}
+
 
 	@Override
 	public int getSizeInventory(){
@@ -129,31 +233,28 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 	@Override
 	public ItemStack getStackInSlot(int index){
-		return index > 1 ? null : inventory[index];
+		return index > 1 ? ItemStack.EMPTY : inventory[index];
 	}
 
 	@Override
 	public ItemStack decrStackSize(int index, int count){
-		ItemStack out = index > 1 ? null : inventory[index].splitStack(count);
-		if(inventory[index] != null && inventory[index].stackSize <= 0){
-			inventory[index] = null;
-		}
+		ItemStack out = index > 1 ? ItemStack.EMPTY : inventory[index].splitStack(count);
 		return out;
 	}
 
 	@Override
 	public String getName(){
-		return "container.heatingChamber";
+		return "container.heating_chamber";
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int index){
 		if(index > 1){
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		ItemStack holder = inventory[index];
-		inventory[index] = null;
+		inventory[index] = ItemStack.EMPTY;
 		return holder;
 	}
 
@@ -216,7 +317,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}
@@ -239,5 +340,10 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 			temp += heat;
 		}
 
+	}
+
+	@Override
+	public boolean isEmpty(){
+		return inventory[0].isEmpty() && inventory[1].isEmpty();
 	}
 }

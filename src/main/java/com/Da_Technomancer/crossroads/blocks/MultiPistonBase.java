@@ -45,7 +45,7 @@ public class MultiPistonBase extends Block{
 
 	protected MultiPistonBase(boolean sticky){
 		super(Material.PISTON);
-		String name = "multiPiston" + (sticky ? "Sticky" : "");
+		String name = "multi_piston" + (sticky ? "_sticky" : "");
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		this.sticky = sticky;
@@ -57,8 +57,8 @@ public class MultiPistonBase extends Block{
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.FACING, BlockPistonBase.getFacingFromEntity(pos, placer));
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer));
 	}
 
 	protected void safeBreak(World worldIn, BlockPos pos){
@@ -139,7 +139,7 @@ public class MultiPistonBase extends Block{
 
 		if(distance == 0){
 			if(world.hasChanges()){
-				worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 1, 1);
+				worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, .5F, (worldIn.rand.nextFloat() * .15F) + .6F);
 			}
 			world.doChanges();
 			return;
@@ -151,14 +151,14 @@ public class MultiPistonBase extends Block{
 			if(canPush(world.getBlockState(pos.offset(dir, i)), false)){
 				if(propogate(list, world, pos.offset(dir, i), dir, null)){
 					if(world.hasChanges()){
-						worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
+						worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, .5F, (worldIn.rand.nextFloat() * .25F) + .6F);
 					}
 					world.doChanges();
 					return;
 				}
 			}else if(!canPush(world.getBlockState(pos.offset(dir, i)), true)){
 				if(world.hasChanges()){
-					worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
+					worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, .5F, (worldIn.rand.nextFloat() * .25F) + .6F);
 				}
 				world.doChanges();
 				return;
@@ -211,7 +211,7 @@ public class MultiPistonBase extends Block{
 			}
 		}
 		if(world.hasChanges()){
-			worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 1, 1);
+			worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, .5F, (worldIn.rand.nextFloat() * .25F) + .6F);
 		}
 		world.doChanges();
 	}
@@ -246,7 +246,7 @@ public class MultiPistonBase extends Block{
 			//The back has to be checked before the sides or the list ordering gets messed up.
 			//Likewise, the sides have to be sent before the front
 			if(canPush(buf.getBlockState(pos.offset(dir.getOpposite())), false)){
-				if(propogate(list, buf, pos.offset(dir.getOpposite()), dir, pos) || list.size() > PUSH_LIMIT){
+				if(list.size() > PUSH_LIMIT || propogate(list, buf, pos.offset(dir.getOpposite()), dir, pos)){
 					return true;
 				}
 			}
@@ -254,7 +254,7 @@ public class MultiPistonBase extends Block{
 			for(EnumFacing checkDir : EnumFacing.VALUES){
 				if(checkDir != dir && checkDir != dir.getOpposite()){
 					if(canPush(buf.getBlockState(pos.offset(checkDir)), false)){
-						if(propogate(list, buf, pos.offset(checkDir), dir, pos) || list.size() > PUSH_LIMIT){
+						if(list.size() > PUSH_LIMIT || propogate(list, buf, pos.offset(checkDir), dir, pos)){
 							return true;
 						}
 					}
@@ -263,7 +263,7 @@ public class MultiPistonBase extends Block{
 		}
 		
 		if(canPush(buf.getBlockState(pos.offset(dir)), false)){
-			if(propogate(list, buf, pos.offset(dir), dir, null) || list.size() > PUSH_LIMIT){
+			if(list.size() > PUSH_LIMIT || propogate(list, buf, pos.offset(dir), dir, null)){
 				return true;
 			}
 		}
@@ -278,11 +278,11 @@ public class MultiPistonBase extends Block{
 	
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
-		neighborChanged(world.getBlockState(pos), world, pos, null);
+		neighborChanged(world.getBlockState(pos), world, pos, null, null);
 	}
 	
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isRemote){
 			return;
 		}
@@ -322,13 +322,13 @@ public class MultiPistonBase extends Block{
 	private static ArrayList<Entity> getEntitiesMultiChunk(AxisAlignedBB checkBox, World worldIn){
 		ArrayList<Entity> found = new ArrayList<Entity>();
 
-		int i = MathHelper.floor_double((checkBox.minX - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
-		int j = MathHelper.floor_double((checkBox.maxX + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
-		int k = MathHelper.floor_double((checkBox.minZ - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
-		int l = MathHelper.floor_double((checkBox.maxZ + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
+		int i = MathHelper.floor((checkBox.minX - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
+		int j = MathHelper.floor((checkBox.maxX + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
+		int k = MathHelper.floor((checkBox.minZ - World.MAX_ENTITY_RADIUS) / 16.0D) - 1;
+		int l = MathHelper.floor((checkBox.maxZ + World.MAX_ENTITY_RADIUS) / 16.0D) + 1;
 
-		int yMin = MathHelper.clamp_int(MathHelper.floor_double((checkBox.minY - World.MAX_ENTITY_RADIUS) / 16.0D) - 1, 0, 15);
-		int yMax = MathHelper.clamp_int(MathHelper.floor_double((checkBox.maxY + World.MAX_ENTITY_RADIUS) / 16.0D) + 1, 0, 15);
+		int yMin = MathHelper.clamp(MathHelper.floor((checkBox.minY - World.MAX_ENTITY_RADIUS) / 16.0D) - 1, 0, 15);
+		int yMax = MathHelper.clamp(MathHelper.floor((checkBox.maxY + World.MAX_ENTITY_RADIUS) / 16.0D) + 1, 0, 15);
 
 		for(int iLoop = i; iLoop <= j; ++iLoop){
 			for(int kLoop = k; kLoop <= l; ++kLoop){

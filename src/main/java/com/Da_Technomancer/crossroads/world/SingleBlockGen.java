@@ -21,8 +21,9 @@ public class SingleBlockGen extends WorldGenerator{
 
 	@Override
 	public boolean generate(World world, Random random, BlockPos pos){
-		if(world.getBlockState(pos).getBlock().isReplaceableOreGen(world.getBlockState(pos), world, pos, this.target))
+		if(world.getBlockState(pos).getBlock().isReplaceableOreGen(world.getBlockState(pos), world, pos, target)){
 			world.setBlockState(pos, this.block);
+		}
 		return true;
 	}
 }

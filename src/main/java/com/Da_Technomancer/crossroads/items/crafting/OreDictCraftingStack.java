@@ -3,8 +3,6 @@ package com.Da_Technomancer.crossroads.items.crafting;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class OreDictCraftingStack implements ICraftingStack{
@@ -19,7 +17,7 @@ public class OreDictCraftingStack implements ICraftingStack{
 
 	@Override
 	public boolean match(ItemStack stack){
-		if(stack == null || count != stack.stackSize){
+		if(stack.isEmpty() || count != stack.getCount()){
 			return false;
 		}
 
@@ -37,7 +35,7 @@ public class OreDictCraftingStack implements ICraftingStack{
 	 */
 	@Override
 	public boolean softMatch(ItemStack stack){
-		if(stack == null){
+		if(stack.isEmpty()){
 			return false;
 		}
 
@@ -50,18 +48,9 @@ public class OreDictCraftingStack implements ICraftingStack{
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public List<ItemStack> getMatchingList(){
 		return OreDictionary.getOres(oreDict, false);
-	}
-	
-	protected String getOreDict(){
-		return oreDict;
-	}
-	
-	protected int getCount(){
-		return count;
 	}
 
 	@Override
@@ -71,7 +60,7 @@ public class OreDictCraftingStack implements ICraftingStack{
 		}
 		if(other instanceof OreDictCraftingStack){
 			OreDictCraftingStack otherStack = (OreDictCraftingStack) other;
-			return oreDict.equals(otherStack.getOreDict()) && count == otherStack.getCount();
+			return oreDict.equals(otherStack.oreDict) && count == otherStack.count;
 		}
 		
 		return false;

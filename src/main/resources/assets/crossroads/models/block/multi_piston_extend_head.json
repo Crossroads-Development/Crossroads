@@ -1,0 +1,6 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "crossroads:blocks/block_tin"
+	}
+}

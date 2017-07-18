@@ -1,8 +1,0 @@
-{
-	"parent": "block/cube_bottom_top",
-	"textures": {
-		"side": "crossroads:blocks/steamBoilerSide",
-		"top": "crossroads:blocks/steamBoilerTop",
-		"bottom": "crossroads:blocks/bronze_heat"
-	}
-}

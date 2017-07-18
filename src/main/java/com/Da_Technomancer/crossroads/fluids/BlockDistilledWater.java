@@ -18,7 +18,7 @@ public class BlockDistilledWater extends BlockFluidClassic{
 		super(DISTILLED_WATER, Material.WATER);
 		DISTILLED_WATER.setBlock(this);
 		setUnlocalizedName("blockDistilledWater");
-		this.setRegistryName("blockDistilledWater");
+		setRegistryName("blockDistilledWater");
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName("blockDistilledWater"));
 
@@ -34,7 +34,7 @@ public class BlockDistilledWater extends BlockFluidClassic{
 	private static class FluidDistilledWater extends Fluid{
 
 		private FluidDistilledWater(){
-			super("distilledwater", new ResourceLocation(Main.MODID + ":blocks/distilledwater_still"), new ResourceLocation(Main.MODID + ":blocks/distilledwater_flow"));
+			super("distilledwater", new ResourceLocation(Main.MODID, "blocks/distilledwater_still"), new ResourceLocation(Main.MODID, "blocks/distilledwater_flow"));
 		}
 	}
 }

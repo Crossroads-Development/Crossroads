@@ -1,11 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks;
 
+import java.awt.Color;
 import java.util.Random;
 
 import com.Da_Technomancer.crossroads.items.ModItems;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
+import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockVine;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -21,23 +22,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class BlockSalt extends Block{
+public class BlockSalt extends BlockFalling{
 
 	protected BlockSalt(){
 		super(Material.SAND);
 		setHarvestLevel("shovel", 0);
-		String name = "blockSalt";
+		String name = "block_salt";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabCrossroads);
 		GameRegistry.register(this);
 		setHardness(.5F);
 		setSoundType(SoundType.SAND);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		OreDictionary.registerOre(name, this);
-		this.setTickRandomly(true);
+		OreDictionary.registerOre("blockSalt", this);
+		setTickRandomly(true);
 	}
 
 	@Override
@@ -45,14 +48,14 @@ public class BlockSalt extends Block{
 		if(entityIn instanceof EntitySlime){
 			entityIn.setDead();
 			if(!worldIn.isRemote){
-				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.SLIME_BALL));
-				worldIn.spawnEntityInWorld(item);
+				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.SLIME_BALL, ((EntitySlime) entityIn).getSlimeSize() + 1));
+				worldIn.spawnEntity(item);
 			}
 		}else if(entityIn instanceof EntityCreeper){
 			entityIn.setDead();
 			if(!worldIn.isRemote){
 				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Blocks.DEADBUSH));
-				worldIn.spawnEntityInWorld(item);
+				worldIn.spawnEntity(item);
 			}
 		}
 
@@ -64,7 +67,8 @@ public class BlockSalt extends Block{
 		if(worldIn.isRemote){
 			return;
 		}
-
+		super.updateTick(worldIn, pos, state, rand);
+		
 		for(int i = 0; i < 10; ++i){
 			BlockPos killPos = pos.add(rand.nextInt(5) - 2, rand.nextInt(3) - 1, rand.nextInt(5) - 2);
 
@@ -74,6 +78,11 @@ public class BlockSalt extends Block{
 				worldIn.setBlockState(killPos, Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.COARSE_DIRT));
 			}
 		}
+	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getDustColor(IBlockState state){
+		return Color.WHITE.getRGB();
 	}
 }

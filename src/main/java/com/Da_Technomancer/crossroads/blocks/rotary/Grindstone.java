@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import javax.annotation.Nullable;
+import java.util.List;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
@@ -21,21 +21,24 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Grindstone extends BlockContainer{
 
 	public Grindstone(){
 		super(Material.ROCK);
-		setUnlocalizedName("grindstone");
-		setRegistryName("grindstone");
+		String name = "grindstone";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("grindstone"));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			playerIn.openGui(Main.instance, GuiHandler.GRINDSTONE_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
@@ -57,5 +60,12 @@ public class Grindstone extends BlockContainer{
 		GrindstoneTileEntity te = (GrindstoneTileEntity) world.getTileEntity(pos);
 		InventoryHelper.dropInventoryItems(world, pos, te);
 		super.breakBlock(world, pos, blockstate);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+		tooltip.add("Mass: 125");
+		tooltip.add("I: 1");
 	}
 }

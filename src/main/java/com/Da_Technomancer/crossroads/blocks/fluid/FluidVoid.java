@@ -15,14 +15,14 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class FluidVoid extends BlockContainer{
 
 	public FluidVoid(){
-		super(Material.IRON);
-		String name = "fluidVoid";
+		super(Material.SPONGE);
+		String name = "fluid_void";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(.6F);
 	}
 
 	@Override
@@ -34,5 +34,4 @@ public class FluidVoid extends BlockContainer{
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-
 }

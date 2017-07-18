@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -15,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -28,7 +25,7 @@ public class HeatingChamber extends BlockContainer{
 
 	public HeatingChamber(){
 		super(Material.IRON);
-		String name = "heatingChamber";
+		String name = "heating_chamber";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
@@ -39,7 +36,7 @@ public class HeatingChamber extends BlockContainer{
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			playerIn.openGui(Main.instance, GuiHandler.HEATINGCHAMBER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}

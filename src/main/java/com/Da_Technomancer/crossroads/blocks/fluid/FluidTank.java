@@ -2,9 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.API.IBlockCompare;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
@@ -30,23 +27,22 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class FluidTank extends BlockContainer implements IBlockCompare{
-	
+public class FluidTank extends BlockContainer{
+
 	public FluidTank(){
 		super(Material.IRON);
-		String name = "fluidTank";
+		String name = "fluid_tank";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setSoundType(SoundType.METAL);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
@@ -67,7 +63,7 @@ public class FluidTank extends BlockContainer implements IBlockCompare{
 		if(!(te instanceof FluidTankTileEntity) || te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents() == null){
 			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
 		}else{
-			player.addExhaustion(0.025F);
+			player.addExhaustion(0.005F);
 			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
 			stack.setTagCompound(te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents().writeToNBT(new NBTTagCompound()));
 			spawnAsEntity(worldIn, pos, stack);
@@ -83,14 +79,14 @@ public class FluidTank extends BlockContainer implements IBlockCompare{
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			return FluidUtil.interactWithFluidHandler(heldItem, worldIn.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), playerIn);
+			return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
 		}
 
-		return FluidUtil.getFluidHandler(heldItem) != null;
+		return FluidUtil.getFluidHandler(playerIn.getHeldItem(hand)) != null;
 	}
-	
+
 	@Override
 	public int damageDropped(IBlockState state){
 		return 0;
@@ -103,7 +99,7 @@ public class FluidTank extends BlockContainer implements IBlockCompare{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.REDSTONE, meta);
+		return getDefaultState().withProperty(Properties.REDSTONE, meta);
 	}
 
 	@Override
@@ -124,11 +120,5 @@ public class FluidTank extends BlockContainer implements IBlockCompare{
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
-	}
-
-	@Override
-	public double getOutput(World worldIn, BlockPos pos){
-		IFluidTankProperties fluid = worldIn.getTileEntity(pos).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0];
-		return fluid.getContents() == null ? 0 : 15D * (double) fluid.getContents().amount / (double) fluid.getCapacity();
 	}
 }

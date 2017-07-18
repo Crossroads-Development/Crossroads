@@ -2,8 +2,12 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,30 +22,25 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 
-	private ItemStack inventory;
+	private ItemStack inventory = ItemStack.EMPTY;
+	private final double[] motionData = new double[4];
+	private final double[] physData = new double[] {500, 8};
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
-		if(isSpotInvalid() && inventory != null){
-			worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.offset(worldObj.getBlockState(pos).getValue(Properties.FACING)).getX(), pos.getY(), pos.offset(worldObj.getBlockState(pos).getValue(Properties.FACING)).getZ(), inventory.copy()));
-			inventory = null;
+		if(isSpotInvalid() && !inventory.isEmpty()){
+			world.spawnEntity(new EntityItem(world, pos.offset(world.getBlockState(pos).getValue(Properties.FACING)).getX(), pos.getY(), pos.offset(world.getBlockState(pos).getValue(Properties.FACING)).getZ(), inventory.copy()));
+			inventory = ItemStack.EMPTY;
 		}else{
-			EnumFacing side = worldObj.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y);
-			if(inventory != null && getOutput() != null && worldObj.getTileEntity(pos.offset(side)) != null && worldObj.getTileEntity(pos.offset(side)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
-				EnumFacing facing = worldObj.getBlockState(getOutput()).getValue(Properties.FACING);
-				if(Math.abs(worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).getMotionData()[0]) > .1D && Math.abs(worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).getMotionData()[1]) > .5D){
-					worldObj.getTileEntity(pos.offset(side)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(-.5D, false, false);
-					EntityItem ent = new EntityItem(worldObj, getOutput().getX() + (facing == EnumFacing.EAST ? 1.5D : facing == EnumFacing.WEST ? -.5D : facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH ? .5D : 0), getOutput().getY(), getOutput().getZ() + (facing == EnumFacing.SOUTH ? 1.5D : facing == EnumFacing.EAST || facing == EnumFacing.WEST ? .5D : facing == EnumFacing.NORTH ? -.5D : 0), inventory.copy());
-					ent.motionX = 0;
-					ent.motionZ = 0;
-					worldObj.spawnEntityInWorld(ent);
-					inventory = null;
-					markDirty();
-				}
+			if(!inventory.isEmpty() && Math.abs(motionData[1]) > .5D && output()){
+				axleHandler.addEnergy(-.5D, false, false);
+
+				inventory = ItemStack.EMPTY;
+				markDirty();
 			}
 		}
 	}
@@ -50,8 +49,11 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
-		if(inventory != null){
+		if(!inventory.isEmpty()){
 			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
+		}
+		for(int i = 0; i < 4; i++){
+			nbt.setDouble("motion" + i, motionData[i]);
 		}
 		return nbt;
 	}
@@ -61,57 +63,146 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 		super.readFromNBT(nbt);
 
 		if(nbt.hasKey("inv")){
-			inventory = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv"));
+			inventory = new ItemStack(nbt.getCompoundTag("inv"));
+		}
+		for(int i = 0; i < 4; i++){
+			motionData[i] = nbt.getDouble("motion" + i);
 		}
 	}
 
 	private boolean isSpotInvalid(){
-		if(worldObj.getTileEntity(pos.offset(EnumFacing.DOWN)) instanceof ItemChutePortTileEntity || worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == ModBlocks.itemChute){
-			return true;
-		}
-		return false;
+		Block block = world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock();
+		return block == ModBlocks.itemChutePort || block == ModBlocks.itemChute;
 	}
 
-	private BlockPos getOutput(){
+	private boolean output(){
+		BlockPos outputPos = null;
+		EnumFacing outDir = null;
 
-		boolean contin = true;
-		int height = 1;
-
-		while(contin){
-
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.UP, height)) instanceof ItemChutePortTileEntity){
-				return pos.offset(EnumFacing.UP, height);
-			}
-
-			if(worldObj.getBlockState(pos.offset(EnumFacing.UP, height)).getBlock() != ModBlocks.itemChute){
-				return null;
-			}
-			if(++height > 255){
+		for(int height = 1; height < 255 - pos.getY(); height++){
+			IBlockState state = world.getBlockState(pos.offset(EnumFacing.UP, height));
+			if(state.getBlock() == ModBlocks.itemChutePort){
+				outputPos = pos.offset(EnumFacing.UP, height);
+				outDir = state.getValue(Properties.FACING);
 				break;
 			}
+
+			if(state.getBlock() != ModBlocks.itemChute){
+				return false;
+			}
+			if(++height > 255){
+				return false;
+			}
 		}
-		return null;
+
+		TileEntity offsetTE = world.getTileEntity(outputPos.offset(outDir));
+		if(offsetTE != null && offsetTE.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, outDir.getOpposite())){
+			IItemHandler outHandler = offsetTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, outDir.getOpposite());
+			for(int i = 0; i < outHandler.getSlots(); i++){
+				ItemStack outStack = outHandler.insertItem(i, inventory, false);
+				if(outStack.isEmpty()){
+					return true;
+				}
+			}
+			return false;
+		}
+
+		EntityItem ent = new EntityItem(world, outputPos.offset(outDir).getX() + .5D, outputPos.offset(outDir).getY(), outputPos.offset(outDir).getZ() + .5D, inventory);
+		ent.motionX = 0;
+		ent.motionZ = 0;
+		world.spawnEntity(ent);
+		return true;
 	}
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing facing){
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getOutput() != null && (facing == null || facing == worldObj.getBlockState(pos).getValue(Properties.FACING))){
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing == world.getBlockState(pos).getValue(Properties.FACING))){
+			return true;
+		}
+		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y)){
 			return true;
 		}
 
 		return super.hasCapability(cap, facing);
 	}
 
-	private final InventoryHandler handler = new InventoryHandler();
+	private final IAxleHandler axleHandler = new AxleHandler();
+	private final IItemHandler handler = new InventoryHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing facing){
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getOutput() != null && (facing == null || facing == worldObj.getBlockState(pos).getValue(Properties.FACING))){
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing == world.getBlockState(pos).getValue(Properties.FACING))){
 			return (T) handler;
+		}
+		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(Properties.FACING).rotateAround(Axis.Y)){
+			return (T) axleHandler;
 		}
 
 		return super.getCapability(cap, facing);
+	}
+
+	private class AxleHandler implements IAxleHandler{
+		@Override
+		public double[] getMotionData(){
+			return motionData;
+		}
+
+		private double rotRatio;
+		private byte updateKey;
+
+		@Override
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+			//If true, this has already been checked.
+			if(key == updateKey || masterIn.addToList(this)){
+				return;
+			}
+
+			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
+			updateKey = key;
+		}
+
+		@Override
+		public double[] getPhysData(){
+			return physData;
+		}
+
+		@Override
+		public double getRotationRatio(){
+			return rotRatio;
+		}
+
+		@Override
+		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
+			if(allowInvert && absolute){
+				motionData[1] += energy;
+			}else if(allowInvert){
+				motionData[1] += energy * Math.signum(motionData[1]);
+			}else if(absolute){
+				int sign = (int) Math.signum(motionData[1]);
+				motionData[1] += energy;
+				if(sign != 0 && Math.signum(motionData[1]) != sign){
+					motionData[1] = 0;
+				}
+			}else{
+				int sign = (int) Math.signum(motionData[1]);
+				motionData[1] += energy * ((double) sign);
+				if(Math.signum(motionData[1]) != sign){
+					motionData[1] = 0;
+				}
+			}
+			markDirty();
+		}
+
+		@Override
+		public void markChanged(){
+			markDirty();
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return false;
+		}
 	}
 
 	private class InventoryHandler implements IItemHandler{
@@ -123,29 +214,34 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inventory : null;
+			return slot == 0 ? inventory : ItemStack.EMPTY;
 		}
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || stack == null || stack.stackSize <= 0 || inventory != null){
+			if(slot != 0 || stack.isEmpty() || !inventory.isEmpty()){
 				return stack;
 			}
 
 			if(!simulate){
 				inventory = stack.copy();
-				inventory.stackSize = 1;
+				inventory.setCount(1);
 				markDirty();
 			}
 
 			ItemStack holder = stack.copy();
-			--holder.stackSize;
+			holder.shrink(1);
 			return holder;
 		}
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			return null;
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 1 : 0;
 		}
 	}
 }

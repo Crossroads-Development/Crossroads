@@ -3,6 +3,8 @@ package com.Da_Technomancer.crossroads;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
+import com.Da_Technomancer.crossroads.entity.ModEntities;
 import com.Da_Technomancer.crossroads.fluids.ModFluids;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.integration.ModIntegration;
@@ -34,21 +36,22 @@ public class CommonProxy{
 		ModBlocks.init();
 		ModItems.init();
 		ModFluids.init();
-		GearFactory.init();
 		HeatCableFactory.init();
 		ModTileEntity.init();
 		ModPackets.preInit();
+		GearFactory.init();
+		ModDimensions.init();
+		ModEntities.init();
 	}
 
 	protected void init(FMLInitializationEvent e){
 		ModCrafting.initCrafting();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
-		
+
 		if(ModConfig.retrogen.getString().isEmpty()){
 			GameRegistry.registerWorldGenerator(WORLD_GEN, 0);
 		}
-		
 		ModIntegration.init();
 
 		ModConfig.config.save();

@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 
@@ -14,11 +15,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGearHolderTileEntity>{
 
-	//private final ResourceLocation texture = new ResourceLocation(Main.MODID + ":textures/model/sidedGear.png");
-	//private final ModelGear model = new ModelGear();
-	
 	private final ModelGearOctagon modelOct = new ModelGearOctagon();
-	private final ResourceLocation res = new ResourceLocation(Main.MODID + ":textures/model/gearOct.png");
+	private final ResourceLocation res = new ResourceLocation(Main.MODID, "textures/model/gear_oct.png");
 
 	@Override
 	public void renderTileEntityAt(SidedGearHolderTileEntity gearHolder, double x, double y, double z, float partialTicks, int destroyStage){
@@ -31,13 +29,17 @@ public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGear
 		
 		for(EnumFacing side : EnumFacing.values()){
 			if(gearHolder.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side)){
+				IAxleHandler handler = gearHolder.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side);
 				color = gearHolder.getMembers()[side.getIndex()].getColor();
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
 				GlStateManager.disableLighting();
 				GlStateManager.translate(x + .5D, y + .5D, z + .5D);
 				GlStateManager.rotate(side == EnumFacing.DOWN ? 0 : side == EnumFacing.UP ? 180F : side == EnumFacing.NORTH || side == EnumFacing.EAST ? 90F : -90F, side.getAxis() == EnumFacing.Axis.Z ? 1 : 0, 0, side.getAxis() == EnumFacing.Axis.Z ? 0 : 1);
-				GlStateManager.rotate(-(float) gearHolder.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side).getAngle(), 0F, 1F, 0F);
+				float angle = (float) (handler.getNextAngle() - handler.getAngle());
+				angle *= partialTicks;
+				angle += handler.getAngle();
+				GlStateManager.rotate(-angle, 0F, 1F, 0F);
 				modelOct.render(res, color);
 				GlStateManager.enableLighting();
 				GlStateManager.popAttrib();

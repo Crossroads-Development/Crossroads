@@ -32,16 +32,16 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 	private boolean init = false;
 	private double temp;
 	private static final int COOLING = 5;
-	private ItemStack inventory = null;
+	private ItemStack inventory = ItemStack.EMPTY;
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 			init = true;
 		}
 
@@ -51,9 +51,7 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 				dContent = null;
 			}
 
-			if(--inventory.stackSize <= 0){
-				inventory = null;
-			}
+			inventory.shrink(1);
 
 			if(content == null){
 				content = new FluidStack(FluidRegistry.WATER, WATER_USE);
@@ -72,11 +70,11 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 			dContent = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("dCon"));
 		}
 
-		this.init = nbt.getBoolean("init");
-		this.temp = nbt.getDouble("temp");
+		init = nbt.getBoolean("init");
+		temp = nbt.getDouble("temp");
 
 		if(nbt.hasKey("inv")){
-			inventory = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv"));
+			inventory = new ItemStack(nbt.getCompoundTag("inv"));
 		}
 	}
 
@@ -90,10 +88,10 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 			nbt.setTag("dCon", dContent.writeToNBT(new NBTTagCompound()));
 		}
 
-		nbt.setBoolean("init", this.init);
-		nbt.setDouble("temp", this.temp);
+		nbt.setBoolean("init", init);
+		nbt.setDouble("temp", temp);
 
-		if(inventory != null){
+		if(!inventory.isEmpty()){
 			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
 		}
 
@@ -158,28 +156,33 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inventory : null;
+			return slot == 0 ? inventory : ItemStack.EMPTY;
 		}
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || stack == null || stack.getItem() != ModItems.dustSalt){
+			if(slot != 0 || stack.isEmpty() || stack.getItem() != ModItems.dustSalt){
 				return stack;
 			}
 			
-			int amount = Math.min(16 - (inventory == null ? 0 : inventory.stackSize), stack.stackSize);
+			int amount = Math.min(16 - inventory.getCount(), stack.getCount());
 			
 			if(!simulate){
-				inventory = new ItemStack(ModItems.dustSalt, amount + (inventory == null ? 0 : inventory.stackSize));
+				inventory = new ItemStack(ModItems.dustSalt, amount + inventory.getCount());
 				markDirty();
 			}
 			
-			return amount == stack.stackSize ? null : new ItemStack(ModItems.dustSalt, stack.stackSize - amount);
+			return amount == stack.getCount() ? ItemStack.EMPTY : new ItemStack(ModItems.dustSalt, stack.getCount() - amount);
 		}
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
 			return null;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 16 : 0;
 		}
 	}
 	
@@ -317,7 +320,7 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

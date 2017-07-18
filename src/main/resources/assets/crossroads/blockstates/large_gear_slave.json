@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:sided_gear_holder" },
+		"facing=south": { "model": "crossroads:sided_gear_holder" },
+		"facing=down": { "model": "crossroads:sided_gear_holder" },
+		"facing=up": { "model": "crossroads:sided_gear_holder" },
+		"facing=east": { "model": "crossroads:sided_gear_holder" },
+		"facing=west": { "model": "crossroads:sided_gear_holder" }
+	}
+}

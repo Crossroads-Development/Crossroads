@@ -42,12 +42,12 @@ public class LargeGearSlave extends BlockContainer{
 	
 	public LargeGearSlave(){
 		super(Material.IRON);
-		String name = "largeGearSlave";
+		String name = "large_gear_slave";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 		setSoundType(SoundType.METAL);
 	}
 
@@ -58,7 +58,7 @@ public class LargeGearSlave extends BlockContainer{
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class LargeGearSlave extends BlockContainer{
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isRemote){
 			return;
 		}
@@ -105,7 +105,7 @@ public class LargeGearSlave extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -120,20 +120,22 @@ public class LargeGearSlave extends BlockContainer{
 	}
 
 	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
-		return true;
-	}
-
-	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
 
 	@Override
+	public boolean removedByPlayer(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, boolean canHarvest){
+		if(canHarvest && worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
+			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.getValue(Properties.FACING), true);
+		}
+		return super.removedByPlayer(state, worldIn, pos, player, canHarvest);
+	}
+	
+	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
-
 		if(worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
-			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.getValue(Properties.FACING));
+			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.getValue(Properties.FACING), false);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

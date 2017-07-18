@@ -18,7 +18,7 @@ public class BlockLiquidFat extends BlockFluidClassic{
 		super(LIQUID_FAT, Material.WATER);
 		LIQUID_FAT.setBlock(this);
 		setUnlocalizedName("blockLiquidFat");
-		this.setRegistryName("blockLiquidFat");
+		setRegistryName("blockLiquidFat");
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName("blockLiquidFat"));
 

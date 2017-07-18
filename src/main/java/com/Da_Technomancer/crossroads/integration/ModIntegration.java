@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.integration;
 
 import com.Da_Technomancer.crossroads.integration.minetweaker.MineTweakerIntegration;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+
 import net.minecraftforge.fml.common.Loader;
 
 /**
@@ -12,12 +13,12 @@ public class ModIntegration {
 	public static boolean isJEIAvailable = false;
 
 	public static void init() {
-		if(Loader.isModLoaded("JEI")){
+		if(Loader.isModLoaded("jei")){
 			RecipeHolder.rebind();
 			isJEIAvailable = true;
 		}
 
-		if (Loader.isModLoaded("MineTweaker3")) {
+		if (Loader.isModLoaded("minetweaker3")) {
 			MineTweakerIntegration.init();
 		}
 	}

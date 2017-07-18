@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.magic;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.magic.CrystallinePrismTileEntity;
 
@@ -22,13 +23,13 @@ public class CrystallinePrism extends BlockContainer{
 
 	public CrystallinePrism(){
 		super(Material.ROCK);
-		String name = "crystallinePrism";
+		String name = "crystalline_prism";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
@@ -42,10 +43,19 @@ public class CrystallinePrism extends BlockContainer{
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
 	}
 
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof BeamRenderTE){
+			((BeamRenderTE) te).refresh();
+		}
+		super.breakBlock(worldIn, pos, state);
+	}
+	
 	@Override
 	public int damageDropped(IBlockState state){
 		return 0;

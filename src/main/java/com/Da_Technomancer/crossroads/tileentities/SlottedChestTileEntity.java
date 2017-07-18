@@ -1,5 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendSlotFilterToClient;
+import com.Da_Technomancer.crossroads.gui.container.SlottedChestContainer;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -9,12 +13,35 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class SlottedChestTileEntity extends TileEntity{
 
+	public SlottedChestTileEntity(){
+		super();
+		for(int i = 0; i < 54; i++){
+			inv[i] = ItemStack.EMPTY;
+			lockedInv[i] = ItemStack.EMPTY;
+		}
+	}
+
 	private ItemStack[] inv = new ItemStack[54];
+	public ItemStack[] lockedInv = new ItemStack[54];
+
+	public void filterChanged(){
+		if(world.isRemote){
+			return;
+		}
+		NBTTagCompound slotNBT = new NBTTagCompound();
+		for(int i = 0; i < 54; ++i){
+			if(!lockedInv[i].isEmpty()){
+				slotNBT.setTag("lock" + i, lockedInv[i].writeToNBT(new NBTTagCompound()));
+			}
+		}
+		ModPackets.network.sendToAllAround(new SendSlotFilterToClient(slotNBT, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
@@ -22,7 +49,12 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		for(int i = 0; i < 54; ++i){
 			if(nbt.hasKey("slot" + i)){
-				inv[i] = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("slot" + i));
+				inv[i] = new ItemStack(nbt.getCompoundTag("slot" + i));
+				//Backward compatibility.
+				lockedInv[i] = new ItemStack(nbt.getCompoundTag("slot" + i));
+			}
+			if(nbt.hasKey("lockSlot" + i)){
+				lockedInv[i] = new ItemStack(nbt.getCompoundTag("lockSlot" + i));
 			}
 		}
 	}
@@ -32,18 +64,33 @@ public class SlottedChestTileEntity extends TileEntity{
 		super.writeToNBT(nbt);
 
 		for(int i = 0; i < 54; ++i){
-			if(inv[i] != null){
+			if(!inv[i].isEmpty()){
 				nbt.setTag("slot" + i, inv[i].writeToNBT(new NBTTagCompound()));
+			}
+			if(!lockedInv[i].isEmpty()){
+				nbt.setTag("lockSlot" + i, lockedInv[i].writeToNBT(new NBTTagCompound()));
 			}
 		}
 
 		return nbt;
 	}
 
-	public void cleanPreset(int slot){
-		if(slot < 54){
-			inv[slot] = null;
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		for(int i = 0; i < 54; ++i){
+			if(!lockedInv[i].isEmpty()){
+				nbt.setTag("lockSlot" + i, lockedInv[i].writeToNBT(new NBTTagCompound()));
+			}
 		}
+		return nbt;
+	}
+
+	public void cleanPreset(int slot){
+		if(slot < 54 && inv[slot].isEmpty()){
+			lockedInv[slot] = ItemStack.EMPTY;
+		}
+		filterChanged();
 	}
 
 	@Override
@@ -68,6 +115,10 @@ public class SlottedChestTileEntity extends TileEntity{
 		return super.getCapability(cap, facing);
 	}
 
+	public boolean isInventoryType(IInventory inv){
+		return inv instanceof Inventory;
+	}
+
 	private class InventoryHandler implements IItemHandler{
 
 		@Override
@@ -77,37 +128,50 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot < 54 ? inv[slot] : null;
+			return slot < 54 ? inv[slot] : ItemStack.EMPTY;
 		}
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot >= 54 || stack == null || !ItemStack.areItemsEqual(stack, inv[slot])){
+			if(slot >= 54 || stack.isEmpty() || !ItemStack.areItemsEqual(stack, lockedInv[slot])){
 				return stack;
 			}
 
-			int change = Math.min(stack.getMaxStackSize() - inv[slot].stackSize, stack.stackSize);
+			int change = Math.min(stack.getMaxStackSize() - inv[slot].getCount(), stack.getCount());
 
 			if(!simulate){
-				inv[slot].stackSize += change;
+				if(inv[slot].isEmpty()){
+					inv[slot] = stack.copy();
+				}else{
+					inv[slot].grow(change);
+				}
 			}
 
-			return stack.stackSize == change ? null : new ItemStack(stack.getItem(), stack.stackSize - change, stack.getMetadata());
+			ItemStack out = stack.copy();
+			out.shrink(change);
+			return stack.getCount() == change ? ItemStack.EMPTY : out;
 		}
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			if(slot >= 54 || inv[slot] == null){
-				return null;
+			if(slot >= 54 || inv[slot].isEmpty()){
+				return ItemStack.EMPTY;
 			}
 
-			int change = Math.min(inv[slot].stackSize, amount);
+			int change = Math.min(inv[slot].getCount(), amount);
+			ItemStack out = inv[slot].copy();
+			out.setCount(change);
 
 			if(!simulate){
-				inv[slot].stackSize -= change;
+				inv[slot].shrink(change);
 			}
 
-			return change == 0 ? null : new ItemStack(inv[slot].getItem(), change, inv[slot].getMetadata());
+			return change == 0 ? ItemStack.EMPTY : out;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot < 54 ? 64 : 0;
 		}
 	}
 
@@ -115,7 +179,7 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		@Override
 		public String getName(){
-			return "container.slottedChest";
+			return "container.slotted_chest";
 		}
 
 		@Override
@@ -135,13 +199,13 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		@Override
 		public ItemStack getStackInSlot(int index){
-			return index >= 54 ? null : inv[index];
+			return index >= 54 ? ItemStack.EMPTY : inv[index];
 		}
 
 		@Override
 		public ItemStack decrStackSize(int index, int count){
-			if(index >= 54 || inv[index] == null){
-				return null;
+			if(index >= 54 || inv[index].isEmpty()){
+				return ItemStack.EMPTY;
 			}
 
 			ItemStack stack = inv[index].splitStack(count);
@@ -152,13 +216,11 @@ public class SlottedChestTileEntity extends TileEntity{
 		@Override
 		public ItemStack removeStackFromSlot(int index){
 			if(index >= 54){
-				return null;
+				return ItemStack.EMPTY;
 			}
 
-			ItemStack stack = inv[index];
-			if(inv[index] != null){
-				inv[index].stackSize = 0;
-			}
+			ItemStack stack = inv[index].copy();
+			inv[index].setCount(0);
 			return stack;
 		}
 
@@ -166,6 +228,10 @@ public class SlottedChestTileEntity extends TileEntity{
 		public void setInventorySlotContents(int index, ItemStack stack){
 			if(index < 54){
 				inv[index] = stack;
+				if(!stack.isEmpty()){
+					lockedInv[index] = stack.copy();
+					lockedInv[index].setCount(1);
+				}
 			}
 		}
 
@@ -180,13 +246,13 @@ public class SlottedChestTileEntity extends TileEntity{
 		}
 
 		@Override
-		public boolean isUseableByPlayer(EntityPlayer player){
-			return worldObj.getTileEntity(pos) == SlottedChestTileEntity.this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
+		public boolean isUsableByPlayer(EntityPlayer player){
+			return world.getTileEntity(pos) == SlottedChestTileEntity.this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
 		}
 
 		@Override
 		public void openInventory(EntityPlayer player){
-
+			filterChanged();
 		}
 
 		@Override
@@ -196,7 +262,7 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		@Override
 		public boolean isItemValidForSlot(int index, ItemStack stack){
-			return index < 54 && ItemStack.areItemsEqual(stack, inv[index]);
+			return index < 54 && (inv[index].isEmpty() ? lockedInv[index].isEmpty() ? true : SlottedChestContainer.doStackContentsMatch(stack, lockedInv[index]) : SlottedChestContainer.doStackContentsMatch(stack, inv[index]));
 		}
 
 		@Override
@@ -216,8 +282,21 @@ public class SlottedChestTileEntity extends TileEntity{
 
 		@Override
 		public void clear(){
-			inv = new ItemStack[54];
+			for(int i = 0; i < 54; i++){
+				inv[i] = ItemStack.EMPTY;
+				lockedInv[i] = ItemStack.EMPTY;
+			}
+			filterChanged();
 		}
 
+		@Override
+		public boolean isEmpty(){
+			for(int i = 0; i < 54; i++){
+				if(!inv[i].isEmpty()){
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 }

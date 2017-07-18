@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/rate_manipulator",
+		"south": "crossroads:blocks/rate_manipulator",
+		"east": "crossroads:blocks/rate_manipulator",
+		"west": "crossroads:blocks/rate_manipulator",
+		"up": "crossroads:blocks/prototype/rotary",
+		"down": "crossroads:blocks/rate_manipulator",
+		"particle": "crossroads:blocks/rate_manipulator"
+	}
+}

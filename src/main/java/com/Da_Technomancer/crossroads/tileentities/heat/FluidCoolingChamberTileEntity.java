@@ -32,33 +32,33 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 	private static final int ECAP = 10;
 	private boolean init = false;
 	private double temp;
-	private ItemStack inventory = null;
+	private ItemStack inventory = ItemStack.EMPTY;
 	private int ticksExisted = 0;
-	private static final Random rand = new Random();
+	private static final Random RAND = new Random();
 
 	@Override
 	public void update(){
-		if(worldObj.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 			init = true;
 		}
 
 		if(++ticksExisted % 10 == 0 && content != null && RecipeHolder.fluidCoolingRecipes.containsKey(content.getFluid()) && content.amount >= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()){
 			Triple<ItemStack, Double, Double> trip = RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getRight();
-			if((inventory == null || (ItemStack.areItemsEqual(trip.getLeft(), inventory) && 16 - inventory.stackSize >= trip.getLeft().stackSize)) && temp < trip.getMiddle() - rand.nextInt(ECAP * trip.getRight().intValue())){
+			if((inventory.isEmpty() || (ItemStack.areItemsEqual(trip.getLeft(), inventory) && 16 - inventory.getCount() >= trip.getLeft().getCount())) && temp < trip.getMiddle() - RAND.nextInt(ECAP * trip.getRight().intValue())){
 				temp += trip.getRight();
 				if((content.amount -= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()) <= 0){
 					content = null;
 				}
 				markDirty();
-				if(inventory == null){
+				if(inventory.isEmpty()){
 					inventory = trip.getLeft().copy();
 				}else{
-					inventory.stackSize += trip.getLeft().stackSize;
+					inventory.grow(trip.getLeft().getCount());
 				}
 			}
 		}
@@ -68,11 +68,11 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
-		this.init = nbt.getBoolean("init");
-		this.temp = nbt.getDouble("temp");
+		init = nbt.getBoolean("init");
+		temp = nbt.getDouble("temp");
 
 		if(nbt.hasKey("inv")){
-			inventory = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("inv"));
+			inventory = new ItemStack(nbt.getCompoundTag("inv"));
 		}
 	}
 
@@ -82,10 +82,10 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 		if(content != null){
 			content.writeToNBT(nbt);
 		}
-		nbt.setBoolean("init", this.init);
-		nbt.setDouble("temp", this.temp);
+		nbt.setBoolean("init", init);
+		nbt.setDouble("temp", temp);
 
-		if(inventory != null){
+		if(!inventory.isEmpty()){
 			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
 		}
 
@@ -140,7 +140,7 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inventory : null;
+			return slot == 0 ? inventory : ItemStack.EMPTY;
 		}
 
 		@Override
@@ -150,22 +150,25 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			if(slot != 0 || inventory == null || amount <= 0){
-				return null;
+			if(slot != 0 || inventory.isEmpty() || amount <= 0){
+				return ItemStack.EMPTY;
 			}
 			
-			int count = Math.min(inventory.stackSize, amount);
+			int count = Math.min(inventory.getCount(), amount);
 			
 			ItemStack holder = inventory.copy();
 			
 			if(!simulate){
 				inventory.splitStack(count);
-				if(inventory.stackSize <= 0){
-					inventory = null;
-				}
+				
 				markDirty();
 			}
-			return count == 0 ? null : new ItemStack(holder.getItem(), count, holder.getMetadata());
+			return count == 0 ? ItemStack.EMPTY : new ItemStack(holder.getItem(), count, holder.getMetadata());
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
 		}
 	}
 
@@ -208,7 +211,7 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * worldObj.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
 				init = true;
 			}
 		}

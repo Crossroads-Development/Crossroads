@@ -1,0 +1,8 @@
+{
+	"parent": "block/cube_bottom_top",
+	"textures": {
+		"side": "crossroads:blocks/iron_fluid",
+		"top": "crossroads:blocks/iron_fluid",
+		"bottom": "crossroads:blocks/iron_heat"
+	}
+}

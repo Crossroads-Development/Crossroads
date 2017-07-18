@@ -19,6 +19,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -44,13 +46,14 @@ public class SidedGearHolder extends BlockContainer{
 		BOUNDING_BOXES.add(new AxisAlignedBB(0D, 0D, .875D, 1D, 1D, 1D));//SOUTH
 		BOUNDING_BOXES.add(new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D));//WEST
 		BOUNDING_BOXES.add(new AxisAlignedBB(.875D, 0D, 0D, 1D, 1D, 1D));//EAST
-		BOUNDING_BOXES.add(new AxisAlignedBB(.25D, .25D, .25D, .75D, .75D, .75D));//Center
+		BOUNDING_BOXES.add(new AxisAlignedBB(.3125D, .3125D, .3125D, .6875D, .6875D, .6875D));//Center
 	}
 
 	public SidedGearHolder(){
 		super(Material.IRON);
-		setUnlocalizedName("sidedGearHolder");
-		setRegistryName("sidedGearHolder");
+		String name = "sided_gear_holder";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
 		this.setHardness(1);
 		setSoundType(SoundType.METAL);
@@ -64,7 +67,12 @@ public class SidedGearHolder extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
-		return null;
+		Item out = GearFactory.BASIC_GEARS.get(((SidedGearHolderTileEntity) world.getTileEntity(pos)).getMembers()[target.sideHit.getOpposite().getIndex()]);
+		if(out == null){
+			return ItemStack.EMPTY;
+		}else{
+			return new ItemStack(out, 1);
+		}
 	}
 
 	@Override
@@ -77,9 +85,9 @@ public class SidedGearHolder extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos){
 		TileEntity te = worldIn.getTileEntity(pos);
-		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
-		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
+		Vec3d start = play.getPositionEyes(0F).subtract((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
 		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
 		AxisAlignedBB out = getAimedSide(te, start, end, true);
 		return (out == null ? BOUNDING_BOXES.get(6) : out).offset(pos);
@@ -96,12 +104,12 @@ public class SidedGearHolder extends BlockContainer{
 			return null;
 		}else{
 			RayTraceResult untransformed = out.calculateIntercept(start, end);
-			return new RayTraceResult(untransformed.hitVec.addVector((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
+			return new RayTraceResult(untransformed.hitVec.addVector((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()), untransformed.sideHit, pos);
 		}
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean nothingProbably){
 		for(EnumFacing side : EnumFacing.values()){
 			if(worldIn.getTileEntity(pos).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side)){
 				addCollisionBoxToList(pos, mask, list, BOUNDING_BOXES.get(side.getIndex()));
@@ -130,7 +138,7 @@ public class SidedGearHolder extends BlockContainer{
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isRemote){
 			return;
 		}
@@ -139,8 +147,8 @@ public class SidedGearHolder extends BlockContainer{
 
 		for(EnumFacing side : EnumFacing.VALUES){
 			if(te.getMembers()[side.getIndex()] != null && !worldIn.isSideSolid(pos.offset(side), side.getOpposite(), false)){
-				spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(te.getMembers()[side.getIndex()]), 1));
-				te.setMembers(null, side.getIndex());
+				spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.BASIC_GEARS.get(te.getMembers()[side.getIndex()]), 1));
+				te.setMembers(null, side.getIndex(), false);
 			}
 		}
 		if(te.getMembers()[0] == null && te.getMembers()[1] == null && te.getMembers()[2] == null && te.getMembers()[3] == null && te.getMembers()[4] == null && te.getMembers()[5] == null){
@@ -159,27 +167,29 @@ public class SidedGearHolder extends BlockContainer{
 			Vec3d end = start.addVector(player.getLook(0F).xCoord * reDist, player.getLook(0F).yCoord * reDist, player.getLook(0F).zCoord * reDist);
 			int out = BOUNDING_BOXES.indexOf(getAimedSide(te, start, end, true));
 
-			SidedGearHolderTileEntity gear = (SidedGearHolderTileEntity) te;
 			if(out == -1){
 				return false;
-			}else if(out == 6){
+			}
+			SidedGearHolderTileEntity gear = (SidedGearHolderTileEntity) te;
+			if(out == 6){
 				if(canHarvest){
 					for(int i = 0; i < 6; i++){
 						if(gear.getMembers()[i] != null){
-							spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(gear.getMembers()[i]), 1));
+							spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.BASIC_GEARS.get(gear.getMembers()[i]), 1));
 						}
 					}
 				}
-				worldIn.destroyBlock(pos, false);
+				CommonProxy.masterKey++;
+				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 				return true;
 			}else{
 				if(canHarvest){
-					spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.basicGears.get(gear.getMembers()[out]), 1));
+					spawnAsEntity(worldIn, pos, new ItemStack(GearFactory.BASIC_GEARS.get(gear.getMembers()[out]), 1));
 				}
-				gear.setMembers(null, out);
-				
+				gear.setMembers(null, out, false);
+				CommonProxy.masterKey++;
 				if(gear.getMembers()[0] == null && gear.getMembers()[1] == null && gear.getMembers()[2] == null && gear.getMembers()[3] == null && gear.getMembers()[4] == null && gear.getMembers()[5] == null){
-					worldIn.destroyBlock(pos, false);
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 					return true;
 				}
 
@@ -197,7 +207,7 @@ public class SidedGearHolder extends BlockContainer{
 		if(te != null){
 			for(int i = 0; i < 6; i++){
 				if(te.getMembers()[i] != null){
-					drops.add(new ItemStack(GearFactory.basicGears.get(te.getMembers()[i]), 1));
+					drops.add(new ItemStack(GearFactory.BASIC_GEARS.get(te.getMembers()[i]), 1));
 				}
 			}
 		}

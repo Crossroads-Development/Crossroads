@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -15,7 +14,9 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -24,6 +25,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RotaryDrill extends BlockContainer{
 
@@ -33,13 +36,13 @@ public class RotaryDrill extends BlockContainer{
 	
 	public RotaryDrill(){
 		super(Material.IRON);
-		String name = "rotaryDrill";
+		String name = "rotary_drill";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 		setSoundType(SoundType.METAL);
 	}
 
@@ -49,9 +52,9 @@ public class RotaryDrill extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : BlockPistonBase.getFacingFromEntity(pos, placer);
-		return this.getDefaultState().withProperty(Properties.FACING, enumfacing);
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer);
+		return getDefaultState().withProperty(Properties.FACING, enumfacing);
 	}
 	
 	@Override
@@ -60,7 +63,7 @@ public class RotaryDrill extends BlockContainer{
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean somethingOrOtherProbably){
 		addCollisionBoxToList(pos, mask, list, state.getValue(Properties.FACING).getAxis() == Axis.X ? X : state.getValue(Properties.FACING).getAxis() == Axis.Z ? Z : Y);
 	}
 
@@ -102,4 +105,10 @@ public class RotaryDrill extends BlockContainer{
 		return facingbits;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+		tooltip.add("Mass: 520");
+		tooltip.add("I: 50");
+	}
 }

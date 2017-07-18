@@ -58,6 +58,5 @@ public class FluidVoidTileEntity extends TileEntity{
 		public FluidStack drain(int maxDrain, boolean doDrain){
 			return null;
 		}
-
 	}
 }

@@ -17,7 +17,7 @@ public class FatFeeder extends BlockContainer{
 
 	public FatFeeder(){
 		super(Material.IRON);
-		String name = "fatFeeder";
+		String name = "fat_feeder";
 		setUnlocalizedName(name);
 		setSoundType(SoundType.METAL);
 		setRegistryName(name);

@@ -1,6 +1,0 @@
-{
-	"variants": {
-		"redstone_bool=true": { "model": "crossroads:blockBronze" },
-		"redstone_bool=false": { "model": "crossroads:blockBronze" }
-	}
-}

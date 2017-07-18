@@ -15,7 +15,7 @@ public class SlimeEffect implements IEffect{
 
 		EntitySlime slime = new EntitySlime(worldIn);
 		slime.setPosition(pos.getX(), pos.getY(), pos.getZ());
-		worldIn.spawnEntityInWorld(slime);
+		worldIn.spawnEntity(slime);
 	}
 
 }

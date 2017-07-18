@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.IConduitModel;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.google.common.base.Function;
 
@@ -27,11 +26,10 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 
 public class ConduitBakedModel implements IBakedModel{
 
-	private TextureAtlasSprite sprite;
 	private final VertexFormat format;
 	private final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter;
 
-	public static final ModelResourceLocation BAKED_MODEL = new ModelResourceLocation(Main.MODID + ":conduit");
+	public static final ModelResourceLocation BAKED_MODEL = new ModelResourceLocation(Main.MODID, "conduit");
 
 	protected ConduitBakedModel(VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter){
 		this.bakedTextureGetter = bakedTextureGetter;
@@ -69,16 +67,20 @@ public class ConduitBakedModel implements IBakedModel{
 	}
 	
 	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int u, int v, EnumFacing side){
-		Vec3d normal = v1.subtract(v2).crossProduct(v3.subtract(v2));
+		return createQuad(v1, v2, v3, v4, sprite, 0, 0, u, v, side);
+	}
+	
+	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int uStart, int vStart, int uEnd, int vEnd, EnumFacing side){
+		Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2));
 
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
 		builder.setQuadOrientation(side);
 		builder.setTexture(sprite);
 		builder.setApplyDiffuseLighting(false);
-		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, 0, 0, sprite);
-		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, 0, v, sprite);
-		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, u, v, sprite);
-		putVertex(builder, normal, v4.xCoord, v4.yCoord, v4.zCoord, u, 0, sprite);
+		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, uStart, vStart, sprite);
+		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, uStart, vEnd, sprite);
+		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, uEnd, vEnd, sprite);
+		putVertex(builder, normal, v4.xCoord, v4.yCoord, v4.zCoord, uEnd, vStart, sprite);
 		return builder.build();
 	}
 
@@ -91,7 +93,7 @@ public class ConduitBakedModel implements IBakedModel{
 
 		List<BakedQuad> quads = new ArrayList<>();
 
-		sprite = bakedTextureGetter.apply(((IConduitModel) state.getBlock()).getTexture());
+		TextureAtlasSprite sprite = bakedTextureGetter.apply(((IConduitModel) state.getBlock()).getTexture());
 
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 
@@ -109,10 +111,10 @@ public class ConduitBakedModel implements IBakedModel{
 		int tSize = (int) (16D * size / (1D - (2D * size)));
 		
 		if(up){
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite, 16, tSize, EnumFacing.EAST));
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1, 1 - size), new Vec3d(size, 1, size), new Vec3d(size, 1 - size, size), sprite, 16, tSize, EnumFacing.WEST));
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1, size), new Vec3d(1 - size, 1, size), sprite, tSize, 16, EnumFacing.NORTH));
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(size, 1, 1 - size), sprite, tSize, 16, EnumFacing.SOUTH));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite, 16, 0, 0, tSize, EnumFacing.EAST));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1, 1 - size), new Vec3d(size, 1, size), new Vec3d(size, 1 - size, size), sprite, 16, 0, 0, tSize, EnumFacing.WEST));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1, size), new Vec3d(1 - size, 1, size), sprite, 0, 16, tSize, 0, EnumFacing.NORTH));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(size, 1, 1 - size), sprite, 0, 16, tSize, 0, EnumFacing.SOUTH));
 		}else{
 			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), sprite, EnumFacing.UP));
 		}
@@ -127,10 +129,10 @@ public class ConduitBakedModel implements IBakedModel{
 		}
 
 		if(east){
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1, 1 - size, size), new Vec3d(1 - size, 1 - size, size), sprite, 16, tSize, EnumFacing.UP));
-			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1, size, size), new Vec3d(1, size, 1 - size), new Vec3d(1 - size, size, 1 - size), sprite, 16, tSize, EnumFacing.DOWN));
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1, 1 - size, size), new Vec3d(1, size, size), new Vec3d(1 - size, size, size), sprite, 16, tSize, EnumFacing.NORTH));
-			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1, size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite, 16, tSize, EnumFacing.SOUTH));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1, 1 - size, size), new Vec3d(1 - size, 1 - size, size), sprite, 16, 0, 0, tSize, EnumFacing.UP));
+			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1, size, size), new Vec3d(1, size, 1 - size), new Vec3d(1 - size, size, 1 - size), sprite, 16, 0, 0, tSize, EnumFacing.DOWN));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1, 1 - size, size), new Vec3d(1, size, size), new Vec3d(1 - size, size, size), sprite, 16, 0, 0, tSize, EnumFacing.NORTH));
+			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1, size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), sprite, 16, 0, 0, tSize, EnumFacing.SOUTH));
 		}else{
 			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, size, 1 - size), sprite, EnumFacing.EAST));
 		}
@@ -145,10 +147,10 @@ public class ConduitBakedModel implements IBakedModel{
 		}
 
 		if(north){
-			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 0), new Vec3d(size, 1 - size, 0), sprite, tSize, 16, EnumFacing.UP));
-			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(size, size, size), new Vec3d(size, size, 0), new Vec3d(1 - size, size, 0), sprite, tSize, 16, EnumFacing.DOWN));
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 0), new Vec3d(1 - size, 1 - size, 0), sprite, tSize, 16, EnumFacing.EAST));
-			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1 - size, 0), new Vec3d(size, size, 0), sprite, tSize, 16, EnumFacing.WEST));
+			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 0), new Vec3d(size, 1 - size, 0), sprite, 0, 16, tSize, 0, EnumFacing.UP));
+			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(size, size, size), new Vec3d(size, size, 0), new Vec3d(1 - size, size, 0), sprite, 0, 16, tSize, 0, EnumFacing.DOWN));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 0), new Vec3d(1 - size, 1 - size, 0), sprite, 0, 16, tSize, 0, EnumFacing.EAST));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1 - size, 0), new Vec3d(size, size, 0), sprite, 0, 16, tSize, 0, EnumFacing.WEST));
 		}else{
 			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), new Vec3d(size, size, size), sprite, EnumFacing.NORTH));
 		}
@@ -186,7 +188,9 @@ public class ConduitBakedModel implements IBakedModel{
 
 	@Override
 	public TextureAtlasSprite getParticleTexture(){
-		return sprite;
+		//Here's the thing... due to all heat cables and fluid tubes sharing a conduit baked model, the breaking particles have to be shared within a chunk.
+		//They all use the bronze block texture for breaking particles. This could be fixed by giving each variant it's own model, but RAM usage would greatly increase. 
+		return bakedTextureGetter.apply(new ResourceLocation(Main.MODID, "blocks/block_bronze"));
 	}
 
 	@Override

@@ -16,10 +16,22 @@ public class ModPackets{
 		int packetId = 5;
 		network.registerMessage(SendIntToClient.class, SendIntToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendStringToClient.class, SendStringToClient.class, packetId++, Side.CLIENT);
-		network.registerMessage(SendPosToClient.class, SendPosToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendDoubleToClient.class, SendDoubleToClient.class, packetId++, Side.CLIENT);
-		network.registerMessage(SendElementNBTToClient.class, SendElementNBTToClient.class, packetId++, Side.CLIENT);
-		network.registerMessage(SendLightningToClient.class, SendLightningToClient.class, packetId++, Side.CLIENT);
-		network.registerMessage(SendBoolToClient.class, SendBoolToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(StoreNBTToClient.class, StoreNBTToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendChatToClient.class, SendChatToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendFieldsToClient.class, SendFieldsToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendMagicItemToServer.class, SendMagicItemToServer.class, packetId++, Side.SERVER);
+		network.registerMessage(SendLooseBeamToClient.class, SendLooseBeamToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendSlotFilterToClient.class, SendSlotFilterToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendDimLoadToClient.class, SendDimLoadToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendDoubleToServer.class, SendDoubleToServer.class, packetId++, Side.SERVER);
+		network.registerMessage(SendIntToServer.class, SendIntToServer.class, packetId++, Side.SERVER);
+		network.registerMessage(SendLogToClient.class, SendLogToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendStringToServer.class, SendStringToServer.class, packetId++, Side.SERVER);
+		network.registerMessage(SendNBTToClient.class, SendNBTToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendPlayerTickCountToClient.class, SendPlayerTickCountToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendDoubleArrayToServer.class, SendDoubleArrayToServer.class, packetId++, Side.SERVER);
+		network.registerMessage(SendDoubleArrayToClient.class, SendDoubleArrayToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendSpinToClient.class, SendSpinToClient.class, packetId++, Side.CLIENT);
 	}
 }

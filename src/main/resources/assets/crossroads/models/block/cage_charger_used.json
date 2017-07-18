@@ -1,0 +1,47 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"base": "crossroads:blocks/block_bronze",
+		"cage": "crossroads:blocks/block_pure_quartz",
+		"particle": "crossroads:blocks/block_bronze"
+	},
+	"elements": [
+	             {	
+	            	 "from": [ 4, 0, 4 ],
+	            	 "to": [ 12, 8, 12 ],
+	            	 "faces": {
+	            		 "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#base", "cullface": "down" },
+	            		 "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#base" },
+	            		 "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#base"},
+	            		 "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#base"},
+	            		 "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#base"},
+	            		 "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#base"}
+	            	 }
+	             },
+	             {
+            "from": [ 4.0, 12.0, 4.0 ], 
+            "to": [ 12.0, 16.0, 12.0 ], 
+            "faces": {
+                "north": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "east": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "south": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "west": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "up": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 8.0 ] },
+                "down": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 8.0 ] }
+            }
+        },
+        {
+            "from": [ 4.0, 8.0, 4.0 ], 
+            "to": [ 12.0, 12.0, 12.0 ], 
+            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "y", "angle": -45.0 },
+            "faces": {
+                "north": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "east": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "south": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "west": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "up": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 8.0 ] },
+                "down": { "texture": "#cage", "uv": [ 0.0, 0.0, 8.0, 8.0 ] }
+            }
+        }
+    ]
+}

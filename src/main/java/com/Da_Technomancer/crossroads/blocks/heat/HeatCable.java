@@ -7,12 +7,15 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IConduitModel;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
+import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
+import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.client.bakedModel.ConduitBakedModel;
+import com.Da_Technomancer.crossroads.client.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 
@@ -49,8 +52,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class HeatCable extends BlockContainer implements IConduitModel{
 
-	private HeatConductors conductor;
-	private HeatInsulators insulator;
+	private final HeatConductors conductor;
+	private final HeatInsulators insulator;
 	private static final double size = .2D;
 	private static final AxisAlignedBB BB = new AxisAlignedBB(size, size, size, 1 - size, 1 - size, 1 - size);
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(size, 0, size, 1 - size, size, 1 - size);
@@ -64,7 +67,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		super(Material.IRON);
 		this.conductor = conductor;
 		this.insulator = insulator;
-		String name = "heatCable" + conductor.toString() + insulator.toString();
+		String name = "heat_cable_" + conductor.toString().toLowerCase() + '_' + insulator.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		this.setHardness(1);
@@ -90,7 +93,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity){
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean pleaseDontBeRelevantToAnythingOrIWillBeSad){
 		addCollisionBoxToList(pos, mask, list, BB);
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
 		
@@ -133,9 +136,10 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		Boolean[] connect = {false, false, false, false, false, false};
-
+		
 		for(EnumFacing direction : EnumFacing.values()){
-			if(world.getTileEntity(pos.offset(direction)) != null && world.getTileEntity(pos.offset(direction)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite())){
+			TileEntity sideTe = world.getTileEntity(pos.offset(direction));
+			if(sideTe != null && ((sideTe instanceof IPrototypePort && ((IPrototypePort) sideTe).getType() == PrototypePortTypes.HEAT && ((IPrototypePort) sideTe).getSide() == direction.getOpposite()) || (sideTe instanceof IPrototypeOwner && ((IPrototypeOwner) sideTe).getTypes()[direction.getOpposite().getIndex()] == PrototypePortTypes.HEAT) || sideTe.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite()))){
 				connect[direction.getIndex()] = true;
 			}
 		}
@@ -205,7 +209,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		if(exState.getValue(Properties.CONNECT)[5]){
 			list.add(EAST);
 		}
-		EntityPlayer play = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);

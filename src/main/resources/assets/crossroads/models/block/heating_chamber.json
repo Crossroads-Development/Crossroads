@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/heating_chamber_side",
+		"south": "crossroads:blocks/heating_chamber_side",
+		"east": "crossroads:blocks/heating_chamber_side",
+		"west": "crossroads:blocks/heating_chamber_side",
+		"up": "crossroads:blocks/heating_chamber_top",
+		"down": "crossroads:blocks/heating_chamber_bottom",
+		"particle": "crossroads:blocks/heating_chamber_side"
+	}
+}

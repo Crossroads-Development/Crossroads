@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
 
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -27,13 +26,13 @@ public class QuartzStabilizer extends BlockContainer{
 	public QuartzStabilizer(boolean large){
 		super(Material.ROCK);
 		this.large = large;
-		String name = (large ? "large" : "small") + "QuartzStabilizer";
+		String name = (large ? "large" : "small") + "_quartz_stabilizer";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
@@ -42,22 +41,22 @@ public class QuartzStabilizer extends BlockContainer{
 	}
 	
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
-		if(worldIn.getTileEntity(pos) instanceof BeamRenderTE){
-			((BeamRenderTE) worldIn.getTileEntity(pos)).refresh();
-		}
-		
-		super.breakBlock(worldIn, pos, state);
-	}
-	
-	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : BlockPistonBase.getFacingFromEntity(pos, placer));
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof BeamRenderTE){
+			((BeamRenderTE) te).refresh();
+		}
+		super.breakBlock(worldIn, pos, state);
+	}
+	
+	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer));
 	}
 
 	@Override

@@ -22,13 +22,13 @@ public class BeamSplitter extends BlockContainer{
 
 	public BeamSplitter(){
 		super(Material.ROCK);
-		String name = "beamSplitter";
+		String name = "beam_splitter";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		GameRegistry.register(this);
 		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
@@ -43,26 +43,24 @@ public class BeamSplitter extends BlockContainer{
 	
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
-		neighborChanged(null, world, pos, null);
+		neighborChanged(state, world, pos, this, pos);
 	}
 	
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn){
-		int i = Math.max(worldIn.getRedstonePower(pos.down(), EnumFacing.DOWN), Math.max(worldIn.getRedstonePower(pos.up(), EnumFacing.UP), Math.max(worldIn.getRedstonePower(pos.east(), EnumFacing.EAST), Math.max(worldIn.getRedstonePower(pos.west(), EnumFacing.WEST), Math.max(worldIn.getRedstonePower(pos.north(), EnumFacing.NORTH), worldIn.getRedstonePower(pos.south(), EnumFacing.SOUTH))))));
-		if(((BeamSplitterTileEntity) worldIn.getTileEntity(pos)).redstone != i){
-			((BeamSplitterTileEntity) worldIn.getTileEntity(pos)).redstone = i;
-		}
-	}
-
-	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
-		if(worldIn.getTileEntity(pos) instanceof BeamRenderTE){
-			((BeamRenderTE) worldIn.getTileEntity(pos)).refresh();
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof BeamRenderTE){
+			((BeamRenderTE) te).refresh();
 		}
-		
 		super.breakBlock(worldIn, pos, state);
 	}
 	
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+		int i = Math.max(worldIn.getRedstonePower(pos.down(), EnumFacing.DOWN), Math.max(worldIn.getRedstonePower(pos.up(), EnumFacing.UP), Math.max(worldIn.getRedstonePower(pos.east(), EnumFacing.EAST), Math.max(worldIn.getRedstonePower(pos.west(), EnumFacing.WEST), Math.max(worldIn.getRedstonePower(pos.north(), EnumFacing.NORTH), worldIn.getRedstonePower(pos.south(), EnumFacing.SOUTH))))));
+		((BeamSplitterTileEntity) worldIn.getTileEntity(pos)).setRedstone(i);
+	}
+
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;

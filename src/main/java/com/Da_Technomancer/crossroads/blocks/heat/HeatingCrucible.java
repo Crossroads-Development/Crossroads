@@ -26,17 +26,18 @@ public class HeatingCrucible extends BlockContainer{
 
 	public HeatingCrucible(){
 		super(Material.ROCK);
-		setUnlocalizedName("heatingCrucible");
-		setRegistryName("heatingCrucible");
+		String name = "heating_crucible";
+		setUnlocalizedName(name);
+		setRegistryName(name);
 		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("heatingCrucible"));
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(3);
+		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(3);
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return this.getDefaultState().withProperty(Properties.FULLNESS, 0).withProperty(Properties.TEXTURE_4, 0);
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.FULLNESS, 0).withProperty(Properties.TEXTURE_4, 0);
 	}
 
 	@Override
