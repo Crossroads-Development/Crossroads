@@ -17,6 +17,8 @@ public final class HeatCableFactory{
 	public static final HashMap<HeatConductors, HashMap<HeatInsulators, RedstoneHeatCable>> REDSTONE_HEAT_CABLES = new HashMap<HeatConductors, HashMap<HeatInsulators, RedstoneHeatCable>>();
 
 	public static void init(){
+		HEAT_CABLES.clear();
+		REDSTONE_HEAT_CABLES.clear();
 		for(HeatConductors cond : HeatConductors.values()){
 			HashMap<HeatInsulators, HeatCable> map = new HashMap<HeatInsulators, HeatCable>();
 			HashMap<HeatInsulators, RedstoneHeatCable> rMap = new HashMap<HeatInsulators, RedstoneHeatCable>();

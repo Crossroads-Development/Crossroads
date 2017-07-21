@@ -122,7 +122,7 @@ public final class MiscOp{
 	 * It should be noted that this is NOT the same as {@link ChunkPos#asLong(int, int)} in terms of results. 
 	 */
 	public static long getLongFromChunk(@Nonnull Chunk chunk){
-		return (((long) chunk.xPosition) << 32) | (chunk.zPosition & 0xffffffffL);
+		return (((long) chunk.x) << 32) | (chunk.z & 0xffffffffL);
 	}
 
 	public static ChunkPos getChunkPosFromLong(long combinedCoord){
@@ -141,6 +141,6 @@ public final class MiscOp{
 	 * It should be noted that this is NOT the same as {@link ChunkPos#asLong(int, int)} in terms of results. 
 	 */
 	public static long getLongFromChunkPos(@Nonnull ChunkPos pos){
-		return (((long) pos.chunkXPos << 32) | (pos.chunkZPos & 0xffffffffL));
+		return (((long) pos.x << 32) | (pos.z & 0xffffffffL));
 	}
 }

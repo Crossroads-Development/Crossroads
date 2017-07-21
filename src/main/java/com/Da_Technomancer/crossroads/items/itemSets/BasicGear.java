@@ -2,6 +2,10 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
@@ -9,9 +13,11 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,33 +27,30 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class BasicGear extends Item{
 
 	private final GearTypes type;
-	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
+	public static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
 	
 	public BasicGear(GearTypes typeIn){
 		String name = "gear_" + typeIn.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabGear);
-		OreDictionary.registerOre("gear" + typeIn.toString(), this);
+		setCreativeTab(ModItems.tabGear);
 		type = typeIn;
-		ModItems.itemAddQue(this, 0, LOCAT);
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 9), " ? ", "?#?", " ? ", '#', "block" + typeIn.toString(), '?', "ingot" + typeIn.toString()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), " ? ", "?#?", " ? ", '#', "ingot" + typeIn.toString(), '?', "nugget" + typeIn.toString()));
+		ModItems.toRegister.add(this);
+		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
+		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"gear" + typeIn.toString()}));
+		//TODO GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 9), " ? ", "?#?", " ? ", '#', "block" + typeIn.toString(), '?', "ingot" + typeIn.toString()));
+		//TODO GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), " ? ", "?#?", " ? ", '#', "ingot" + typeIn.toString(), '?', "nugget" + typeIn.toString()));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Mass: " + MiscOp.betterRound(type.getDensity() / 8, 2));
 		tooltip.add("I: " + MiscOp.betterRound(type.getDensity() / 8, 2) * .125);
 	}

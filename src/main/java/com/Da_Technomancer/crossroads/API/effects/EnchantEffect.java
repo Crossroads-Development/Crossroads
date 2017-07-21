@@ -8,6 +8,7 @@ import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 
 public class EnchantEffect implements IEffect{
 
-	private final Random rand = new Random();
+	private static final Random RAND = new Random();
 	
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
@@ -24,22 +25,22 @@ public class EnchantEffect implements IEffect{
 		ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
 		if(items != null && items.size() != 0){
 			for(EntityItem ent : items){
-				List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(this.rand, ent.getEntityItem(), (int) mult, mult >= 32);
+				List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(RAND, ent.getItem(), (int) mult, mult >= 32);
 				
-				if(ench == null || ent.getEntityItem().isItemEnchanted()){
+				if(ench == null || ent.getItem().isItemEnchanted()){
 					continue;
 				}
 				
-				if(ent.getEntityItem().getItem() == Items.BOOK){
-					ent.setEntityItemStack(new ItemStack(Items.ENCHANTED_BOOK, 1));
+				if(ent.getItem().getItem() == Items.BOOK){
+					ent.setItem(new ItemStack(Items.ENCHANTED_BOOK, 1));
 				}
 				
 				for(EnchantmentData datum : ench){
-					if(ent.getEntityItem().getItem() == Items.ENCHANTED_BOOK){
+					if(ent.getItem().getItem() == Items.ENCHANTED_BOOK){
 						//While vanilla behavior when enchanting books is to put on 1 fewer enchantments, for the EnchantEffect this does not occur. THIS IS NOT A BUG.
-						Items.ENCHANTED_BOOK.addEnchantment(ent.getEntityItem(), datum);
+						ItemEnchantedBook.addEnchantment(ent.getItem(), datum);
 					}else{
-						ent.getEntityItem().addEnchantment(datum.enchantmentobj, datum.enchantmentLevel);
+						ent.getItem().addEnchantment(datum.enchantment, datum.enchantmentLevel);
 					}
 				}
 			}
@@ -53,8 +54,8 @@ public class EnchantEffect implements IEffect{
 			ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
 			if(items != null && items.size() != 0){
 				for(EntityItem ent : items){
-					if(ent.getEntityItem().getTagCompound() != null && ent.getEntityItem().getTagCompound().hasKey("ench")){
-						ent.getEntityItem().getTagCompound().removeTag("ench");
+					if(ent.getItem().getTagCompound() != null && ent.getItem().getTagCompound().hasKey("ench")){
+						ent.getItem().getTagCompound().removeTag("ench");
 					}
 				}
 			}

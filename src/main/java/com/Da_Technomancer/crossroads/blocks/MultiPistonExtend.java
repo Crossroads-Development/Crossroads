@@ -15,7 +15,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MultiPistonExtend extends Block{
 
@@ -29,8 +28,8 @@ public class MultiPistonExtend extends Block{
 		setRegistryName(name);
 		setHardness(0.5F);
 		setCreativeTab(ModItems.tabCrossroads);
-		GameRegistry.register(this);
-		setDefaultState(this.blockState.getBaseState().withProperty(Properties.FACING, EnumFacing.NORTH).withProperty(Properties.HEAD, false));
+		setDefaultState(getDefaultState().withProperty(Properties.FACING, EnumFacing.NORTH).withProperty(Properties.HEAD, false));
+		ModBlocks.toRegister.add(this);
 	}
 
 	@Override

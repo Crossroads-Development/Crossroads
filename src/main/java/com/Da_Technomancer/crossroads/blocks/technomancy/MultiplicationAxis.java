@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 
@@ -12,7 +13,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -22,7 +22,6 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MultiplicationAxis extends BlockContainer{
 	
@@ -31,21 +30,16 @@ public class MultiplicationAxis extends BlockContainer{
 		String name = "multiplication_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setCreativeTab(ModItems.tabCrossroads);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite()).withProperty(Properties.REDSTONE_BOOL, false);
-	}
-
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
 	}
 
 	@Override

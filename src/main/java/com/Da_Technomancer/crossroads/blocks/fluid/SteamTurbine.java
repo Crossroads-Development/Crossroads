@@ -2,6 +2,9 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 
@@ -9,8 +12,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -19,7 +21,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,11 +31,11 @@ public class SteamTurbine extends BlockContainer{
 		String name = "steam_turbine";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setCreativeTab(ModItems.tabCrossroads);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class SteamTurbine extends BlockContainer{
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Mass: 375");
 		tooltip.add("I: 8");
 	}

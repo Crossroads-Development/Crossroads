@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class FluidGauge extends Item{
 
@@ -20,8 +19,9 @@ public class FluidGauge extends Item{
 		String name = "fluid_gauge";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabCrossroads);
+		ModItems.toRegister.add(this);
+		ModItems.itemAddQue(this);
 	}
 
 	@Override

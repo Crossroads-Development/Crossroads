@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.blocks;
 
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
@@ -28,7 +26,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,15 +39,9 @@ public class FertileSoil extends Block{
 		setHardness(.5F);
 		setSoundType(SoundType.GROUND);
 		setCreativeTab(ModItems.tabCrossroads);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemMultiTexture(this, this, new ItemMultiTexture.Mapper(){
-			@Override
-			@Nullable
-			public String apply(ItemStack stack){
-				return (stack.getMetadata() == 0 ? "wheat" : stack.getMetadata() == 1 ? "potato" : stack.getMetadata() == 2 ? "carrot" : stack.getMetadata() == 3 ? "beet" : stack.getMetadata() == 4 ? "oak" : stack.getMetadata() == 5 ? "birch" : stack.getMetadata() == 6 ? "spruce" : stack.getMetadata() == 7 ? "jungle" : stack.getMetadata() == 8 ? "acacia" : "dark");
-			}
-		}).setRegistryName(name));
 		setTickRandomly(true);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQueRange(this, 9, new ItemMultiTexture(this, this, ((ItemMultiTexture.Mapper) (ItemStack stack) -> (stack.getMetadata() == 0 ? "wheat" : stack.getMetadata() == 1 ? "potato" : stack.getMetadata() == 2 ? "carrot" : stack.getMetadata() == 3 ? "beet" : stack.getMetadata() == 4 ? "oak" : stack.getMetadata() == 5 ? "birch" : stack.getMetadata() == 6 ? "spruce" : stack.getMetadata() == 7 ? "jungle" : stack.getMetadata() == 8 ? "acacia" : "dark"))));
 	}
 
 	@Override
@@ -123,9 +114,10 @@ public class FertileSoil extends Block{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list){
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list){
+		Item item = Item.getItemFromBlock(this);
 		for(int i = 0; i < 10; i++){
-			list.add(new ItemStack(itemIn, 1, i));
+			list.add(new ItemStack(item, 1, i));
 		}
 	}
 

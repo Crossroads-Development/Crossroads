@@ -23,7 +23,7 @@ public class ToggleGearRenderer extends TileEntitySpecialRenderer<ToggleGearTile
 	private final ModelAxle modelAx = new ModelAxle();
 	
 	@Override
-	public void renderTileEntityAt(ToggleGearTileEntity gear, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(ToggleGearTileEntity gear, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		
 		if(!gear.getWorld().isBlockLoaded(gear.getPos(), false)){
 			return;

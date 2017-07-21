@@ -17,7 +17,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemCandleLily extends ItemLilyPad{
 
@@ -26,8 +25,9 @@ public class ItemCandleLily extends ItemLilyPad{
 		String name = "candle_lilypad";
 		setRegistryName(name);
 		setUnlocalizedName(name);
-		this.setCreativeTab(ModItems.tabCrossroads);
-		GameRegistry.register(this);
+		setCreativeTab(ModItems.tabCrossroads);
+		ModItems.toRegister.add(this);
+		ModItems.itemAddQue(this);
 	}
 
 	@Override

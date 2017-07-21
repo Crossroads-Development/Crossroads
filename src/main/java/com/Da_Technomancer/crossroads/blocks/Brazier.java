@@ -17,7 +17,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -27,7 +26,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -42,8 +40,8 @@ public class Brazier extends BlockContainer{
 		setHardness(2);
 		setRegistryName(name);
 		setCreativeTab(ModItems.tabCrossroads);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -144,10 +142,4 @@ public class Brazier extends BlockContainer{
 		}
 		super.breakBlock(world, pos, blockstate);
 	}
-
-	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-		return false;
-	}
-
 }

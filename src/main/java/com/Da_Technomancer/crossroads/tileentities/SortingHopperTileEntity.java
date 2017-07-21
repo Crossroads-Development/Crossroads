@@ -475,11 +475,11 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 		if(itemIn == null){
 			return false;
 		}else{
-			ItemStack itemstack = itemIn.getEntityItem().copy();
+			ItemStack itemstack = itemIn.getItem().copy();
 			ItemStack itemstack1 = putStackInInventoryAllSlots(p_145898_0_, itemstack, (EnumFacing) null);
 
 			if(!itemstack1.isEmpty()){
-				itemIn.setEntityItemStack(itemstack1);
+				itemIn.setItem(itemstack1);
 			}else{
 				flag = true;
 				itemIn.setDead();

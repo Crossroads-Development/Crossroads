@@ -111,7 +111,7 @@ public final class EventHandlerCommon{
 		//Retrogen
 		if(TO_RETROGEN.size() != 0){
 			Chunk chunk = TO_RETROGEN.get(0);
-			CommonProxy.WORLD_GEN.generate(RAND, chunk.xPosition, chunk.zPosition, chunk.getWorld(), null, null);
+			CommonProxy.WORLD_GEN.generate(RAND, chunk.x, chunk.z, chunk.getWorld(), null, null);
 			TO_RETROGEN.remove(0);
 		}
 

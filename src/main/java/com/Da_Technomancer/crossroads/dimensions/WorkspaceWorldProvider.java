@@ -13,7 +13,7 @@ import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,9 +23,8 @@ public class WorkspaceWorldProvider extends WorldProvider{
 	public void init(){
 		biomeProvider = new BiomeProviderSingle(Biomes.VOID);
 		hasSkyLight = false;
-		hasNoSky = true;
 	}
-	
+
 	@Override
 	public DimensionType getDimensionType(){
 		return ModDimensions.workspaceDimType;
@@ -35,12 +34,12 @@ public class WorkspaceWorldProvider extends WorldProvider{
 	public boolean canRespawnHere(){
 		return false;
 	}
-	
+
 	@Override
 	public float calculateCelestialAngle(long worldTime, float partialTicks){
 		return 0;
 	}
-	
+
 	@Override
 	public boolean canDoLightning(Chunk chunk){
 		return false;
@@ -76,13 +75,13 @@ public class WorkspaceWorldProvider extends WorldProvider{
 		}
 
 		@Override
-		public Chunk provideChunk(int x, int z){
+		public Chunk generateChunk(int x, int z){
 			ChunkPrimer primer = new ChunkPrimer();
-			
+
 			if(x == 0 && z == 0){
 				primer.setBlockState(0, 30, 0, Blocks.STONEBRICK.getDefaultState());
 			}
-			
+
 			Chunk chunk = new Chunk(world, primer, x, z);
 			chunk.generateSkylightMap();
 			return chunk;
@@ -104,13 +103,18 @@ public class WorkspaceWorldProvider extends WorldProvider{
 		}
 
 		@Override
-		public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos position, boolean p_180513_4_){
+		public void recreateStructures(Chunk chunkIn, int x, int z){
+
+		}
+
+		@Override
+		public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position, boolean findUnexplored){
 			return null;
 		}
 
 		@Override
-		public void recreateStructures(Chunk chunkIn, int x, int z){
-
+		public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos){
+			return false;
 		}
 	}
 }

@@ -159,7 +159,7 @@ public class SlottedChestContainer extends Container{
 						itemstack = itemstack10.copy();
 
 						if(slot6.getStack().getItem() == item){
-							retrySlotClick(slotId, dragType, true, player);
+							//TODO retrySlotClick(slotId, dragType, true, player);
 						}
 					}
 				}
@@ -357,7 +357,7 @@ public class SlottedChestContainer extends Container{
 				}
 			}
 
-			this.detectAndSendChanges();
+			detectAndSendChanges();
 		}
 
 		return itemstack;

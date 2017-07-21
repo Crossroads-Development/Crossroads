@@ -19,7 +19,7 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 	private static final ModelGearIcositetragon MODEL = new ModelGearIcositetragon();
 	
 	@Override
-	public void renderTileEntityAt(LargeGearMasterTileEntity gear, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(LargeGearMasterTileEntity gear, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 
 		if(gear.getWorld().getBlockState(gear.getPos()).getBlock() != ModBlocks.largeGearMaster || !gear.getWorld().isBlockLoaded(gear.getPos(), false)){
 			return;

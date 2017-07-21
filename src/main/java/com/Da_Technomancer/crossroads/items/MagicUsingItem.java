@@ -2,11 +2,14 @@ package com.Da_Technomancer.crossroads.items;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.Keys;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMagicItemToServer;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -51,7 +54,7 @@ public abstract class MagicUsingItem extends Item{
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		NBTTagCompound nbt = stack.getTagCompound();
 		if(nbt == null){
 			nbt = new NBTTagCompound();

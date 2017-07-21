@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
@@ -12,14 +13,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class RedstoneKeyboard extends BlockContainer{
 	
@@ -28,10 +27,10 @@ public class RedstoneKeyboard extends BlockContainer{
 		String name = "redstone_keyboard";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setCreativeTab(ModItems.tabCrossroads);
 		setHardness(3);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 	
 	@Override

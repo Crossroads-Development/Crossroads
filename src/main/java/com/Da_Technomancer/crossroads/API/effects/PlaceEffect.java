@@ -29,14 +29,14 @@ public class PlaceEffect implements IEffect{
 		if(items != null && items.size() != 0){
 			FakePlayer placer = FakePlayerFactory.get((WorldServer) worldIn, new GameProfile(null, Main.MODID + "-place_effect-" + worldIn.provider.getDimension()));
 			for(EntityItem ent : items){
-				if(ent.getEntityItem() != null && ent.getEntityItem().getItem() instanceof ItemBlock && ((ItemBlock) ent.getEntityItem().getItem()).getBlock().canPlaceBlockAt(worldIn, ent.getPosition())){
-					worldIn.setBlockState(ent.getPosition(), ((ItemBlock) ent.getEntityItem().getItem()).getBlock().getStateForPlacement(worldIn, ent.getPosition(), EnumFacing.DOWN, 0, 0, 0, ent.getEntityItem().getMetadata(), placer, EnumHand.MAIN_HAND));
-					Block block = ((ItemBlock) ent.getEntityItem().getItem()).getBlock();
-					block.onBlockPlacedBy(worldIn, ent.getPosition(), worldIn.getBlockState(ent.getPosition()), placer, ent.getEntityItem());
+				if(!ent.getItem().isEmpty() && ent.getItem().getItem() instanceof ItemBlock && ((ItemBlock) ent.getItem().getItem()).getBlock().canPlaceBlockAt(worldIn, ent.getPosition())){
+					worldIn.setBlockState(ent.getPosition(), ((ItemBlock) ent.getItem().getItem()).getBlock().getStateForPlacement(worldIn, ent.getPosition(), EnumFacing.DOWN, 0, 0, 0, ent.getItem().getMetadata(), placer, EnumHand.MAIN_HAND));
+					Block block = ((ItemBlock) ent.getItem().getItem()).getBlock();
+					block.onBlockPlacedBy(worldIn, ent.getPosition(), worldIn.getBlockState(ent.getPosition()), placer, ent.getItem());
 					SoundType soundtype = block.getSoundType(worldIn.getBlockState(pos), worldIn, pos, null);
 					worldIn.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-					ent.getEntityItem().shrink(1);
-					if(ent.getEntityItem().getCount() <= 0){
+					ent.getItem().shrink(1);
+					if(ent.getItem().getCount() <= 0){
 						ent.setDead();
 					}
 				}

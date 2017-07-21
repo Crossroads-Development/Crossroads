@@ -27,15 +27,15 @@ public class ClientProxy extends CommonProxy{
 		super.preInit(e);
 		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 		ModFluids.registerRenderers();
-		ModBlocks.preInitModels();
 		ModItems.initModels();
 		HeatCableFactory.clientInit();
-		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, (RenderManager manager) -> (new RenderSnowball<EntityBullet>(manager, Items.field_191525_da, Minecraft.getMinecraft().getRenderItem())));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, (RenderManager manager) -> (new RenderSnowball<EntityBullet>(manager, Items.IRON_NUGGET, Minecraft.getMinecraft().getRenderItem())));
 	}
 
 	@Override
 	protected void init(FMLInitializationEvent e){
 		super.init(e);
+		ModBlocks.initModels();
 		GearFactory.clientInit();
 		AAModTESR.registerBlockRenderer();
 		Keys.init();

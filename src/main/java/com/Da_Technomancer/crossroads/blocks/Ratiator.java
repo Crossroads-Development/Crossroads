@@ -19,7 +19,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -31,7 +30,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -44,10 +42,10 @@ public class Ratiator extends BlockContainer{
 		String name = "ratiator";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setHardness(0);
 		setCreativeTab(ModItems.tabCrossroads);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override

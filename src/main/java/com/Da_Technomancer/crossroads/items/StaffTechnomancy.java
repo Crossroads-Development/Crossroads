@@ -18,7 +18,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class StaffTechnomancy extends MagicUsingItem{
 
@@ -26,8 +25,9 @@ public class StaffTechnomancy extends MagicUsingItem{
 		String name = "staff_technomancy";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
 		setCreativeTab(ModItems.tabCrossroads);
+		ModItems.toRegister.add(this);
+		ModItems.itemAddQue(this);
 	}
 	
 	@Override
@@ -58,7 +58,7 @@ public class StaffTechnomancy extends MagicUsingItem{
 					MagicUnit mag = new MagicUnit(energy, potential, stability, voi);
 					RayTraceResult ray = MiscOp.rayTrace(player, 32);
 					Vec3d lookVec = player.getLookVec().scale(32D);
-					BlockPos endPos = ray == null ? player.getPosition().add(new Vec3i(lookVec.xCoord, lookVec.yCoord, lookVec.zCoord)) : ray.getBlockPos();
+					BlockPos endPos = ray == null ? player.getPosition().add(new Vec3i(lookVec.x, lookVec.y, lookVec.z)) : ray.getBlockPos();
 					IEffect effect = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
 					if(effect != null){
 						effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()));

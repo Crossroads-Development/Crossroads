@@ -2,7 +2,10 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ItemChutePortTileEntity;
 
@@ -12,9 +15,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -23,7 +25,6 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,9 +37,9 @@ public class ItemChutePort extends BlockContainer{
 		setRegistryName(name);
 		setHardness(2);
 		setCreativeTab(ModItems.tabCrossroads);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setSoundType(SoundType.METAL);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -74,7 +75,7 @@ public class ItemChutePort extends BlockContainer{
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Mass: 500");
 		tooltip.add("I: 2");
 	}

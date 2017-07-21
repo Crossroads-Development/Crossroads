@@ -19,7 +19,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
@@ -29,7 +28,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**Notable differences from a normal piston include:
  * 15 block head range, distance controlled by signal strength,
@@ -51,9 +49,9 @@ public class MultiPistonBase extends Block{
 		this.sticky = sticky;
 		setHardness(0.5F);
 		setCreativeTab(ModItems.tabCrossroads);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		setDefaultState(this.blockState.getBaseState().withProperty(Properties.FACING, EnumFacing.NORTH).withProperty(Properties.REDSTONE_BOOL, false));
+		setDefaultState(getDefaultState().withProperty(Properties.FACING, EnumFacing.NORTH).withProperty(Properties.REDSTONE_BOOL, false));
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 	
 	@Override
@@ -337,7 +335,7 @@ public class MultiPistonBase extends Block{
 					for(int yLoop = yMin; yLoop <= yMax; ++yLoop){
 						if(!chunk.getEntityLists()[yLoop].isEmpty()){
 							for(Entity entity : chunk.getEntityLists()[yLoop]){
-								if(entity.getEntityBoundingBox().intersectsWith(checkBox)){
+								if(entity.getEntityBoundingBox().intersects(checkBox)){
 									found.add(entity);
 								}
 							}

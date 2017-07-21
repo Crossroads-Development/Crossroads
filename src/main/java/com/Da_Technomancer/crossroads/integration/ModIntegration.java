@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.integration;
 
-import com.Da_Technomancer.crossroads.integration.minetweaker.MineTweakerIntegration;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraftforge.fml.common.Loader;
@@ -19,7 +18,7 @@ public class ModIntegration {
 		}
 
 		if (Loader.isModLoaded("minetweaker3")) {
-			MineTweakerIntegration.init();
+			//TODO MineTweakerIntegration.init();
 		}
 	}
 }

@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class BasicBlock extends Block{
 	// This class can define any block without any special properties or
@@ -40,20 +40,19 @@ public class BasicBlock extends Block{
 		}
 		setUnlocalizedName(unlocName);
 		setRegistryName(unlocName);
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.setHardness(hardness);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(unlocName));
+		setCreativeTab(ModItems.tabCrossroads);
+		setHardness(hardness);
 		if(sound != null){
 			setSoundType(sound);
 		}
-		if(oreDict != null){
-			OreDictionary.registerOre(oreDict, this);
-		}
+		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
+		if(oreDict != null){
+			ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {oreDict}));
+		}
 	}
 
-	public BasicBlock setSoundType(SoundType sound){
+	public BasicBlock setSoundType(SoundType sound){//TODO
 		return (BasicBlock) super.setSoundType(sound);
 	}
 }

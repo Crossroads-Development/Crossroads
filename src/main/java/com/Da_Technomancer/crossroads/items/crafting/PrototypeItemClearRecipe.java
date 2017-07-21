@@ -8,8 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class PrototypeItemClearRecipe implements IRecipe{
+public class PrototypeItemClearRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe{
 
 	private final Item toClear;
 	private final String nbtPath;
@@ -58,11 +59,6 @@ public class PrototypeItemClearRecipe implements IRecipe{
 	}
 
 	@Override
-	public int getRecipeSize(){
-		return 9;
-	}
-
-	@Override
 	public ItemStack getRecipeOutput(){
 		return new ItemStack(toClear, 1);
 	}
@@ -84,5 +80,10 @@ public class PrototypeItemClearRecipe implements IRecipe{
 			}
 		}
 		return outList;
+	}
+
+	@Override
+	public boolean canFit(int width, int height){
+		return width * height >= 1;
 	}
 }

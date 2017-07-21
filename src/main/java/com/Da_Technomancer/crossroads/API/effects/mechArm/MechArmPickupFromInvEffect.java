@@ -23,7 +23,7 @@ public class MechArmPickupFromInvEffect implements IMechArmEffect{
 		}
 		IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 
-		ItemStack heldStack = holdingStack ? ((EntityItem) ent.getPassengers().get(0)).getEntityItem().copy() : ItemStack.EMPTY;
+		ItemStack heldStack = holdingStack ? ((EntityItem) ent.getPassengers().get(0)).getItem().copy() : ItemStack.EMPTY;
 		int startSize = heldStack.getCount();
 
 		for(int i = 0; i < handler.getSlots(); i++){
@@ -45,7 +45,7 @@ public class MechArmPickupFromInvEffect implements IMechArmEffect{
 		}
 		if(!heldStack.isEmpty()){
 			if(holdingStack){
-				((EntityItem) ent.getPassengers().get(0)).setEntityItemStack(heldStack);
+				((EntityItem) ent.getPassengers().get(0)).setItem(heldStack);
 			}else{
 				EntityItem heldItemEnt = new EntityItem(world, posX, posY, posZ, heldStack);
 				heldItemEnt.startRiding(ent, true);

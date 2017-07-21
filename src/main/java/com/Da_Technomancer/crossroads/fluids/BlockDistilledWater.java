@@ -1,14 +1,13 @@
 package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockDistilledWater extends BlockFluidClassic{
 
@@ -19,9 +18,7 @@ public class BlockDistilledWater extends BlockFluidClassic{
 		DISTILLED_WATER.setBlock(this);
 		setUnlocalizedName("blockDistilledWater");
 		setRegistryName("blockDistilledWater");
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("blockDistilledWater"));
-
+		ModBlocks.toRegister.add(this);
 	}
 
 	/**

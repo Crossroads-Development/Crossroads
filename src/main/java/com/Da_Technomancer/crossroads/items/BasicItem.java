@@ -1,8 +1,10 @@
 package com.Da_Technomancer.crossroads.items;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
+
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class BasicItem extends Item{
 
@@ -19,17 +21,17 @@ public class BasicItem extends Item{
 	public BasicItem(String name, String oreDict){
 		this(name, oreDict, true);
 	}
-	
+
 	public BasicItem(String name, String oreDict, boolean tab){
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
 		if(tab){
 			setCreativeTab(ModItems.tabCrossroads);
 		}
-		if(oreDict != null){
-			OreDictionary.registerOre(oreDict, this);
-		}
+		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
+		if(oreDict != null){
+			ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {oreDict}));
+		}
 	}
 }

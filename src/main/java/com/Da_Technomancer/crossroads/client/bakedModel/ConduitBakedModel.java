@@ -3,12 +3,12 @@ package com.Da_Technomancer.crossroads.client.bakedModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.google.common.base.Function;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -53,7 +53,7 @@ public class ConduitBakedModel implements IBakedModel{
 						break;
 					}
 				case NORMAL:
-					builder.put(e, (float) normal.xCoord, (float) normal.yCoord, (float) normal.zCoord, 0f);
+					builder.put(e, (float) normal.x, (float) normal.y, (float) normal.z, 0F);
 					break;
 				default:
 					builder.put(e);
@@ -77,10 +77,10 @@ public class ConduitBakedModel implements IBakedModel{
 		builder.setQuadOrientation(side);
 		builder.setTexture(sprite);
 		builder.setApplyDiffuseLighting(false);
-		putVertex(builder, normal, v1.xCoord, v1.yCoord, v1.zCoord, uStart, vStart, sprite);
-		putVertex(builder, normal, v2.xCoord, v2.yCoord, v2.zCoord, uStart, vEnd, sprite);
-		putVertex(builder, normal, v3.xCoord, v3.yCoord, v3.zCoord, uEnd, vEnd, sprite);
-		putVertex(builder, normal, v4.xCoord, v4.yCoord, v4.zCoord, uEnd, vStart, sprite);
+		putVertex(builder, normal, v1.x, v1.y, v1.z, uStart, vStart, sprite);
+		putVertex(builder, normal, v2.x, v2.y, v2.z, uStart, vEnd, sprite);
+		putVertex(builder, normal, v3.x, v3.y, v3.z, uEnd, vEnd, sprite);
+		putVertex(builder, normal, v4.x, v4.y, v4.z, uEnd, vStart, sprite);
 		return builder.build();
 	}
 

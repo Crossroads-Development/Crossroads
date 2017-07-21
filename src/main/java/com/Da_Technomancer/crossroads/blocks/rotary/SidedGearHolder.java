@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
 
@@ -31,7 +32,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,9 +54,9 @@ public class SidedGearHolder extends BlockContainer{
 		String name = "sided_gear_holder";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		this.setHardness(1);
+		setHardness(1);
 		setSoundType(SoundType.METAL);
+		ModBlocks.toRegister.add(this);
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class SidedGearHolder extends BlockContainer{
 		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
-		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
+		Vec3d end = start.addVector(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
 		AxisAlignedBB out = getAimedSide(te, start, end, true);
 		return (out == null ? BOUNDING_BOXES.get(6) : out).offset(pos);
 	}
@@ -128,11 +128,6 @@ public class SidedGearHolder extends BlockContainer{
 	}
 
 	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
-		return false;
-	}
-
-	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
@@ -164,7 +159,7 @@ public class SidedGearHolder extends BlockContainer{
 		if(te instanceof SidedGearHolderTileEntity){
 			float reDist = player.isCreative() ? 5F : 4.5F;
 			Vec3d start = new Vec3d(player.prevPosX, player.prevPosY + (double) player.getEyeHeight(), player.prevPosZ).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
-			Vec3d end = start.addVector(player.getLook(0F).xCoord * reDist, player.getLook(0F).yCoord * reDist, player.getLook(0F).zCoord * reDist);
+			Vec3d end = start.addVector(player.getLook(0F).x * reDist, player.getLook(0F).y * reDist, player.getLook(0F).z * reDist);
 			int out = BOUNDING_BOXES.indexOf(getAimedSide(te, start, end, true));
 
 			if(out == -1){

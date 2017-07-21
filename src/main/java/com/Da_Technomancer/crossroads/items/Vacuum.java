@@ -13,7 +13,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Vacuum extends Item{
 
@@ -24,10 +23,11 @@ public class Vacuum extends Item{
 		String name = "vacuum";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
-		this.maxStackSize = 1;
-		this.setMaxDamage(1200);
+		setCreativeTab(ModItems.tabCrossroads);
+		maxStackSize = 1;
+		setMaxDamage(1200);
+		ModItems.toRegister.add(this);
+		ModItems.itemAddQue(this);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class Vacuum extends Item{
 
 		for(Entity ent : entities){
 			Vec3d motVec = playerIn.getPositionVector().subtract(ent.getPositionVector()).normalize();
-			ent.addVelocity(motVec.xCoord, motVec.yCoord, motVec.zCoord);
+			ent.addVelocity(motVec.x, motVec.y, motVec.z);
 		}
 
 		playerIn.getHeldItem(hand).damageItem(1, playerIn);

@@ -10,10 +10,10 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.tileentities.magic.BeaconHarnessTileEntity;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -24,7 +24,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 	private static final Random rand = new Random();
 	
 	@Override
-	public void renderTileEntityAt(BeaconHarnessTileEntity beam, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(BeaconHarnessTileEntity beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false) || beam.getBeam() == null){
 			return;
 		}
@@ -34,7 +34,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 		float brightY = OpenGlHelper.lastBrightnessY;
 		
 		Tessellator tes = Tessellator.getInstance();
-		VertexBuffer buf = tes.getBuffer();
+		BufferBuilder buf = tes.getBuffer();
 		
 		for(int dir = 0; dir < 2; ++dir){
 

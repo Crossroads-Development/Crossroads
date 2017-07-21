@@ -15,9 +15,9 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxi
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
@@ -35,7 +35,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 	private final ModelPyramid modelPyr = new ModelPyramid();
 
 	@Override
-	public void renderTileEntityAt(MultiplicationAxisTileEntity axis, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(MultiplicationAxisTileEntity axis, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 
 		if(!axis.getWorld().isBlockLoaded(axis.getPos(), false)){
 			return;
@@ -447,7 +447,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		//Belts
 		GlStateManager.disableCull();
 		Minecraft.getMinecraft().renderEngine.bindTexture(textureBelt);
-		VertexBuffer vb = Tessellator.getInstance().getBuffer();
+		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		//In->Transformer

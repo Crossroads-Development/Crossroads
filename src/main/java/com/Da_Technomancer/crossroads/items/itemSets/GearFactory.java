@@ -21,6 +21,9 @@ public class GearFactory{
 	public static final HashMap<GearTypes, ToggleGear> TOGGLE_GEARS = new HashMap<GearTypes, ToggleGear>();
 
 	public static void init(){
+		BASIC_GEARS.clear();
+		LARGE_GEARS.clear();
+		TOGGLE_GEARS.clear();
 		for(GearTypes typ : GearTypes.values()){
 			BASIC_GEARS.put(typ, new BasicGear(typ));
 			LARGE_GEARS.put(typ, new LargeGear(typ));

@@ -17,7 +17,7 @@ public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTi
 	private final ResourceLocation texture = new ResourceLocation(Main.MODID, "textures/model/drill.png");
 
 	@Override
-	public void renderTileEntityAt(RotaryDrillTileEntity drill, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(RotaryDrillTileEntity drill, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 
 		if(drill.getWorld().getBlockState(drill.getPos()).getBlock() != ModBlocks.rotaryDrill || !drill.getWorld().isBlockLoaded(drill.getPos(), false)){
 			return;

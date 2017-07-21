@@ -13,7 +13,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Speedometer extends Item{
 
@@ -21,8 +20,9 @@ public class Speedometer extends Item{
 		String name = "speedometer";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabCrossroads);
+		ModItems.toRegister.add(this);
+		ModItems.itemAddQue(this);
 	}
 
 	@Override

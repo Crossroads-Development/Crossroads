@@ -8,10 +8,10 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
@@ -23,7 +23,7 @@ public class GatewayFrameRenderer extends TileEntitySpecialRenderer<GatewayFrame
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/gateway.png");
 
 	@Override
-	public void renderTileEntityAt(GatewayFrameTileEntity frame, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(GatewayFrameTileEntity frame, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		if(frame == null || !frame.getWorld().isBlockLoaded(frame.getPos(), false) || frame.getWorld().getBlockState(frame.getPos()) != ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
 			return;
 		}
@@ -43,7 +43,7 @@ public class GatewayFrameRenderer extends TileEntitySpecialRenderer<GatewayFrame
 			GlStateManager.rotate(90, 0, 1, 0);
 		}
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-		VertexBuffer vb = Tessellator.getInstance().getBuffer();
+		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-1.5D, 0, 0).tex(0, 0).endVertex();

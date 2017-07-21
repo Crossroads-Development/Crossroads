@@ -9,10 +9,10 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 
 	@Override
-	public void renderTileEntityAt(BeamRenderTEBase beam, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(BeamRenderTEBase beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false) || beam.getBeam() == null){
 			return;
 		}
@@ -71,7 +71,7 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 					GlStateManager.rotate(beam.getWorld().getTotalWorldTime() * 2, 0, 1, 0);
 				}
 				Tessellator tes = Tessellator.getInstance();
-				VertexBuffer buf = tes.getBuffer();
+				BufferBuilder buf = tes.getBuffer();
 
 				final double small = -(trip[dir].getRight().doubleValue() / 16D);
 				final double big = (trip[dir].getRight().doubleValue() / 16D);

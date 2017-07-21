@@ -35,7 +35,7 @@ public class WorkspaceDimTeleport extends CommandBase{
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
 		if(sender instanceof EntityPlayerMP){
 			int dimId = ModDimensions.getDimForPlayer((EntityPlayerMP) sender);
-			server.getPlayerList().transferPlayerToDimension((EntityPlayerMP) sender, dimId, new NoPortalTeleporter(server.worldServerForDimension(dimId)));
+			server.getPlayerList().transferPlayerToDimension((EntityPlayerMP) sender, dimId, new NoPortalTeleporter(server.getWorld(dimId)));
 		}
 	}
 

@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.bakedModel.ConduitBakedModel;
 import com.Da_Technomancer.crossroads.client.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -26,7 +27,6 @@ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -43,7 +43,6 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -63,11 +62,11 @@ public class RedstoneFluidTube extends BlockContainer implements IConduitModel{
 		String name = "redstone_fluid_tube";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setCreativeTab(ModItems.tabCrossroads);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -136,7 +135,7 @@ public class RedstoneFluidTube extends BlockContainer implements IConduitModel{
 		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
-		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
+		Vec3d end = start.addVector(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
 		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
 		return (out == null ? BB : out).offset(pos);
 	}
@@ -201,11 +200,6 @@ public class RedstoneFluidTube extends BlockContainer implements IConduitModel{
 	
 	@Override
 	public boolean isFullCube(IBlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
 	}
 

@@ -2,6 +2,9 @@ package com.Da_Technomancer.crossroads.items;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -14,7 +17,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -24,8 +26,9 @@ public class ChaosRod extends Item{
 		String name = "chaos_rod";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.tabCrossroads);
+		ModItems.toRegister.add(this);
+		ModItems.itemAddQue(this);
 	}
 
 	@Override
@@ -35,7 +38,7 @@ public class ChaosRod extends Item{
 			return ActionResult.newResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 		}
 		Vec3d change = playerIn.getLookVec().scale(8);
-		playerIn.setPositionAndUpdate(playerIn.posX + change.xCoord, playerIn.posY + change.yCoord, playerIn.posZ + change.zCoord);
+		playerIn.setPositionAndUpdate(playerIn.posX + change.x, playerIn.posY + change.y, playerIn.posZ + change.z);
 		//Long story short, Potus4mine is the username of the person who found an exploit, which I left in only for them. 
 		if(playerIn.getGameProfile().getName().equals("Potus4mine") ? playerIn.getActivePotionEffect(MobEffects.WEAKNESS) != null : playerIn.getActivePotionEffect(MobEffects.GLOWING) != null){
 			playerIn.attackEntityFrom(DamageSource.DRAGON_BREATH, 5F);
@@ -46,7 +49,7 @@ public class ChaosRod extends Item{
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("It seems familiar...");
 	}
 }

@@ -14,8 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public final class OreSetUp{
 
@@ -115,29 +113,29 @@ public final class OreSetUp{
 		};
 		nuggetCopshowium = new BasicItem("nugget_copshowium", "nuggetCopshowium");
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetTin, 9), "ingotTin"));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotTin, 9), "blockTin"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotTin, 1), "***", "***", "***", '*', "nuggetTin"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTin, 1), "***", "***", "***", '*', "ingotTin"));
+//		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetTin, 9), "ingotTin"));
+//		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotTin, 9), "blockTin"));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotTin, 1), "***", "***", "***", '*', "nuggetTin"));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTin, 1), "***", "***", "***", '*', "ingotTin"));
 		GameRegistry.addSmelting(new ItemStack(oreTin, 1), new ItemStack(ingotTin, 1), .7F);
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetCopper, 9), "ingotCopper"));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotCopper, 9), "blockCopper"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotCopper, 1), "***", "***", "***", '*', "nuggetCopper"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCopper, 1), "***", "***", "***", '*', "ingotCopper"));
-
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetBronze, 9), "ingotBronze"));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotBronze, 9), "blockBronze"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotBronze, 1), "***", "***", "***", '*', "nuggetBronze"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBronze, 1), "***", "***", "***", '*', "ingotBronze"));
-
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(gemRuby, 4), "blockRuby"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockRuby, 1), "**", "**", '*', "gemRuby"));
+//		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetCopper, 9), "ingotCopper"));
+//		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotCopper, 9), "blockCopper"));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotCopper, 1), "***", "***", "***", '*', "nuggetCopper"));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCopper, 1), "***", "***", "***", '*', "ingotCopper"));
+//
+//		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetBronze, 9), "ingotBronze"));
+//		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotBronze, 9), "blockBronze"));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotBronze, 1), "***", "***", "***", '*', "nuggetBronze"));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBronze, 1), "***", "***", "***", '*', "ingotBronze"));
+//
+//		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(gemRuby, 4), "blockRuby"));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockRuby, 1), "**", "**", '*', "gemRuby"));
 		GameRegistry.addSmelting(new ItemStack(oreRuby, 1), new ItemStack(gemRuby, 1), 1F);
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetCopshowium, 9), "ingotCopshowium"));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotCopshowium, 9), "blockCopshowium"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotCopshowium, 1), "***", "***", "***", '*', "nuggetCopshowium"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCopshowium, 1), "***", "***", "***", '*', "ingotCopshowium"));
+//		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nuggetCopshowium, 9), "ingotCopshowium"));
+//		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingotCopshowium, 9), "blockCopshowium"));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ingotCopshowium, 1), "***", "***", "***", '*', "nuggetCopshowium"));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCopshowium, 1), "***", "***", "***", '*', "ingotCopshowium"));
 	}
 }

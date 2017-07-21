@@ -98,14 +98,14 @@ public class CoalHeaterContainer extends Container{
 		super.detectAndSendChanges();
 
 		for(int i = 0; i < this.listeners.size(); ++i){
-			IContainerListener icontainerlistener = (IContainerListener) this.listeners.get(i);
+			IContainerListener icontainerlistener = (IContainerListener) listeners.get(i);
 
 			if(this.progress != this.te.getField(0)){
-				icontainerlistener.sendProgressBarUpdate(this, 0, this.te.getField(0));
+				icontainerlistener.sendWindowProperty(this, 0, te.getField(0));
 			}
 		}
 
-		this.progress = this.te.getField(0);
+		progress = te.getField(0);
 	}
 
 }

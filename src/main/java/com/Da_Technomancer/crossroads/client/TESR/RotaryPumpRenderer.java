@@ -10,9 +10,9 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -28,7 +28,7 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 	private static final ModelPump model = new ModelPump();
 
 	@Override
-	public void renderTileEntityAt(RotaryPumpTileEntity pump, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(RotaryPumpTileEntity pump, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 
 		if(pump == null || !pump.getWorld().isBlockLoaded(pump.getPos(), false)){
 			return;
@@ -65,7 +65,7 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 			GlStateManager.translate(x, y, z);
 
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			VertexBuffer vb = Tessellator.getInstance().getBuffer();
+			BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 			float xSt = 3F / 16F;
 			float ySt = 0;

@@ -23,7 +23,7 @@ public class MechArmDepositEffect implements IMechArmEffect{
 		IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 
 		EntityItem itemEnt = ((EntityItem) ent.getPassengers().get(0));
-		ItemStack heldStack = itemEnt.getEntityItem();
+		ItemStack heldStack = itemEnt.getItem();
 		int startSize = heldStack.getCount();
 
 		for(int i = 0; i < handler.getSlots(); i++){
@@ -32,7 +32,7 @@ public class MechArmDepositEffect implements IMechArmEffect{
 			}
 			heldStack = handler.insertItem(i, heldStack, false);
 		}
-		itemEnt.setEntityItemStack(heldStack);
+		itemEnt.setItem(heldStack);
 
 		return heldStack.getCount() < startSize;
 	}

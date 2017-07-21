@@ -5,9 +5,9 @@ import java.awt.Color;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
@@ -44,7 +44,7 @@ public class ModelGearIcositetragon{
 		float widthProng = 1F / 48F;
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(res);
-		VertexBuffer vb = Tessellator.getInstance().getBuffer();
+		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
 

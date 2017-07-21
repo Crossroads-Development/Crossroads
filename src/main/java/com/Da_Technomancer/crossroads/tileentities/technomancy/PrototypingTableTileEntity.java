@@ -186,7 +186,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 						int newChunk = ModDimensions.nextFreePrototypeChunk(info.ports, info.portPos);
 						if(newChunk != -1){
 							ChunkPos chunkPos = infoList.get(newChunk).chunk;
-							if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16, newChunk, false)){
+							if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.x, chunkPos.z), dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16, newChunk, false)){
 								infoList.set(newChunk, null);
 								data.markDirty();
 								if(player != null){
@@ -233,7 +233,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 					int newChunk = ModDimensions.nextFreePrototypeChunk(portInfo.getLeft(), portInfo.getRight());
 					if(newChunk != -1){
 						ChunkPos chunkPos = infoList.get(newChunk).chunk;
-						if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.chunkXPos, chunkPos.chunkZPos), world, pos.add(1, 1, 1), 16, 16, 16, newChunk, ModConfig.allowPrototype.getInt() == 1)){
+						if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.x, chunkPos.z), world, pos.add(1, 1, 1), 16, 16, 16, newChunk, ModConfig.allowPrototype.getInt() == 1)){
 							infoList.set(newChunk, null);
 							data.markDirty();
 							if(player != null){

@@ -16,7 +16,7 @@ public class SteamTurbineRenderer extends TileEntitySpecialRenderer<SteamTurbine
 	private static final ModelPump model = new ModelPump();
 
 	@Override
-	public void renderTileEntityAt(SteamTurbineTileEntity pump, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(SteamTurbineTileEntity pump, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		if(pump == null || pump.getWorld().getBlockState(pump.getPos()).getBlock() != ModBlocks.steamTurbine){
 			return;
 		}

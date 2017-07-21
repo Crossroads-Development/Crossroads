@@ -1,14 +1,13 @@
 package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockSteam extends BlockFluidClassic{
 
@@ -19,9 +18,7 @@ public class BlockSteam extends BlockFluidClassic{
 		STEAM.setBlock(this);
 		setUnlocalizedName("blockSteam");
 		setRegistryName("blockSteam");
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName("blockSteam"));
-
+		ModBlocks.toRegister.add(this);
 	}
 	
 	/**

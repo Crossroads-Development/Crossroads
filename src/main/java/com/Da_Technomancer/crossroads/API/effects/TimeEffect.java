@@ -73,8 +73,8 @@ public class TimeEffect implements IEffect{
 				}
 			}else if(severity > 30 && ModConfig.resetChunk.getBoolean()){
 				try{
-					Chunk swapWith = ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator.provideChunk(pos.getX() >> 4, pos.getZ() >> 4);
-					swapWith.populateChunk(worldIn.getChunkProvider(), ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator);
+					Chunk swapWith = ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator.generateChunk(pos.getX() >> 4, pos.getZ() >> 4);
+					swapWith.populate(worldIn.getChunkProvider(), ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator);
 					Chunk current = worldIn.getChunkFromBlockCoords(pos);
 					setChunk(current, swapWith);
 				}catch(Exception e){

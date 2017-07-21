@@ -22,7 +22,7 @@ public class AdditionAxisRenderer extends TileEntitySpecialRenderer<AdditionAxis
 	private final ModelGearOctagon modelGear = new ModelGearOctagon();
 
 	@Override
-	public void renderTileEntityAt(AdditionAxisTileEntity axis, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(AdditionAxisTileEntity axis, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 
 		if(!axis.getWorld().isBlockLoaded(axis.getPos(), false) || axis.getWorld().getBlockState(axis.getPos()).getBlock() != ModBlocks.additionAxis){
 			return;

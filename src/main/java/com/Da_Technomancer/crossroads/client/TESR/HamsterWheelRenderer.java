@@ -22,7 +22,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 	private final ModelAxle modelAxle = new ModelAxle();
 
 	@Override
-	public void renderTileEntityAt(HamsterWheelTileEntity wheel, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(HamsterWheelTileEntity wheel, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		World world = wheel.getWorld();
 		BlockPos pos = wheel.getPos();
 		if(!world.isBlockLoaded(pos, false) || world.getBlockState(pos).getBlock() != ModBlocks.hamsterWheel){

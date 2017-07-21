@@ -19,7 +19,7 @@ public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGear
 	private final ResourceLocation res = new ResourceLocation(Main.MODID, "textures/model/gear_oct.png");
 
 	@Override
-	public void renderTileEntityAt(SidedGearHolderTileEntity gearHolder, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(SidedGearHolderTileEntity gearHolder, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 
 		if(!gearHolder.getWorld().isBlockLoaded(gearHolder.getPos(), false)){
 			return;

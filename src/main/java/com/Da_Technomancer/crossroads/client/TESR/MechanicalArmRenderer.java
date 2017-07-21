@@ -21,7 +21,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 	private final ModelGearOctagon modelGear = new ModelGearOctagon();
 
 	@Override
-	public void renderTileEntityAt(MechanicalArmTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
+	public void render(MechanicalArmTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || te.getWorld().getBlockState(te.getPos()).getBlock() != ModBlocks.mechanicalArm){
 			return;
 		}

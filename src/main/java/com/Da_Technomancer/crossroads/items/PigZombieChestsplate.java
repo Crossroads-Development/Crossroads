@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class PigZombieChestsplate extends ItemArmor{
 
@@ -19,8 +18,9 @@ public class PigZombieChestsplate extends ItemArmor{
 		String name = "pig_zombie_chestplate";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
 		setCreativeTab(ModItems.tabCrossroads);
+		ModItems.toRegister.add(this);
+		ModItems.itemAddQue(this);
 	}
 
 	@Override

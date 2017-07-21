@@ -2,14 +2,16 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
 
 import net.minecraft.block.Block;
@@ -20,11 +22,9 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -33,10 +33,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class ToggleGear extends BlockContainer{
 
@@ -51,13 +49,11 @@ public class ToggleGear extends BlockContainer{
 		String name = "toggle_gear_" + type.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setCreativeTab(ModItems.tabGear);
-		this.setHardness(3);
-		ModItems.itemAddQue(Item.getItemFromBlock(this), 0, LOCAT);
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(this, 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.BASIC_GEARS.get(type)));
+		setCreativeTab(ModItems.tabGear);
+		setHardness(3);
 		setSoundType(SoundType.METAL);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this, 0, LOCAT);
 	}
 	
 	@Override
@@ -67,7 +63,7 @@ public class ToggleGear extends BlockContainer{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Mass: " + MiscOp.betterRound(type.getDensity() / 8D, 2));
 		tooltip.add("I: " + MiscOp.betterRound(type.getDensity() / 8D, 2) * .125D);
 	}
@@ -153,11 +149,6 @@ public class ToggleGear extends BlockContainer{
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
 	}
 }

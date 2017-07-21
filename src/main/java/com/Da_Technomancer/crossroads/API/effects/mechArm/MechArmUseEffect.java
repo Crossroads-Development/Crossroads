@@ -26,7 +26,7 @@ public class MechArmUseEffect implements IMechArmEffect{
 	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, EnumFacing side, EntityArmRidable ent, MechanicalArmTileEntity te){
 		if(!ent.getPassengers().isEmpty() && ent.getPassengers().get(0) instanceof EntityItem){
 			EntityItem itemEnt = (EntityItem) ent.getPassengers().get(0);
-			ItemStack heldStack = itemEnt.getEntityItem();
+			ItemStack heldStack = itemEnt.getItem();
 			int oldSize = heldStack.getCount();
 			boolean itemBlock = heldStack.getItem() instanceof ItemBlock;
 			FakePlayer user = FakePlayerFactory.get((WorldServer) world, new GameProfile(null, Main.MODID + "-arm_use_effect-" + world.provider.getDimension()));
@@ -43,16 +43,16 @@ public class MechArmUseEffect implements IMechArmEffect{
 				RayTraceResult trace = world.rayTraceBlocks(posVec, posVec.add(new Vec3d(side.getDirectionVec())), false, false, true);
 				if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK){
 					Vec3d hitVec = trace.hitVec.subtract(new Vec3d(trace.getBlockPos()));
-					result = heldStack.onItemUse(user, world, trace.getBlockPos(), EnumHand.MAIN_HAND, trace.sideHit, (float) hitVec.xCoord, (float) hitVec.yCoord, (float) hitVec.zCoord);
+					result = heldStack.onItemUse(user, world, trace.getBlockPos(), EnumHand.MAIN_HAND, trace.sideHit, (float) hitVec.x, (float) hitVec.y, (float) hitVec.z);
 				}
 			}
 			if(result == EnumActionResult.PASS){
 				ActionResult<ItemStack> actionResult = heldStack.useItemRightClick(world, user, EnumHand.MAIN_HAND);
 				result = actionResult.getType();
-				itemEnt.setEntityItemStack(actionResult.getResult());
+				itemEnt.setItem(actionResult.getResult());
 			}
 
-			return result == EnumActionResult.SUCCESS && (!itemBlock || itemEnt.getEntityItem().getCount() != oldSize);
+			return result == EnumActionResult.SUCCESS && (!itemBlock || itemEnt.getItem().getCount() != oldSize);
 		}
 		return false;
 	}

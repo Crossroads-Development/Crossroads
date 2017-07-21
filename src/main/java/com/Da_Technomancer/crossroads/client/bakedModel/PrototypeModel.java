@@ -3,10 +3,10 @@ package com.Da_Technomancer.crossroads.client.bakedModel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Function;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;

@@ -2,6 +2,10 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.MiscOp;
@@ -13,6 +17,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEnt
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,31 +26,29 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class LargeGear extends Item{
 
 	private final GearTypes type;
-	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
+	public static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
 	
 
 	public LargeGear(GearTypes typeIn){
 		String name = "large_gear_" + typeIn.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
-		this.setCreativeTab(ModItems.tabGear);
 		type = typeIn;
-		ModItems.itemAddQue(this, 0, LOCAT);
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), "###", "#$#", "###", '#', GearFactory.BASIC_GEARS.get(typeIn), '$', "block" + typeIn.toString()));
+		setCreativeTab(ModItems.tabGear);
+		ModItems.toRegister.add(this);
+		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
+		//TODO GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), "###", "#$#", "###", '#', GearFactory.BASIC_GEARS.get(typeIn), '$', "block" + typeIn.toString()));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Mass: " + MiscOp.betterRound(4.5D * type.getDensity(), 2));
 		tooltip.add("I: " + MiscOp.betterRound(4.5D * type.getDensity(), 2) * 1.125D);
 	}

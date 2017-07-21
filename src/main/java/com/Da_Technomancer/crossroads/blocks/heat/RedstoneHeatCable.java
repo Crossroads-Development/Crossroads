@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.bakedModel.ConduitBakedModel;
 import com.Da_Technomancer.crossroads.client.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -28,10 +29,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -47,7 +48,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -55,14 +55,14 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	private final HeatConductors conductor;
 	private final HeatInsulators insulator;
-	private static final double size = .2D;
-	private static final AxisAlignedBB BB = new AxisAlignedBB(size, size, size, 1 - size, 1 - size, 1 - size);
-	private static final AxisAlignedBB DOWN = new AxisAlignedBB(size, 0, size, 1 - size, size, 1 - size);
-	private static final AxisAlignedBB UP = new AxisAlignedBB(size, 1, size, 1 - size, 1 - size, 1 - size);
-	private static final AxisAlignedBB NORTH = new AxisAlignedBB(size, size, 0, 1 - size, 1 - size, size);
-	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(size, size, 1, 1 - size, 1 - size, 1 - size);
-	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, size, size, size, 1 - size, 1 - size);
-	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, size, size, 1 - size, 1 - size, 1 - size);
+	private static final double SIZE = .2D;
+	private static final AxisAlignedBB BB = new AxisAlignedBB(SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
+	private static final AxisAlignedBB DOWN = new AxisAlignedBB(SIZE, 0, SIZE, 1 - SIZE, SIZE, 1 - SIZE);
+	private static final AxisAlignedBB UP = new AxisAlignedBB(SIZE, 1, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
+	private static final AxisAlignedBB NORTH = new AxisAlignedBB(SIZE, SIZE, 0, 1 - SIZE, 1 - SIZE, SIZE);
+	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(SIZE, SIZE, 1, 1 - SIZE, 1 - SIZE, 1 - SIZE);
+	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE);
+	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
 
 	public RedstoneHeatCable(HeatConductors conductor, HeatInsulators insulator){
 		super(Material.IRON);
@@ -71,10 +71,10 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 		String name = "redstone_heat_cable_" + conductor.toString().toLowerCase() + '_' + insulator.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		this.setHardness(1);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
+		setHardness(1);
 		setCreativeTab(ModItems.tabHeatCable);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -215,7 +215,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Transfer Rate: " + conductor.getRate());
 		tooltip.add("Loss Rate: " + insulator.getRate());
 		tooltip.add("Melting Point: " + insulator.getLimit() + "*C");
@@ -223,16 +223,11 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public double getSize(){
-		return size;
+		return SIZE;
 	}
 
 	@Override
 	public boolean isFullCube(IBlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side){
 		return false;
 	}
 
@@ -262,7 +257,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
-		Vec3d end = start.addVector(play.getLook(0F).xCoord * reDist, play.getLook(0F).yCoord * reDist, play.getLook(0F).zCoord * reDist);
+		Vec3d end = start.addVector(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
 		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
 		return (out == null ? BB : out).offset(pos);
 	}

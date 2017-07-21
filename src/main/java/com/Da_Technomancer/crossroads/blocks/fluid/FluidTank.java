@@ -2,7 +2,10 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 
@@ -12,10 +15,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -27,7 +30,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -39,10 +41,10 @@ public class FluidTank extends BlockContainer{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setSoundType(SoundType.METAL);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
 		setCreativeTab(ModItems.tabCrossroads);
 		setHardness(3);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -52,7 +54,7 @@ public class FluidTank extends BlockContainer{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("FluidName")){
 			tooltip.add("Contains: " + FluidStack.loadFluidStackFromNBT(stack.getTagCompound()).amount + "mB of " + FluidStack.loadFluidStackFromNBT(stack.getTagCompound()).getLocalizedName());
 		}
@@ -85,11 +87,6 @@ public class FluidTank extends BlockContainer{
 		}
 
 		return FluidUtil.getFluidHandler(playerIn.getHeldItem(hand)) != null;
-	}
-
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
 	}
 
 	@Override

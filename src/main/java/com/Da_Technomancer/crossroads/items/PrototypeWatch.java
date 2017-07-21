@@ -4,8 +4,13 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
@@ -24,6 +29,8 @@ import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,7 +45,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -49,17 +55,20 @@ public class PrototypeWatch extends MagicUsingItem{
 	 */
 	private static final HashMap<Integer, WatchPrototypeOwner> watchMap = new HashMap<Integer, WatchPrototypeOwner>();
 
-	public PrototypeWatch(){//The overall handling needs re-writes to reduce unintended behavior.
+	public PrototypeWatch(){
 		String name = "prototype_watch";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
 		setCreativeTab(ModItems.tabCrossroads);
+		ModItems.toRegister.add(this);
+		for(int i = 0; i < 8; i++){
+			ModItems.toClientRegister.put(Pair.of(this, i), new ModelResourceLocation(Main.MODID + ":watch_" + i));
+		}
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		if(!stack.hasTagCompound()){
 			stack.setTagCompound(new NBTTagCompound());
 		}
@@ -67,7 +76,7 @@ public class PrototypeWatch extends MagicUsingItem{
 		if(prototypeNBT.hasKey("name")){
 			tooltip.add("Name: " + prototypeNBT.getString("name"));
 		}
-		super.addInformation(stack, playerIn, tooltip, advanced);
+		super.addInformation(stack, world, tooltip, advanced);
 	}
 
 	/**

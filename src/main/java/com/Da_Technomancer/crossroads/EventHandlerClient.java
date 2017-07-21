@@ -15,10 +15,10 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -57,9 +57,9 @@ public final class EventHandlerClient{
 				float brightY = OpenGlHelper.lastBrightnessY;
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 				GlStateManager.disableCull();
-				GlStateManager.translate(chunk.getPos().getXStart() - game.player.getPositionEyes(e.getPartialTicks()).xCoord, 0, chunk.getPos().getZStart() - game.player.getPositionEyes(e.getPartialTicks()).zCoord);
+				GlStateManager.translate(chunk.getPos().getXStart() - game.player.getPositionEyes(e.getPartialTicks()).x, 0, chunk.getPos().getZStart() - game.player.getPositionEyes(e.getPartialTicks()).z);
 				Tessellator tes = Tessellator.getInstance();
-				VertexBuffer buf = tes.getBuffer();
+				BufferBuilder buf = tes.getBuffer();
 				for(int i = 1; i >= 0; i--){
 					if(i == 0 ? ModConfig.fieldLinesEnergy.getBoolean() : ModConfig.fieldLinesPotential.getBoolean()){
 						GlStateManager.translate(0, .01F, 0);
@@ -139,7 +139,7 @@ public final class EventHandlerClient{
 				final int length = beam.length;
 
 				Tessellator tes = Tessellator.getInstance();
-				VertexBuffer buf = tes.getBuffer();
+				BufferBuilder buf = tes.getBuffer();
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				//+Z
 				buf.pos(small, length, big).tex(1, 0).endVertex();
@@ -225,7 +225,7 @@ public final class EventHandlerClient{
 				GlStateManager.enableBlend();
 				Minecraft.getMinecraft().getTextureManager().bindTexture(MAGIC_BAR_BACKGROUND);
 				Tessellator tes = Tessellator.getInstance();
-				VertexBuffer buf = tes.getBuffer();
+				BufferBuilder buf = tes.getBuffer();
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				buf.pos(0, 120, -3).tex(0, 1).endVertex();
 				buf.pos(117, 120, -3).tex(1, 1).endVertex();
@@ -267,7 +267,7 @@ public final class EventHandlerClient{
 				GlStateManager.enableBlend();
 				Minecraft.getMinecraft().getTextureManager().bindTexture(MAGIC_BAR_BACKGROUND);
 				Tessellator tes = Tessellator.getInstance();
-				VertexBuffer buf = tes.getBuffer();
+				BufferBuilder buf = tes.getBuffer();
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				buf.pos(0, 60, -3).tex(0, 1).endVertex();
 				buf.pos(117, 60, -3).tex(1, 1).endVertex();

@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.items;
 
 import net.minecraft.item.ItemFood;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MashedPotato extends ItemFood{
 	
@@ -10,7 +9,8 @@ public class MashedPotato extends ItemFood{
 		String name = "mashed_potato";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
 		setCreativeTab(ModItems.tabCrossroads);
+		ModItems.toRegister.add(this);
+		ModItems.itemAddQue(this);
 	}
 }

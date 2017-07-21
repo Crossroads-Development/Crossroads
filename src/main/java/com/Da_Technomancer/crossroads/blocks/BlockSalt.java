@@ -3,7 +3,10 @@ package com.Da_Technomancer.crossroads.blocks;
 import java.awt.Color;
 import java.util.Random;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockFalling;
@@ -17,14 +20,11 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class BlockSalt extends BlockFalling{
 
@@ -35,12 +35,12 @@ public class BlockSalt extends BlockFalling{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.tabCrossroads);
-		GameRegistry.register(this);
 		setHardness(.5F);
 		setSoundType(SoundType.SAND);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		OreDictionary.registerOre("blockSalt", this);
 		setTickRandomly(true);
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
+		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"blockSalt"}));
 	}
 
 	@Override

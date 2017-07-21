@@ -1,8 +1,10 @@
 package com.Da_Technomancer.crossroads.items;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
-import org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
@@ -79,62 +81,62 @@ public final class ModItems{
 	public static PrototypePistol pistol;
 	public static PrototypeWatch watch;
 
-	private static ArrayList<Triple<Item, Integer, ModelResourceLocation>> modelQue = new ArrayList<Triple<Item, Integer, ModelResourceLocation>>();
+	/**
+	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
+	 */
+	public static final HashMap<Pair<Item, Integer>, ModelResourceLocation> toClientRegister = new HashMap<Pair<Item, Integer>, ModelResourceLocation>();
+	public static final ArrayList<Item> toRegister = new ArrayList<Item>();
 
-	public static void itemAddQue(Item item){
-		modelQue.add(Triple.of(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory")));
-	}
-	
-	public static void itemAddQue(Item item, int meta, ModelResourceLocation location){
-		modelQue.add(Triple.of(item, meta, location));
+	/**
+	 * Convenience method to add an Item to the toClientRegister map. 
+	 * @param item
+	 * @return
+	 */
+	public static <T extends Item> T itemAddQue(T item){
+		toClientRegister.put(Pair.of(item, 0), new ModelResourceLocation(item.getRegistryName(), "inventory"));
+		return item;
 	}
 
 	public static final void init(){
-		itemAddQue(debugGearWriter = new DebugGearWriter());
-		itemAddQue(handCrank = new HandCrank());
-		itemAddQue(debugHeatWriter = new DebugHeatWriter());
+		debugGearWriter = new DebugGearWriter();
+		handCrank = new HandCrank();
+		debugHeatWriter = new DebugHeatWriter();
 		dustCopper = new BasicItem("dust_copper", "dustCopper");
 		dustSalt = new BasicItem("dust_salt", "dustSalt");
-		itemAddQue(obsidianKit = new ObsidianCuttingKit());
-		itemAddQue(mashedPotato = new MashedPotato());
-		itemAddQue(thermometer = new Thermometer());
-		itemAddQue(fluidGauge = new FluidGauge());
-		itemAddQue(speedometer = new Speedometer());
-		itemAddQue(omnimeter = new OmniMeter());
-		itemAddQue(vacuum = new Vacuum());
-		itemAddQue(magentaBread = new MagentaBread());
-		itemAddQue(itemCandleLilypad = new ItemCandleLily());
-		itemAddQue(edibleBlob = new EdibleBlob());
-		itemAddQue(diamondWire = new BasicItem("diamond_wire", "wireDiamond"));
-		itemAddQue(rainIdol = new RainIdol());
+		obsidianKit = new ObsidianCuttingKit();
+		mashedPotato = new MashedPotato();
+		thermometer = new Thermometer();
+		fluidGauge = new FluidGauge();
+		speedometer = new Speedometer();
+		omnimeter = new OmniMeter();
+		vacuum = new Vacuum();
+		magentaBread = new MagentaBread();
+		itemCandleLilypad = new ItemCandleLily();
+		edibleBlob = new EdibleBlob();
+		diamondWire = new BasicItem("diamond_wire", "wireDiamond");
+		rainIdol = new RainIdol();
 		pureQuartz = new BasicItem("pure_quartz", "gemQuartz");
 		luminescentQuartz = new BasicItem("luminescent_quartz");
 		lensArray = new BasicItem("lens_array");
 		invisItem = new BasicItem("invis_item", null, false);
-		itemAddQue(squidHelmet = new SquidHelmet());
-		itemAddQue(pigZombieChestplate = new PigZombieChestsplate());
-		itemAddQue(cowLeggings = new CowLeggings());
-		itemAddQue(chickenBoots = new ChickenBoots());
-		itemAddQue(chaosRod = new ChaosRod());
+		squidHelmet = new SquidHelmet();
+		pigZombieChestplate = new PigZombieChestsplate();
+		cowLeggings = new CowLeggings();
+		chickenBoots = new ChickenBoots();
+		chaosRod = new ChaosRod();
 		voidCrystal = new BasicItem("void_crystal");
-		itemAddQue(moduleGoggles = new ModuleGoggles());
-		itemAddQue(staffTechnomancy = new StaffTechnomancy());
-		itemAddQue(beamCage = new BeamCage());
-		itemAddQue(pistol = new PrototypePistol());
-		itemAddQue(watch = new PrototypeWatch(), 0, new ModelResourceLocation(Main.MODID + ":watch_0"));
-		itemAddQue(watch, 1, new ModelResourceLocation(Main.MODID + ":watch_1"));
-		itemAddQue(watch, 2, new ModelResourceLocation(Main.MODID + ":watch_2"));
-		itemAddQue(watch, 3, new ModelResourceLocation(Main.MODID + ":watch_3"));
-		itemAddQue(watch, 4, new ModelResourceLocation(Main.MODID + ":watch_4"));
-		itemAddQue(watch, 5, new ModelResourceLocation(Main.MODID + ":watch_5"));
-		itemAddQue(watch, 6, new ModelResourceLocation(Main.MODID + ":watch_6"));
-		itemAddQue(watch, 7, new ModelResourceLocation(Main.MODID + ":watch_7"));
+		moduleGoggles = new ModuleGoggles();
+		staffTechnomancy = new StaffTechnomancy();
+		beamCage = new BeamCage();
+		pistol = new PrototypePistol();
+		watch = new PrototypeWatch();
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void initModels(){
-		for(Triple<Item, Integer, ModelResourceLocation> modeling : modelQue){
-			ModelLoader.setCustomModelResourceLocation(modeling.getLeft(), modeling.getMiddle(), modeling.getRight());
+		for(Entry<Pair<Item, Integer>, ModelResourceLocation> modeling : toClientRegister.entrySet()){
+			ModelLoader.setCustomModelResourceLocation(modeling.getKey().getLeft(), modeling.getKey().getRight(), modeling.getValue());
 		}
+		toClientRegister.clear();
 	}
 }

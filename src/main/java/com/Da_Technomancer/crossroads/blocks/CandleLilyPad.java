@@ -9,7 +9,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CandleLilyPad extends BlockLilyPad{
 
@@ -17,8 +16,8 @@ public class CandleLilyPad extends BlockLilyPad{
 		String name = "candle_lilypad";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
 		setSoundType(SoundType.PLANT);
+		ModBlocks.toRegister.add(this);
 	}
 
 	@Override

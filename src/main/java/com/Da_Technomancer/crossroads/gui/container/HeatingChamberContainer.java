@@ -102,7 +102,7 @@ public class HeatingChamberContainer extends Container{
 			IContainerListener icontainerlistener = (IContainerListener) listeners.get(i);
 
 			if(this.progress != te.getField(0)){
-				icontainerlistener.sendProgressBarUpdate(this, 0, te.getField(0));
+				icontainerlistener.sendWindowProperty(this, 0, te.getField(0));
 			}
 		}
 

@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -69,7 +70,7 @@ public class CraftingStack implements ICraftingStack{
 			return ImmutableList.of(new ItemStack(item, count, meta));
 		}
 		NonNullList<ItemStack> list = NonNullList.create();
-		item.getSubItems(item, null, list);
+		item.getSubItems(CreativeTabs.SEARCH, list);
 		return list;
 	}
 	

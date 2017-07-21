@@ -9,8 +9,9 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class PrototypeItemSetRecipe implements IRecipe{
+public class PrototypeItemSetRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe{
 
 	private final Item toSet;
 	private final String nbtPath;
@@ -99,11 +100,6 @@ public class PrototypeItemSetRecipe implements IRecipe{
 	}
 
 	@Override
-	public int getRecipeSize(){
-		return 9;
-	}
-
-	@Override
 	public ItemStack getRecipeOutput(){
 		return new ItemStack(toSet);
 	}
@@ -111,5 +107,10 @@ public class PrototypeItemSetRecipe implements IRecipe{
 	@Override
 	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv){
 		return NonNullList.withSize(9, ItemStack.EMPTY);
+	}
+
+	@Override
+	public boolean canFit(int width, int height){
+		return width * height >= 2;
 	}
 }

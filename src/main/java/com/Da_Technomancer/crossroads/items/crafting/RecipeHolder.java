@@ -114,10 +114,10 @@ public final class RecipeHolder{
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 
 		for(EntityItem it : itemEnt){
-			if(it.getEntityItem() == null || it.getEntityItem().getCount() != 1){
+			if(it.getItem().isEmpty() || it.getItem().getCount() != 1){
 				return ItemStack.EMPTY;
 			}
-			items.add(it.getEntityItem());
+			items.add(it.getItem());
 		}
 
 		if(items.size() != 3){

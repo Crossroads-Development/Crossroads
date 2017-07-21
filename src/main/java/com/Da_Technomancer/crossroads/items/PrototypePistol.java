@@ -4,6 +4,8 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
 import com.Da_Technomancer.crossroads.API.Capabilities;
@@ -25,6 +27,7 @@ import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.entity.EntityBullet;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,7 +47,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -59,13 +61,14 @@ public class PrototypePistol extends MagicUsingItem{
 		String name = "prototype_pistol";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
 		setCreativeTab(ModItems.tabCrossroads);
+		ModItems.toRegister.add(this);
+		ModItems.itemAddQue(this);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		if(!stack.hasTagCompound()){
 			stack.setTagCompound(new NBTTagCompound());
 		}
@@ -74,14 +77,14 @@ public class PrototypePistol extends MagicUsingItem{
 		if(prototypeNBT.hasKey("name")){
 			tooltip.add("Name: " + prototypeNBT.getString("name"));
 		}
-		super.addInformation(stack, playerIn, tooltip, advanced);
+		super.addInformation(stack, world, tooltip, advanced);
 	}
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand){
 		if(!worldIn.isRemote && playerIn.isSneaking() && hand == EnumHand.MAIN_HAND && playerIn.getHeldItem(hand).hasTagCompound() && !playerIn.getHeldItem(hand).getTagCompound().getBoolean("loaded")){
 			for(int i = 0; i < playerIn.inventory.getSizeInventory(); i++){
-				if(playerIn.inventory.getStackInSlot(i).getItem() == Items.field_191525_da){
+				if(playerIn.inventory.getStackInSlot(i).getItem() == Items.IRON_NUGGET){
 					playerIn.getHeldItem(hand).getTagCompound().setBoolean("loaded", true);
 					playerIn.inventory.decrStackSize(i, 1);
 					worldIn.playSound(null, playerIn.getPosition(), SoundEvents.ITEM_ARMOR_EQUIP_IRON, SoundCategory.PLAYERS, 5, 1F);

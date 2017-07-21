@@ -22,7 +22,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -35,7 +34,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -56,10 +54,10 @@ public class SortingHopper extends BlockContainer{
 		setRegistryName(name);
 		setHardness(2);
 		setSoundType(SoundType.METAL);
-		this.setCreativeTab(ModItems.tabCrossroads);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(name));
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.DOWN).withProperty(ENABLED, Boolean.valueOf(true)));
+		setCreativeTab(ModItems.tabCrossroads);
+		setDefaultState(getDefaultState().withProperty(FACING, EnumFacing.DOWN).withProperty(ENABLED, Boolean.valueOf(true)));
+		ModBlocks.toRegister.add(this);
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -93,13 +91,8 @@ public class SortingHopper extends BlockContainer{
 	}
 
 	@Override
-	public boolean isFullyOpaque(IBlockState state){
-		return true;
-	}
-
-	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state){
-		this.updateState(worldIn, pos, state);
+		updateState(worldIn, pos, state);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -14,7 +15,6 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,7 +25,8 @@ public class EdibleBlob extends ItemFood{
 		String name = "edible_blob";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		GameRegistry.register(this);
+		ModItems.toRegister.add(this);
+		ModItems.itemAddQue(this);
 		//This is not in a creative tab due to creative giving a version that has no NBT
 	}
 
@@ -67,7 +68,7 @@ public class EdibleBlob extends ItemFood{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add(stack.hasTagCompound() ? "Food value: " + stack.getTagCompound().getInteger("food") : "ERROR");
 		tooltip.add(stack.hasTagCompound() ? "Saturation value: " + stack.getTagCompound().getInteger("sat") : "ERROR");
 	}

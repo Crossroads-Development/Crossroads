@@ -22,10 +22,9 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeModContainer;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,7 +34,6 @@ public class PrototypeWorldProvider extends WorldProvider{
 	public void init(){
 		biomeProvider = new BiomeProviderSingle(Biomes.VOID);
 		hasSkyLight = false;
-		hasNoSky = true;
 	}
 
 	@Override
@@ -51,8 +49,8 @@ public class PrototypeWorldProvider extends WorldProvider{
 	 * Call on the virtual server side only. 
 	 */
 	public static void tickChunk(ChunkPos chunk){
-		int chunkX = chunk.chunkXPos;
-		int chunkZ = chunk.chunkZPos;
+		int chunkX = chunk.x;
+		int chunkZ = chunk.z;
 		WorldServer protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		if(protWorld == null){
 			DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
@@ -81,7 +79,7 @@ public class PrototypeWorldProvider extends WorldProvider{
 					CrashReportCategory crashCateg = crash.makeCategory("Block entity being ticked");
 					ticking.addInfoToCrashReport(crashCateg);
 					if(ForgeModContainer.removeErroringTileEntities){
-						FMLLog.severe(crash.getCompleteReport());
+						Main.logger.error(crash.getCompleteReport());
 						ticking.invalidate();
 						protWorld.removeTileEntity(ticking.getPos());
 					}else
@@ -160,7 +158,7 @@ public class PrototypeWorldProvider extends WorldProvider{
 		}
 
 		@Override
-		public Chunk provideChunk(int x, int z){
+		public Chunk generateChunk(int x, int z){
 			return new Chunk(world, x, z);
 		}
 
@@ -180,13 +178,18 @@ public class PrototypeWorldProvider extends WorldProvider{
 		}
 
 		@Override
-		public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos position, boolean p_180513_4_){
+		public void recreateStructures(Chunk chunkIn, int x, int z){
+
+		}
+
+		@Override
+		public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position, boolean findUnexplored){
 			return null;
 		}
 
 		@Override
-		public void recreateStructures(Chunk chunkIn, int x, int z){
-
+		public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos){
+			return false;
 		}
 	}
 }
