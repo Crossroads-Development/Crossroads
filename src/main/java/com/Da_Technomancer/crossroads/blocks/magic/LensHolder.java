@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
 
 import net.minecraft.block.BlockContainer;
@@ -104,7 +104,7 @@ public class LensHolder extends BlockContainer{
 			ItemStack stack = playerIn.getHeldItem(hand);
 			if(state.getValue(Properties.TEXTURE_7) != 0){
 				int i = state.getValue(Properties.TEXTURE_7);
-				ItemStack gotten = new ItemStack(i == 1 ? OreSetUp.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1);
+				ItemStack gotten = new ItemStack(i == 1 ? OreSetup.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1);
 				if(!playerIn.inventory.addItemStackToInventory(gotten)){
 					EntityItem dropped = playerIn.dropItem(gotten, false);
 					dropped.setNoPickupDelay();
@@ -112,7 +112,7 @@ public class LensHolder extends BlockContainer{
 				}
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
 			}else if(!stack.isEmpty() && state.getValue(Properties.TEXTURE_7) == 0){
-				int i = stack.getItem() == ModItems.voidCrystal ? 6 : stack.getItem() == Items.DIAMOND ? 3 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == OreSetUp.gemRuby ? 1 : 0;
+				int i = stack.getItem() == ModItems.voidCrystal ? 6 : stack.getItem() == Items.DIAMOND ? 3 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == OreSetup.gemRuby ? 1 : 0;
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, i));
 				if(i != 0){
 					stack.shrink(1);
@@ -126,7 +126,7 @@ public class LensHolder extends BlockContainer{
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
 		if(state.getValue(Properties.TEXTURE_7) != 0){
 			int i = state.getValue(Properties.TEXTURE_7);
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(i == 1 ? OreSetUp.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1));
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(i == 1 ? OreSetup.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1));
 		}
 		
 		TileEntity te = world.getTileEntity(pos);

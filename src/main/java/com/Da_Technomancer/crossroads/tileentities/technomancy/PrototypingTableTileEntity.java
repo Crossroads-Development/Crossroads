@@ -19,7 +19,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -391,18 +391,18 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 			markDirty();
 			int ind = stack.getTagCompound().hasKey("index") ? stack.getTagCompound().getInteger("index") : -1;
 			if(ind == -1){
-				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + 3, 64));
+				copshowium = new ItemStack(OreSetup.ingotCopshowium, Math.min(copshowium.getCount() + 3, 64));
 				return;
 			}
 			if(!world.isRemote){
 				PrototypeWorldSavedData data = PrototypeWorldSavedData.get(false);
 				ArrayList<PrototypeInfo> infoList = data.prototypes;
 				if(infoList.size() <= ind || infoList.get(ind) == null){
-					copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + 3, 64));
+					copshowium = new ItemStack(OreSetup.ingotCopshowium, Math.min(copshowium.getCount() + 3, 64));
 					return;
 				}
 				int out = 3;
-				copshowium = new ItemStack(OreSetUp.ingotCopshowium, Math.min(copshowium.getCount() + out, 64));
+				copshowium = new ItemStack(OreSetup.ingotCopshowium, Math.min(copshowium.getCount() + out, 64));
 				infoList.set(ind, null);
 				data.markDirty();
 			}
@@ -416,7 +416,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && stack.getItem() == OreSetUp.ingotCopshowium;
+		return index == 0 && stack.getItem() == OreSetup.ingotCopshowium;
 	}
 
 	@Override
@@ -481,7 +481,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot == 0 && stack.getItem() == OreSetUp.ingotCopshowium && copshowium.getCount() < 64){
+			if(slot == 0 && stack.getItem() == OreSetup.ingotCopshowium && copshowium.getCount() < 64){
 				ItemStack out = new ItemStack(stack.getItem(), stack.getCount() + copshowium.getCount() - 64);
 				if(!simulate){
 					copshowium = new ItemStack(stack.getItem(), Math.min(copshowium.getCount() + stack.getCount(), 64));

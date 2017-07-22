@@ -67,7 +67,7 @@ public final class RecipeHolder{
 
 	/**
 	 * The recipes for the Detailed Crafter that require technomancy to be unlocked.
-	 * 
+	 * Recipes can have a null group (it is unused). 
 	 * ONLY USE ShapedOreRecipe and ShapelessOreRecipe. Using any other type require changing the JEI integration (DetailedCrafterRecipeWrapper) or it will crash.
 	 */
 	public static final ArrayList<IRecipe> technomancyRecipes = new ArrayList<IRecipe>();

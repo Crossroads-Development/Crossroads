@@ -34,7 +34,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int CRAFTER_GUI = 6;
 	public static final int PROTOTYPING_GUI = 7;
 	public static final int PROTOTYPE_PORT_GUI = 8;
-	public static final int REDSTONE_REGISTRY_GUI = 9;//TODO
+	public static final int REDSTONE_REGISTRY_GUI = 9;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){

@@ -73,7 +73,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		setHardness(1);
 		setCreativeTab(ModItems.tabHeatCable);
 		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);	
+		ModBlocks.blockAddQue(this, false);	
 	}
 
 	@SideOnly(Side.CLIENT)

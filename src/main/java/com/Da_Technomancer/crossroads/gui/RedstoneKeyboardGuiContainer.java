@@ -29,6 +29,13 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 0, 300, 25, null, (Character key) -> Character.isAlphabetic(key) || key == '.' || Character.isDigit(key));
 		textBar.setText(doubleToString(te.output));
 	}
+	
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks){
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
 
 	private static String doubleToString(double d){
 		String out = Double.toString(d);

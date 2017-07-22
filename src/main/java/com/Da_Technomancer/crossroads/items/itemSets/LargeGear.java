@@ -33,7 +33,7 @@ public class LargeGear extends Item{
 
 	private final GearTypes type;
 	public static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
-	
+
 
 	public LargeGear(GearTypes typeIn){
 		String name = "large_gear_" + typeIn.toString().toLowerCase();
@@ -43,7 +43,6 @@ public class LargeGear extends Item{
 		setCreativeTab(ModItems.tabGear);
 		ModItems.toRegister.add(this);
 		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
-		//TODO GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), "###", "#$#", "###", '#', GearFactory.BASIC_GEARS.get(typeIn), '$', "block" + typeIn.toString()));
 	}
 
 	@Override

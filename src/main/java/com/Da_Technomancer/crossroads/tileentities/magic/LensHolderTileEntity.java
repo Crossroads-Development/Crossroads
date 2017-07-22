@@ -17,7 +17,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -230,7 +230,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 				case 0:
 					return ItemStack.EMPTY;
 				case 1:
-					return new ItemStack(OreSetUp.gemRuby, 1);
+					return new ItemStack(OreSetup.gemRuby, 1);
 				case 2:
 					return new ItemStack(Items.EMERALD, 1);
 				case 3:
@@ -256,7 +256,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || !getLens().isEmpty() || stack.isEmpty() || (stack.getItem() != Items.DIAMOND && stack.getItem() != Items.EMERALD && stack.getItem() != ModItems.pureQuartz && stack.getItem() != OreSetUp.gemRuby)){
+			if(slot != 0 || !getLens().isEmpty() || stack.isEmpty() || (stack.getItem() != Items.DIAMOND && stack.getItem() != Items.EMERALD && stack.getItem() != ModItems.pureQuartz && stack.getItem() != OreSetup.gemRuby)){
 				return stack;
 			}
 

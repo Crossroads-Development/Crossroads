@@ -25,6 +25,13 @@ public class SlottedChestGuiContainer extends GuiContainer{
 		ySize = 222;
 	}
 
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks){
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
+	
 	/**
 	 * Draw the foreground layer for the GuiContainer (everything in front of
 	 * the items)

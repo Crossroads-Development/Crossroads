@@ -32,6 +32,13 @@ public class PrototypePortGuiContainer extends GuiContainer{
 		this.xSize = 160;
 		this.ySize = 160;
 	}
+	
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks){
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
 
 	@Override
 	public void initGui(){

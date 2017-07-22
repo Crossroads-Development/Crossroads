@@ -28,7 +28,6 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	
 	protected MagicUnitStorage[] queued = {new MagicUnitStorage(), new MagicUnitStorage()};
 	protected long activeCycle;
-	protected int nextStage = 0;//TODO
 
 	@Override
 	public void refresh(){
@@ -46,15 +45,6 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		if(world.isRemote){
 			return;
 		}
-
-		/*TODO
-		if(nextStage != BeamManager.beamStage){
-			return;
-		}else{
-			nextStage++;
-			nextStage %= BeamManager.BEAM_TIME;
-			markDirty();
-		}*/
 		
 		if(BeamManager.beamStage == 0){
 			if(beamer == null){
@@ -116,7 +106,6 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		queued[0].writeToNBT("queue0", nbt);
 		queued[1].writeToNBT("queue1", nbt);
 		nbt.setLong("cyc", activeCycle);
-		nbt.setInteger("nextStage", nextStage);
 
 		if(beamer != null){
 			for(int i = 0; i < 6; i++){
@@ -133,7 +122,6 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		queued[0] = MagicUnitStorage.readFromNBT("queue0", nbt);
 		queued[1] = MagicUnitStorage.readFromNBT("queue1", nbt);
 		activeCycle = nbt.getLong("cyc");
-		nextStage = nbt.getInteger("nextStage");
 
 		for(int i = 0; i < 6; i++){
 			memTrip[i] = nbt.getInteger(i + "_memTrip");

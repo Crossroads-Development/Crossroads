@@ -34,7 +34,7 @@ public class BasicGear extends Item{
 
 	private final GearTypes type;
 	public static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
-	
+
 	public BasicGear(GearTypes typeIn){
 		String name = "gear_" + typeIn.toString().toLowerCase();
 		setUnlocalizedName(name);
@@ -44,8 +44,6 @@ public class BasicGear extends Item{
 		ModItems.toRegister.add(this);
 		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
 		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"gear" + typeIn.toString()}));
-		//TODO GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 9), " ? ", "?#?", " ? ", '#', "block" + typeIn.toString(), '?', "ingot" + typeIn.toString()));
-		//TODO GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), " ? ", "?#?", " ? ", '#', "ingot" + typeIn.toString(), '?', "nugget" + typeIn.toString()));
 	}
 
 	@Override
@@ -60,7 +58,7 @@ public class BasicGear extends Item{
 		if(worldIn.isRemote){
 			return EnumActionResult.SUCCESS;
 		}
-		
+
 		TileEntity te = worldIn.getTileEntity(pos.offset(side));
 		if(te instanceof SidedGearHolderTileEntity && !te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()) && worldIn.isSideSolid(pos, side)){
 			if(!playerIn.capabilities.isCreativeMode){

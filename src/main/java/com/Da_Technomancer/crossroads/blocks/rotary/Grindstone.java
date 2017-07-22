@@ -15,7 +15,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -60,7 +59,7 @@ public class Grindstone extends BlockContainer{
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
 		GrindstoneTileEntity te = (GrindstoneTileEntity) world.getTileEntity(pos);
-		InventoryHelper.dropInventoryItems(world, pos, te);
+		te.dropItems();
 		super.breakBlock(world, pos, blockstate);
 	}
 	

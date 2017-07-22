@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
@@ -14,7 +15,7 @@ public class GrindstoneGuiContainer extends GuiContainer{
 	private IInventory playerInv;
 	private GrindstoneTileEntity te;
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/grindstone_gui.png");
-	
+
 	public GrindstoneGuiContainer(IInventory playerInv, GrindstoneTileEntity te){
 		super(new GrindstoneContainer(playerInv, te));
 		this.playerInv = playerInv;
@@ -22,6 +23,13 @@ public class GrindstoneGuiContainer extends GuiContainer{
 
 		xSize = 176;
 		ySize = 166;
+	}
+
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks){
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
 	}
 
 	@Override
@@ -34,13 +42,13 @@ public class GrindstoneGuiContainer extends GuiContainer{
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		String s = te.getDisplayName().getUnformattedText();
+		String s = I18n.format("container.grindstone");
 		fontRenderer.drawString(s, 88 - fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		fontRenderer.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 72, 4210752);
 	}
 
 	private int getScaledProgress(){
-		return (int) Math.ceil(te.getField(0) * 17 / GrindstoneTileEntity.REQUIRED);
+		return (int) Math.ceil(te.getProgress() * 17 / GrindstoneTileEntity.REQUIRED);
 	}
 
 }

@@ -31,6 +31,13 @@ public class DetailedCrafterGuiContainer extends GuiContainer{
 			drawTexturedModalRect(guiLeft + 124, guiTop + 60, 176, 0, 16, 16);
 		}
 	}
+	
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks){
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
@@ -38,5 +45,4 @@ public class DetailedCrafterGuiContainer extends GuiContainer{
         fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, ySize - 96 + 2, 4210752);
         
 	}
-
 }

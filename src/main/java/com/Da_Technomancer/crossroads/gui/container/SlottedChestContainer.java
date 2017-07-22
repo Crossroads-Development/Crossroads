@@ -13,7 +13,6 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class SlottedChestContainer extends Container{
@@ -145,22 +144,22 @@ public class SlottedChestContainer extends Container{
 					return ItemStack.EMPTY;
 				}
 
-				Slot slot6 = this.inventorySlots.get(slotId);
+				Slot slot6 = inventorySlots.get(slotId);
 				//Clear filter on shift left empty click
 				if(te.isInventoryType(slot6.inventory) && !slot6.getHasStack()){
 					te.cleanPreset(slot6.getSlotIndex());
 				}
 
-				if(slot6 != null && slot6.canTakeStack(player)){
+				if(slot6.canTakeStack(player)){
 					ItemStack itemstack10 = transferStackInSlot(player, slotId);
 
 					if(!itemstack10.isEmpty()){
-						Item item = itemstack10.getItem();
+//						Item item = itemstack10.getItem();
 						itemstack = itemstack10.copy();
-
-						if(slot6.getStack().getItem() == item){
-							//TODO retrySlotClick(slotId, dragType, true, player);
-						}
+//
+//						if(slot6.getStack().getItem() == item){
+//							retrySlotClick(slotId, dragType, true, player);
+//						}
 					}
 				}
 			}else{

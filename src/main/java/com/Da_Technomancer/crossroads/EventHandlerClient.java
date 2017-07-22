@@ -14,7 +14,6 @@ import com.Da_Technomancer.crossroads.items.MagicUsingItem;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -43,7 +42,31 @@ public final class EventHandlerClient{
 	@SubscribeEvent
 	public void drawFieldsAndBeams(RenderWorldLastEvent e){
 		Minecraft game = Minecraft.getMinecraft();
-		if(game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == ModItems.moduleGoggles && game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).hasTagCompound()){
+		ItemStack helmet = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		
+		//Goggle entity glowing
+		if(game.world.getTotalWorldTime() % 5 == 0){
+			boolean glow = helmet != null && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().hasKey(GoggleLenses.VOID.name());
+			for(Entity ent : game.world.getLoadedEntityList()){
+				NBTTagCompound entNBT = ent.getEntityData();
+				if(!entNBT.hasKey("glow")){
+					ent.setGlowing(false);
+				}else{
+					entNBT.removeTag("glow");
+				}
+
+				if(glow){
+					if(ent.isGlowing()){
+						entNBT.setBoolean("glow", true);
+					}else{
+						ent.setGlowing(true);
+					}
+				}
+			}
+		}
+		
+		//Fields
+		if(helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound()){
 			game.mcProfiler.startSection(Main.MODNAME + ": Field Render");
 			Chunk chunk = game.world.getChunkFromBlockCoords(game.player.getPosition());
 			byte[][][] fields = FieldWorldSavedData.get(game.world).fieldNodes.get(MiscOp.getLongFromChunk(chunk));
@@ -88,7 +111,7 @@ public final class EventHandlerClient{
 					}else{
 						game.getTextureManager().bindTexture(TEXTURE_FIELDS);
 						GlStateManager.translate(0, .01F, 0);
-						if(game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(i == 0 ? GoggleLenses.RUBY.name() : GoggleLenses.EMERALD.name())){
+						if(helmet.getTagCompound().hasKey(i == 0 ? GoggleLenses.RUBY.name() : GoggleLenses.EMERALD.name())){
 							GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, 0, .4F);
 							buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 							for(int j = 0; j < 7; j++){
@@ -116,6 +139,7 @@ public final class EventHandlerClient{
 			game.mcProfiler.endSection();
 		}
 
+		//Loose beams
 		if(!SafeCallable.beamsToRender.isEmpty()){
 			GlStateManager.disableLighting();
 			GlStateManager.disableCull();
@@ -181,31 +205,6 @@ public final class EventHandlerClient{
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 			GlStateManager.enableCull();
 			GlStateManager.enableLighting();
-		}
-	}
-
-	@SubscribeEvent
-	public void voidGoggleGlow(RenderWorldLastEvent e){
-		WorldClient world = Minecraft.getMinecraft().world;
-		if(world.getTotalWorldTime() % 5 == 0){
-			ItemStack helmet = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-			boolean glow = helmet != null && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().hasKey(GoggleLenses.VOID.name());
-			for(Entity ent : world.getLoadedEntityList()){
-				NBTTagCompound entNBT = ent.getEntityData();
-				if(!entNBT.hasKey("glow")){
-					ent.setGlowing(false);
-				}else{
-					entNBT.removeTag("glow");
-				}
-
-				if(glow){
-					if(ent.isGlowing()){
-						entNBT.setBoolean("glow", true);
-					}else{
-						ent.setGlowing(true);
-					}
-				}
-			}
 		}
 	}
 

@@ -39,6 +39,13 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		ySize = 120;
 		this.te = te;
 	}
+	
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks){
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
 
 	@Override
 	public void initGui(){

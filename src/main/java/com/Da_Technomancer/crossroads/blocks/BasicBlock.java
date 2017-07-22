@@ -51,8 +51,4 @@ public class BasicBlock extends Block{
 			ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {oreDict}));
 		}
 	}
-
-	public BasicBlock setSoundType(SoundType sound){//TODO
-		return (BasicBlock) super.setSoundType(sound);
-	}
 }

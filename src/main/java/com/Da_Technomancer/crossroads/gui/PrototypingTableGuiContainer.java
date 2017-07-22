@@ -35,10 +35,17 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 		this.te = te;
 		this.playerInv = playerInv;
 
-		this.xSize = 176;
-		this.ySize = 214;
+		xSize = 176;
+		ySize = 214;
 	}
 
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks){
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
+	
 	@Override
 	public void initGui(){
 		super.initGui();

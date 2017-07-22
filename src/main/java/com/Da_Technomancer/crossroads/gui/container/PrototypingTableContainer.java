@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetUp;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ public class PrototypingTableContainer extends Container{
 		addSlotToContainer(new Slot(te, 0, 134, 78){
 			@Override
 			public boolean isItemValid(ItemStack stack){
-				return stack.getItem() == OreSetUp.ingotCopshowium;
+				return stack.getItem() == OreSetup.ingotCopshowium;
 			}
 		});
 
