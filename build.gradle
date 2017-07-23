@@ -39,7 +39,7 @@ repositories {
 dependencies {
 	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.3-55"
 	deobfCompile "mezz.jei:jei_1.12:4.7.2.77"
-	//Not yet updated deobfCompile "MineTweaker3:MineTweaker3-MC1112-Main:1.11.2-3.0.26.111"
+	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.1.99"
 }
 
 processResources {
