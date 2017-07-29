@@ -37,7 +37,7 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.3-55"
+	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.4-56"
 	deobfCompile "mezz.jei:jei_1.12:4.7.2.77"
 	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.1.99"
 }
