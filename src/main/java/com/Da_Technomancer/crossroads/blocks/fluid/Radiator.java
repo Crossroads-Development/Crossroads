@@ -47,7 +47,7 @@ public class Radiator extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Produces: 5°C/t while running");
+		tooltip.add("Produces: 5Â°C/t while running");
 		tooltip.add("Produces: 100mB/t distilled water while running");
 		tooltip.add("Consumes: 100mB/t steam while running");
 	}

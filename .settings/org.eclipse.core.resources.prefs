@@ -1,5 +1,8 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/effects/goggles/RubyGoggleEffect.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/fluid/Radiator.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/fluid/SteamBoiler.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/heat/FuelHeater.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/heat/HeatCable.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/heat/HeatExchanger.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/heat/HeatingChamber.java=UTF-8

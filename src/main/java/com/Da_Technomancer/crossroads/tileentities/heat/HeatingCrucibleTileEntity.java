@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -107,8 +106,6 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		return false;
 	}
 
-	private int ticksExisted = 0;
-
 	private IBlockState getCorrectState(){
 		return ModBlocks.heatingCrucible.getDefaultState().withProperty(Properties.FULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + ((float) inventory.getCount()) * 3F / 16F))).withProperty(Properties.TEXTURE_4, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
 	}
@@ -118,7 +115,6 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		if(world.isRemote){
 			return;
 		}
-		ticksExisted++;
 
 		if(!init){
 			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
@@ -129,7 +125,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 
 		if(temp >= 1000D){
 			temp -= 10D;
-			if(!inventory.isEmpty() && ticksExisted % 10 == 0 && Math.random() < MiscOp.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= (type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
+			if(!inventory.isEmpty() && Math.random() < (temp >= 1490 ? 0.5 : 0.1) && (content == null || CAPACITY - content.amount >= (type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
 				if(content == null){
 					content = new FluidStack(type == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA);
 				}else{

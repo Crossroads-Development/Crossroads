@@ -62,6 +62,6 @@ public class SteamBoiler extends BlockContainer{
 		tooltip.add("Produces: 100mB/t steam while running");
 		tooltip.add("Produces: 1 salt/t while running with normal water");
 		tooltip.add("Consumes: 100mB/t [distilled] water while running");
-		tooltip.add("Consumes: -5°C/t while above 100°C and contains any [distilled] water");
+		tooltip.add("Consumes: -5Â°C/t while above 100Â°C and contains any [distilled] water");
 	}
 }

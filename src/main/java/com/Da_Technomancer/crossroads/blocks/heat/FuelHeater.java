@@ -67,6 +67,6 @@ public class FuelHeater extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Adds: 1°C/t while burning fuel");
+		tooltip.add("Adds: 1Â°C/t while burning fuel");
 	}
 }
