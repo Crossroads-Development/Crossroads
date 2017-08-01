@@ -9,9 +9,10 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
+import com.Da_Technomancer.crossroads.API.enums.CableThemes;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
+import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -37,6 +38,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -50,10 +52,10 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
-	private final HeatConductors conductor;
 	private final HeatInsulators insulator;
 	private static final double SIZE = .2D;
 	private static final AxisAlignedBB BB = new AxisAlignedBB(SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
@@ -64,11 +66,10 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE);
 	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
 
-	public RedstoneHeatCable(HeatConductors conductor, HeatInsulators insulator){
+	public RedstoneHeatCable(HeatInsulators insulator){
 		super(Material.IRON);
-		this.conductor = conductor;
 		this.insulator = insulator;
-		String name = "redstone_heat_cable_" + conductor.toString().toLowerCase() + '_' + insulator.toString().toLowerCase();
+		String name = "redstone_heat_cable_copper_" + insulator.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(1);
@@ -120,7 +121,38 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public ResourceLocation getTexture(){
-		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + '-' + conductor.name().toLowerCase() + "-redstone");
+		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + "-copper-redstone");
+	}
+	
+	@Override
+	public ResourceLocation getTexture(IBlockState state){
+		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + '-' + CableThemes.values()[state.getValue(Properties.TEXTURE_4)].toString() + "-redstone");
+	}
+	
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		if(playerIn != null && hand != null){
+			ItemStack held = playerIn.getHeldItem(hand);
+			if(held.isEmpty()){
+				return false;
+			}
+			for(int oreDict : OreDictionary.getOreIDs(held)){
+				CableThemes match = IHeatHandler.OREDICT_TO_THEME.get(OreDictionary.getOreName(oreDict));
+				if(match != null && state.getValue(Properties.TEXTURE_4) != match.ordinal()){
+					if(!worldIn.isRemote){
+						worldIn.setBlockState(pos, state.withProperty(Properties.TEXTURE_4, match.ordinal()));
+						worldIn.markBlockRangeForRenderUpdate(pos, pos);
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
+		return getDefaultState().withProperty(Properties.TEXTURE_4, 0);
 	}
 
 	@Override
@@ -131,7 +163,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new ExtendedBlockState(this, new IProperty[] {Properties.REDSTONE_BOOL}, new IUnlistedProperty[] {Properties.CONNECT});
+		return new ExtendedBlockState(this, new IProperty[] {Properties.REDSTONE_BOOL, Properties.TEXTURE_4}, new IUnlistedProperty[] {Properties.CONNECT});
 	}
 
 	@Override
@@ -160,12 +192,12 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
+		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, (meta & 1) == 1).withProperty(Properties.TEXTURE_4, meta >> 1);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.REDSTONE_BOOL) ? 1 : 0;
+		return (state.getValue(Properties.REDSTONE_BOOL) ? 1 : 0) + (state.getValue(Properties.TEXTURE_4) << 1);
 	}
 
 	@Override
@@ -205,7 +237,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new RedstoneHeatCableTileEntity(conductor, insulator);
+		return new RedstoneHeatCableTileEntity(insulator);
 	}
 
 	@Override
@@ -216,9 +248,8 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Transfer Rate: " + conductor.getRate());
-		tooltip.add("Loss Rate: " + insulator.getRate());
-		tooltip.add("Melting Point: " + insulator.getLimit() + "*C");
+		tooltip.add("Loss Rate: -" + insulator.getRate() + "°C/t");
+		tooltip.add("Melting Point: " + insulator.getLimit() + "°C");
 	}
 
 	@Override

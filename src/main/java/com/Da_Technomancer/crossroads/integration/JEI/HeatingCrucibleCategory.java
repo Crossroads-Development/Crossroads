@@ -25,6 +25,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
 	private final IDrawable arrowStatic;
+	private final IDrawable fluidOverlay;
 
 	protected HeatingCrucibleCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
@@ -32,6 +33,8 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, StartDirection.LEFT, false);
+	
+		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Main.MODID, "textures/gui/square_fluid_overlay.png"), 0, 0, 32, 32, 32, 32);
 	}
 
 	@Override
@@ -62,7 +65,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, HeatingCrucibleRecipe recipeWrapper, IIngredients ingredients){
-		recipeLayout.getFluidStacks().init(0, false, 90, 42, 32, 32, 200, false, null);
+		recipeLayout.getFluidStacks().init(0, false, 90, 42, 32, 32, 200, false, fluidOverlay);
 		recipeLayout.getFluidStacks().set(0, ingredients.getOutputs(FluidStack.class).get(0));
 		recipeLayout.getItemStacks().init(0, true, 40, 50);
 		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));

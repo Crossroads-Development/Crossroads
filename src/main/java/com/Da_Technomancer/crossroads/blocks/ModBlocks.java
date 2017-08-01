@@ -1,11 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCongealer;
@@ -20,7 +18,7 @@ import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPump;
 import com.Da_Technomancer.crossroads.blocks.fluid.SteamBoiler;
 import com.Da_Technomancer.crossroads.blocks.fluid.SteamTurbine;
 import com.Da_Technomancer.crossroads.blocks.fluid.WaterCentrifuge;
-import com.Da_Technomancer.crossroads.blocks.heat.CoalHeater;
+import com.Da_Technomancer.crossroads.blocks.heat.FuelHeater;
 import com.Da_Technomancer.crossroads.blocks.heat.FluidCoolingChamber;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatExchanger;
@@ -99,7 +97,7 @@ public final class ModBlocks{
 	public static HeatExchanger heatExchanger;
 	public static HeatExchanger insulHeatExchanger;
 	public static FluidTank fluidTank;
-	public static CoalHeater coalHeater;
+	public static FuelHeater fuelHeater;
 	public static HeatingChamber heatingChamber;
 	public static SaltReactor saltReactor;
 	public static FluidCoolingChamber fluidCoolingChamber;
@@ -239,7 +237,7 @@ public final class ModBlocks{
 		heatExchanger = new HeatExchanger(false);
 		insulHeatExchanger = new HeatExchanger(true);
 		fluidTank = new FluidTank();
-		coalHeater = new CoalHeater();
+		fuelHeater = new FuelHeater();
 		heatingChamber = new HeatingChamber();
 		saltReactor = new SaltReactor();
 		fluidCoolingChamber = new FluidCoolingChamber();
@@ -307,16 +305,12 @@ public final class ModBlocks{
 
 	@SideOnly(Side.CLIENT)
 	public static void initModels(){
-		for(HashMap<HeatInsulators, HeatCable> map : HeatCableFactory.HEAT_CABLES.values()){
-			for(HeatCable cable : map.values()){
-				cable.initModel();
-			}
+		for(HeatCable cable : HeatCableFactory.HEAT_CABLES.values()){
+			cable.initModel();
 		}
 
-		for(HashMap<HeatInsulators, RedstoneHeatCable> map : HeatCableFactory.REDSTONE_HEAT_CABLES.values()){
-			for(RedstoneHeatCable cable : map.values()){
-				cable.initModel();
-			}
+		for(RedstoneHeatCable cable : HeatCableFactory.REDSTONE_HEAT_CABLES.values()){
+			cable.initModel();
 		}
 
 		fluidTube.initModel();

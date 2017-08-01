@@ -9,9 +9,10 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
+import com.Da_Technomancer.crossroads.API.enums.CableThemes;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
+import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -36,6 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -49,10 +51,10 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class HeatCable extends BlockContainer implements IConduitModel{
 
-	private final HeatConductors conductor;
 	private final HeatInsulators insulator;
 	private static final double SIZE = .2D;
 	private static final AxisAlignedBB BB = new AxisAlignedBB(SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
@@ -62,12 +64,11 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(SIZE, SIZE, 1, 1 - SIZE, 1 - SIZE, 1 - SIZE);
 	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE);
 	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
-	
-	public HeatCable(HeatConductors conductor, HeatInsulators insulator){
+
+	public HeatCable(HeatInsulators insulator){
 		super(Material.IRON);
-		this.conductor = conductor;
 		this.insulator = insulator;
-		String name = "heat_cable_" + conductor.toString().toLowerCase() + '_' + insulator.toString().toLowerCase();
+		String name = "heat_cable_copper_" + insulator.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(1);
@@ -86,7 +87,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		};
 		ModelLoader.setCustomStateMapper(this, ignoreState);
 	}
-	
+
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
 		return BB;
@@ -96,7 +97,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean pleaseDontBeRelevantToAnythingOrIWillBeSad){
 		addCollisionBoxToList(pos, mask, list, BB);
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
-		
+
 		if(exState.getValue(Properties.CONNECT)[0]){
 			addCollisionBoxToList(pos, mask, list, DOWN);
 		}
@@ -119,7 +120,48 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public ResourceLocation getTexture(){
-		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + '-' + conductor.name().toLowerCase());
+		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + "-copper");
+	}
+
+	@Override
+	public ResourceLocation getTexture(IBlockState state){
+		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + '-' + CableThemes.values()[state.getValue(Properties.TEXTURE_4)].toString());
+	}
+	
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		if(playerIn != null && hand != null){
+			ItemStack held = playerIn.getHeldItem(hand);
+			if(held.isEmpty()){
+				return false;
+			}
+			for(int oreDict : OreDictionary.getOreIDs(held)){
+				CableThemes match = IHeatHandler.OREDICT_TO_THEME.get(OreDictionary.getOreName(oreDict));
+				if(match != null && state.getValue(Properties.TEXTURE_4) != match.ordinal()){
+					if(!worldIn.isRemote){
+						worldIn.setBlockState(pos, state.withProperty(Properties.TEXTURE_4, match.ordinal()));
+						worldIn.markBlockRangeForRenderUpdate(pos, pos);
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
+		return getDefaultState().withProperty(Properties.TEXTURE_4, 0);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta){
+		return getDefaultState().withProperty(Properties.TEXTURE_4, meta);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state){
+		return state.getValue(Properties.TEXTURE_4);
 	}
 
 	@Override
@@ -129,14 +171,14 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] {Properties.CONNECT});
+		return new ExtendedBlockState(this, new IProperty[] {Properties.TEXTURE_4}, new IUnlistedProperty[] {Properties.CONNECT});
 	}
 
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		Boolean[] connect = {false, false, false, false, false, false};
-		
+
 		for(EnumFacing direction : EnumFacing.values()){
 			TileEntity sideTe = world.getTileEntity(pos.offset(direction));
 			if(sideTe != null && ((sideTe instanceof IPrototypePort && ((IPrototypePort) sideTe).getType() == PrototypePortTypes.HEAT && ((IPrototypePort) sideTe).getSide() == direction.getOpposite()) || (sideTe instanceof IPrototypeOwner && ((IPrototypeOwner) sideTe).getTypes()[direction.getOpposite().getIndex()] == PrototypePortTypes.HEAT) || sideTe.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite()))){
@@ -156,19 +198,18 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new HeatCableTileEntity(conductor, insulator);
+		return new HeatCableTileEntity(insulator);
 	}
 
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Transfer Rate: " + conductor.getRate());
-		tooltip.add("Loss Rate: " + insulator.getRate());
-		tooltip.add("Melting Point: " + insulator.getLimit() + "*C");
+		tooltip.add("Loss Rate: -" + insulator.getRate() + "°C/t");
+		tooltip.add("Melting Point: " + insulator.getLimit() + "°C");
 	}
 
 	@Override
@@ -236,7 +277,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		if(exState.getValue(Properties.CONNECT)[5]){
 			list.add(EAST);
 		}
-		
+
 		start = start.subtract(pos.getX(), pos.getY(), pos.getZ());
 		end = end.subtract(pos.getX(), pos.getY(), pos.getZ());
 		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);

@@ -1,15 +1,20 @@
 package com.Da_Technomancer.crossroads.items;
 
+import java.util.ArrayList;
+
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.CrystalMasterAxisTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,7 +32,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-public class OmniMeter extends Item{
+public class OmniMeter extends Item implements IInfoDevice{
 
 	public OmniMeter(){
 		String name = "omnimeter";
@@ -37,75 +42,82 @@ public class OmniMeter extends Item{
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}
+	
+	/**
+	 * Value chosen at random.
+	 */
+	private static final int CHAT_ID = 279478;
 
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		TileEntity te = worldIn.getTileEntity(pos);
-		if(te == null || worldIn.isRemote){
-			return te != null && te instanceof RatiatorTileEntity ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
-		}
-		boolean pass = true;
+		
+		if(!worldIn.isRemote){
+			if(te != null){
+				ArrayList<String> chat = new ArrayList<String>();
+				
+				if(te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
+					chat.add("Temp: " + worldIn.getTileEntity(pos).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "°C");
+					chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * worldIn.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
+				}
 
-		if(te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
-			pass = false;
-			playerIn.sendMessage(new TextComponentString("Temp: " + worldIn.getTileEntity(pos).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "°C"));
-			playerIn.sendMessage(new TextComponentString("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * worldIn.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C"));
-		}
-
-		if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
-			pass = false;
-			IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-			playerIn.sendMessage(new TextComponentString(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s.")));
-			for(IFluidTankProperties tank : pipe.getTankProperties()){
-				playerIn.sendMessage(new TextComponentString("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : tank.getContents().getLocalizedName()) + ", Capacity: " + tank.getCapacity()));
-			}
-		}
-
-		if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
-			pass = false;
-			IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
-			playerIn.sendMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]));
-		}else if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
-			pass = false;
-			IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing);
-			playerIn.sendMessage(new TextComponentString("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]));
-		}
-
-		if(te instanceof BeamRenderTEBase){
-			pass = false;
-			MagicUnit[] mag = ((BeamRenderTEBase) te).getLastFullSent();
-			if(mag != null){
-				for(int i = 0; i < mag.length; i++){
-					MagicUnit check = mag[i];
-					if(check != null){
-						NBTTagCompound nbt = MiscOp.getPlayerTag(playerIn);
-						if(!nbt.hasKey("elements")){
-							nbt.setTag("elements", new NBTTagCompound());
-						}
-						nbt = nbt.getCompoundTag("elements");
-
-						if(!nbt.hasKey(MagicElements.getElement(check).name())){
-							nbt.setBoolean(MagicElements.getElement(check).name(), true);
-							playerIn.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
-							StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerIn, false);
-						}
-
-						playerIn.sendMessage(new TextComponentString(EnumFacing.getFront(i).toString() + ": " + check.toString()));
+				if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
+					IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+					chat.add(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s."));
+					for(IFluidTankProperties tank : pipe.getTankProperties()){
+						chat.add("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : tank.getContents().getLocalizedName()) + ", Capacity: " + tank.getCapacity());
 					}
+				}
+
+				if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
+					IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
+					chat.add("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]);
+				}else if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
+					IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing);
+					chat.add("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", Mass: " + gear.getPhysData()[0] + ", I: " + gear.getPhysData()[1]);
+				}
+
+				if(te instanceof BeamRenderTEBase){
+					MagicUnit[] mag = ((BeamRenderTEBase) te).getLastFullSent();
+					if(mag != null){
+						for(int i = 0; i < mag.length; i++){
+							MagicUnit check = mag[i];
+							if(check != null){
+								NBTTagCompound nbt = MiscOp.getPlayerTag(playerIn);
+								if(!nbt.hasKey("elements")){
+									nbt.setTag("elements", new NBTTagCompound());
+								}
+								nbt = nbt.getCompoundTag("elements");
+
+								if(!nbt.hasKey(MagicElements.getElement(check).name())){
+									nbt.setBoolean(MagicElements.getElement(check).name(), true);
+									playerIn.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
+									StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerIn, false);
+								}
+
+								chat.add(EnumFacing.getFront(i).toString() + ": " + check.toString());
+							}
+						}
+					}
+				}
+				
+				if(te instanceof IInfoTE){
+					((IInfoTE) te).addInfo(chat, this, playerIn, facing);
+				}
+				if(!chat.isEmpty()){
+					String out = "";
+					for(String line : chat){
+						if(!out.equals("")){
+							out += "\n";
+						}
+						out += line;
+					}
+					ModPackets.network.sendTo(new SendChatToClient(out, CHAT_ID), (EntityPlayerMP) playerIn);
+					return EnumActionResult.SUCCESS;
 				}
 			}
 		}
-
-		if(te instanceof CrystalMasterAxisTileEntity){
-			pass = false;
-			playerIn.sendMessage(new TextComponentString("Element: " + ((((CrystalMasterAxisTileEntity) te).getElement() == null) ? "NONE" : (((CrystalMasterAxisTileEntity) te).getElement().toString() + (((CrystalMasterAxisTileEntity) te).isVoid() ? " (VOID), " : ", ") + "Time: " + ((CrystalMasterAxisTileEntity) te).getTime()))));
-		}
-
-		if(te instanceof RatiatorTileEntity){
-			pass = false;
-			playerIn.sendMessage(new TextComponentString("Out: " + ((RatiatorTileEntity) te).getOutput()));
-		}
-
-		return pass ? EnumActionResult.PASS : EnumActionResult.SUCCESS;
+		
+		return te != null && te instanceof RatiatorTileEntity ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 	}
 }

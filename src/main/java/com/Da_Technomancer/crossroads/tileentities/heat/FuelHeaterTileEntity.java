@@ -2,24 +2,23 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class CoalHeaterTileEntity extends AbstractInventory implements ITickable{
+public class FuelHeaterTileEntity extends AbstractInventory implements ITickable{
 
 	private ItemStack inventory = ItemStack.EMPTY;
 	private int burnTime;
 	private double temp;
 	private boolean init = false;
-	private int ticksExisted = 0;
 
 	@Override
 	public void update(){
@@ -28,35 +27,34 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 			init = true;
 		}
 
-		if(++ticksExisted % 10 == 0 && world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			double reservePool = temp * HeatConductors.COPPER.getRate();
+		TileEntity upTE = world.getTileEntity(pos.offset(EnumFacing.UP));
+		if(upTE != null && upTE.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			double reservePool = temp;
 			temp -= reservePool;
 
-			IHeatHandler handler = world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN);
-			reservePool += handler.getTemp() * HeatConductors.COPPER.getRate();
-			handler.addHeat(-(handler.getTemp() * HeatConductors.COPPER.getRate()));
+			IHeatHandler handler = upTE.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN);
+			reservePool += handler.getTemp();
+			handler.addHeat(-(handler.getTemp()));
 			reservePool /= 2;
 			temp += reservePool;
 			handler.addHeat(reservePool);
 		}
 
 		if(burnTime != 0){
-			markDirty();
-			temp += 1;
+			temp += 1D;
 			--burnTime;
-		}
-
-		if(burnTime == 0 && !inventory.isEmpty() && inventory.getItem() == Items.COAL){
 			markDirty();
-			inventory.shrink(1);
-
-			burnTime = 1600;
 		}
 
+		if(burnTime == 0 && !inventory.isEmpty()){
+			burnTime = TileEntityFurnace.getItemBurnTime(inventory);
+			inventory.shrink(1);
+			markDirty();
+		}
 	}
 
 	@Override
@@ -75,8 +73,8 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
-		nbt.setBoolean("init", this.init);
-		nbt.setDouble("temp", this.temp);
+		nbt.setBoolean("init", init);
+		nbt.setDouble("temp", temp);
 		nbt.setInteger("burn", burnTime);
 		if(!inventory.isEmpty()){
 			NBTTagCompound invTag = new NBTTagCompound();
@@ -178,7 +176,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && stack.getItem() == Items.COAL;
+		return index == 0 && TileEntityFurnace.isItemFuel(stack);
 	}
 
 	@Override
@@ -224,7 +222,7 @@ public class CoalHeaterTileEntity extends AbstractInventory implements ITickable
 
 	@Override
 	public String getName(){
-		return "container.coal_heater";
+		return "container.fuel_heater";
 	}
 
 	@Override

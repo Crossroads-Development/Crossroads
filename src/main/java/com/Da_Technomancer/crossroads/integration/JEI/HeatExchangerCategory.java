@@ -65,12 +65,16 @@ public class HeatExchangerCategory implements IRecipeCategory<HeatExchangerRecip
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, HeatExchangerRecipe recipeWrapper, IIngredients ingredients){
-		recipeLayout.getFluidStacks().init(0, true, 22, 56, 17, 17, 1, false, null);
-		recipeLayout.getFluidStacks().set(0, ingredients.getInputs(FluidStack.class).get(0));
+		if(ingredients.getInputs(FluidStack.class).get(0) != null){
+			recipeLayout.getFluidStacks().init(0, true, 22, 56, 17, 17, 1, false, null);
+			recipeLayout.getFluidStacks().set(0, ingredients.getInputs(FluidStack.class).get(0));
+		}
 		recipeLayout.getItemStacks().init(0, true, 21, 55);
 		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
-		recipeLayout.getFluidStacks().init(1, false, 81, 56, 16, 16, 1000, true, null);
-		recipeLayout.getFluidStacks().set(1, ingredients.getOutputs(FluidStack.class).get(0));
+		if(ingredients.getOutputs(FluidStack.class).get(0) != null){
+			recipeLayout.getFluidStacks().init(1, false, 81, 56, 16, 16, 1000, true, null);
+			recipeLayout.getFluidStacks().set(1, ingredients.getOutputs(FluidStack.class).get(0));
+		}
 		recipeLayout.getItemStacks().init(1, false, 80, 55);
 		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(ItemStack.class).get(0));
 	}
@@ -84,7 +88,7 @@ public class HeatExchangerCategory implements IRecipeCategory<HeatExchangerRecip
 	public List<String> getTooltipStrings(int mouseX, int mouseY){
 		return ImmutableList.of();
 	}
-	
+
 	@Override
 	public String getModName(){
 		return Main.MODNAME;

@@ -1,11 +1,18 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
+import java.util.ArrayList;
+
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.OmniMeter;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -13,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class RatiatorTileEntity extends TileEntity{
+public class RatiatorTileEntity extends TileEntity implements IInfoTE{
 	
 	private double output;
 	
@@ -70,6 +77,13 @@ public class RatiatorTileEntity extends TileEntity{
 		@Override
 		public double getOutput(boolean read){
 			return output;
+		}
+	}
+
+	@Override
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
+		if(device instanceof OmniMeter || device == GoggleLenses.QUARTZ){
+			chat.add("Out: " + output);
 		}
 	}
 }

@@ -5,34 +5,38 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class HeatCableTileEntity extends TileEntity implements ITickable{
 
-	private HeatConductors conductor;
 	private HeatInsulators insulator;
 
 	private boolean init = false;
 	// Temp as in temperature, not as in temporary
 	private double temp = 0;
-	private int ticksExisted;
 
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
+	
 	public HeatCableTileEntity(){
-		this(HeatConductors.COPPER, HeatInsulators.WOOL);
+		this(HeatInsulators.WOOL);
 	}
 
-	public HeatCableTileEntity(HeatConductors conductor, HeatInsulators insulator){
+	public HeatCableTileEntity(HeatInsulators insulator){
 		super();
-		this.conductor = conductor;
 		this.insulator = insulator;
 	}
 
@@ -41,8 +45,6 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 		if(world.isRemote){
 			return;
 		}
-		
-		ticksExisted++;
 
 		if(!init){
 			if(insulator == HeatInsulators.ICE){
@@ -53,9 +55,10 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 			init = true;
 		}
 
-		if(ticksExisted % 10 == 0){
-			transHeat(conductor.getRate());
-			runLoss(insulator.getRate());
+		double prevTemp = temp;
+		transHeat();
+		runLoss(insulator.getRate());
+		if(temp != prevTemp){
 			markDirty();
 		}
 
@@ -68,29 +71,27 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 		}
 	}
 
-	public void transHeat(double rate){
-
-		double reservePool = temp * rate;
-		temp -= reservePool;
+	public void transHeat(){
 		int members = 1;
 
 		for(EnumFacing side : EnumFacing.values()){
-			if(world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				IHeatHandler handler = world.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
-				reservePool += handler.getTemp() * rate;
-				handler.addHeat(-(handler.getTemp() * rate));
+			TileEntity te = world.getTileEntity(pos.offset(side));
+			if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				IHeatHandler handler = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
+				temp += handler.getTemp();
+				handler.addHeat(-handler.getTemp());
 				members++;
 			}
 		}
 
-		reservePool /= members;
+		temp /= members;
 
 		for(EnumFacing side : EnumFacing.values()){
-			if(world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				world.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
+			TileEntity te = world.getTileEntity(pos.offset(side));
+			if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(temp);
 			}
 		}
-		temp += reservePool;
 	}
 
 	@Override
@@ -99,26 +100,17 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 
 		init = nbt.getBoolean("init");
 		temp = nbt.getDouble("temp");
-		conductor = nbt.hasKey("cond") ? HeatConductors.valueOf(nbt.getString("cond")) : HeatConductors.COPPER;
 		insulator = nbt.hasKey("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
-
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
-		nbt.setBoolean("init", this.init);
-		nbt.setDouble("temp", this.temp);
-		if(!world.isRemote){
-			nbt.setString("cond", conductor.name());
-			nbt.setString("insul", insulator.name());
-		}
+		nbt.setBoolean("init", init);
+		nbt.setDouble("temp", temp);
+		nbt.setString("insul", insulator.name());
 		return nbt;
-	}
-
-	public HeatConductors getConductor(){
-		return conductor;
 	}
 
 	public HeatInsulators getInsulator(){
@@ -126,13 +118,8 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 	}
 
 	private void runLoss(double rate){
-		if(rate == 0){
-			return;
-		}
-
-		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
-		newTemp /= (rate + 1);
-		temp = newTemp;
+		double biomeTemp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+		temp += Math.min(rate, Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
 	@Override
@@ -184,6 +171,5 @@ public class HeatCableTileEntity extends TileEntity implements ITickable{
 			init();
 			temp += heat;
 		}
-
 	}
 }

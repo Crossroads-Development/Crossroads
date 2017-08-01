@@ -1,5 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -10,6 +14,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
@@ -18,6 +23,8 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class HeatingCrucible extends BlockContainer{
@@ -39,18 +46,13 @@ public class HeatingCrucible extends BlockContainer{
 	}
 
 	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
-	}
-
-	@Override
 	protected BlockStateContainer createBlockState(){
 		return new BlockStateContainer(this, new IProperty[] {Properties.FULLNESS, Properties.TEXTURE_4});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.FULLNESS, meta & 3).withProperty(Properties.TEXTURE_4, (meta & 12) / 4);
+		return getDefaultState().withProperty(Properties.FULLNESS, meta & 3).withProperty(Properties.TEXTURE_4, (meta & 12) / 4);
 	}
 
 	@Override
@@ -85,5 +87,11 @@ public class HeatingCrucible extends BlockContainer{
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		tooltip.add("Loss Rate: -10°C/t when above 1000°C");
 	}
 }

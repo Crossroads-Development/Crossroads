@@ -9,11 +9,11 @@ import net.minecraft.init.Blocks;
 
 public enum HeatInsulators{
 
-	WOOL(.01D, 300, new BlockEffect(Blocks.FIRE.getDefaultState()), "wool"),
-	SLIME(.005D, 500, new SlimeEffect(), "slimeball"),
-	DIRT(.1D, 42, new DirtEffect(), "dirt"),
-	ICE(.00005D, 0, new BlockEffect(Blocks.WATER.getDefaultState()), Blocks.PACKED_ICE),
-	OBSIDIAN(0.0001D, 2000, new BlockEffect(Blocks.LAVA.getDefaultState()), "obsidian");
+	WOOL(.25D, 300D, new BlockEffect(Blocks.FIRE.getDefaultState()), "wool"),
+	SLIME(.2D, 500D, new SlimeEffect(), "slimeball"),
+	DIRT(.5D, 42D, new DirtEffect(), "dirt"),
+	ICE(.001D, 0D, new BlockEffect(Blocks.WATER.getDefaultState()), Blocks.PACKED_ICE),
+	OBSIDIAN(.015D, 2000D, new BlockEffect(Blocks.LAVA.getDefaultState()), "obsidian");
 
 	private final double rate;
 	private final double limit;
@@ -55,5 +55,4 @@ public enum HeatInsulators{
 		name = char1 + name;
 		return name;
 	}
-
 }

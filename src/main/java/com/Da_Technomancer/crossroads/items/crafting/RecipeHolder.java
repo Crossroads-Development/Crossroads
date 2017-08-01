@@ -39,11 +39,10 @@ public final class RecipeHolder{
 	public static final HashMap<ICraftingStack, ItemStack[]> grindRecipes = new HashMap<ICraftingStack, ItemStack[]>();
 
 	/**
-	 * Block is input, blockstate is the created block, Double1 is heat created,
-	 * Double2 is the limit.
+	 * Block is input, blockstate is the created block, Double1 is heat created, Double2 is the limit, boolean is whether to show this recipe in JEI. 
 	 * 
 	 */
-	public static final HashMap<Block, Triple<IBlockState, Double, Double>> envirHeatSource = new HashMap<Block, Triple<IBlockState, Double, Double>>();
+	public static final HashMap<Block, Pair<Boolean, Triple<IBlockState, Double, Double>>> envirHeatSource = new HashMap<Block, Pair<Boolean, Triple<IBlockState, Double, Double>>>();
 
 	/**
 	 * Fluid is input, Integer is the amount required, ItemStack is output,
@@ -90,8 +89,10 @@ public final class RecipeHolder{
 		}
 		JEIWrappers.put(FluidCoolingCategory.ID, currentRecipes);
 		currentRecipes = new ArrayList<IRecipeWrapper>();
-		for(Entry<Block, Triple<IBlockState, Double, Double>> rec : envirHeatSource.entrySet()){
-			currentRecipes.add(new HeatExchangerRecipe(rec));
+		for(Entry<Block, Pair<Boolean, Triple<IBlockState, Double, Double>>> rec : envirHeatSource.entrySet()){
+			if(rec.getValue().getLeft()){
+				currentRecipes.add(new HeatExchangerRecipe(rec));
+			}
 		}
 		JEIWrappers.put(HeatExchangerCategory.ID, currentRecipes);
 		currentRecipes = new ArrayList<IRecipeWrapper>();

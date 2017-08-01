@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -116,7 +115,7 @@ public class CommonProxy{
 	 * These missing mappings events will be removed eventually. 
 	 */
 	@SubscribeEvent
-	public void missingBlockMapping(RegistryEvent.MissingMappings<Block> event) {
+	public static void missingBlockMapping(RegistryEvent.MissingMappings<Block> event) {
 		for(RegistryEvent.MissingMappings.Mapping<Block> mapping : event.getMappings()){
 			Main.logger.info("Repairing missing mapping: " + mapping.key.toString());
 			switch(mapping.key.getResourcePath().toLowerCase()){
@@ -187,7 +186,7 @@ public class CommonProxy{
 					mapping.remap(ModBlocks.waterCentrifuge);
 				break;
 				case("coalheater"):
-					mapping.remap(ModBlocks.coalHeater);
+					mapping.remap(ModBlocks.fuelHeater);
 				break;
 				case("fluidcoolingchamber"):
 					mapping.remap(ModBlocks.fluidCoolingChamber);
@@ -340,9 +339,21 @@ public class CommonProxy{
 				default:
 					String oldMap = mapping.key.getResourcePath().toLowerCase();
 					if(oldMap.contains("redstoneheatcable")){
-						mapping.remap(HeatCableFactory.REDSTONE_HEAT_CABLES.get(oldMap.contains("copper") ? HeatConductors.COPPER : oldMap.contains("iron") ? HeatConductors.IRON : oldMap.contains("quartz") ? HeatConductors.QUARTZ : HeatConductors.DIAMOND).get(oldMap.contains("wool") ? HeatInsulators.WOOL : oldMap.contains("slime") ? HeatInsulators.SLIME : oldMap.contains("dirt") ? HeatInsulators.DIRT : oldMap.contains("ice") ? HeatInsulators.ICE : HeatInsulators.OBSIDIAN));
+						if(oldMap.contains("copper")){
+							mapping.remap(HeatCableFactory.REDSTONE_HEAT_CABLES.get(oldMap.contains("wool") ? HeatInsulators.WOOL : oldMap.contains("slime") ? HeatInsulators.SLIME : oldMap.contains("dirt") ? HeatInsulators.DIRT : oldMap.contains("ice") ? HeatInsulators.ICE : HeatInsulators.OBSIDIAN));
+						}else{
+							mapping.ignore();
+						}
 					}else if(oldMap.contains("heatcable")){
-						mapping.remap(HeatCableFactory.HEAT_CABLES.get(oldMap.contains("copper") ? HeatConductors.COPPER : oldMap.contains("iron") ? HeatConductors.IRON : oldMap.contains("quartz") ? HeatConductors.QUARTZ : HeatConductors.DIAMOND).get(oldMap.contains("wool") ? HeatInsulators.WOOL : oldMap.contains("slime") ? HeatInsulators.SLIME : oldMap.contains("dirt") ? HeatInsulators.DIRT : oldMap.contains("ice") ? HeatInsulators.ICE : HeatInsulators.OBSIDIAN));
+						if(oldMap.contains("copper")){
+							mapping.remap(HeatCableFactory.HEAT_CABLES.get(oldMap.contains("wool") ? HeatInsulators.WOOL : oldMap.contains("slime") ? HeatInsulators.SLIME : oldMap.contains("dirt") ? HeatInsulators.DIRT : oldMap.contains("ice") ? HeatInsulators.ICE : HeatInsulators.OBSIDIAN));
+						}else{
+							mapping.ignore();
+						}
+					}else if(oldMap.contains("redstone_heat_cable") & !oldMap.contains("copper")){
+						mapping.ignore();
+					}else if(oldMap.contains("heat_cable") & !oldMap.contains("copper")){
+						mapping.ignore();
 					}
 					break;
 			}
@@ -350,7 +361,7 @@ public class CommonProxy{
 	}
 
 	@SubscribeEvent
-	public void missingItemMapping(RegistryEvent.MissingMappings<Item> event) {
+	public static void missingItemMapping(RegistryEvent.MissingMappings<Item> event) {
 		for(RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getMappings()){
 			Main.logger.info("Repairing missing mapping: " + mapping.key.toString());
 			switch(mapping.key.getResourcePath().toLowerCase()){
@@ -421,7 +432,7 @@ public class CommonProxy{
 					mapping.remap(Item.getItemFromBlock(ModBlocks.waterCentrifuge));
 				break;
 				case("coalheater"):
-					mapping.remap(Item.getItemFromBlock(ModBlocks.coalHeater));
+					mapping.remap(Item.getItemFromBlock(ModBlocks.fuelHeater));
 				break;
 				case("fluidcoolingchamber"):
 					mapping.remap(Item.getItemFromBlock(ModBlocks.fluidCoolingChamber));
@@ -694,9 +705,21 @@ public class CommonProxy{
 				default:
 					String oldMap = mapping.key.getResourcePath().toLowerCase();
 					if(oldMap.contains("redstoneheatcable")){
-						mapping.remap(Item.getItemFromBlock(HeatCableFactory.REDSTONE_HEAT_CABLES.get(oldMap.contains("copper") ? HeatConductors.COPPER : oldMap.contains("iron") ? HeatConductors.IRON : oldMap.contains("quartz") ? HeatConductors.QUARTZ : HeatConductors.DIAMOND).get(oldMap.contains("wool") ? HeatInsulators.WOOL : oldMap.contains("slime") ? HeatInsulators.SLIME : oldMap.contains("dirt") ? HeatInsulators.DIRT : oldMap.contains("ice") ? HeatInsulators.ICE : HeatInsulators.OBSIDIAN)));
+						if(oldMap.contains("copper")){
+							mapping.remap(Item.getItemFromBlock(HeatCableFactory.REDSTONE_HEAT_CABLES.get(oldMap.contains("wool") ? HeatInsulators.WOOL : oldMap.contains("slime") ? HeatInsulators.SLIME : oldMap.contains("dirt") ? HeatInsulators.DIRT : oldMap.contains("ice") ? HeatInsulators.ICE : HeatInsulators.OBSIDIAN)));
+						}else{
+							mapping.ignore();
+						}
 					}else if(oldMap.contains("heatcable")){
-						mapping.remap(Item.getItemFromBlock(HeatCableFactory.HEAT_CABLES.get(oldMap.contains("copper") ? HeatConductors.COPPER : oldMap.contains("iron") ? HeatConductors.IRON : oldMap.contains("quartz") ? HeatConductors.QUARTZ : HeatConductors.DIAMOND).get(oldMap.contains("wool") ? HeatInsulators.WOOL : oldMap.contains("slime") ? HeatInsulators.SLIME : oldMap.contains("dirt") ? HeatInsulators.DIRT : oldMap.contains("ice") ? HeatInsulators.ICE : HeatInsulators.OBSIDIAN)));
+						if(oldMap.contains("copper")){
+							mapping.remap(Item.getItemFromBlock(HeatCableFactory.HEAT_CABLES.get(oldMap.contains("wool") ? HeatInsulators.WOOL : oldMap.contains("slime") ? HeatInsulators.SLIME : oldMap.contains("dirt") ? HeatInsulators.DIRT : oldMap.contains("ice") ? HeatInsulators.ICE : HeatInsulators.OBSIDIAN)));
+						}else{
+							mapping.ignore();
+						}
+					}else if(oldMap.contains("redstone_heat_cable") & !oldMap.contains("copper")){
+						mapping.ignore();
+					}else if(oldMap.contains("heat_cable") & !oldMap.contains("copper")){
+						mapping.ignore();
 					}
 					break;
 			}

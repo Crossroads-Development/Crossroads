@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.gui.container;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.tileentities.heat.CoalHeaterTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -15,10 +15,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CoalHeaterContainer extends Container{
 
-	private CoalHeaterTileEntity te;
+	private FuelHeaterTileEntity te;
 	private int progress;
 
-	public CoalHeaterContainer(IInventory playerInv, CoalHeaterTileEntity te){
+	public CoalHeaterContainer(IInventory playerInv, FuelHeaterTileEntity te){
 		this.te = te;
 
 		// Fuel slot, ID 0

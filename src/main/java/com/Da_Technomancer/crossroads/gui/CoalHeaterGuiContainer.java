@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.gui.container.CoalHeaterContainer;
-import com.Da_Technomancer.crossroads.tileentities.heat.CoalHeaterTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,10 +13,10 @@ public class CoalHeaterGuiContainer extends GuiContainer{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID + ":textures/gui/container/coal_heater_gui.png");
 
-	private CoalHeaterTileEntity te;
+	private FuelHeaterTileEntity te;
 	private IInventory playerInv;
 
-	public CoalHeaterGuiContainer(IInventory playerInv, CoalHeaterTileEntity te){
+	public CoalHeaterGuiContainer(IInventory playerInv, FuelHeaterTileEntity te){
 		super(new CoalHeaterContainer(playerInv, te));
 		this.te = te;
 		this.playerInv = playerInv;

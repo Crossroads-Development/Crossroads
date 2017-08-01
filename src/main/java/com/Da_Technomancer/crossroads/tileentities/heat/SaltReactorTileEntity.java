@@ -31,7 +31,7 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 	private static final int CAPACITY = 16 * WATER_USE;
 	private boolean init = false;
 	private double temp;
-	private static final int COOLING = 5;
+	private static final double COOLING = 5D;
 	private ItemStack inventory = ItemStack.EMPTY;
 
 	@Override
@@ -45,7 +45,7 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 			init = true;
 		}
 
-		if(temp >= -273 + COOLING && dContent != null && dContent.amount >= WATER_USE && CAPACITY - (content == null ? 0 : content.amount) >= WATER_USE && inventory != null && inventory.getItem() == ModItems.dustSalt){
+		if(temp >= -273D + COOLING && dContent != null && dContent.amount >= WATER_USE && CAPACITY - (content == null ? 0 : content.amount) >= WATER_USE && inventory.getItem() == ModItems.dustSalt){
 			temp -= COOLING;
 			if((dContent.amount -= WATER_USE) <= 0){
 				dContent = null;
@@ -320,8 +320,9 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 				init = true;
+				markDirty();
 			}
 		}
 
@@ -335,13 +336,14 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 		public void setTemp(double tempIn){
 			init = true;
 			temp = tempIn;
+			markDirty();
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
 			temp += heat;
-
+			markDirty();
 		}
 	}
 }

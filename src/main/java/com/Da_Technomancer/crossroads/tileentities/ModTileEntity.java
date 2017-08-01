@@ -15,7 +15,7 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.heat.CoalHeaterTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.FluidCoolingChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatExchangerTileEntity;
@@ -86,7 +86,7 @@ public class ModTileEntity{
 		registerOld(FluidVoidTileEntity.class, "fluidVoid");
 		registerOld(HeatExchangerTileEntity.class, "heatExchanger");
 		registerOld(FluidTankTileEntity.class, "fluidTank");
-		registerOld(CoalHeaterTileEntity.class, "coalHeater");
+		registerOld(FuelHeaterTileEntity.class, "coalHeater");
 		registerOld(HeatingChamberTileEntity.class, "heatingChamber");
 		registerOld(SaltReactorTileEntity.class, "saltReactor");
 		registerOld(FluidCoolingChamberTileEntity.class, "fluidCoolingChamber");
@@ -150,7 +150,7 @@ public class ModTileEntity{
 	 */
 	@Deprecated
 	private static void registerOld(Class<? extends TileEntity> locat, String ID){
-		GameRegistry.registerTileEntity(locat, Main.MODID + "_" + ID);
+		GameRegistry.registerTileEntity(locat, Main.MODID + '_' + ID);
 	}
 
 	/**
@@ -158,6 +158,6 @@ public class ModTileEntity{
 	 * @param ID Should be lower-case.
 	 */
 	private static void register(Class<? extends TileEntity> clazz, String ID){
-		GameRegistry.registerTileEntity(clazz, Main.MODID + ":" + ID);
+		GameRegistry.registerTileEntity(clazz, Main.MODID + ':' + ID);
 	}
 }

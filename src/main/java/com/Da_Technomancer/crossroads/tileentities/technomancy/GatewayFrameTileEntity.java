@@ -8,9 +8,10 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.effects.goggles.IGoggleInfoTE;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
@@ -38,7 +39,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGoggleInfoTE{
+public class GatewayFrameTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 
 	private final IMagicHandler magicHandler = new MagicHandler();
@@ -51,8 +52,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IGo
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, GoggleLenses lens, EntityPlayer player, @Nullable EnumFacing side){
-		if(lens == GoggleLenses.EMERALD && world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
+		if(device == GoggleLenses.EMERALD && world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
 			GatewayFrameTileEntity xTE = dialedCoord(Axis.X);
 			if(xTE != null){
 				chat.add("Dialed: " + xTE.getCoord() + ", " + getCoord() + ", " + dialedCoord(Axis.Z).getCoord());

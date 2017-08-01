@@ -17,7 +17,10 @@ public class Properties{
 	public static final PropertyInteger FULLNESS = PropertyInteger.create("fullness", 0, 3);
 	/**true means X axis, false means Z axis*/
 	public static final PropertyBool ORIENT = PropertyBool.create("orient");
-	/**0 = copper, 1 = molten copper, 2 = cobble, 3 = lava*/
+	/** Depending on context: 
+	 * 0: copper, 1: molten copper, 2: cobblestone, 3: lava
+	 * 0: copper 1: iron 2: quartz 3: diamond
+	 */
 	public static final PropertyInteger TEXTURE_4 = PropertyInteger.create("text", 0, 3);
 	/**0 = none, 1 = ruby, 2 = emerald, 3 = diamond, 4 = pure quartz, 5 = luminescent quartz, 6 = void crystal */
 	public static final PropertyInteger TEXTURE_7 = PropertyInteger.create("text_seven", 0, 6);

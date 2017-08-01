@@ -2,14 +2,16 @@ package com.Da_Technomancer.crossroads.API.effects.goggles;
 
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
+import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -41,6 +43,7 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 							nbt.setBoolean(MagicElements.getElement(check).name(), true);
 							//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
 							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString() + TextFormatting.RESET.toString()));
+							StoreNBTToClient.syncNBTToClient((EntityPlayerMP) player, false);
 						}
 						chat.add(EnumFacing.getFront(i).toString() + ": " + check.toString());
 					}
@@ -48,11 +51,8 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 			}
 		}
 
-		if(te instanceof IGoggleInfoTE){
-			((IGoggleInfoTE) te).addInfo(chat, GoggleLenses.QUARTZ, player, ray.sideHit);
-		}
-		if(te instanceof RatiatorTileEntity){
-			chat.add("Output Signal: " + ((RatiatorTileEntity) te).getOutput());
+		if(te instanceof IInfoTE){
+			((IInfoTE) te).addInfo(chat, GoggleLenses.QUARTZ, player, ray.sideHit);
 		}
 	}
 }

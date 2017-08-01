@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.function.Function;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
+import com.Da_Technomancer.crossroads.API.enums.CableThemes;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.google.common.collect.ImmutableSet;
 
@@ -29,9 +29,9 @@ public class ConduitModel implements IModel{
 	public Collection<ResourceLocation> getTextures(){
 		ArrayList<ResourceLocation> textures = new ArrayList<>();
 		for(HeatInsulators insul : HeatInsulators.values()){
-			for(HeatConductors cond : HeatConductors.values()){
-				textures.add(new ResourceLocation(Main.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + cond.name().toLowerCase()));
-				textures.add(new ResourceLocation(Main.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + cond.name().toLowerCase() + "-redstone"));
+			for(CableThemes theme : CableThemes.values()){
+				textures.add(new ResourceLocation(Main.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + theme.name()));
+				textures.add(new ResourceLocation(Main.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + theme.name() + "-redstone"));
 			}
 		}
 		textures.add(new ResourceLocation(Main.MODID, "blocks/block_bronze"));

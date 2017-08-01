@@ -26,12 +26,14 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipe>
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
 	private final IDrawableStatic arrowStatic;
+	private final IDrawable fluidOverlay;
 
 	protected FluidCoolingCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, StartDirection.LEFT, false);
+		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Main.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64, 16, 64);
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipe>
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, FluidCoolingRecipe recipeWrapper, IIngredients ingredients){
-		recipeLayout.getFluidStacks().init(0, true, 21, 30, 16, 64, 1000, true, null);
+		recipeLayout.getFluidStacks().init(0, true, 21, 30, 16, 64, 1000, true, fluidOverlay);
 		recipeLayout.getFluidStacks().set(0, ingredients.getInputs(FluidStack.class).get(0));
 		recipeLayout.getItemStacks().init(0, false, 80, 55);
 		recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class).get(0));

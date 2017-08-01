@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import mezz.jei.api.ingredients.IIngredients;
@@ -25,7 +26,7 @@ public class HeatExchangerRecipe implements IRecipeWrapper{
 	private final double max;
 	private final double add;
 
-	public HeatExchangerRecipe(Entry<Block, Triple<IBlockState, Double, Double>> entry){
+	public HeatExchangerRecipe(Entry<Block, Pair<Boolean, Triple<IBlockState, Double, Double>>> entry){
 		if(entry.getKey() == Blocks.FIRE){
 			ItemStack discountFire = new ItemStack(Items.FLINT_AND_STEEL, 1);
 			discountFire.setStackDisplayName("Fire");
@@ -38,14 +39,14 @@ public class HeatExchangerRecipe implements IRecipeWrapper{
 		}else{
 			inputFluid = null;
 		}
-		stack = entry.getValue().getLeft() == null ? ItemStack.EMPTY : new ItemStack(entry.getValue().getLeft().getBlock());
-		if(stack.isEmpty() && entry.getValue().getLeft() != null && FluidRegistry.lookupFluidForBlock(entry.getValue().getLeft().getBlock()) != null){
-			outputFluid = new FluidStack(FluidRegistry.lookupFluidForBlock(entry.getValue().getLeft().getBlock()), 1000);
+		stack = entry.getValue().getLeft() == null ? ItemStack.EMPTY : new ItemStack(entry.getValue().getRight().getLeft().getBlock());
+		if(stack.isEmpty() && entry.getValue().getLeft() != null && FluidRegistry.lookupFluidForBlock(entry.getValue().getRight().getLeft().getBlock()) != null){
+			outputFluid = new FluidStack(FluidRegistry.lookupFluidForBlock(entry.getValue().getRight().getLeft().getBlock()), 1000);
 		}else{
 			outputFluid = null;
 		}
-		add = entry.getValue().getMiddle();
-		max = entry.getValue().getRight();
+		add = entry.getValue().getRight().getMiddle();
+		max = entry.getValue().getRight().getRight();
 	}
 
 	@Override

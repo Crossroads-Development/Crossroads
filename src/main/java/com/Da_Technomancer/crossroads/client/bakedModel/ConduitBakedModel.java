@@ -93,7 +93,7 @@ public class ConduitBakedModel implements IBakedModel{
 
 		List<BakedQuad> quads = new ArrayList<>();
 
-		TextureAtlasSprite sprite = bakedTextureGetter.apply(((IConduitModel) state.getBlock()).getTexture());
+		TextureAtlasSprite sprite = bakedTextureGetter.apply(((IConduitModel) state.getBlock()).getTexture(state));
 
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 

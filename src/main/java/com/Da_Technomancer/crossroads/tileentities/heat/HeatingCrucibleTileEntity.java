@@ -52,7 +52,6 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 
 	/**
 	 * 0 = not locked, 1 = copper, 2 = cobble
-	 * 
 	 */
 	private byte getType(){
 		if(!inventory.isEmpty()){
@@ -122,28 +121,30 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 		ticksExisted++;
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 			init = true;
 		}
 
 		byte type = getType();
 
-		if(!inventory.isEmpty() && ticksExisted % 10 == 0 && Math.random() < MiscOp.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= (getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
+		if(temp >= 1000D){
+			temp -= 10D;
+			if(!inventory.isEmpty() && ticksExisted % 10 == 0 && Math.random() < MiscOp.findEfficiency(temp, 1000D, 1500D) && (content == null || CAPACITY - content.amount >= (type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
+				if(content == null){
+					content = new FluidStack(type == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA);
+				}else{
+					content.amount += type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA;
+				}
 
-			if(content == null){
-				content = new FluidStack(type == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA);
-			}else{
-				content.amount += getType() == 1 ? PRODUCED_COPPER : PRODUCED_LAVA;
+				inventory.shrink(1);
 			}
-
-			inventory.shrink(1);
-
-			temp -= 100D;
 			markDirty();
 		}
 
-		if(world.getBlockState(pos).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || world.getBlockState(pos).getValue(Properties.TEXTURE_4) != getCorrectState().getValue(Properties.TEXTURE_4)){
-			world.setBlockState(pos, getCorrectState(), 2);
+		
+		IBlockState correctState = getCorrectState();
+		if(world.getBlockState(pos).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || world.getBlockState(pos).getValue(Properties.TEXTURE_4) != correctState.getValue(Properties.TEXTURE_4)){
+			world.setBlockState(pos, correctState, 2);
 		}
 	}
 
@@ -246,7 +247,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		@Override

@@ -13,7 +13,6 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
@@ -87,9 +86,7 @@ public final class GuideBooks{
 			createPages(pages, "lore.energy");
 			entries.put(new ResourceLocation(Main.MODID, "energy"), new EntryItemStack(pages, "Basics of Energy", new ItemStack(ModItems.handCrank, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.heat.start", new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL), 4), "###", "$$$", "###", '#', Blocks.WOOL, '$', "ingotCopper"), "lore.heat.wires", new ShapedOreRecipe(null, new ItemStack(ModItems.diamondWire, 3), "*&*", '*', "ingotTin", '&', "gemDiamond"), "lore.heat_thermometer", new ShapedOreRecipe(null, new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', ModBlocks.axle, '?', "blockGlass"), "lore.heat.bobo");
-			entries.put(new ResourceLocation(Main.MODID, "heat"), new EntryItemStack(pages, "Basics of Heat", new ItemStack(ModItems.thermometer, 1), true));
-			pages = new ArrayList<IPage>();
+			entries.put(new ResourceLocation(Main.MODID, "heat"), new SmartEntry("lore.heat.name", new ItemStack(ModItems.thermometer, 1), "lore.heat.start", ((Supplier<Object>) () -> ModConfig.getConfigBool(ModConfig.heatEffects, true) ? "lore.heat.insulator" : "info.heat.insulator_effect_disable"), "lore.heat.end", new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 4), "###", "$$$", "###", '#', Blocks.WOOL, '$', "ingotCopper"), "lore.heat.post_recipe", new ShapedOreRecipe(null, new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', ModBlocks.axle, '?', "blockGlass"), "lore.heat.bobo"));
 			createPages(pages, "lore.steam.start", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidTube, 8), "###", "   ", "###", '#', "ingotBronze"), "lore.steam.tubes", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidTank, 1), " $ ", "$#$", " $ ", '#', "ingotGold", '$', "ingotBronze"), "lore.steam.steam", new ShapedOreRecipe(null, new ItemStack(ModBlocks.steamBoiler, 1), "###", "# #", "&&&", '#', "ingotBronze", '&', "ingotCopper"), Pair.of("lore.steam.boiler", new Object[] {Math.round(EnergyConverters.DEG_PER_BUCKET_STEAM * 1.1D), EnergyConverters.DEG_PER_BUCKET_STEAM}), new ShapedOreRecipe(null, new ItemStack(ModItems.fluidGauge, 1), " * ", "*#*", " *$", '#', "blockGlass", '*', "ingotIron", '$', ModBlocks.fluidTube));
 			entries.put(new ResourceLocation(Main.MODID, "steam"), new EntryItemStack(pages, "Basics of Steam", new ItemStack(ModItems.fluidGauge, 1), true));
 			pages = new ArrayList<IPage>();
@@ -103,28 +100,14 @@ public final class GuideBooks{
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
 			// HEAT
-			createPages(pages, "lore.coal_heater.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.coalHeater, 1), "#*#", "# #", "###", '#', "cobblestone", '*', "ingotCopper"), "lore.coal_heater.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "coal_heater"), new EntryItemStack(pages, "Coal Heater", new ItemStack(ModBlocks.coalHeater, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.heating_chamber.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatingChamber, 1), "#*#", "# #", "###", '#', "ingotIron", '*', "ingotCopper"), "lore.heating_chamber.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "heating_chamber"), new EntryItemStack(pages, "Heating Chamber", new ItemStack(ModBlocks.heatingChamber, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.heat_exchanger.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatExchanger, 1), "#$#", "$$$", "###", '#', Blocks.IRON_BARS, '$', "ingotCopper"), "lore.heat_exchanger.mid_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.insulHeatExchanger, 1), "###", "#$#", "###", '#', "obsidian", '$', ModBlocks.heatExchanger), "lore.heat_exchanger.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "heat_exchanger"), new EntryItemStack(pages, "Heat Exchangers", new ItemStack(ModBlocks.heatExchanger, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.heating_crucible.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatingCrucible, 1), "# #", "#?#", "###", '#', Blocks.HARDENED_CLAY, '?', Items.CAULDRON), "lore.heating_crucible.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "heating_crucible"), new EntryItemStack(pages, "Heating Crucible", new ItemStack(ModBlocks.heatingCrucible, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.fluid_cooling_chamber", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidCoolingChamber, 1), "###", "# #", "%%%", '#', "ingotTin", '%', "ingotIron"));
-			entries.put(new ResourceLocation(Main.MODID, "fluid_cooling"), new EntryItemStack(pages, "Fluid Cooling Chamber", new ItemStack(ModBlocks.fluidCoolingChamber, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.redstone_cable.pre_recipe", new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.REDSTONE_HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL), 1), "###", "#?#", "###", '#', "dustRedstone", '?', HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL)), "lore.redstone_cable.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "redstone_cable"), new EntryItemStack(pages, "Redstone Heat Cables", new ItemStack(Items.REDSTONE, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.salt_reactor.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotTin", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper"), "lore.salt_reactor.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "salt_reactor"), new EntryItemStack(pages, "Salt Reactor", new ItemStack(ModBlocks.saltReactor, 1), true));
-			pages = new ArrayList<IPage>();
-
+			entries.put(new ResourceLocation(Main.MODID, "fuel_heater"), new SmartEntry("lore.fuel_heater", new ItemStack(ModBlocks.fuelHeater, 1), "lore.fuel_heater.text", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fuelHeater, 1), "#*#", "# #", "###", '#', "cobblestone", '*', "ingotCopper")));
+			entries.put(new ResourceLocation(Main.MODID, "heating_chamber"), new SmartEntry("lore.heating_chamber", new ItemStack(ModBlocks.heatingChamber, 1), "lore.heating_chamber.text", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatingChamber, 1), "#*#", "# #", "###", '#', "ingotIron", '*', "ingotCopper")));
+			entries.put(new ResourceLocation(Main.MODID, "heat_exchanger"), new SmartEntry("lore.heat_exchanger", new ItemStack(ModBlocks.heatExchanger, 1), "lore.heat_exchanger.text", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatExchanger, 1), "#$#", "$$$", "###", '#', Blocks.IRON_BARS, '$', "ingotCopper"), new ShapedOreRecipe(null, new ItemStack(ModBlocks.insulHeatExchanger, 1), "###", "#$#", "###", '#', "obsidian", '$', ModBlocks.heatExchanger)));
+			entries.put(new ResourceLocation(Main.MODID, "heating_crucible"), new SmartEntry("lore.heating_crucible", new ItemStack(ModBlocks.heatingChamber, 1), "lore.heating_crucible.text", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatingCrucible, 1), "# #", "#?#", "###", '#', Blocks.HARDENED_CLAY, '?', Items.CAULDRON)));
+			entries.put(new ResourceLocation(Main.MODID, "fluid_cooling"), new SmartEntry("lore.fluid_cooling", new ItemStack(ModBlocks.fluidCoolingChamber, 1), "lore.fluid_cooling.text",  new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidCoolingChamber, 1), "###", "# #", "#%#", '#', "ingotIron", '%', "ingotCopper")));
+			entries.put(new ResourceLocation(Main.MODID, "redstone_cable"), new SmartEntry("lore.redstone_cable", new ItemStack(Items.REDSTONE, 1), "lore.redstone_cable.text", new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.REDSTONE_HEAT_CABLES.get(HeatInsulators.WOOL), 1), "###", "#?#", "###", '#', "dustRedstone", '?', HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL))));
+			entries.put(new ResourceLocation(Main.MODID, "salt_reactor"), new SmartEntry("lore.salt_reactor", new ItemStack(ModBlocks.saltReactor, 1), "lore.salt_reactor.text", new ShapedOreRecipe(null, new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotIron", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper")));
+			
 			categories.add(new CategoryItemStack(entries, "Heat Machines", new ItemStack(ModBlocks.heatingChamber, 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
@@ -254,7 +237,7 @@ public final class GuideBooks{
 				}
 			});
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
-			
+
 			MAIN.setTitle("Main Menu");
 			MAIN.setWelcomeMessage("Welcome to Crossroads");
 			MAIN.setDisplayName("mysterious_journal");
@@ -273,8 +256,8 @@ public final class GuideBooks{
 
 		@Override
 		public void handlePost(ItemStack bookStack){
-			GameRegistry.addShapelessRecipe(new ResourceLocation(Main.MODID, "guide_journal"), null, bookStack, CraftingHelper.getIngredient(Items.BOOK), CraftingHelper.getIngredient(Items.COMPASS));
-			GameRegistry.addShapelessRecipe(new ResourceLocation(Main.MODID, "guide_manual_to_journal"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(GuideBooks.INFO)));
+			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_journal"), null, bookStack, CraftingHelper.getIngredient(Items.BOOK), CraftingHelper.getIngredient(Items.COMPASS));
+			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_manual_to_journal"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(GuideBooks.INFO)));
 		}
 	}
 
@@ -300,7 +283,7 @@ public final class GuideBooks{
 			createPages(pages, "info.energy");
 			entries.put(new ResourceLocation(Main.MODID, "energy"), new EntryItemStack(pages, "Basics of Energy", new ItemStack(ModItems.handCrank, 1), true));
 			pages = new ArrayList<IPage>();
-			entries.put(new ResourceLocation(Main.MODID, "heat"), new SmartEntry("info.heat.name", new ItemStack(ModItems.thermometer, 1), "info.heat.start", ((Supplier<Object>) () -> ModConfig.getConfigBool(ModConfig.heatEffects, true) ? "info.heat.insulator" : "info.heat.insulator_effect_disable"), "info.heat.end", new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL), 4), "###", "$$$", "###", '#', Blocks.WOOL, '$', "ingotCopper"), new ShapedOreRecipe(null, new ItemStack(ModItems.diamondWire, 3), "*&*", '*', "ingotTin", '&', "gemDiamond"), "info.heat.post_recipe", new ShapedOreRecipe(null, new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', ModBlocks.axle, '?', "blockGlass")));
+			entries.put(new ResourceLocation(Main.MODID, "heat"), new SmartEntry("info.heat.name", new ItemStack(ModItems.thermometer, 1), "info.heat.start", ((Supplier<Object>) () -> ModConfig.getConfigBool(ModConfig.heatEffects, true) ? "info.heat.insulator" : "info.heat.insulator_effect_disable"), "info.heat.end", new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 4), "###", "$$$", "###", '#', Blocks.WOOL, '$', "ingotCopper"), "info.heat.post_recipe", new ShapedOreRecipe(null, new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', ModBlocks.axle, '?', "blockGlass")));
 			createPages(pages, "info.steam.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidTube, 8), "###", "   ", "###", '#', "ingotBronze"), "info.steam.mid_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidTank, 1), " $ ", "$#$", " $ ", '#', "ingotGold", '$', "ingotBronze"), "info.steam.pre_boiler_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.steamBoiler, 1), "###", "# #", "&&&", '#', "ingotBronze", '&', "ingotCopper"), Pair.of("info.steam.boiler", new Object[] {Math.round(EnergyConverters.DEG_PER_BUCKET_STEAM * 1.1D), EnergyConverters.DEG_PER_BUCKET_STEAM}), new ShapedOreRecipe(null, new ItemStack(ModItems.fluidGauge, 1), " * ", "*#*", " *$", '#', "blockGlass", '*', "ingotIron", '$', ModBlocks.fluidTube));
 			entries.put(new ResourceLocation(Main.MODID, "steam"), new EntryItemStack(pages, "Basics of Steam", new ItemStack(ModItems.fluidGauge, 1), true));
 			pages = new ArrayList<IPage>();
@@ -316,27 +299,13 @@ public final class GuideBooks{
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
 			// HEAT
-			createPages(pages, "info.coal_heater.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.coalHeater, 1), "#*#", "# #", "###", '#', "cobblestone", '*', "ingotCopper"), "info.coal_heater.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "coal_heater"), new EntryItemStack(pages, "Coal Heater", new ItemStack(ModBlocks.coalHeater, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "info.heating_chamber.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatingChamber, 1), "#*#", "# #", "###", '#', "ingotIron", '*', "ingotCopper"), "info.heating_chamber.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "heating_chamber"), new EntryItemStack(pages, "Heating Chamber", new ItemStack(ModBlocks.heatingChamber, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "info.heat_exchanger.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatExchanger, 1), "#$#", "$$$", "###", '#', Blocks.IRON_BARS, '$', "ingotCopper"), "info.heat_exchanger.mid_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.insulHeatExchanger, 1), "###", "#$#", "###", '#', "obsidian", '$', ModBlocks.heatExchanger), "info.heat_exchanger.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "heat_exchanger"), new EntryItemStack(pages, "Heat Exchangers", new ItemStack(ModBlocks.heatExchanger, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "info.heating_crucible.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatingCrucible, 1), "# #", "#?#", "###", '#', Blocks.HARDENED_CLAY, '?', Items.CAULDRON), "info.heating_crucible.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "heating_crucible"), new EntryItemStack(pages, "Heating Crucible", new ItemStack(ModBlocks.heatingCrucible, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "info.fluid_cooling", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidCoolingChamber, 1), "###", "# #", "#%#", '#', "ingotIron", '%', "ingotCopper"));
-			entries.put(new ResourceLocation(Main.MODID, "fluid_cooling"), new EntryItemStack(pages, "Fluid Cooling Chamber", new ItemStack(ModBlocks.fluidCoolingChamber, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "info.redstone_cable.pre_recipe", new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.REDSTONE_HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL), 1), "###", "#?#", "###", '#', "dustRedstone", '?', HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL)), "info.redstone_cable.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "redstone_cable"), new EntryItemStack(pages, "Redstone Heat Cable", new ItemStack(Items.REDSTONE, 1), true));
-			pages = new ArrayList<IPage>();
-			createPages(pages, "info.salt_reactor.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotIron", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper"), "info.salt_reactor.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "salt_reactor"), new EntryItemStack(pages, "Salt Reactor", new ItemStack(ModBlocks.saltReactor, 1), true));
-			pages = new ArrayList<IPage>();
+			entries.put(new ResourceLocation(Main.MODID, "fuel_heater"), new SmartEntry("info.fuel_heater", new ItemStack(ModBlocks.fuelHeater, 1), "info.fuel_heater.text", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fuelHeater, 1), "#*#", "# #", "###", '#', "cobblestone", '*', "ingotCopper")));
+			entries.put(new ResourceLocation(Main.MODID, "heating_chamber"), new SmartEntry("info.heating_chamber", new ItemStack(ModBlocks.heatingChamber, 1), "info.heating_chamber.text", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatingChamber, 1), "#*#", "# #", "###", '#', "ingotIron", '*', "ingotCopper")));
+			entries.put(new ResourceLocation(Main.MODID, "heat_exchanger"), new SmartEntry("info.heat_exchanger", new ItemStack(ModBlocks.heatExchanger, 1), "info.heat_exchanger.text", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatExchanger, 1), "#$#", "$$$", "###", '#', Blocks.IRON_BARS, '$', "ingotCopper"), new ShapedOreRecipe(null, new ItemStack(ModBlocks.insulHeatExchanger, 1), "###", "#$#", "###", '#', "obsidian", '$', ModBlocks.heatExchanger)));
+			entries.put(new ResourceLocation(Main.MODID, "heating_crucible"), new SmartEntry("info.heating_crucible", new ItemStack(ModBlocks.heatingChamber, 1), "info.heating_crucible.text", new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatingCrucible, 1), "# #", "#?#", "###", '#', Blocks.HARDENED_CLAY, '?', Items.CAULDRON)));
+			entries.put(new ResourceLocation(Main.MODID, "fluid_cooling"), new SmartEntry("info.fluid_cooling", new ItemStack(ModBlocks.fluidCoolingChamber, 1), "info.fluid_cooling.text",  new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidCoolingChamber, 1), "###", "# #", "#%#", '#', "ingotIron", '%', "ingotCopper")));
+			entries.put(new ResourceLocation(Main.MODID, "redstone_cable"), new SmartEntry("info.redstone_cable", new ItemStack(Items.REDSTONE, 1), "info.redstone_cable.text", new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.REDSTONE_HEAT_CABLES.get(HeatInsulators.WOOL), 1), "###", "#?#", "###", '#', "dustRedstone", '?', HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL))));
+			entries.put(new ResourceLocation(Main.MODID, "salt_reactor"), new SmartEntry("info.salt_reactor", new ItemStack(ModBlocks.saltReactor, 1), "info.salt_reactor.text", new ShapedOreRecipe(null, new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotIron", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper")));
 
 			categories.add(new CategoryItemStack(entries, "Heat Machines", new ItemStack(ModBlocks.heatingChamber, 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
@@ -489,7 +458,7 @@ public final class GuideBooks{
 
 		@Override
 		public void handlePost(ItemStack bookStack){
-			GameRegistry.addShapelessRecipe(new ResourceLocation(Main.MODID, "guide_journal_to_manual"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(GuideBooks.MAIN)));
+			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_journal_to_manual"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(GuideBooks.MAIN)));
 		}
 	}
 

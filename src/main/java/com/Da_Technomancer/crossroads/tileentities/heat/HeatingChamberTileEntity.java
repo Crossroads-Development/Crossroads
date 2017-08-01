@@ -31,26 +31,29 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 			init = true;
 		}
 
-		if(!inventory[0].isEmpty() && !getOutput().isEmpty()){
-			if(temp >= 2 + MINTEMP){
-				temp -= 2;
-				if((progress += 2) >= REQUIRED){
+		if(temp >= 2 + MINTEMP){
+			temp -= 2;
+			ItemStack output = getOutput();
+			if(!inventory[0].isEmpty() && !output.isEmpty()){
+				progress += 2;
+				if(progress >= REQUIRED){
 					progress = 0;
-					markDirty();
+					
 					if(inventory[1].isEmpty()){
-						inventory[1] = getOutput();
+						inventory[1] = output;
 					}else{
-						inventory[1].grow(getOutput().getCount());
+						inventory[1].grow(output.getCount());
 					}
 					inventory[0].shrink(1);
 				}
+			}else{
+				progress = 0;
 			}
-		}else{
-			progress = 0;
+			markDirty();
 		}
 	}
 
@@ -92,8 +95,8 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
-		nbt.setBoolean("init", this.init);
-		nbt.setDouble("temp", this.temp);
+		nbt.setBoolean("init", init);
+		nbt.setDouble("temp", temp);
 		nbt.setInteger("prog", progress);
 
 		if(!inventory[0].isEmpty()){

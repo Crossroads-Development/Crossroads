@@ -11,7 +11,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.effects.goggles.IGoggleInfoTE;
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
@@ -20,6 +21,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
+import com.Da_Technomancer.crossroads.items.OmniMeter;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,11 +30,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable, IGoggleInfoTE{
+public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	@Override
-	public void addInfo(ArrayList<String> chat, GoggleLenses lens, EntityPlayer player, @Nullable EnumFacing side){
-		if(lens == GoggleLenses.QUARTZ){
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
+		if(device == GoggleLenses.QUARTZ || device instanceof OmniMeter){
 			chat.add("Element: " + (currentElement == null ? "NONE" : currentElement.toString() + (voi ? " (VOID), " : ", ") + "Time: " + time));
 		}
 	}

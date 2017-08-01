@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.enums;
 
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.effects.goggles.DiamondGoggleEffect;
 import com.Da_Technomancer.crossroads.API.effects.goggles.EmeraldGoggleEffect;
 import com.Da_Technomancer.crossroads.API.effects.goggles.IGoggleEffect;
@@ -18,9 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public enum GoggleLenses{
-	
-	
+public enum GoggleLenses implements IInfoDevice{
 	
 	//Don't reorder these unless you want to rename all the goggle texture files.
 	RUBY(new OreDictCraftingStack("gemRuby", 1), "_ruby", new RubyGoggleEffect()),

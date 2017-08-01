@@ -2,23 +2,27 @@ package com.Da_Technomancer.crossroads.items;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
 import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.world.World;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
@@ -36,7 +40,7 @@ public final class ModItems{
 	public static final CreativeTabs tabHeatCable = new CreativeTabs("heatCable"){
 		@Override
 		public ItemStack getTabIconItem(){
-			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatConductors.COPPER).get(HeatInsulators.WOOL), 1);
+			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 1);
 		}
 	};
 	public static final CreativeTabs tabGear = new CreativeTabs("gear"){
@@ -63,6 +67,7 @@ public final class ModItems{
 	public static MagentaBread magentaBread;
 	public static ItemCandleLily itemCandleLilypad;
 	public static EdibleBlob edibleBlob;
+	@Deprecated
 	public static BasicItem diamondWire;
 	public static RainIdol rainIdol;
 	public static BasicItem pureQuartz;
@@ -113,7 +118,14 @@ public final class ModItems{
 		magentaBread = new MagentaBread();
 		itemCandleLilypad = new ItemCandleLily();
 		edibleBlob = new EdibleBlob();
-		diamondWire = new BasicItem("diamond_wire", "wireDiamond");
+		diamondWire = new BasicItem("diamond_wire", "wireDiamond", false){
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+				tooltip.add("DEPRECATED");
+				tooltip.add("This item is being removed. Dispose of any you have.");
+			}
+		};
 		rainIdol = new RainIdol();
 		pureQuartz = new BasicItem("pure_quartz", "gemQuartz");
 		luminescentQuartz = new BasicItem("luminescent_quartz");

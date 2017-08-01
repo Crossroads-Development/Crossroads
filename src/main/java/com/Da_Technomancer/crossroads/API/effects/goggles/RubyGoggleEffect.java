@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -27,8 +28,8 @@ public class RubyGoggleEffect implements IGoggleEffect{
 			if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
 				chat.add("Temp: " + te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "°C, Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(ray.getBlockPos()).getFloatTemperature(ray.getBlockPos()) + "°C");
 			}
-			if(te instanceof IGoggleInfoTE){
-				((IGoggleInfoTE) te).addInfo(chat, GoggleLenses.RUBY, player, ray.sideHit);
+			if(te instanceof IInfoTE){
+				((IInfoTE) te).addInfo(chat, GoggleLenses.RUBY, player, ray.sideHit);
 			}
 		}
 

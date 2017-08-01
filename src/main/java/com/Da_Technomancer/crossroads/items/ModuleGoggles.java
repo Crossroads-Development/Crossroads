@@ -36,7 +36,7 @@ public class ModuleGoggles extends ItemArmor{
 	}
 
 	/**
-	 * Initial value chosen at random.
+	 * Value chosen at random.
 	 */
 	private static final int CHAT_ID = 718749;
 	

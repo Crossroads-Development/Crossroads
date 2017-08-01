@@ -35,9 +35,11 @@ public class RadiatorTileEntity extends TileEntity implements ITickable{
 		if(steam != null && steam.amount >= 100 && (water == null || CAPACITY - water.amount >= 100)){
 			temp += .1D * EnergyConverters.DEG_PER_BUCKET_STEAM;
 			water = new FluidStack(BlockDistilledWater.getDistilledWater(), 100 + (water == null ? 0 : water.amount));
-			if((steam.amount -= 100) <= 0){
+			steam.amount -= 100;
+			if(steam.amount <= 0){
 				steam = null;
 			}
+			markDirty();
 		}
 
 	}

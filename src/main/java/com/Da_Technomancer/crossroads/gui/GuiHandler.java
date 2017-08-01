@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.gui.container.PrototypingTableContainer;
 import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
 import com.Da_Technomancer.crossroads.gui.container.SlottedChestContainer;
 import com.Da_Technomancer.crossroads.tileentities.SlottedChestTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.heat.CoalHeaterTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
@@ -42,7 +42,7 @@ public class GuiHandler implements IGuiHandler{
 			case GRINDSTONE_GUI:
 				return new GrindstoneContainer(player.inventory, ((GrindstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case COALHEATER_GUI:
-				return new CoalHeaterContainer(player.inventory, ((CoalHeaterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+				return new CoalHeaterContainer(player.inventory, ((FuelHeaterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case HEATINGCHAMBER_GUI:
 				return new HeatingChamberContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case SLOTTEDCHEST_GUI:
@@ -70,7 +70,7 @@ public class GuiHandler implements IGuiHandler{
 			case GRINDSTONE_GUI:
 				return new GrindstoneGuiContainer(player.inventory, ((GrindstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case COALHEATER_GUI:
-				return new CoalHeaterGuiContainer(player.inventory, ((CoalHeaterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+				return new CoalHeaterGuiContainer(player.inventory, ((FuelHeaterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case HEATINGCHAMBER_GUI:
 				return new HeatingChamberGuiContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case SLOTTEDCHEST_GUI:

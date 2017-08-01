@@ -1,27 +1,33 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
+import java.util.ArrayList;
+
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.enums.HeatConductors;
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.items.OmniMeter;
+import com.Da_Technomancer.crossroads.items.Thermometer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class HeatExchangerTileEntity extends TileEntity implements ITickable{
+public class HeatExchangerTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private double temp = 0;
 	private boolean init = false;
-	private int ticksExisted = 0;
 	private boolean insul;
+	private double bufferTemp = 0;
 
 	public HeatExchangerTileEntity(){
 		this(false);
@@ -33,45 +39,62 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 	}
 
 	@Override
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
+		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
+			chat.add("Buffered heat: " + bufferTemp + "°C");
+		}
+	}
+	
+	@Override
 	public void update(){
 		if(world.isRemote){
 			return;
 		}
-		++ticksExisted;
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos());
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 			init = true;
 		}
 
-		if(ticksExisted % 10 == 0){
-			transHeat(HeatConductors.COPPER.getRate());
-			if(!insul){
-				runLoss(.1D);
+		if(RecipeHolder.envirHeatSource.containsKey(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())){
+			Triple<IBlockState, Double, Double> trip = RecipeHolder.envirHeatSource.get(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock()).getRight();
+			if((trip.getMiddle() < 0 && trip.getRight() < temp + bufferTemp) || (trip.getMiddle() >= 0 && trip.getRight() > temp + bufferTemp)){
+				world.setBlockState(pos.offset(EnumFacing.DOWN), trip.getLeft(), 3);
+				bufferTemp += trip.getMiddle();
+				markDirty();
 			}
+		}
+		
+		if(bufferTemp != 0){
+			double internalTransfer = Math.min(25D, Math.abs(bufferTemp)) * Math.signum(bufferTemp);
+			temp += internalTransfer;
+			bufferTemp -= internalTransfer;
 			markDirty();
 		}
-
-		if(RecipeHolder.envirHeatSource.containsKey(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock())){
-			Triple<IBlockState, Double, Double> trip = RecipeHolder.envirHeatSource.get(world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock());
-			if((trip.getMiddle() < 0 && trip.getRight() < temp) || (trip.getMiddle() >= 0 && trip.getRight() > temp)){
-				world.setBlockState(pos.offset(EnumFacing.DOWN), trip.getLeft() == null ? Blocks.AIR.getDefaultState() : trip.getLeft(), 3);
-				handler.addHeat(trip.getMiddle());
-			}
+		
+		
+		double prevTemp = temp;
+		transHeat();
+		if(!insul){
+			runLoss(10D);
+		}
+		if(temp != prevTemp){
+			markDirty();
 		}
 	}
 
-	public void transHeat(double rate){
+	public void transHeat(){
 
-		double reservePool = temp * rate;
+		double reservePool = temp;
 		temp -= reservePool;
 		int members = 1;
 
 		for(EnumFacing side : EnumFacing.values()){
-			if(side != EnumFacing.DOWN && world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				IHeatHandler handler = world.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
-				reservePool += handler.getTemp() * rate;
-				handler.addHeat(-(handler.getTemp() * rate));
+			TileEntity te = world.getTileEntity(pos.offset(side));
+			if(side != EnumFacing.DOWN && te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				IHeatHandler handler = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
+				reservePool += handler.getTemp();
+				handler.addHeat(-handler.getTemp());
 				members++;
 			}
 		}
@@ -79,21 +102,17 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 		reservePool /= members;
 
 		for(EnumFacing side : EnumFacing.values()){
-			if(world.getTileEntity(pos.offset(side)) != null && world.getTileEntity(pos.offset(side)).hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				world.getTileEntity(pos.offset(side)).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
+			TileEntity te = world.getTileEntity(pos.offset(side));
+			if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+				te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
 			}
 		}
 		temp += reservePool;
 	}
 
 	private void runLoss(double rate){
-		if(rate == 0){
-			return;
-		}
-
-		double newTemp = temp + (rate * (EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(getPos())));
-		newTemp /= (rate + 1);
-		temp = newTemp;
+		double biomeTemp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+		temp += Math.min(rate, Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
 	@Override
@@ -103,6 +122,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 		insul = nbt.getBoolean("insul");
 		init = nbt.getBoolean("init");
 		temp = nbt.getDouble("temp");
+		bufferTemp = nbt.getDouble("buffer");
 	}
 
 	@Override
@@ -112,6 +132,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable{
 		nbt.setBoolean("insul", insul);
 		nbt.setBoolean("init", this.init);
 		nbt.setDouble("temp", this.temp);
+		nbt.setDouble("buffer", bufferTemp);
 		return nbt;
 	}
 

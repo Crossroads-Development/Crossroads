@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.effects.goggles.IGoggleInfoTE;
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
@@ -21,11 +22,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class CageChargerTileEntity extends TileEntity implements IGoggleInfoTE{
+public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 
 	@Override
-	public void addInfo(ArrayList<String> chat, GoggleLenses lens, EntityPlayer player, @Nullable EnumFacing side){
-		if(lens == GoggleLenses.QUARTZ && !cage.isEmpty()){
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
+		if(device == GoggleLenses.QUARTZ && !cage.isEmpty()){
 			if(cage.getTagCompound() == null){
 				cage.setTagCompound(new NBTTagCompound());
 			}

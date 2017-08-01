@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects.goggles;
 import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -40,8 +41,8 @@ public class EmeraldGoggleEffect implements IGoggleEffect{
 					chat.add("Total Energy: " + te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy());
 				}
 				
-				if(te instanceof IGoggleInfoTE){
-					((IGoggleInfoTE) te).addInfo(chat, GoggleLenses.EMERALD, player, ray.sideHit);
+				if(te instanceof IInfoTE){
+					((IInfoTE) te).addInfo(chat, GoggleLenses.EMERALD, player, ray.sideHit);
 				}
 			}
 		}
