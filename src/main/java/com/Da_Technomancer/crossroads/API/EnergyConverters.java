@@ -19,7 +19,7 @@ public final class EnergyConverters{
 	 * conversion is far too simple (Heat capacity, thermodynamics, units,
 	 * etc.)
 	 */
-	public static final double DEG_PER_JOULE = 4D;
+	public static final double DEG_PER_JOULE = 1D;
 
 	/**
 	 * The number of mB of liquid fat that is equivalent to 1 food

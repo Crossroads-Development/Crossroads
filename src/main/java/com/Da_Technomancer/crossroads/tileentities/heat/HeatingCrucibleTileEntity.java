@@ -125,7 +125,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 
 		if(temp >= 1000D){
 			temp -= 10D;
-			if(!inventory.isEmpty() && Math.random() < (temp >= 1490 ? 0.5 : 0.1) && (content == null || CAPACITY - content.amount >= (type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
+			if(!inventory.isEmpty() && Math.random() < (temp >= 1490 ? 0.05 : 0.01) && (content == null || CAPACITY - content.amount >= (type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
 				if(content == null){
 					content = new FluidStack(type == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA);
 				}else{
