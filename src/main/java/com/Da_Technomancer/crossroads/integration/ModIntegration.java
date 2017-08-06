@@ -17,7 +17,6 @@ public class ModIntegration{
 	public static void init(){
 		if(Loader.isModLoaded("jei")){
 			RecipeHolder.rebind();
-
 		}
 	}
 }

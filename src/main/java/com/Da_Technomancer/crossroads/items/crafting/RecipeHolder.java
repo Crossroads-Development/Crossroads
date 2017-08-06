@@ -83,11 +83,13 @@ public final class RecipeHolder{
 			currentRecipes.add(new GrindstoneRecipe(rec));
 		}
 		JEIWrappers.put(GrindstoneCategory.ID, currentRecipes);
+		
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> rec : fluidCoolingRecipes.entrySet()){
 			currentRecipes.add(new FluidCoolingRecipe(rec));
 		}
 		JEIWrappers.put(FluidCoolingCategory.ID, currentRecipes);
+		
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<Block, Pair<Boolean, Triple<IBlockState, Double, Double>>> rec : envirHeatSource.entrySet()){
 			if(rec.getValue().getLeft()){
@@ -95,11 +97,13 @@ public final class RecipeHolder{
 			}
 		}
 		JEIWrappers.put(HeatExchangerCategory.ID, currentRecipes);
+		
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(IRecipe rec : technomancyRecipes){
 			currentRecipes.add(new DetailedCrafterRecipe(rec, 0));
 		}
 		JEIWrappers.put(DetailedCrafterCategory.ID, currentRecipes);
+		
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		currentRecipes.add(new HeatingCrucibleRecipe(true));
 		currentRecipes.add(new HeatingCrucibleRecipe(false));

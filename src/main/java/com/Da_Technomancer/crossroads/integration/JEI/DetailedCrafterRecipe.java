@@ -1,7 +1,11 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import com.Da_Technomancer.crossroads.Main;
 import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.ingredients.IIngredients;
@@ -13,7 +17,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import scala.actors.threadpool.Arrays;
 
 public class DetailedCrafterRecipe implements IRecipeWrapper{
 
@@ -52,12 +55,12 @@ public class DetailedCrafterRecipe implements IRecipeWrapper{
 			Object[] input = recipe.getIngredients().toArray();
 			int width = ((ShapedOreRecipe) recipe).getWidth();
 			int height = ((ShapedOreRecipe) recipe).getHeight();
-			ingredients.setInputLists(ItemStack.class, ImmutableList.of(format(input[0]), format(width < 2 ? ImmutableList.of() : input[1]), format(width < 3 ? ImmutableList.of() : input[2]), format(height < 2 ? ImmutableList.of() : input[width]), format(height < 2 || width < 2 ? ImmutableList.of() : input[width + 1]), format(height < 2 || width < 3 ? ImmutableList.of() : input[width + 2]), format(height < 3 ? ImmutableList.of() : input[width * 2]), format(height < 3 || width < 2 ? ImmutableList.of() : input[(width * 2) + 1]), format(height < 3 || width < 3 ? ImmutableList.of() : input[(width * 2) + 2])));
+			ingredients.setInputLists(ItemStack.class, ImmutableList.of(format(input[0]), format(width < 2 ? null : input[1]), format(width < 3 ? null : input[2]), format(height < 2 ? null : input[width]), format(height < 2 || width < 2 ? null : input[width + 1]), format(height < 2 || width < 3 ? null : input[width + 2]), format(height < 3 ? null : input[width * 2]), format(height < 3 || width < 2 ? null : input[(width * 2) + 1]), format(height < 3 || width < 3 ? null : input[(width * 2) + 2])));
 		}else if(recipe instanceof ShapelessOreRecipe){
 			NonNullList<Ingredient> input = recipe.getIngredients();
-			ingredients.setInputLists(ItemStack.class, ImmutableList.of(format(input.get(0)), format(input.size() < 2 ? ImmutableList.of() : input.get(1)), format(input.size() < 3 ? ImmutableList.of() : input.get(2)), format(input.size() < 4 ? ImmutableList.of() : input.get(3)), format(input.size() < 5 ? ImmutableList.of() : input.get(4)), format(input.size() < 6 ? ImmutableList.of() : input.get(5)), format(input.size() < 7 ? ImmutableList.of() : input.get(6)), format(input.size() < 8 ? ImmutableList.of() : input.get(7)), format(input.size() < 9 ? ImmutableList.of() : input.get(8))));
+			ingredients.setInputLists(ItemStack.class, ImmutableList.of(format(input.get(0)), format(input.size() < 2 ? null : input.get(1)), format(input.size() < 3 ? null : input.get(2)), format(input.size() < 4 ? null : input.get(3)), format(input.size() < 5 ? null : input.get(4)), format(input.size() < 6 ? null : input.get(5)), format(input.size() < 7 ? null : input.get(6)), format(input.size() < 8 ? null : input.get(7)), format(input.size() < 9 ? null : input.get(8))));
 		}else{
-			throw new IllegalArgumentException("INVALID RECIPE TYPE passed to JEI for Detailed Crafter!");
+			throw new IllegalArgumentException(Main.MODNAME + ": INVALID RECIPE TYPE passed to JEI for Detailed Crafter!");
 		}
 		ingredients.setOutputs(ItemStack.class, ImmutableList.of(recipe.getRecipeOutput()));
 	}
@@ -67,7 +70,7 @@ public class DetailedCrafterRecipe implements IRecipeWrapper{
 	}
 
 	@SuppressWarnings("unchecked")
-	private static List<ItemStack> format(Object ingr){
+	private static List<ItemStack> format(@Nullable Object ingr){
 		if(ingr instanceof NonNullList<?>){
 			return (NonNullList<ItemStack>) ingr;
 		}
