@@ -72,13 +72,16 @@ public class BrazierTileEntity extends TileEntity implements ITickable{
 				case 3:
 					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * Math.random()), pos.getY() + 1 + (Math.random() * .25D), pos.getZ() + .25 + (.5 * Math.random()), 0, -1, 0, 1, 1, new int[0]);
 					server.spawnParticle(EnumParticleTypes.REDSTONE, false, pos.getX() + .25 + (.5 * Math.random()), pos.getY() + 1 + (Math.random() * .25D), pos.getZ() + .25 + (.5 * Math.random()), 0, 0, 1, 0, 1, new int[0]);
-					if((out = RecipeHolder.recipeMatch((ArrayList<EntityItem>) world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE))) != ItemStack.EMPTY){
+					out = RecipeHolder.recipeMatch((ArrayList<EntityItem>) world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE));
+					if(!out.isEmpty()){
 						for(EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-1, 0, -1), pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
 							item.setDead();
 						}
 
 						world.addWeatherEffect(new EntityLightningBolt(world, pos.getX(), pos.getY() + 1, pos.getZ(), false));
-						world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), out.copy()));
+						EntityItem item = new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), out.copy());
+						item.setEntityInvulnerable(true);
+						world.spawnEntity(item);
 					}
 					break;
 			}
