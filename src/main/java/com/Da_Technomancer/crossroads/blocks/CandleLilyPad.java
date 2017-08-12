@@ -4,6 +4,7 @@ import net.minecraft.block.BlockLilyPad;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -28,7 +29,7 @@ public class CandleLilyPad extends BlockLilyPad{
 	@Override
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos){
 		IBlockState soil = worldIn.getBlockState(pos.down());
-		return super.canPlaceBlockAt(worldIn, pos) && soil.getBlock().canSustainPlant(soil, worldIn, pos.down(), net.minecraft.util.EnumFacing.UP, (IPlantable) Blocks.WATERLILY);
+		return super.canPlaceBlockAt(worldIn, pos) && soil.getBlock().canSustainPlant(soil, worldIn, pos.down(), EnumFacing.UP, (IPlantable) Blocks.WATERLILY);
 	}
 
 	@Override

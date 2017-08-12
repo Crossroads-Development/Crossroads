@@ -152,7 +152,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, ISpinReceiv
 				}
 			}
 
-			TileEntity negTE = world.getTileEntity(pos.offset(endPos));
+			TileEntity negTE = world.getTileEntity(pos.offset(endNeg));
 
 			if(negTE != null){
 				if(negTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, endPos)){

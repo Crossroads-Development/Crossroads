@@ -8,7 +8,7 @@ buildscript {
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.12-1.5.2"
+version = "1.12-1.5.3"
 group = "com.Da_Technomancer.crossroads"
 archivesBaseName = "crossroads"
 
@@ -21,7 +21,7 @@ tasks.withType(JavaCompile) {
 }
 
 minecraft {
-	version = "1.12-14.21.1.2415"
+	version = "1.12.1-14.22.0.2452"
 	runDir = "run"
 		
 	mappings = "snapshot_20170624"

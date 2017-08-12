@@ -50,13 +50,8 @@ public class GatewayFrame extends BlockContainer{
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		if(!worldIn.isRemote){
-			((GatewayFrameTileEntity) worldIn.getTileEntity(pos)).owner = !(placer instanceof EntityPlayer) ? null : new GameProfileNonPicky(((EntityPlayer) placer).getGameProfile());
+			((GatewayFrameTileEntity) worldIn.getTileEntity(pos)).setOwner(!(placer instanceof EntityPlayer) ? null : new GameProfileNonPicky(((EntityPlayer) placer).getGameProfile()));
 		}
-	}
-
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
 	}
 
 	@Override

@@ -153,7 +153,11 @@ public class Ratiator extends BlockContainer{
 
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
-		RatiatorTileEntity te = ((RatiatorTileEntity) worldIn.getTileEntity(pos));
+		TileEntity rawTE = worldIn.getTileEntity(pos);
+		if(rawTE == null){
+			return;
+		}
+		RatiatorTileEntity te = ((RatiatorTileEntity) rawTE);
 		double lastOut = te.getOutput();
 		double sidePower = Math.max(getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).rotateY(), false), getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).rotateYCCW(), false));
 		te.setOutput(state.getValue(Properties.REDSTONE_BOOL) ? getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).getOpposite(), true) / (sidePower == 0 ? 1D : sidePower) : getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).getOpposite(), true) * sidePower);
@@ -210,10 +214,13 @@ public class Ratiator extends BlockContainer{
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-
+	
 	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+		((RatiatorTileEntity) worldIn.getTileEntity(pos)).setOutput(0);
+		worldIn.neighborChanged(pos.offset(state.getValue(Properties.FACING)), this, pos);
+		worldIn.notifyNeighborsOfStateExcept(pos.offset(state.getValue(Properties.FACING)), this, state.getValue(Properties.FACING).getOpposite());
+		super.breakBlock(worldIn, pos, state);
 	}
 
 	@Override
