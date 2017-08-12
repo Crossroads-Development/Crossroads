@@ -39,6 +39,6 @@ public class HeatingCrucibleRecipe implements IRecipeWrapper{
 	@Override
 	public void getIngredients(IIngredients ingredients){
 		ingredients.setInputLists(ItemStack.class, ImmutableList.of(OreDictionary.getOres(copper ? "dustCopper" : "cobblestone", false)));
-		ingredients.setOutput(FluidStack.class, new FluidStack(copper ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, 200));
+		ingredients.setOutput(FluidStack.class, copper ? new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144) : new FluidStack(FluidRegistry.LAVA, 200));
 	}
 }

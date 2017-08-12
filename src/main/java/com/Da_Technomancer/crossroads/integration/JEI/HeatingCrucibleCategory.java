@@ -65,8 +65,9 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, HeatingCrucibleRecipe recipeWrapper, IIngredients ingredients){
-		recipeLayout.getFluidStacks().init(0, false, 90, 42, 32, 32, 200, false, fluidOverlay);
-		recipeLayout.getFluidStacks().set(0, ingredients.getOutputs(FluidStack.class).get(0));
+		List<FluidStack> fluids = ingredients.getOutputs(FluidStack.class).get(0);
+		recipeLayout.getFluidStacks().init(0, false, 90, 42, 32, 32, fluids.get(0).amount, false, fluidOverlay);
+		recipeLayout.getFluidStacks().set(0, fluids);
 		recipeLayout.getItemStacks().init(0, true, 40, 50);
 		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
 	}

@@ -35,6 +35,7 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 		if(isSpotInvalid() && !inventory.isEmpty()){
 			world.spawnEntity(new EntityItem(world, pos.offset(world.getBlockState(pos).getValue(Properties.FACING)).getX(), pos.getY(), pos.offset(world.getBlockState(pos).getValue(Properties.FACING)).getZ(), inventory.copy()));
 			inventory = ItemStack.EMPTY;
+			markDirty();
 		}else{
 			if(!inventory.isEmpty() && Math.abs(motionData[1]) > .5D && output()){
 				axleHandler.addEnergy(-.5D, false, false);
@@ -90,11 +91,12 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 			if(state.getBlock() != ModBlocks.itemChute){
 				return false;
 			}
-			if(++height > 255){
-				return false;
-			}
 		}
-
+		
+		if(outputPos == null){
+			return false;
+		}
+		
 		TileEntity offsetTE = world.getTileEntity(outputPos.offset(outDir));
 		if(offsetTE != null && offsetTE.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, outDir.getOpposite())){
 			IItemHandler outHandler = offsetTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, outDir.getOpposite());

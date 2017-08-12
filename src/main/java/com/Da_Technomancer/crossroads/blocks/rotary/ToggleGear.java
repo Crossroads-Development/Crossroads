@@ -42,7 +42,7 @@ public class ToggleGear extends BlockContainer{
 	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .5625D, 0D, 1D, .625D, 1D);
 	private final GearTypes type;
 	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base_toggle", "inventory");
-	
+
 	public ToggleGear(GearTypes type){
 		super(Material.IRON);
 		this.type = type;
@@ -55,7 +55,7 @@ public class ToggleGear extends BlockContainer{
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this, 0, LOCAT);
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		neighborChanged(state, worldIn, pos, null, null);
@@ -67,18 +67,18 @@ public class ToggleGear extends BlockContainer{
 		tooltip.add("Mass: " + MiscOp.betterRound(type.getDensity() / 8D, 2));
 		tooltip.add("I: " + MiscOp.betterRound(type.getDensity() / 8D, 2) * .125D);
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new ToggleGearTileEntity(type);
 	}
-	
+
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		CommonProxy.masterKey++;
 		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, worldIn.isBlockPowered(pos));
 	}
-	
+
 	@Override
 	public boolean hasComparatorInputOverride(IBlockState state){
 		return true;
@@ -93,15 +93,15 @@ public class ToggleGear extends BlockContainer{
 		double holder = Math.pow(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0], 2) / 2D;
 		holder *= 15D;
 		holder = Math.min(15, holder);
-		
+
 		return (int) holder;
 	}
-	
+
 	@Override
 	protected BlockStateContainer createBlockState(){
 		return new BlockStateContainer(this, new IProperty[] {Properties.REDSTONE_BOOL});
 	}
-	
+
 	@Override
 	public int damageDropped(IBlockState state){
 		return 0;
@@ -117,12 +117,12 @@ public class ToggleGear extends BlockContainer{
 		return state.getValue(Properties.REDSTONE_BOOL) ? 1 : 0;
 	}
 
-	
+
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
 		return state.getValue(Properties.REDSTONE_BOOL) ? DOWN : UP;
 	}
-	
+
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos prevPos){
 		if(worldIn.isRemote){
@@ -132,12 +132,12 @@ public class ToggleGear extends BlockContainer{
 			if(!state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
 				worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, .3F, .6F);
+				worldIn.updateComparatorOutputLevel(pos, this);
 			}
-		}else{
-			if(state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
-				worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, .3F, .5F);
-			}
+		}else if(state.getValue(Properties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
+			worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, .3F, .5F);
+			worldIn.updateComparatorOutputLevel(pos, this);
 		}
 		CommonProxy.masterKey++;
 	}

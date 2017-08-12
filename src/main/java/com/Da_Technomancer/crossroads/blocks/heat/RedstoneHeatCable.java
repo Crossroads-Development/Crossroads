@@ -123,12 +123,12 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	public ResourceLocation getTexture(){
 		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + "-copper-redstone");
 	}
-	
+
 	@Override
 	public ResourceLocation getTexture(IBlockState state){
 		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + '-' + CableThemes.values()[state.getValue(Properties.TEXTURE_4)].toString() + "-redstone");
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(playerIn != null && hand != null){
@@ -149,7 +149,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 		}
 		return false;
 	}
-	
+
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
 		return getDefaultState().withProperty(Properties.TEXTURE_4, 0);
@@ -227,11 +227,11 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 		if(worldIn.isBlockPowered(pos)){
 			if(!state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+				worldIn.updateComparatorOutputLevel(pos, this);
 			}
-		}else{
-			if(state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
-			}
+		}else if(state.getValue(Properties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
+			worldIn.updateComparatorOutputLevel(pos, this);
 		}
 	}
 
