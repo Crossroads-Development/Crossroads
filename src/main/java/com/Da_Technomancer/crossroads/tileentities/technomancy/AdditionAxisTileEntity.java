@@ -165,7 +165,7 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, ISp
 		if(!work){
 			return;
 		}
-		
+
 		for(IAxleHandler axle : rotaryMembers){
 			if(axle.shouldManageAngle()){
 				float axleSpeed = ((float) axle.getMotionData()[0]);
@@ -294,6 +294,8 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, ISp
 			}
 		}
 
+		private final Random RAND = new Random();
+
 		@Override
 		public void requestUpdate(){
 			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
@@ -301,26 +303,30 @@ public class AdditionAxisTileEntity extends TileEntity implements ITickable, ISp
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
 			memberCopy.addAll(rotaryMembers);
-			for(IAxleHandler axle : memberCopy){
-				//For 0-mass gears.
-				axle.getMotionData()[0] = 0;
-			}
 			rotaryMembers.clear();
 			locked = false;
-			Random rand = new Random();
-			if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			TileEntity te = world.getTileEntity(pos.offset(EnumFacing.UP));
+			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 				byte keyNew;
 				do {
-					keyNew = (byte) (rand.nextInt(100) + 1);
+					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
 
-				world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).propogate(this, key, 0, 0);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).propogate(this, key, 0, 0);
 			}
-			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
-				for(IAxleHandler gear : memberCopy){
-					gear.resetAngle();
+
+			if(!memberCopy.containsAll(rotaryMembers)){
+				for(IAxleHandler axle : rotaryMembers){
+					axle.resetAngle();
 				}
+			}
+
+			memberCopy.removeAll(rotaryMembers);
+			for(IAxleHandler axle : memberCopy){
+				//For 0-mass gears.
+				axle.getMotionData()[0] = 0;
+				axle.syncAngle();
 			}
 		}
 

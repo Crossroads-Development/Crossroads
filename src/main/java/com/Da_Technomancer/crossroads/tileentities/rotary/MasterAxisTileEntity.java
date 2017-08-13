@@ -58,15 +58,14 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		}
 
 		for(IAxleHandler gear : rotaryMembers){
-			double newEnergy = 0;
-
 			// set w
-			gear.getMotionData()[0] = Math.signum(sumEnergy) * Math.signum(gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
+			double newSpeed = Math.signum(sumEnergy * gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
+			gear.getMotionData()[0] = newSpeed;
 			// set energy
-			newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
+			double newEnergy = Math.signum(newSpeed) * Math.pow(newSpeed, 2) * gear.getPhysData()[1] / 2D;
 			gear.getMotionData()[1] = newEnergy;
 			// set power
-			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
+			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20D;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
 
@@ -86,9 +85,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
 		return sumEnergy;
 	}
-	
+
 	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
-	
+
 	private void runAngleCalc(){
 		boolean syncSpin = false;
 		boolean work = false;
@@ -102,7 +101,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		if(!work){
 			return;
 		}
-		
+
 		for(IAxleHandler axle : rotaryMembers){
 			if(axle.shouldManageAngle()){
 				float axleSpeed = ((float) axle.getMotionData()[0]);
@@ -198,6 +197,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			}
 		}
 
+		private final Random RAND = new Random();
+
 		@Override
 		public void requestUpdate(){
 			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
@@ -205,26 +206,30 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
 			memberCopy.addAll(rotaryMembers);
-			for(IAxleHandler axle : memberCopy){
-				//For 0-mass gears.
-				axle.getMotionData()[0] = 0;
-			}
 			rotaryMembers.clear();
 			locked = false;
-			Random rand = new Random();
-			if(world.getTileEntity(pos.offset(facing)) != null && world.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
+			TileEntity te = world.getTileEntity(pos.offset(facing));
+			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 				byte keyNew;
 				do {
-					keyNew = (byte) (rand.nextInt(100) + 1);
+					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
 
-				world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
-			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
-				for(IAxleHandler gear : memberCopy){
-					gear.resetAngle();
+
+			if(!memberCopy.containsAll(rotaryMembers)){
+				for(IAxleHandler axle : rotaryMembers){
+					axle.resetAngle();
 				}
+			}
+
+			memberCopy.removeAll(rotaryMembers);
+			for(IAxleHandler axle : memberCopy){
+				//For 0-mass gears.
+				axle.getMotionData()[0] = 0;
+				axle.syncAngle();
 			}
 		}
 

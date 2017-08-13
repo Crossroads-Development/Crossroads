@@ -27,15 +27,16 @@ public class FluidTankTileEntity extends TileEntity{
 	private final int CAPACITY = 20_000;
 
 	private void fixState(){
-		int i = content == null ? 0 : ((int) Math.ceil(15D * content.amount / CAPACITY));
+		int i = Math.min(15, Math.max(0, content == null ? 0 : ((int) Math.ceil(15D * content.amount / CAPACITY))));
 		if(i != world.getBlockState(pos).getValue(Properties.REDSTONE)){
-			world.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i < 0 ? 0 : i > 15 ? 15 : i));
+			world.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i));
 		}
+		markDirty();
 	}
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return (oldState.getBlock() != newState.getBlock());
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	@Override

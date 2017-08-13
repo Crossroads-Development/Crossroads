@@ -83,12 +83,12 @@ public class ArcSinAxisTileEntity extends TileEntity implements ITickable{
 		if(downTE != null && downTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
 			downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * MiscOp.posOrNeg(downTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
 		}
-		
+
 		runAngleCalc();
 	}
-	
+
 	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
-	
+
 	private void runAngleCalc(){
 		boolean syncSpin = false;
 		boolean work = false;
@@ -102,7 +102,7 @@ public class ArcSinAxisTileEntity extends TileEntity implements ITickable{
 		if(!work){
 			return;
 		}
-		
+
 		for(IAxleHandler axle : rotaryMembers){
 			if(axle.shouldManageAngle()){
 				float axleSpeed = ((float) axle.getMotionData()[0]);
@@ -225,6 +225,8 @@ public class ArcSinAxisTileEntity extends TileEntity implements ITickable{
 			}
 		}
 
+		private final Random RAND = new Random();
+
 		@Override
 		public void requestUpdate(){
 			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
@@ -232,26 +234,30 @@ public class ArcSinAxisTileEntity extends TileEntity implements ITickable{
 			}
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
 			memberCopy.addAll(rotaryMembers);
-			for(IAxleHandler axle : memberCopy){
-				//For 0-mass gears.
-				axle.getMotionData()[0] = 0;
-			}
 			rotaryMembers.clear();
 			locked = false;
-			Random rand = new Random();
-			if(world.getTileEntity(pos.offset(facing)) != null && world.getTileEntity(pos.offset(facing)).hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
+			TileEntity te = world.getTileEntity(pos.offset(facing));
+			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 				byte keyNew;
 				do {
-					keyNew = (byte) (rand.nextInt(100) + 1);
+					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
 
-				world.getTileEntity(pos.offset(facing)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
 			}
-			if(!memberCopy.containsAll(rotaryMembers) || !rotaryMembers.containsAll(memberCopy)){
-				for(IAxleHandler gear : rotaryMembers){
-					gear.resetAngle();
+
+			if(!memberCopy.containsAll(rotaryMembers)){
+				for(IAxleHandler axle : rotaryMembers){
+					axle.resetAngle();
 				}
+			}
+
+			memberCopy.removeAll(rotaryMembers);
+			for(IAxleHandler axle : memberCopy){
+				//For 0-mass gears.
+				axle.getMotionData()[0] = 0;
+				axle.syncAngle();
 			}
 		}
 
