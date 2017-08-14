@@ -99,7 +99,7 @@ public final class EventHandlerCommon{
 				}
 				loadingTicket = ForgeChunkManager.requestTicket(Main.instance, protWorld, ForgeChunkManager.Type.NORMAL);
 			}
-			
+
 			for(ChunkPos chunk : toLoad){
 				ForgeChunkManager.forceChunk(loadingTicket, chunk);
 			}
@@ -133,12 +133,7 @@ public final class EventHandlerCommon{
 		if(!e.world.isRemote && e.world.getTotalWorldTime() % 5 == 0){
 			e.world.profiler.startSection(Main.MODNAME + "-Field Calculations");
 			FieldWorldSavedData data = FieldWorldSavedData.get(e.world);
-			if(e.phase == TickEvent.Phase.START){
-				data.nodeForces.clear();
-				for(long key : data.fieldNodes.keySet()){
-					data.nodeForces.put(key, FieldWorldSavedData.getDefaultChunkForce());
-				}
-			}else{
+			if(e.phase == TickEvent.Phase.END){
 				HashSet<Long> toRemove = new HashSet<Long>();
 
 				for(Entry<Long, byte[][][]> datum : data.fieldNodes.entrySet()){
@@ -158,7 +153,13 @@ public final class EventHandlerCommon{
 				for(long remove : toRemove){
 					data.fieldNodes.remove(remove);
 				}
+				
+				data.nodeForces.clear();
+				for(long key : data.fieldNodes.keySet()){
+					data.nodeForces.put(key, FieldWorldSavedData.getDefaultChunkForce());
+				}
 			}
+			
 			e.world.profiler.endSection();
 		}
 
@@ -193,29 +194,31 @@ public final class EventHandlerCommon{
 					}
 				}
 
-				for(EntityPlayer play : e.world.playerEntities){
-					ItemStack heldStack = play.getHeldItem(EnumHand.MAIN_HAND);
-					int offsetX = 7 + entityPos.getX() - play.getPosition().getX();
-					int offsetZ = 7 + entityPos.getZ() - play.getPosition().getZ();
-					if(heldStack.getItem() == ModItems.watch && heldStack.hasTagCompound() && offsetX < 16 && offsetZ < 16 && offsetX >= 0 && offsetZ >= 0){
-						NBTTagCompound watchNBT = heldStack.getTagCompound().getCompoundTag("prot");
-						if(!watchNBT.hasKey("index")){
-							continue;
-						}
-						int index = watchNBT.getInteger("index");
-						if(prototypes.size() <= index || prototypes.get(index) == null){
-							heldStack.getTagCompound().removeTag("prot");
-							continue;
-						}
+				if(fieldsProt != null){
+					for(EntityPlayer play : e.world.playerEntities){
+						ItemStack heldStack = play.getHeldItem(EnumHand.MAIN_HAND);
+						int offsetX = 7 + entityPos.getX() - play.getPosition().getX();
+						int offsetZ = 7 + entityPos.getZ() - play.getPosition().getZ();
+						if(heldStack.getItem() == ModItems.watch && heldStack.hasTagCompound() && offsetX < 16 && offsetZ < 16 && offsetX >= 0 && offsetZ >= 0){
+							NBTTagCompound watchNBT = heldStack.getTagCompound().getCompoundTag("prot");
+							if(!watchNBT.hasKey("index")){
+								continue;
+							}
+							int index = watchNBT.getInteger("index");
+							if(prototypes.size() <= index || prototypes.get(index) == null){
+								heldStack.getTagCompound().removeTag("prot");
+								continue;
+							}
 
-						byte[][][] watchFields = fieldsProt == null ? FieldWorldSavedData.getDefaultChunkFlux() : fieldsProt.get(MiscOp.getLongFromChunkPos(prototypes.get(index).chunk));
-						if(watchFields != null){
-							offsetX /= 2;
-							offsetZ /= 2;
-							potential *= 1 + watchFields[1][offsetX][offsetZ];
-							potential /= 8;
-							if(watchFields[1][offsetX][offsetZ] > watchFields[0][offsetX][offsetZ]){
-								potential = 0;
+							byte[][][] watchFields = fieldsProt.get(MiscOp.getLongFromChunkPos(prototypes.get(index).chunk));
+							if(watchFields != null){
+								offsetX /= 2;
+								offsetZ /= 2;
+								potential *= 1 + watchFields[1][offsetX][offsetZ];
+								potential /= 8;
+								if(watchFields[1][offsetX][offsetZ] > watchFields[0][offsetX][offsetZ]){
+									potential = 0;
+								}
 							}
 						}
 					}

@@ -8,7 +8,7 @@ buildscript {
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.12-1.5.4"
+version = "1.12-1.5.5"
 group = "com.Da_Technomancer.crossroads"
 archivesBaseName = "crossroads"
 

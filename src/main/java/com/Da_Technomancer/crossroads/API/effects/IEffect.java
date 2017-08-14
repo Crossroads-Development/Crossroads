@@ -9,7 +9,7 @@ public interface IEffect{
 	 * 
 	 * @param worldIn
 	 * @param pos
-	 * @param mult There is no requirement for an IEffect to use the mult value, but if used then it multiplies the power of the effect.
+	 * @param mult There is no requirement for an IEffect to use the mult value, but if used then it multiplies the power of the effect. 
 	 * 
 	 * This should only ever be called on the server side.
 	 */

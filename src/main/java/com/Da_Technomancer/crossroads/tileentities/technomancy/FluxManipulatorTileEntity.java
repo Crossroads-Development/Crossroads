@@ -34,6 +34,7 @@ public class FluxManipulatorTileEntity extends TileEntity implements ITickable{
 				}
 			}
 			lastTick = (int) (world.getTotalWorldTime() % 5);
+			markDirty();
 		}
 	}
 

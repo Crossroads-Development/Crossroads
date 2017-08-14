@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
+import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.WorkspaceWorldProvider;
 
 import net.minecraft.init.Blocks;
@@ -56,7 +57,7 @@ public class TimeEffect implements IEffect{
 
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, double mult){
-			if(worldIn.provider instanceof WorkspaceWorldProvider){
+			if(worldIn.provider instanceof WorkspaceWorldProvider || worldIn.provider instanceof PrototypeWorldProvider){
 				return;
 			}
 			
@@ -71,7 +72,7 @@ public class TimeEffect implements IEffect{
 						}
 					}
 				}
-			}else if(severity > 30 && ModConfig.resetChunk.getBoolean()){
+			}else if(severity >= 30 && ModConfig.resetChunk.getBoolean()){
 				try{
 					Chunk swapWith = ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator.generateChunk(pos.getX() >> 4, pos.getZ() >> 4);
 					swapWith.populate(worldIn.getChunkProvider(), ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator);
@@ -80,7 +81,7 @@ public class TimeEffect implements IEffect{
 				}catch(Exception e){
 					Main.logger.log(Level.ERROR, "Something went wrong while reseting a chunk. Disable this in the config if necessary. Please report this as a bug.", e);
 				}
-			}else if(severity > 5 && ModConfig.magicChunk.getBoolean()){
+			}else if(severity >= 5 && ModConfig.magicChunk.getBoolean()){
 				ChunkPos base = worldIn.getChunkFromBlockCoords(pos).getPos();
 				for(int i = 0; i < severity; i++){
 					BlockPos effectPos = base.getBlock(RAND.nextInt(16), RAND.nextInt(256), RAND.nextInt(16));
@@ -91,7 +92,7 @@ public class TimeEffect implements IEffect{
 					element.getEffect().doEffect(worldIn, effectPos, severity);
 				}
 			}else if(ModConfig.blastChunk.getBoolean()){
-				worldIn.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), severity, false);
+				worldIn.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), severity, true);
 			}else{
 				Main.logger.info("There would have been a flux event at " + pos.toString() + " in dimension " + worldIn.provider.getDimension() + " of severity " + severity + ", but the relevant flux event is disabled in the config. Lucky you.");
 			}

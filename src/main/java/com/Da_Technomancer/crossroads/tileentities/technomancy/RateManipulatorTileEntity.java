@@ -27,8 +27,10 @@ public class RateManipulatorTileEntity extends TileEntity implements ITickable{
 					}
 				}
 				run = true;
+				markDirty();
 			}else if(world.getTotalWorldTime() % 5 == 1){
 				run = false;
+				markDirty();
 			}
 		}
 	}
