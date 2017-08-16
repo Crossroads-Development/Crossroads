@@ -48,8 +48,6 @@ public class EdibleBlob extends ItemFood{
 	@Override
 	@Nullable
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving){
-		stack.shrink(1);
-
 		if (entityLiving instanceof EntityPlayer){
 			EntityPlayer entityplayer = (EntityPlayer) entityLiving;
 			FoodStats food = entityplayer.getFoodStats();
@@ -63,6 +61,7 @@ public class EdibleBlob extends ItemFood{
 			entityplayer.addStat(StatList.getObjectUseStats(this));
 		}
 
+		stack.shrink(1);
 		return stack;
 	}
 
