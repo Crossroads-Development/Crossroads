@@ -46,9 +46,9 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
 		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Temp: " + heatHandler.getTemp() + "°C");
+			chat.add("Temp: " + heatHandler.getTemp() + "Â°C");
 			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
+				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "Â°C");
 			}
 		}
 	}
