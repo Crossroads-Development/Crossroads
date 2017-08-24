@@ -30,7 +30,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 
 	private FluidStack content = null;
 	private static final int CAPACITY = 1_296;
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -136,14 +136,14 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 
 		@Override
 		public int fill(FluidStack resource, boolean doFill){
-			if(content != null && resource != null){
-				if(content.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium() || resource.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium() && resource.getFluid() != content.getFluid()){
-					if(content.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium()){
+			if(content != null && resource != null && (content.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium() || resource.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium()) && resource.getFluid() != content.getFluid()){
+				if(content.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium()){
+					if(doFill){
 						content = null;
 						markDirty();
-					}else{
-						return resource.amount;
 					}
+				}else{
+					return resource.amount;
 				}
 			}
 

@@ -66,13 +66,15 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 			return;
 		}
 
-		// content cannot = null
 		if(!canDrain){
+			// content != null
 			content.amount -= handler.fill(content, true);
 
 			if(content.amount == 0){
 				content = null;
 			}
+
+			markDirty();
 
 			//It's possible the connected machine does allow draining but was just empty. This checks for that. 
 			if(handler.drain(1, false) != null){
@@ -88,9 +90,10 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 			if(content == null){
 				content = handler.drain(CAPACITY, true);
 			}else{
-				content.amount += handler.drain(new FluidStack(content.getFluid(), CAPACITY - content.amount), false) == null ? 0 : handler.drain(new FluidStack(content.getFluid(), CAPACITY - content.amount), true).amount;
+				FluidStack drained = handler.drain(new FluidStack(content.getFluid(), CAPACITY - content.amount), true);
+				content.amount += drained == null ? 0 : drained.amount;
 			}
-
+			markDirty();
 			if(handler.fill(content, false) == 0){
 				return;
 			}
@@ -102,34 +105,28 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 		// full, tank and pipe are not BOTH empty, capacity and contents of
 		// pipe.
 
-		FluidStack holder = handler.drain(Short.MAX_VALUE, false);
-		long tankContent = holder == null ? 0 : holder.amount;
-		long tankCapacity = tankContent + handler.fill(content == null ? new FluidStack(holder.getFluid(), Short.MAX_VALUE) : new FluidStack(content.getFluid(), Short.MAX_VALUE), false);
+		FluidStack fakeFullDrained = handler.drain(Short.MAX_VALUE, false);
+		long tankContent = fakeFullDrained == null ? 0 : fakeFullDrained.amount;
+		long tankCapacity = tankContent + handler.fill(content == null ? new FluidStack(fakeFullDrained.getFluid(), Short.MAX_VALUE) : new FluidStack(content.getFluid(), Short.MAX_VALUE), false);
 
 		int total = (int) Math.min((content == null ? 0 : content.amount) + tankContent, Short.MAX_VALUE);
 
-		Fluid fluid = content == null ? holder.getFluid() : content.getFluid();
+		Fluid fluid = content == null ? fakeFullDrained.getFluid() : content.getFluid();
 
-		int contentTwo = (int) Math.round(total * tankCapacity / ((double) (CAPACITY + tankCapacity)));
-		int contentOne = total - contentTwo;
-
-		//		if(tankContent != 0){
-		//			handler.drain((int) Math.min(tankContent, Integer.MAX_VALUE), true);
-		//		}
-
+		int targetOtherContent = (int) Math.round(((double) total * tankCapacity) / ((double) (CAPACITY + tankCapacity)));
+		int targetContent = total - targetOtherContent;
+		
 		content = null;
 
 		if(fluid != null){
-			if(contentTwo != 0){
-				if(contentTwo - tankContent >= 0){
-					handler.fill(new FluidStack(fluid, contentTwo - (int) tankContent), true);
-				}else{
-					handler.drain(((int) tankContent) - contentTwo, true);
-				}
-
+			if(targetOtherContent - tankContent >= 0){
+				handler.fill(new FluidStack(fluid, targetOtherContent - (int) tankContent), true);
+			}else{
+				handler.drain(((int) tankContent) - targetOtherContent, true);
 			}
-			if(contentOne != 0){
-				content = new FluidStack(fluid, contentOne);
+			
+			if(targetContent != 0){
+				content = new FluidStack(fluid, targetContent);
 			}
 
 		}
