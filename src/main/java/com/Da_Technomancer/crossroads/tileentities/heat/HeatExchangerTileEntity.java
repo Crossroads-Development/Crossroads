@@ -41,10 +41,14 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
 		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
+			chat.add("Temp: " + handler.getTemp() + "°C");
 			chat.add("Buffered heat: " + bufferTemp + "°C");
+			if(!(device instanceof Thermometer)){
+				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
+			}
 		}
 	}
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -64,15 +68,15 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 				markDirty();
 			}
 		}
-		
+
 		if(bufferTemp != 0){
 			double internalTransfer = Math.min(25D, Math.abs(bufferTemp)) * Math.signum(bufferTemp);
 			temp += internalTransfer;
 			bufferTemp -= internalTransfer;
 			markDirty();
 		}
-		
-		
+
+
 		double prevTemp = temp;
 		transHeat();
 		if(!insul){

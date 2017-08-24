@@ -257,7 +257,7 @@ public final class GuideBooks{
 		@Override
 		public void handlePost(ItemStack bookStack){
 			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_journal"), null, bookStack, CraftingHelper.getIngredient(Items.BOOK), CraftingHelper.getIngredient(Items.COMPASS));
-			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_manual_to_journal"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(GuideBooks.INFO)));
+			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_manual_to_journal"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(INFO)));
 		}
 	}
 
@@ -458,7 +458,7 @@ public final class GuideBooks{
 
 		@Override
 		public void handlePost(ItemStack bookStack){
-			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_journal_to_manual"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(GuideBooks.MAIN)));
+			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_journal_to_manual"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(MAIN)));
 		}
 	}
 

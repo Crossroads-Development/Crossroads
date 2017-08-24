@@ -1,10 +1,19 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
+import java.util.ArrayList;
+
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.items.OmniMeter;
+import com.Da_Technomancer.crossroads.items.Thermometer;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -13,12 +22,22 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class FuelHeaterTileEntity extends AbstractInventory implements ITickable{
+public class FuelHeaterTileEntity extends AbstractInventory implements ITickable, IInfoTE{
 
 	private ItemStack inventory = ItemStack.EMPTY;
 	private int burnTime;
 	private double temp;
 	private boolean init = false;
+
+	@Override
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
+		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
+			chat.add("Temp: " + handler.getTemp() + "°C");
+			if(!(device instanceof Thermometer)){
+				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
+			}
+		}
+	}
 
 	@Override
 	public void update(){
@@ -50,9 +69,13 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 			markDirty();
 		}
 
-		if(burnTime == 0 && !inventory.isEmpty()){
+		if(burnTime == 0 && TileEntityFurnace.isItemFuel(inventory)){
 			burnTime = TileEntityFurnace.getItemBurnTime(inventory);
+			Item item = inventory.getItem();
 			inventory.shrink(1);
+			if(inventory.isEmpty() && item != null && item.hasContainerItem(inventory)){
+				inventory = item.getContainerItem(inventory);
+			}
 			markDirty();
 		}
 	}

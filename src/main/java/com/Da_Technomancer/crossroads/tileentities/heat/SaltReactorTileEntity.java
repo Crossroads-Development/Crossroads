@@ -1,13 +1,21 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
+import java.util.ArrayList;
+
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.OmniMeter;
+import com.Da_Technomancer.crossroads.items.Thermometer;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -23,7 +31,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class SaltReactorTileEntity extends TileEntity implements ITickable{
+public class SaltReactorTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private FluidStack content = null;
 	private FluidStack dContent = null;
@@ -34,6 +42,16 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable{
 	private static final double COOLING = 5D;
 	private ItemStack inventory = ItemStack.EMPTY;
 
+	@Override
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
+		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
+			chat.add("Temp: " + heatHandler.getTemp() + "°C");
+			if(!(device instanceof Thermometer)){
+				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
+			}
+		}
+	}
+	
 	@Override
 	public void update(){
 		if(world.isRemote){

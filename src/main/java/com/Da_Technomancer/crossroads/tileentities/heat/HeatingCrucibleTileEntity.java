@@ -1,15 +1,23 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
+import java.util.ArrayList;
+
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
+import com.Da_Technomancer.crossroads.items.OmniMeter;
+import com.Da_Technomancer.crossroads.items.Thermometer;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -29,7 +37,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
+public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private FluidStack content = null;
 	private static final int PRODUCED_LAVA = 200;
@@ -39,6 +47,16 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable{
 	private double temp;
 	private ItemStack inventory = ItemStack.EMPTY;
 
+	@Override
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
+		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
+			chat.add("Temp: " + heatHandler.getTemp() + "°C");
+			if(!(device instanceof Thermometer)){
+				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
+			}
+		}
+	}
+	
 	/**
 	 * This controls whether the tile entity gets replaced whenever the block
 	 * state is changed. Normally only want this when block actually is

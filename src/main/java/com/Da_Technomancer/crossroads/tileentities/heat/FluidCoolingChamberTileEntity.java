@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -8,9 +9,15 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.items.OmniMeter;
+import com.Da_Technomancer.crossroads.items.Thermometer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,7 +32,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class FluidCoolingChamberTileEntity extends TileEntity implements ITickable{
+public class FluidCoolingChamberTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private FluidStack content = null;
 	private static final int CAPACITY = 16000;
@@ -35,6 +42,16 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 	private ItemStack inventory = ItemStack.EMPTY;
 	private int ticksExisted = 0;
 	private static final Random RAND = new Random();
+
+	@Override
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
+		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
+			chat.add("Temp: " + heatHandler.getTemp() + "°C");
+			if(!(device instanceof Thermometer)){
+				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
+			}
+		}
+	}
 
 	@Override
 	public void update(){
@@ -106,7 +123,7 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return (T) heatHandler;
 		}
-		
+
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}
@@ -123,14 +140,14 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return true;
 		}
-		
+
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return true;
 		}
-		
+
 		return super.hasCapability(capability, facing);
 	}
-	
+
 	private class ItemHandler implements IItemHandler{
 
 		@Override
@@ -153,14 +170,14 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 			if(slot != 0 || inventory.isEmpty() || amount <= 0){
 				return ItemStack.EMPTY;
 			}
-			
+
 			int count = Math.min(inventory.getCount(), amount);
-			
+
 			ItemStack holder = inventory.copy();
-			
+
 			if(!simulate){
 				inventory.splitStack(count);
-				
+
 				markDirty();
 			}
 			return count == 0 ? ItemStack.EMPTY : new ItemStack(holder.getItem(), count, holder.getMetadata());

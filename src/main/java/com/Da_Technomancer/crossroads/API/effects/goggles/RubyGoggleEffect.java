@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.API.effects.goggles;
 
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
@@ -25,9 +23,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 		//Notice that null side is used for finding the capability. This is because most blocks with heat support only have one side with the capability, which would normally be inaccessible. 
 		if(ray != null){
 			TileEntity te = world.getTileEntity(ray.getBlockPos());
-			if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
-				chat.add("Temp: " + te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "°C, Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(ray.getBlockPos()).getFloatTemperature(ray.getBlockPos()) + "°C");
-			}
+			
 			if(te instanceof IInfoTE){
 				((IInfoTE) te).addInfo(chat, GoggleLenses.RUBY, player, ray.sideHit);
 			}

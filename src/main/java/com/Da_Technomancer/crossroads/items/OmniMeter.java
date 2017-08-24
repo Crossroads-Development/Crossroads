@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.items;
 import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
@@ -55,11 +54,6 @@ public class OmniMeter extends Item implements IInfoDevice{
 		if(!worldIn.isRemote){
 			if(te != null){
 				ArrayList<String> chat = new ArrayList<String>();
-				
-				if(te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
-					chat.add("Temp: " + worldIn.getTileEntity(pos).getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "°C");
-					chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * worldIn.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
-				}
 
 				if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
 					IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
@@ -113,11 +107,10 @@ public class OmniMeter extends Item implements IInfoDevice{
 						out += line;
 					}
 					ModPackets.network.sendTo(new SendChatToClient(out, CHAT_ID), (EntityPlayerMP) playerIn);
-					return EnumActionResult.SUCCESS;
 				}
 			}
 		}
 		
-		return te != null && te instanceof RatiatorTileEntity ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
+		return te instanceof IInfoTE || te instanceof RatiatorTileEntity ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 	}
 }

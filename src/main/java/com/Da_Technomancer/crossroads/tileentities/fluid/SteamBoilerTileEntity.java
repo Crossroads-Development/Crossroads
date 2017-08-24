@@ -15,6 +15,7 @@ import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import com.Da_Technomancer.crossroads.items.FluidGauge;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
+import com.Da_Technomancer.crossroads.items.Thermometer;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -42,11 +43,18 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable, IInf
 
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
+		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
+			chat.add("Temp: " + heatHandler.getTemp() + "°C");
+			if(!(device instanceof Thermometer)){
+				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
+			}
+		}
+
 		if(device instanceof FluidGauge || device instanceof OmniMeter || device == GoggleLenses.DIAMOND){
 			chat.add(inventory.getCount() + "/64 salt");
 		}
 	}
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){

@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.items;
 
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -36,13 +35,12 @@ public class Thermometer extends Item implements IInfoDevice{
 	
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+		TileEntity te = worldIn.getTileEntity(pos);
+		
 		if(!worldIn.isRemote){
-			TileEntity te = worldIn.getTileEntity(pos);
 			if(te != null){
 				ArrayList<String> chat = new ArrayList<String>();
-				if(te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
-					chat.add("Temp: " + te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + "°C");
-				}
+				
 				if(te instanceof IInfoTE){
 					((IInfoTE) te).addInfo(chat, this, playerIn, facing);
 				}
@@ -55,11 +53,10 @@ public class Thermometer extends Item implements IInfoDevice{
 						out += line;
 					}
 					ModPackets.network.sendTo(new SendChatToClient(out, CHAT_ID), (EntityPlayerMP) playerIn);
-					return EnumActionResult.SUCCESS;
 				}
 			}
 		}
 		
-		return EnumActionResult.PASS;
+		return te instanceof IInfoTE ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 	}
 }

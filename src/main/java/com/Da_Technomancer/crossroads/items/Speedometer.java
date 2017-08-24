@@ -30,17 +30,18 @@ public class Speedometer extends Item implements IInfoDevice{
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}
-	
+
 	/**
 	 * Value chosen at random.
 	 */
 	private static final int CHAT_ID = 823485;
-	
+
 
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+		TileEntity te = worldIn.getTileEntity(pos);
+
 		if(!worldIn.isRemote){
-			TileEntity te = worldIn.getTileEntity(pos);
 			if(te != null){
 				ArrayList<String> chat = new ArrayList<String>();
 				if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
@@ -59,11 +60,10 @@ public class Speedometer extends Item implements IInfoDevice{
 						out += line;
 					}
 					ModPackets.network.sendTo(new SendChatToClient(out, CHAT_ID), (EntityPlayerMP) playerIn);
-					return EnumActionResult.SUCCESS;
 				}
 			}
 		}
-		
-		return EnumActionResult.PASS;
+
+		return te instanceof IInfoTE ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 	}
 }

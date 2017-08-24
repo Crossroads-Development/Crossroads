@@ -17,5 +17,14 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatExcha
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatingCrucibleRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/OmniMeter.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/Thermometer.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/fluid/RadiatorTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/fluid/SteamBoilerTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/FluidCoolingChamberTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/FuelHeaterTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/HeatCableTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/HeatExchangerTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/HeatingChamberTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/HeatingCrucibleTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/RedstoneHeatCableTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/SaltReactorTileEntity.java=UTF-8
 encoding//src/main/resources/assets/crossroads/lang/en_US.lang=UTF-8
