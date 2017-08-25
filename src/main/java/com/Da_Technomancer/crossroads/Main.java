@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads;
 
 import org.apache.logging.log4j.Logger;
 
+import com.Da_Technomancer.crossroads.command.DiscoverElementCommand;
+import com.Da_Technomancer.crossroads.command.ResetPathCommand;
 import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 
@@ -54,6 +56,8 @@ public final class Main{
 	@Mod.EventHandler
 	public void serverLoading(FMLServerStartingEvent e){
 		e.registerServerCommand(new WorkspaceDimTeleport());
+		e.registerServerCommand(new ResetPathCommand());
+		e.registerServerCommand(new DiscoverElementCommand());
 	}
 
 	@Mod.EventHandler

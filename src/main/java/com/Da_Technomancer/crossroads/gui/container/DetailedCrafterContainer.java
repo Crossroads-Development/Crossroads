@@ -76,10 +76,10 @@ public class DetailedCrafterContainer extends Container{
 	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn){
 		ItemStack out = ItemStack.EMPTY;
-		if(!world.isRemote && !MiscOp.getPlayerTag(playerInv.player).hasKey("path")){
-			MiscOp.getPlayerTag(playerInv.player).setTag("path", new NBTTagCompound());
-		}
 		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscOp.getPlayerTag(playerInv.player);
+		if(!world.isRemote && !nbt.hasKey("path")){
+			nbt.setTag("path", new NBTTagCompound());
+		}
 		if(nbt.getCompoundTag("path").getBoolean("technomancy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.technomancyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);

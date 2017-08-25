@@ -28,7 +28,7 @@ public class WorkspaceDimTeleport extends CommandBase{
 
 	@Override
 	public String getUsage(ICommandSender sender){
-		return "tpWorkspaceDim";
+		return "/tpWorkspaceDim";
 	}
 
 	@Override
