@@ -26,13 +26,30 @@ public class DiscoverElementCommand extends CommandBase{
 
 	@Override
 	public String getUsage(ICommandSender sender){
-		return "/discoverElement <element>";
+		return "/discoverElement <element OR all>";
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
-		if(args == null || args.length != 1){
+		if(args == null || args.length != 1 || !(sender instanceof EntityPlayerMP)){
 			sender.sendMessage(new TextComponentString("Incorrect # of arguments!"));
+			return;
+		}
+
+		if(args[0].toUpperCase().equals("ALL")){
+			NBTTagCompound nbt = MiscOp.getPlayerTag((EntityPlayer) sender);
+			if(!nbt.hasKey("elements")){
+				nbt.setTag("elements", new NBTTagCompound());
+			}
+			nbt = nbt.getCompoundTag("elements");
+
+			for(MagicElements element : MagicElements.values()){
+				if(!nbt.hasKey(element.name())){
+					nbt.setBoolean(element.name(), true);
+					sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.toString()));
+				}
+			}
+			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) sender, false);
 			return;
 		}
 
@@ -45,18 +62,16 @@ public class DiscoverElementCommand extends CommandBase{
 			return;
 		}
 
-		if(sender instanceof EntityPlayerMP){
-			NBTTagCompound nbt = MiscOp.getPlayerTag((EntityPlayer) sender);
-			if(!nbt.hasKey("elements")){
-				nbt.setTag("elements", new NBTTagCompound());
-			}
-			nbt = nbt.getCompoundTag("elements");
+		NBTTagCompound nbt = MiscOp.getPlayerTag((EntityPlayer) sender);
+		if(!nbt.hasKey("elements")){
+			nbt.setTag("elements", new NBTTagCompound());
+		}
+		nbt = nbt.getCompoundTag("elements");
 
-			if(!nbt.hasKey(element.name())){
-				nbt.setBoolean(element.name(), true);
-				sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.toString()));
-				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) sender, false);
-			}
+		if(!nbt.hasKey(element.name())){
+			nbt.setBoolean(element.name(), true);
+			sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.toString()));
+			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) sender, false);
 		}
 	}
 

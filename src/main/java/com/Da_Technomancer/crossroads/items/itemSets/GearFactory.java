@@ -33,9 +33,9 @@ public class GearFactory{
 	
 	@SideOnly(Side.CLIENT)
 	public static void clientInit(){
+		ItemColors itemColor = Minecraft.getMinecraft().getItemColors();
 		for(GearTypes typ : GearTypes.values()){
 			int colorCode = typ.getColor().getRGB();
-			ItemColors itemColor = Minecraft.getMinecraft().getItemColors();
 			IItemColor itemColoring = new IItemColor(){
 				@Override
 				public int getColorFromItemstack(ItemStack stack, int tintIndex){

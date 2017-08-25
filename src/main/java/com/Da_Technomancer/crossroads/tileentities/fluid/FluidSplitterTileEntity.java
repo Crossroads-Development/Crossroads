@@ -143,7 +143,7 @@ public class FluidSplitterTileEntity extends TileEntity{
 				return 0;
 			}
 
-			int accepted = Math.max(0, Math.min(resource.amount, Math.min(downFluid != null && !downFluid.isFluidEqual(resource) ? 0 : ((15 * (CAPACITY - (downFluid == null ? 0 : downFluid.amount))) / redstone), upFluid != null && !upFluid.isFluidEqual(resource) ? 0 : ((15 * (CAPACITY - (upFluid == null ? 0 : upFluid.amount))) / (15 - redstone)))));
+			int accepted = Math.max(0, Math.min(resource.amount, redstone == 0 ? upFluid != null && !upFluid.isFluidEqual(resource) ? 0 : CAPACITY - (upFluid == null ? 0 : upFluid.amount) : redstone == 15 ? downFluid != null && !downFluid.isFluidEqual(resource) ? 0 : CAPACITY - (downFluid == null ? 0 : downFluid.amount) : Math.min(downFluid != null && !downFluid.isFluidEqual(resource) ? 0 : ((15 * (CAPACITY - (downFluid == null ? 0 : downFluid.amount))) / redstone), upFluid != null && !upFluid.isFluidEqual(resource) ? 0 : ((15 * (CAPACITY - (upFluid == null ? 0 : upFluid.amount))) / (15 - redstone)))));
 			
 			int goDown = (redstone * (accepted / 15)) + (transfered >= redstone ? 0 : Math.min(redstone - transfered, accepted % 15)) + Math.max(0, Math.min(redstone, (accepted % 15) + transfered - 15));
 			int goUp = accepted - goDown;
