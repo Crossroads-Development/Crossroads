@@ -44,7 +44,7 @@ public class DiscoverElementCommand extends CommandBase{
 			nbt = nbt.getCompoundTag("elements");
 
 			for(MagicElements element : MagicElements.values()){
-				if(!nbt.hasKey(element.name())){
+				if(!nbt.hasKey(element.name()) && element != MagicElements.NO_MATCH){
 					nbt.setBoolean(element.name(), true);
 					sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.toString()));
 				}
