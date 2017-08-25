@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.enums.GearTypes;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
@@ -16,6 +17,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -72,7 +74,8 @@ public class DetailedCrafterContainer extends Container{
 	}
 
 	private static final IRecipe UNLOCK_TECHNOMANCY = new ShapelessOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.COPSHOWIUM), 1), "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze");
-
+	private static final IRecipe UNLOCK_ALCHEMY = new ShapelessOreRecipe(null, new ItemStack(Items.POTIONITEM, 1), Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE);
+	
 	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn){
 		ItemStack out = ItemStack.EMPTY;
@@ -80,6 +83,7 @@ public class DetailedCrafterContainer extends Container{
 		if(!world.isRemote && !nbt.hasKey("path")){
 			nbt.setTag("path", new NBTTagCompound());
 		}
+		
 		if(nbt.getCompoundTag("path").getBoolean("technomancy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.technomancyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
@@ -87,7 +91,7 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world) && nbt.getCompoundTag("elements").hasKey(MagicElements.TIME.name())){
+		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world) && nbt.getCompoundTag("elements").hasKey(MagicElements.TIME.name()) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("alchemy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("alchemy"))){
 			for(int i = 0; i < 9; i++){
 				inInv.decrStackSize(i, 1);
 			}
@@ -96,10 +100,39 @@ public class DetailedCrafterContainer extends Container{
 				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
 			}
 		}
+		
+		if(nbt.getCompoundTag("path").getBoolean("alchemy")){
+			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.alchemyRecipes);
+			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
+			if(out != ItemStack.EMPTY){
+				outInv.setInventorySlotContents(0, out);
+				return;
+			}
+		}else if(UNLOCK_ALCHEMY.matches(inInv, world) && passesAlchemyCriteria(nbt.getCompoundTag("elements")) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("technomancy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("technomancy"))){
+			for(int i = 0; i < 9; i++){
+				inInv.decrStackSize(i, 1);
+			}
+			nbt.getCompoundTag("path").setBoolean("alchemy", true);
+			if(!world.isRemote){
+				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
+			}
+		}
+		
 		IRecipe recipe = CraftingManager.findMatchingRecipe(inInv, world);
 		outInv.setInventorySlotContents(0, recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv));
 	}
 
+	private static boolean passesAlchemyCriteria(NBTTagCompound elementTag){
+		//In order to unlock alchemy, the player needs to have discovered all elements other than void and time. (Discovering void and/or time doesn't hurt)
+		for(MagicElements element : MagicElements.values()){
+			if(element != MagicElements.TIME && element != MagicElements.VOID && element != MagicElements.NO_MATCH && !elementTag.getBoolean(element.name())){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	@Nullable
 	private static IRecipe findMatchingSpecialRecipe(InventoryCrafting craftInv, World world, ArrayList<IRecipe> recipes){
 		for(IRecipe recipe : recipes){

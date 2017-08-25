@@ -189,6 +189,9 @@ public final class ModCrafting{
 		//Detailed Crafting Table (Cheap Technomancy Recipe)
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.detailedCrafter, 1), "*&*", "&#&", "*&*", '*', "nuggetIron", '&', "nuggetTin", '#', Blocks.CRAFTING_TABLE));
 
+		//Temporary for testing TODO
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(Blocks.DIRT, 1), "***", "---", "***", '*', "ingotCopper", '-', "ingotIron"));
+		
 		//Ores
 		//Tin
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.nuggetTin, 9), "ingotTin"));

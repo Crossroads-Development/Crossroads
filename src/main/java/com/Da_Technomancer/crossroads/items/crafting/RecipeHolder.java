@@ -70,6 +70,13 @@ public final class RecipeHolder{
 	 * ONLY USE ShapedOreRecipe and ShapelessOreRecipe. Using any other type require changing the JEI integration (DetailedCrafterRecipeWrapper) or it will crash.
 	 */
 	public static final ArrayList<IRecipe> technomancyRecipes = new ArrayList<IRecipe>();
+	
+	/**
+	 * The recipes for the Detailed Crafter that require alchemy to be unlocked.
+	 * Recipes can have a null group (it is unused). 
+	 * ONLY USE ShapedOreRecipe and ShapelessOreRecipe. Using any other type require changing the JEI integration (DetailedCrafterRecipeWrapper) or it will crash.
+	 */
+	public static final ArrayList<IRecipe> alchemyRecipes = new ArrayList<IRecipe>();
 
 	public static final HashMap<String, ArrayList<IRecipeWrapper>> JEIWrappers = new HashMap<String, ArrayList<IRecipeWrapper>>();
 
@@ -101,6 +108,9 @@ public final class RecipeHolder{
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(IRecipe rec : technomancyRecipes){
 			currentRecipes.add(new DetailedCrafterRecipe(rec, 0));
+		}
+		for(IRecipe rec : alchemyRecipes){
+			currentRecipes.add(new DetailedCrafterRecipe(rec, 1));
 		}
 		JEIWrappers.put(DetailedCrafterCategory.ID, currentRecipes);
 		

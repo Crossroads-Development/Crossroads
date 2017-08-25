@@ -25,7 +25,7 @@ public class DetailedCrafterRecipe implements IRecipeWrapper{
 
 	/**
 	 * @param recipe
-	 * @param type Technomancy: 0, Alchemy: NYI (1), Witchcraft: NYI (2)
+	 * @param type Technomancy: 0, Alchemy: 1, Witchcraft: NYI (2)
 	 */
 	public DetailedCrafterRecipe(IRecipe recipe, int type){
 		this.recipe = recipe;
