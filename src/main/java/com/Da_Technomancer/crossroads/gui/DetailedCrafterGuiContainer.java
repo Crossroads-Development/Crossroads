@@ -30,6 +30,9 @@ public class DetailedCrafterGuiContainer extends GuiContainer{
 		if(StoreNBTToClient.clientPlayerTag.getCompoundTag("path").getBoolean("technomancy")){
 			drawTexturedModalRect(guiLeft + 124, guiTop + 60, 176, 0, 16, 16);
 		}
+		if(StoreNBTToClient.clientPlayerTag.getCompoundTag("path").getBoolean("alchemy")){
+			drawTexturedModalRect(guiLeft + 108, guiTop + 60, 176, 16, 16, 16);
+		}
 	}
 	
 	@Override
