@@ -130,7 +130,7 @@ public class PrototypePistol extends MagicUsingItem{
 						double speed = Math.sqrt(owner.axle.getMotionData()[1] * 2D / MASS_OF_BULLET);
 						EntityBullet bullet = new EntityBullet(player.world, player, (int) Math.round(speed / 20D), owner.magic.lastOut);
 						bullet.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-						bullet.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, (float) speed / 20F /*In blocks/tick*/, 0);
+						bullet.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, (float) Math.min(speed / 20F, 0.5F) /*In blocks/tick*/, 0);
 						player.world.spawnEntity(bullet);
 						stack.getTagCompound().setBoolean("loaded", false);
 						player.resetActiveHand();
