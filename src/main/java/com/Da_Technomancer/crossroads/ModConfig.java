@@ -37,6 +37,7 @@ public final class ModConfig{
 	public static Property wipeInvalidMappings;
 	public static Property blockedPrototype;
 	public static Property allowPrototype;
+	public static Property maximumPistolDamage;
 
 	private static final ArrayList<Property> SYNCED_PROPERTIES = new ArrayList<Property>();
 	public static NBTTagCompound syncPropNBT;
@@ -78,6 +79,7 @@ public final class ModConfig{
 		wipeInvalidMappings = config.get(CAT_INTERNAL, "Wipe internal per player dimension mappings on failure? (Default false)", false, "Only use this if needed, as the mappings between players and technomancy workspace dimensions will be lost. If doing this, delete the files for those dimensions. Also, make a backup of the world file before setting this to true.");
 		blockedPrototype = config.get(CAT_TECHNOMANCY, "Blocks disallowed to be used in prototypes. Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'.", new String[] {Main.MODID + ":large_gear_slave", Main.MODID + ":large_gear_master", Main.MODID + ":prototype", Main.MODID + ":gateway_frame", "minecraft:portal", "rftools:matter_transmitter", "bloodmagic:blockteleposer"}, "Use to prevent exploits, bugs, travel to the prototype dimension, griefing, and other naughty things. Also, most modded multiblocks should be blocked to prevent bugs.");
 		SYNCED_PROPERTIES.add(allowPrototype = config.get(CAT_TECHNOMANCY, "Restrictions on prototyping. (Default 0)", 0, "-1: Prototyping is disabled. May block large amounts of the mod. 0: Default value. 1: Prototyping destroys the template structure the prototype was made from instead of copying the template. (prevents unintended dupe exploits). 2: Prototyping works as normal, except prototype blocks themselves cannot be placed, only used within other compatable devices (such as the watch).", -1, 2));
+		maximumPistolDamage = config.get(CAT_TECHNOMANCY, "Maximum pistol damage per shot, -1 for no cap. (Default -1)", -1);
 	}
 
 	/**

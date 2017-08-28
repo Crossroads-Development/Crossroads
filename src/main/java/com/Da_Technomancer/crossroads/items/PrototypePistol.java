@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.enums.MagicElements;
@@ -128,9 +129,11 @@ public class PrototypePistol extends MagicUsingItem{
 					if(owner.axle.getMotionData()[1] > 0){
 						//In blocks(meters)/s This would be the IRL formula if all energy were losslessly transfered.
 						double speed = Math.sqrt(owner.axle.getMotionData()[1] * 2D / MASS_OF_BULLET);
-						EntityBullet bullet = new EntityBullet(player.world, player, (int) Math.round(speed / 20D), owner.magic.lastOut);
+						int maxDamage = ModConfig.getConfigInt(ModConfig.maximumPistolDamage, false);
+						EntityBullet bullet = new EntityBullet(player.world, player, maxDamage < 0 ? (int) Math.round(speed / 20D) : Math.min(maxDamage, (int) Math.round(speed / 20D)), owner.magic.lastOut);
 						bullet.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-						bullet.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, (float) Math.min(speed / 20F, 0.5F) /*In blocks/tick*/, 0);
+						bullet.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, (float) Math.min(speed / 20F, 5F) /*In blocks/tick*/, 0);
+						bullet.ignoreEntity = player;
 						player.world.spawnEntity(bullet);
 						stack.getTagCompound().setBoolean("loaded", false);
 						player.resetActiveHand();
