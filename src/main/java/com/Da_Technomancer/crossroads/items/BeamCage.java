@@ -20,6 +20,7 @@ public class BeamCage extends Item{
 		String name = "beam_cage";
 		setUnlocalizedName(name);
 		setRegistryName(name);
+		maxStackSize = 1;
 		setCreativeTab(ModItems.tabCrossroads);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
