@@ -64,7 +64,7 @@ public class CommonProxy{
 	}
 
 	protected void postInit(FMLPostInitializationEvent e){
-
+		
 	}
 
 	@SubscribeEvent

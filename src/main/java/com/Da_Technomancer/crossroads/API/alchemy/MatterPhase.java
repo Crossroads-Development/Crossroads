@@ -4,6 +4,7 @@ public enum MatterPhase{
 	
 	GAS(true, true, false, true),
 	LIQUID(true, false, true, false),
+	SOLUTE(true, false, true, false),
 	SOLID(false, false, false, false);
 	
 	private final boolean flows;

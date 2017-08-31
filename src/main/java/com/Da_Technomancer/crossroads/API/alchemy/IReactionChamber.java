@@ -16,4 +16,13 @@ public interface IReactionChamber{
 	@Nonnull
 	public List<IReagent> getNonSolidReagants();
 	
+	/**
+	 * Adds a solidified material to the chamber. 
+	 */
+	public void addSolid(IReagent solid);
+	
+	public default boolean isCharged(){
+		return false;
+	}
+	
 }

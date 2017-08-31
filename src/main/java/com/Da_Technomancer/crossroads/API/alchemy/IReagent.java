@@ -18,13 +18,7 @@ public interface IReagent{
 	
 	public void setAmount(double amountIn);
 	
-	public void increaseAmount(double amountChange);
-	
-	public default boolean isAlkhest(){
-		return false;
-	}
-	
-	public default boolean isAntiAlkhest(){
-		return false;
+	public default void increaseAmount(double amountChange){
+		setAmount(getAmount() + amountChange);
 	}
 }
