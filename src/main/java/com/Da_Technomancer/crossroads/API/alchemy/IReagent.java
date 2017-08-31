@@ -10,6 +10,8 @@ public interface IReagent{
 	@Nonnull
 	public MatterPhase getPhase();
 	
+	public void updatePhase(boolean polar, boolean nonPolar, boolean aquaRegia);
+	
 	public double getTemp();
 	
 	public void setTemp(double tempIn);

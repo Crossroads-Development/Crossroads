@@ -134,12 +134,12 @@ public class SimpleReagentType implements IReagentType{
 	}
 	
 	@Override
-	public boolean canGlassContain(double temp){
+	public boolean canGlassContain(){
 		return (containType & 3) == 0;
 	}
 	
 	@Override
-	public boolean destroysBadContainer(double temp){
+	public boolean destroysBadContainer(){
 		return containType == 2;
 	}
 	

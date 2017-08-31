@@ -30,11 +30,11 @@ public interface IReagentType{
 		return solventType();
 	}
 	
-	public default boolean canGlassContain(double temp){
+	public default boolean canGlassContain(){
 		return true;
 	}
 	
-	public default boolean destroysBadContainer(double temp){
+	public default boolean destroysBadContainer(){
 		return false;
 	}
 	

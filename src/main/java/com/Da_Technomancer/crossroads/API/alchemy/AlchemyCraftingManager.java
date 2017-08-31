@@ -32,11 +32,18 @@ public final class AlchemyCraftingManager{
 	
 	public static final List<IReagentType> REAGENTS = new ArrayList<IReagentType>();//TODO set size
 	
+	/**
+	 * Assumes the chamber has had {@link AlchemyHelper#updateContents(IReactionChamber, double)} called to fix the contents first. This calls it every time it changes the contents. 
+	 * 
+	 * @param chamber
+	 * @param passes The maximum number of reactions to do. 
+	 */
 	public static void performReaction(IReactionChamber chamber, int passes){
 		for(int pass = 0; pass < passes; passes++){
 			boolean operated = false;
 			for(Predicate<IReactionChamber> react : REACTIONS){
 				if(react.test(chamber)){
+					AlchemyHelper.updateContents(chamber, 0);
 					operated = true;
 					break;
 				}
