@@ -103,11 +103,6 @@ public class ToggleGear extends BlockContainer{
 	}
 
 	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
-	}
-
-	@Override
 	public IBlockState getStateFromMeta(int meta){
 		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
 	}
