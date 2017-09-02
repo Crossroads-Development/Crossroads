@@ -1,5 +1,8 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import java.awt.Color;
+import java.util.function.Function;
+
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
@@ -22,14 +25,15 @@ public class SimpleReagentType implements IReagentType{
 	private final String name;
 	private final SolventType solvent;
 	private final SolventType solute;
+	private final Function<MatterPhase, Color> color;
 	
 	/**
 	 * @param name Material name. 
 	 * @param meltingPoint Melting temperature. Must be lower than boilingPoint. 
 	 * @param boilingPoint Boiling temperature. Must be higher than meltingPoint. 
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint){
-		this(name, meltingPoint, boilingPoint, null, 0, false);
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, Function<MatterPhase, Color> color){
+		this(name, meltingPoint, boilingPoint, color, null, 0, false);
 	}
 	
 	/**
@@ -40,8 +44,8 @@ public class SimpleReagentType implements IReagentType{
 	 * @param itemQuantity The amount of reagent 1 item is equivelent to. 
 	 * @param base Whether this is a constant material (in all worlds). Doesn't matter if solid is null. 
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, @Nullable Item solid, int itemQuantity, boolean base){
-		this(name, meltingPoint, boilingPoint, solid, itemQuantity, base, 0, null, null);
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, Function<MatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base){
+		this(name, meltingPoint, boilingPoint, color, solid, itemQuantity, base, 0, null, null);
 	}
 	
 	/**
@@ -55,8 +59,8 @@ public class SimpleReagentType implements IReagentType{
 	 * @param solventType Sets the solvent type
 	 * @param soluteType Sets the solute type
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType){
-		this(name, meltingPoint, boilingPoint, solid, itemQuantity, base, catalType, solventType, soluteType, 0, null);
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, Function<MatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType){
+		this(name, meltingPoint, boilingPoint, color, solid, itemQuantity, base, catalType, solventType, soluteType, 0, null);
 	}
 	
 	/**
@@ -71,7 +75,7 @@ public class SimpleReagentType implements IReagentType{
 	 * @param solventType Sets the solvent type
 	 * @param soluteType Sets the solute type
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType, int containType, @Nullable IAlchEffect effect){
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, Function<MatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType, int containType, @Nullable IAlchEffect effect){
 		this.name = name;
 		if(boilingPoint <= meltingPoint){
 			throw Main.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));
@@ -92,6 +96,7 @@ public class SimpleReagentType implements IReagentType{
 		this.effect = effect;
 		this.solvent = solventType;
 		this.solute = soluteType;
+		this.color = color;
 	}
 	
 	@Override
@@ -166,5 +171,10 @@ public class SimpleReagentType implements IReagentType{
 	@Nullable
 	public SolventType soluteType(){
 		return solute;
+	}
+
+	@Override
+	public Color getColor(MatterPhase phase){
+		return color.apply(phase);
 	}
 }

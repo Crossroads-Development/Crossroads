@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import java.awt.Color;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
@@ -37,6 +39,13 @@ public interface IReagentType{
 	public default boolean destroysBadContainer(){
 		return false;
 	}
+	
+	/**
+	 * Gets the (purely visual) color. 
+	 * @param phase Will never be called for solid phase. 
+	 * @return A color for rendering. Alpha is used. 
+	 */
+	public Color getColor(MatterPhase phase);
 	
 	public default void onRelease(World world, BlockPos pos, double amount, MatterPhase phase){
 		
