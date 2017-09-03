@@ -12,8 +12,14 @@ public interface IReagentType{
 
 	public String getName();
 	
+	/**
+	 * @return The melting temperature. Must be less than boiling temperature. Setting below absolute-zero will disable freezing. 
+	 */
 	public double getMeltingPoint();
 	
+	/**
+	 * @return The boiling temperature. Must be greater than melting temperature. Setting below absolute-zero will disable condensing. 
+	 */
 	public double getBoilingPoint();
 	
 	/**
@@ -39,6 +45,8 @@ public interface IReagentType{
 	public default boolean destroysBadContainer(){
 		return false;
 	}
+	
+	public int getIndex();
 	
 	/**
 	 * Gets the (purely visual) color. 

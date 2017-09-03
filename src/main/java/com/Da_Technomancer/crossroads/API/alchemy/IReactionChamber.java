@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -15,23 +13,17 @@ public interface IReactionChamber{
 	@Nullable
 	public IReagent getCatalyst();
 	
-	@Nullable
-	public IReagent getSolid();
-	
-	public void clearSolid();
-	
 	/**
 	 * Note: might be called several times in quick succession. 
 	 */
 	public void destroyChamber();
 	
-	@Nonnull
-	public List<IReagent> getNonSolidReagants();
-	
 	/**
-	 * Adds a solidified material to the chamber. 
+	 * Array MUST be of size {@link AlchemyCraftingManager#RESERVED_REAGENT_COUNT} + {@link AlchemyCraftingManager#DYNAMIC_REAGENT_COUNT}. May contain null elements. 
+	 * @return An array of the contained reagents. 
 	 */
-	public void addSolid(IReagent solid);
+	@Nonnull
+	public IReagent[] getReagants();
 	
 	public default boolean isCharged(){
 		return false;
