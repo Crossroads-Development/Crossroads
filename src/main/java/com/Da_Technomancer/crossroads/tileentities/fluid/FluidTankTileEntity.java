@@ -4,15 +4,10 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,17 +21,8 @@ public class FluidTankTileEntity extends TileEntity{
 	private FluidStack content = null;
 	private final int CAPACITY = 20_000;
 
-	private void fixState(){
-		int i = Math.min(15, Math.max(0, content == null ? 0 : ((int) Math.ceil(15D * content.amount / CAPACITY))));
-		if(i != world.getBlockState(pos).getValue(Properties.REDSTONE)){
-			world.setBlockState(pos, ModBlocks.fluidTank.getDefaultState().withProperty(Properties.REDSTONE, i));
-		}
-		markDirty();
-	}
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
+	public int getRedstone(){
+		return Math.min(15, Math.max(0, content == null ? 0 : ((int) Math.ceil(15D * content.amount / CAPACITY))));
 	}
 
 	@Override
@@ -62,7 +48,7 @@ public class FluidTankTileEntity extends TileEntity{
 	 */
 	public void setContent(FluidStack contentIn){
 		content = contentIn;
-		fixState();
+		markDirty();
 	}
 
 	private final IFluidHandler mainHandler = new MainHandler();
@@ -77,7 +63,7 @@ public class FluidTankTileEntity extends TileEntity{
 		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
 			return (T) redstoneHandler;
 		}
-		
+
 		return super.getCapability(capability, facing);
 	}
 
@@ -96,7 +82,7 @@ public class FluidTankTileEntity extends TileEntity{
 			return read ? content == null ? 0 : 15D * (double) content.amount / (double) CAPACITY : 0;
 		}
 	}
-	
+
 	private class MainHandler implements IFluidHandler{
 
 		@Override
@@ -111,7 +97,7 @@ public class FluidTankTileEntity extends TileEntity{
 
 				if(doFill && amount != 0){
 					content = new FluidStack(resource.getFluid(), amount + (content == null ? 0 : content.amount), resource.tag);
-					fixState();
+					markDirty();
 				}
 
 				return amount;
@@ -132,7 +118,7 @@ public class FluidTankTileEntity extends TileEntity{
 				if(content.amount <= 0){
 					content = null;
 				}
-				fixState();
+				markDirty();
 			}
 
 			return new FluidStack(resource.getFluid(), amount);
@@ -152,7 +138,7 @@ public class FluidTankTileEntity extends TileEntity{
 				if(content.amount <= 0){
 					content = null;
 				}
-				fixState();
+				markDirty();
 			}
 
 			return new FluidStack(fluid, amount);

@@ -90,30 +90,26 @@ public class FluidTank extends BlockContainer{
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.REDSTONE});
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.REDSTONE, meta);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.REDSTONE);
-	}
-
-	@Override
 	public boolean hasComparatorInputOverride(IBlockState state){
 		return true;
 	}
 
 	@Override
 	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
-		return blockState.getValue(Properties.REDSTONE);
+		TileEntity te = worldIn.getTileEntity(pos);
+		return te instanceof FluidTankTileEntity ? ((FluidTankTileEntity) te).getRedstone() : 0;
 	}
 
+	@Override
+	public BlockStateContainer createBlockState(){
+		return new BlockStateContainer(this, new IProperty[] {Properties.REDSTONE});
+	}
+	
+	@Override
+	public int getMetaFromState(IBlockState state){
+		return state.getValue(Properties.REDSTONE);
+	}
+	
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;

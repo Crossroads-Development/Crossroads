@@ -44,7 +44,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		super();
 		this.insulator = insulator;
 	}
-	
+
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
 		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
@@ -131,7 +131,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		nbt.setString("insul", insulator.name());
 		return nbt;
 	}
-	
+
 	public HeatInsulators getInsulator(){
 		return insulator;
 	}
@@ -191,7 +191,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 				}else{
 					temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
 				}
-				world.updateComparatorOutputLevel(pos, null);
+				markDirty();
 			}
 		}
 
@@ -204,15 +204,19 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		@Override
 		public void setTemp(double tempIn){
 			init = true;
-			temp = tempIn;
-			world.updateComparatorOutputLevel(pos, null);
+			if(temp != tempIn){
+				temp = tempIn;
+				markDirty();
+			}
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
-			temp += heat;
-			world.updateComparatorOutputLevel(pos, null);
+			if(heat != 0){
+				temp += heat;
+				markDirty();
+			}
 		}
 	}
 }

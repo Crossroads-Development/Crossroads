@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class DirtEffect implements IEffect{
 
 	private final Random rand = new Random();
-	
+
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
 
@@ -47,6 +47,7 @@ public class DirtEffect implements IEffect{
 				EntitySquid squid = new EntitySquid(worldIn);
 				squid.setPosition(pos.getX(), pos.getY(), pos.getZ());
 				squid.setCustomNameTag("Richard Nixon");
+				squid.enablePersistence();
 				worldIn.spawnEntity(squid);
 				break;
 			case 5:
