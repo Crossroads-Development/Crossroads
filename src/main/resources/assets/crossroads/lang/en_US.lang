@@ -195,6 +195,8 @@ tile.molten_copshowium.name=Molten Copshowium Source
 item.prototype_watch.name=Prototyped Watch
 tile.mechanical_arm.name=Mechanical Arm
 tile.redstone_registry.name=Redstone Registry
+death.attack.chemical=%1$s died from a chemical spill.
+death.attack.chemical.player=%2$s spilled chemicals on %1$s.
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

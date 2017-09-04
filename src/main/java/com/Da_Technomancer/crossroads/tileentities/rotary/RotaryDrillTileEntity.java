@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
+import java.util.List;
+
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
@@ -18,7 +20,7 @@ import net.minecraftforge.common.capabilities.Capability;
 public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 
 	private static final DamageSource DRILL = new DamageSource("drill").setDamageBypassesArmor();
-	
+
 	private int ticksExisted = 0;
 	private final double ENERGY_USE = .5D;
 	private final double SPEED_PER_HARDNESS = .1D;
@@ -48,9 +50,12 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 					if(Math.abs(motionData[0]) >= world.getBlockState(pos.offset(facing)).getBlockHardness(world, pos.offset(facing)) * SPEED_PER_HARDNESS){
 						world.destroyBlock(pos.offset(facing), true);
 					}
-				}else if(world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE) != null){
-					for(EntityLivingBase ent : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE)){
-						ent.attackEntityFrom(DRILL, (float) Math.abs(motionData[0] / SPEED_PER_HARDNESS));
+				}else{
+					List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE);
+					if(ents != null){
+						for(EntityLivingBase ent : ents){
+							ent.attackEntityFrom(DRILL, (float) Math.abs(motionData[0] / SPEED_PER_HARDNESS));
+						}
 					}
 				}
 			}
@@ -65,7 +70,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 		}
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -73,18 +78,18 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 			motionData[i] = nbt.getDouble("motion" + i);
 		}
 	}
-	
+
 	public float getAngle(){
 		return angle;
 	}
-	
+
 	private IAxleHandler axleHandler = new AxleHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		return (cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()) || super.hasCapability(cap, side);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
@@ -93,7 +98,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 		}
 		return super.getCapability(cap, side);
 	}
-	
+
 	private class AxleHandler implements IAxleHandler{
 
 		@Override

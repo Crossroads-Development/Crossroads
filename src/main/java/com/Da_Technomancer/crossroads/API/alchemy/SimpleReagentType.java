@@ -80,9 +80,10 @@ public class SimpleReagentType implements IReagentType{
 	 * @param itemQuantity The amount of reagent 1 item is equivelent to. 
 	 * @param base Whether this is a constant material (in all worlds). 
 	 * @param catalType 0: None; 1: Alkhest; 2: Anti-Alkhest
-	 * @param containType 0: Normal; 1: Vanishes in glass; 2: Destroys glass. 
 	 * @param solventType Sets the solvent type
 	 * @param soluteType Sets the solute type
+	 * @param containType 0: Normal; 1: Vanishes in glass; 2: Destroys glass. 
+	 * @param effect The effect this has when released. Null for none. 
 	 */
 	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<MatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType, int containType, @Nullable IAlchEffect effect){
 		this.name = name;
