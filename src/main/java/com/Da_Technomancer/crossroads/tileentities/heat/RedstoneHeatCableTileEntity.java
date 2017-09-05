@@ -75,6 +75,10 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 			init = true;
 		}
 
+		if(!world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+			return;
+		}
+		
 		double prevTemp = temp;
 		transHeat();
 		runLoss(insulator.getRate());
