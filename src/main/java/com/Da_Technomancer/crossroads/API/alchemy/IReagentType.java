@@ -60,7 +60,7 @@ public interface IReagentType{
 	}
 	
 	@Nullable
-	public default IReagent getReagentFromStack(ItemStack stack){
+	public default Reagent getReagentFromStack(ItemStack stack){
 		return null;
 	}
 	
@@ -68,7 +68,7 @@ public interface IReagentType{
 	 * @param reag The reagent
 	 * @return The matching solid ItemStack. ItemStack.EMPTY if there either isn't enough material (or cannot be solidifed for any other reason). 
 	 */
-	public default ItemStack getStackFromReagent(IReagent reag){
+	public default ItemStack getStackFromReagent(Reagent reag){
 		return ItemStack.EMPTY;
 	}
 	

@@ -7,10 +7,10 @@ public class AlchemyHelper{
 	public static void updateContents(IReactionChamber chamber, double extraHeat){
 		double totalHeat = extraHeat;
 		double totalAmount = 0D;
-		IReagent[] reagents = chamber.getReagants();
+		Reagent[] reagents = chamber.getReagants();
 		boolean glassChamber = chamber.isGlass();
 
-		for(IReagent reag : reagents){
+		for(Reagent reag : reagents){
 			if(reag == null){
 				continue;
 			}
@@ -29,7 +29,7 @@ public class AlchemyHelper{
 		boolean hasNonPolar = false;
 		boolean hasAquaRegia = false;
 
-		for(IReagent reag : reagents){
+		for(Reagent reag : reagents){
 			if(reag != null && reag.getAmount() >= MIN_QUANTITY){
 				IReagentType type = reag.getType();
 				if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
@@ -43,7 +43,7 @@ public class AlchemyHelper{
 		}
 
 		for(int i = 0; i < reagents.length; i++){
-			IReagent reag = reagents[i];
+			Reagent reag = reagents[i];
 			if(reag == null){
 				continue;
 			}

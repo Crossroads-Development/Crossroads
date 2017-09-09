@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+
 import com.Da_Technomancer.crossroads.API.effects.alchemy.AcidAlchemyEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.AquaRegiaAlchemyEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.SaltEffect;
@@ -71,41 +74,27 @@ public final class AlchemyCraftingManager{
 		BASE_REACTIONS.add((IReactionChamber chamb) -> {
 			if(chamb.getReagants()[3] != null && chamb.getReagants()[3].getTemp() >= 190){
 				double temp = chamb.getReagants()[3].getTemp();
-				double amount = Math.min(20, chamb.getReagants()[3].getAmount());
+				double amount = Math.min(2D, chamb.getReagants()[3].getAmount());
 				if(chamb.getReagants()[3].increaseAmount(-amount, 0) <= 0){
 					chamb.getReagants()[3] = null;
 				}
 				if(chamb.getReagants()[8] == null){
-					chamb.getReagants()[8] = new SimpleReagent(REAGENTS[8], temp, amount * 8);
+					chamb.getReagants()[8] = new Reagent(REAGENTS[8], temp, amount * 8);
 				}else{
 					chamb.getReagants()[8].increaseAmount(amount * 8D, temp);
 				}
 				chamb.addVisualEffect(ModParticles.COLOR_FIRE, 0, 0, 0, 2.4D, 1D);
-				return -amount * 8D * 3500D;
+				return -amount * 8D * 300D * 15D;
 			}else{
 				return 0;
 			}
 		});
 		//Sulfur Dioxide oxidation
-		BASE_REACTIONS.add((IReactionChamber chamb) -> {
-			if(chamb.getCatalyst() != null && chamb.getCatalyst().getType() == REAGENTS[7] && chamb.getReagants()[8] != null){
-				double amount = chamb.getReagants()[8].getAmount();
-				double temp = chamb.getReagants()[8].getTemp();
-				if(temp > 620 || temp < 400){
-					return 0;
-				}
-				chamb.getReagants()[8] = null;
-				if(chamb.getReagants()[9] == null){
-					chamb.getReagants()[9] = new SimpleReagent(REAGENTS[9], temp, amount);
-				}else{
-					chamb.getReagants()[9].increaseAmount(amount, temp);
-				}
-				return -100D * amount;
-			}
-			return 0;
-		});
+		BASE_REACTIONS.add(new SimpleReaction(-100D, 400D, 620D, REAGENTS[7], false, Triple.of(REAGENTS[8], 1D, MatterPhase.GAS), null, null, Pair.of(REAGENTS[9], 1D), null, null));
+		//Sulfuric Acid production. 
+		BASE_REACTIONS.add(new SimpleReaction(-100D, -300D, -300D, null, false, Triple.of(REAGENTS[9], 1D, MatterPhase.GAS), Triple.of(REAGENTS[4], 1D, MatterPhase.GAS), null, Pair.of(REAGENTS[10], 1D), null, null));		
+		
 		// TODO reactions
-
 	}
 
 	/** Assumes the chamber has had {@link AlchemyHelper#updateContents(IReactionChamber, double)} called to fix the contents first. This calls it every time it changes the contents.

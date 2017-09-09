@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 public interface IReactionChamber extends IAlchemyContainer{
 	
 	@Nullable
-	public IReagent getCatalyst();
+	public Reagent getCatalyst();
 	
 	public default boolean isCharged(){
 		return false;

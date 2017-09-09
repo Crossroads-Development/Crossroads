@@ -126,8 +126,8 @@ public class SimpleReagentType implements IReagentType{
 	}
 
 	@Nullable
-	public IReagent getReagentFromStack(ItemStack stack){
-		return stack.getItem() == solid ? new SimpleReagent(this, 30D, itemAmount) : null;
+	public Reagent getReagentFromStack(ItemStack stack){
+		return stack.getItem() == solid ? new Reagent(this, 30D, itemAmount) : null;
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class SimpleReagentType implements IReagentType{
 	 * @return The matching solid ItemStack. ItemStack.EMPTY if there either isn't enough material (or cannot be solidifed for any other reason). 
 	 */
 	@Override
-	public ItemStack getStackFromReagent(IReagent reag){
+	public ItemStack getStackFromReagent(Reagent reag){
 		return reag != null && reag.getType() == this && reag.getPhase() == MatterPhase.SOLID && reag.getAmount() >= itemAmount ? new ItemStack(solid, itemAmount) : ItemStack.EMPTY;
 	}
 

@@ -19,9 +19,9 @@ public class AquaRegiaAlchemyEffect implements IAlchEffect{
 	
 	@Override
 	public void doEffect(World world, BlockPos pos, double amount, MatterPhase phase){
-		if(amount >= 25D){
+		if(amount >= .1D){
 			for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
-				e.attackEntityFrom(AcidAlchemyEffect.ACID_DAMAGE, ((float) (amount / 25D)));
+				e.attackEntityFrom(AcidAlchemyEffect.ACID_DAMAGE, ((float) (amount * 10D)));
 			}
 			
 			IBlockState state = world.getBlockState(pos);

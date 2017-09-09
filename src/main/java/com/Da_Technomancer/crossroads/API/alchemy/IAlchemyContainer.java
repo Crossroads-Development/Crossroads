@@ -16,6 +16,6 @@ public interface IAlchemyContainer{
 	 * @return An array of the contained reagents. 
 	 */
 	@Nonnull
-	public IReagent[] getReagants();
+	public Reagent[] getReagants();
 
 }

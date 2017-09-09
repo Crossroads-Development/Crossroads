@@ -14,9 +14,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
-/**
- * This command resets the player's chosen path(s), if any. 
- */
 public class DiscoverElementCommand extends CommandBase{
 
 	@Override

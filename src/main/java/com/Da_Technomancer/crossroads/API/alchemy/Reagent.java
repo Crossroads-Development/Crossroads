@@ -1,24 +1,25 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-public class SimpleReagent implements IReagent{
+import javax.annotation.Nonnull;
+
+public class Reagent{
 
 	private final IReagentType type;
 	private double temp;
 	private double amount;
 	private MatterPhase phase;
 
-	public SimpleReagent(IReagentType type, double temp, double amount){
+	public Reagent(IReagentType type, double temp, double amount){
 		this.type = type;
 		this.temp = temp;
 		this.amount = amount;
 	}
 
-	@Override
+	@Nonnull
 	public IReagentType getType(){
 		return type;
 	}
 
-	@Override
 	public void updatePhase(boolean polar, boolean nonPolar, boolean aquaRegia){
 		if(temp >= type.getBoilingPoint()){
 			phase = MatterPhase.GAS;
@@ -65,28 +66,42 @@ public class SimpleReagent implements IReagent{
 		phase = MatterPhase.LIQUID;
 	}
 
-	@Override
+	@Nonnull
 	public MatterPhase getPhase(){
+		if(phase == null){
+			updatePhase(false, false, false);
+		}
 		return phase;
 	}
 
-	@Override
 	public double getTemp(){
 		return temp;
 	}
 
-	@Override
 	public void setTemp(double tempIn){
 		temp = Math.max(-273, tempIn);
 	}
 
-	@Override
+	/**
+	 * @return The amount of this substance. In moles (where applicable). 
+	 */
 	public double getAmount(){
 		return amount;
 	}
 
-	@Override
 	public void setAmount(double amountIn){
 		amount = Math.max(0, amountIn);
+	}
+	
+	/**
+	 * @param amountChange
+	 * @return The new amount. 
+	 */
+	public double increaseAmount(double amountChange, double newMatTemp){
+		if(amountChange > 0 ){
+			setTemp(((temp * amount) + (amountChange * newMatTemp)) / (amount + amountChange));
+		}
+		setAmount(amount + amountChange);
+		return amount;
 	}
 }
