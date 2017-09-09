@@ -77,7 +77,7 @@ public class SimpleReagent implements IReagent{
 
 	@Override
 	public void setTemp(double tempIn){
-		temp = tempIn;
+		temp = Math.max(-273, tempIn);
 	}
 
 	@Override
@@ -87,6 +87,6 @@ public class SimpleReagent implements IReagent{
 
 	@Override
 	public void setAmount(double amountIn){
-		amount = amountIn;
+		amount = Math.max(0, amountIn);
 	}
 }

@@ -15,6 +15,7 @@ import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
+import com.Da_Technomancer.crossroads.particles.ModParticles;
 import com.Da_Technomancer.crossroads.tileentities.ModTileEntity;
 import com.Da_Technomancer.crossroads.world.ModWorldGen;
 
@@ -48,6 +49,7 @@ public class CommonProxy{
 		ModPackets.preInit();
 		ModDimensions.init();
 		ModEntities.init();
+		ModParticles.init();
 		ModIntegration.preInit();
 	}
 

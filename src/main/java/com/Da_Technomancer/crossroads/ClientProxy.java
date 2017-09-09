@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.fluids.ModFluids;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
+import com.Da_Technomancer.crossroads.particles.ModParticles;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -40,6 +41,7 @@ public class ClientProxy extends CommonProxy{
 		GearFactory.clientInit();
 		AAModTESR.registerBlockRenderer();
 		Keys.init();
+		ModParticles.clientInit();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 
