@@ -63,7 +63,7 @@ public final class AlchemyCraftingManager{
 		REAGENTS[12] = new SimpleReagentType("murcury_2_sulfide", 580D, Short.MAX_VALUE, 12, (MatterPhase phase) -> Color.RED, Items.REDSTONE, 100, true, 0, null, null, 0, null);// Mercury (II) sulfide, AKA cinnabar.
 		REAGENTS[13] = new SimpleReagentType("murcury", -40D, 560D, 13, (MatterPhase phase) -> Color.LIGHT_GRAY, null, 1, true, 0, null, null, 0, null);// AKA quicksilver
 		REAGENTS[14] = new SimpleReagentType("gold", 1100D, 3000D, 14, (MatterPhase phase) -> Color.YELLOW, Items.GOLD_INGOT, 144, true, 0, null, SolventType.AQUA_REGIA, 0, null);
-		REAGENTS[15] = new SimpleReagentType("hydrogen_chloride", -110D, -90D, 15, (MatterPhase phase) -> CLEAR_COLOR, null, 1, true, 0, SolventType.POLAR, null, 0, ACID_EFFECT);// Salt that forms hydrochloric acid in water.
+		REAGENTS[15] = new SimpleReagentType("hydrogen_chloride", -110D, 90D, 15, (MatterPhase phase) -> CLEAR_COLOR, null, 1, true, 0, SolventType.POLAR, null, 0, ACID_EFFECT);// Salt that forms hydrochloric acid in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve. 
 		REAGENTS[16] = new SimpleReagentType("sodium_sulfate", 890D, 1400D, 16, (MatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, 1, true, 0, null, SolventType.POLAR, 0, null);
 		REAGENTS[17] = new SimpleReagentType("ethanol", -110D, 80D, 17, (MatterPhase phase) -> CLEAR_COLOR, null, 1, true, 0, SolventType.NON_POLAR, null, 0, null);// If anyone asks, this is denatured alcohol for legal reasons.
 		REAGENTS[18] = new SimpleReagentType("philosopher_stone", -275D, -274D, 18, (MatterPhase phase) -> Color.BLACK, null, 100, true, 1, null, null, 2, null);// TODO item
@@ -93,6 +93,14 @@ public final class AlchemyCraftingManager{
 		BASE_REACTIONS.add(new SimpleReaction(-100D, 400D, 620D, REAGENTS[7], false, Triple.of(REAGENTS[8], 1D, MatterPhase.GAS), null, null, Pair.of(REAGENTS[9], 1D), null, null));
 		//Sulfuric Acid production. 
 		BASE_REACTIONS.add(new SimpleReaction(-100D, -300D, -300D, null, false, Triple.of(REAGENTS[9], 1D, MatterPhase.GAS), Triple.of(REAGENTS[4], 1D, MatterPhase.GAS), null, Pair.of(REAGENTS[10], 1D), null, null));		
+		//Cinnebar decomposition
+		BASE_REACTIONS.add(new SimpleReaction(60D, 360D, -300D, null, false, Triple.of(REAGENTS[12], 1D, null), null, null, Pair.of(REAGENTS[13], 1D), Pair.of(REAGENTS[8], 1D), Pair.of(REAGENTS[1], 2D)));
+		//Hydrochloric Acid production
+		BASE_REACTIONS.add(new SimpleReaction(30D, 90D, -300D, null, false, Triple.of(REAGENTS[6], 2D, MatterPhase.SOLUTE), Triple.of(REAGENTS[10], 1D, MatterPhase.SOLUTE), null, Pair.of(REAGENTS[16], 1D), Pair.of(REAGENTS[15], 2D), null));
+		//Nitric Acid production
+		BASE_REACTIONS.add(new SimpleReaction(70D, 100D, -300D, null, true, Triple.of(REAGENTS[4], 1D, MatterPhase.SOLUTE), null, null, Pair.of(REAGENTS[5], 2D), null, null));
+		//Aqua Regia production
+		BASE_REACTIONS.add(new SimpleReaction(0.015625D, -300D, -300D, null, false, Triple.of(REAGENTS[5], 1D, MatterPhase.SOLUTE), Triple.of(REAGENTS[15], 3D, MatterPhase.SOLUTE), null, Pair.of(REAGENTS[11], 4D), null, null));
 		
 		// TODO reactions
 	}
