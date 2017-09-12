@@ -141,8 +141,8 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 				if(match != null && state.getValue(Properties.TEXTURE_4) != match.ordinal()){
 					if(!worldIn.isRemote){
 						worldIn.setBlockState(pos, state.withProperty(Properties.TEXTURE_4, match.ordinal()));
-						worldIn.markBlockRangeForRenderUpdate(pos, pos);
 					}
+					worldIn.markBlockRangeForRenderUpdate(pos, pos);
 					return true;
 				}
 			}
