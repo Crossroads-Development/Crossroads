@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,6 +35,10 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
+		if(world.getBlockState(pos).getBlock() != ModBlocks.rotaryDrill){
+			invalidate();
+			return;
+		}
 		EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
 		if(world.isRemote){
 			TileEntity attachedTE = world.getTileEntity(pos.offset(facing.getOpposite()));

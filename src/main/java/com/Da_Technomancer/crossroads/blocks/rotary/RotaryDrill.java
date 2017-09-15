@@ -96,7 +96,7 @@ public class RotaryDrill extends BlockContainer{
 	@Override
 	public IBlockState getStateFromMeta(int meta){
 		EnumFacing facing = EnumFacing.getFront(meta);
-		return this.getDefaultState().withProperty(Properties.FACING, facing);
+		return getDefaultState().withProperty(Properties.FACING, facing);
 	}
 
 	@Override
