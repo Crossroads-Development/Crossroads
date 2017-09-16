@@ -371,6 +371,8 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.basicFluidSplitter, 1), "*^*", "&&&", "*^*", '*', "nuggetTin", '^', ModBlocks.fluidTube, '&', "ingotBronze"));
 		//Redstone Fluid Splitter
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.fluidSplitter, 1), ModBlocks.basicFluidSplitter, "dustRedstone", "dustRedstone", "dustRedstone"));
+		//Vanadium smelting
+		GameRegistry.addSmelting(ModItems.vanadium, new ItemStack(ModItems.vanadiumVOxide, 1), .7F);
 	}
 
 	private static ItemStack getFilledHopper(){

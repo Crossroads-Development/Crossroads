@@ -89,7 +89,6 @@ item.edible_blob.name=Edible Blob
 tile.fat_collector.name=Fat Collector
 fluid.liquidfat=Liquid Fat
 tile.fat_congealer.name=Fat Congealer
-item.diamond_wire.name=Diamond Wiring
 tile.redstone_heat_cable_copper_wool.name=Redstone Wool Insulated Heat Cable
 tile.redstone_heat_cable_copper_dirt.name=Redstone Dirt "Insulated" Heat Cable
 tile.redstone_heat_cable_copper_slime.name=Redstone Slime Insulated Heat Cable
@@ -197,6 +196,14 @@ tile.mechanical_arm.name=Mechanical Arm
 tile.redstone_registry.name=Redstone Registry
 death.attack.chemical=%1$s died from a chemical spill.
 death.attack.chemical.player=%2$s spilled chemicals on %1$s.
+item.adamant.name=Adamant
+item.sulfur.name=Sulfur
+item.vanadium.name=Vanadium
+item.vanadium_5_oxide.name=Vanadium (V) Oxide
+item.phil_stone.name=Philosopher's Stone
+item.prac_stone.name=Practitioner's Stone
+item.alch_crystal.name=Alchemical Crystal
+item.waste_salt.name=Waste Salt
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

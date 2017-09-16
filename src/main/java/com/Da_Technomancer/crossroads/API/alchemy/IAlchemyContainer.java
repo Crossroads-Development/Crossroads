@@ -17,5 +17,16 @@ public interface IAlchemyContainer{
 	 */
 	@Nonnull
 	public Reagent[] getReagants();
-
+	
+	public double getCapacity();
+	
+	public default double getContent(){
+		double amount = 0;
+		for(Reagent reag : getReagants()){
+			if(reag != null && !reag.getPhase().compressable()){
+				amount += reag.getAmount();
+			}
+		}
+		return amount;
+	}
 }

@@ -27,11 +27,14 @@ public class AlchemyHelper{
 
 		boolean hasPolar = false;
 		boolean hasNonPolar = false;
-		boolean hasAquaRegia = false;
+		boolean hasAquaRegia = false;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
 		for(Reagent reag : reagents){
 			if(reag != null && reag.getAmount() >= MIN_QUANTITY){
 				IReagentType type = reag.getType();
+				if(type == AlchemyCraftingManager.REAGENTS[11]){
+					hasAquaRegia = true;
+				}
 				if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
 					SolventType solv = type.solventType();
 					hasPolar |= solv == SolventType.POLAR || solv == SolventType.MIXED_POLAR;
@@ -41,6 +44,8 @@ public class AlchemyHelper{
 				reag.setTemp(endTemp);
 			}
 		}
+		
+		hasAquaRegia &= hasPolar;
 
 		for(int i = 0; i < reagents.length; i++){
 			Reagent reag = reagents[i];
@@ -51,7 +56,7 @@ public class AlchemyHelper{
 			if(glassChamber && !reag.getType().canGlassContain()){
 				if(reag.getType().destroysBadContainer()){
 					chamber.destroyChamber();
-					reag.getType().onRelease(chamber.getWorld(), chamber.getPos(), reag.getAmount(), reag.getPhase());
+					return;
 				}
 				reagents[i] = null;
 			}
