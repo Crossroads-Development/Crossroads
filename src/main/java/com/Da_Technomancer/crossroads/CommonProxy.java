@@ -662,7 +662,7 @@ public class CommonProxy{
 					mapping.remap(ModItems.edibleBlob);
 				break;
 				case("diamondwire"):
-					mapping.remap(ModItems.diamondWire);
+					mapping.ignore();
 				break;
 				case("rainidol"):
 					mapping.remap(ModItems.rainIdol);

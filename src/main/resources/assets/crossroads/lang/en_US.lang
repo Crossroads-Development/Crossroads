@@ -204,6 +204,7 @@ item.phil_stone.name=Philosopher's Stone
 item.prac_stone.name=Practitioner's Stone
 item.alch_crystal.name=Alchemical Crystal
 item.waste_salt.name=Waste Salt
+tile.sifter.name=Sifter
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

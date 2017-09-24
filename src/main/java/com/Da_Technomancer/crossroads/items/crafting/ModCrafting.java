@@ -69,10 +69,6 @@ public final class ModCrafting{
 		}
 		toRegisterOreDict.clear();
 
-
-		//RecipeSorter.register(Main.MODID + ":prototype_set", PrototypeItemSetRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
-		//RecipeSorter.register(Main.MODID + ":prototype_reset", PrototypeItemClearRecipe.class, RecipeSorter.Category.SHAPELESS, "after:crossroads:prototype_set");
-
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("oreCopper", 1), new ItemStack[] {new ItemStack(ModItems.dustCopper, 2), new ItemStack(Blocks.SAND)});
 		RecipeHolder.grindRecipes.put(new CraftingStack(Items.WHEAT, 1, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
 		RecipeHolder.grindRecipes.put(new CraftingStack(Blocks.PUMPKIN, 1, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
@@ -120,6 +116,12 @@ public final class ModCrafting{
 		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));
 		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(36, 24, 0, 0));
 		RecipeHolder.magExtractRecipes.put(Items.GLOWSTONE_DUST, new MagicUnit(1, 1, 1, 0));
+
+		RecipeHolder.sifterRecipes.put(Items.GUNPOWDER, new ItemStack(ModItems.sulfur, 1));
+		RecipeHolder.sifterRecipes.put(Item.getItemFromBlock(Blocks.COAL_BLOCK), new ItemStack(ModItems.vanadium, 1));
+
+		//Sifter
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.sifter, 1), " * ", "-|-", " * ", '*', "gearIron", '-', "stickIron", '|', ModBlocks.itemChute));
 
 		//Copshowium Creation Chamber
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModBlocks.fluidCoolingChamber));
@@ -189,9 +191,6 @@ public final class ModCrafting{
 		//Detailed Crafting Table (Cheap Technomancy Recipe)
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.detailedCrafter, 1), "*&*", "&#&", "*&*", '*', "nuggetIron", '&', "nuggetTin", '#', Blocks.CRAFTING_TABLE));
 
-		//Temporary for testing TODO
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(Blocks.DIRT, 1), "***", "---", "***", '*', "ingotCopper", '-', "ingotIron"));
-		
 		//Ores
 		//Tin
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.nuggetTin, 9), "ingotTin"));
@@ -222,7 +221,7 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.ingotCopshowium, 9), "blockCopshowium"));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.ingotCopshowium, 1), "***", "***", "***", '*', "nuggetCopshowium"));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockCopshowium, 1), "***", "***", "***", '*', "ingotCopshowium"));
-		
+
 		// Axle
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));
 		// Bronze

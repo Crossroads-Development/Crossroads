@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.alchemy.AbstractTransmutationBlock;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.SifterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.BasicFluidSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
@@ -15,8 +17,8 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.FluidCoolingChamberTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatExchangerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
@@ -143,6 +145,8 @@ public class ModTileEntity{
 		registerOld(PrototypePortTileEntity.class, "prototype_port");
 		register(MechanicalArmTileEntity.class, "mechanical_arm");
 		register(RedstoneRegistryTileEntity.class, "redstone_registry");
+		register(AbstractTransmutationBlock.TransmutationTileEntity.class, "transmutation_site");
+		register(SifterTileEntity.class, "sifter");
 	}
 
 	/**

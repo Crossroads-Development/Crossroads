@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.Da_Technomancer.crossroads.blocks.alchemy.Sifter;
 import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCongealer;
@@ -18,8 +19,8 @@ import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPump;
 import com.Da_Technomancer.crossroads.blocks.fluid.SteamBoiler;
 import com.Da_Technomancer.crossroads.blocks.fluid.SteamTurbine;
 import com.Da_Technomancer.crossroads.blocks.fluid.WaterCentrifuge;
-import com.Da_Technomancer.crossroads.blocks.heat.FuelHeater;
 import com.Da_Technomancer.crossroads.blocks.heat.FluidCoolingChamber;
+import com.Da_Technomancer.crossroads.blocks.heat.FuelHeater;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatExchanger;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatingChamber;
@@ -163,6 +164,7 @@ public final class ModBlocks{
 	public static PrototypePort prototypePort;
 	public static MechanicalArm mechanicalArm;
 	public static RedstoneRegistry redstoneRegistry;
+	public static Sifter sifter;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -301,6 +303,7 @@ public final class ModBlocks{
 		prototypePort = new PrototypePort();
 		mechanicalArm = new MechanicalArm();
 		redstoneRegistry = new RedstoneRegistry();
+		sifter = new Sifter();
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemChute extends Block{
 
-	private final AxisAlignedBB BB = new AxisAlignedBB(.125D, 0, .125D, .875D, 1, .875D);
+	private static final AxisAlignedBB BB = new AxisAlignedBB(.125D, 0, .125D, .875D, 1, .875D);
 	
 	public ItemChute(){
 		super(Material.IRON);

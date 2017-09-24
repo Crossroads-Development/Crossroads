@@ -97,5 +97,4 @@ public class ItemChutePort extends BlockContainer{
 		int facingbits = facing.getIndex();
 		return facingbits;
 	}
-
 }

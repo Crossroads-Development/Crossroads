@@ -65,6 +65,11 @@ public final class RecipeHolder{
 	public static final HashMap<Item, MagicUnit> magExtractRecipes = new HashMap<Item, MagicUnit>();
 
 	/**
+	 * Recipes for the Sifter (from alchemy). Item is input, ItemStack is output, note that the input ignores metadata/nbt. 
+	 */
+	public static final HashMap<Item, ItemStack> sifterRecipes = new HashMap<Item, ItemStack>();
+	
+	/**
 	 * The recipes for the Detailed Crafter that require technomancy to be unlocked.
 	 * Recipes can have a null group (it is unused). 
 	 * ONLY USE ShapedOreRecipe and ShapelessOreRecipe. Using any other type require changing the JEI integration (DetailedCrafterRecipeWrapper) or it will crash.

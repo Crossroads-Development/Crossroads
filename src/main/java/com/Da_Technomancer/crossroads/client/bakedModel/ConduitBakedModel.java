@@ -188,8 +188,8 @@ public class ConduitBakedModel implements IBakedModel{
 
 	@Override
 	public TextureAtlasSprite getParticleTexture(){
-		//Here's the thing... due to all heat cables and fluid tubes sharing a conduit baked model, the breaking particles have to be shared within a chunk.
-		//They all use the bronze block texture for breaking particles. This could be fixed by giving each variant it's own model, but RAM usage would greatly increase. 
+		//Due to all heat cables and fluid tubes sharing a conduit baked model, the breaking particles have to be shared within a chunk.
+		//They all use the bronze block texture for breaking particles. This could be fixed by giving each variant its own model, but RAM usage would greatly increase. 
 		return bakedTextureGetter.apply(new ResourceLocation(Main.MODID, "blocks/block_bronze"));
 	}
 

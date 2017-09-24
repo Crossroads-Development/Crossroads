@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.command.ResetPathCommand;
 import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 
+import net.minecraft.world.GameRules.ValueType;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -59,6 +60,7 @@ public final class Main{
 		e.registerServerCommand(new WorkspaceDimTeleport());
 		e.registerServerCommand(new ResetPathCommand());
 		e.registerServerCommand(new DiscoverElementCommand());
+		e.getServer().worlds[0].getGameRules().addGameRule("alchemyTransSpread", "true", ValueType.BOOLEAN_VALUE);
 		AlchemyCraftingManager.setup(e.getServer().worlds[0].getSeed());
 	}
 
