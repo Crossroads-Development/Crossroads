@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.items;
+package com.Da_Technomancer.crossroads.items.technomancy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,9 +7,10 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
+import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;

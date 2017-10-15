@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.enums;
+package com.Da_Technomancer.crossroads.API.rotary;
 
 import java.awt.Color;
 

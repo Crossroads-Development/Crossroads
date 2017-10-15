@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 
 import javax.annotation.Nonnull;
 
-import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
-
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;

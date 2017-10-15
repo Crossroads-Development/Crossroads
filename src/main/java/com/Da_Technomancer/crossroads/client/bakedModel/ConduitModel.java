@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.function.Function;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.enums.CableThemes;
-import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.heat.CableThemes;
+import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;

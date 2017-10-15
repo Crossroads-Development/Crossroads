@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import java.util.HashMap;
 
-import com.Da_Technomancer.crossroads.API.enums.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.rotary.ToggleGear;
 
 import net.minecraft.block.Block;

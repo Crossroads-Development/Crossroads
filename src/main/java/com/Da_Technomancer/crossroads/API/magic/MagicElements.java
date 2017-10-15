@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.enums;
+package com.Da_Technomancer.crossroads.API.magic;
 
 import java.awt.Color;
 
@@ -17,7 +17,6 @@ import com.Da_Technomancer.crossroads.API.effects.LightEffect;
 import com.Da_Technomancer.crossroads.API.effects.PlaceEffect;
 import com.Da_Technomancer.crossroads.API.effects.RiftEffect;
 import com.Da_Technomancer.crossroads.API.effects.TimeEffect;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
 import net.minecraft.init.Blocks;
 

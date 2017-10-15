@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.MagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.items.ModItems;
 

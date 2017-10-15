@@ -1,10 +1,11 @@
-package com.Da_Technomancer.crossroads.items;
+package com.Da_Technomancer.crossroads.items.technomancy;
 
 import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;

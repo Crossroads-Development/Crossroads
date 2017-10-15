@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.enums;
+package com.Da_Technomancer.crossroads.API.technomancy;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;

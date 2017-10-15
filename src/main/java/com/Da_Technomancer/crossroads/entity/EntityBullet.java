@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.entity;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
-import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
 import net.minecraft.entity.EntityLivingBase;

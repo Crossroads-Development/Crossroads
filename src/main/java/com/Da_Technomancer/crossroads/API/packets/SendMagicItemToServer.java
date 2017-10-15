@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.items.MagicUsingItem;
+import com.Da_Technomancer.crossroads.items.technomancy.MagicUsingItem;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

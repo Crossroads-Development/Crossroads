@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.API;
 
+import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
+
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
@@ -32,4 +34,6 @@ public class Properties{
 	public static final PropertyInteger PLANT = PropertyInteger.create("plant", 0, 9);
 	public static final PropertyBool HEAD = PropertyBool.create("head");
 	public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
+	public static final PropertyInteger TEMP_CHANGE = PropertyInteger.create("temp_change", 0, 4);
+	public static final PropertyEnum<EnumContainerType> CONTAINER_TYPE = PropertyEnum.create("container_type", EnumContainerType.class);
 }

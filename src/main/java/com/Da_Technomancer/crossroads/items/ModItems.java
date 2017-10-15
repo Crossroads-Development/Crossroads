@@ -7,10 +7,17 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.enums.GearTypes;
-import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
+import com.Da_Technomancer.crossroads.items.alchemy.PhilStone;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
+import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
+import com.Da_Technomancer.crossroads.items.technomancy.ModuleGoggles;
+import com.Da_Technomancer.crossroads.items.technomancy.PrototypePistol;
+import com.Da_Technomancer.crossroads.items.technomancy.PrototypeWatch;
+import com.Da_Technomancer.crossroads.items.technomancy.StaffTechnomancy;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -45,7 +52,7 @@ public final class ModItems{
 		}
 	};
 	protected static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 100, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F).setRepairItem(new ItemStack(Items.POISONOUS_POTATO));
-	protected static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[4], 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
+	public static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[4], 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
 
 	public static DebugGearWriter debugGearWriter;
 	public static DebugHeatWriter debugHeatWriter;
@@ -82,10 +89,11 @@ public final class ModItems{
 	public static BasicItem sulfur;
 	public static BasicItem vanadium;
 	public static BasicItem vanadiumVOxide;
-	public static BasicItem philosopherStone;
+	public static PhilStone philosopherStone;
 	public static BasicItem practitionerStone;
 	public static BasicItem alchCrystal;
 	public static BasicItem wasteSalt;
+	public static FlorenceFlask florenceFlask;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -139,10 +147,11 @@ public final class ModItems{
 		sulfur = new BasicItem("sulfur", "dustSulfur");
 		vanadium = new BasicItem("vanadium");
 		vanadiumVOxide = new BasicItem("vanadium_5_oxide");
-		philosopherStone = new BasicItem("phil_stone");
+		philosopherStone = new PhilStone();
 		practitionerStone = new BasicItem("prac_stone");
 		alchCrystal = new BasicItem("alch_crystal");
 		wasteSalt = new BasicItem("waste_salt");
+		florenceFlask = new FlorenceFlask();
 	}
 
 	@SideOnly(Side.CLIENT)

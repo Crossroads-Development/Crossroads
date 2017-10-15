@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
-import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
-
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 

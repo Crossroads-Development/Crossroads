@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.API.DefaultStorageHelper.DefaultStorage;
+import com.Da_Technomancer.crossroads.API.alchemy.DefaultChemicalHandler;
+import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.heat.DefaultHeatHandler;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.magic.DefaultMagicHandler;
@@ -40,6 +42,9 @@ public class Capabilities{
 	
 	@CapabilityInject(IAdvancedRedstoneHandler.class)
 	public static Capability<IAdvancedRedstoneHandler> ADVANCED_REDSTONE_HANDLER_CAPABILITY = null;
+	
+	@CapabilityInject(IChemicalHandler.class)
+	public static Capability<IChemicalHandler> CHEMICAL_HANDLER_CAPABILITY = null;
 
 	public static void register(){
 		CapabilityManager.INSTANCE.register(IHeatHandler.class, new DefaultStorage<>(), DefaultHeatHandler.class);
@@ -49,5 +54,6 @@ public class Capabilities{
 		CapabilityManager.INSTANCE.register(IAxisHandler.class, new DefaultStorage<>(), DefaultAxisHandler.class);
 		CapabilityManager.INSTANCE.register(ISlaveAxisHandler.class, new DefaultStorage<>(), DefaultSlaveAxisHandler.class);
 		CapabilityManager.INSTANCE.register(IAdvancedRedstoneHandler.class, new DefaultStorage<>(), DefaultAdvancedRedstoneHandler.class);
+		CapabilityManager.INSTANCE.register(IChemicalHandler.class, new DefaultStorage<>(), DefaultChemicalHandler.class);
 	}
 }

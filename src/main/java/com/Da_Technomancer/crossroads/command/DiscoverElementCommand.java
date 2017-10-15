@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.command;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.MagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 
 import net.minecraft.command.CommandBase;

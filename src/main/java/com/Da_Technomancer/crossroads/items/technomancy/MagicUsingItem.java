@@ -1,11 +1,11 @@
-package com.Da_Technomancer.crossroads.items;
+package com.Da_Technomancer.crossroads.items.technomancy;
 
 import java.util.List;
 
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Keys;
-import com.Da_Technomancer.crossroads.API.enums.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.MagicElements;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMagicItemToServer;
 
@@ -67,7 +67,6 @@ public abstract class MagicUsingItem extends Item{
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand){
-		
 		playerIn.setActiveHand(hand);
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}

@@ -1,6 +1,4 @@
-package com.Da_Technomancer.crossroads.API.enums;
-
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+package com.Da_Technomancer.crossroads.API.heat;
 
 public enum CableThemes{
 	

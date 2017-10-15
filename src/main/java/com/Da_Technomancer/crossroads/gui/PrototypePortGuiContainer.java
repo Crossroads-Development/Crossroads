@@ -3,11 +3,11 @@ package com.Da_Technomancer.crossroads.gui;
 import java.io.IOException;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.enums.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.gui.RadioButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.gui.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;
+import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.gui.container.PrototypePortContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
 

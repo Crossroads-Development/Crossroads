@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/IReaction.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/Reagent.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/effects/goggles/RubyGoggleEffect.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/fluid/Radiator.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/fluid/SteamBoiler.java=UTF-8
@@ -18,6 +19,7 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatExcha
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatingCrucibleRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/OmniMeter.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/Thermometer.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/items/alchemy/PhilStone.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/fluid/RadiatorTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/fluid/SteamBoilerTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/FluidCoolingChamberTileEntity.java=UTF-8

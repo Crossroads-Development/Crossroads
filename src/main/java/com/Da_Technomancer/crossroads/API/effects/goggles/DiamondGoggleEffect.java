@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects.goggles;
 import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.enums.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

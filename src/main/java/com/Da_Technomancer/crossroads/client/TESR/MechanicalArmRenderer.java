@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.client.TESR;
 import java.awt.Color;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.enums.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelGearOctagon;

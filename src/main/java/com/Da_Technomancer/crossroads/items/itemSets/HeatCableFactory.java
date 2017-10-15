@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import java.util.HashMap;
 
-import com.Da_Technomancer.crossroads.API.enums.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCable;
 

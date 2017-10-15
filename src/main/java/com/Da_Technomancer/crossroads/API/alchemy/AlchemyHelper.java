@@ -5,7 +5,11 @@ public class AlchemyHelper{
 	public static final double MIN_QUANTITY = 0.05D;
 
 	public static void updateContents(IReactionChamber chamber, double extraHeat){
-		double totalHeat = extraHeat;
+		updateContents(chamber, extraHeat, extraHeat < 0 ? -273D : Short.MAX_VALUE);
+	}
+	
+	public static void updateContents(IReactionChamber chamber, double extraHeat, double goalTemp){
+		double totalHeat = 0;
 		double totalAmount = 0D;
 		Reagent[] reagents = chamber.getReagants();
 		boolean glassChamber = chamber.isGlass();
@@ -24,6 +28,13 @@ public class AlchemyHelper{
 		}
 
 		double endTemp = (totalHeat / totalAmount) - 273D;
+		if(extraHeat >= 0){
+			totalHeat += Math.max(0, Math.min(extraHeat, (goalTemp - endTemp) * totalAmount));
+			endTemp = (totalHeat / totalAmount) - 273D;
+		}else{
+			totalHeat += Math.min(0, Math.max(extraHeat, (goalTemp - endTemp) * totalAmount));
+			endTemp = (totalHeat / totalAmount) - 273D;
+		}
 
 		boolean hasPolar = false;
 		boolean hasNonPolar = false;

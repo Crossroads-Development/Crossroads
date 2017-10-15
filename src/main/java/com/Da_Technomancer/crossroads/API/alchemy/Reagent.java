@@ -104,4 +104,9 @@ public class Reagent{
 		setAmount(amount + amountChange);
 		return amount;
 	}
+	
+	@Override
+	public String toString(){
+		return type == null ? "EMPTY_REAGENT" : (type.getName() + ", Amount: " + amount + ", Temp: " + temp + "°C");
+	}
 }

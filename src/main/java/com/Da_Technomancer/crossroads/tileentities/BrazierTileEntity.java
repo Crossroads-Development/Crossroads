@@ -56,9 +56,8 @@ public class BrazierTileEntity extends TileEntity implements ITickable{
 			world.setBlockState(pos, ModBlocks.brazier.getDefaultState().withProperty(Properties.LIGHT, true), 2);
 		}
 
-		WorldServer server = (WorldServer) world;
-
 		if(ticksExisted % 10 == 0){
+			WorldServer server = (WorldServer) world;
 			ItemStack out;
 			switch(getState()){
 				case 0:

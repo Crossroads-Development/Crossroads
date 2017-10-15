@@ -5,7 +5,6 @@ import java.awt.Color;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.enums.MagicElements;
 
 import net.minecraft.nbt.NBTTagCompound;
 

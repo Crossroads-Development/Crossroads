@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,6 +16,12 @@ public interface IReactionChamber extends IAlchemyContainer{
 	}
 	
 	/**
+	 * Note: might be called several times in quick succession. 
+	 */
+	public void destroyChamber();
+	
+	
+	/**
 	 * Adds temporary particles for visual effect after a reaction. Note that x, y, and z Offset are poorly named, and together with the particleSpeed, can control the color for several particle types. I don't understand why either. 
 	 * @param particleType
 	 * @param numberOfParticles
@@ -26,8 +31,6 @@ public interface IReactionChamber extends IAlchemyContainer{
 	 * @param particleSpeed
 	 */
 	public void addVisualEffect(EnumParticleTypes particleType, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed);
-	
-	public void addItem(ItemStack stack);
 	
 	public World getWorld();
 	

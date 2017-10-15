@@ -10,6 +10,9 @@ import net.minecraft.world.World;
 
 public interface IReagentType{
 
+	/**
+	 * @return A human readable name. 
+	 */
 	public String getName();
 	
 	/**
