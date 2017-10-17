@@ -270,7 +270,7 @@ public class DetailedCrafterContainer extends Container{
 			InventoryCraftResult inventorycraftresult = (InventoryCraftResult)this.inventory;
 			IRecipe irecipe = inventorycraftresult.getRecipeUsed();
 
-			if (irecipe != null && !irecipe.isHidden()){
+			if (irecipe != null && !irecipe.isDynamic()){
 				player.unlockRecipes(Lists.newArrayList(irecipe));
 				inventorycraftresult.setRecipeUsed(null);
 			}

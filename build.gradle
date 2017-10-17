@@ -21,10 +21,10 @@ tasks.withType(JavaCompile) {
 }
 
 minecraft {
-	version = "1.12.1-14.22.0.2452"
+	version = "1.12.2-14.23.0.2512"
 	runDir = "run"
 		
-	mappings = "snapshot_20170624"
+	mappings = "snapshot_20171016"
 		
 	replace 'gradVERSION', project.version
 	replaceIn 'Main.java'
@@ -37,9 +37,9 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.4-56"
-	deobfCompile "mezz.jei:jei_1.12:4.7.2.77"
-	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.1.99"
+	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.4-57"
+	deobfCompile "mezz.jei:jei_1.12.2:4.8.0.108"
+	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.8.275"
 }
 
 processResources {

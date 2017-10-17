@@ -53,8 +53,8 @@ public class DetailedCrafterRecipe implements IRecipeWrapper{
 	public void getIngredients(IIngredients ingredients){
 		if(recipe instanceof ShapedOreRecipe){
 			Object[] input = recipe.getIngredients().toArray();
-			int width = ((ShapedOreRecipe) recipe).getWidth();
-			int height = ((ShapedOreRecipe) recipe).getHeight();
+			int width = ((ShapedOreRecipe) recipe).getRecipeWidth();
+			int height = ((ShapedOreRecipe) recipe).getRecipeHeight();
 			ingredients.setInputLists(ItemStack.class, ImmutableList.of(format(input[0]), format(width < 2 ? null : input[1]), format(width < 3 ? null : input[2]), format(height < 2 ? null : input[width]), format(height < 2 || width < 2 ? null : input[width + 1]), format(height < 2 || width < 3 ? null : input[width + 2]), format(height < 3 ? null : input[width * 2]), format(height < 3 || width < 2 ? null : input[(width * 2) + 1]), format(height < 3 || width < 3 ? null : input[(width * 2) + 2])));
 		}else if(recipe instanceof ShapelessOreRecipe){
 			NonNullList<Ingredient> input = recipe.getIngredients();

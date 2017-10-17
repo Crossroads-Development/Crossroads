@@ -30,7 +30,7 @@ public class GearFactory{
 			TOGGLE_GEARS.put(typ, new ToggleGear(typ));
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static void clientInit(){
 		ItemColors itemColor = Minecraft.getMinecraft().getItemColors();
@@ -38,7 +38,7 @@ public class GearFactory{
 			int colorCode = typ.getColor().getRGB();
 			IItemColor itemColoring = new IItemColor(){
 				@Override
-				public int getColorFromItemstack(ItemStack stack, int tintIndex){
+				public int colorMultiplier(ItemStack stack, int tintIndex){
 					return colorCode;
 				}
 			};

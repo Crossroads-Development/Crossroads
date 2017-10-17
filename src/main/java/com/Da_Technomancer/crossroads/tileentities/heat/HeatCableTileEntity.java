@@ -39,7 +39,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable, IInfoT
 		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
 			chat.add("Temp: " + heatHandler.getTemp() + "°C");
 			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
+				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos) + "°C");
 			}
 		}
 	}
@@ -68,7 +68,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable, IInfoT
 			if(insulator == HeatInsulators.ICE){
 				temp = -10;
 			}else{
-				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
 			}
 			init = true;
 		}
@@ -136,7 +136,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable, IInfoT
 	}
 
 	private void runLoss(double rate){
-		double biomeTemp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+		double biomeTemp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
 		temp += Math.min(rate, Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
@@ -167,7 +167,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable, IInfoT
 				if(insulator == HeatInsulators.ICE){
 					temp = -10;
 				}else{
-					temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+					temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
 				}
 			}
 		}

@@ -34,7 +34,7 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
 			chat.add("Temp: " + handler.getTemp() + "°C");
 			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos) + "°C");
+				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos) + "°C");
 			}
 		}
 	}
@@ -46,7 +46,7 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
 			init = true;
 		}
 
@@ -131,7 +131,7 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getFloatTemperature(pos);
+				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
 				init = true;
 			}
 		}

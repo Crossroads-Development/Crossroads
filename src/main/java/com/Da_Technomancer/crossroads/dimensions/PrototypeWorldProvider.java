@@ -72,11 +72,11 @@ public class PrototypeWorldProvider extends WorldProvider{
 
 				try{
 					protWorld.profiler.startSection(ticking.getClass());
-					//Swap over to the commented out method once the deprecated one is removed. The deprecated one is still used here for backward compatability. 
-					//					protWorld.profiler.func_194340_a(() ->
-					//					{
-					//						return String.valueOf(TileEntity.getKey(ticking.getClass()));
-					//					});
+//					Swap over to the commented out method once the deprecated one is removed. The deprecated one is still used here for backward compatability. 
+//										protWorld.profiler.func_194340_a(() ->
+//										{
+//											return String.valueOf(TileEntity.getKey(ticking.getClass()));
+//										});
 					((ITickable) ticking).update();
 					protWorld.profiler.endSection();
 				}catch(Throwable throwable){
