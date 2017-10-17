@@ -23,15 +23,32 @@ import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable, IInfoTE{
 
+	public void disconnect(){
+		for(IAxleHandler axle : rotaryMembers){
+			//For 0-mass gears.
+			axle.getMotionData()[0] = 0;
+			axle.syncAngle();
+		}
+		CommonProxy.masterKey++;
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
+	
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
 		if(device == GoggleLenses.QUARTZ || device instanceof OmniMeter){

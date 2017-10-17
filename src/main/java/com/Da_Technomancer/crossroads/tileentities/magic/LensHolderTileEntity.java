@@ -34,7 +34,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiver{
-
+	
 	private Triple<Color, Integer, Integer> trip;
 	private Triple<Color, Integer, Integer> tripUp;
 

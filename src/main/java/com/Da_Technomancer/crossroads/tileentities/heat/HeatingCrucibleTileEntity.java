@@ -64,7 +64,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 	 */
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return (oldState.getBlock() != newState.getBlock());
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	/**

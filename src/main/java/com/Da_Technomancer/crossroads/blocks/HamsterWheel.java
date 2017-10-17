@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.HamsterWheelTileEntity;
@@ -15,6 +16,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -27,7 +29,7 @@ import net.minecraft.world.World;
 public class HamsterWheel extends BlockContainer{
 
 	private static final AxisAlignedBB[] BB = new AxisAlignedBB[]{new AxisAlignedBB(0, 0, .5D, 1, 1, 1), new AxisAlignedBB(0, 0, 0, .5D, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 1, .5D), new AxisAlignedBB(.5D, 0, 0, 1, 1, 1)};
-	
+
 	protected HamsterWheel(){
 		super(Material.IRON);
 		String name = "hamster_wheel";
@@ -43,7 +45,18 @@ public class HamsterWheel extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new HamsterWheelTileEntity();
 	}
-	
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		if(ModConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+			if(!worldIn.isRemote){
+				worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
+			}
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
 		return BB[Math.max(state.getValue(Properties.FACING).getHorizontalIndex(), 0)];

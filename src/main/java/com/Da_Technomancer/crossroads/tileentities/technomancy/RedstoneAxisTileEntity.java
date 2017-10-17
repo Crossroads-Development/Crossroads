@@ -31,6 +31,15 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 	private EnumFacing facing;
 	private byte key;
 
+	public void disconnect(){
+		for(IAxleHandler axle : rotaryMembers){
+			//For 0-mass gears.
+			axle.getMotionData()[0] = 0;
+			axle.syncAngle();
+		}
+		CommonProxy.masterKey++;
+	}
+	
 	public RedstoneAxisTileEntity(){
 		this(EnumFacing.NORTH);
 	}

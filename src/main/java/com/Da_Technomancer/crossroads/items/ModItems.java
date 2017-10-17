@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
@@ -94,6 +95,7 @@ public final class ModItems{
 	public static BasicItem alchCrystal;
 	public static BasicItem wasteSalt;
 	public static FlorenceFlask florenceFlask;
+	public static BasicItem wrench;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -152,6 +154,9 @@ public final class ModItems{
 		alchCrystal = new BasicItem("alch_crystal");
 		wasteSalt = new BasicItem("waste_salt");
 		florenceFlask = new FlorenceFlask();
+		if(ModConfig.getConfigBool(ModConfig.addWrench, false)){
+			wrench = new BasicItem("wrench");
+		}
 	}
 
 	@SideOnly(Side.CLIENT)

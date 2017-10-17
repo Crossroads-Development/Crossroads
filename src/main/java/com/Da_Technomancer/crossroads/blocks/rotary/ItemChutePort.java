@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -17,10 +18,12 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -57,6 +60,24 @@ public class ItemChutePort extends BlockContainer{
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite();
 		return getDefaultState().withProperty(Properties.FACING, enumfacing);
 	}
+	
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+		ItemChutePortTileEntity te = (ItemChutePortTileEntity) world.getTileEntity(pos);
+		te.dropItems();
+		super.breakBlock(world, pos, blockstate);
+	}
+	
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		if(ModConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+			if(!worldIn.isRemote){
+				worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
+			}
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
@@ -66,11 +87,6 @@ public class ItemChutePort extends BlockContainer{
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
 		return state.withRotation(mirrorIn.toRotation(state.getValue(Properties.FACING)));
-	}
-
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
 	}
 	
 	@Override

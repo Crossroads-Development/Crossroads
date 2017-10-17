@@ -16,6 +16,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -26,6 +27,11 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 	private final double[] motionData = new double[4];
 	private final double[] physData = new double[] {500, 8};
 
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
+	
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -42,6 +48,12 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 			inventory = ItemStack.EMPTY;
 			markDirty();
 		}
+	}
+	
+	public void dropItems(){
+		world.spawnEntity(new EntityItem(world, pos.offset(world.getBlockState(pos).getValue(Properties.FACING)).getX(), pos.getY(), pos.offset(world.getBlockState(pos).getValue(Properties.FACING)).getZ(), inventory.copy()));
+		inventory = ItemStack.EMPTY;
+		markDirty();
 	}
 
 	@Override
@@ -71,7 +83,8 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 
 	private boolean isSpotInvalid(){
 		Block block = world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock();
-		return block == ModBlocks.itemChutePort || block == ModBlocks.itemChute;
+		Block blockUp = world.getBlockState(pos.offset(EnumFacing.UP)).getBlock();
+		return block == ModBlocks.itemChutePort || block == ModBlocks.itemChute || (blockUp != ModBlocks.itemChutePort && blockUp != ModBlocks.itemChute);
 	}
 
 	private boolean output(){

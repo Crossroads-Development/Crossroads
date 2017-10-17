@@ -206,7 +206,7 @@ item.alch_crystal.name=Alchemical Crystal
 item.waste_salt.name=Waste Salt
 tile.sifter.name=Sifter
 item.florence_flask.name=Florence Flask
-tile.florence_stand.name=Florence Stand
+item.wrench.name=Wrench
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

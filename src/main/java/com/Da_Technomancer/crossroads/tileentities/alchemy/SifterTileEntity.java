@@ -6,12 +6,15 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -19,6 +22,11 @@ import net.minecraftforge.items.IItemHandler;
 
 public class SifterTileEntity extends TileEntity implements ITickable{
 
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
+	
 	private ItemStack inv = ItemStack.EMPTY;
 	private double[] motionData = new double[4];
 	private static final double[] PHYS_DATA = {500D, 2D};

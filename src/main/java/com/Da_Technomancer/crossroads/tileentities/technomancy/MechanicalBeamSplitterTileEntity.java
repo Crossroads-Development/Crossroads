@@ -5,11 +5,19 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class MechanicalBeamSplitterTileEntity extends BeamRenderTE{
 
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
+	
 	@Override
 	protected void doEmit(MagicUnit out){
 		EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);

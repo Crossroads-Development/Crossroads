@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.magic;
 
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -102,6 +103,12 @@ public class LensHolder extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			ItemStack stack = playerIn.getHeldItem(hand);
+			
+			if(ModConfig.isWrench(stack, false)){
+				worldIn.setBlockState(pos, state.withProperty(Properties.ORIENT, !state.getValue(Properties.ORIENT)));
+				return true;
+			}
+			
 			if(state.getValue(Properties.TEXTURE_7) != 0){
 				int i = state.getValue(Properties.TEXTURE_7);
 				ItemStack gotten = new ItemStack(i == 1 ? OreSetup.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1);

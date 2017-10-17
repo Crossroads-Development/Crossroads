@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -22,10 +23,12 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -66,6 +69,17 @@ public class Axle extends BlockContainer{
 	}
 	
 	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		if(ModConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+			if(!worldIn.isRemote){
+				worldIn.setBlockState(pos, state.cycleProperty(Properties.AXIS));
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		CommonProxy.masterKey++;
 		return getDefaultState().withProperty(Properties.AXIS, EnumFacing.getDirectionFromEntityLiving(pos, placer).getAxis());
@@ -74,11 +88,6 @@ public class Axle extends BlockContainer{
 	@Override
 	protected BlockStateContainer createBlockState(){
 		return new BlockStateContainer(this, new IProperty[] {Properties.AXIS});
-	}
-	
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
 	}
 
 	@Override

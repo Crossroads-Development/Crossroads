@@ -25,6 +25,15 @@ public class EqualsAxisTileEntity extends TileEntity implements ITickable{
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
 
+	public void disconnect(){
+		for(IAxleHandler axle : rotaryMembers){
+			//For 0-mass gears.
+			axle.getMotionData()[0] = 0;
+			axle.syncAngle();
+		}
+		CommonProxy.masterKey++;
+	}
+	
 	private boolean locked = false;
 	private double sumEnergy = 0;
 	private int ticksExisted = 0;

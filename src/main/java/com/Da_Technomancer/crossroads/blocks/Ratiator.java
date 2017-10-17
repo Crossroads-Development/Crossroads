@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks;
 
 import java.util.Random;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -170,6 +171,11 @@ public class Ratiator extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
+			if(ModConfig.isWrench(playerIn.getHeldItem(hand), false)){
+				worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
+				return true;
+			}
+
 			boolean oldValue = state.getValue(Properties.REDSTONE_BOOL);
 			worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, !oldValue));
 			worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, oldValue ? .55F : .5F);
@@ -214,7 +220,7 @@ public class Ratiator extends BlockContainer{
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		((RatiatorTileEntity) worldIn.getTileEntity(pos)).setOutput(0);

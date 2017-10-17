@@ -2,7 +2,9 @@ package com.Da_Technomancer.crossroads;
 
 import java.util.ArrayList;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -38,6 +40,8 @@ public final class ModConfig{
 	public static Property blockedPrototype;
 	public static Property allowPrototype;
 	public static Property maximumPistolDamage;
+	public static Property addWrench;
+	public static Property wrenchTypes;
 
 	private static final ArrayList<Property> SYNCED_PROPERTIES = new ArrayList<Property>();
 	public static NBTTagCompound syncPropNBT;
@@ -80,6 +84,8 @@ public final class ModConfig{
 		blockedPrototype = config.get(CAT_TECHNOMANCY, "Blocks disallowed to be used in prototypes. Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'.", new String[] {Main.MODID + ":large_gear_slave", Main.MODID + ":large_gear_master", Main.MODID + ":prototype", Main.MODID + ":gateway_frame", "minecraft:portal", "rftools:matter_transmitter", "bloodmagic:blockteleposer"}, "Use to prevent exploits, bugs, travel to the prototype dimension, griefing, and other naughty things. Also, most modded multiblocks should be blocked to prevent bugs.");
 		SYNCED_PROPERTIES.add(allowPrototype = config.get(CAT_TECHNOMANCY, "Restrictions on prototyping. (Default 0)", 0, "-1: Prototyping is disabled. May block large amounts of the mod. 0: Default value. 1: Prototyping destroys the template structure the prototype was made from instead of copying the template. (prevents unintended dupe exploits). 2: Prototyping works as normal, except prototype blocks themselves cannot be placed, only used within other compatable devices (such as the watch).", -1, 2));
 		maximumPistolDamage = config.get(CAT_TECHNOMANCY, "Maximum pistol damage per shot, -1 for no cap. (Default -1)", -1);
+		addWrench = config.get(CAT_INTERNAL, "Add a wrench item? (Default true, must match server if false)", true);
+		SYNCED_PROPERTIES.add(wrenchTypes = config.get(CAT_INTERNAL, "Item ids for wrench items. Should be in format 'modid:itemregistryname', ex. minecraft:apple or crossroads:wrench.", new String[] {Main.MODID + ":wrench", "actuallyadditions:itemlaserwrench", "appliedenergistics2:certus_quartz_wrench", "appliedenergistics2:nether_quartz_wrench", "base:wrench", "enderio:itemyetawrench", "extrautils2:wrench", "bigreactors:wrench", "forestry:wrench", "progressiveautomation:wrench", "thermalfoundation:wrench", "redstonearsenal:tool.wrench_flux", "rftools:smartwrench", "immersiveengineering:tool"}));
 	}
 
 	/**
@@ -218,5 +224,27 @@ public final class ModConfig{
 			i++;
 		}
 		return out;
+	}
+	
+	/**
+	 * @param stack The stack to test
+	 * @param client Whether this is on the client side
+	 * @return Whether this item is considered a wrench
+	 */
+	public static boolean isWrench(ItemStack stack, boolean client){
+		if(stack.isEmpty()){
+			return false;
+		}
+		ResourceLocation loc = stack.getItem().getRegistryName();
+		if(loc == null){
+			return false;
+		}
+		String name = loc.toString();
+		for(String s : getConfigStringList(wrenchTypes, client)){
+			if(name.equals(s)){
+				return true;
+			}
+		}
+		return false;
 	}
 }

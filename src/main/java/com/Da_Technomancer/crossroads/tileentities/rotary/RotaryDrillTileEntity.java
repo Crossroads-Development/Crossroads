@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +17,8 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class RotaryDrillTileEntity extends TileEntity implements ITickable{
@@ -26,6 +29,11 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 	private final double ENERGY_USE = .5D;
 	private final double SPEED_PER_HARDNESS = .1D;
 
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
+	
 	/**
 	 * This uses the angle of the attached gear instead of calculating it's own for a few reasons. It will always be attached when it should spin, and should always have the same angle as the attached gear (no point calculating).
 	 */

@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -13,10 +14,12 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -45,6 +48,30 @@ public class MultiplicationAxis extends BlockContainer{
 	@Override
 	protected BlockStateContainer createBlockState(){
 		return new BlockStateContainer(this, new IProperty[] {Properties.FACING, Properties.REDSTONE_BOOL});
+	}
+	
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof MultiplicationAxisTileEntity){
+			((MultiplicationAxisTileEntity) te).disconnect();
+		}
+		super.breakBlock(world, pos, blockstate);
+	}
+	
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		if(ModConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+			if(!worldIn.isRemote){
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(te instanceof MultiplicationAxisTileEntity){
+					((MultiplicationAxisTileEntity) te).disconnect();
+				}
+				worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	@Override

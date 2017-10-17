@@ -1,9 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.WorldBuffer;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -17,10 +19,12 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -38,7 +42,7 @@ import net.minecraft.world.gen.ChunkProviderServer;
  * Can move up to 64 blocks at a time instead of 12
  */
 public class MultiPistonBase extends Block{
-	
+
 	private final boolean sticky;
 
 	protected MultiPistonBase(boolean sticky){
@@ -53,10 +57,23 @@ public class MultiPistonBase extends Block{
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
 	}
-	
+
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer));
+	}
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		if(ModConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote) && getExtension(worldIn, pos, state.getValue(Properties.FACING)) == 0){
+			if(!worldIn.isRemote){
+				IBlockState endState = state.cycleProperty(Properties.FACING);
+				worldIn.setBlockState(pos, endState);
+				checkRedstone(worldIn, pos, endState.getValue(Properties.FACING));
+			}
+			return true;
+		}
+		return false;
 	}
 
 	protected void safeBreak(World worldIn, BlockPos pos){
@@ -64,9 +81,14 @@ public class MultiPistonBase extends Block{
 			worldIn.destroyBlock(pos, true);
 		}
 	}
-	
+
 	private boolean safeToBreak = true;
-	
+
+	@Override
+	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
+		checkRedstone(worldIn, pos, state.getValue(Properties.FACING));
+	}
+
 	private void checkRedstone(World worldIn, BlockPos pos, EnumFacing dir){
 		int i = Math.max(worldIn.getRedstonePower(pos.down(), EnumFacing.DOWN), Math.max(worldIn.getRedstonePower(pos.up(), EnumFacing.UP), Math.max(worldIn.getRedstonePower(pos.east(), EnumFacing.EAST), Math.max(worldIn.getRedstonePower(pos.west(), EnumFacing.WEST), Math.max(worldIn.getRedstonePower(pos.north(), EnumFacing.NORTH), worldIn.getRedstonePower(pos.south(), EnumFacing.SOUTH))))));
 		if(i > 0){
@@ -78,15 +100,18 @@ public class MultiPistonBase extends Block{
 				worldIn.setBlockState(pos, worldIn.getBlockState(pos).withProperty(Properties.REDSTONE_BOOL, false));
 			}
 		}
-		
+
 		int prev = getExtension(worldIn, pos, dir);
 		if(prev != i && prev != -1){
 			safeToBreak = false;
 			setExtension(worldIn, pos, dir, i, prev);
 			safeToBreak = true;
+			if(!worldIn.isBlockTickPending(pos, this)){
+				worldIn.updateBlockTick(pos, this, 1, -1);
+			}
 		}
 	}
-	
+
 	private int getExtension(World worldIn, BlockPos pos, EnumFacing dir){
 		if(!safeToBreak){
 			return -1;
@@ -99,12 +124,12 @@ public class MultiPistonBase extends Block{
 		}
 		return 15;
 	}
-	
+
 	private void setExtension(World worldIn, BlockPos pos, EnumFacing dir, int distance, int prev){
 		if(prev == distance){
 			return;
 		}
-		
+
 		final WorldBuffer world = new WorldBuffer(worldIn);
 		final Block GOAL = sticky ? ModBlocks.multiPistonExtendSticky : ModBlocks.multiPistonExtend;
 		for(int i = 1; i <= prev; i++){
@@ -142,7 +167,7 @@ public class MultiPistonBase extends Block{
 			world.doChanges();
 			return;
 		}
-		
+
 		for(int i = 1; i <= distance; i++){
 			ArrayList<BlockPos> list = new ArrayList<BlockPos>();
 
@@ -213,7 +238,7 @@ public class MultiPistonBase extends Block{
 		}
 		world.doChanges();
 	}
-	
+
 	private static boolean canPush(IBlockState state, boolean blocking){
 		if(blocking){
 			return (state.getBlock() == Blocks.PISTON || state.getBlock() == Blocks.STICKY_PISTON) ? !state.getValue(BlockPistonBase.EXTENDED) : state.getMobilityFlag() != EnumPushReaction.BLOCK && !state.getBlock().hasTileEntity(state) && state.getBlock() != Blocks.OBSIDIAN && state.getBlockHardness(null, null) >= 0;
@@ -221,9 +246,9 @@ public class MultiPistonBase extends Block{
 			return (state.getBlock() == Blocks.PISTON || state.getBlock() == Blocks.STICKY_PISTON) ? !state.getValue(BlockPistonBase.EXTENDED) : state.getMobilityFlag() == EnumPushReaction.NORMAL && state.getMaterial() != Material.AIR && !state.getBlock().hasTileEntity(state) && state.getBlock() != Blocks.OBSIDIAN && state.getBlockHardness(null, null) >= 0;
 		}
 	}
-	
+
 	private static final int PUSH_LIMIT = 64;
-	
+
 	/**
 	 * Used recursively to fill a list with the blocks to be moved. Returns true if there is a problem that stops the movement.
 	 */
@@ -239,7 +264,7 @@ public class MultiPistonBase extends Block{
 		}else{
 			list.add(list.indexOf(forward), pos);
 		}
-		
+
 		if(buf.getBlockState(pos).getBlock() == Blocks.SLIME_BLOCK){
 			//The back has to be checked before the sides or the list ordering gets messed up.
 			//Likewise, the sides have to be sent before the front
@@ -248,7 +273,7 @@ public class MultiPistonBase extends Block{
 					return true;
 				}
 			}
-			
+
 			for(EnumFacing checkDir : EnumFacing.VALUES){
 				if(checkDir != dir && checkDir != dir.getOpposite()){
 					if(canPush(buf.getBlockState(pos.offset(checkDir)), false)){
@@ -259,37 +284,32 @@ public class MultiPistonBase extends Block{
 				}
 			}
 		}
-		
+
 		if(canPush(buf.getBlockState(pos.offset(dir)), false)){
 			if(list.size() > PUSH_LIMIT || propogate(list, buf, pos.offset(dir), dir, null)){
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
 		setExtension(world, pos, state.getValue(Properties.FACING), 0, getExtension(world, pos, state.getValue(Properties.FACING)));
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		neighborChanged(world.getBlockState(pos), world, pos, null, null);
 	}
-	
+
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isRemote){
 			return;
 		}
 		checkRedstone(worldIn, pos, state.getValue(Properties.FACING));
-	}
-	
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
 	}
 
 	@Override
@@ -306,12 +326,12 @@ public class MultiPistonBase extends Block{
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(Properties.FACING).getIndex() + (state.getValue(Properties.REDSTONE_BOOL) ? 8 : 0);
 	}
-	
+
 	@Override
 	public EnumPushReaction getMobilityFlag(IBlockState state){
 		return state.getValue(Properties.REDSTONE_BOOL) ? EnumPushReaction.BLOCK : EnumPushReaction.NORMAL;
 	}
-	
+
 
 	/**
 	 * An alternate version of World#getEntitiesWithinAABBExcludingEntity that checks a 3x3x3 cube of mini chunks (16x16x16 cubes within chunks) for entities.

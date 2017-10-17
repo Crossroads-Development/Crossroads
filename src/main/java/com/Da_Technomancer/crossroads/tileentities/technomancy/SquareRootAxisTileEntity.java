@@ -35,6 +35,15 @@ public class SquareRootAxisTileEntity extends TileEntity implements ITickable{
 		this(EnumFacing.NORTH);
 	}
 
+	public void disconnect(){
+		for(IAxleHandler axle : rotaryMembers){
+			//For 0-mass gears.
+			axle.getMotionData()[0] = 0;
+			axle.syncAngle();
+		}
+		CommonProxy.masterKey++;
+	}
+	
 	public SquareRootAxisTileEntity(EnumFacing facingIn){
 		super();
 		facing = facingIn;

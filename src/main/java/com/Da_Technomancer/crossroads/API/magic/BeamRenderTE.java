@@ -21,6 +21,14 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	protected Triple<Color, Integer, Integer>[] trip = new Triple[6];
 	protected BeamManager[] beamer;
 
+	/**
+	 * Sets the beamer variable to null, use whenever rotating the block. 
+	 */
+	public void resetBeamer(){
+		refresh();
+		beamer = null;
+	}
+	
 	@Override
 	public Triple<Color, Integer, Integer>[] getBeam(){
 		return trip;
