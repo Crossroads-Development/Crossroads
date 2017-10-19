@@ -10,6 +10,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.integration.JEI.ArcaneExtractorCategory;
+import com.Da_Technomancer.crossroads.integration.JEI.ArcaneExtractorRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.DetailedCrafterCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.DetailedCrafterRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingCategory;
@@ -29,6 +31,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public final class RecipeHolder{
 
@@ -51,6 +55,11 @@ public final class RecipeHolder{
 	 */
 	public static final HashMap<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> fluidCoolingRecipes = new HashMap<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>>();
 
+	/**
+	 * Stores the heating crucible recipes. BE CAREFUL, the contained FluidStack is mutable. The ICraftingStack is the ingredient, FluidStack is output, and String is the unmelted texture
+	 */
+	public static final ArrayList<Triple<ICraftingStack, FluidStack, String>> heatingCrucibleRecipes = new ArrayList<Triple<ICraftingStack, FluidStack, String>>();
+	
 	/**
 	 * A list of all recipes, Item Array are the ingredients, and itemstack is
 	 * output. A list for poisonous potato recipes and mashed potato recipes.
@@ -120,9 +129,16 @@ public final class RecipeHolder{
 		JEIWrappers.put(DetailedCrafterCategory.ID, currentRecipes);
 		
 		currentRecipes = new ArrayList<IRecipeWrapper>();
-		currentRecipes.add(new HeatingCrucibleRecipe(true));
-		currentRecipes.add(new HeatingCrucibleRecipe(false));
+		for(Triple<ICraftingStack, FluidStack, String> rec : heatingCrucibleRecipes){
+			currentRecipes.add(new HeatingCrucibleRecipe(rec.getLeft(), rec.getMiddle()));
+		}
 		JEIWrappers.put(HeatingCrucibleCategory.ID, currentRecipes);
+		
+		currentRecipes = new ArrayList<IRecipeWrapper>();
+		for(Entry<Item, MagicUnit> rec : magExtractRecipes.entrySet()){
+			currentRecipes.add(new ArcaneExtractorRecipe(new ItemStack(rec.getKey(), 1, OreDictionary.WILDCARD_VALUE), rec.getValue()));
+		}
+		JEIWrappers.put(ArcaneExtractorCategory.ID, currentRecipes);
 	}
 
 	@Nonnull

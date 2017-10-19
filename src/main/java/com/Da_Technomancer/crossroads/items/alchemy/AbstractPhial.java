@@ -107,7 +107,9 @@ public abstract class AbstractPhial extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
-		list.add(new ItemStack(this, 1, 0));
-		list.add(new ItemStack(this, 1, 1));
+		if(isInCreativeTab(tab)){
+			list.add(new ItemStack(this, 1, 0));
+			list.add(new ItemStack(this, 1, 1));
+		}
 	}
 }

@@ -9,6 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class CraftingStack implements ICraftingStack{
 
@@ -30,12 +31,12 @@ public class CraftingStack implements ICraftingStack{
 	 * 
 	 * @param item
 	 * @param count
-	 * @param meta A value of -1 means to ignore metadata
+	 * @param meta A value of -1 or OreDictionary.WILDCARD_VALUE means to ignore metadata
 	 */
 	public CraftingStack(Item item, int count, int meta){
 		this.item = item;
 		this.count = count;
-		this.meta = meta;
+		this.meta = meta == OreDictionary.WILDCARD_VALUE ? -1 : meta;
 	}
 
 	@Override
@@ -85,5 +86,10 @@ public class CraftingStack implements ICraftingStack{
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public String toString(){
+		return "CraftingStack[Item: " + item + ", Count: " + count + ", Meta: " + meta + "]";
 	}
 }

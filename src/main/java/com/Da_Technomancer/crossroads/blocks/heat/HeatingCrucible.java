@@ -47,12 +47,13 @@ public class HeatingCrucible extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
+		//The TEXTURE_4 property will be removed from this block at some point. 
 		return new BlockStateContainer(this, new IProperty[] {Properties.FULLNESS, Properties.TEXTURE_4});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.FULLNESS, meta & 3).withProperty(Properties.TEXTURE_4, (meta & 12) / 4);
+		return getDefaultState().withProperty(Properties.FULLNESS, meta & 3);
 	}
 
 	@Override

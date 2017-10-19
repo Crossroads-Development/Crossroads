@@ -65,4 +65,9 @@ public class OreDictCraftingStack implements ICraftingStack{
 		
 		return false;
 	}
+	
+	@Override
+	public String toString(){
+		return "OreDictCraftingStack[OreDict: " + oreDict + ", Count: " + count + "]";
+	}
 }

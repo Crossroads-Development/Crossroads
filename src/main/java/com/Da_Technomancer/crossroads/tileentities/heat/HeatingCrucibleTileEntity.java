@@ -4,20 +4,28 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
 import com.Da_Technomancer.crossroads.items.Thermometer;
+import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -27,25 +35,42 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.oredict.OreDictionary;
 
-public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, IInfoTE, IStringReceiver{
 
 	private FluidStack content = null;
-	private static final int PRODUCED_LAVA = 200;
-	private static final int PRODUCED_COPPER = 144;
-	private static final int CAPACITY = 16 * PRODUCED_LAVA;
+	private static final int CAPACITY = 16 * 200;
 	private boolean init = false;
 	private double temp;
 	private ItemStack inventory = ItemStack.EMPTY;
+
+	@Override
+	public void receiveString(String context, String message, EntityPlayerMP sender){
+		if(world.isRemote && context.equals("text")){
+			activeText = message;
+		}
+	}
+
+	/**
+	 * The texture of the solid material, if any. Server side only. 
+	 */
+	private String solidText = null;
+	/**
+	 * The texture to be displayed, if any. 
+	 */
+	private String activeText = null;
+
+	public String getActiveTexture(){
+		return activeText;
+	}
 
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
@@ -56,7 +81,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 			}
 		}
 	}
-	
+
 	/**
 	 * This controls whether the tile entity gets replaced whenever the block
 	 * state is changed. Normally only want this when block actually is
@@ -67,69 +92,21 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 		return oldState.getBlock() != newState.getBlock();
 	}
 
-	/**
-	 * 0 = not locked, 1 = copper, 2 = cobble
-	 */
-	private byte getType(){
-		if(!inventory.isEmpty()){
-			for(int ID : OreDictionary.getOreIDs(inventory)){
-				if(ID == OreDictionary.getOreID("dustCopper")){
-					return 1;
-				}
-				if(ID == OreDictionary.getOreID("cobblestone")){
-					return 2;
-				}
-			}
-		}
-
-		if(content != null){
-			if(content.getFluid() == FluidRegistry.LAVA){
-				return 2;
-			}
-			if(content.getFluid() == BlockMoltenCopper.getMoltenCopper()){
-				return 1;
-			}
-		}
-
-		return 0;
-	}
-
-	private boolean recipeIsValid(ItemStack stack){
-
+	private Pair<FluidStack, String> getRecipe(ItemStack stack){
 		if(stack.isEmpty()){
-			return false;
+			return Pair.of(null, null);
 		}
 
-		byte type = 0;
-
-		for(int ID : OreDictionary.getOreIDs(stack)){
-			if(ID == OreDictionary.getOreID("dustCopper")){
-				type = 1;
-				break;
-			}
-			if(ID == OreDictionary.getOreID("cobblestone")){
-				type = 2;
-				break;
+		for(Triple<ICraftingStack, FluidStack, String> rec : RecipeHolder.heatingCrucibleRecipes){
+			if(rec.getLeft().softMatch(stack)){
+				return Pair.of(rec.getMiddle(), rec.getRight());
 			}
 		}
-
-		if(type == 0){
-			return false;
-		}
-
-		if(type == getType() || getType() == 0){
-			return true;
-		}
-
-		return false;
-	}
-
-	private IBlockState getCorrectState(){
-		return ModBlocks.heatingCrucible.getDefaultState().withProperty(Properties.FULLNESS, (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + ((float) inventory.getCount()) * 3F / 16F))).withProperty(Properties.TEXTURE_4, (getType() == 2 ? 2 : 0) + (content != null ? 1 : 0));
+		return Pair.of(null, null);
 	}
 
 	@Override
-	public void update(){
+	public void update(){		
 		if(world.isRemote){
 			return;
 		}
@@ -139,26 +116,47 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 			init = true;
 		}
 
-		byte type = getType();
+		int fullness = (int) Math.ceil(Math.min(3, (content == null ? 0F : ((float) content.amount) * 3F / ((float) CAPACITY)) + ((float) inventory.getCount()) * 3F / 16F));
+		IBlockState state = world.getBlockState(pos);
+		if(state.getBlock() != ModBlocks.heatingCrucible){
+			invalidate();
+			return;
+		}
+		if(state.getValue(Properties.FULLNESS) != fullness){
+			world.setBlockState(pos, state.withProperty(Properties.FULLNESS, fullness), 2);
+		}
+
+		if(fullness != 0 && world.getTotalWorldTime() % 2 == 0){
+			if(solidText != null && content == null && !solidText.equals(activeText)){
+				activeText = solidText;
+				ModPackets.network.sendToAllAround(new SendStringToClient("text", activeText, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}else if(content != null && content.getFluid().getStill() != null){
+				String goal = content.getFluid().getStill().toString();
+				if(!goal.equals(activeText)){
+					activeText = goal;
+					ModPackets.network.sendToAllAround(new SendStringToClient("text", activeText, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				}
+			}
+		}
 
 		if(temp >= 1000D){
 			temp -= 10D;
-			if(!inventory.isEmpty() && Math.random() < (temp >= 1490 ? 0.05 : 0.01) && (content == null || CAPACITY - content.amount >= (type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA))){
-				if(content == null){
-					content = new FluidStack(type == 1 ? BlockMoltenCopper.getMoltenCopper() : FluidRegistry.LAVA, type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA);
-				}else{
-					content.amount += type == 1 ? PRODUCED_COPPER : PRODUCED_LAVA;
+			if(!inventory.isEmpty() && Math.random() < (temp >= 1490 ? 0.05 : 0.01)){
+				FluidStack created = getRecipe(inventory).getLeft();
+				if(created == null){
+					inventory = ItemStack.EMPTY;
+				}else if(content == null || (CAPACITY - content.amount >= created.amount && content.getFluid() == created.getFluid())){
+					if(content == null){
+						content = created.copy();
+					}else{
+						content.amount += created.amount;
+					}
 				}
+
 
 				inventory.shrink(1);
 			}
 			markDirty();
-		}
-
-		
-		IBlockState correctState = getCorrectState();
-		if(world.getBlockState(pos).getValue(Properties.FULLNESS) != getCorrectState().getValue(Properties.FULLNESS) || world.getBlockState(pos).getValue(Properties.TEXTURE_4) != correctState.getValue(Properties.TEXTURE_4)){
-			world.setBlockState(pos, correctState, 2);
 		}
 	}
 
@@ -169,9 +167,13 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 
 		init = nbt.getBoolean("init");
 		temp = nbt.getDouble("temp");
-
+		solidText = nbt.getString("sol");
+		activeText = nbt.getString("act");
 		if(nbt.hasKey("inv")){
 			inventory = new ItemStack(nbt.getCompoundTag("inv"));
+		}
+		if(solidText == null && !inventory.isEmpty()){
+			solidText = getRecipe(inventory).getRight();
 		}
 	}
 
@@ -184,11 +186,24 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 
 		nbt.setBoolean("init", init);
 		nbt.setDouble("temp", temp);
+		if(solidText != null){
+			nbt.setString("sol", solidText);
+		}
+		if(activeText != null){
+			nbt.setString("act", activeText);
+		}
 
 		if(!inventory.isEmpty()){
 			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
 		}
 
+		return nbt;
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setString("act", activeText);
 		return nbt;
 	}
 
@@ -245,7 +260,11 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || !recipeIsValid(stack)){
+			if(slot != 0 || (!inventory.isEmpty() && !stack.isItemEqual(inventory))){
+				return stack;
+			}
+			Pair<FluidStack, String> rec = getRecipe(stack);
+			if(rec.getLeft() == null){
 				return stack;
 			}
 
@@ -253,7 +272,9 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 
 			if(!simulate){
 				inventory = new ItemStack(stack.getItem(), amount + inventory.getCount(), stack.getMetadata());
+				solidText = rec.getRight();
 				markDirty();
+				
 			}
 
 			return amount == stack.getCount() ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - amount, stack.getMetadata());

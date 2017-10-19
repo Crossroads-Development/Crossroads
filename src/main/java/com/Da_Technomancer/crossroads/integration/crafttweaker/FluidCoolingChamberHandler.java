@@ -36,10 +36,7 @@ public class FluidCoolingChamberHandler{
 		if(liquidStack == null){
 			return;
 		}
-		Fluid fluid = liquidStack.getFluid();
-		int amountRequired = liquidStack.amount;
-		ItemStack outputStack = CraftTweakerMC.getItemStack(output);
-		CraftTweakerAPI.apply(new Add(fluid, amountRequired, outputStack, maxTemp, heatAdded));
+		CraftTweakerAPI.apply(new Add(liquidStack.getFluid(), liquidStack.amount, CraftTweakerMC.getItemStack(output), maxTemp, heatAdded));
 	}
 
 	/** Operation to add a recipe. */

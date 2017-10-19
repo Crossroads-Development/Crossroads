@@ -24,7 +24,7 @@ import net.minecraftforge.fluids.IFluidBlock;
 
 public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTileEntity>{
 
-	private static final ResourceLocation texture = new ResourceLocation(Main.MODID, "textures/model/pump.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/pump.png");
 	private static final ModelPump model = new ModelPump();
 
 	@Override
@@ -40,7 +40,7 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 		GlStateManager.translate(-.5F, -1.5F, .5F);
 		GlStateManager.rotate(pump.getCompletion() * 360F, 0F, 1F, 0F);
 		
-		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		model.renderScrew();
 		
 		GlStateManager.popMatrix();

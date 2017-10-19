@@ -31,6 +31,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -83,6 +84,10 @@ public final class ModCrafting{
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("ingotCopper", 1), new ItemStack[] {new ItemStack(ModItems.dustCopper, 1)});
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("stone", 1),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
 
+		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("dustCopper", 1), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/ore_native_copper"));
+		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("oreCopper", 1), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/ore_copper"));
+		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("cobblestone", 1), new FluidStack(FluidRegistry.LAVA, 200), "minecraft:blocks/cobblestone"));
+		
 		// Heating, order of decreasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Pair.of(true, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D)));
 		RecipeHolder.envirHeatSource.put(Blocks.FLOWING_LAVA, Pair.of(false, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D)));

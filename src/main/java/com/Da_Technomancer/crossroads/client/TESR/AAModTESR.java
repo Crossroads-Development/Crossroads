@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.HamsterWheelTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.magic.BeaconHarnessTileEntity;
@@ -57,6 +58,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(HamsterWheelTileEntity.class, new HamsterWheelRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(GatewayFrameTileEntity.class, new GatewayFrameRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(MechanicalArmTileEntity.class, new MechanicalArmRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(HeatingCrucibleTileEntity.class, new HeatingCrucibleRenderer());
 	}
 
 	public static void reg(Block block){

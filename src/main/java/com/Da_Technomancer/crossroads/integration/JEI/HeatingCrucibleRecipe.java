@@ -2,23 +2,23 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
+import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
 import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class HeatingCrucibleRecipe implements IRecipeWrapper{
 
-	private final boolean copper;
+	private final ICraftingStack in;
+	private final FluidStack out;
 
-	public HeatingCrucibleRecipe(boolean copper){
-		this.copper = copper;
+	public HeatingCrucibleRecipe(ICraftingStack in, FluidStack out){
+		this.in = in;
+		this.out = out;
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class HeatingCrucibleRecipe implements IRecipeWrapper{
 
 	@Override
 	public void getIngredients(IIngredients ingredients){
-		ingredients.setInputLists(ItemStack.class, ImmutableList.of(OreDictionary.getOres(copper ? "dustCopper" : "cobblestone", false)));
-		ingredients.setOutput(FluidStack.class, copper ? new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144) : new FluidStack(FluidRegistry.LAVA, 200));
+		ingredients.setInputLists(ItemStack.class, ImmutableList.of(in.getMatchingList()));
+		ingredients.setOutput(FluidStack.class, out);
 	}
 }

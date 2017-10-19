@@ -14,6 +14,8 @@ public class CraftTweakerIntegration{
 	public static void init(){
 		CraftTweakerAPI.registerClass(GrindstoneHandler.class);
 		CraftTweakerAPI.registerClass(FluidCoolingChamberHandler.class);
+		CraftTweakerAPI.registerClass(ArcaneExtractorHandler.class);
+		CraftTweakerAPI.registerClass(HeatingCrucibleHandler.class);
 	}
 
 	private static final ItemStack[] EMPTY = new ItemStack[0];
