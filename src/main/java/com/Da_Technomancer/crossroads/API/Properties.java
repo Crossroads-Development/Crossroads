@@ -11,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 public class Properties{
 
 	public static final UnlistedPropertyBooleanSixArray CONNECT = new UnlistedPropertyBooleanSixArray("connect");
+	public static final UnlistedPropertyIntegerSixArray CONNECT_MODE = new UnlistedPropertyIntegerSixArray("connect_mode");
 	public static final UnlistedPropertyIntegerSixArray PORT_TYPE = new UnlistedPropertyIntegerSixArray("port_type");
 	public static final PropertyBool LIGHT = PropertyBool.create("light");
 	/**
@@ -36,4 +37,5 @@ public class Properties{
 	public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
 	public static final PropertyInteger TEMP_CHANGE = PropertyInteger.create("temp_change", 0, 4);
 	public static final PropertyEnum<EnumContainerType> CONTAINER_TYPE = PropertyEnum.create("container_type", EnumContainerType.class);
+	public static final PropertyDirection HORIZONTAL_FACING = PropertyDirection.create("horiz_facing", (EnumFacing side) -> side.getAxis() != EnumFacing.Axis.Y);
 }

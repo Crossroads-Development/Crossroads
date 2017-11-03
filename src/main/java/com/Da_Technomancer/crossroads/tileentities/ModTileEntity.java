@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.alchemy.AbstractTransmutationBlock;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.SifterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.BasicFluidSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
@@ -147,6 +149,8 @@ public class ModTileEntity{
 		register(RedstoneRegistryTileEntity.class, "redstone_registry");
 		register(AbstractTransmutationBlock.TransmutationTileEntity.class, "transmutation_site");
 		register(SifterTileEntity.class, "sifter");
+		register(AlchemicalTubeTileEntity.class, "alchemical_tube");
+		register(FluidInjectorTileEntity.class, "fluid_injector");
 	}
 
 	/**

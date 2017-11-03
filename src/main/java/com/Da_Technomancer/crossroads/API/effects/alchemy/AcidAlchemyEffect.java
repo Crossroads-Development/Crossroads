@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 import java.util.Random;
 
-import com.Da_Technomancer.crossroads.API.alchemy.MatterPhase;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 
 import net.minecraft.block.state.IBlockState;
@@ -24,8 +24,8 @@ public class AcidAlchemyEffect implements IAlchEffect{
 	public static final DamageSource ACID_DAMAGE = new DamageSource("chemical").setDamageBypassesArmor();
 	
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount, MatterPhase phase){
-		if(phase == MatterPhase.SOLUTE && amount >= .2D){
+	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase){
+		if(phase == EnumMatterPhase.SOLUTE && amount >= .2D){
 			for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
 				e.attackEntityFrom(ACID_DAMAGE, ((float) (amount * 5D)));
 			}

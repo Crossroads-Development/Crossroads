@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 
-import com.Da_Technomancer.crossroads.API.alchemy.MatterPhase;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.google.common.base.Predicate;
 
 import net.minecraft.block.BlockDirt;
@@ -26,7 +26,7 @@ public class SaltAlchemyEffect implements IAlchEffect{
 	private static final Predicate<Entity> FILTER = (Entity e) -> (e instanceof EntitySlime || e instanceof EntityCreeper) && EntitySelectors.IS_ALIVE.apply(e);
 
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount, MatterPhase phase){
+	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase){
 		int radius = Math.min(1, (int) amount / 100);
 		for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos.add(-radius, -radius, -radius), pos.add(radius, radius, radius)), FILTER)){
 			if(e instanceof EntitySlime){

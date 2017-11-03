@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemicalTube;
+import com.Da_Technomancer.crossroads.blocks.alchemy.FluidInjector;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Sifter;
 import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
@@ -165,6 +167,8 @@ public final class ModBlocks{
 	public static MechanicalArm mechanicalArm;
 	public static RedstoneRegistry redstoneRegistry;
 	public static Sifter sifter;
+	public static AlchemicalTube alchemicalTube;
+	public static FluidInjector fluidInjector;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -304,6 +308,8 @@ public final class ModBlocks{
 		mechanicalArm = new MechanicalArm();
 		redstoneRegistry = new RedstoneRegistry();
 		sifter = new Sifter();
+		alchemicalTube = new AlchemicalTube();
+		fluidInjector = new FluidInjector();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -320,5 +326,6 @@ public final class ModBlocks{
 		redstoneFluidTube.initModel();
 		prototype.initModel();
 		prototypePort.initModel();
+		alchemicalTube.initModel();
 	}
 }

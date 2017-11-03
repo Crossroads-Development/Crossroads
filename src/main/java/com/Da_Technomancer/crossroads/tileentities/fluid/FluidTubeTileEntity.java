@@ -25,6 +25,10 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
+		if(content != null && content.amount == 0){
+			content = null;
+		}
+		
 		for(EnumFacing dir : EnumFacing.values()){
 			TileEntity te = world.getTileEntity(pos.offset(dir));
 			if(te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())){
@@ -77,6 +81,9 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 		if(!canFill && CAPACITY != (content == null ? 0 : content.amount)){
 			if(content == null){
 				content = handler.drain(CAPACITY, true);
+				if(content != null && content.amount == 0){
+					content = null;
+				}
 			}else{
 				FluidStack drained = handler.drain(new FluidStack(content.getFluid(), CAPACITY - content.amount), true);
 				content.amount += drained == null ? 0 : drained.amount;
@@ -221,5 +228,4 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable{
 			return new FluidStack(fluid, change);
 		}
 	}
-
 }

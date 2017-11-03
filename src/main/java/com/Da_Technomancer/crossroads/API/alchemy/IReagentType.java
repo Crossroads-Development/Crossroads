@@ -56,9 +56,9 @@ public interface IReagentType{
 	 * @param phase Will never be called for solid phase. 
 	 * @return A color for rendering. Alpha is used. 
 	 */
-	public Color getColor(MatterPhase phase);
+	public Color getColor(EnumMatterPhase phase);
 	
-	public default void onRelease(World world, BlockPos pos, double amount, MatterPhase phase){
+	public default void onRelease(World world, BlockPos pos, double amount, EnumMatterPhase phase){
 		
 	}
 	

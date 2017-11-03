@@ -207,6 +207,11 @@ item.waste_salt.name=Waste Salt
 tile.sifter.name=Sifter
 item.florence_flask.name=Florence Flask
 item.wrench.name=Wrench
+tile.alch_tube.name=Alchemical Tube
+tile.alch_tube_glass.name=Glass Alchemical Tube
+tile.alch_tube_cryst.name=Crystal Alchemical Tube
+tile.fluid_injector_glass.name=Glass Fluid Injector
+tile.fluid_injector_cryst.name=Crystal Fluid Injector
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

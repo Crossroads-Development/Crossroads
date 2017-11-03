@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -25,7 +25,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 			TileEntity te = world.getTileEntity(ray.getBlockPos());
 			
 			if(te instanceof IInfoTE){
-				((IInfoTE) te).addInfo(chat, GoggleLenses.RUBY, player, ray.sideHit);
+				((IInfoTE) te).addInfo(chat, EnumGoggleLenses.RUBY, player, ray.sideHit);
 			}
 		}
 

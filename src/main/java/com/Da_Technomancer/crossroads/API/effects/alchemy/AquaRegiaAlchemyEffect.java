@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
-import com.Da_Technomancer.crossroads.API.alchemy.MatterPhase;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 
 import net.minecraft.block.state.IBlockState;
@@ -18,7 +18,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class AquaRegiaAlchemyEffect implements IAlchEffect{
 	
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount, MatterPhase phase){
+	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase){
 		if(amount >= .1D){
 			for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
 				e.attackEntityFrom(AcidAlchemyEffect.ACID_DAMAGE, ((float) (amount * 10D)));

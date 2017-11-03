@@ -208,9 +208,8 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 		Boolean[] connect = {false, false, false, false, false, false};
 
 		for(EnumFacing direction : EnumFacing.values()){
-			if(world.getTileEntity(pos.offset(direction)) != null && world.getTileEntity(pos.offset(direction)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())){
-				connect[direction.getIndex()] = true;
-			}
+			TileEntity te = world.getTileEntity(pos.offset(direction));
+			connect[direction.getIndex()] = te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite());
 		}
 		return extendedBlockState.withProperty(Properties.CONNECT, connect);
 	}

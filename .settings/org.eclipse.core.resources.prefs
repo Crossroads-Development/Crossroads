@@ -21,7 +21,10 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatingCr
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/crafttweaker/HeatingCrucibleHandler.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/OmniMeter.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/Thermometer.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/items/alchemy/AbstractPhial.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/alchemy/PhilStone.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/AlchemicalTubeTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/FluidInjectorTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/fluid/RadiatorTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/fluid/SteamBoilerTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/FluidCoolingChamberTileEntity.java=UTF-8

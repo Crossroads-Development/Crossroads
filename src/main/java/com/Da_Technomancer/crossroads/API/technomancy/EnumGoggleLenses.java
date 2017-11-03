@@ -19,7 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public enum GoggleLenses implements IInfoDevice{
+public enum EnumGoggleLenses implements IInfoDevice{
 	
 	//Don't reorder these unless you want to rename all the goggle texture files.
 	RUBY(new OreDictCraftingStack("gemRuby", 1), "_ruby", new RubyGoggleEffect()),
@@ -32,7 +32,7 @@ public enum GoggleLenses implements IInfoDevice{
 	private final String texturePath;
 	private final IGoggleEffect effect;
 	
-	GoggleLenses(ICraftingStack item, String texturePath, IGoggleEffect effect){
+	EnumGoggleLenses(ICraftingStack item, String texturePath, IGoggleEffect effect){
 		this.item = item;
 		this.texturePath = texturePath;
 		this.effect = effect;

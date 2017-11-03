@@ -17,7 +17,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
@@ -310,7 +310,7 @@ public final class EventHandlerCommon{
 	@SubscribeEvent
 	public void craftGoggles(AnvilUpdateEvent e){
 		if(e.getLeft().getItem() == ModItems.moduleGoggles){
-			for(GoggleLenses lens : GoggleLenses.values()){
+			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(lens.matchesRecipe(e.getRight()) && (!e.getLeft().hasTagCompound() || !e.getLeft().getTagCompound().hasKey(lens.name()))){
 					ItemStack out = e.getLeft().copy();
 					if(!out.hasTagCompound()){

@@ -5,13 +5,11 @@ import javax.annotation.Nonnull;
 public class Reagent{
 
 	private final IReagentType type;
-	private double temp;
 	private double amount;
-	private MatterPhase phase;
+	private EnumMatterPhase phase;
 
-	public Reagent(IReagentType type, double temp, double amount){
+	public Reagent(IReagentType type, double amount){
 		this.type = type;
-		this.temp = temp;
 		this.amount = amount;
 	}
 
@@ -20,66 +18,63 @@ public class Reagent{
 		return type;
 	}
 
-	public void updatePhase(boolean polar, boolean nonPolar, boolean aquaRegia){
+	public void updatePhase(double temp, boolean polar, boolean nonPolar, boolean aquaRegia){
 		if(temp >= type.getBoilingPoint()){
-			phase = MatterPhase.GAS;
+			phase = EnumMatterPhase.GAS;
 			return;
 		}
 		if(temp < type.getMeltingPoint()){
 			SolventType solvent = type.soluteType();
-			switch(solvent){
-				case AQUA_REGIA:
-					if(aquaRegia){
-						phase = MatterPhase.SOLUTE;
-					}else{
-						phase = MatterPhase.SOLID;
-					}
-					break;
-				case MIXED_POLAR:
-					if(polar || nonPolar){
-						phase = MatterPhase.SOLUTE;
-					}else{
-						phase = MatterPhase.SOLID;
-					}
-					break;
-				case POLAR:
-					if(polar){
-						phase = MatterPhase.SOLUTE;
-					}else{
-						phase = MatterPhase.SOLID;
-					}
-					break;
-				case NON_POLAR:
-					if(nonPolar){
-						phase = MatterPhase.SOLUTE;
-					}else{
-						phase = MatterPhase.SOLID;
-					}
-					break;
-				default:
-					phase = MatterPhase.SOLID;
-					break;
+			if(solvent != null){
+				switch(solvent){
+					case AQUA_REGIA:
+						if(aquaRegia){
+							phase = EnumMatterPhase.SOLUTE;
+						}else{
+							phase = EnumMatterPhase.SOLID;
+						}
+						break;
+					case MIXED_POLAR:
+						if(polar || nonPolar){
+							phase = EnumMatterPhase.SOLUTE;
+						}else{
+							phase = EnumMatterPhase.SOLID;
+						}
+						break;
+					case POLAR:
+						if(polar){
+							phase = EnumMatterPhase.SOLUTE;
+						}else{
+							phase = EnumMatterPhase.SOLID;
+						}
+						break;
+					case NON_POLAR:
+						if(nonPolar){
+							phase = EnumMatterPhase.SOLUTE;
+						}else{
+							phase = EnumMatterPhase.SOLID;
+						}
+						break;
+				}
+			}else{
+				phase = EnumMatterPhase.SOLID;
 			}
 			return;
 		}
 
-		phase = MatterPhase.LIQUID;
+		phase = EnumMatterPhase.LIQUID;
 	}
 
+	/**
+	 * @param temp Current temperature. Optional, only used if phase hasn't been set yet to update the phase. If phase should already have been set, this can be left as 0. 
+	 * @return
+	 */
 	@Nonnull
-	public MatterPhase getPhase(){
+	public EnumMatterPhase getPhase(double temp){
 		if(phase == null){
-			updatePhase(false, false, false);
+			updatePhase(temp, false, false, false);
 		}
 		return phase;
-	}
-
-	public double getTemp(){
-		return temp;
-	}
-
-	public void setTemp(double tempIn){
-		temp = Math.max(-273, tempIn);
 	}
 
 	/**
@@ -92,21 +87,18 @@ public class Reagent{
 	public void setAmount(double amountIn){
 		amount = Math.max(0, amountIn);
 	}
-	
+
 	/**
 	 * @param amountChange
 	 * @return The new amount. 
 	 */
-	public double increaseAmount(double amountChange, double newMatTemp){
-		if(amountChange > 0 ){
-			setTemp(((temp * amount) + (amountChange * newMatTemp)) / (amount + amountChange));
-		}
+	public double increaseAmount(double amountChange){
 		setAmount(amount + amountChange);
 		return amount;
 	}
-	
+
 	@Override
 	public String toString(){
-		return type == null ? "EMPTY_REAGENT" : (type.getName() + ", Amount: " + amount + ", Temp: " + temp + "°C");
+		return type == null ? "EMPTY_REAGENT" : (type.getName() + ", Amount: " + amount);
 	}
 }

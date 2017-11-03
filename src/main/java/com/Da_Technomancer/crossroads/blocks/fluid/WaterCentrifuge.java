@@ -86,11 +86,6 @@ public class WaterCentrifuge extends BlockContainer{
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return getDefaultState().withProperty(Properties.ORIENT, (placer == null) ? true : placer.getHorizontalFacing().getAxis() == Axis.X);
 	}
-
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
-	}
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){

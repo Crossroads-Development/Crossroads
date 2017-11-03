@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads;
 
 import org.apache.logging.log4j.Logger;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCraftingManager;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.command.DiscoverElementCommand;
 import com.Da_Technomancer.crossroads.command.ResetPathCommand;
 import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
@@ -61,7 +61,7 @@ public final class Main{
 		e.registerServerCommand(new ResetPathCommand());
 		e.registerServerCommand(new DiscoverElementCommand());
 		e.getServer().worlds[0].getGameRules().addGameRule("alchemyTransSpread", "true", ValueType.BOOLEAN_VALUE);
-		AlchemyCraftingManager.setup(e.getServer().worlds[0].getSeed());
+		AlchemyCore.setup(e.getServer().worlds[0].getSeed());
 	}
 
 	@Mod.EventHandler

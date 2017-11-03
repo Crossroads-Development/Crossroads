@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -45,7 +45,7 @@ public class ModuleGoggles extends ItemArmor{
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
 		if(!world.isRemote && stack.hasTagCompound()){
 			ArrayList<String> chat = new ArrayList<String>();
-			for(GoggleLenses lens : GoggleLenses.values()){
+			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(stack.getTagCompound().hasKey(lens.name())){
 					lens.doEffect(world, player, chat, MiscOp.rayTrace(player, 8));
 				}
@@ -68,7 +68,7 @@ public class ModuleGoggles extends ItemArmor{
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Lenses:");
 		if(stack.hasTagCompound()){
-			for(GoggleLenses lens : GoggleLenses.values()){
+			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(stack.getTagCompound().hasKey(lens.name())){
 					tooltip.add('-' + lens.name());
 				}
@@ -82,7 +82,7 @@ public class ModuleGoggles extends ItemArmor{
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
 		String path = Main.MODID + ":textures/models/armor/goggles/goggle";
 		if(stack.hasTagCompound()){
-			for(GoggleLenses lens : GoggleLenses.values()){
+			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(stack.getTagCompound().hasKey(lens.name())){
 					path += lens.getTexturePath();
 				}

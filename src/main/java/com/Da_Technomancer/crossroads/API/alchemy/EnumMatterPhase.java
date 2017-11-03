@@ -1,22 +1,20 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-public enum MatterPhase{
+public enum EnumMatterPhase{
 	
-	GAS(true, true, false, true),
-	LIQUID(true, false, true, false),
-	SOLUTE(true, false, true, false),
-	SOLID(false, false, false, false);
+	GAS(true, true, false),
+	LIQUID(true, false, true),
+	SOLUTE(true, false, true),
+	SOLID(false, false, false);
 	
 	private final boolean flows;
 	private final boolean flowsUp;
 	private final boolean flowsDown;
-	private final boolean compressable;
 	
-	MatterPhase(boolean flows, boolean flowsUp, boolean flowsDown, boolean compressable){
+	EnumMatterPhase(boolean flows, boolean flowsUp, boolean flowsDown){
 		this.flows = flows;
 		this.flowsUp = flowsUp;
 		this.flowsDown = flowsDown;
-		this.compressable = compressable;
 	}
 	
 	public boolean flows(){
@@ -29,9 +27,5 @@ public enum MatterPhase{
 	
 	public boolean flowsDown(){
 		return flows && flowsDown;
-	}
-	
-	public boolean compressable(){
-		return compressable;
 	}
 }

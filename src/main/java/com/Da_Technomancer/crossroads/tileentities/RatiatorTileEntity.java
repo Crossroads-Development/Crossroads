@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
 
@@ -82,7 +82,7 @@ public class RatiatorTileEntity extends TileEntity implements IInfoTE{
 
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device instanceof OmniMeter || device == GoggleLenses.QUARTZ){
+		if(device instanceof OmniMeter || device == EnumGoggleLenses.QUARTZ){
 			chat.add("Out: " + output);
 		}
 	}

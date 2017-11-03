@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -52,7 +52,7 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 		}
 
 		if(te instanceof IInfoTE){
-			((IInfoTE) te).addInfo(chat, GoggleLenses.QUARTZ, player, ray.sideHit);
+			((IInfoTE) te).addInfo(chat, EnumGoggleLenses.QUARTZ, player, ray.sideHit);
 		}
 	}
 }

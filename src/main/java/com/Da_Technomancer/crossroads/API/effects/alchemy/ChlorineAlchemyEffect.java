@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
-import com.Da_Technomancer.crossroads.API.alchemy.MatterPhase;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.init.MobEffects;
@@ -15,7 +15,7 @@ import net.minecraft.world.WorldServer;
 public class ChlorineAlchemyEffect implements IAlchEffect{
 
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount, MatterPhase phase){
+	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase){
 		int radius = (int) Math.pow(amount / 10D, 1D / 3D);//This affects a cubic area instead of a spherical one because it's so much easier to do a cube. 
 		WorldServer worldS = (WorldServer) world;
 		for(int x = -radius; x <= radius; x++){

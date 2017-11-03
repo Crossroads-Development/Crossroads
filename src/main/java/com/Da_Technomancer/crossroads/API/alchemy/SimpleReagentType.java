@@ -25,17 +25,17 @@ public class SimpleReagentType implements IReagentType{
 	private final String name;
 	private final SolventType solvent;
 	private final SolventType solute;
-	private final Function<MatterPhase, Color> color;
+	private final Function<EnumMatterPhase, Color> color;
 	private final int index;
 
 	/**
 	 * @param name Material name. 
 	 * @param meltingPoint Melting temperature. Must be lower than boilingPoint. 
 	 * @param boilingPoint Boiling temperature. Must be higher than meltingPoint. 
-	 * @param index The index in the {@link AlchemyCraftingManager#REAGENTS} array.
+	 * @param index The index in the {@link AlchemyCore#REAGENTS} array.
 	 * @param color A function giving the color of this reagent based on phase. 
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<MatterPhase, Color> color){
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color){
 		this(name, meltingPoint, boilingPoint, index, color, null, 0, false);
 	}
 
@@ -43,13 +43,13 @@ public class SimpleReagentType implements IReagentType{
 	 * @param name Material name. 
 	 * @param meltingPoint Melting temperature. Must be lower than boilingPoint. 
 	 * @param boilingPoint Boiling temperature. Must be higher than meltingPoint. 
-	 * @param index The index in the {@link AlchemyCraftingManager#REAGENTS} array.
+	 * @param index The index in the {@link AlchemyCore#REAGENTS} array.
 	 * @param color A function giving the color of this reagent based on phase. 
 	 * @param solid The item that represents this in solid form. 
 	 * @param itemQuantity The amount of reagent 1 item is equivelent to. 
 	 * @param base Whether this is a constant material (in all worlds). Doesn't matter if solid is null. 
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<MatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base){
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base){
 		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, base, 0, null, null);
 	}
 
@@ -57,7 +57,7 @@ public class SimpleReagentType implements IReagentType{
 	 * @param name Material name. 
 	 * @param meltingPoint Melting temperature. Must be lower than boilingPoint. 
 	 * @param boilingPoint Boiling temperature. Must be higher than meltingPoint. 
-	 * @param index The index in the {@link AlchemyCraftingManager#REAGENTS} array.
+	 * @param index The index in the {@link AlchemyCore#REAGENTS} array.
 	 * @param color A function giving the color of this reagent based on phase. 
 	 * @param solid The item that represents this in solid form. 
 	 * @param itemQuantity The amount of reagent 1 item is equivelent to. 
@@ -66,7 +66,7 @@ public class SimpleReagentType implements IReagentType{
 	 * @param solventType Sets the solvent type
 	 * @param soluteType Sets the solute type
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<MatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType){
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType){
 		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, base, catalType, solventType, soluteType, 0, null);
 	}
 
@@ -74,7 +74,7 @@ public class SimpleReagentType implements IReagentType{
 	 * @param name Material name. 
 	 * @param meltingPoint Melting temperature. Must be lower than boilingPoint. 
 	 * @param boilingPoint Boiling temperature. Must be higher than meltingPoint. 
-	 * @param index The index in the {@link AlchemyCraftingManager#REAGENTS} array.
+	 * @param index The index in the {@link AlchemyCore#REAGENTS} array.
 	 * @param color A function giving the color of this reagent based on phase. 
 	 * @param solid The item that represents this in solid form. 
 	 * @param itemQuantity The amount of reagent 1 item is equivelent to. 
@@ -85,7 +85,7 @@ public class SimpleReagentType implements IReagentType{
 	 * @param containType 0: Normal; 1: Vanishes in glass; 2: Destroys glass. 
 	 * @param effect The effect this has when released. Null for none. 
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<MatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType, int containType, @Nullable IAlchEffect effect){
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType, int containType, @Nullable IAlchEffect effect){
 		this.name = name;
 		if(boilingPoint <= meltingPoint){
 			throw Main.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));
@@ -96,9 +96,9 @@ public class SimpleReagentType implements IReagentType{
 		this.itemAmount = itemQuantity;
 		if(solid != null){
 			if(base){
-				AlchemyCraftingManager.BASE_ITEM_TO_REAGENT.put(solid, this);
+				AlchemyCore.BASE_ITEM_TO_REAGENT.put(solid, this);
 			}else{
-				AlchemyCraftingManager.ITEM_TO_REAGENT.put(solid, this);
+				AlchemyCore.ITEM_TO_REAGENT.put(solid, this);
 			}
 		}
 		this.catalType = catalType;
@@ -127,16 +127,16 @@ public class SimpleReagentType implements IReagentType{
 
 	@Nullable
 	public Reagent getReagentFromStack(ItemStack stack){
-		return stack.getItem() == solid ? new Reagent(this, 30D, itemAmount) : null;
+		return stack.getItem() == solid ? new Reagent(this, itemAmount) : null;
 	}
 
 	/**
-	 * @param reag The reagent
+	 * @param reag The reagent (assumes phase is SOLID)
 	 * @return The matching solid ItemStack. ItemStack.EMPTY if there either isn't enough material (or cannot be solidifed for any other reason). 
 	 */
 	@Override
 	public ItemStack getStackFromReagent(Reagent reag){
-		return reag != null && reag.getType() == this && reag.getPhase() == MatterPhase.SOLID && reag.getAmount() >= itemAmount ? new ItemStack(solid, itemAmount) : ItemStack.EMPTY;
+		return reag != null && reag.getType() == this && reag.getAmount() >= itemAmount ? new ItemStack(solid, itemAmount) : ItemStack.EMPTY;
 	}
 
 	@Override
@@ -160,7 +160,7 @@ public class SimpleReagentType implements IReagentType{
 	}
 
 	@Override
-	public void onRelease(World world, BlockPos pos, double amount, MatterPhase phase){
+	public void onRelease(World world, BlockPos pos, double amount, EnumMatterPhase phase){
 		if(effect != null){
 			effect.doEffect(world, pos, amount, phase);
 		}
@@ -185,7 +185,7 @@ public class SimpleReagentType implements IReagentType{
 	}
 
 	@Override
-	public Color getColor(MatterPhase phase){
+	public Color getColor(EnumMatterPhase phase){
 		return color.apply(phase);
 	}
 

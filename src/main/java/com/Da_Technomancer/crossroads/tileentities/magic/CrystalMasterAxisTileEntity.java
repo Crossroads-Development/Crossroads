@@ -20,7 +20,7 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
 
 import net.minecraft.block.state.IBlockState;
@@ -51,7 +51,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 	
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == GoggleLenses.QUARTZ || device instanceof OmniMeter){
+		if(device == EnumGoggleLenses.QUARTZ || device instanceof OmniMeter){
 			chat.add("Element: " + (currentElement == null ? "NONE" : currentElement.toString() + (voi ? " (VOID), " : ", ") + "Time: " + time));
 		}
 	}

@@ -2,74 +2,78 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 public class AlchemyHelper{
 
-	public static final double MIN_QUANTITY = 0.05D;
+	public static final double MIN_QUANTITY = 0.005D;
 
-	public static void updateContents(IReactionChamber chamber, double extraHeat){
-		updateContents(chamber, extraHeat, extraHeat < 0 ? -273D : Short.MAX_VALUE);
-	}
-	
-	public static void updateContents(IReactionChamber chamber, double extraHeat, double goalTemp){
-		double totalHeat = 0;
-		double totalAmount = 0D;
+	public static void updatePhase(IReactionChamber chamber){
 		Reagent[] reagents = chamber.getReagants();
 		boolean glassChamber = chamber.isGlass();
 
-		for(Reagent reag : reagents){
-			if(reag == null){
-				continue;
-			}
-
-			totalHeat += (273D + reag.getTemp()) * reag.getAmount();
-			totalAmount += reag.getAmount();
-		}
-
-		if(totalAmount <= 0){
-			return;
-		}
-
-		double endTemp = (totalHeat / totalAmount) - 273D;
-		if(extraHeat >= 0){
-			totalHeat += Math.max(0, Math.min(extraHeat, (goalTemp - endTemp) * totalAmount));
-			endTemp = (totalHeat / totalAmount) - 273D;
-		}else{
-			totalHeat += Math.min(0, Math.max(extraHeat, (goalTemp - endTemp) * totalAmount));
-			endTemp = (totalHeat / totalAmount) - 273D;
-		}
+		double endTemp = chamber.getTemp();
 
 		boolean hasPolar = false;
 		boolean hasNonPolar = false;
 		boolean hasAquaRegia = false;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
-		for(Reagent reag : reagents){
-			if(reag != null && reag.getAmount() >= MIN_QUANTITY){
-				IReagentType type = reag.getType();
-				if(type == AlchemyCraftingManager.REAGENTS[11]){
-					hasAquaRegia = true;
+		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+			Reagent reag = reagents[i];
+			if(reag != null){
+				if(reag.getAmount() >= MIN_QUANTITY){
+					IReagentType type = reag.getType();
+					hasAquaRegia |= i == 11;
+					
+					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
+						SolventType solv = type.solventType();
+						hasPolar |= solv == SolventType.POLAR || solv == SolventType.MIXED_POLAR;
+						hasNonPolar |= solv == SolventType.NON_POLAR || solv == SolventType.MIXED_POLAR;
+						hasAquaRegia |= solv == SolventType.AQUA_REGIA;
+					}
+				}else{
+					chamber.addHeat(-((endTemp + 273D) * reag.getAmount()));
+					reagents[i] = null;
 				}
-				if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
-					SolventType solv = type.solventType();
-					hasPolar |= solv == SolventType.POLAR || solv == SolventType.MIXED_POLAR;
-					hasNonPolar |= solv == SolventType.NON_POLAR || solv == SolventType.MIXED_POLAR;
-					hasAquaRegia |= solv == SolventType.AQUA_REGIA;
-				}
-				reag.setTemp(endTemp);
 			}
 		}
-		
+
 		hasAquaRegia &= hasPolar;
+
+		boolean destroy = false;
 
 		for(int i = 0; i < reagents.length; i++){
 			Reagent reag = reagents[i];
 			if(reag == null){
 				continue;
 			}
-			reag.updatePhase(hasPolar, hasNonPolar, hasAquaRegia);
+			reag.updatePhase(endTemp, hasPolar, hasNonPolar, hasAquaRegia);
 			if(glassChamber && !reag.getType().canGlassContain()){
-				if(reag.getType().destroysBadContainer()){
-					chamber.destroyChamber();
-					return;
-				}
+				destroy |= reag.getType().destroysBadContainer();
 				reagents[i] = null;
+			}
+		}
+
+		if(destroy || chamber.getIntegrityCapacity() < chamber.getContent()){
+			chamber.destroyChamber();
+			return;
+		}
+	}
+
+	/** Assumes the chamber has had {@link AlchemyHelper#updateContents(IReactionChamber, double)} called to fix the contents first. This calls it every time it changes the contents.
+	 * 
+	 * @param chamber
+	 * @param passes
+	 * The maximum number of reactions to do.
+	 */
+	public static void performReaction(IReactionChamber chamber, int passes){
+		for(int pass = 0; pass < passes; passes++){
+			boolean operated = false;
+			for(IReaction react : AlchemyCore.REACTIONS){
+				if(react.performReaction(chamber)){
+					updatePhase(chamber);
+					operated = true;
+					break;
+				}
+			}
+			if(!operated){
+				break;
 			}
 		}
 	}

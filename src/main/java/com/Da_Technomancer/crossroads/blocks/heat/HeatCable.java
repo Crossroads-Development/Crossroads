@@ -127,7 +127,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	public ResourceLocation getTexture(IBlockState state){
 		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + '-' + CableThemes.values()[state.getValue(Properties.TEXTURE_4)].toString());
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(playerIn != null && hand != null){
@@ -148,7 +148,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		}
 		return false;
 	}
-	
+
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
 		return getDefaultState().withProperty(Properties.TEXTURE_4, 0);
@@ -181,9 +181,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 		for(EnumFacing direction : EnumFacing.values()){
 			TileEntity sideTe = world.getTileEntity(pos.offset(direction));
-			if(sideTe != null && ((sideTe instanceof IPrototypePort && ((IPrototypePort) sideTe).getType() == PrototypePortTypes.HEAT && ((IPrototypePort) sideTe).getSide() == direction.getOpposite()) || (sideTe instanceof IPrototypeOwner && ((IPrototypeOwner) sideTe).getTypes()[direction.getOpposite().getIndex()] == PrototypePortTypes.HEAT) || sideTe.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite()))){
-				connect[direction.getIndex()] = true;
-			}
+			connect[direction.getIndex()] = sideTe != null && ((sideTe instanceof IPrototypePort && ((IPrototypePort) sideTe).getType() == PrototypePortTypes.HEAT && ((IPrototypePort) sideTe).getSide() == direction.getOpposite()) || (sideTe instanceof IPrototypeOwner && ((IPrototypeOwner) sideTe).getTypes()[direction.getOpposite().getIndex()] == PrototypePortTypes.HEAT) || sideTe.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite()));
 		}
 
 		extendedBlockState = extendedBlockState.withProperty(Properties.CONNECT, connect);

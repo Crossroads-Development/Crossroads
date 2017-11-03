@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -42,7 +42,7 @@ public class EmeraldGoggleEffect implements IGoggleEffect{
 				}
 				
 				if(te instanceof IInfoTE){
-					((IInfoTE) te).addInfo(chat, GoggleLenses.EMERALD, player, ray.sideHit);
+					((IInfoTE) te).addInfo(chat, EnumGoggleLenses.EMERALD, player, ray.sideHit);
 				}
 			}
 		}

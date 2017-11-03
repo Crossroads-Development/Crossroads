@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
 import com.Da_Technomancer.crossroads.items.Thermometer;
 
@@ -34,7 +34,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device instanceof OmniMeter || device == GoggleLenses.RUBY || device instanceof Thermometer){
+		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
 			chat.add("Temp: " + heatHandler.getTemp() + "°C");
 			if(!(device instanceof Thermometer)){
 				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos) + "°C");

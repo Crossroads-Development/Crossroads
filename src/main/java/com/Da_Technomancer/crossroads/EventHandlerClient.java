@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.technomancy.MagicUsingItem;
@@ -46,7 +46,7 @@ public final class EventHandlerClient{
 		
 		//Goggle entity glowing
 		if(game.world.getTotalWorldTime() % 5 == 0){
-			boolean glow = helmet != null && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().hasKey(GoggleLenses.VOID.name());
+			boolean glow = helmet != null && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().hasKey(EnumGoggleLenses.VOID.name());
 			for(Entity ent : game.world.getLoadedEntityList()){
 				NBTTagCompound entNBT = ent.getEntityData();
 				if(!entNBT.hasKey("glow")){
@@ -86,7 +86,7 @@ public final class EventHandlerClient{
 				for(int i = 1; i >= 0; i--){
 					if(i == 0 ? ModConfig.fieldLinesEnergy.getBoolean() : ModConfig.fieldLinesPotential.getBoolean()){
 						GlStateManager.translate(0, .01F, 0);
-						if(game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(i == 0 ? GoggleLenses.RUBY.name() : GoggleLenses.EMERALD.name())){
+						if(game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(i == 0 ? EnumGoggleLenses.RUBY.name() : EnumGoggleLenses.EMERALD.name())){
 							GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, 0, .4F);
 							GlStateManager.glLineWidth(10F);
 							GlStateManager.disableTexture2D();
@@ -111,7 +111,7 @@ public final class EventHandlerClient{
 					}else{
 						game.getTextureManager().bindTexture(TEXTURE_FIELDS);
 						GlStateManager.translate(0, .01F, 0);
-						if(helmet.getTagCompound().hasKey(i == 0 ? GoggleLenses.RUBY.name() : GoggleLenses.EMERALD.name())){
+						if(helmet.getTagCompound().hasKey(i == 0 ? EnumGoggleLenses.RUBY.name() : EnumGoggleLenses.EMERALD.name())){
 							GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, 0, .4F);
 							buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 							for(int j = 0; j < 7; j++){

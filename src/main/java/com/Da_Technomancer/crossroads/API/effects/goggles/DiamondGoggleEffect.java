@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects.goggles;
 import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -27,7 +27,7 @@ public class DiamondGoggleEffect implements IGoggleEffect{
 				}
 			}
 			if(te instanceof IInfoTE){
-				((IInfoTE) te).addInfo(chat, GoggleLenses.DIAMOND, player, ray.sideHit);
+				((IInfoTE) te).addInfo(chat, EnumGoggleLenses.DIAMOND, player, ray.sideHit);
 			}
 		}
 	}

@@ -5,8 +5,8 @@ public interface IReaction{
 	/**
 	 * Performs this reaction, if applicable. 
 	 * @param chamber The chamber to check. 
-	 * @return The change in °C*amount from this reaction (negative if increasing temperature, positive if decreasing it), or 0 if no reaction occured. All reactions MUST change temperature when performed! 
+	 * @return Whether this performed a reaction. 
 	 */
-	public double performReaction(IReactionChamber chamber);
+	public boolean performReaction(IReactionChamber chamber);
 
 }

@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.crossroads.API.technomancy.GoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == GoggleLenses.QUARTZ && !cage.isEmpty()){
+		if(device == EnumGoggleLenses.QUARTZ && !cage.isEmpty()){
 			if(cage.getTagCompound() == null){
 				cage.setTagCompound(new NBTTagCompound());
 			}

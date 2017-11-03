@@ -34,6 +34,10 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 		if(world.isRemote){
 			return;
 		}
+		
+		if(content != null && content.amount == 0){
+			content = null;
+		}
 
 		if(world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			for(EnumFacing dir : EnumFacing.values()){
