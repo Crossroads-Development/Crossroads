@@ -70,7 +70,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 			// content != null
 			content.amount -= handler.fill(content, true);
 
-			if(content.amount == 0){
+			if(content.amount <= 0){
 				content = null;
 			}
 
@@ -93,6 +93,9 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 				FluidStack drained = handler.drain(new FluidStack(content.getFluid(), CAPACITY - content.amount), true);
 				content.amount += drained == null ? 0 : drained.amount;
 			}
+			if(content != null && content.amount <= 0){
+				content = null;
+			}
 			markDirty();
 			if(handler.fill(content, false) == 0){
 				return;
@@ -105,27 +108,27 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 		// full, tank and pipe are not BOTH empty, capacity and contents of
 		// pipe.
 
-		FluidStack fakeFullDrained = handler.drain(Short.MAX_VALUE, false);
+		FluidStack fakeFullDrained = handler.drain(Integer.MAX_VALUE, false);
 		long tankContent = fakeFullDrained == null ? 0 : fakeFullDrained.amount;
-		long tankCapacity = tankContent + handler.fill(content == null ? new FluidStack(fakeFullDrained.getFluid(), Short.MAX_VALUE) : new FluidStack(content.getFluid(), Short.MAX_VALUE), false);
+		long tankCapacity = tankContent + handler.fill(content == null ? new FluidStack(fakeFullDrained.getFluid(), Integer.MAX_VALUE) : new FluidStack(content.getFluid(), Integer.MAX_VALUE), false);
 
-		int total = (int) Math.min((content == null ? 0 : content.amount) + tankContent, Short.MAX_VALUE);
+		long total = (content == null ? 0 : content.amount) + tankContent;
 
 		Fluid fluid = content == null ? fakeFullDrained.getFluid() : content.getFluid();
 
-		int targetOtherContent = (int) Math.round(((double) total * tankCapacity) / ((double) (CAPACITY + tankCapacity)));
-		int targetContent = total - targetOtherContent;
-		
+		long targetOtherContent = Math.round(((double) total * tankCapacity) / ((double) (CAPACITY + tankCapacity)));
+		int targetContent = (int) (total - targetOtherContent);
+
 		content = null;
 
 		if(fluid != null){
 			if(targetOtherContent - tankContent >= 0){
-				handler.fill(new FluidStack(fluid, targetOtherContent - (int) tankContent), true);
+				handler.fill(new FluidStack(fluid, (int) (targetOtherContent - tankContent)), true);
 			}else{
-				handler.drain(((int) tankContent) - targetOtherContent, true);
+				handler.drain((int) (tankContent - targetOtherContent), true);
 			}
-			
-			if(targetContent != 0){
+
+			if(targetContent > 0){
 				content = new FluidStack(fluid, targetContent);
 			}
 

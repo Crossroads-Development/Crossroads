@@ -132,7 +132,7 @@ public class PrototypePistol extends MagicUsingItem{
 						int maxDamage = ModConfig.getConfigInt(ModConfig.maximumPistolDamage, false);
 						EntityBullet bullet = new EntityBullet(player.world, player, maxDamage < 0 ? (int) Math.round(speed / 20D) : Math.min(maxDamage, (int) Math.round(speed / 20D)), owner.magic.lastOut);
 						bullet.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-						bullet.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, (float) Math.min(speed / 20F, 5F) /*In blocks/tick*/, 0);
+						bullet.shoot(player, player.rotationPitch, player.rotationYaw, 0, (float) Math.min(speed / 20F, 5F) /*In blocks/tick*/, 0);
 						bullet.ignoreEntity = player;
 						player.world.spawnEntity(bullet);
 						stack.getTagCompound().setBoolean("loaded", false);

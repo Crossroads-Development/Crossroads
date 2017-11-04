@@ -38,7 +38,7 @@ public class GearFactory{
 			int colorCode = typ.getColor().getRGB();
 			IItemColor itemColoring = new IItemColor(){
 				@Override
-				public int getColorFromItemstack(ItemStack stack, int tintIndex){
+				public int colorMultiplier(ItemStack stack, int tintIndex){
 					return colorCode;
 				}
 			};
