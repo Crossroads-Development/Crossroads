@@ -1,8 +1,8 @@
 {	
 	"ambientocclusion": false,
     "textures": {
-		"particle": "blocks/glass",
-		"side": "blocks/glass",
+		"particle": "crossroads:blocks/block_alch_crystal",
+		"side": "crossroads:blocks/block_alch_crystal",
 		"ends": "crossroads:blocks/block_bronze"
 	},
     "elements": [

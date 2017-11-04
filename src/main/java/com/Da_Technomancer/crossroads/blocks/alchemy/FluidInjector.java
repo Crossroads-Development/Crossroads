@@ -41,7 +41,7 @@ public class FluidInjector extends BlockContainer{
 		String name = "fluid_injector";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setHardness(2);
+		setHardness(.5F);
 		setCreativeTab(ModItems.tabCrossroads);
 		setSoundType(SoundType.GLASS);
 		ModBlocks.toRegister.add(this);
