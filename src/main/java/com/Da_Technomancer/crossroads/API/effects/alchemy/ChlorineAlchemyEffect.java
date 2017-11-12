@@ -1,12 +1,15 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
+import java.awt.Color;
+
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
+import com.Da_Technomancer.crossroads.particles.ModParticles;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -16,17 +19,18 @@ public class ChlorineAlchemyEffect implements IAlchEffect{
 
 	@Override
 	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase){
-		int radius = (int) Math.pow(amount / 10D, 1D / 3D);//This affects a cubic area instead of a spherical one because it's so much easier to do a cube. 
+		int radius = 5 * (int) Math.pow(amount, 1D / 3D);//This affects a cubic area instead of a spherical one because it's so much easier to do a cube. 
 		WorldServer worldS = (WorldServer) world;
 		for(int x = -radius; x <= radius; x++){
 			for(int y = -radius; y <= radius; y++){
 				for(int z = -radius; z <= radius; z++){
-					worldS.spawnParticle(EnumParticleTypes.SPELL_MOB, false, pos.getX() + (double) x + (.5D * Math.random()), pos.getY() + (double) y + (Math.random() * .25D), pos.getZ() + (double) z + (.5D * Math.random()), 0, 0.2D, 1D, 0.2D, 1, new int[0]);//TODO verify color
+					Color col = AlchemyCore.REAGENTS[21].getColor(EnumMatterPhase.GAS);
+					worldS.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F, new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()});
 				}
 			}
 		}
 		for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos.add(-radius, -radius, -radius), pos.add(radius, radius, radius)), EntitySelectors.IS_ALIVE)){
-			e.addPotionEffect(new PotionEffect(MobEffects.WITHER, 30, 3));
+			e.addPotionEffect(new PotionEffect(MobEffects.WITHER, 15, 3));
 			e.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 30, 3));
 			e.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 30, 1));
 			e.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 300, 0));

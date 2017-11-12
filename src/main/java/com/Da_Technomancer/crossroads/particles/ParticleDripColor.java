@@ -20,9 +20,9 @@ public class ParticleDripColor extends Particle{
 		particleBlue = 1F;
 		setParticleTextureIndex(113);
 		particleScale *= rand.nextFloat() * 0.6F + 0.6F;
-		motionX = (Math.random() * 2D - 1D) * 0.02D;
-		motionY = (Math.random() - 1D) * 0.02D;
-		motionZ = (Math.random() * 2D - 1D) * 0.02D;
+		motionX = xSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.02D
+		motionY = ySpeedIn;//Suggestion: (Math.random() - 1D) * 0.02D
+		motionZ = zSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.02D
 		particleMaxAge = (int) (7.0D / (Math.random() * 0.8D + 0.2D));
 	}
 

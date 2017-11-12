@@ -20,9 +20,9 @@ public class ParticleBubbleColor extends Particle{
 		particleBlue = 1F;
 		setParticleTextureIndex(133);
 		particleScale *= rand.nextFloat() * 0.6F + 0.2F;
-		motionX = (Math.random() * 2D - 1D) * 0.015D;
-		motionY = Math.random() * 0.015D;
-		motionZ = (Math.random() * 2D - 1D) * 0.015D;
+		motionX = xSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
+		motionY = ySpeedIn;//Suggestion: Math.random() * 0.015D
+		motionZ = zSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
 		particleMaxAge = (int) (7.0D / (Math.random() * 0.8D + 0.2D));
 	}
 

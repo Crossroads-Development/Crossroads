@@ -178,10 +178,10 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 				}
 			}
 			if(liqAmount > 0){
-				server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (float) liqCol[0] / (255F * liqAmount), (float) liqCol[1] / (255F * liqAmount), (float) liqCol[2] / (255F * liqAmount), 1F, new int[] {((int) ((float) liqCol[3] / liqAmount))});
+				server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.02D, (Math.random() - 1D) * 0.02D, (Math.random() * 2D - 1D) * 0.02D, 1F, new int[] {(int) (liqCol[0] / liqAmount), (int) (liqCol[1] / liqAmount), (int) (liqCol[2] / liqAmount), (int) (liqCol[3] / liqAmount)});
 			}
 			if(gasAmount > 0){
-				server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (float) gasCol[0] / (255F * gasAmount), (float) gasCol[1] / (255F * gasAmount), (float) gasCol[2] / (255F * gasAmount), 1F, new int[] {((int) ((float) gasCol[3] / gasAmount))});
+				server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F, new int[] {(int) (gasCol[0] / gasAmount), (int) (gasCol[1] / gasAmount), (int) (gasCol[2] / gasAmount), (int) (gasCol[3] / gasAmount)});
 			}
 			
 			

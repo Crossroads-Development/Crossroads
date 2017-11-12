@@ -29,13 +29,15 @@ public class ModParticles{
 	private static IParticleFactory flameFact;
 	private static IParticleFactory gasFact;
 	private static IParticleFactory liquidFact;
-	
+
 	public static void clientInit(){
 		flameFact = new ParticleFlame.Factory();
 		Minecraft.getMinecraft().effectRenderer.registerParticle(COLOR_FIRE.getParticleID(), (int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_) -> {Particle particle = flameFact.createParticle(particleID, worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, p_178902_15_); particle.setRBGColorF((float) xSpeedIn, (float) ySpeedIn, (float) zSpeedIn); return particle;});
+
 		gasFact = new ParticleBubbleColor.Factory();
-		Minecraft.getMinecraft().effectRenderer.registerParticle(COLOR_GAS.getParticleID(), (int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... extraArgs) -> {Particle particle = gasFact.createParticle(particleID, worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, extraArgs); particle.setRBGColorF((float) xSpeedIn, (float) ySpeedIn, (float) zSpeedIn); particle.setAlphaF(extraArgs.length == 0 ? 1F : ((float) extraArgs[0]) / 255F); return particle;});
+		Minecraft.getMinecraft().effectRenderer.registerParticle(COLOR_GAS.getParticleID(), (int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... extraArgs) -> {Particle particle = gasFact.createParticle(particleID, worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, extraArgs); if(extraArgs.length >= 3) particle.setRBGColorF((float) (extraArgs[0]) / 255F, (float) (extraArgs[1]) / 255F, (float) (extraArgs[2]) / 255F); particle.setAlphaF(extraArgs.length < 4 ? 1F : ((float) extraArgs[3]) / 255F); return particle;});
+
 		liquidFact = new ParticleDripColor.Factory();
-		Minecraft.getMinecraft().effectRenderer.registerParticle(COLOR_LIQUID.getParticleID(), (int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... extraArgs) -> {Particle particle = liquidFact.createParticle(particleID, worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, extraArgs); particle.setRBGColorF((float) xSpeedIn, (float) ySpeedIn, (float) zSpeedIn); particle.setAlphaF(extraArgs.length == 0 ? 1F : ((float) extraArgs[0]) / 255F); return particle;});
+		Minecraft.getMinecraft().effectRenderer.registerParticle(COLOR_LIQUID.getParticleID(), (int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... extraArgs) -> {Particle particle = liquidFact.createParticle(particleID, worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, extraArgs); if(extraArgs.length >= 3) particle.setRBGColorF((float) (extraArgs[0]) / 255F, (float) (extraArgs[1]) / 255F, (float) (extraArgs[2]) / 255F); particle.setAlphaF(extraArgs.length < 4 ? 1F : ((float) extraArgs[3]) / 255F); return particle;});
 	}
 }
