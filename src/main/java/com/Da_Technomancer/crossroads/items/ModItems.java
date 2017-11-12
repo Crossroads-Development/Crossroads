@@ -22,10 +22,12 @@ import com.Da_Technomancer.crossroads.items.technomancy.StaffTechnomancy;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
@@ -155,7 +157,12 @@ public final class ModItems{
 		wasteSalt = new BasicItem("waste_salt");
 		florenceFlask = new FlorenceFlask();
 		if(ModConfig.getConfigBool(ModConfig.addWrench, false)){
-			wrench = new BasicItem("wrench");
+			wrench = new BasicItem("wrench"){
+				@Override
+				public boolean doesSneakBypassUse(ItemStack stack, net.minecraft.world.IBlockAccess world, BlockPos pos, EntityPlayer player){
+					return true;
+				}
+			};
 		}
 	}
 

@@ -5,7 +5,7 @@ public class AlchemyHelper{
 	public static final double MIN_QUANTITY = 0.005D;
 
 	public static void updatePhase(IReactionChamber chamber){
-		Reagent[] reagents = chamber.getReagants();
+		ReagentStack[] reagents = chamber.getReagants();
 		boolean glassChamber = chamber.isGlass();
 
 		double endTemp = chamber.getTemp();
@@ -15,10 +15,10 @@ public class AlchemyHelper{
 		boolean hasAquaRegia = false;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			Reagent reag = reagents[i];
+			ReagentStack reag = reagents[i];
 			if(reag != null){
 				if(reag.getAmount() >= MIN_QUANTITY){
-					IReagentType type = reag.getType();
+					IReagent type = reag.getType();
 					hasAquaRegia |= i == 11;
 					
 					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
@@ -39,7 +39,7 @@ public class AlchemyHelper{
 		boolean destroy = false;
 
 		for(int i = 0; i < reagents.length; i++){
-			Reagent reag = reagents[i];
+			ReagentStack reag = reagents[i];
 			if(reag == null){
 				continue;
 			}

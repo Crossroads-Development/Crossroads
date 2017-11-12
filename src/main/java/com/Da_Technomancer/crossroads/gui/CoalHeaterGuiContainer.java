@@ -41,8 +41,10 @@ public class CoalHeaterGuiContainer extends GuiContainer{
 		int j = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 
-		int k = this.getBurnLeftScaled(13);
-		this.drawTexturedModalRect(i + 81, j + 6 + 12 - k, 176, 12 - k, 14, k);
+		int k = getBurnLeftScaled();
+		if(k != 0){
+			drawTexturedModalRect(i + 81, j + 6 + 13 - k, 176, 13 - k, 14, k);
+		}
 	}
 
 	@Override
@@ -52,8 +54,9 @@ public class CoalHeaterGuiContainer extends GuiContainer{
 		fontRenderer.drawString(this.playerInv.getDisplayName().getUnformattedText(), 8, 42, 4210752);
 	}
 
-	private int getBurnLeftScaled(int pixels){
-		return this.te.getField(0) * pixels / 1600;
+	private int getBurnLeftScaled(){
+		int burnTime = te.getField(0);
+		return burnTime == 0 ? 0 : 1 + (te.getField(0) * 13 / 1600);
 	}
 
 }

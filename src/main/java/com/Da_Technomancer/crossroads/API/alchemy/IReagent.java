@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public interface IReagentType{
+public interface IReagent{
 
 	/**
 	 * @return A human readable name. 
@@ -63,7 +63,7 @@ public interface IReagentType{
 	}
 	
 	@Nullable
-	public default Reagent getReagentFromStack(ItemStack stack){
+	public default ReagentStack getReagentFromStack(ItemStack stack){
 		return null;
 	}
 	
@@ -71,7 +71,7 @@ public interface IReagentType{
 	 * @param reag The reagent
 	 * @return The matching solid ItemStack. ItemStack.EMPTY if there either isn't enough material (or cannot be solidifed for any other reason). 
 	 */
-	public default ItemStack getStackFromReagent(Reagent reag){
+	public default ItemStack getStackFromReagent(ReagentStack reag){
 		return ItemStack.EMPTY;
 	}
 	

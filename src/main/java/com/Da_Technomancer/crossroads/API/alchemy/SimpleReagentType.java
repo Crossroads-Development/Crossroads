@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class SimpleReagentType implements IReagentType{
+public class SimpleReagentType implements IReagent{
 
 	private final double melting;
 	private final double boiling;
@@ -126,8 +126,8 @@ public class SimpleReagentType implements IReagentType{
 	}
 
 	@Nullable
-	public Reagent getReagentFromStack(ItemStack stack){
-		return stack.getItem() == solid ? new Reagent(this, itemAmount) : null;
+	public ReagentStack getReagentFromStack(ItemStack stack){
+		return stack.getItem() == solid ? new ReagentStack(this, itemAmount) : null;
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class SimpleReagentType implements IReagentType{
 	 * @return The matching solid ItemStack. ItemStack.EMPTY if there either isn't enough material (or cannot be solidifed for any other reason). 
 	 */
 	@Override
-	public ItemStack getStackFromReagent(Reagent reag){
+	public ItemStack getStackFromReagent(ReagentStack reag){
 		return reag != null && reag.getType() == this && reag.getAmount() >= itemAmount ? new ItemStack(solid, itemAmount) : ItemStack.EMPTY;
 	}
 

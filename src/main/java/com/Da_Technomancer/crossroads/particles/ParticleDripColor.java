@@ -19,7 +19,7 @@ public class ParticleDripColor extends Particle{
 		particleGreen = 1F;
 		particleBlue = 1F;
 		setParticleTextureIndex(113);
-		particleScale *= rand.nextFloat() * 0.6F + 0.2F;
+		particleScale *= rand.nextFloat() * 0.6F + 0.6F;
 		motionX = (Math.random() * 2D - 1D) * 0.02D;
 		motionY = (Math.random() - 1D) * 0.02D;
 		motionZ = (Math.random() * 2D - 1D) * 0.02D;

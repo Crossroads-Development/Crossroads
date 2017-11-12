@@ -18,11 +18,11 @@ public class ParticleBubbleColor extends Particle{
 		particleRed = 1F;
 		particleGreen = 1F;
 		particleBlue = 1F;
-		setParticleTextureIndex(32);
+		setParticleTextureIndex(133);
 		particleScale *= rand.nextFloat() * 0.6F + 0.2F;
-		motionX = (Math.random() * 2D - 1D) * 0.02D;
-		motionY = Math.random() * 0.02D;
-		motionZ = (Math.random() * 2D - 1D) * 0.02D;
+		motionX = (Math.random() * 2D - 1D) * 0.015D;
+		motionY = Math.random() * 0.015D;
+		motionZ = (Math.random() * 2D - 1D) * 0.015D;
 		particleMaxAge = (int) (7.0D / (Math.random() * 0.8D + 0.2D));
 	}
 
@@ -43,7 +43,7 @@ public class ParticleBubbleColor extends Particle{
 	@SideOnly(Side.CLIENT)
 	public static class Factory implements IParticleFactory{
 		public Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_){
-			return new ParticleDripColor(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
+			return new ParticleBubbleColor(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
 		}
 	}
 }

@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemicalTube;
+import com.Da_Technomancer.crossroads.blocks.alchemy.CoolingCoil;
+import com.Da_Technomancer.crossroads.blocks.alchemy.FlowLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FluidInjector;
+import com.Da_Technomancer.crossroads.blocks.alchemy.HeatedTube;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Sifter;
 import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
@@ -169,6 +172,9 @@ public final class ModBlocks{
 	public static Sifter sifter;
 	public static AlchemicalTube alchemicalTube;
 	public static FluidInjector fluidInjector;
+	public static FlowLimiter flowLimiter;
+	public static HeatedTube heatedTube;
+	public static CoolingCoil coolingCoil;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -310,6 +316,9 @@ public final class ModBlocks{
 		sifter = new Sifter();
 		alchemicalTube = new AlchemicalTube();
 		fluidInjector = new FluidInjector();
+		flowLimiter = new FlowLimiter();
+		heatedTube = new HeatedTube();
+		coolingCoil = new CoolingCoil();
 	}
 
 	@SideOnly(Side.CLIENT)

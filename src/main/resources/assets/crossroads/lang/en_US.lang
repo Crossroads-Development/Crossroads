@@ -212,6 +212,12 @@ tile.alch_tube_glass.name=Glass Alchemical Tube
 tile.alch_tube_cryst.name=Crystal Alchemical Tube
 tile.fluid_injector_glass.name=Glass Fluid Injector
 tile.fluid_injector_cryst.name=Crystal Fluid Injector
+tile.flow_limiter_glass.name=Glass Flow Limiter
+tile.flow_limiter_cryst.name=Crystal Flow Limiter
+tile.heated_tube_glass.name=Glass Heated Tube
+tile.heated_tube_cryst.name=Crystal Heated Tube
+tile.cooling_coil_glass.name=Glass Cooling Coil
+tile.cooling_coil_cryst.name=Crystal Cooling Coil
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

@@ -19,7 +19,7 @@ public interface IReactionChamber{
 	 * @return An array of the contained reagents. 
 	 */
 	@Nonnull
-	public Reagent[] getReagants();
+	public ReagentStack[] getReagants();
 	
 	public double getIntegrityCapacity();
 	
@@ -46,7 +46,7 @@ public interface IReactionChamber{
 	
 	public default double getContent(){
 		double amount = 0;
-		for(Reagent reag : getReagants()){
+		for(ReagentStack reag : getReagants()){
 			if(reag != null){
 				amount += reag.getAmount();
 			}
@@ -55,7 +55,7 @@ public interface IReactionChamber{
 	}
 	
 	@Nullable
-	public Reagent getCatalyst();
+	public ReagentStack getCatalyst();
 	
 	public default boolean isCharged(){
 		return false;

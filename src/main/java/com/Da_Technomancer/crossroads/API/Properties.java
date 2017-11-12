@@ -13,6 +13,9 @@ public class Properties{
 	public static final UnlistedPropertyBooleanSixArray CONNECT = new UnlistedPropertyBooleanSixArray("connect");
 	public static final UnlistedPropertyIntegerSixArray CONNECT_MODE = new UnlistedPropertyIntegerSixArray("connect_mode");
 	public static final UnlistedPropertyIntegerSixArray PORT_TYPE = new UnlistedPropertyIntegerSixArray("port_type");
+	/**
+	 * Depending on the block, either means emitting light or made of alchemical crystal instead of normal materials
+	 */
 	public static final PropertyBool LIGHT = PropertyBool.create("light");
 	/**
 	 * This property should be removed, except removing it will cause all existing fluid tanks to disappear. This property will be fully removed in the next world-breaking update. 

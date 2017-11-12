@@ -2,19 +2,19 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import javax.annotation.Nonnull;
 
-public class Reagent{
+public class ReagentStack{
 
-	private final IReagentType type;
+	private final IReagent type;
 	private double amount;
 	private EnumMatterPhase phase;
 
-	public Reagent(IReagentType type, double amount){
+	public ReagentStack(IReagent type, double amount){
 		this.type = type;
 		this.amount = amount;
 	}
 
 	@Nonnull
-	public IReagentType getType(){
+	public IReagent getType(){
 		return type;
 	}
 

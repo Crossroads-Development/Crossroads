@@ -14,6 +14,12 @@ public interface IChemicalHandler{
 	
 	public double getContent();
 	
+	/**
+	 * @param type The index of a reagent type
+	 * @return The contained amount of the passed reagent type index. 
+	 */
+	public double getContent(int type);
+	
 	public double getTransferCapacity();
 	
 	public default double getTemp(){
@@ -35,7 +41,7 @@ public interface IChemicalHandler{
 	 * @param caller An IChemicalHandler calling this for transferring heat. If null, this acts as if the transferred reagent is 20*C and no heat will be removed from the source. 
 	 * @return Whether anything in reag was changed. 
 	 */
-	public boolean insertReagents(Reagent[] reag, EnumFacing side, @Nullable IChemicalHandler caller);
+	public boolean insertReagents(ReagentStack[] reag, EnumFacing side, @Nullable IChemicalHandler caller);
 	
 	@Nonnull
 	public EnumTransferMode getMode(EnumFacing side);

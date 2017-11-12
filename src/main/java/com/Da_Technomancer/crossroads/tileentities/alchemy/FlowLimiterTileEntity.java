@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyHelper;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
@@ -17,31 +18,39 @@ import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.alchemy.SolventType;
-import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, IIntReceiver, IInfoTE{
+public class FlowLimiterTileEntity extends TileEntity implements ITickable, IInfoTE{
 
-	private final Integer[] connectMode = {0, 0, 0, 0, 0, 0};
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
+	
+	private static final double[] LIMITS = new double[] {0.5D, 1, 2, 4};
+
 	private boolean glass;
 	private final ReagentStack[] contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
 	private double heat = 0;
 	private double amount = 0;
 	private boolean dirtyReag = false;
+	private int limitIndex = 0;
 
 	/**
 	 * @param chat Add info to this list, 1 line per entry. 
@@ -64,30 +73,20 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 		}
 	}
 
-	public AlchemicalTubeTileEntity(){
+	public FlowLimiterTileEntity(){
 		super();
 	}
 
-	public AlchemicalTubeTileEntity(boolean glass){
+	public FlowLimiterTileEntity(boolean glass){
 		super();
 		this.glass = glass;
 	}
 
-	public Integer[] getConnectMode(boolean forRender){
-		return forRender ? new Integer[] {Math.max(0, connectMode[0]), Math.max(0, connectMode[1]), Math.max(0, connectMode[2]), Math.max(0, connectMode[3]), Math.max(0, connectMode[4]), Math.max(0, connectMode[5])} : connectMode;
-	}
-
-	public void markSideChanged(int index){
+	public void cycleLimit(EntityPlayerMP player){
+		limitIndex += 1;
+		limitIndex %= LIMITS.length;
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendIntToClient(index, connectMode[index], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-	}
-
-	@Override
-	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sender){
-		if(identifier < 6){
-			connectMode[identifier] = message;
-			world.markBlockRangeForRenderUpdate(pos, pos);
-		}
+		ModPackets.network.sendTo(new SendChatToClient("Reagent movement limit configured to: " + LIMITS[limitIndex], 25856), player);//CHAT_ID chosen at random
 	}
 
 	private void correctReag(){
@@ -183,48 +182,47 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 			if(gasAmount > 0){
 				server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (float) gasCol[0] / (255F * gasAmount), (float) gasCol[1] / (255F * gasAmount), (float) gasCol[2] / (255F * gasAmount), 1F, new int[] {((int) ((float) gasCol[3] / gasAmount))});
 			}
-			
-			
-			for(int i = 0; i < 6; i++){
-				EnumFacing side = EnumFacing.getFront(i);
-				TileEntity te = null;
-				if(connectMode[i] != -1){
-					te = world.getTileEntity(pos.offset(side));
-					if(te == null){
-						if(connectMode[i] != 0){
-							connectMode[i] = 0;
-							markSideChanged(i);
-						}
-						continue;
-					}
-					if(!te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
-						if(connectMode[i] != 0){
-							connectMode[i] = 0;
-							markSideChanged(i);
-						}
-						continue;
-					}
 
-					IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
-					EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-					if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
-						if(connectMode[i] != 0){
-							connectMode[i] = 0;
-							markSideChanged(i);
-						}
-						continue;
-					}
 
-					if(connectMode[i] == 0){
-						connectMode[i] = 1;
-						markSideChanged(i);
-						continue;
-					}else if(amount != 0 && connectMode[i] == 1){
-						if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
-							correctReag();
-							markDirty();
+			EnumFacing side = world.getBlockState(pos).getValue(Properties.FACING);
+			TileEntity te = world.getTileEntity(pos.offset(side));
+			if(amount <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+				return;
+			}
+
+			IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
+			EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
+			if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
+				return;
+			}
+
+			if(amount != 0){
+				double limit = LIMITS[limitIndex];
+				ReagentStack[] transReag = new ReagentStack[AlchemyCore.REAGENT_COUNT];
+				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+					if(contents[i] != null){
+						double transLimit = Math.min(contents[i].getAmount(), limit - otherHandler.getContent(i));
+						transReag[i] = new ReagentStack(AlchemyCore.REAGENTS[i], transLimit);
+						if(contents[i].increaseAmount(-transLimit) <= 0){
+							contents[i] = null;
 						}
 					}
+				}
+
+				boolean changed = otherHandler.insertReagents(transReag, side.getOpposite(), handler);
+				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+					if(transReag[i] != null){
+						if(contents[i] == null){
+							contents[i] = transReag[i];
+						}else{
+							contents[i].increaseAmount(transReag[i].getAmount());
+						}
+					}
+				}
+
+				if(changed){
+					correctReag();
+					markDirty();
 				}
 			}
 		}
@@ -234,9 +232,7 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		glass = nbt.getBoolean("glass");
-		for(int i = 0; i < 6; i++){
-			connectMode[i] = nbt.getInteger("mode_" + i);
-		}
+		limitIndex = Math.min(nbt.getInteger("limit"), LIMITS.length - 1);
 		heat = nbt.getDouble("heat");
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			contents[i] = nbt.hasKey(i + "_am") ? new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am")) : null;
@@ -248,9 +244,7 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("glass", glass);
-		for(int i = 0; i < 6; i++){
-			nbt.setInteger("mode_" + i, connectMode[i]);
-		}
+		nbt.setInteger("limit", limitIndex);
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			if(contents[i] != null){
 				nbt.setDouble(i + "_am", contents[i].getAmount());
@@ -261,17 +255,8 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound out = super.getUpdateTag();
-		for(int i = 0; i < 6; i++){
-			out.setInteger("mode_" + i, connectMode[i]);
-		}
-		return out;
-	}
-
-	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || connectMode[side.getIndex()] != -1)){
+		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.FACING).getAxis())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -280,7 +265,7 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || connectMode[side.getIndex()] != -1)){
+		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.FACING).getAxis())){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);
@@ -292,7 +277,7 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 
 		@Override
 		public EnumTransferMode getMode(EnumFacing side){
-			return connectMode[side.getIndex()] <= 0 ? EnumTransferMode.NONE : connectMode[side.getIndex()] == 1 ? EnumTransferMode.OUTPUT : EnumTransferMode.INPUT;
+			return side == world.getBlockState(pos).getValue(Properties.FACING) ? EnumTransferMode.OUTPUT : EnumTransferMode.INPUT;
 		}
 
 		@Override

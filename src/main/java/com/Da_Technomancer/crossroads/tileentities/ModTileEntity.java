@@ -3,7 +3,10 @@ package com.Da_Technomancer.crossroads.tileentities;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.alchemy.AbstractTransmutationBlock;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.CoolingCoilTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatedTubeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.SifterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.BasicFluidSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
@@ -151,6 +154,9 @@ public class ModTileEntity{
 		register(SifterTileEntity.class, "sifter");
 		register(AlchemicalTubeTileEntity.class, "alchemical_tube");
 		register(FluidInjectorTileEntity.class, "fluid_injector");
+		register(FlowLimiterTileEntity.class, "flow_limiter");
+		register(HeatedTubeTileEntity.class, "heated_tube");
+		register(CoolingCoilTileEntity.class, "cooling_coil");
 	}
 
 	/**

@@ -11,14 +11,14 @@ public class SimpleReaction implements IReaction{
 	private final double heatChange;
 	private final double minTemp;
 	private final double maxTemp;
-	private final IReagentType cat;
+	private final IReagent cat;
 	private final boolean charged;
-	private final Triple<IReagentType, Double, Boolean> ingrOne;
-	private final Triple<IReagentType, Double, Boolean> ingrTwo;
-	private final Triple<IReagentType, Double, Boolean> ingrThree;
-	private final Pair<IReagentType, Double> outOne;
-	private final Pair<IReagentType, Double> outTwo;
-	private final Pair<IReagentType, Double> outThree;
+	private final Triple<IReagent, Double, Boolean> ingrOne;
+	private final Triple<IReagent, Double, Boolean> ingrTwo;
+	private final Triple<IReagent, Double, Boolean> ingrThree;
+	private final Pair<IReagent, Double> outOne;
+	private final Pair<IReagent, Double> outTwo;
+	private final Pair<IReagent, Double> outThree;
 	private final double amountChange;
 
 	/**
@@ -34,7 +34,7 @@ public class SimpleReaction implements IReaction{
 	 * @param outTwo Second output, null for none. ReagentType, amount per reaction. 
 	 * @param outThree Third output, null for none. ReagentType, amount per reaction. 
 	 */
-	public SimpleReaction(double heatChange, double minTemp, double maxTemp, @Nullable IReagentType cat, boolean charged, @Nonnull Triple<IReagentType, Double, Boolean> ingrOne, @Nullable Triple<IReagentType, Double, Boolean> ingrTwo, @Nullable Triple<IReagentType, Double, Boolean> ingrThree, @Nonnull Pair<IReagentType, Double> outOne, @Nullable Pair<IReagentType, Double> outTwo, @Nullable Pair<IReagentType, Double> outThree){
+	public SimpleReaction(double heatChange, double minTemp, double maxTemp, @Nullable IReagent cat, boolean charged, @Nonnull Triple<IReagent, Double, Boolean> ingrOne, @Nullable Triple<IReagent, Double, Boolean> ingrTwo, @Nullable Triple<IReagent, Double, Boolean> ingrThree, @Nonnull Pair<IReagent, Double> outOne, @Nullable Pair<IReagent, Double> outTwo, @Nullable Pair<IReagent, Double> outThree){
 		this.heatChange = heatChange;
 		this.minTemp = minTemp;
 		this.maxTemp = maxTemp;
@@ -54,7 +54,7 @@ public class SimpleReaction implements IReaction{
 		if((charged && !chamb.isCharged()) || (cat != null && (chamb.getCatalyst() == null || chamb.getCatalyst().getType() != cat))){
 			return false;
 		}
-		Reagent[] reags = chamb.getReagants();
+		ReagentStack[] reags = chamb.getReagants();
 		int indF = ingrOne.getLeft().getIndex();
 		int indS = ingrTwo == null ? -1 : ingrTwo.getLeft().getIndex();
 		int indT = ingrThree == null ? -1 : ingrThree.getLeft().getIndex();
@@ -82,14 +82,14 @@ public class SimpleReaction implements IReaction{
 
 		int outOneInd = outOne.getLeft().getIndex();
 		if(reags[outOneInd] == null){
-			reags[outOneInd] = new Reagent(outOne.getLeft(), outOne.getRight() * amount);
+			reags[outOneInd] = new ReagentStack(outOne.getLeft(), outOne.getRight() * amount);
 		}else{
 			reags[outOneInd].increaseAmount(outOne.getRight() * amount);
 		}
 		if(outTwo != null){
 			int outTwoInd = outTwo.getKey().getIndex();
 			if(reags[outTwoInd] == null){
-				reags[outTwoInd] = new Reagent(outTwo.getLeft(), outTwo.getRight() * amount);
+				reags[outTwoInd] = new ReagentStack(outTwo.getLeft(), outTwo.getRight() * amount);
 			}else{
 				reags[outTwoInd].increaseAmount(outTwo.getRight() * amount);
 			}
@@ -97,7 +97,7 @@ public class SimpleReaction implements IReaction{
 		if(outThree != null){
 			int outThreeInd = outThree.getLeft().getIndex();
 			if(reags[outThreeInd] == null){
-				reags[outThreeInd] = new Reagent(outThree.getLeft(), outThree.getRight() * amount);
+				reags[outThreeInd] = new ReagentStack(outThree.getLeft(), outThree.getRight() * amount);
 			}else{
 				reags[outThreeInd].increaseAmount(outThree.getRight() * amount);
 			}

@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.API.effects.alchemy.ChlorineAlchemyEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.SaltAlchemyEffect;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
+import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
@@ -36,10 +37,12 @@ public final class AlchemyCore{
 	/** Note that the contained predicates have the side effect of performing the reaction. */
 	public static final List<IReaction> REACTIONS = new ArrayList<IReaction>();// TODO set size
 
-	protected static final BiMap<Item, IReagentType> BASE_ITEM_TO_REAGENT = HashBiMap.create();// TODO set size
-	public static final BiMap<Item, IReagentType> ITEM_TO_REAGENT = HashBiMap.create();// TODO set size
-	public static final BiMap<Fluid, IReagentType> FLUID_TO_REAGENT = HashBiMap.create(); // TODO set size
-	public static final IReagentType[] REAGENTS = new IReagentType[REAGENT_COUNT];
+	protected static final BiMap<Item, IReagent> BASE_ITEM_TO_REAGENT = HashBiMap.create();// TODO set size
+	public static final BiMap<Item, IReagent> ITEM_TO_REAGENT = HashBiMap.create();// TODO set size
+	public static final BiMap<Fluid, IReagent> FLUID_TO_LIQREAGENT = HashBiMap.create(); // For liquid phase. TODO set size
+	public static final BiMap<Fluid, IReagent> FLUID_TO_GASREAGENT = HashBiMap.create(); // For gas phase. TODO set size
+	
+	public static final IReagent[] REAGENTS = new IReagent[REAGENT_COUNT];
 
 	// A large number of colors are defined here so that a new color instance won't be initialized every time getColor is called.
 	private static final Color PHELOSTIGEN_COLOR = new Color(255, 200, 0, 150);
@@ -62,7 +65,7 @@ public final class AlchemyCore{
 		REAGENTS[1] = new SimpleReagentType("Aether", -275D, -274D, 1, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, true, 0, null, null, 1, null);
 		REAGENTS[2] = new SimpleReagentType("Adamant", Short.MAX_VALUE - 1, Short.MAX_VALUE, 2, (EnumMatterPhase phase) -> Color.GRAY, ModItems.adamant, 100, true, 0, null, SolventType.AQUA_REGIA, 0, null);
 		REAGENTS[3] = new SimpleReagentType("Sulfur", 115D, 445D, 3, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_YELLOW_COLOR : phase == EnumMatterPhase.LIQUID ? Color.RED : Color.YELLOW, ModItems.sulfur, 100, true, 0, null, SolventType.NON_POLAR, 0, null);
-		REAGENTS[4] = new SimpleReagentType("Water", 0D, 100D, 4, (EnumMatterPhase phase) -> TRANSLUCENT_BLUE_COLOR, Item.getItemFromBlock(Blocks.ICE), 100, true, 0, SolventType.POLAR, null, 0, null);
+		REAGENTS[4] = new SimpleReagentType("Water", 0D, 100D, 4, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_WHITE_COLOR : TRANSLUCENT_BLUE_COLOR, Item.getItemFromBlock(Blocks.ICE), 100, true, 0, SolventType.POLAR, null, 0, null);
 		REAGENTS[5] = new SimpleReagentType("Hydrogen Nitrate", -40D, 80D, 5, (EnumMatterPhase phase) -> Color.YELLOW, null, 1, true, 0, null, SolventType.POLAR, 0, ACID_EFFECT);// Salt that forms nitric acid, AKA aqua fortis, in water.
 		REAGENTS[6] = new SimpleReagentType("Sodium Chloride", 800D, 1400D, 6, (EnumMatterPhase phase) -> phase == EnumMatterPhase.LIQUID ? Color.ORANGE : Color.WHITE, ModItems.dustSalt, 100, true, 0, null, SolventType.POLAR, 0, SALT_EFFECT);// AKA table salt.
 		REAGENTS[7] = new SimpleReagentType("Vanadium (V) Oxide", 690D, 1750D, 7, (EnumMatterPhase phase) -> Color.YELLOW, ModItems.vanadiumVOxide, 100, true, 0, null, SolventType.POLAR, 0, null);// Vanadium (V) oxide. This should decompose at the specified boiling point, but there isn't any real point to adding that.
@@ -83,8 +86,9 @@ public final class AlchemyCore{
 		REAGENTS[22] = new SimpleReagentType("Alchemical Crystal", Short.MAX_VALUE - 1, Short.MAX_VALUE, 22, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, ModItems.alchCrystal, 10, true, 0, null, null, 0, null);
 		REAGENTS[23] = new SimpleReagentType("Copper", 1000D, 2560D, 23, (EnumMatterPhase phase) -> Color.ORANGE, OreSetup.nuggetCopper, 16, true, 0, null, null, 0, null);
 		
-		FLUID_TO_REAGENT.put(BlockDistilledWater.getDistilledWater(), REAGENTS[4]);
-		FLUID_TO_REAGENT.put(BlockMoltenCopper.getMoltenCopper(), REAGENTS[23]);
+		FLUID_TO_LIQREAGENT.put(BlockDistilledWater.getDistilledWater(), REAGENTS[4]);
+		FLUID_TO_LIQREAGENT.put(BlockMoltenCopper.getMoltenCopper(), REAGENTS[23]);
+		FLUID_TO_GASREAGENT.put(BlockSteam.getSteam(), REAGENTS[4]);
 		
 		// Reactions
 		// Sulfur combustion.
@@ -96,7 +100,7 @@ public final class AlchemyCore{
 					chamb.getReagants()[3] = null;
 				}
 				if(chamb.getReagants()[8] == null){
-					chamb.getReagants()[8] = new Reagent(REAGENTS[8], amount * 8);
+					chamb.getReagants()[8] = new ReagentStack(REAGENTS[8], amount * 8);
 				}else{
 					chamb.getReagants()[8].increaseAmount(amount * 8D);
 				}
@@ -129,12 +133,12 @@ public final class AlchemyCore{
 		BASE_REACTIONS.add(new SimpleReaction(-35D, -50D, -20D, null, false, Triple.of(REAGENTS[2], 1D, false), Triple.of(REAGENTS[13], 4D, false), null, Pair.of(REAGENTS[22], 5D), null, null));
 		//Practitioner's Stone creation (destroys chamber if proportions are wrong.)
 		BASE_REACTIONS.add((IReactionChamber chamb) -> {
-			Reagent phel = chamb.getReagants()[0];
-			Reagent aeth = chamb.getReagants()[1];
-			Reagent adam = chamb.getReagants()[2];
+			ReagentStack phel = chamb.getReagants()[0];
+			ReagentStack aeth = chamb.getReagants()[1];
+			ReagentStack adam = chamb.getReagants()[2];
 			double temp = chamb.getTemp();
 			if(phel != null && aeth != null && adam != null && temp <= 20D){
-				Reagent gold = chamb.getReagants()[14];
+				ReagentStack gold = chamb.getReagants()[14];
 				if(gold != null && gold.getPhase(temp) == EnumMatterPhase.SOLUTE){
 					if(Math.abs(phel.getAmount() - aeth.getAmount()) >= 1D || Math.abs(phel.getAmount() - adam.getAmount()) >= 1D || Math.abs(phel.getAmount() + aeth.getAmount() + adam.getAmount() - gold.getAmount()) >= 3D || Math.abs(aeth.getAmount() - adam.getAmount()) >= 1D){
 						chamb.destroyChamber();
@@ -146,7 +150,7 @@ public final class AlchemyCore{
 					chamb.getReagants()[2] = null;
 					chamb.getReagants()[14] = null;
 					if(chamb.getReagants()[19] == null){
-						chamb.getReagants()[19] = new Reagent(REAGENTS[19], amount);
+						chamb.getReagants()[19] = new ReagentStack(REAGENTS[19], amount);
 					}else{
 						chamb.getReagants()[19].increaseAmount(amount);
 					}
@@ -170,9 +174,6 @@ public final class AlchemyCore{
 		ITEM_TO_REAGENT.putAll(BASE_ITEM_TO_REAGENT);
 
 		for(int i = RESERVED_REAGENT_COUNT; i < REAGENT_COUNT; i++){
-			int gen_minor = rand.nextInt();
-			int gen_middle = rand.nextInt();
-			int gen_major = rand.nextInt();
 			// TODO create the dynamic reagents and reactions
 		}
 	}

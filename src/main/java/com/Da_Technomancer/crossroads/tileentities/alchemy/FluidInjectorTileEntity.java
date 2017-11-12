@@ -15,8 +15,8 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagentType;
-import com.Da_Technomancer.crossroads.API.alchemy.Reagent;
+import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.alchemy.SolventType;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -45,7 +45,7 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 	private static final double REAG_PER_MB = .05D;
 
 	private boolean glass;
-	private final Reagent[] contents = new Reagent[AlchemyCore.REAGENT_COUNT];
+	private final ReagentStack[] contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
 	private double heat = 0;
 	private double amount = 0;
 	private boolean dirtyReag = false;
@@ -68,7 +68,7 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 			}else{
 				chat.add("No reagents");
 			}
-			for(Reagent reag : contents){
+			for(ReagentStack reag : contents){
 				if(reag != null){
 					chat.add(reag.toString());
 				}
@@ -87,7 +87,7 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 
 	private void correctReag(){
 		amount = 0;
-		for(Reagent r : contents){
+		for(ReagentStack r : contents){
 			if(r != null){
 				amount += r.getAmount();
 			}
@@ -102,10 +102,10 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 		boolean hasAquaRegia = false;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			Reagent reag = contents[i];
+			ReagentStack reag = contents[i];
 			if(reag != null){
 				if(reag.getAmount() >= AlchemyHelper.MIN_QUANTITY){
-					IReagentType type = reag.getType();
+					IReagent type = reag.getType();
 					hasAquaRegia |= i == 11;
 
 					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
@@ -124,7 +124,7 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 		hasAquaRegia &= hasPolar;
 
 		for(int i = 0; i < contents.length; i++){
-			Reagent reag = contents[i];
+			ReagentStack reag = contents[i];
 			if(reag == null){
 				continue;
 			}
@@ -137,58 +137,64 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 		if(world.isRemote){
 			return;
 		}
-		
+
 		if(dirtyReag){
 			correctReag();
 			dirtyReag = false;
 		}
 
 		if(world.getTotalWorldTime() % AlchemyCore.ALCHEMY_TIME == 0){
-			if(amount != 0){
-				TileEntity te = world.getTileEntity(pos.offset(EnumFacing.DOWN));
-				if(te != null && te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.UP)){
-					IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.UP);
-					if(otherHandler.insertReagents(contents, EnumFacing.UP, chemHandler)){
-						correctReag();
-						markDirty();
-					}
-				}
-			}
-
 			double temp = chemHandler.getTemp();
 			WorldServer server = (WorldServer) world;
 			float liqAmount = 0;
 			float[] liqCol = new float[4];
 			float gasAmount = 0;
 			float[] gasCol = new float[4];
-			for(Reagent r : contents){
+			for(ReagentStack r : contents){
 				if(r != null){
-					Color col = r.getType().getColor(r.getPhase(temp));
 					switch(r.getPhase(temp)){
 						case LIQUID:
+							Color colL = r.getType().getColor(EnumMatterPhase.LIQUID);
 							liqAmount += r.getAmount();
-							liqCol[0] += r.getAmount() * (double) col.getRed();
-							liqCol[1] += r.getAmount() * (double) col.getGreen();
-							liqCol[2] += r.getAmount() * (double) col.getBlue();
-							liqCol[3] += r.getAmount() * (double) col.getAlpha();
+							liqCol[0] += r.getAmount() * (double) colL.getRed();
+							liqCol[1] += r.getAmount() * (double) colL.getGreen();
+							liqCol[2] += r.getAmount() * (double) colL.getBlue();
+							liqCol[3] += r.getAmount() * (double) colL.getAlpha();
 							break;
 						case GAS:
+							Color colG = r.getType().getColor(EnumMatterPhase.GAS);
 							gasAmount += r.getAmount();
-							gasCol[0] += r.getAmount() * (double) col.getRed();
-							gasCol[1] += r.getAmount() * (double) col.getGreen();
-							gasCol[2] += r.getAmount() * (double) col.getBlue();
-							gasCol[3] += r.getAmount() * (double) col.getAlpha();
+							gasCol[0] += r.getAmount() * (double) colG.getRed();
+							gasCol[1] += r.getAmount() * (double) colG.getGreen();
+							gasCol[2] += r.getAmount() * (double) colG.getBlue();
+							gasCol[3] += r.getAmount() * (double) colG.getAlpha();
 							break;
 						default:
 							break;
 					}
 				}
 			}
+
 			if(liqAmount > 0){
-				server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (float) liqCol[0] / (255F * liqAmount), (float) liqCol[1] / (255F * liqAmount), (float) liqCol[2] / (255F * liqAmount), 1F, new int[] {((int) ((float) liqCol[3] / liqAmount))});
+				server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .25F, (float) pos.getZ() + .5F, 0, (float) liqCol[0] / (255F * liqAmount), (float) liqCol[1] / (255F * liqAmount), (float) liqCol[2] / (255F * liqAmount), 1F, new int[] {((int) ((float) liqCol[3] / liqAmount))});
 			}
 			if(gasAmount > 0){
-				server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (float) gasCol[0] / (255F * gasAmount), (float) gasCol[1] / (255F * gasAmount), (float) gasCol[2] / (255F * gasAmount), 1F, new int[] {((int) ((float) gasCol[3] / gasAmount))});
+				server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .75F, (float) pos.getZ() + .5F, 0, (float) gasCol[0] / (255F * gasAmount), (float) gasCol[1] / (255F * gasAmount), (float) gasCol[2] / (255F * gasAmount), 1F, new int[] {((int) ((float) gasCol[3] / gasAmount))});
+			}
+
+
+			for(int i = 0; i < 2; i++){
+				if(amount != 0){
+					EnumFacing side = EnumFacing.getFront(i);
+					TileEntity te = world.getTileEntity(pos.offset(side.getOpposite()));
+					if(te != null && te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side)){
+						IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side);
+						if(otherHandler.insertReagents(contents, side, chemHandler)){
+							correctReag();
+							markDirty();
+						}
+					}
+				}
 			}
 		}
 	}
@@ -199,7 +205,7 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 		glass = nbt.getBoolean("glass");
 		heat = nbt.getDouble("heat");
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			contents[i] = nbt.hasKey(i + "_am") ? new Reagent(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am")) : null;
+			contents[i] = nbt.hasKey(i + "_am") ? new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am")) : null;
 		}
 		dirtyReag = true;
 	}
@@ -257,14 +263,14 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 
 		@Override
 		public int fill(FluidStack resource, boolean doFill){
-			IReagentType typ;
-			if(resource != null && (typ = AlchemyCore.FLUID_TO_REAGENT.get(resource.getFluid())) != null){
+			IReagent typ;
+			if(resource != null && (typ = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid())) != null){
 				int canAccept = Math.min((int) ((chemHandler.getTransferCapacity() - amount) / REAG_PER_MB), resource.amount);
 				if(canAccept > 0){
 					if(doFill){
 						double reagToFill = REAG_PER_MB * (double) canAccept;
 						if(contents[typ.getIndex()] == null){
-							contents[typ.getIndex()] = new Reagent(typ, reagToFill);
+							contents[typ.getIndex()] = new ReagentStack(typ, reagToFill);
 						}else{
 							contents[typ.getIndex()].increaseAmount(reagToFill);
 						}
@@ -281,42 +287,22 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 
 		@Override
 		public FluidStack drain(FluidStack resource, boolean doDrain){
-			return null;
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			return null;
-		}
-	}
-
-	private class FluidHandlerDown implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new FluidTankProperties[] {new FluidTankProperties(null, 100, false, true)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			return 0;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource == null || resource.amount <= 0 || !AlchemyCore.FLUID_TO_REAGENT.containsKey(resource.getFluid())){
+			if(resource == null || resource.amount <= 0 || !AlchemyCore.FLUID_TO_GASREAGENT.containsKey(resource.getFluid())){
 				return null;
 			}
 
-			int index = AlchemyCore.FLUID_TO_REAGENT.get(resource.getFluid()).getIndex();
-			if(contents[index] != null && contents[index].getPhase(chemHandler.getTemp()) == EnumMatterPhase.LIQUID){
+			int index = AlchemyCore.FLUID_TO_GASREAGENT.get(resource.getFluid()).getIndex();
+			if(contents[index] != null && contents[index].getPhase(chemHandler.getTemp()) == EnumMatterPhase.GAS){
 				int toDrain = (int) Math.min(resource.amount, contents[index].getAmount() / REAG_PER_MB);
 				double reagToDrain = REAG_PER_MB * (double) toDrain;
 				if(doDrain){
 					contents[index].increaseAmount(-reagToDrain);
-					amount -= reagToDrain;
-					heat -= reagToDrain * (double) resource.getFluid().getTemperature();
-					heat = Math.max(heat, 0D);
+					if(amount != 0){
+						double endTemp = heat / amount;
+						amount -= reagToDrain;
+						heat -= reagToDrain * endTemp;
+						heat = Math.max(heat, 0D);
+					}
 					dirtyReag = true;
 					markDirty();
 				}
@@ -334,16 +320,109 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 
 			//The Fluid-IReagentType BiMap is guaranteed to be equal in length to or shorter than REAGENT_COUNT (and in practice is substantially shorter),
 			//so it's more efficient to iterate over the BiMap and check each IReagentType's index than to iterate over the reagent array and check each reagent in the BiMap. 
-			for(Map.Entry<Fluid, IReagentType> entry : AlchemyCore.FLUID_TO_REAGENT.entrySet()){
+			for(Map.Entry<Fluid, IReagent> entry : AlchemyCore.FLUID_TO_GASREAGENT.entrySet()){
+				int index = entry.getValue().getIndex();
+				if(contents[index] != null && contents[index].getPhase(chemHandler.getTemp()) == EnumMatterPhase.GAS){
+					int toDrain = (int) Math.min(maxDrain, contents[index].getAmount() / REAG_PER_MB);
+					if(doDrain){
+						double reagToDrain = REAG_PER_MB * (double) toDrain;
+						contents[index].increaseAmount(-reagToDrain);
+						if(amount != 0){
+							double endTemp = heat / amount;
+							amount -= reagToDrain;
+							heat -= reagToDrain * endTemp;
+							heat = Math.max(heat, 0D);
+						}
+						dirtyReag = true;
+						markDirty();
+					}
+					return new FluidStack(entry.getKey(), toDrain);
+				}
+			}
+
+			return null;
+		}
+	}
+
+	private class FluidHandlerDown implements IFluidHandler{
+
+		@Override
+		public IFluidTankProperties[] getTankProperties(){
+			return new FluidTankProperties[] {new FluidTankProperties(null, 100, true, true)};
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill){
+			IReagent typ;
+			if(resource != null && (typ = AlchemyCore.FLUID_TO_GASREAGENT.get(resource.getFluid())) != null){
+				int canAccept = Math.min((int) ((chemHandler.getTransferCapacity() - amount) / REAG_PER_MB), resource.amount);
+				if(canAccept > 0){
+					if(doFill){
+						double reagToFill = REAG_PER_MB * (double) canAccept;
+						if(contents[typ.getIndex()] == null){
+							contents[typ.getIndex()] = new ReagentStack(typ, reagToFill);
+						}else{
+							contents[typ.getIndex()].increaseAmount(reagToFill);
+						}
+						amount += reagToFill;
+						heat += reagToFill * (double) resource.getFluid().getTemperature();
+						dirtyReag = true;
+						markDirty();
+					}
+					return canAccept;
+				}
+			}
+			return 0;
+		}
+
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain){
+			if(resource == null || resource.amount <= 0 || !AlchemyCore.FLUID_TO_LIQREAGENT.containsKey(resource.getFluid())){
+				return null;
+			}
+
+			int index = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid()).getIndex();
+			if(contents[index] != null && contents[index].getPhase(chemHandler.getTemp()) == EnumMatterPhase.LIQUID){
+				int toDrain = (int) Math.min(resource.amount, contents[index].getAmount() / REAG_PER_MB);
+				double reagToDrain = REAG_PER_MB * (double) toDrain;
+				if(doDrain){
+					contents[index].increaseAmount(-reagToDrain);
+					if(amount != 0){
+						double endTemp = heat / amount;
+						amount -= reagToDrain;
+						heat -= reagToDrain * endTemp;
+						heat = Math.max(heat, 0D);
+					}
+					dirtyReag = true;
+					markDirty();
+				}
+				return new FluidStack(resource.getFluid(), toDrain);
+			}
+
+			return null;
+		}
+
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain){
+			if(maxDrain <= 0){
+				return null;
+			}
+
+			//The Fluid-IReagentType BiMap is guaranteed to be equal in length to or shorter than REAGENT_COUNT (and in practice is substantially shorter),
+			//so it's more efficient to iterate over the BiMap and check each IReagentType's index than to iterate over the reagent array and check each reagent in the BiMap. 
+			for(Map.Entry<Fluid, IReagent> entry : AlchemyCore.FLUID_TO_LIQREAGENT.entrySet()){
 				int index = entry.getValue().getIndex();
 				if(contents[index] != null && contents[index].getPhase(chemHandler.getTemp()) == EnumMatterPhase.LIQUID){
 					int toDrain = (int) Math.min(maxDrain, contents[index].getAmount() / REAG_PER_MB);
 					if(doDrain){
 						double reagToDrain = REAG_PER_MB * (double) toDrain;
 						contents[index].increaseAmount(-reagToDrain);
-						amount -= reagToDrain;
-						heat -= reagToDrain * (double) entry.getKey().getTemperature();
-						heat = Math.max(heat, 0D);
+						if(amount != 0){
+							double endTemp = heat / amount;
+							amount -= reagToDrain;
+							heat -= reagToDrain * endTemp;
+							heat = Math.max(heat, 0D);
+						}
 						dirtyReag = true;
 						markDirty();
 					}
@@ -359,7 +438,7 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 
 		@Override
 		public EnumTransferMode getMode(EnumFacing side){
-			return side == EnumFacing.DOWN ? EnumTransferMode.OUTPUT : EnumTransferMode.INPUT;
+			return EnumTransferMode.NONE;
 		}
 
 		@Override
@@ -389,55 +468,57 @@ public class FluidInjectorTileEntity extends TileEntity implements ITickable, II
 		}
 
 		@Override
-		public boolean insertReagents(Reagent[] reag, EnumFacing side, IChemicalHandler caller){
-			if(getMode(side) == EnumTransferMode.INPUT){
-				double space = getTransferCapacity() - amount;
-				if(space <= 0){
-					return false;
-				}
-				double callerTemp = caller == null ? 293 : caller.getTemp() + 273D;
-				boolean changed = false;
-				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-					Reagent r = reag[i];
-					if(r != null){
-						EnumMatterPhase phase = r.getPhase(0);
-						if(phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp())){
-							double moved = Math.min(space, r.getAmount());
-							if(moved <= 0D){
-								continue;
-							}
-							amount += moved;
-							changed = true;
-							space -= moved;
-							double heatTrans = moved * callerTemp;
-							if(r.increaseAmount(-moved) <= 0){
-								reag[i] = null;
-							}
-							heat += heatTrans;
-							if(caller != null){
-								caller.addHeat(-heatTrans);
-							}
-							if(contents[i] == null){
-								contents[i] = new Reagent(AlchemyCore.REAGENTS[i], moved);
-							}else{
-								contents[i].increaseAmount(moved);
-							}
+		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller){
+			double space = getTransferCapacity() - amount;
+			if(space <= 0){
+				return false;
+			}
+			double callerTemp = caller == null ? 293 : caller.getTemp() + 273D;
+			boolean changed = false;
+			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+				ReagentStack r = reag[i];
+				if(r != null){
+					EnumMatterPhase phase = r.getPhase(0);
+					if(phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp())){
+						double moved = Math.min(space, r.getAmount());
+						if(moved <= 0D){
+							continue;
+						}
+						amount += moved;
+						changed = true;
+						space -= moved;
+						double heatTrans = moved * callerTemp;
+						if(r.increaseAmount(-moved) <= 0){
+							reag[i] = null;
+						}
+						heat += heatTrans;
+						if(caller != null){
+							caller.addHeat(-heatTrans);
+						}
+						if(contents[i] == null){
+							contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], moved);
+						}else{
+							contents[i].increaseAmount(moved);
+						}
 
-							if(space <= 0){
-								break;
-							}
+						if(space <= 0){
+							break;
 						}
 					}
 				}
-
-				if(changed){
-					dirtyReag = true;
-					markDirty();
-				}
-				return changed;
 			}
 
-			return false;
+			if(changed){
+				dirtyReag = true;
+				markDirty();
+			}
+			return changed;
+		}
+
+		@Override
+		public double getContent(int type){
+			ReagentStack r = contents[type];
+			return r == null ? 0 : r.getAmount();
 		}
 	}
 }

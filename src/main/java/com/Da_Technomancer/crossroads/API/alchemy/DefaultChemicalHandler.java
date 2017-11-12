@@ -30,12 +30,17 @@ public class DefaultChemicalHandler implements IChemicalHandler{
 	}
 
 	@Override
-	public boolean insertReagents(Reagent[] reag, EnumFacing side, IChemicalHandler caller){
+	public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller){
 		return false;
 	}
 
 	@Override
 	public void setHeat(double heat){
 		
+	}
+
+	@Override
+	public double getContent(int type){
+		return 0;
 	}
 }
