@@ -1,5 +1,8 @@
 package com.Da_Technomancer.crossroads.API.effects.mechArm;
 
+import java.util.Random;
+import java.util.UUID;
+
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
@@ -22,6 +25,8 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 
 public class MechArmUseEffect implements IMechArmEffect{
 
+	private static final Random ID_GEN = new Random();
+	
 	@Override
 	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, EnumFacing side, EntityArmRidable ent, MechanicalArmTileEntity te){
 		if(!ent.getPassengers().isEmpty() && ent.getPassengers().get(0) instanceof EntityItem){
@@ -29,7 +34,7 @@ public class MechArmUseEffect implements IMechArmEffect{
 			ItemStack heldStack = itemEnt.getItem();
 			int oldSize = heldStack.getCount();
 			boolean itemBlock = heldStack.getItem() instanceof ItemBlock;
-			FakePlayer user = FakePlayerFactory.get((WorldServer) world, new GameProfile(null, Main.MODID + "-arm_use_effect-" + world.provider.getDimension()));
+			FakePlayer user = FakePlayerFactory.get((WorldServer) world, new GameProfile(new UUID(ID_GEN.nextLong(), ID_GEN.nextLong()), Main.MODID + "-arm_use_effect-" + world.provider.getDimension()));
 			user.setHeldItem(EnumHand.MAIN_HAND, heldStack);
 			user.setPositionAndRotation(posX, posY, posZ, side.getHorizontalAngle(), 0);
 			user.eyeHeight = 0;

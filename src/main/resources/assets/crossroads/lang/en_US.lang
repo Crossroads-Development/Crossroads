@@ -218,6 +218,8 @@ tile.heated_tube_glass.name=Glass Heated Tube
 tile.heated_tube_cryst.name=Crystal Heated Tube
 tile.cooling_coil_glass.name=Glass Cooling Coil
 tile.cooling_coil_cryst.name=Crystal Cooling Coil
+tile.chemical_vent.name=Chemical Vent
+tile.port_extender.name=Port Extender
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

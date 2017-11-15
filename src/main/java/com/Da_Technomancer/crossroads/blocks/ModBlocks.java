@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemicalTube;
+import com.Da_Technomancer.crossroads.blocks.alchemy.ChemicalVent;
 import com.Da_Technomancer.crossroads.blocks.alchemy.CoolingCoil;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FlowLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FluidInjector;
@@ -175,6 +176,8 @@ public final class ModBlocks{
 	public static FlowLimiter flowLimiter;
 	public static HeatedTube heatedTube;
 	public static CoolingCoil coolingCoil;
+	public static ChemicalVent chemicalVent;
+	public static PortExtender portExtender;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -319,6 +322,8 @@ public final class ModBlocks{
 		flowLimiter = new FlowLimiter();
 		heatedTube = new HeatedTube();
 		coolingCoil = new CoolingCoil();
+		chemicalVent = new ChemicalVent();
+		portExtender = new PortExtender();
 	}
 
 	@SideOnly(Side.CLIENT)

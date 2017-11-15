@@ -21,6 +21,8 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class FuelHeaterTileEntity extends AbstractInventory implements ITickable, IInfoTE{
 
@@ -112,11 +114,15 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return true;
 		}
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return true;
+		}
 
 		return super.hasCapability(capability, facing);
 	}
 
 	private IHeatHandler handler = new HeatHandler();
+	private ItemHandler itemHandler = new ItemHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -124,10 +130,60 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return (T) handler;
 		}
-
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return (T) itemHandler;
+		}
 		return super.getCapability(capability, facing);
 	}
 
+	private class ItemHandler implements IItemHandler{
+
+		@Override
+		public int getSlots(){
+			return 1;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return slot == 0 ? inventory : ItemStack.EMPTY;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			if(stack != null && slot == 0 && TileEntityFurnace.isItemFuel(stack) && (inventory.isEmpty() || ItemStack.areItemsEqual(stack, inventory))){
+				if(inventory.isEmpty()){
+					if(!simulate){
+						inventory = stack.copy();
+						markDirty();
+					}
+					return ItemStack.EMPTY;
+				}
+				
+				int moved = Math.min(inventory.getMaxStackSize() - inventory.getCount(), stack.getCount());
+				
+				if(!simulate){
+					inventory.grow(moved);
+					markDirty();
+				}
+				ItemStack output = stack.copy();
+				output.shrink(moved);
+				return output;
+			}
+			
+			return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return slot == 0 ? 64 : 0;
+		}
+	}
+	
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
