@@ -1,0 +1,7 @@
+{
+	"parent": "block/cube_column",
+	"textures": {
+		"side": "crossroads:blocks/reaction_chamber_side_cryst",
+		"end": "crossroads:blocks/reaction_chamber_bottom_cryst"
+	}
+}

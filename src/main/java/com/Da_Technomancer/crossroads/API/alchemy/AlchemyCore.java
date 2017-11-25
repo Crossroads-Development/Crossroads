@@ -2,12 +2,15 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.logging.log4j.Level;
 
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.AcidAlchemyEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.AquaRegiaAlchemyEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.ChlorineAlchemyEffect;
@@ -32,13 +35,14 @@ public final class AlchemyCore{
 	public static final int DYNAMIC_REAGENT_COUNT = 32;
 	public static final int REAGENT_COUNT = RESERVED_REAGENT_COUNT + DYNAMIC_REAGENT_COUNT;
 	public static final int ALCHEMY_TIME = 2;//TODO
+	public static final double MIN_QUANTITY = 0.005D;
 	
 	private static final List<IReaction> BASE_REACTIONS = new ArrayList<IReaction>();// TODO set size
 	/** Note that the contained predicates have the side effect of performing the reaction. */
 	public static final List<IReaction> REACTIONS = new ArrayList<IReaction>();// TODO set size
 
-	protected static final BiMap<Item, IReagent> BASE_ITEM_TO_REAGENT = HashBiMap.create();// TODO set size
-	public static final BiMap<Item, IReagent> ITEM_TO_REAGENT = HashBiMap.create();// TODO set size
+	protected static final LinkedHashMap<Item, IReagent> BASE_ITEM_TO_REAGENT = new LinkedHashMap<Item, IReagent>();// TODO set size
+	public static final LinkedHashMap<Item, IReagent> ITEM_TO_REAGENT = new LinkedHashMap<Item, IReagent>();// TODO set size
 	public static final BiMap<Fluid, IReagent> FLUID_TO_LIQREAGENT = HashBiMap.create(); // For liquid phase. TODO set size
 	public static final BiMap<Fluid, IReagent> FLUID_TO_GASREAGENT = HashBiMap.create(); // For gas phase. TODO set size
 	
@@ -63,17 +67,17 @@ public final class AlchemyCore{
 		// Reagents
 		REAGENTS[0] = new SimpleReagentType("Phelostigen", -275D, -274D, 0, (EnumMatterPhase phase) -> PHELOSTIGEN_COLOR, null, 1, true, 0, null, null, 2, null);// TODO effect
 		REAGENTS[1] = new SimpleReagentType("Aether", -275D, -274D, 1, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, true, 0, null, null, 1, null);
-		REAGENTS[2] = new SimpleReagentType("Adamant", Short.MAX_VALUE - 1, Short.MAX_VALUE, 2, (EnumMatterPhase phase) -> Color.GRAY, ModItems.adamant, 100, true, 0, null, SolventType.AQUA_REGIA, 0, null);
-		REAGENTS[3] = new SimpleReagentType("Sulfur", 115D, 445D, 3, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_YELLOW_COLOR : phase == EnumMatterPhase.LIQUID ? Color.RED : Color.YELLOW, ModItems.sulfur, 100, true, 0, null, SolventType.NON_POLAR, 0, null);
-		REAGENTS[4] = new SimpleReagentType("Water", 0D, 100D, 4, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_WHITE_COLOR : TRANSLUCENT_BLUE_COLOR, Item.getItemFromBlock(Blocks.ICE), 100, true, 0, SolventType.POLAR, null, 0, null);
+		REAGENTS[2] = new SimpleReagentType("Adamant", Short.MAX_VALUE - 1, Short.MAX_VALUE, 2, (EnumMatterPhase phase) -> Color.GRAY, ModItems.adamant, 1, true, 0, null, SolventType.AQUA_REGIA, 0, null);
+		REAGENTS[3] = new SimpleReagentType("Sulfur", 115D, 445D, 3, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_YELLOW_COLOR : phase == EnumMatterPhase.LIQUID ? Color.RED : Color.YELLOW, ModItems.sulfur, 10, true, 0, null, SolventType.NON_POLAR, 0, null);
+		REAGENTS[4] = new SimpleReagentType("Water", 0D, 100D, 4, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_WHITE_COLOR : TRANSLUCENT_BLUE_COLOR, Item.getItemFromBlock(Blocks.PACKED_ICE), 50, true, 0, SolventType.POLAR, null, 0, null);
 		REAGENTS[5] = new SimpleReagentType("Hydrogen Nitrate", -40D, 80D, 5, (EnumMatterPhase phase) -> Color.YELLOW, null, 1, true, 0, null, SolventType.POLAR, 0, ACID_EFFECT);// Salt that forms nitric acid, AKA aqua fortis, in water.
-		REAGENTS[6] = new SimpleReagentType("Sodium Chloride", 800D, 1400D, 6, (EnumMatterPhase phase) -> phase == EnumMatterPhase.LIQUID ? Color.ORANGE : Color.WHITE, ModItems.dustSalt, 100, true, 0, null, SolventType.POLAR, 0, SALT_EFFECT);// AKA table salt.
-		REAGENTS[7] = new SimpleReagentType("Vanadium (V) Oxide", 690D, 1750D, 7, (EnumMatterPhase phase) -> Color.YELLOW, ModItems.vanadiumVOxide, 100, true, 0, null, SolventType.POLAR, 0, null);// Vanadium (V) oxide. This should decompose at the specified boiling point, but there isn't any real point to adding that.
+		REAGENTS[6] = new SimpleReagentType("Sodium Chloride", 800D, 1400D, 6, (EnumMatterPhase phase) -> phase == EnumMatterPhase.LIQUID ? Color.ORANGE : Color.WHITE, ModItems.dustSalt, 1, true, 0, null, SolventType.POLAR, 0, SALT_EFFECT);// AKA table salt.
+		REAGENTS[7] = new SimpleReagentType("Vanadium (V) Oxide", 690D, 1750D, 7, (EnumMatterPhase phase) -> Color.YELLOW, ModItems.vanadiumVOxide, 1, true, 0, null, SolventType.POLAR, 0, null);// Vanadium (V) oxide. This should decompose at the specified boiling point, but there isn't any real point to adding that.
 		REAGENTS[8] = new SimpleReagentType("Sulfur Dioxide", -72D, -10D, 8, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, 1, true, 0, SolventType.POLAR, SolventType.POLAR, 0, null);
 		REAGENTS[9] = new SimpleReagentType("Sulfur Trioxide", 20D, 40D, 9, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, 1, true, 0, null, SolventType.POLAR, 0, null);
 		REAGENTS[10] = new SimpleReagentType("Hydrogen Sulfate", 10D, 340D, 10, (EnumMatterPhase phase) -> BROWN_COLOR, null, 1, true, 0, null, SolventType.POLAR, 0, ACID_EFFECT);// Salt that forms sulfuric acid, AKA Oil of Vitriol, in water.
 		REAGENTS[11] = new SimpleReagentType("Aqua Regia", -40D, 100D, 11, (EnumMatterPhase phase) -> Color.ORANGE, null, 1, true, 0, SolventType.AQUA_REGIA, SolventType.POLAR, 0, new AquaRegiaAlchemyEffect());// Shouldn't really be its own substance (actually a mixture of nitric and hydrochloric acid), but the code is greatly simplified by making it a separate substance.
-		REAGENTS[12] = new SimpleReagentType("Murcury (II) Sulfide", 580D, Short.MAX_VALUE, 12, (EnumMatterPhase phase) -> Color.RED, Items.REDSTONE, 100, true, 0, null, null, 0, null);// Mercury (II) sulfide, AKA cinnabar.
+		REAGENTS[12] = new SimpleReagentType("Murcury (II) Sulfide", 580D, Short.MAX_VALUE, 12, (EnumMatterPhase phase) -> Color.RED, Items.REDSTONE, 5, true, 0, null, null, 0, null);// Mercury (II) sulfide, AKA cinnabar.
 		REAGENTS[13] = new SimpleReagentType("Murcury", -40D, 560D, 13, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, null, 1, true, 0, null, null, 0, null);// AKA quicksilver
 		REAGENTS[14] = new SimpleReagentType("Gold", 1100D, 3000D, 14, (EnumMatterPhase phase) -> Color.YELLOW, Items.GOLD_NUGGET, 16, true, 0, null, SolventType.AQUA_REGIA, 0, null);
 		REAGENTS[15] = new SimpleReagentType("Hydrogen Chloride", -110D, 90D, 15, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, true, 0, SolventType.POLAR, null, 0, ACID_EFFECT);// Salt that forms hydrochloric acid, AKA muriatic acid, in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve. 
@@ -81,9 +85,9 @@ public final class AlchemyCore{
 		REAGENTS[17] = new SimpleReagentType("Ethanol", -110D, 80D, 17, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, true, 0, SolventType.NON_POLAR, null, 0, null);// If anyone asks, this is denatured alcohol for legal reasons.
 		REAGENTS[18] = new SimpleReagentType("Philosopher Stone", Short.MAX_VALUE - 1, Short.MAX_VALUE, 18, (EnumMatterPhase phase) -> Color.BLACK, ModItems.philosopherStone, 100, true, 1, null, null, 2, null);
 		REAGENTS[19] = new SimpleReagentType("Practitioner Stone", Short.MAX_VALUE - 1, Short.MAX_VALUE, 19, (EnumMatterPhase phase) -> Color.BLACK, ModItems.practitionerStone, 100, true, 2, null, null, 2, null);
-		REAGENTS[20] = new SimpleReagentType("Bedrock", Short.MAX_VALUE - 1, Short.MAX_VALUE, 20, (EnumMatterPhase phase) -> Color.GRAY, Item.getItemFromBlock(Blocks.BEDROCK), 100, true, 0, null, SolventType.AQUA_REGIA, 0, null);
+		REAGENTS[20] = new SimpleReagentType("Bedrock", Short.MAX_VALUE - 1, Short.MAX_VALUE, 20, (EnumMatterPhase phase) -> Color.GRAY, Item.getItemFromBlock(Blocks.BEDROCK), 50, true, 0, null, SolventType.AQUA_REGIA, 0, null);
 		REAGENTS[21] = new SimpleReagentType("Chlorine", -100D, -35D, 21, (EnumMatterPhase phase) -> TRANSLUCENT_LIME_COLOR, null, 1, true, 0, SolventType.NON_POLAR, SolventType.NON_POLAR, 0, new ChlorineAlchemyEffect());
-		REAGENTS[22] = new SimpleReagentType("Alchemical Crystal", Short.MAX_VALUE - 1, Short.MAX_VALUE, 22, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, ModItems.alchCrystal, 10, true, 0, null, null, 0, null);
+		REAGENTS[22] = new SimpleReagentType("Alchemical Crystal", Short.MAX_VALUE - 1, Short.MAX_VALUE, 22, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, ModItems.alchCrystal, 1, true, 0, null, null, 0, null);
 		REAGENTS[23] = new SimpleReagentType("Copper", 1000D, 2560D, 23, (EnumMatterPhase phase) -> Color.ORANGE, OreSetup.nuggetCopper, 16, true, 0, null, null, 0, null);
 		
 		FLUID_TO_LIQREAGENT.put(BlockDistilledWater.getDistilledWater(), REAGENTS[4]);
@@ -95,7 +99,7 @@ public final class AlchemyCore{
 		BASE_REACTIONS.add((IReactionChamber chamb) -> {
 			if(chamb.getReagants()[3] != null && chamb.getTemp() >= 190){
 				double temp = chamb.getTemp();
-				double amount = Math.min(2D, chamb.getReagants()[3].getAmount());
+				double amount = chamb.getReagants()[3].getAmount();
 				if(chamb.getReagants()[3].increaseAmount(-amount) <= 0){
 					chamb.getReagants()[3] = null;
 				}
@@ -104,8 +108,8 @@ public final class AlchemyCore{
 				}else{
 					chamb.getReagants()[8].increaseAmount(amount * 8D);
 				}
-				chamb.addVisualEffect(ModParticles.COLOR_FIRE, 0, 0, 0, 2.4D, 1D);
-				chamb.addHeat(amount * 8D * 300D * 15D + (temp * 7D * amount));
+				chamb.addVisualEffect(ModParticles.COLOR_FLAME, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, new int[] {128, 0, 255, 128});
+				chamb.addHeat(amount * 8D * 300D * 5D + (temp * 7D * amount));
 				return true;
 			}else{
 				return false;

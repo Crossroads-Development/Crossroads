@@ -15,9 +15,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ParticleDripColor extends Particle{
-
-	protected ParticleDripColor(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn){
+public class ParticleFlameColor extends Particle{
+	
+	protected ParticleFlameColor(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn){
 		super(worldIn, xCoordIn, yCoordIn, zCoordIn);
 		setSize(0.02F, 0.02F);
 		setBoundingBox(new AxisAlignedBB(xCoordIn, yCoordIn, zCoordIn, xCoordIn + width, yCoordIn + height, zCoordIn + width));
@@ -25,12 +25,29 @@ public class ParticleDripColor extends Particle{
 		particleRed = 1F;
 		particleGreen = 1F;
 		particleBlue = 1F;
-		setParticleTextureIndex(17);
-		particleScale *= rand.nextFloat() * 0.6F + 0.6F;
-		motionX = xSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.02D
-		motionY = ySpeedIn;//Suggestion: (Math.random() - 1D) * 0.02D
-		motionZ = zSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.02D
+		setParticleTextureIndex(48);
+		particleScale *= rand.nextFloat() * 0.6F + 0.2F;
+		motionX = xSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
+		motionY = ySpeedIn;//Suggestion: Math.random() * 0.015D
+		motionZ = zSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
 		particleMaxAge = (int) (7.0D / (Math.random() * 0.8D + 0.2D));
+	}
+	
+	@Override
+	public int getBrightnessForRender(float p_189214_1_){
+		float f = ((float)this.particleAge + p_189214_1_) / (float)this.particleMaxAge;
+        f = MathHelper.clamp(f, 0.0F, 1.0F);
+        int i = super.getBrightnessForRender(p_189214_1_);
+        int j = i & 255;
+        int k = i >> 16 & 255;
+        j = j + (int)(f * 15.0F * 16.0F);
+
+        if (j > 240)
+        {
+            j = 240;
+        }
+
+        return j | k << 16;
 	}
 
 	@Override
@@ -76,11 +93,9 @@ public class ParticleDripColor extends Particle{
 		buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 		Minecraft.getMinecraft().renderEngine.bindTexture(ModParticles.BASE_PARTICLE_TEXTURE);
 	}
-	
+
 	@Override
 	public void onUpdate(){
-		setParticleTextureIndex(17 - (particleAge * 4 >= particleMaxAge ? 1 : 0));
-		
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
@@ -97,7 +112,7 @@ public class ParticleDripColor extends Particle{
 	@SideOnly(Side.CLIENT)
 	public static class Factory implements IParticleFactory{
 		public Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_){
-			return new ParticleDripColor(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
+			return new ParticleFlameColor(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
 		}
 	}
 }

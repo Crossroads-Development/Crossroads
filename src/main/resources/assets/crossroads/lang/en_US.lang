@@ -220,6 +220,8 @@ tile.cooling_coil_glass.name=Glass Cooling Coil
 tile.cooling_coil_cryst.name=Crystal Cooling Coil
 tile.chemical_vent.name=Chemical Vent
 tile.port_extender.name=Port Extender
+tile.reaction_chamber_glass.name=Glass Reaction Chamber
+tile.reaction_chamber_cryst.name=Crystal Reaction Chamber
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

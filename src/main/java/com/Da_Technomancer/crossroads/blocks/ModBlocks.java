@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.CoolingCoil;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FlowLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FluidInjector;
 import com.Da_Technomancer.crossroads.blocks.alchemy.HeatedTube;
+import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Sifter;
 import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
@@ -178,6 +179,7 @@ public final class ModBlocks{
 	public static CoolingCoil coolingCoil;
 	public static ChemicalVent chemicalVent;
 	public static PortExtender portExtender;
+	public static ReactionChamber reactionChamber;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -324,6 +326,7 @@ public final class ModBlocks{
 		coolingCoil = new CoolingCoil();
 		chemicalVent = new ChemicalVent();
 		portExtender = new PortExtender();
+		reactionChamber = new ReactionChamber();
 	}
 
 	@SideOnly(Side.CLIENT)

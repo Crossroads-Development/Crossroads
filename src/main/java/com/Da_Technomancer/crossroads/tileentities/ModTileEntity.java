@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.CoolingCoilTileEntity
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatedTubeTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.SifterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.BasicFluidSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
@@ -160,6 +161,7 @@ public class ModTileEntity{
 		register(CoolingCoilTileEntity.class, "cooling_coil");
 		register(ChemicalVentTileEntity.class, "chemical_vent");
 		register(PortExtenderTileEntity.class, "port_extender");
+		register(ReactionChamberTileEntity.class, "reaction_chamber");
 	}
 
 	/**

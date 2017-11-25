@@ -19,6 +19,10 @@ public class ReagentStack{
 	}
 
 	public void updatePhase(double temp, boolean polar, boolean nonPolar, boolean aquaRegia){
+		if(type.isLockedFlame()){
+			phase = EnumMatterPhase.FLAME;
+			return;
+		}
 		if(temp >= type.getBoilingPoint()){
 			phase = EnumMatterPhase.GAS;
 			return;

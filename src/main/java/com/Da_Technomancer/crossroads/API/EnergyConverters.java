@@ -43,4 +43,9 @@ public final class EnergyConverters{
 	 * Based on balance and convenience. 
 	 */
 	public static final double COPSHOWIUM_PER_COPPER = 1.8D;
+	
+	/**
+	 * Conversion factor between degrees kelvin normal heat, and degrees kelvin * amount alchemy system. Based on steam cost. 
+	 */
+	public static final double ALCHEMY_TEMP_CONVERSION = .025D;
 }

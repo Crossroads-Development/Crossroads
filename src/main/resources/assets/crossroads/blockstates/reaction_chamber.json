@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"light=false": { "model": "crossroads:reaction_chamber_glass" },
+		"light=true": { "model": "crossroads:reaction_chamber_cryst" }
+	}
+}

@@ -82,4 +82,8 @@ public interface IReagent{
 	public default boolean isAntiAlkhest(){
 		return false;
 	}
+	
+	public default boolean isLockedFlame(){
+		return false;
+	}
 }

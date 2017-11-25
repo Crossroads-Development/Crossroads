@@ -5,7 +5,8 @@ public enum EnumMatterPhase{
 	GAS(true, true, false),
 	LIQUID(true, false, true),
 	SOLUTE(true, false, true),
-	SOLID(false, false, false);
+	SOLID(false, false, false),
+	FLAME(true, true, false);
 	
 	private final boolean flows;
 	private final boolean flowsUp;

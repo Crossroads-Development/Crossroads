@@ -17,7 +17,9 @@ import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
-/** All blocks using BeamRenderer MUST return false to isOpaqueCube */
+/** 
+ * All blocks using BeamRenderer MUST return false to isOpaqueCube 
+ */
 public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 
 	@Override
@@ -73,31 +75,30 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
 
-				final double small = -(trip[dir].getRight().doubleValue() / 16D);
-				final double big = (trip[dir].getRight().doubleValue() / 16D);
+				final double halfWidth = trip[dir].getRight().doubleValue() / 16D;
 				final int length = trip[dir].getMiddle().intValue();
 
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				//+Z
-				buf.pos(small, length, big).tex(1, 0).endVertex();
-				buf.pos(small, 0, big).tex(1, length).endVertex();
-				buf.pos(big, 0, big).tex(0, length).endVertex();
-				buf.pos(big, length, big).tex(0, 0).endVertex();
+				buf.pos(-halfWidth, length, halfWidth).tex(1, 0).endVertex();
+				buf.pos(-halfWidth, 0, halfWidth).tex(1, length).endVertex();
+				buf.pos(halfWidth, 0, halfWidth).tex(0, length).endVertex();
+				buf.pos(halfWidth, length, halfWidth).tex(0, 0).endVertex();
 				//-Z
-				buf.pos(big, length, small).tex(1, 0).endVertex();
-				buf.pos(big, 0, small).tex(1, length).endVertex();
-				buf.pos(small, 0, small).tex(0, length).endVertex();
-				buf.pos(small, length, small).tex(0, 0).endVertex();
+				buf.pos(halfWidth, length, -halfWidth).tex(1, 0).endVertex();
+				buf.pos(halfWidth, 0, -halfWidth).tex(1, length).endVertex();
+				buf.pos(-halfWidth, 0, -halfWidth).tex(0, length).endVertex();
+				buf.pos(-halfWidth, length, -halfWidth).tex(0, 0).endVertex();
 				//-X
-				buf.pos(small, length, small).tex(1, 0).endVertex();
-				buf.pos(small, 0, small).tex(1, length).endVertex();
-				buf.pos(small, 0, big).tex(0, length).endVertex();
-				buf.pos(small, length, big).tex(0, 0).endVertex();
+				buf.pos(-halfWidth, length, -halfWidth).tex(1, 0).endVertex();
+				buf.pos(-halfWidth, 0, -halfWidth).tex(1, length).endVertex();
+				buf.pos(-halfWidth, 0, halfWidth).tex(0, length).endVertex();
+				buf.pos(-halfWidth, length, halfWidth).tex(0, 0).endVertex();
 				//+X
-				buf.pos(big, length, big).tex(1, 0).endVertex();
-				buf.pos(big, 0, big).tex(1, length).endVertex();
-				buf.pos(big, 0, small).tex(0, length).endVertex();
-				buf.pos(big, length, small).tex(0, 0).endVertex();
+				buf.pos(halfWidth, length, halfWidth).tex(1, 0).endVertex();
+				buf.pos(halfWidth, 0, halfWidth).tex(1, length).endVertex();
+				buf.pos(halfWidth, 0, -halfWidth).tex(0, length).endVertex();
+				buf.pos(halfWidth, length, -halfWidth).tex(0, 0).endVertex();
 				tes.draw();
 				
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);

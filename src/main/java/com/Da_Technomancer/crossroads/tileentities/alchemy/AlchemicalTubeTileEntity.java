@@ -1,76 +1,33 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.awt.Color;
-import java.util.ArrayList;
-
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyHelper;
+import com.Da_Technomancer.crossroads.API.alchemy.AbstractAlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
-import com.Da_Technomancer.crossroads.API.alchemy.SolventType;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.particles.ModParticles;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, IIntReceiver, IInfoTE{
+public class AlchemicalTubeTileEntity extends AbstractAlchemyCarrierTE implements IIntReceiver{
 
 	private final Integer[] connectMode = {0, 0, 0, 0, 0, 0};
-	private boolean glass;
-	private final ReagentStack[] contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
-	private double heat = 0;
-	private double amount = 0;
-	private boolean dirtyReag = false;
-
-	/**
-	 * @param chat Add info to this list, 1 line per entry. 
-	 * @param device The device type calling this method. 
-	 * @param player The player using the info device.
-	 * @param side The viewed EnumFacing (only used by goggles).
-	 */
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
-			if(amount != 0){
-				chat.add("Temp: " + handler.getTemp() + "°C");
-			}else{
-				chat.add("No reagents");
-			}
-			for(ReagentStack reag : contents){
-				if(reag != null){
-					chat.add(reag.toString());
-				}
-			}
-		}
-	}
 
 	public AlchemicalTubeTileEntity(){
 		super();
 	}
 
 	public AlchemicalTubeTileEntity(boolean glass){
-		super();
-		this.glass = glass;
+		super(glass);
 	}
 
 	public Integer[] getConnectMode(boolean forRender){
@@ -89,141 +46,47 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 			world.markBlockRangeForRenderUpdate(pos, pos);
 		}
 	}
-
-	private void correctReag(){
-		amount = 0;
-		for(ReagentStack r : contents){
-			if(r != null){
-				amount += r.getAmount();
-			}
-		}
-		if(amount == 0){
-			return;
-		}
-		double endTemp = (heat / amount) - 273D;
-
-		boolean hasPolar = false;
-		boolean hasNonPolar = false;
-		boolean hasAquaRegia = false;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
-
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			ReagentStack reag = contents[i];
-			if(reag != null){
-				if(reag.getAmount() >= AlchemyHelper.MIN_QUANTITY){
-					IReagent type = reag.getType();
-					hasAquaRegia |= i == 11;
-
-					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
-						SolventType solv = type.solventType();
-						hasPolar |= solv == SolventType.POLAR || solv == SolventType.MIXED_POLAR;
-						hasNonPolar |= solv == SolventType.NON_POLAR || solv == SolventType.MIXED_POLAR;
-						hasAquaRegia |= solv == SolventType.AQUA_REGIA;
-					}
-				}else{
-					heat -= (endTemp + 273D) * reag.getAmount();
-					contents[i] = null;
-				}
-			}
-		}
-
-		hasAquaRegia &= hasPolar;
-
-		for(int i = 0; i < contents.length; i++){
-			ReagentStack reag = contents[i];
-			if(reag == null){
-				continue;
-			}
-			reag.updatePhase(endTemp, hasPolar, hasNonPolar, hasAquaRegia);
-		}
-	}
-
+	
 	@Override
-	public void update(){
-		if(world.isRemote){
-			return;
-		}
-		if(dirtyReag){
-			correctReag();
-			dirtyReag = false;
-		}
-
-		if(world.getTotalWorldTime() % AlchemyCore.ALCHEMY_TIME == 0){
-			double temp = handler.getTemp();
-			WorldServer server = (WorldServer) world;
-			float liqAmount = 0;
-			float[] liqCol = new float[4];
-			float gasAmount = 0;
-			float[] gasCol = new float[4];
-			for(ReagentStack r : contents){
-				if(r != null){
-					Color col = r.getType().getColor(r.getPhase(temp));
-					switch(r.getPhase(temp)){
-						case LIQUID:
-							liqAmount += r.getAmount();
-							liqCol[0] += r.getAmount() * (double) col.getRed();
-							liqCol[1] += r.getAmount() * (double) col.getGreen();
-							liqCol[2] += r.getAmount() * (double) col.getBlue();
-							liqCol[3] += r.getAmount() * (double) col.getAlpha();
-							break;
-						case GAS:
-							gasAmount += r.getAmount();
-							gasCol[0] += r.getAmount() * (double) col.getRed();
-							gasCol[1] += r.getAmount() * (double) col.getGreen();
-							gasCol[2] += r.getAmount() * (double) col.getBlue();
-							gasCol[3] += r.getAmount() * (double) col.getAlpha();
-							break;
-						default:
-							break;
-					}
-				}
-			}
-			if(liqAmount > 0){
-				server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.02D, (Math.random() - 1D) * 0.02D, (Math.random() * 2D - 1D) * 0.02D, 1F, new int[] {(int) (liqCol[0] / liqAmount), (int) (liqCol[1] / liqAmount), (int) (liqCol[2] / liqAmount), (int) (liqCol[3] / liqAmount)});
-			}
-			if(gasAmount > 0){
-				server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F, new int[] {(int) (gasCol[0] / gasAmount), (int) (gasCol[1] / gasAmount), (int) (gasCol[2] / gasAmount), (int) (gasCol[3] / gasAmount)});
-			}
-			
-			
-			for(int i = 0; i < 6; i++){
-				EnumFacing side = EnumFacing.getFront(i);
-				TileEntity te = null;
-				if(connectMode[i] != -1){
-					te = world.getTileEntity(pos.offset(side));
-					if(te == null){
-						if(connectMode[i] != 0){
-							connectMode[i] = 0;
-							markSideChanged(i);
-						}
-						continue;
-					}
-					if(!te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
-						if(connectMode[i] != 0){
-							connectMode[i] = 0;
-							markSideChanged(i);
-						}
-						continue;
-					}
-
-					IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
-					EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-					if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
-						if(connectMode[i] != 0){
-							connectMode[i] = 0;
-							markSideChanged(i);
-						}
-						continue;
-					}
-
-					if(connectMode[i] == 0){
-						connectMode[i] = 1;
+	protected void performTransfer(){
+		for(int i = 0; i < 6; i++){
+			EnumFacing side = EnumFacing.getFront(i);
+			TileEntity te = null;
+			if(connectMode[i] != -1){
+				te = world.getTileEntity(pos.offset(side));
+				if(te == null){
+					if(connectMode[i] != 0){
+						connectMode[i] = 0;
 						markSideChanged(i);
-						continue;
-					}else if(amount != 0 && connectMode[i] == 1){
-						if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
-							correctReag();
-							markDirty();
-						}
+					}
+					continue;
+				}
+				if(!te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+					if(connectMode[i] != 0){
+						connectMode[i] = 0;
+						markSideChanged(i);
+					}
+					continue;
+				}
+
+				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
+				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
+				if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
+					if(connectMode[i] != 0){
+						connectMode[i] = 0;
+						markSideChanged(i);
+					}
+					continue;
+				}
+
+				if(connectMode[i] == 0){
+					connectMode[i] = 1;
+					markSideChanged(i);
+					continue;
+				}else if(amount != 0 && connectMode[i] == 1){
+					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
+						correctReag();
+						markDirty();
 					}
 				}
 			}
@@ -233,30 +96,17 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		glass = nbt.getBoolean("glass");
 		for(int i = 0; i < 6; i++){
 			connectMode[i] = nbt.getInteger("mode_" + i);
 		}
-		heat = nbt.getDouble("heat");
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			contents[i] = nbt.hasKey(i + "_am") ? new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am")) : null;
-		}
-		dirtyReag = true;
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setBoolean("glass", glass);
 		for(int i = 0; i < 6; i++){
 			nbt.setInteger("mode_" + i, connectMode[i]);
 		}
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			if(contents[i] != null){
-				nbt.setDouble(i + "_am", contents[i].getAmount());
-			}
-		}
-		nbt.setDouble("heat", heat);
 		return nbt;
 	}
 
@@ -286,97 +136,12 @@ public class AlchemicalTubeTileEntity extends TileEntity implements ITickable, I
 		return super.getCapability(cap, side);
 	}
 
-	private final AlchHandler handler = new AlchHandler();
-
-	private class AlchHandler implements IChemicalHandler{
-
-		@Override
-		public EnumTransferMode getMode(EnumFacing side){
-			return connectMode[side.getIndex()] <= 0 ? EnumTransferMode.NONE : connectMode[side.getIndex()] == 1 ? EnumTransferMode.OUTPUT : EnumTransferMode.INPUT;
+	@Override
+	protected EnumTransferMode[] getModes(){
+		EnumTransferMode[] output = new EnumTransferMode[6];
+		for(int i = 0; i < 6; i++){
+			output[i] = connectMode[i] <= 0 ? EnumTransferMode.NONE : connectMode[i] == 1 ? EnumTransferMode.OUTPUT : EnumTransferMode.INPUT;
 		}
-
-		@Override
-		public EnumContainerType getChannel(EnumFacing side){
-			return glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL;
-		}
-
-		@Override
-		public double getContent(){
-			return amount;
-		}
-
-		@Override
-		public double getTransferCapacity(){
-			return 10D;
-		}
-
-		@Override
-		public double getHeat(){
-			return heat;
-		}
-
-		@Override
-		public void setHeat(double heatIn){
-			heat = heatIn;
-			markDirty();
-		}
-
-		@Override
-		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller){
-			if(getMode(side) == EnumTransferMode.INPUT){
-				double space = getTransferCapacity() - amount;
-				if(space <= 0){
-					return false;
-				}
-				double callerTemp = caller == null ? 293 : caller.getTemp() + 273D;
-				boolean changed = false;
-				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-					ReagentStack r = reag[i];
-					if(r != null){
-						EnumMatterPhase phase = r.getPhase(0);
-						if(phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp())){
-							double moved = Math.min(space, r.getAmount());
-							if(moved <= 0D){
-								continue;
-							}
-							amount += moved;
-							changed = true;
-							space -= moved;
-							double heatTrans = moved * callerTemp;
-							if(r.increaseAmount(-moved) <= 0){
-								reag[i] = null;
-							}
-							heat += heatTrans;
-							if(caller != null){
-								caller.addHeat(-heatTrans);
-							}
-							if(contents[i] == null){
-								contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], moved);
-							}else{
-								contents[i].increaseAmount(moved);
-							}
-
-							if(space <= 0){
-								break;
-							}
-						}
-					}
-				}
-
-				if(changed){
-					dirtyReag = true;
-					markDirty();
-				}
-				return changed;
-			}
-
-			return false;
-		}
-
-		@Override
-		public double getContent(int type){
-			ReagentStack r = contents[type];
-			return r == null ? 0 : r.getAmount();
-		}
+		return output;
 	}
 }

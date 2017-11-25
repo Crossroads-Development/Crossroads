@@ -48,14 +48,12 @@ public class BlockSalt extends BlockFalling{
 		if(entityIn instanceof EntitySlime){
 			entityIn.setDead();
 			if(!worldIn.isRemote){
-				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.SLIME_BALL, ((EntitySlime) entityIn).getSlimeSize() + 1));
-				worldIn.spawnEntity(item);
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.SLIME_BALL, ((EntitySlime) entityIn).getSlimeSize() + 1)));
 			}
 		}else if(entityIn instanceof EntityCreeper){
 			entityIn.setDead();
 			if(!worldIn.isRemote){
-				EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Blocks.DEADBUSH));
-				worldIn.spawnEntity(item);
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Blocks.DEADBUSH)));
 			}
 		}
 

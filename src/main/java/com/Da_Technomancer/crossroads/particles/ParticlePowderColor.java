@@ -8,9 +8,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ParticleBubbleColor extends Particle{
+public class ParticlePowderColor extends Particle{
 
-	protected ParticleBubbleColor(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn){
+	protected ParticlePowderColor(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn){
 		super(worldIn, xCoordIn, yCoordIn, zCoordIn);
 		setSize(0.02F, 0.02F);
 		setBoundingBox(new AxisAlignedBB(xCoordIn, yCoordIn, zCoordIn, xCoordIn + width, yCoordIn + height, zCoordIn + width));
@@ -18,11 +18,11 @@ public class ParticleBubbleColor extends Particle{
 		particleRed = 1F;
 		particleGreen = 1F;
 		particleBlue = 1F;
-		setParticleTextureIndex(133);
-		particleScale *= rand.nextFloat() * 0.6F + 0.2F;
-		motionX = xSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
-		motionY = ySpeedIn;//Suggestion: Math.random() * 0.015D
-		motionZ = zSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
+		setParticleTextureIndex(177);
+		particleScale *= rand.nextFloat() * 0.6F + 0.6F;
+		motionX = xSpeedIn;//Suggestion: 0
+		motionY = ySpeedIn;//Suggestion: 0
+		motionZ = zSpeedIn;//Suggestion: 0
 		particleMaxAge = (int) (7.0D / (Math.random() * 0.8D + 0.2D));
 	}
 
@@ -43,7 +43,7 @@ public class ParticleBubbleColor extends Particle{
 	@SideOnly(Side.CLIENT)
 	public static class Factory implements IParticleFactory{
 		public Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_){
-			return new ParticleBubbleColor(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
+			return new ParticlePowderColor(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
 		}
 	}
 }

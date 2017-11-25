@@ -92,6 +92,8 @@ public class ChemicalVentTileEntity extends TileEntity{
 
 						Color col = r.getType().getColor(phase);
 						WorldServer server = (WorldServer) world;
+						
+						//TODO add support for FLAME phase
 						if(phase == EnumMatterPhase.GAS){
 							for(int j = 0; j <= (int) moved; j++){
 								server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, 1F, new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()});

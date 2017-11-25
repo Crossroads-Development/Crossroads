@@ -4,15 +4,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 /**
  * To be placed on things that store alchemy reagents and allow reactions.  *
  */
 public interface IReactionChamber{
-	
-	public boolean isGlass();
 
 	/**
 	 * Array MUST be of size {@link AlchemyCore#REAGENT_COUNT}. May contain null elements. 
@@ -20,8 +16,6 @@ public interface IReactionChamber{
 	 */
 	@Nonnull
 	public ReagentStack[] getReagants();
-	
-	public double getIntegrityCapacity();
 	
 	/**
 	 * Not the same as temperature.
@@ -41,7 +35,7 @@ public interface IReactionChamber{
 	 */
 	public default double getTemp(){
 		double cont = getContent();
-		return cont == 0 ? 0 : (getHeat() / cont) + 273D;
+		return cont == 0 ? 0 : (getHeat() / cont) - 273D;
 	}
 	
 	public default double getContent(){
@@ -55,7 +49,9 @@ public interface IReactionChamber{
 	}
 	
 	@Nullable
-	public ReagentStack getCatalyst();
+	public default ReagentStack getCatalyst(){
+		return null;
+	}
 	
 	public default boolean isCharged(){
 		return false;
@@ -68,17 +64,12 @@ public interface IReactionChamber{
 	
 	
 	/**
-	 * Adds temporary particles for visual effect after a reaction. Note that x, y, and z Offset are poorly named, and together with the particleSpeed, can control the color for several particle types. I don't understand why either. 
+	 * Adds temporary particles for visual effect after a reaction. 
 	 * @param particleType
-	 * @param numberOfParticles
-	 * @param xOffset
-	 * @param yOffset
-	 * @param zOffset
-	 * @param particleSpeed
+	 * @param speedX
+	 * @param speedY
+	 * @param speedZ
+	 * @param particleArgs
 	 */
-	public void addVisualEffect(EnumParticleTypes particleType, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed);
-	
-	public World getWorld();
-	
-	public BlockPos getPos();
+	public void addVisualEffect(EnumParticleTypes particleType, double speedX, double speedY, double speedZ, int... particleArgs);
 }

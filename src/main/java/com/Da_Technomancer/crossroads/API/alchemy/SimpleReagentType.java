@@ -18,7 +18,7 @@ public class SimpleReagentType implements IReagent{
 	private final double melting;
 	private final double boiling;
 	private final int catalType;
-	private final int itemAmount;
+	private final double itemAmount;
 	private final Item solid;
 	private final int containType;
 	private final IAlchEffect effect;
@@ -85,7 +85,7 @@ public class SimpleReagentType implements IReagent{
 	 * @param containType 0: Normal; 1: Vanishes in glass; 2: Destroys glass. 
 	 * @param effect The effect this has when released. Null for none. 
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType, int containType, @Nullable IAlchEffect effect){
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, double itemQuantity, boolean base, int catalType, @Nullable SolventType solventType, @Nullable SolventType soluteType, int containType, @Nullable IAlchEffect effect){
 		this.name = name;
 		if(boilingPoint <= meltingPoint){
 			throw Main.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));
@@ -136,7 +136,7 @@ public class SimpleReagentType implements IReagent{
 	 */
 	@Override
 	public ItemStack getStackFromReagent(ReagentStack reag){
-		return reag != null && reag.getType() == this && reag.getAmount() >= itemAmount ? new ItemStack(solid, itemAmount) : ItemStack.EMPTY;
+		return reag != null && reag.getType() == this && reag.getAmount() >= itemAmount ? new ItemStack(solid, (int) (reag.getAmount() / itemAmount)) : ItemStack.EMPTY;
 	}
 
 	@Override

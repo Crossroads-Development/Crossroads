@@ -29,7 +29,7 @@ public class DebugHeatWriter extends Item{
 		if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
 			IHeatHandler cable = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null);
 			if(playerIn.isSneaking()){
-				cable.addHeat(-100);
+				cable.setTemp(Math.max(-273, cable.getTemp() - 100));
 			}else{
 				cable.addHeat(100);
 			}

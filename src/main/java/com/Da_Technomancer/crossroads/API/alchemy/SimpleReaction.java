@@ -103,7 +103,7 @@ public class SimpleReaction implements IReaction{
 			}
 		}
 
-		chamb.addHeat((amountChange * temp * amount) - (heatChange * amount * 15D));//15 was picked somewhat arbitrarily as a conversion factor from J/mol * mol to *C
+		chamb.addHeat((amountChange * temp * amount) - (heatChange * amount * 5D));//5 was picked somewhat arbitrarily as a conversion factor from J/mol * mol to *C
 		return true;
 	}
 }
