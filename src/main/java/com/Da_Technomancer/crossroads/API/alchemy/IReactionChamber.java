@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import net.minecraft.util.EnumParticleTypes;
 
@@ -46,11 +45,6 @@ public interface IReactionChamber{
 			}
 		}
 		return amount;
-	}
-	
-	@Nullable
-	public default ReagentStack getCatalyst(){
-		return null;
 	}
 	
 	public default boolean isCharged(){

@@ -77,7 +77,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 				ReagentStack r = reag[i];
 				if(r != null){
-					EnumMatterPhase phase = r.getPhase(0);
+					EnumMatterPhase phase = r.getPhase(callerTemp - 273D);
 					if(phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp())){
 						double moved = r.getAmount();
 						if(moved <= 0D){
@@ -92,25 +92,34 @@ public class ChemicalVentTileEntity extends TileEntity{
 
 						Color col = r.getType().getColor(phase);
 						WorldServer server = (WorldServer) world;
-						
-						//TODO add support for FLAME phase
-						if(phase == EnumMatterPhase.GAS){
-							for(int j = 0; j <= (int) moved; j++){
-								server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, 1F, new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()});
-							}
-							r.getType().onRelease(world, pos, r.getAmount(), phase);
-						}else{
-							for(int j = 0; j <= (int) moved; j++){
-								server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.02D, -Math.random(), (Math.random() * 2D - 1D) * 0.02D, 1F, new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()});
-							}
-							BlockPos searching = pos;
-							for(int j = pos.getY() - 1; j > 0; j--){
-								searching = new BlockPos(pos.getX(), j, pos.getZ());
-								if(world.getBlockState(searching).isFullCube()){
-									break;
+
+
+						switch(phase){
+							case GAS:
+								for(int j = 0; j <= (int) moved; j++){
+									server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, 1F, new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()});
 								}
-							}
-							r.getType().onRelease(world, searching, r.getAmount(), phase);
+								r.getType().onRelease(world, pos, r.getAmount(), phase);
+								break;
+							case LIQUID:
+							case SOLUTE:
+								for(int j = 0; j <= (int) moved; j++){
+									server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.02D, -Math.random(), (Math.random() * 2D - 1D) * 0.02D, 1F, new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()});
+								}
+								BlockPos searching = pos;
+								for(int j = pos.getY() - 1; j > 0; j--){
+									searching = new BlockPos(pos.getX(), j, pos.getZ());
+									if(world.getBlockState(searching).isFullCube()){
+										break;
+									}
+								}
+								r.getType().onRelease(world, searching, r.getAmount(), phase);
+								break;
+							case FLAME:
+								//TODO
+								break;
+							default:
+								break;	
 						}
 					}
 				}

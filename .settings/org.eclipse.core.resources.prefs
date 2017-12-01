@@ -13,7 +13,9 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/heat/HeatingChambe
 encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/heat/HeatingCrucible.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/heat/RedstoneHeatCable.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/heat/SaltReactor.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/gui/RedstoneKeyboardGuiContainer.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/gui/RedstoneRegistryGuiContainer.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/gui/container/RedstoneKeyboardContainer.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/GuideAPI/GuideBooks.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/GuideAPI/SmartEntry.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/ArcaneExtractorRecipe.java=UTF-8

@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,6 +10,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
@@ -41,7 +43,7 @@ public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITi
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
 			if(amount != 0){
-				chat.add("Temp: " + handler.getTemp() + "°C");
+				chat.add("Temp: " + (device == ModItems.omnimeter ? MiscOp.betterRound(handler.getTemp(), 2) : handler.getTemp()) + "°C");
 			}else{
 				chat.add("No reagents");
 			}
@@ -65,7 +67,7 @@ public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITi
 	protected double correctTemp(){
 		return (heat / amount) - 273D;
 	}
-	
+
 	protected void correctReag(){
 		dirtyReag = false;
 		amount = 0;
@@ -202,7 +204,7 @@ public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITi
 	protected double transferCapacity(){
 		return 10D;
 	}
-	
+
 	protected void performTransfer(){
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
@@ -228,7 +230,7 @@ public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITi
 			}
 		}
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -252,15 +254,15 @@ public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITi
 		nbt.setDouble("heat", heat);
 		return nbt;
 	}
-	
+
 	protected IChemicalHandler handler = new AlchHandler();
-	
+
 	protected class AlchHandler implements IChemicalHandler{
 
 		public AlchHandler(){
-			
+
 		}
-		
+
 		@Override
 		public EnumTransferMode getMode(EnumFacing side){
 			return getModes()[side.getIndex()];
@@ -301,36 +303,44 @@ public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITi
 				}
 				double callerTemp = caller == null ? 293 : caller.getTemp() + 273D;
 				boolean changed = false;
+
+				HashSet<Integer> validIds = new HashSet<Integer>(4);
+				double totalValid = 0;
+
 				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 					ReagentStack r = reag[i];
 					if(r != null){
 						EnumMatterPhase phase = r.getPhase(0);
 						if(phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp())){
-							double moved = Math.min(space, r.getAmount());
-							if(moved <= 0D){
-								continue;
-							}
-							amount += moved;
-							changed = true;
-							space -= moved;
-							double heatTrans = moved * callerTemp;
-							if(r.increaseAmount(-moved) <= 0){
-								reag[i] = null;
-							}
-							heat += heatTrans;
-							if(caller != null){
-								caller.addHeat(-heatTrans);
-							}
-							if(contents[i] == null){
-								contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], moved);
-							}else{
-								contents[i].increaseAmount(moved);
-							}
-
-							if(space <= 0){
-								break;
-							}
+							validIds.add(i);
+							totalValid += r.getAmount();
 						}
+					}
+				}
+
+				totalValid = Math.min(1D, space / totalValid);
+
+				for(int i : validIds){
+					ReagentStack r = reag[i];
+					double moved = r.getAmount() * totalValid;
+					if(moved <= 0D){
+						continue;
+					}
+					amount += moved;
+					changed = true;
+					space -= moved;
+					double heatTrans = moved * callerTemp;
+					if(r.increaseAmount(-moved) <= 0){
+						reag[i] = null;
+					}
+					heat += heatTrans;
+					if(caller != null){
+						caller.addHeat(-heatTrans);
+					}
+					if(contents[i] == null){
+						contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], moved);
+					}else{
+						contents[i].increaseAmount(moved);
 					}
 				}
 

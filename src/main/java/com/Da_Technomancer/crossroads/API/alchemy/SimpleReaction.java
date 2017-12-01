@@ -51,10 +51,13 @@ public class SimpleReaction implements IReaction{
 
 	@Override
 	public boolean performReaction(IReactionChamber chamb){
-		if((charged && !chamb.isCharged()) || (cat != null && (chamb.getCatalyst() == null || chamb.getCatalyst().getType() != cat))){
+		if(charged && !chamb.isCharged()){
 			return false;
 		}
 		ReagentStack[] reags = chamb.getReagants();
+		if(cat != null && reags[cat.getIndex()] == null){
+			return false;
+		}
 		int indF = ingrOne.getLeft().getIndex();
 		int indS = ingrTwo == null ? -1 : ingrTwo.getLeft().getIndex();
 		int indT = ingrThree == null ? -1 : ingrThree.getLeft().getIndex();

@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AbstractAlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
@@ -42,7 +43,7 @@ public class HeatedTubeTileEntity extends AbstractAlchemyCarrierTE{
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
-			chat.add("Temp: " + cableTemp + "°C");
+			chat.add("Temp: " + (device == ModItems.omnimeter ? MiscOp.betterRound(cableTemp, 2) : cableTemp) + "°C");
 			if(amount == 0){
 				chat.add("No reagents");
 			}

@@ -22,6 +22,9 @@ public final class ModFluids{
 	public static BlockMoltenCopper moltenCopper;
 	public static BlockLiquidFat liquidFat;
 	public static BlockMoltenCopshowium moltenCopshowium;
+	public static BlockMoltenGold moltenGold;
+	public static BlockMoltenIron moltenIron;
+	public static BlockMoltenTin moltenTin;
 
 	public static void init(){
 		FluidRegistry.registerFluid(BlockSteam.STEAM);
@@ -43,6 +46,18 @@ public final class ModFluids{
 		FluidRegistry.registerFluid(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
 		moltenCopshowium = new BlockMoltenCopshowium();
 		FluidRegistry.addBucketForFluid(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
+		
+		FluidRegistry.registerFluid(BlockMoltenGold.MOLTEN_GOLD);
+		moltenGold = new BlockMoltenGold();
+		FluidRegistry.addBucketForFluid(BlockMoltenGold.MOLTEN_GOLD);
+		
+		FluidRegistry.registerFluid(BlockMoltenIron.MOLTEN_IRON);
+		moltenIron = new BlockMoltenIron();
+		FluidRegistry.addBucketForFluid(BlockMoltenIron.MOLTEN_IRON);
+		
+		FluidRegistry.registerFluid(BlockMoltenTin.MOLTEN_TIN);
+		moltenTin = new BlockMoltenTin();
+		FluidRegistry.addBucketForFluid(BlockMoltenTin.MOLTEN_TIN);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -52,6 +67,9 @@ public final class ModFluids{
 		registerFluidBlockRendering(BlockDistilledWater.DISTILLED_WATER);
 		registerFluidBlockRendering(BlockLiquidFat.LIQUID_FAT);
 		registerFluidBlockRendering(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
+		registerFluidBlockRendering(BlockMoltenGold.MOLTEN_GOLD);
+		registerFluidBlockRendering(BlockMoltenIron.MOLTEN_IRON);
+		registerFluidBlockRendering(BlockMoltenTin.MOLTEN_TIN);
 	}
 
 	/*

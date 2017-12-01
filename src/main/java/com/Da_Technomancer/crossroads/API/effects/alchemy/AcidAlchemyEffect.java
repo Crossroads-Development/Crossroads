@@ -25,9 +25,9 @@ public class AcidAlchemyEffect implements IAlchEffect{
 	
 	@Override
 	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase){
-		if(phase == EnumMatterPhase.SOLUTE && amount >= .2D){
-			for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
-				e.attackEntityFrom(ACID_DAMAGE, ((float) (amount * 5D)));
+		if((phase == EnumMatterPhase.SOLUTE || phase == EnumMatterPhase.LIQUID) && amount >= .02D){
+			for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(2, 2, 2)), EntitySelectors.IS_ALIVE)){
+				e.attackEntityFrom(ACID_DAMAGE, ((float) (amount * 50D)));
 			}
 			
 			IBlockState state = world.getBlockState(pos);

@@ -2,7 +2,9 @@ package com.Da_Technomancer.crossroads.gui;
 
 import java.io.IOException;
 
+import com.Da_Technomancer.crossroads.API.gui.ButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.gui.TextBarGuiObject;
+import com.Da_Technomancer.crossroads.API.gui.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToServer;
 import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
@@ -14,6 +16,11 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 
 	private final RedstoneKeyboardTileEntity te;
 	private TextBarGuiObject textBar;
+	private ButtonGuiObject clearButton;
+	private ToggleButtonGuiObject multButton;
+	private ToggleButtonGuiObject divButton;
+	private ButtonGuiObject piButton;
+	private ButtonGuiObject eulerButton;
 
 	public RedstoneKeyboardGuiContainer(RedstoneKeyboardTileEntity te){
 		super(new RedstoneKeyboardContainer());
@@ -26,10 +33,15 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 	public void initGui(){
 		super.initGui();
 
-		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 0, 300, 25, null, (Character key) -> Character.isAlphabetic(key) || key == '.' || Character.isDigit(key));
+		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 0, 300, 25, null, (Character key) -> key == '.' || Character.isDigit(key));
 		textBar.setText(doubleToString(te.output));
+		clearButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 20, 20, "C");
+		multButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 20, 20, 20, "⨉");
+		divButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 40, 20, 20, "÷");
+		piButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 60, 20, 20, "π");
+		eulerButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 80, 20, 20, "e");
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks){
 		drawDefaultBackground();
@@ -44,7 +56,7 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 		}
 		return d == Math.PI ? "PI" : out;
 	}
-	
+
 	@Override
 	public void onGuiClosed(){
 		super.onGuiClosed();
@@ -54,39 +66,102 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		textBar.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		clearButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		multButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		divButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		piButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		eulerButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		textBar.drawFore(mouseX, mouseY, fontRenderer);
+		clearButton.drawFore(mouseX, mouseY, fontRenderer);
+		multButton.drawFore(mouseX, mouseY, fontRenderer);
+		divButton.drawFore(mouseX, mouseY, fontRenderer);
+		piButton.drawFore(mouseX, mouseY, fontRenderer);
+		eulerButton.drawFore(mouseX, mouseY, fontRenderer);
 	}
 
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException {
 		super.mouseClicked(x, y, button);
-		textBar.mouseClicked(x, y, button);
+		if(!textBar.mouseClicked(x, y, button)){
+			if(clearButton.mouseClicked(x, y, button)){
+				textBar.setText("0");
+			}else if(multButton.mouseClicked(x, y, button)){
+				if(multButton.isDepressed()){
+					divButton.setDepressed(false);
+					try{
+						prevValue = Double.parseDouble(textBar.getText());
+					}catch(NumberFormatException e){
+						multButton.setDepressed(false);
+					}
+					textBar.setText("");
+				}else{
+					try{
+						double value = Double.parseDouble(textBar.getText());
+						if(!Double.isFinite(value)){
+							textBar.setText(Double.toString(prevValue));
+						}else{
+							value *= prevValue;
+							textBar.setText(Double.toString(value));
+						}
+					}catch(NumberFormatException e){
+						textBar.setText(Double.toString(prevValue));
+					}
+
+				}
+			}else if(divButton.mouseClicked(x, y, button)){
+				if(divButton.isDepressed()){
+					multButton.setDepressed(false);
+					try{
+						prevValue = Double.parseDouble(textBar.getText());
+					}catch(NumberFormatException e){
+						divButton.setDepressed(false);
+					}
+					textBar.setText("");
+				}else{
+					try{
+						double value = Double.parseDouble(textBar.getText());
+						if(Math.abs(value) == 0 || !Double.isFinite(value)){
+							textBar.setText(Double.toString(prevValue));
+						}else{
+							value = prevValue / value;
+							textBar.setText(Double.toString(value));
+						}
+					}catch(NumberFormatException e){
+						textBar.setText(Double.toString(prevValue));
+					}
+
+				}
+			}else if(piButton.mouseClicked(x, y, button)){
+				textBar.setText(Double.toString(Math.PI));
+			}else if(eulerButton.mouseClicked(x, y, button)){
+				textBar.setText(Double.toString(Math.E));
+			}
+		}
 	}
+
+	private double prevValue = 0;
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(!textBar.buttonPress(key, keyCode)){
+		if(!textBar.buttonPress(key, keyCode) && !clearButton.buttonPress(key, keyCode) && !multButton.buttonPress(key, keyCode) && !divButton.buttonPress(key, keyCode) && !piButton.buttonPress(key, keyCode) && !eulerButton.buttonPress(key, keyCode)){
 			super.keyTyped(key, keyCode);
 		}
 	}
 
 	private void setOutput(){
 		double out = 0;
-		boolean changed;
-		if(textBar.getText().toLowerCase().equals("pi")){
-			changed = true;
-			out = Math.PI;
-		}else{
-			try{
-				out = Double.parseDouble(textBar.getText());
+		boolean changed = false;
+		try{
+			out = Double.parseDouble(textBar.getText());
+			if(Double.isFinite(out)){
 				changed = true;
-			}catch(NumberFormatException e){
-				changed = false;
 			}
+		}catch(NumberFormatException e){
+			changed = false;
 		}
 		out = Math.abs(out);
 		if(changed && out != te.output){

@@ -8,9 +8,7 @@ import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.logging.log4j.Level;
 
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.AcidAlchemyEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.AquaRegiaAlchemyEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.ChlorineAlchemyEffect;

@@ -93,57 +93,53 @@ public class FluidInjectorTileEntity extends AbstractAlchemyCarrierTE{
 	private class AlchHandlerInjector extends AlchHandler{
 		@Override
 		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller){
-			//if(getMode(side) == EnumTransferMode.INPUT){
-				double space = getTransferCapacity() - amount;
-				if(space <= 0){
-					return false;
-				}
-				double callerTemp = caller == null ? 293 : caller.getTemp() + 273D;
-				boolean changed = false;
-				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-					ReagentStack r = reag[i];
-					if(r != null){
-						EnumMatterPhase phase = r.getPhase(0);
-						if(phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp())){
-							double moved = Math.min(space, r.getAmount());
-							if(moved <= 0D){
-								continue;
-							}
-							amount += moved;
-							changed = true;
-							space -= moved;
-							double heatTrans = moved * callerTemp;
-							if(r.increaseAmount(-moved) <= 0){
-								reag[i] = null;
-							}
-							heat += heatTrans;
-							if(caller != null){
-								caller.addHeat(-heatTrans);
-							}
-							if(contents[i] == null){
-								contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], moved);
-							}else{
-								contents[i].increaseAmount(moved);
-							}
+			double space = getTransferCapacity() - amount;
+			if(space <= 0){
+				return false;
+			}
+			double callerTemp = caller == null ? 293 : caller.getTemp() + 273D;
+			boolean changed = false;
+			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+				ReagentStack r = reag[i];
+				if(r != null){
+					EnumMatterPhase phase = r.getPhase(0);
+					if(phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp())){
+						double moved = Math.min(space, r.getAmount());
+						if(moved <= 0D){
+							continue;
+						}
+						amount += moved;
+						changed = true;
+						space -= moved;
+						double heatTrans = moved * callerTemp;
+						if(r.increaseAmount(-moved) <= 0){
+							reag[i] = null;
+						}
+						heat += heatTrans;
+						if(caller != null){
+							caller.addHeat(-heatTrans);
+						}
+						if(contents[i] == null){
+							contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], moved);
+						}else{
+							contents[i].increaseAmount(moved);
+						}
 
-							if(space <= 0){
-								break;
-							}
+						if(space <= 0){
+							break;
 						}
 					}
 				}
+			}
 
-				if(changed){
-					dirtyReag = true;
-					markDirty();
-				}
-				return changed;
-			//}
-
-			//return false;
+			if(changed){
+				dirtyReag = true;
+				markDirty();
+			}
+			return changed;
 		}
 	}
-	
+
 	private class FluidHandlerUp implements IFluidHandler{
 
 		@Override
