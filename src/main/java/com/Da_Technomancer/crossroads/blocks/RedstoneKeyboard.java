@@ -1,12 +1,11 @@
-package com.Da_Technomancer.crossroads.blocks.technomancy;
+package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -22,7 +21,7 @@ import net.minecraft.world.World;
 
 public class RedstoneKeyboard extends BlockContainer{
 	
-	public RedstoneKeyboard(){
+	protected RedstoneKeyboard(){
 		super(Material.IRON);
 		String name = "redstone_keyboard";
 		setUnlocalizedName(name);

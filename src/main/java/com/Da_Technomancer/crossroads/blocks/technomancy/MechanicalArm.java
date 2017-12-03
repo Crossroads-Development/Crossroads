@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.Ratiator;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
 
@@ -42,7 +43,7 @@ public class MechanicalArm extends BlockContainer{
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		 //Redstone controlled by north side.
-		((MechanicalArmTileEntity) worldIn.getTileEntity(pos)).setRedstone(ModBlocks.ratiator.getPowerOnSide(worldIn, pos, EnumFacing.NORTH, false));
+		((MechanicalArmTileEntity) worldIn.getTileEntity(pos)).setRedstone(Ratiator.getPowerOnSide(worldIn, pos, EnumFacing.NORTH, false));
 	}
 	
 	@Override

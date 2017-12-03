@@ -39,7 +39,7 @@ public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGear
 				float angle = (float) (handler.getNextAngle() - handler.getAngle());
 				angle *= partialTicks;
 				angle += handler.getAngle();
-				GlStateManager.rotate(-angle, 0F, 1F, 0F);
+				GlStateManager.rotate(angle, 0F, 1F, 0F);
 				modelOct.render(res, color);
 				GlStateManager.enableLighting();
 				GlStateManager.popAttrib();

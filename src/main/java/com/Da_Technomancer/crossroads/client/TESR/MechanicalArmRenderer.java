@@ -26,13 +26,15 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 			return;
 		}
 
+		double[] angle = new double[] {te.angle[0] * partialTicks + (1D - partialTicks) * (-te.speedRecord[0]), te.angle[1] * partialTicks + (1D - partialTicks) * (Math.min(MechanicalArmTileEntity.MAXIMUM_LOWER_ANGLE, Math.max(MechanicalArmTileEntity.MINIMUM_LOWER_ANGLE, MechanicalArmTileEntity.MAXIMUM_LOWER_ANGLE - Math.abs(te.speedRecord[1])))), te.angle[2] * partialTicks + (1D - partialTicks) * (Math.min(MechanicalArmTileEntity.MAXIMUM_UPPER_ANGLE, Math.max(MechanicalArmTileEntity.MINIMUM_UPPER_ANGLE, MechanicalArmTileEntity.MINIMUM_UPPER_ANGLE + Math.abs(te.speedRecord[2]))))};
+
 		Color colorGear = GearTypes.COPSHOWIUM.getColor();
 
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5D, y + 1D, z + .5D);
-		GlStateManager.rotate(180F - (float) Math.toDegrees(te.angle[0]), 0, 1, 0);
-		GlStateManager.rotate(90F - (float) Math.toDegrees(te.angle[1]), 0, 0, 1);
+		GlStateManager.rotate(180F - (float) Math.toDegrees(angle[0]), 0, 1, 0);
+		GlStateManager.rotate(90F - (float) Math.toDegrees(angle[1]), 0, 0, 1);
 
 		//Lower arm
 		GlStateManager.pushMatrix();
@@ -40,7 +42,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		//Control Lower Arm
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, -.0625D, .5D);
-		GlStateManager.rotate(22.5F - (float) Math.toDegrees(te.angle[2]), 0, 1, 0);
+		GlStateManager.rotate(22.5F - (float) Math.toDegrees(angle[2]), 0, 1, 0);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1, MechanicalArmTileEntity.LOWER_ARM_LENGTH - .125D, 1);
 		modelAx.render(textureAx, textureAx, Color.WHITE);
@@ -70,7 +72,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		modelAx.render(textureAx, textureAx, Color.GRAY);
 		GlStateManager.popMatrix();
 
-		GlStateManager.rotate(-(float) Math.toDegrees(te.angle[2]) + 90F, 0, 1, 0);
+		GlStateManager.rotate(-(float) Math.toDegrees(angle[2]) + 90F, 0, 1, 0);
 
 		//Upper Gear
 		GlStateManager.pushMatrix();
@@ -79,7 +81,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		GlStateManager.translate(0, .4375D, 0);
 		modelGear.render(textureGear, colorGear);
 		GlStateManager.popMatrix();
-		
+
 		//Axle
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, -.09375, 0);
@@ -114,7 +116,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}
-	
+
 	@Override
 	public boolean isGlobalRenderer(MechanicalArmTileEntity te){
 		return true;

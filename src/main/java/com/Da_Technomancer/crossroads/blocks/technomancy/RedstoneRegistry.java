@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleArrayToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.Ratiator;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
@@ -69,7 +70,7 @@ public class RedstoneRegistry extends BlockContainer{
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		double power = 0;
 		for(EnumFacing side : EnumFacing.values()){
-			power = Math.max(power, ModBlocks.ratiator.getPowerOnSide(worldIn, pos, side, false));
+			power = Math.max(power, Ratiator.getPowerOnSide(worldIn, pos, side, false));
 		}
 		if(power > 0){
 			if(!state.getValue(Properties.REDSTONE_BOOL)){

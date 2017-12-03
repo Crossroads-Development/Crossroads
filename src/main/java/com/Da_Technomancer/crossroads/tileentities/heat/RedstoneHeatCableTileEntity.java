@@ -50,7 +50,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
 			chat.add("Temp: " + heatHandler.getTemp() + "°C");
 			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos) + "°C");
+				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 			}
 		}
 	}
@@ -70,7 +70,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 			if(insulator == HeatInsulators.ICE){
 				temp = -10;
 			}else{
-				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
+				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			}
 			init = true;
 		}
@@ -95,7 +95,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		}
 	}
 
-	public void transHeat(){
+	private void transHeat(){
 		int members = 1;
 
 		for(EnumFacing side : EnumFacing.values()){
@@ -141,7 +141,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	}
 
 	private void runLoss(double rate){
-		double biomeTemp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
+		double biomeTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 		temp += Math.min(rate, Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
@@ -193,7 +193,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 				if(insulator == HeatInsulators.ICE){
 					temp = -10;
 				}else{
-					temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
+					temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				}
 				markDirty();
 			}

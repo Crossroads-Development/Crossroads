@@ -42,7 +42,7 @@ public class BlockMoltenIron extends BlockFluidClassic{
 		private FluidMoltenIron(){
 			super("iron", new ResourceLocation(Main.MODID + ":blocks/molteniron_still"), new ResourceLocation(Main.MODID + ":blocks/molteniron_flow"));
 			setDensity(3000);
-			setTemperature(1500);
+			setTemperature(2000);
 			setViscosity(1300);
 		}
 

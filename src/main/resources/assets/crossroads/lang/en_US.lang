@@ -222,6 +222,9 @@ tile.chemical_vent.name=Chemical Vent
 tile.port_extender.name=Port Extender
 tile.reaction_chamber_glass.name=Glass Reaction Chamber
 tile.reaction_chamber_cryst.name=Crystal Reaction Chamber
+fluid.tin=Molten Tin
+fluid.gold=Molten Gold
+fluid.iron=Molten Iron
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

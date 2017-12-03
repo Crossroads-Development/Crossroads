@@ -29,9 +29,9 @@ public class AdditionAxisRenderer extends TileEntitySpecialRenderer<AdditionAxis
 		}
 		
 		boolean orient = axis.getWorld().getBlockState(axis.getPos()).getValue(Properties.ORIENT);
-		float angleOne = (float) axis.angleOne;
-		float angleTwo = (float) axis.angleTwo;
-		float angleThree = (float) axis.angleThree;
+		float angleOne = (float) -axis.angleOne;
+		float angleTwo = (float) -axis.angleTwo;
+		float angleThree = (float) -axis.angleThree;
 		Color col = GearTypes.COPSHOWIUM.getColor();
 
 		GlStateManager.pushMatrix();

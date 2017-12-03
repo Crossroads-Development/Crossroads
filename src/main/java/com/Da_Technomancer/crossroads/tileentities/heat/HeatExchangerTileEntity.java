@@ -44,7 +44,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 			chat.add("Temp: " + handler.getTemp() + "°C");
 			chat.add("Buffered heat: " + bufferTemp + "°C");
 			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos) + "°C");
+				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 			}
 		}
 	}
@@ -56,7 +56,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 		}
 
 		if(!init){
-			temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
+			temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
 
@@ -87,7 +87,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 		}
 	}
 
-	public void transHeat(){
+	private void transHeat(){
 
 		double reservePool = temp;
 		temp -= reservePool;
@@ -115,7 +115,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 	}
 
 	private void runLoss(double rate){
-		double biomeTemp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
+		double biomeTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 		temp += Math.min(rate, Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
@@ -164,7 +164,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(getPos());
+				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				init = true;
 			}
 		}

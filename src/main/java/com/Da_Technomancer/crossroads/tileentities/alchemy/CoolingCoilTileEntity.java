@@ -75,7 +75,7 @@ public class CoolingCoilTileEntity extends AbstractAlchemyCarrierTE{
 			return;
 		}
 		if(!init){
-			cableTemp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
+			cableTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
 		super.update();

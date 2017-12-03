@@ -58,7 +58,7 @@ public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTi
 		}
 		GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
 		GlStateManager.translate(0F, -2F, 0F);
-		GlStateManager.rotate(-drill.getAngle(), 0F, 1F, 0F);
+		GlStateManager.rotate(drill.getAngle(), 0F, 1F, 0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		model.render();
 		GlStateManager.popMatrix();

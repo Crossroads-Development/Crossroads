@@ -17,6 +17,8 @@ public class Properties{
 	 * Depending on the block, either means emitting light or made of alchemical crystal instead of normal materials
 	 */
 	public static final PropertyBool LIGHT = PropertyBool.create("light");
+	public static final PropertyBool ACTIVE = PropertyBool.create("active");
+	
 	/**
 	 * This property should be removed, except removing it will cause all existing fluid tanks to disappear. This property will be fully removed in the next world-breaking update. 
 	 */

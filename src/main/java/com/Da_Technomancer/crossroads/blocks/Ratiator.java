@@ -115,7 +115,7 @@ public class Ratiator extends BlockContainer{
 		neighborChanged(state, worldIn, pos, null, null);
 	}
 
-	public double getPowerOnSide(World worldIn, BlockPos pos, EnumFacing side, boolean allowAll){
+	public static double getPowerOnSide(World worldIn, BlockPos pos, EnumFacing side, boolean allowAll){
 		IBlockState state = worldIn.getBlockState(pos.offset(side));
 		Block block = state.getBlock();
 		TileEntity te = worldIn.getTileEntity(pos.offset(side));

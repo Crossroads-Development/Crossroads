@@ -2,10 +2,9 @@ package com.Da_Technomancer.crossroads.API;
 
 public final class EnergyConverters{
 
-	/**
-	 * A multiplier for biome temp. to get degrees. Based on reality.
-	 */
-	public static final float BIOME_TEMP_MULT = 30F;
+	public static double convertBiomeTemp(double rawTemp){
+		return rawTemp * 17.5D - 2.5D;
+	}
 
 	/**
 	 * The number of degrees that 1000mB of steam is worth. Based on game

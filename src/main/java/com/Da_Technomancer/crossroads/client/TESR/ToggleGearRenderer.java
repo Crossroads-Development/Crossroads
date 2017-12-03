@@ -43,7 +43,7 @@ public class ToggleGearRenderer extends TileEntitySpecialRenderer<ToggleGearTile
 		float angle = (float) (gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getNextAngle() - gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getAngle());
 		angle *= partialTicks;
 		angle += gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getAngle();
-		GlStateManager.rotate(-angle, 0F, 1F, 0F);
+		GlStateManager.rotate(angle, 0F, 1F, 0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(res);
 		modelOct.render(res, gear.getMember().getColor());
 		GlStateManager.enableLighting();
@@ -55,7 +55,7 @@ public class ToggleGearRenderer extends TileEntitySpecialRenderer<ToggleGearTile
 		GlStateManager.color(1, 1, 1);
 		GlStateManager.translate(x + .5F, y + .375F, z + .5F);
 		GlStateManager.scale(1D, .75D, 1D);
-		GlStateManager.rotate((float) -angle, 0F, 1F, 0F);
+		GlStateManager.rotate((float) angle, 0F, 1F, 0F);
 		modelAx.render(textureAx, textureAx, Color.WHITE);
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();

@@ -20,6 +20,18 @@
 		"copshowium": {
 			"model": "forge:fluid",
 			"custom": { "fluid": "copshowium" }
+		},
+		"iron": {
+			"model": "forge:fluid",
+			"custom": { "fluid": "iron" }
+		},
+		"gold": {
+			"model": "forge:fluid",
+			"custom": { "fluid": "gold" }
+		},
+		"tin": {
+			"model": "forge:fluid",
+			"custom": { "fluid": "tin" }
 		}
 	}
 }

@@ -50,7 +50,7 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 			handler = gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH);
 		}
 		if(handler != null){
-			GlStateManager.rotate((float) -handler.getAngle(), 0F, 1F, 0F);
+			GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
 			GlStateManager.scale(3, 1, 3);
 			MODEL.render(TEXTURE, TEXTURE_RIM, gear.getMember().getColor());
 		}

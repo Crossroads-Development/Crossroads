@@ -70,7 +70,7 @@ public class ReactionChamberTileEntity extends AbstractAlchemyReactorTE{
 			return;
 		}
 		if(!init){
-			cableTemp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
+			cableTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
 
@@ -253,7 +253,7 @@ public class ReactionChamberTileEntity extends AbstractAlchemyReactorTE{
 		private void init(){
 			if(!init){
 				init = true;
-				cableTemp = EnergyConverters.BIOME_TEMP_MULT * world.getBiomeForCoordsBody(pos).getTemperature(pos);
+				cableTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			}
 		}
 

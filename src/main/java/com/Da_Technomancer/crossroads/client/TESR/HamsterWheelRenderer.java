@@ -40,6 +40,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		float angle = wheel.nextAngle - wheel.angle;
 		angle *= partialTicks;
 		angle += wheel.angle;
+		angle *= -1F;
 
 		//Feet
 		GlStateManager.pushMatrix();

@@ -46,9 +46,9 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		}
 		
 		EnumFacing facing = state.getValue(Properties.FACING);
-		double speedTwo = axis.lastInTwo;
-		float angleOne = (float) axis.angleOne;
-		float angleTwo = (float) axis.angleTwo;
+		double speedTwo = -axis.lastInTwo;
+		float angleOne = (float) -axis.angleOne;
+		float angleTwo = (float) -axis.angleTwo;
 		float angleThree = (float) axis.angleThree;
 		float angleTwoPos = (float) axis.angleTwoPos;
 		Color col = GearTypes.COPSHOWIUM.getColor();

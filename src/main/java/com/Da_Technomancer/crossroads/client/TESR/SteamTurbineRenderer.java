@@ -12,22 +12,21 @@ import net.minecraft.util.ResourceLocation;
 
 public class SteamTurbineRenderer extends TileEntitySpecialRenderer<SteamTurbineTileEntity>{
 	
-	private static final ResourceLocation texture = new ResourceLocation(Main.MODID, "textures/model/pump.png");
-	private static final ModelPump model = new ModelPump();
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/pump.png");
+	private static final ModelPump MODEL = new ModelPump();
 
 	@Override
-	public void render(SteamTurbineTileEntity pump, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(pump == null || pump.getWorld().getBlockState(pump.getPos()).getBlock() != ModBlocks.steamTurbine){
+	public void render(SteamTurbineTileEntity turbine, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
+		if(turbine == null || turbine.getWorld().getBlockState(turbine.getPos()).getBlock() != ModBlocks.steamTurbine){
 			return;
 		}
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
-		GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
-		GlStateManager.translate(-.5F, -1.5F, .5F);
-		GlStateManager.rotate(pump.getCompletion(), 0F, 1F, 0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-		model.renderScrew();
+		GlStateManager.translate(.5F, 0F, .5F);
+		GlStateManager.rotate(turbine.getCompletion(), 0F, 1F, 0F);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+		MODEL.renderScrew();
 		GlStateManager.popMatrix();
 	}
 }

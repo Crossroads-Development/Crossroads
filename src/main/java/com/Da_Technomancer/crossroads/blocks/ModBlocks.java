@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.ChemicalVent;
 import com.Da_Technomancer.crossroads.blocks.alchemy.CoolingCoil;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FlowLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FluidInjector;
+import com.Da_Technomancer.crossroads.blocks.alchemy.HeatLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.HeatedTube;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Sifter;
@@ -74,7 +75,6 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.PrototypePort;
 import com.Da_Technomancer.crossroads.blocks.technomancy.PrototypingTable;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneKeyboard;
 import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneRegistry;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SinAxis;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SquareRootAxis;
@@ -180,6 +180,7 @@ public final class ModBlocks{
 	public static ChemicalVent chemicalVent;
 	public static PortExtender portExtender;
 	public static ReactionChamber reactionChamber;
+	public static HeatLimiter heatLimiter;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -327,6 +328,7 @@ public final class ModBlocks{
 		chemicalVent = new ChemicalVent();
 		portExtender = new PortExtender();
 		reactionChamber = new ReactionChamber();
+		heatLimiter = new HeatLimiter();
 	}
 
 	@SideOnly(Side.CLIENT)

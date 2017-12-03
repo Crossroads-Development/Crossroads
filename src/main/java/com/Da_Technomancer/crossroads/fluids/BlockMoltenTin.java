@@ -42,7 +42,7 @@ public class BlockMoltenTin extends BlockFluidClassic{
 		private FluidMoltenTin(){
 			super("tin", new ResourceLocation(Main.MODID + ":blocks/moltentin_still"), new ResourceLocation(Main.MODID + ":blocks/moltentin_flow"));
 			setDensity(3000);
-			setTemperature(1500);
+			setTemperature(600);
 			setViscosity(1300);
 		}
 	}

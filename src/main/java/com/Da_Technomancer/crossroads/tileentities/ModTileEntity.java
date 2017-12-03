@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.ChemicalVentTileEntit
 import com.Da_Technomancer.crossroads.tileentities.alchemy.CoolingCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatedTubeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.SifterTileEntity;
@@ -71,7 +72,6 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypeTileEnti
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RateManipulatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SinAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.SquareRootAxisTileEntity;
@@ -162,6 +162,7 @@ public class ModTileEntity{
 		register(ChemicalVentTileEntity.class, "chemical_vent");
 		register(PortExtenderTileEntity.class, "port_extender");
 		register(ReactionChamberTileEntity.class, "reaction_chamber");
+		register(HeatLimiterTileEntity.class, "heat_limiter");
 	}
 
 	/**

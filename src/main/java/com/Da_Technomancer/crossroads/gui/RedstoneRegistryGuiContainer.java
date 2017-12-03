@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.gui.ButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.gui.OutputLogGuiObject;
 import com.Da_Technomancer.crossroads.API.gui.TextBarGuiObject;
+import com.Da_Technomancer.crossroads.API.gui.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleArrayToServer;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;
@@ -23,12 +24,18 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 	private final RedstoneRegistryTileEntity te;
 	private TextBarGuiObject textBar;
 	private OutputLogGuiObject log;
-	private ButtonGuiObject clear;
+	private ButtonGuiObject remove;
 	private ButtonGuiObject up;
 	private ButtonGuiObject down;
 	private ButtonGuiObject select;
 	private ButtonGuiObject add;
-	
+
+	private ButtonGuiObject clearButton;
+	private ToggleButtonGuiObject multButton;
+	private ToggleButtonGuiObject divButton;
+	private ButtonGuiObject piButton;
+	private ButtonGuiObject eulerButton;
+
 	private int index;
 	private double[] output;
 	private int focus;
@@ -39,7 +46,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		ySize = 120;
 		this.te = te;
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks){
 		drawDefaultBackground();
@@ -53,19 +60,25 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		index = te.getIndex();
 		focus = index;
 		output = Arrays.copyOf(te.getOutput(), te.getOutput().length);
-		
-		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 10, 90, 260, 25, null, (Character key) -> Character.isAlphabetic(key) || key == '.' || Character.isDigit(key));
-		textBar.setText(output[index] == Math.PI ? "PI" : doubleToString(output[index]));
-		
+
+		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 10, 90, 260, 25, null, (Character key) -> key == '.' || Character.isDigit(key));
+		textBar.setText(doubleToString(output[index]));
+
 		log = new OutputLogGuiObject((width - xSize) / 2, (height - ySize) / 2, 10, 10, 260, 3, 25);
-		log.addText(index + ": " + (output[index] == Math.PI ? "PI" : doubleToString(output[index])), Color.YELLOW);
+		log.addText(index + ": " + doubleToString(output[index]), Color.YELLOW);
 		updateLog();
-		
-		clear = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 290, 30, 20, "-");
+
+		remove = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 290, 30, 20, "-");
 		up = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 270, 10, 20, "▲");
 		down = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 270, 30, 20, "▼");
 		select = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 270, 50, 20, "#");
 		add = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 290, 10, 20, "+");
+
+		clearButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 10, 70, 20, "C");
+		multButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 30, 70, 20, "⨉");
+		divButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 50, 70, 20, "÷");
+		piButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 70, 70, 20, "π");
+		eulerButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 90, 70, 20, "e");
 	}
 
 	private static String doubleToString(double d){
@@ -73,9 +86,9 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		if(out.endsWith(".0")){
 			out = out.substring(0, out.length() - 2);
 		}
-		return d == Math.PI ? "PI" : out;
+		return out;
 	}
-	
+
 	@Override
 	public void onGuiClosed(){
 		super.onGuiClosed();
@@ -83,7 +96,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 	}
 
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/redstone_registry_gui.png");
-	
+
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1, 1, 1);
@@ -91,29 +104,41 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
 		drawModalRectWithCustomSizedTexture(i, j, 0, 0, xSize, ySize, 320, 120);
-		
+
 		textBar.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		log.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
-		clear.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		remove.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		up.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		down.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		select.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		add.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+
+		clearButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		multButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		divButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		piButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		eulerButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		textBar.drawFore(mouseX, mouseY, fontRenderer);
 		log.drawFore(mouseX, mouseY, fontRenderer);
-		clear.drawFore(mouseX, mouseY, fontRenderer);
+		remove.drawFore(mouseX, mouseY, fontRenderer);
 		up.drawFore(mouseX, mouseY, fontRenderer);
 		down.drawFore(mouseX, mouseY, fontRenderer);
 		select.drawFore(mouseX, mouseY, fontRenderer);
 		add.drawFore(mouseX, mouseY, fontRenderer);
+
+		clearButton.drawFore(mouseX, mouseY, fontRenderer);
+		multButton.drawFore(mouseX, mouseY, fontRenderer);
+		divButton.drawFore(mouseX, mouseY, fontRenderer);
+		piButton.drawFore(mouseX, mouseY, fontRenderer);
+		eulerButton.drawFore(mouseX, mouseY, fontRenderer);
 	}
 
 	private boolean wasBarSelected;
-	
+
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException {
 		super.mouseClicked(x, y, button);
@@ -127,7 +152,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		if(log.mouseClicked(x, y, button)){
 			return;
 		}
-		if(clear.mouseClicked(x, y, button)){
+		if(remove.mouseClicked(x, y, button)){
 			if(output.length == 1){
 				output[0] = 0;
 				updateLog();
@@ -169,7 +194,74 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 			}
 			return;
 		}
+
+		if(clearButton.mouseClicked(x, y, button)){
+			textBar.setText("0");
+			setIndexValue();
+		}else if(multButton.mouseClicked(x, y, button)){
+			if(multButton.isDepressed()){
+				if(divButton.isDepressed()){
+					divButton.setDepressed(false);
+					textBar.setText(Double.toString(prevValue));
+				}
+				try{
+					prevValue = Double.parseDouble(textBar.getText());
+				}catch(NumberFormatException e){
+					multButton.setDepressed(false);
+				}
+				textBar.setText("");
+			}else{
+				try{
+					double value = Double.parseDouble(textBar.getText());
+					if(!Double.isFinite(value)){
+						textBar.setText(Double.toString(prevValue));
+					}else{
+						value *= prevValue;
+						textBar.setText(Double.toString(value));
+						setIndexValue();
+					}
+				}catch(NumberFormatException e){
+					textBar.setText(Double.toString(prevValue));
+				}
+
+			}
+		}else if(divButton.mouseClicked(x, y, button)){
+			if(divButton.isDepressed()){
+				if(multButton.isDepressed()){
+					multButton.setDepressed(false);
+					textBar.setText(Double.toString(prevValue));
+				}
+				try{
+					prevValue = Double.parseDouble(textBar.getText());
+				}catch(NumberFormatException e){
+					divButton.setDepressed(false);
+				}
+				textBar.setText("");
+			}else{
+				try{
+					double value = Double.parseDouble(textBar.getText());
+					if(Math.abs(value) == 0 || !Double.isFinite(value)){
+						textBar.setText(Double.toString(prevValue));
+					}else{
+						value = prevValue / value;
+						textBar.setText(Double.toString(value));
+						setIndexValue();
+					}
+				}catch(NumberFormatException e){
+					textBar.setText(Double.toString(prevValue));
+				}
+
+			}
+		}else if(piButton.mouseClicked(x, y, button)){
+			textBar.setText(Double.toString(Math.PI));
+			setIndexValue();
+		}else if(eulerButton.mouseClicked(x, y, button)){
+			textBar.setText(Double.toString(Math.E));
+			setIndexValue();
+		}
 	}
+
+	double prevValue = 0;
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
@@ -200,7 +292,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		focus = Math.max(Math.min(focus, output.length - 1), 0);
 		log.clearLog();
 		index = Math.min(index, output.length - 1);
-		
+
 		for(int i = 0; i < 3; i++){
 			if(focus + i < output.length){
 				log.addText((focus + i) + ": " + doubleToString(output[focus + i]), focus + i == index ? Color.YELLOW : null);
@@ -208,19 +300,15 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		}
 		textBar.setText(doubleToString(output[focus]));
 	}
-	
+
 	private void setIndexValue(){
 		String heldText = textBar.getText();
 		double out = 0;
 		boolean errored = false;
-		if(heldText.toLowerCase().equals("pi")){
-			out = Math.PI;
-		}else{
-			try{
-				out = Double.parseDouble(heldText);
-			}catch(NumberFormatException e){
-				errored = true;
-			}
+		try{
+			out = Double.parseDouble(heldText);
+		}catch(NumberFormatException e){
+			errored = true;
 		}
 		if(!errored){
 			out = Math.abs(out);
@@ -228,7 +316,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		}
 		updateLog();
 	}
-	
+
 	private void setOutput(){
 		if(!output.equals(te.getOutput())){
 			te.setOutput(output);

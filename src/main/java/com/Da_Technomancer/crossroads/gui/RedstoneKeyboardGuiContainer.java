@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.gui.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToServer;
 import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneKeyboardTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 
@@ -54,7 +54,7 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 		if(out.endsWith(".0")){
 			out = out.substring(0, out.length() - 2);
 		}
-		return d == Math.PI ? "PI" : out;
+		return out;
 	}
 
 	@Override
@@ -91,7 +91,10 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 				textBar.setText("0");
 			}else if(multButton.mouseClicked(x, y, button)){
 				if(multButton.isDepressed()){
-					divButton.setDepressed(false);
+					if(divButton.isDepressed()){
+						divButton.setDepressed(false);
+						textBar.setText(Double.toString(prevValue));
+					}
 					try{
 						prevValue = Double.parseDouble(textBar.getText());
 					}catch(NumberFormatException e){
@@ -114,7 +117,10 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 				}
 			}else if(divButton.mouseClicked(x, y, button)){
 				if(divButton.isDepressed()){
-					multButton.setDepressed(false);
+					if(multButton.isDepressed()){
+						multButton.setDepressed(false);
+						textBar.setText(Double.toString(prevValue));
+					}
 					try{
 						prevValue = Double.parseDouble(textBar.getText());
 					}catch(NumberFormatException e){

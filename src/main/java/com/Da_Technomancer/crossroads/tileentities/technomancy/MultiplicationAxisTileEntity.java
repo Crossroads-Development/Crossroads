@@ -137,7 +137,7 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 		}
 		if(Math.abs(inOne - lastInOne) >= CLIENT_SPEED_MARGIN){
 			lastInOne = (float) inOne;
-			ModPackets.network.sendToAllAround(new SendSpinToClient(1, lastInOne, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendSpinToClient(0, lastInOne, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 		if(Math.abs(inTwo - lastInTwo) >= CLIENT_SPEED_MARGIN){
 			lastInTwo = (float) inTwo;

@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.tileentities.technomancy;
+package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;

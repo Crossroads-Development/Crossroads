@@ -32,6 +32,7 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/Chem
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/CoolingCoilTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/FlowLimiterTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/FluidInjectorTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/HeatLimiterTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/HeatedTubeTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/ReactionChamberTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/fluid/RadiatorTileEntity.java=UTF-8

@@ -13,7 +13,7 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.Ratiator;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -52,7 +52,7 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 	private void runCalc(){
 		double baseSpeed = 0;
 		for(EnumFacing side : EnumFacing.values()){
-			baseSpeed = Math.max(ModBlocks.ratiator.getPowerOnSide(world, pos, side, false), baseSpeed);
+			baseSpeed = Math.max(Ratiator.getPowerOnSide(world, pos, side, false), baseSpeed);
 		}
 
 		double sumIRot = 0;
