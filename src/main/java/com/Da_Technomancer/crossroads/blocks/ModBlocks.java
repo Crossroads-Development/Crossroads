@@ -7,12 +7,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemicalTube;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ChemicalVent;
 import com.Da_Technomancer.crossroads.blocks.alchemy.CoolingCoil;
+import com.Da_Technomancer.crossroads.blocks.alchemy.Dynamo;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FlowLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FluidInjector;
 import com.Da_Technomancer.crossroads.blocks.alchemy.HeatLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.HeatedTube;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Sifter;
+import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoil;
+import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
 import com.Da_Technomancer.crossroads.blocks.fluid.FatCongealer;
@@ -181,6 +184,9 @@ public final class ModBlocks{
 	public static PortExtender portExtender;
 	public static ReactionChamber reactionChamber;
 	public static HeatLimiter heatLimiter;
+	public static Dynamo dynamo;
+	public static TeslaCoil teslaCoil;
+	public static TeslaCoilTop teslaCoilTop;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -329,6 +335,9 @@ public final class ModBlocks{
 		portExtender = new PortExtender();
 		reactionChamber = new ReactionChamber();
 		heatLimiter = new HeatLimiter();
+		dynamo = new Dynamo();
+		teslaCoil = new TeslaCoil();
+		teslaCoilTop = new TeslaCoilTop();
 	}
 
 	@SideOnly(Side.CLIENT)

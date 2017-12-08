@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
 import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
 import com.Da_Technomancer.crossroads.tileentities.SlottedChestTileEntity;
 
@@ -21,6 +22,7 @@ import net.minecraft.world.World;
 public class SafeCallable{
 
 	public static final ArrayList<LooseBeamRenderable> beamsToRender = new ArrayList<LooseBeamRenderable>();
+	public static final ArrayList<LooseArcRenderable> arcsToRender = new ArrayList<LooseArcRenderable>();
 	
 	protected static final Method printChatNoLog;
 

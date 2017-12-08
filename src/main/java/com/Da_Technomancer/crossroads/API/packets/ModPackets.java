@@ -33,5 +33,6 @@ public class ModPackets{
 		network.registerMessage(SendDoubleArrayToServer.class, SendDoubleArrayToServer.class, packetId++, Side.SERVER);
 		network.registerMessage(SendDoubleArrayToClient.class, SendDoubleArrayToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendSpinToClient.class, SendSpinToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendLooseArcToClient.class, SendLooseArcToClient.class, packetId++, Side.CLIENT);
 	}
 }

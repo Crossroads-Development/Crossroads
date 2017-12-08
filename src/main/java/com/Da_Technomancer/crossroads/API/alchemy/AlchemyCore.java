@@ -15,6 +15,9 @@ import com.Da_Technomancer.crossroads.API.effects.alchemy.ChlorineAlchemyEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.SaltAlchemyEffect;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
+import com.Da_Technomancer.crossroads.fluids.BlockMoltenGold;
+import com.Da_Technomancer.crossroads.fluids.BlockMoltenIron;
+import com.Da_Technomancer.crossroads.fluids.BlockMoltenTin;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
@@ -87,10 +90,15 @@ public final class AlchemyCore{
 		REAGENTS[21] = new SimpleReagentType("Chlorine", -100D, -35D, 21, (EnumMatterPhase phase) -> TRANSLUCENT_LIME_COLOR, null, 1, true, 0, SolventType.NON_POLAR, SolventType.NON_POLAR, 0, new ChlorineAlchemyEffect());
 		REAGENTS[22] = new SimpleReagentType("Alchemical Crystal", Short.MAX_VALUE - 1, Short.MAX_VALUE, 22, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, ModItems.alchCrystal, 1, true, 0, null, null, 0, null);
 		REAGENTS[23] = new SimpleReagentType("Copper", 1000D, 2560D, 23, (EnumMatterPhase phase) -> Color.ORANGE, OreSetup.nuggetCopper, 16, true, 0, null, null, 0, null);
+		REAGENTS[24] = new SimpleReagentType("Iron", 1500D, 2560D, 24, (EnumMatterPhase phase) -> phase == EnumMatterPhase.SOLID ? Color.GRAY : Color.RED, Items.IRON_NUGGET, 16, true, 0, null, null, 0, null);
+		REAGENTS[25] = new SimpleReagentType("Tin", 230D, 2560D, 25, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, OreSetup.nuggetTin, 16, true, 0, null, null, 0, null);
 		
 		FLUID_TO_LIQREAGENT.put(BlockDistilledWater.getDistilledWater(), REAGENTS[4]);
 		FLUID_TO_LIQREAGENT.put(BlockMoltenCopper.getMoltenCopper(), REAGENTS[23]);
 		FLUID_TO_GASREAGENT.put(BlockSteam.getSteam(), REAGENTS[4]);
+		FLUID_TO_LIQREAGENT.put(BlockMoltenIron.getMoltenIron(), REAGENTS[24]);
+		FLUID_TO_LIQREAGENT.put(BlockMoltenTin.getMoltenTin(), REAGENTS[25]);
+		FLUID_TO_LIQREAGENT.put(BlockMoltenGold.getMoltenGold(), REAGENTS[14]);
 		
 		// Reactions
 		// Sulfur combustion.
@@ -126,7 +134,7 @@ public final class AlchemyCore{
 		//Aqua Regia production
 		BASE_REACTIONS.add(new SimpleReaction(0.015625D, -300D, -300D, null, false, Triple.of(REAGENTS[5], 1D, true), Triple.of(REAGENTS[15], 3D, true), null, Pair.of(REAGENTS[11], 4D), null, null));
 		//Chlorine gas production
-		BASE_REACTIONS.add(new SimpleReaction(0D, 100D, 600D, null, true, Triple.of(REAGENTS[6], 2D, true), Triple.of(REAGENTS[4], 2D, false), null, Pair.of(REAGENTS[21], 1D), Pair.of(REAGENTS[16], 2D), null));	
+		BASE_REACTIONS.add(new SimpleReaction(0D, 100D, 600D, null, true, Triple.of(REAGENTS[6], 2D, false), Triple.of(REAGENTS[4], 2D, false), null, Pair.of(REAGENTS[21], 1D), Pair.of(REAGENTS[16], 2D), null));	
 		//Adamant production
 		BASE_REACTIONS.add(new SimpleReaction(0D, 100D, 600D, null, false, Triple.of(REAGENTS[20], 5D, true), null, null, Pair.of(REAGENTS[2], 1D), Pair.of(REAGENTS[6], 4D), null));
 		//Philosopher's Stone creation

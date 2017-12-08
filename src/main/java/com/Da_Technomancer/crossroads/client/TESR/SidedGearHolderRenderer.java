@@ -20,7 +20,6 @@ public class SidedGearHolderRenderer extends TileEntitySpecialRenderer<SidedGear
 
 	@Override
 	public void render(SidedGearHolderTileEntity gearHolder, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-
 		if(!gearHolder.getWorld().isBlockLoaded(gearHolder.getPos(), false)){
 			return;
 		}

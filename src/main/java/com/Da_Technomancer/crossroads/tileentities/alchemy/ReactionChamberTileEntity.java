@@ -26,7 +26,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -34,7 +37,9 @@ public class ReactionChamberTileEntity extends AbstractAlchemyReactorTE{
 
 	private double cableTemp = 0;
 	private boolean init = false;
-
+	private int energy = 0;
+	private static final int ENERGY_CAPACITY = 1000;
+	
 	/**
 	 * @param chat Add info to this list, 1 line per entry. 
 	 * @param device The device type calling this method. 
@@ -43,8 +48,13 @@ public class ReactionChamberTileEntity extends AbstractAlchemyReactorTE{
 	 */
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
+		if(device == ModItems.omnimeter || device == EnumGoggleLenses.RUBY){
 			chat.add("Temp: " + cableTemp + "°C");
+		}		
+		if(device == ModItems.omnimeter || device == EnumGoggleLenses.EMERALD){
+			chat.add("Energy: " + energy + "/" + ENERGY_CAPACITY + "FE");
+		}
+		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
 			if(amount == 0){
 				chat.add("No reagents");
 			}
@@ -73,8 +83,15 @@ public class ReactionChamberTileEntity extends AbstractAlchemyReactorTE{
 			cableTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
+		
+		energy = Math.max(0, energy - 10);
 
 		super.update();
+	}
+	
+	@Override
+	public boolean isCharged(){
+		return energy > 0;
 	}
 	
 	@Override
@@ -116,6 +133,7 @@ public class ReactionChamberTileEntity extends AbstractAlchemyReactorTE{
 		super.readFromNBT(nbt);
 		cableTemp = nbt.getDouble("temp");
 		init = nbt.getBoolean("init");
+		energy = nbt.getInteger("ener");
 	}
 
 	@Override
@@ -123,6 +141,7 @@ public class ReactionChamberTileEntity extends AbstractAlchemyReactorTE{
 		super.writeToNBT(nbt);
 		nbt.setDouble("temp", cableTemp);
 		nbt.setBoolean("init", init);
+		nbt.setInteger("ener", energy);
 		return nbt;
 	}
 
@@ -135,6 +154,9 @@ public class ReactionChamberTileEntity extends AbstractAlchemyReactorTE{
 			return true;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return true;
+		}
+		if(cap == CapabilityEnergy.ENERGY && (side == null || side.getAxis() != Axis.Y)){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -152,12 +174,56 @@ public class ReactionChamberTileEntity extends AbstractAlchemyReactorTE{
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}
+		if(cap == CapabilityEnergy.ENERGY && (side == null || side.getAxis() != Axis.Y)){
+			return (T) energyHandler;
+		}
 		return super.getCapability(cap, side);
 	}
 
 	private final HeatHandler heatHandler = new HeatHandler();
 	private final ItemHandler itemHandler = new ItemHandler();
+	private final EnergyHandler energyHandler  = new EnergyHandler();
 
+	private class EnergyHandler implements IEnergyStorage{
+
+		@Override
+		public int receiveEnergy(int maxReceive, boolean simulate){
+			int toMove = Math.min(ENERGY_CAPACITY - energy, maxReceive);
+			
+			if(!simulate && toMove > 0){
+				energy += toMove;
+				markDirty();
+			}			
+			
+			return toMove;
+		}
+
+		@Override
+		public int extractEnergy(int maxExtract, boolean simulate){
+			return 0;
+		}
+
+		@Override
+		public int getEnergyStored(){
+			return energy;
+		}
+
+		@Override
+		public int getMaxEnergyStored(){
+			return ENERGY_CAPACITY;
+		}
+
+		@Override
+		public boolean canExtract(){
+			return false;
+		}
+
+		@Override
+		public boolean canReceive(){
+			return true;
+		}
+	}
+	
 	private class ItemHandler implements IItemHandler{
 
 		private ItemStack[] fakeInventory = new ItemStack[AlchemyCore.ITEM_TO_REAGENT.size()];

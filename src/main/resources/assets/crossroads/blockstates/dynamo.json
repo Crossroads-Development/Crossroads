@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"horiz_facing=north": { "model": "crossroads:dynamo", "y": 180 },
+		"horiz_facing=south": { "model": "crossroads:dynamo"},
+		"horiz_facing=east": { "model": "crossroads:dynamo", "y": 270 },
+		"horiz_facing=west": { "model": "crossroads:dynamo", "y": 90 }
+	}
+}

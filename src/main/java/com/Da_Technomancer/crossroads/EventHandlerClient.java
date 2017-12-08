@@ -2,13 +2,15 @@ package com.Da_Technomancer.crossroads;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
-import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.technomancy.MagicUsingItem;
@@ -27,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -39,11 +42,13 @@ public final class EventHandlerClient{
 
 	private static final ResourceLocation TEXTURE_FIELDS = new ResourceLocation(Main.MODID, "textures/gui/field.png");
 
+	private static final Random RAND = new Random();
+
 	@SubscribeEvent
 	public void drawFieldsAndBeams(RenderWorldLastEvent e){
 		Minecraft game = Minecraft.getMinecraft();
 		ItemStack helmet = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		
+
 		//Goggle entity glowing
 		if(game.world.getTotalWorldTime() % 5 == 0){
 			boolean glow = helmet != null && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().hasKey(EnumGoggleLenses.VOID.name());
@@ -64,7 +69,7 @@ public final class EventHandlerClient{
 				}
 			}
 		}
-		
+
 		//Fields
 		if(helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound()){
 			game.mcProfiler.startSection(Main.MODNAME + ": Field Render");
@@ -141,6 +146,8 @@ public final class EventHandlerClient{
 
 		//Loose beams
 		if(!SafeCallable.beamsToRender.isEmpty()){
+			game.mcProfiler.startSection(Main.MODNAME + ": Loose beam render");
+
 			GlStateManager.disableLighting();
 			GlStateManager.disableCull();
 			float brightX = OpenGlHelper.lastBrightnessX;
@@ -205,6 +212,123 @@ public final class EventHandlerClient{
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 			GlStateManager.enableCull();
 			GlStateManager.enableLighting();
+
+			game.mcProfiler.endSection();
+		}
+
+		//Lightning arcs
+		if(!SafeCallable.arcsToRender.isEmpty()){
+			game.mcProfiler.startSection(Main.MODNAME + ": Lightning arc render");
+
+			GlStateManager.enableBlend();
+			GlStateManager.disableLighting();
+			GlStateManager.disableCull();
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			GlStateManager.disableTexture2D();
+			float brightX = OpenGlHelper.lastBrightnessX;
+			float brightY = OpenGlHelper.lastBrightnessY;
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+
+			ArrayList<LooseArcRenderable> toRemove = new ArrayList<LooseArcRenderable>();
+
+			final float arcWidth = 0.05F;
+
+			for(LooseArcRenderable arc : SafeCallable.arcsToRender){
+				GlStateManager.pushMatrix();
+				GlStateManager.pushAttrib();
+				Color col = new Color(arc.color, true);
+				GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, col.getAlpha() / 255F);
+				GlStateManager.translate(-game.player.posX, -game.player.posY, -game.player.posZ);
+				Tessellator tes = Tessellator.getInstance();
+				BufferBuilder buf = tes.getBuffer();
+				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+
+				float distance = (float) Math.sqrt(Math.pow(arc.xEn - arc.xSt, 2D) + Math.pow(arc.yEn - arc.ySt, 2D) + Math.pow(arc.zEn - arc.zSt, 2D));
+
+				boolean invalidState = false;
+
+				if(arc.lastTick != game.world.getTotalWorldTime()){
+					invalidState = (game.world.getTotalWorldTime() % 5 == 0) || (arc.lastTick < 0);//TODO
+					arc.lastTick = game.world.getTotalWorldTime();
+					if(arc.lifeTime-- < 0){
+						toRemove.add(arc);
+					}
+				}
+
+				int diverged = (int) (arc.diffusionRate * arc.count);
+
+				for(int i = 0; i < arc.count - diverged; i++){
+					Vec3d prev = new Vec3d(arc.xSt, arc.ySt, arc.zSt);
+					for(int node = 0; node < (int) distance - 1; node++){
+						Vec3d next = arc.states[i][node];
+
+
+						if(invalidState){
+							next = new Vec3d(arc.xSt + (arc.xEn - arc.xSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.ySt + (arc.yEn - arc.ySt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.zSt + (arc.zEn - arc.zSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F);
+							arc.states[i][node] = next;
+						}
+
+						Vec3d vec = new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(next.x - game.player.posX, next.y - game.player.posY, next.z - game.player.posZ));
+						vec = vec.normalize();
+						vec = vec.scale(arcWidth / 2F);
+
+						buf.pos(next.x - vec.x, next.y - vec.y, next.z - vec.z).endVertex();
+						buf.pos(next.x + vec.x, next.y + vec.y, next.z + vec.z).endVertex();
+						buf.pos(prev.x + vec.x, prev.y + vec.y, prev.z + vec.z).endVertex();
+						buf.pos(prev.x - vec.x, prev.y - vec.y, prev.z - vec.z).endVertex();
+
+						prev = next;
+					}
+
+					Vec3d normal = new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(arc.xEn - game.player.posX, arc.yEn - game.player.posY, arc.zEn - game.player.posZ));
+					normal = normal.normalize().scale(arcWidth / 2F);
+
+					buf.pos(arc.xEn - normal.x, arc.yEn - normal.y, arc.zEn - normal.z).endVertex();
+					buf.pos(arc.xEn + normal.x, arc.yEn + normal.y, arc.zEn + normal.z).endVertex();
+					buf.pos(prev.x + normal.x, prev.y + normal.y, prev.z + normal.z).endVertex();
+					buf.pos(prev.x - normal.x, prev.y - normal.y, prev.z - normal.z).endVertex();
+				}
+
+				for(int i = arc.count - diverged; i < arc.count; i++){
+					Vec3d prev = new Vec3d(arc.xSt, arc.ySt, arc.zSt);
+					for(int node = 0; node < (int) distance - 1; node++){
+						Vec3d next = arc.states[i][node];
+
+						if(invalidState){
+							next = new Vec3d(prev.x + (arc.xEn - arc.xSt) * (RAND.nextFloat() * 0.2F - .05F) + RAND.nextFloat() * 0.5 - .25F, prev.y + (arc.yEn - arc.ySt) * (RAND.nextFloat() * .2F - .05F) + RAND.nextFloat() * 0.5 - .25F, prev.z + (arc.zEn - arc.zSt) * (RAND.nextFloat() * .2F - .05F) + RAND.nextFloat() * 0.5 - .25F);
+							arc.states[i][node] = next;
+						}
+
+						Vec3d vec = new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(next.x - game.player.posX, next.y - game.player.posY, next.z - game.player.posZ));
+						vec = vec.normalize();
+						vec = vec.scale(arcWidth / 2F);
+
+						buf.pos(next.x - vec.x, next.y - vec.y, next.z - vec.z).endVertex();
+						buf.pos(next.x + vec.x, next.y + vec.y, next.z + vec.z).endVertex();
+						buf.pos(prev.x + vec.x, prev.y + vec.y, prev.z + vec.z).endVertex();
+						buf.pos(prev.x - vec.x, prev.y - vec.y, prev.z - vec.z).endVertex();
+
+						prev = next;
+					}
+				}
+
+				tes.draw();
+				GlStateManager.color(1, 1, 1);
+				GlStateManager.popAttrib();
+				GlStateManager.popMatrix();
+			}
+
+			for(LooseArcRenderable arc : toRemove){
+				SafeCallable.arcsToRender.remove(arc);
+			}
+
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+			GlStateManager.enableTexture2D();
+			GlStateManager.enableCull();
+			GlStateManager.disableBlend();
+			GlStateManager.enableLighting();
+
+			game.mcProfiler.endSection();
 		}
 	}
 

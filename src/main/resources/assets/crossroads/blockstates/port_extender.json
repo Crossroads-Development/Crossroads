@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:port_extender", "x": 90},
+		"facing=south": { "model": "crossroads:port_extender", "x": 270 },
+		"facing=east": { "model": "crossroads:port_extender", "x": 90, "y": 90 },
+		"facing=west": { "model": "crossroads:port_extender", "x": 270, "y": 90 },
+		"facing=up": { "model": "crossroads:port_extender"},
+		"facing=down": { "model": "crossroads:port_extender", "x": 180 }
+	}
+}

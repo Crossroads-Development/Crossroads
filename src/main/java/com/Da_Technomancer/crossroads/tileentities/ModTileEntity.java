@@ -1,16 +1,17 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.alchemy.AbstractTransmutationBlock;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ChemicalVentTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.CoolingCoilTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatedTubeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.SifterTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.BasicFluidSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
@@ -152,7 +153,6 @@ public class ModTileEntity{
 		registerOld(PrototypePortTileEntity.class, "prototype_port");
 		register(MechanicalArmTileEntity.class, "mechanical_arm");
 		register(RedstoneRegistryTileEntity.class, "redstone_registry");
-		register(AbstractTransmutationBlock.TransmutationTileEntity.class, "transmutation_site");
 		register(SifterTileEntity.class, "sifter");
 		register(AlchemicalTubeTileEntity.class, "alchemical_tube");
 		register(FluidInjectorTileEntity.class, "fluid_injector");
@@ -163,6 +163,8 @@ public class ModTileEntity{
 		register(PortExtenderTileEntity.class, "port_extender");
 		register(ReactionChamberTileEntity.class, "reaction_chamber");
 		register(HeatLimiterTileEntity.class, "heat_limiter");
+		register(DynamoTileEntity.class, "dynamo");
+		register(TeslaCoilTileEntity.class, "tesla_coil");
 	}
 
 	/**

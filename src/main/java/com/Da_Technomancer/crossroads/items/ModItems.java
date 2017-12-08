@@ -11,6 +11,8 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
+import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
+import com.Da_Technomancer.crossroads.items.alchemy.LiechWrench;
 import com.Da_Technomancer.crossroads.items.alchemy.PhilStone;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
@@ -27,8 +29,8 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -98,6 +100,8 @@ public final class ModItems{
 	public static BasicItem wasteSalt;
 	public static FlorenceFlask florenceFlask;
 	public static BasicItem wrench;
+	public static LiechWrench liechWrench;
+	public static LeydenJar leydenJar;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -164,6 +168,8 @@ public final class ModItems{
 				}
 			};
 		}
+		liechWrench = new LiechWrench();
+		leydenJar = new LeydenJar();
 	}
 
 	@SideOnly(Side.CLIENT)

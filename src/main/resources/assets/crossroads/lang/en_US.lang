@@ -225,6 +225,12 @@ tile.reaction_chamber_cryst.name=Crystal Reaction Chamber
 fluid.tin=Molten Tin
 fluid.gold=Molten Gold
 fluid.iron=Molten Iron
+item.liech_wrench.name=Liechtensteinian Army Wrench
+item.leyden_jar.name=Leyden Jar
+tile.tesla_coil.name=Tesla Coil
+tile.tesla_coil_top.name=Tesla Coil Top
+tile.heat_limiter.name=Heat Limiter
+tile.dynamo.name=Dynamo
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ
