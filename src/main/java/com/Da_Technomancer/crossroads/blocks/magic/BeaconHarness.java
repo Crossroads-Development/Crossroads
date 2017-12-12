@@ -1,5 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.magic;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -9,10 +13,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BeaconHarness extends BlockContainer{
 
@@ -61,5 +69,11 @@ public class BeaconHarness extends BlockContainer{
 	@Override
 	public int getLightOpacity(IBlockState state){
 		return 15;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		tooltip.add("It's balanced, because it requires nether stars.");
 	}
 }

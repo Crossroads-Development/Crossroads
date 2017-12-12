@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"light=false": { "model": "crossroads:reagent_tank_glass" },
+		"light=true": { "model": "crossroads:reagent_tank_cryst" }
+	}
+}

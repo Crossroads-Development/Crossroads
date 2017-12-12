@@ -205,7 +205,6 @@ item.prac_stone.name=Practitioner's Stone
 item.alch_crystal.name=Alchemical Crystal
 item.waste_salt.name=Waste Salt
 tile.sifter.name=Sifter
-item.florence_flask.name=Florence Flask
 item.wrench.name=Wrench
 tile.alch_tube.name=Alchemical Tube
 tile.alch_tube_glass.name=Glass Alchemical Tube
@@ -231,6 +230,14 @@ tile.tesla_coil.name=Tesla Coil
 tile.tesla_coil_top.name=Tesla Coil Top
 tile.heat_limiter.name=Heat Limiter
 tile.dynamo.name=Dynamo
+tile.reagent_tank_glass.name=Glass Reagent Tank
+tile.reagent_tank_cryst.name=Crystal Reagent Tank
+tile.reagent_pump_glass.name=Glass Reagent Pump
+tile.reagent_pump_cryst.name=Crystal Reagent Pump
+tile.maxwell_demon.name=Maxwell's Demon
+item.phial.name=Phial
+item.phial_glass.name=Glass Phial
+item.phial_cryst.name=Crystal Phial
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

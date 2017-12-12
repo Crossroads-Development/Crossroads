@@ -30,7 +30,7 @@ public class DefaultChemicalHandler implements IChemicalHandler{
 	}
 
 	@Override
-	public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller){
+	public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
 		return false;
 	}
 

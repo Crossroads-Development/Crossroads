@@ -1,0 +1,22 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "crossroads:blocks/reag_pump_cryst",
+		"side": "crossroads:blocks/reag_pump_cryst",
+		"end": "crossroads:blocks/block_alch_crystal"
+	},
+	"elements": [
+	             {
+	            	 "from": [ 0, 0.0, 0.0 ], 
+	            	 "to": [ 16.0, 16.0, 16.0 ], 
+	            	 "faces": {
+	            		 "north": { "texture": "#side", "uv": [ 0, 0, 16, 16 ] },
+	            		 "east": { "texture": "#side", "uv": [ 0, 0, 16, 16 ] },
+	            		 "south": { "texture": "#side", "uv": [ 0, 0, 16, 16 ] },
+	            		 "west": { "texture": "#side", "uv": [ 0, 0, 16, 16 ] },
+	            		 "up": { "texture": "#end", "uv": [ 0, 0, 16, 16 ], "cullface": "up" },
+	            		 "down": { "texture": "#end", "uv": [ 0, 0, 16, 16 ], "cullface": "down" }
+	            	 }
+	             }
+	             ]
+}

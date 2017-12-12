@@ -41,7 +41,18 @@ public interface IChemicalHandler{
 	 * @param caller An IChemicalHandler calling this for transferring heat. If null, this acts as if the transferred reagent is 20*C and no heat will be removed from the source. 
 	 * @return Whether anything in reag was changed. 
 	 */
-	public boolean insertReagents(ReagentStack[] reag, EnumFacing side, @Nullable IChemicalHandler caller);
+	public default boolean insertReagents(ReagentStack[] reag, EnumFacing side, @Nullable IChemicalHandler caller){
+		return insertReagents(reag, side, caller, false);
+	}
+	
+	/**
+	 * @param reag A standard reagent storage array. Moved reagents will be taken from it directly, so it should be mutable and write back to the caller.
+	 * @param side The side this is calling (for programming convenience). 
+	 * @param caller An IChemicalHandler calling this for transferring heat. If null, this acts as if the transferred reagent is 20*C and no heat will be removed from the source. 
+	 * @param ignorePhase If true, ignore phase movement rules. 
+	 * @return Whether anything in reag was changed. 
+	 */
+	public boolean insertReagents(ReagentStack[] reag, EnumFacing side, @Nullable IChemicalHandler caller, boolean ignorePhase);
 	
 	@Nonnull
 	public EnumTransferMode getMode(EnumFacing side);

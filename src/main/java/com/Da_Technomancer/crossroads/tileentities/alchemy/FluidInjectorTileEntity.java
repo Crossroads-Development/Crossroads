@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import java.util.Map;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.alchemy.AbstractAlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
@@ -92,7 +93,7 @@ public class FluidInjectorTileEntity extends AbstractAlchemyCarrierTE{
 
 	private class AlchHandlerInjector extends AlchHandler{
 		@Override
-		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller){
+		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
 			double space = getTransferCapacity() - amount;
 			if(space <= 0){
 				return false;
@@ -103,7 +104,7 @@ public class FluidInjectorTileEntity extends AbstractAlchemyCarrierTE{
 				ReagentStack r = reag[i];
 				if(r != null){
 					EnumMatterPhase phase = r.getPhase(0);
-					if(phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp())){
+					if(ignorePhase || (phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp()))){
 						double moved = Math.min(space, r.getAmount());
 						if(moved <= 0D){
 							continue;
@@ -161,7 +162,13 @@ public class FluidInjectorTileEntity extends AbstractAlchemyCarrierTE{
 							contents[typ.getIndex()].increaseAmount(reagToFill);
 						}
 						amount += reagToFill;
-						heat += reagToFill * (double) resource.getFluid().getTemperature();
+						double envTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						if(typ.getBoilingPoint() <= envTemp || typ.getMeltingPoint() > envTemp){
+							envTemp = (double) resource.getFluid().getTemperature();
+						}else{
+							envTemp += 273D;
+						}
+						heat += reagToFill * envTemp;
 						dirtyReag = true;
 						markDirty();
 					}
@@ -251,7 +258,13 @@ public class FluidInjectorTileEntity extends AbstractAlchemyCarrierTE{
 							contents[typ.getIndex()].increaseAmount(reagToFill);
 						}
 						amount += reagToFill;
-						heat += reagToFill * (double) resource.getFluid().getTemperature();
+						double envTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						if(typ.getBoilingPoint() > envTemp){
+							envTemp = (double) resource.getFluid().getTemperature();
+						}else{
+							envTemp += 273D;
+						}
+						heat += reagToFill * envTemp;
 						dirtyReag = true;
 						markDirty();
 					}

@@ -10,9 +10,9 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
-import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
 import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
 import com.Da_Technomancer.crossroads.items.alchemy.LiechWrench;
+import com.Da_Technomancer.crossroads.items.alchemy.Phial;
 import com.Da_Technomancer.crossroads.items.alchemy.PhilStone;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
@@ -98,7 +98,7 @@ public final class ModItems{
 	public static BasicItem practitionerStone;
 	public static BasicItem alchCrystal;
 	public static BasicItem wasteSalt;
-	public static FlorenceFlask florenceFlask;
+	public static Phial phial;
 	public static BasicItem wrench;
 	public static LiechWrench liechWrench;
 	public static LeydenJar leydenJar;
@@ -159,7 +159,7 @@ public final class ModItems{
 		practitionerStone = new BasicItem("prac_stone");
 		alchCrystal = new BasicItem("alch_crystal");
 		wasteSalt = new BasicItem("waste_salt");
-		florenceFlask = new FlorenceFlask();
+		phial = new Phial();
 		if(ModConfig.getConfigBool(ModConfig.addWrench, false)){
 			wrench = new BasicItem("wrench"){
 				@Override

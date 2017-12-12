@@ -71,14 +71,14 @@ public class ChemicalVentTileEntity extends TileEntity{
 		}
 
 		@Override
-		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller){
+		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
 			double callerTemp = caller == null ? 293 : caller.getTemp() + 273D;
 			boolean changed = false;
 			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 				ReagentStack r = reag[i];
 				if(r != null){
 					EnumMatterPhase phase = r.getPhase(callerTemp - 273D);
-					if(phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp())){
+					if(ignorePhase || (phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp()))){
 						double moved = r.getAmount();
 						if(moved <= 0D){
 							continue;

@@ -1,5 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -9,14 +13,18 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SlottedChest extends BlockContainer{
 
@@ -55,5 +63,11 @@ public class SlottedChest extends BlockContainer{
 			playerIn.openGui(Main.instance, GuiHandler.SLOTTEDCHEST_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		tooltip.add("The partitions make it bigger somehow.");
 	}
 }

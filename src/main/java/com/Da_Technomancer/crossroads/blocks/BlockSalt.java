@@ -1,7 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import java.awt.Color;
+import java.util.List;
 import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -14,6 +17,7 @@ import net.minecraft.block.BlockVine;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -82,5 +86,11 @@ public class BlockSalt extends BlockFalling{
 	@Override
 	public int getDustColor(IBlockState state){
 		return Color.WHITE.getRGB();
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		tooltip.add("Plants are overrated.");
 	}
 }

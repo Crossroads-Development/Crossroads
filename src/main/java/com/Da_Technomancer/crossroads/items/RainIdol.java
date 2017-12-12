@@ -36,6 +36,7 @@ public class RainIdol extends Item{
 		if(!ModConfig.getConfigBool(ModConfig.weatherControl, true)){
 			tooltip.add("This item has been disabled in the config. It does nothing.");
 		}
+		tooltip.add("Have you heard the word of our lord and saviour, this blue rock with rain powers?");
 	}
 
 	@Override

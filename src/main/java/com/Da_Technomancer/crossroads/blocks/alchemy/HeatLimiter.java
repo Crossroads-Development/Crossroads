@@ -24,13 +24,13 @@ import net.minecraft.world.World;
 public class HeatLimiter extends BlockContainer{
 
 	public HeatLimiter(){
-		super(Material.GLASS);
+		super(Material.IRON);
 		String name = "heat_limiter";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.tabCrossroads);
-		setSoundType(SoundType.GLASS);
+		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
 	}

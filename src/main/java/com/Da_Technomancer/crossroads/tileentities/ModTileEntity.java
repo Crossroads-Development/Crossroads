@@ -9,7 +9,10 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatedTubeTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.MaxwellDemonTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentPumpTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentTankTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.SifterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.BasicFluidSplitterTileEntity;
@@ -165,6 +168,9 @@ public class ModTileEntity{
 		register(HeatLimiterTileEntity.class, "heat_limiter");
 		register(DynamoTileEntity.class, "dynamo");
 		register(TeslaCoilTileEntity.class, "tesla_coil");
+		register(ReagentTankTileEntity.class, "reagent_tank");
+		register(ReagentPumpTileEntity.class, "reagent_pump");
+		register(MaxwellDemonTileEntity.class, "maxwell_demon");
 	}
 
 	/**

@@ -208,17 +208,17 @@ public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITi
 	protected void performTransfer(){
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
-			if(modes[i] == EnumTransferMode.OUTPUT){
+			if(modes[i].isOutput()){
 				EnumFacing side = EnumFacing.getFront(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
 				if(amount <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
-					return;
+					continue;
 				}
 
 				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 				if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
-					return;
+					continue;
 				}
 
 				if(amount != 0){
@@ -295,8 +295,8 @@ public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITi
 		}
 
 		@Override
-		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller){
-			if(getMode(side) == EnumTransferMode.INPUT){
+		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
+			if(getMode(side).isInput()){
 				double space = getTransferCapacity() - amount;
 				if(space <= 0){
 					return false;
@@ -310,8 +310,8 @@ public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITi
 				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 					ReagentStack r = reag[i];
 					if(r != null){
-						EnumMatterPhase phase = r.getPhase(0);
-						if(phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp())){
+						EnumMatterPhase phase = r.getPhase(callerTemp - 273D);
+						if(ignorePhase || (phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp()))){
 							validIds.add(i);
 							totalValid += r.getAmount();
 						}

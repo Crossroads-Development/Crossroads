@@ -60,5 +60,6 @@ public class SaltReactor extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Removes: 5°C/t while active");
+		tooltip.add("Nothing actually reacts, what makes it a reactor?");
 	}
 }

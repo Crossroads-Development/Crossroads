@@ -12,7 +12,10 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.FlowLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FluidInjector;
 import com.Da_Technomancer.crossroads.blocks.alchemy.HeatLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.HeatedTube;
+import com.Da_Technomancer.crossroads.blocks.alchemy.MaxwellDemon;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
+import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentPump;
+import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentTank;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Sifter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoil;
 import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoilTop;
@@ -187,6 +190,9 @@ public final class ModBlocks{
 	public static Dynamo dynamo;
 	public static TeslaCoil teslaCoil;
 	public static TeslaCoilTop teslaCoilTop;
+	public static ReagentTank reagentTank;
+	public static ReagentPump reagentPump;
+	public static MaxwellDemon maxwellDemon;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -338,6 +344,9 @@ public final class ModBlocks{
 		dynamo = new Dynamo();
 		teslaCoil = new TeslaCoil();
 		teslaCoilTop = new TeslaCoilTop();
+		reagentTank = new ReagentTank();
+		reagentPump = new ReagentPump();
+		maxwellDemon = new MaxwellDemon();
 	}
 
 	@SideOnly(Side.CLIENT)
