@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.alchemy.AbstractAlchemyCarrierTE;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class ReagentTankTileEntity extends AbstractAlchemyCarrierTE{
+public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	public ReagentTankTileEntity(){
 		super();

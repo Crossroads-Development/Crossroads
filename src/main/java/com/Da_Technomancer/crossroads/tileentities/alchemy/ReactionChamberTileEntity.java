@@ -11,7 +11,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.alchemy.AbstractAlchemyReactorTE;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyReactorTE;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
@@ -33,7 +33,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class ReactionChamberTileEntity extends AbstractAlchemyReactorTE{
+public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	private double cableTemp = 0;
 	private boolean init = false;

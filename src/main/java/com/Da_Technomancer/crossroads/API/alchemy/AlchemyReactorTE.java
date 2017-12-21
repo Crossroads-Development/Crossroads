@@ -7,13 +7,13 @@ import net.minecraft.world.WorldServer;
 /**
  * Implementations must implement hasCapability and getCapability directly. 
  */
-public abstract class AbstractAlchemyReactorTE extends AbstractAlchemyCarrierTE implements IReactionChamber{
+public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReactionChamber{
 	
-	public AbstractAlchemyReactorTE(){
+	public AlchemyReactorTE(){
 		super();
 	}
 
-	public AbstractAlchemyReactorTE(boolean glass){
+	public AlchemyReactorTE(boolean glass){
 		super(glass);
 	}
 
@@ -110,7 +110,7 @@ public abstract class AbstractAlchemyReactorTE extends AbstractAlchemyCarrierTE 
 			}
 		}
 
-		if(destroy || integrityCapacity() < getContent()){
+		if(destroy){
 			destroyChamber();
 			return;
 		}
@@ -139,9 +139,5 @@ public abstract class AbstractAlchemyReactorTE extends AbstractAlchemyCarrierTE 
 				break;
 			}
 		}
-	}
-
-	protected double integrityCapacity(){
-		return transferCapacity() * 1.5D;
 	}
 }

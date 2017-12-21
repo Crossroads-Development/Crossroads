@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.alchemy.AbstractAlchemyCarrierTE;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
@@ -26,7 +26,7 @@ import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-public class FluidInjectorTileEntity extends AbstractAlchemyCarrierTE{
+public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
 	private static final double REAG_PER_MB = .05D;
 

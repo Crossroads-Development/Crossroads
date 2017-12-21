@@ -8,11 +8,13 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemicalTube;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ChemicalVent;
 import com.Da_Technomancer.crossroads.blocks.alchemy.CoolingCoil;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Dynamo;
+import com.Da_Technomancer.crossroads.blocks.alchemy.FlorenceHolder;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FlowLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FluidInjector;
 import com.Da_Technomancer.crossroads.blocks.alchemy.HeatLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.HeatedTube;
 import com.Da_Technomancer.crossroads.blocks.alchemy.MaxwellDemon;
+import com.Da_Technomancer.crossroads.blocks.alchemy.PhialHolder;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentPump;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentTank;
@@ -193,6 +195,8 @@ public final class ModBlocks{
 	public static ReagentTank reagentTank;
 	public static ReagentPump reagentPump;
 	public static MaxwellDemon maxwellDemon;
+	public static PhialHolder phialHolder;
+	public static FlorenceHolder florenceHolder;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -347,6 +351,8 @@ public final class ModBlocks{
 		reagentTank = new ReagentTank();
 		reagentPump = new ReagentPump();
 		maxwellDemon = new MaxwellDemon();
+		phialHolder = new PhialHolder();
+		florenceHolder = new FlorenceHolder();
 	}
 
 	@SideOnly(Side.CLIENT)

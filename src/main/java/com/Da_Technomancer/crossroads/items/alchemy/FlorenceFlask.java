@@ -9,13 +9,13 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class Phial extends AbstractGlassware{
+public class FlorenceFlask extends AbstractGlassware{
 
-	private static final ModelResourceLocation LOCAT_GLASS = new ModelResourceLocation(Main.MODID + ":phial_glass", "inventory");
-	private static final ModelResourceLocation LOCAT_CRYSTAL = new ModelResourceLocation(Main.MODID + ":phial_crystal", "inventory");
+	private static final ModelResourceLocation LOCAT_GLASS = new ModelResourceLocation(Main.MODID + ":florence_glass", "inventory");
+	private static final ModelResourceLocation LOCAT_CRYSTAL = new ModelResourceLocation(Main.MODID + ":florence_crystal", "inventory");
 	
-	public Phial(){
-		String name = "phial";
+	public FlorenceFlask(){
+		String name = "florence_flask";
 		maxStackSize = 1;
 		hasSubtypes = true;
 		setUnlocalizedName(name);
@@ -28,13 +28,11 @@ public class Phial extends AbstractGlassware{
 
 	@Override
 	public double getCapacity(){
-		return 25D;
+		return 200D;
 	}
 	
 	@Override
 	public String getUnlocalizedName(ItemStack stack){
-		return stack.getMetadata() == 1 ? "item.phial_cryst" : "item.phial_glass";
+		return stack.getMetadata() == 1 ? "item.florence_cryst" : "item.florence_glass";
 	}
-	
-	//TODO pouring out
 }

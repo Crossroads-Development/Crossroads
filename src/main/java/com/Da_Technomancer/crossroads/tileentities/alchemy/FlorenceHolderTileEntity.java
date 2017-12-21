@@ -7,69 +7,34 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyGlasswareHolderTE;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class HeatedTubeTileEntity extends AlchemyCarrierTE{
+public class FlorenceHolderTileEntity extends AlchemyGlasswareHolderTE{
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
+	public AbstractGlassware getPhialType(){
+		return ModItems.florenceFlask;
 	}
 
 	private double cableTemp = 0;
 	private boolean init = false;
-
-	/**
-	 * @param chat Add info to this list, 1 line per entry. 
-	 * @param device The device type calling this method. 
-	 * @param player The player using the info device.
-	 * @param side The viewed EnumFacing (only used by goggles).
-	 */
-	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
-			chat.add("Temp: " + (device == ModItems.omnimeter ? MiscOp.betterRound(cableTemp, 2) : cableTemp) + "Â°C");
-			if(amount == 0){
-				chat.add("No reagents");
-			}
-			for(ReagentStack reag : contents){
-				if(reag != null){
-					chat.add(reag.toString());
-				}
-			}
-		}
-	}
-
-	public HeatedTubeTileEntity(){
-		super();
-	}
-
-	public HeatedTubeTileEntity(boolean glass){
-		super(glass);
-	}
-
-	@Override
-	protected double correctTemp(){
-		//Shares heat between internal cable & contents
-		cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);		
-		heat = (cableTemp + 273D) * amount;
-		return cableTemp;
-	}
 
 	@Override
 	public void update(){
@@ -85,12 +50,53 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	protected EnumTransferMode[] getModes(){
-		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		EnumFacing outSide = world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
-		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
-		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
-		return output;
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
+		if(device == ModItems.omnimeter || device == EnumGoggleLenses.RUBY){
+			chat.add("Temp: " + cableTemp + "°C");
+		}
+		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
+			if(amount == 0){
+				chat.add("No reagents");
+			}
+			for(ReagentStack reag : contents){
+				if(reag != null){
+					chat.add(reag.toString());
+				}
+			}
+		}
+	}
+
+	@Override
+	protected double correctTemp(){
+		//Shares heat between internal cable & contents
+		cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);		
+		heat = (cableTemp + 273D) * amount;
+		return cableTemp;
+	}
+
+	@Override
+	protected void performTransfer(){
+		IBlockState state = world.getBlockState(pos);
+		if(state.getBlock() == ModBlocks.florenceHolder && state.getValue(Properties.ACTIVE)){
+			EnumFacing side = EnumFacing.UP;
+			TileEntity te = world.getTileEntity(pos.offset(side));
+			if(amount <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+				return;
+			}
+
+			IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
+			EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
+			if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
+				return;
+			}
+
+			if(amount != 0){
+				if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.getValue(Properties.REDSTONE_BOOL))){
+					correctReag();
+					markDirty();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -109,11 +115,22 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
+	protected EnumTransferMode[] getModes(){
+		EnumTransferMode[] modes = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
+		if(world.getBlockState(pos).getValue(Properties.ACTIVE)){
+			modes[1] = EnumTransferMode.BOTH;
+		}
+		return modes;
+	}
+
+	private final HeatHandler heatHandler = new HeatHandler();
+
+	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING).getAxis())){
+		if((side == null || side == EnumFacing.UP) && cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.ACTIVE)){
 			return true;
 		}
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == null || side.getAxis() == EnumFacing.Axis.Y)){
+		if((side == null || side == EnumFacing.DOWN) && cap == Capabilities.HEAT_HANDLER_CAPABILITY){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -122,16 +139,14 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING).getAxis())){
+		if((side == null || side == EnumFacing.UP) && cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.ACTIVE)){
 			return (T) handler;
 		}
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == null || side.getAxis() == EnumFacing.Axis.Y)){
+		if((side == null || side == EnumFacing.DOWN) && cap == Capabilities.HEAT_HANDLER_CAPABILITY){
 			return (T) heatHandler;
 		}
 		return super.getCapability(cap, side);
 	}
-
-	private final HeatHandler heatHandler = new HeatHandler();
 
 	private class HeatHandler implements IHeatHandler{
 

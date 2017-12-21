@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
@@ -22,27 +22,28 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class AbstractPhial extends Item{
+public abstract class AbstractGlassware extends Item{
 
 	public abstract double getCapacity();
 
 	/**
 	 * Cache the result to minimize calls to this method. 
 	 * @param stack
-	 * @return The contained reagents and heat. Modifying the returned array does NOT write through to the ItemStack, use the setReagents method. 
+	 * @return The contained reagents, heat, and amount. Modifying the returned array does NOT write through to the ItemStack, use the setReagents method. 
 	 */
 	@Nonnull
-	public Pair<ReagentStack[], Double> getReagants(ItemStack stack){
+	public Triple<ReagentStack[], Double, Double> getReagants(ItemStack stack){
 		ReagentStack[] reagents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
 		double heat = 0;
+		double totalAmount = 0;
 		NBTTagCompound nbt = stack.getTagCompound();
 		if(nbt != null){
 			boolean hasPolar = nbt.getBoolean("po");
 			boolean hasNonPolar = nbt.getBoolean("np");
 			boolean hasAquaRegia = nbt.getBoolean("ar");
 			heat = nbt.getDouble("he");
-			double amount = nbt.getDouble("am");
-			double temp = amount == 0 ? 0 : (heat / amount) + 273D;
+			totalAmount = nbt.getDouble("am");
+			double temp = totalAmount == 0 ? 0 : (heat / totalAmount) - 273D;
 			for(int i = 0; i < AlchemyCore.RESERVED_REAGENT_COUNT + AlchemyCore.DYNAMIC_REAGENT_COUNT ; i++){
 				if(nbt.hasKey(i + "_am")){
 					reagents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am"));
@@ -50,7 +51,7 @@ public abstract class AbstractPhial extends Item{
 				}
 			}
 		}
-		return Pair.of(reagents, heat);
+		return Triple.of(reagents, heat, totalAmount);
 	}
 
 	/**
@@ -65,7 +66,7 @@ public abstract class AbstractPhial extends Item{
 			stack.setTagCompound(new NBTTagCompound());
 		}
 		
-		double temp = amount == 0 ? 0 : (heat / amount) + 273D;		
+		double temp = amount == 0 ? 0 : (heat / amount) - 273D;		
 		NBTTagCompound nbt = stack.getTagCompound();
 		boolean hasPolar = false;
 		boolean hasNonPolar = false;
@@ -73,6 +74,7 @@ public abstract class AbstractPhial extends Item{
 		for(int i = 0; i < AlchemyCore.RESERVED_REAGENT_COUNT + AlchemyCore.DYNAMIC_REAGENT_COUNT ; i++){
 			ReagentStack reag = reagents[i];
 			if(reag == null){
+				nbt.removeTag(i + "_am");
 				continue;
 			}
 
@@ -108,7 +110,8 @@ public abstract class AbstractPhial extends Item{
 			return;
 		}
 		double amount = nbt.getDouble("am");
-		tooltip.add("Temperature: " + (amount == 0 ? 0 : (nbt.getDouble("he") / amount) + 273D) + "°C");
+		tooltip.add("Temperature: " + (amount == 0 ? 0 : (nbt.getDouble("he") / amount) - 273D) + "°C");
+		
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			if(nbt.hasKey(i + "_am")){
 				tooltip.add(new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am")).toString());

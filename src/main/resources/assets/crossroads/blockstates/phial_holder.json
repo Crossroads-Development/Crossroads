@@ -1,0 +1,38 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "crossroads:phial_holder_base",
+		"uvlock": true
+	},
+	"variants": {
+		"active": {
+			"true": {
+				"submodel": "crossroads:phial_holder_phial",
+				"textures": {
+					"glass": "blocks/glass"
+				}
+			},
+			"false": {
+				
+			}
+		},
+		"light": {
+			"true": {
+				"textures": {
+					"glass": "crossroads:blocks/block_alch_crystal"
+				}
+			},
+			"false": {
+				
+			}
+		},
+		"redstone_bool": {
+			"true": {
+				
+			},
+			"false": {
+				
+			}
+		}
+	}
+}

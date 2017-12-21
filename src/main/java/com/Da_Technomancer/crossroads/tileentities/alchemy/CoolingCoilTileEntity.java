@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.alchemy.AbstractAlchemyCarrierTE;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class CoolingCoilTileEntity extends AbstractAlchemyCarrierTE{
+public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){

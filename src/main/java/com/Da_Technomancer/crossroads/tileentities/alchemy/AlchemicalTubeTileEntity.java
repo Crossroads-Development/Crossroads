@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.alchemy.AbstractAlchemyCarrierTE;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
@@ -18,7 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class AlchemicalTubeTileEntity extends AbstractAlchemyCarrierTE implements IIntReceiver{
+public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntReceiver{
 
 	private final Integer[] connectMode = {0, 0, 0, 0, 0, 0};
 

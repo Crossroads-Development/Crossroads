@@ -15,6 +15,11 @@ public class MechArmReleaseEntityEffect implements IMechArmEffect{
 		if(ent.getPassengers().size() != 0){
 			Entity passenger = ent.getPassengers().get(0);
 			passenger.dismountRidingEntity();
+			
+			
+			//TODO no longer valid with change to arm to use speed instead of angle
+			
+			
 			//The principle used here is to calculate the next end position given constant arm speed over a small amount of time, find the distance and direction between the two positions, and use that to set the velocity. 
 			double newAngle0 = te.angle[0] + (te.motionData[0][0] / 20D);
 			double newAngle1 = te.angle[1] + (te.motionData[1][0] / 20D);

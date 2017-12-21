@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
 import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
 import com.Da_Technomancer.crossroads.items.alchemy.LiechWrench;
 import com.Da_Technomancer.crossroads.items.alchemy.Phial;
@@ -102,6 +103,7 @@ public final class ModItems{
 	public static BasicItem wrench;
 	public static LiechWrench liechWrench;
 	public static LeydenJar leydenJar;
+	public static FlorenceFlask florenceFlask;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -170,6 +172,7 @@ public final class ModItems{
 		}
 		liechWrench = new LiechWrench();
 		leydenJar = new LeydenJar();
+		florenceFlask = new FlorenceFlask();
 	}
 
 	@SideOnly(Side.CLIENT)

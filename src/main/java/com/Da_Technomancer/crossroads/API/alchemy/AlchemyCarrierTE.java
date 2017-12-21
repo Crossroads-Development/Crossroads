@@ -25,10 +25,10 @@ import net.minecraft.world.WorldServer;
 /**
  * Implementations must implement hasCapability and getCapability directly. 
  */
-public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITickable, IInfoTE{
+public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, IInfoTE{
 
 	protected boolean glass;
-	protected final ReagentStack[] contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
+	protected ReagentStack[] contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
 	protected double heat = 0;
 	protected double amount = 0;
 	protected boolean dirtyReag = false;
@@ -55,11 +55,11 @@ public abstract class AbstractAlchemyCarrierTE extends TileEntity implements ITi
 		}
 	}
 
-	public AbstractAlchemyCarrierTE(){
+	public AlchemyCarrierTE(){
 		super();
 	}
 
-	public AbstractAlchemyCarrierTE(boolean glass){
+	public AlchemyCarrierTE(boolean glass){
 		super();
 		this.glass = glass;
 	}

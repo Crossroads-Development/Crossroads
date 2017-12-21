@@ -1,0 +1,10 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "#glass",
+		"main": "#glass"
+    },
+    "elements": [
+        
+    ]
+}

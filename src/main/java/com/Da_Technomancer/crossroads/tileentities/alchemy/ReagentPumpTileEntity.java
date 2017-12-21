@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.alchemy.AbstractAlchemyCarrierTE;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class ReagentPumpTileEntity extends AbstractAlchemyCarrierTE{
+public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){

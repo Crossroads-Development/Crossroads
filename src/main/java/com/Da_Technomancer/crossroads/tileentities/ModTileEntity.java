@@ -5,11 +5,13 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEnt
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ChemicalVentTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.CoolingCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.FlorenceHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatedTubeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.MaxwellDemonTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.PhialHolderTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentTankTileEntity;
@@ -171,6 +173,8 @@ public class ModTileEntity{
 		register(ReagentTankTileEntity.class, "reagent_tank");
 		register(ReagentPumpTileEntity.class, "reagent_pump");
 		register(MaxwellDemonTileEntity.class, "maxwell_demon");
+		register(PhialHolderTileEntity.class, "phial_holder");
+		register(FlorenceHolderTileEntity.class, "florence_holder");
 	}
 
 	/**

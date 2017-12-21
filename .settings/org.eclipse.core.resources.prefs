@@ -1,6 +1,6 @@
 eclipse.preferences.version=1
-encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/AbstractAlchemyCarrierTE.java=UTF-8
-encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/AbstractAlchemyReactorTE.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/AlchemyCarrierTE.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/AlchemyReactorTE.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/IReaction.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/ReagentStack.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/effects/goggles/RubyGoggleEffect.java=UTF-8
@@ -26,7 +26,7 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatingCr
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/crafttweaker/HeatingCrucibleHandler.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/OmniMeter.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/Thermometer.java=UTF-8
-encoding//src/main/java/com/Da_Technomancer/crossroads/items/alchemy/AbstractPhial.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/items/alchemy/AbstractGlassware.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/alchemy/PhilStone.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/AlchemicalTubeTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/ChemicalVentTileEntity.java=UTF-8
