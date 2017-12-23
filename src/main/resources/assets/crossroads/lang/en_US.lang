@@ -241,6 +241,8 @@ item.phial_cryst.name=Crystal Phial
 tile.phial_holder.name=Phial Stand
 item.florence_glass.name=Glass Florence Flask
 item.florence_cryst.name=Crystal Florence Flask
+item.shell_glass.name=Glass Shell
+item.shell_cryst.name=Crystal Shell
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

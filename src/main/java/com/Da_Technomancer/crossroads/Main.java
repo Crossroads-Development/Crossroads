@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.command.DiscoverElementCommand;
 import com.Da_Technomancer.crossroads.command.ResetPathCommand;
+import com.Da_Technomancer.crossroads.command.SpawnReagentCommand;
 import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 
@@ -60,6 +61,7 @@ public final class Main{
 		e.registerServerCommand(new WorkspaceDimTeleport());
 		e.registerServerCommand(new ResetPathCommand());
 		e.registerServerCommand(new DiscoverElementCommand());
+		e.registerServerCommand(new SpawnReagentCommand());
 		e.getServer().worlds[0].getGameRules().addGameRule("alchemyTransSpread", "true", ValueType.BOOLEAN_VALUE);
 		AlchemyCore.setup(e.getServer().worlds[0].getSeed());
 	}

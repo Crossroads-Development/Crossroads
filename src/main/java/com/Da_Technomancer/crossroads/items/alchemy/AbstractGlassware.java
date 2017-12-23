@@ -44,7 +44,7 @@ public abstract class AbstractGlassware extends Item{
 			heat = nbt.getDouble("he");
 			totalAmount = nbt.getDouble("am");
 			double temp = totalAmount == 0 ? 0 : (heat / totalAmount) - 273D;
-			for(int i = 0; i < AlchemyCore.RESERVED_REAGENT_COUNT + AlchemyCore.DYNAMIC_REAGENT_COUNT ; i++){
+			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 				if(nbt.hasKey(i + "_am")){
 					reagents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am"));
 					reagents[i].updatePhase(temp, hasPolar, hasNonPolar, hasAquaRegia);
@@ -71,7 +71,7 @@ public abstract class AbstractGlassware extends Item{
 		boolean hasPolar = false;
 		boolean hasNonPolar = false;
 		boolean hasAquaRegia = false;
-		for(int i = 0; i < AlchemyCore.RESERVED_REAGENT_COUNT + AlchemyCore.DYNAMIC_REAGENT_COUNT ; i++){
+		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = reagents[i];
 			if(reag == null){
 				nbt.removeTag(i + "_am");

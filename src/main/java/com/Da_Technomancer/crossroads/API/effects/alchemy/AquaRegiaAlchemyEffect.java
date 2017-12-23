@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
@@ -20,8 +20,8 @@ public class AquaRegiaAlchemyEffect implements IAlchEffect{
 	@Override
 	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase){
 		if(amount >= .1D){
-			for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
-				e.attackEntityFrom(AcidAlchemyEffect.ACID_DAMAGE, ((float) (amount * 10D)));
+			for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(2, 2, 2)), EntitySelectors.IS_ALIVE)){
+				e.attackEntityFrom(AcidAlchemyEffect.ACID_DAMAGE, ((float) (amount * 2D)));
 			}
 			
 			IBlockState state = world.getBlockState(pos);

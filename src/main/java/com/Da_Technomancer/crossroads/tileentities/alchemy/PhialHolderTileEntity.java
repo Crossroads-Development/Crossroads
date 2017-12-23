@@ -13,8 +13,6 @@ import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class PhialHolderTileEntity extends AlchemyGlasswareHolderTE{
@@ -47,11 +45,6 @@ public class PhialHolderTileEntity extends AlchemyGlasswareHolderTE{
 				}
 			}
 		}
-	}
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
 import com.Da_Technomancer.crossroads.items.alchemy.LiechWrench;
 import com.Da_Technomancer.crossroads.items.alchemy.Phial;
 import com.Da_Technomancer.crossroads.items.alchemy.PhilStone;
+import com.Da_Technomancer.crossroads.items.alchemy.Shell;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
@@ -32,6 +33,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -104,6 +106,7 @@ public final class ModItems{
 	public static LiechWrench liechWrench;
 	public static LeydenJar leydenJar;
 	public static FlorenceFlask florenceFlask;
+	public static Shell shell;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -165,7 +168,7 @@ public final class ModItems{
 		if(ModConfig.getConfigBool(ModConfig.addWrench, false)){
 			wrench = new BasicItem("wrench"){
 				@Override
-				public boolean doesSneakBypassUse(ItemStack stack, net.minecraft.world.IBlockAccess world, BlockPos pos, EntityPlayer player){
+				public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player){
 					return true;
 				}
 			};
@@ -173,6 +176,7 @@ public final class ModItems{
 		liechWrench = new LiechWrench();
 		leydenJar = new LeydenJar();
 		florenceFlask = new FlorenceFlask();
+		shell = new Shell();
 	}
 
 	@SideOnly(Side.CLIENT)

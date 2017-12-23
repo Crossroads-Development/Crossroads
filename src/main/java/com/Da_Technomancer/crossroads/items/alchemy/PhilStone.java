@@ -20,13 +20,6 @@ public class PhilStone extends Item implements IInfoDevice{
 		ModItems.itemAddQue(this);
 	}
 
-	/**
-	 * Called by the default implemetation of EntityItem's onUpdate method, allowing for cleaner
-	 * control over the update of the item without having to write a subclass.
-	 *
-	 * @param entityItem The entity Item
-	 * @return Return true to skip any further update code.
-	 */
 	public boolean onEntityItemUpdate(EntityItem entityItem){
 		if(entityItem.onGround){
 			AxisAlignedBB entityBox = entityItem.getEntityBoundingBox();
