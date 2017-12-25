@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
 import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
 import com.Da_Technomancer.crossroads.items.alchemy.LiechWrench;
+import com.Da_Technomancer.crossroads.items.alchemy.Nitroglycerin;
 import com.Da_Technomancer.crossroads.items.alchemy.Phial;
 import com.Da_Technomancer.crossroads.items.alchemy.PhilStone;
 import com.Da_Technomancer.crossroads.items.alchemy.Shell;
@@ -107,6 +108,7 @@ public final class ModItems{
 	public static LeydenJar leydenJar;
 	public static FlorenceFlask florenceFlask;
 	public static Shell shell;
+	public static Nitroglycerin nitroglycerin;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -177,6 +179,7 @@ public final class ModItems{
 		leydenJar = new LeydenJar();
 		florenceFlask = new FlorenceFlask();
 		shell = new Shell();
+		nitroglycerin = new Nitroglycerin();
 	}
 
 	@SideOnly(Side.CLIENT)

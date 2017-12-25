@@ -18,6 +18,7 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.PhialHolder;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentPump;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentTank;
+import com.Da_Technomancer.crossroads.blocks.alchemy.RedsAlchemicalTube;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Sifter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoil;
 import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoilTop;
@@ -197,6 +198,7 @@ public final class ModBlocks{
 	public static MaxwellDemon maxwellDemon;
 	public static PhialHolder phialHolder;
 	public static FlorenceHolder florenceHolder;
+	public static RedsAlchemicalTube redsAlchemicalTube;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -353,6 +355,7 @@ public final class ModBlocks{
 		maxwellDemon = new MaxwellDemon();
 		phialHolder = new PhialHolder();
 		florenceHolder = new FlorenceHolder();
+		redsAlchemicalTube = new RedsAlchemicalTube();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -370,5 +373,6 @@ public final class ModBlocks{
 		prototype.initModel();
 		prototypePort.initModel();
 		alchemicalTube.initModel();
+		redsAlchemicalTube.initModel();
 	}
 }

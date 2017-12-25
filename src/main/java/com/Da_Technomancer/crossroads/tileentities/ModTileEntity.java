@@ -15,6 +15,7 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.PhialHolderTileEntity
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentTankTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.RedsAlchemicalTubeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.SifterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.BasicFluidSplitterTileEntity;
@@ -175,6 +176,7 @@ public class ModTileEntity{
 		register(MaxwellDemonTileEntity.class, "maxwell_demon");
 		register(PhialHolderTileEntity.class, "phial_holder");
 		register(FlorenceHolderTileEntity.class, "florence_holder");
+		register(RedsAlchemicalTubeTileEntity.class, "reds_alchemical_tube");
 	}
 
 	/**

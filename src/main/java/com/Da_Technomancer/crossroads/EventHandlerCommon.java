@@ -345,12 +345,20 @@ public final class EventHandlerCommon{
 	public void damageTaken(LivingHurtEvent e){
 		if(e.getSource() == DamageSource.FALL){
 			EntityLivingBase ent = e.getEntityLiving();
+			
 			ItemStack boots = ent.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 			if(boots.getItem() == ModItems.chickenBoots && boots.getItemDamage() != ModItems.chickenBoots.getMaxDamage(boots)){
 				e.setCanceled(true);
 				boots.damageItem(Math.min((int) e.getAmount(), ModItems.chickenBoots.getMaxDamage(boots) - boots.getItemDamage()), ent);
 				ent.getEntityWorld().playSound(null, ent.posX, ent.posY, ent.posZ, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 				return;
+			}
+			
+			if(ent instanceof EntityPlayer){
+				EntityPlayer player = (EntityPlayer) ent;
+				if(player.inventory.clearMatchingItems(ModItems.nitroglycerin, -1, -1, null) > 0){
+					player.world.createExplosion(null, player.posX, player.posY, player.posZ, 5F, true);
+				}
 			}
 		}
 	}

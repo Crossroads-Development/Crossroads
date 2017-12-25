@@ -39,6 +39,7 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/Heat
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/ReactionChamberTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/ReagentPumpTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/ReagentTankTileEntity.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/alchemy/RedsAlchemicalTubeTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/fluid/RadiatorTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/fluid/SteamBoilerTileEntity.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/tileentities/heat/FluidCoolingChamberTileEntity.java=UTF-8
