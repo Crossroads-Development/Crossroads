@@ -21,6 +21,7 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/integration/GuideAPI/Guid
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/GuideAPI/SmartEntry.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/ArcaneExtractorRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/FluidCoolingRecipe.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/FusionBeamRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatExchangerRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatingCrucibleRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/crafttweaker/HeatingCrucibleHandler.java=UTF-8

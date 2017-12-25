@@ -12,7 +12,6 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -37,7 +36,7 @@ public class GrindstoneHandler{
 		if(in.isEmpty()){
 			return;
 		}
-		CraftTweakerAPI.apply(new Add(new CraftingStack(in.getItem(), in.getCount(), OreDictionary.WILDCARD_VALUE == input.getDamage() ? -1 : in.getMetadata()), CraftTweakerIntegration.toItemStack(output1, output2, output3)));
+		CraftTweakerAPI.apply(new Add(new CraftingStack(in.getItem(), in.getCount(), in.getMetadata()), CraftTweakerIntegration.toItemStack(output1, output2, output3)));
 	}
 
 	/** Add a new ore dict recipe.
@@ -65,7 +64,7 @@ public class GrindstoneHandler{
 	 *            the key that represents the input item
 	 * @param outputs
 	 *            the results of the grindstone operation */
-	private static ItemStack[] addGrindstoneRecipe(ICraftingStack input, ItemStack[] outputs){
+	private static ItemStack[] addGrindstoneRecipe(ICraftingStack<ItemStack> input, ItemStack[] outputs){
 		return RecipeHolder.grindRecipes.put(input, outputs);
 	}
 
@@ -79,7 +78,7 @@ public class GrindstoneHandler{
 	 * @param overwritten
 	 *            the previously registered output for the input, that will be added again
 	 * @return the output stack that was registered for the input key */
-	private static ItemStack[] replaceGrindstoneRecipe(ICraftingStack input, ItemStack[] outputs, ItemStack[] overwritten){
+	private static ItemStack[] replaceGrindstoneRecipe(ICraftingStack<ItemStack> input, ItemStack[] outputs, ItemStack[] overwritten){
 		if(outputs != null){
 			// remove only if the exact output is registered
 			if(RecipeHolder.grindRecipes.remove(input, outputs)){
@@ -102,10 +101,10 @@ public class GrindstoneHandler{
 
 	/** Operation to add a new recipe. */
 	private static class Add implements IAction{
-		private final ICraftingStack input;
+		private final ICraftingStack<ItemStack> input;
 		private final ItemStack[] outputs;
 
-		private Add(ICraftingStack input, ItemStack[] outputs){
+		private Add(ICraftingStack<ItemStack> input, ItemStack[] outputs){
 			this.input = input;
 			this.outputs = outputs;
 		}
@@ -131,7 +130,7 @@ public class GrindstoneHandler{
 			return;
 		}
 
-		CraftTweakerAPI.apply(new Remove(new CraftingStack(in.getItem(), in.getCount(), input.getDamage() == OreDictionary.WILDCARD_VALUE ? -1 : in.getMetadata())));
+		CraftTweakerAPI.apply(new Remove(new CraftingStack(in.getItem(), in.getCount(), in.getMetadata())));
 	}
 
 	/** Remove a grindstone recipe for the ore dictionary entry of the input item stack.
@@ -148,9 +147,9 @@ public class GrindstoneHandler{
 
 	/** Operation to remove a grindstone recipe. */
 	private static class Remove implements IAction{
-		ICraftingStack input;
+		ICraftingStack<ItemStack> input;
 
-		Remove(ICraftingStack input){
+		Remove(ICraftingStack<ItemStack> input){
 			this.input = input;
 		}
 

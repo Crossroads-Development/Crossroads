@@ -17,7 +17,7 @@ public class GrindstoneRecipe implements IRecipeWrapper{
 	private List<ItemStack> inputs;
 	private List<ItemStack> outputs;
 
-	public GrindstoneRecipe(Entry<ICraftingStack, ItemStack[]> in){
+	public GrindstoneRecipe(Entry<ICraftingStack<ItemStack>, ItemStack[]> in){
 		outputs = Arrays.asList(in.getValue());
 		inputs = in.getKey().getMatchingList();
 	}

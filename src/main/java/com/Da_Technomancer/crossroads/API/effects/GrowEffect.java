@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.ModConfig;
+
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,13 +27,22 @@ public class GrowEffect implements IEffect{
 		}		
 		
 		for(int i = 0; i < mult; i++){
+			//The state must be quarried every loop because some plants could break themselves upon growing
 			IBlockState state = worldIn.getBlockState(pos);
 			if(!(state.getBlock() instanceof IGrowable)){
 				return;
 			}
-			IGrowable igrowable = (IGrowable) state.getBlock();
-			if(igrowable.canGrow(worldIn, pos, state, false)){
-				igrowable.grow(worldIn, worldIn.rand, pos, state);
+			
+			String stateName = state.getBlock().getRegistryName().toString();
+			
+			for(String blockedID : ModConfig.getConfigStringList(ModConfig.growBlacklist, false)){
+				if(blockedID.equals(stateName)){
+					return;
+				}
+			}
+			IGrowable growable = (IGrowable) state.getBlock();
+			if(growable.canGrow(worldIn, pos, state, false)){
+				growable.grow(worldIn, worldIn.rand, pos, state);
 			}
 		}
 	}

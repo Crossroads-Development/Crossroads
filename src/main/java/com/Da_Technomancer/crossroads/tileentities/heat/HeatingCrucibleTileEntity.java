@@ -97,7 +97,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 			return Pair.of(null, null);
 		}
 
-		for(Triple<ICraftingStack, FluidStack, String> rec : RecipeHolder.heatingCrucibleRecipes){
+		for(Triple<ICraftingStack<ItemStack>, FluidStack, String> rec : RecipeHolder.heatingCrucibleRecipes){
 			if(rec.getLeft().softMatch(stack)){
 				return Pair.of(rec.getMiddle(), rec.getRight());
 			}

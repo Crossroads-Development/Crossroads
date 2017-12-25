@@ -17,7 +17,7 @@ public class BlockDistilledWater extends BlockFluidClassic{
 		super(DISTILLED_WATER, Material.WATER);
 		DISTILLED_WATER.setBlock(this);
 		setUnlocalizedName("blockDistilledWater");
-		setRegistryName("blockDistilledWater");
+		setRegistryName("blockdistilledwater");
 		ModBlocks.toRegister.add(this);
 	}
 

@@ -123,7 +123,7 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 	}
 
 	private ItemStack[] getOutput(){
-		for(Entry<ICraftingStack, ItemStack[]> recipe: RecipeHolder.grindRecipes.entrySet()){
+		for(Entry<ICraftingStack<ItemStack>, ItemStack[]> recipe: RecipeHolder.grindRecipes.entrySet()){
 			if(recipe.getKey().softMatch(inventory[0])){
 				return recipe.getValue();
 			}

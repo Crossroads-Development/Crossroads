@@ -24,6 +24,8 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.BlockPrismarine;
+import net.minecraft.block.BlockStone;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -48,6 +50,7 @@ public final class ModCrafting{
 	 */
 	public static final ArrayList<Pair<Object, String[]>> toRegisterOreDict = new ArrayList<Pair<Object, String[]>>();
 
+	@SuppressWarnings("unchecked")
 	public static void init(){
 
 		toRegisterOreDict.add(Pair.of(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), new String[] {"wool"}));
@@ -94,7 +97,7 @@ public final class ModCrafting{
 		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("dustCopper", 1), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/ore_native_copper"));
 		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("oreCopper", 1), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/ore_copper"));
 		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("cobblestone", 1), new FluidStack(FluidRegistry.LAVA, 200), "minecraft:blocks/cobblestone"));
-		
+
 		// Heating, order of decreasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Pair.of(true, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D)));
 		RecipeHolder.envirHeatSource.put(Blocks.FLOWING_LAVA, Pair.of(false, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D)));
@@ -134,6 +137,25 @@ public final class ModCrafting{
 
 		RecipeHolder.sifterRecipes.put(Items.GUNPOWDER, new ItemStack(ModItems.sulfur, 1));
 		RecipeHolder.sifterRecipes.put(Item.getItemFromBlock(Blocks.COAL_BLOCK), new ItemStack(ModItems.vanadium, 1));
+
+		//Fusion beam
+		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.SNOW.getDefaultState(), false), new BeamTransmute(Blocks.ICE.getDefaultState(), 1));
+		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.SAND.getDefaultState(), false), new BeamTransmute(ModBlocks.blockPureQuartz.getDefaultState(), 16));
+		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.NETHERRACK.getDefaultState(), false), new BeamTransmute(Blocks.NETHER_BRICK.getDefaultState(), 8));
+		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.GRAVEL.getDefaultState(), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 8));
+		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.COBBLESTONE.getDefaultState(), false), new BeamTransmute(Blocks.STONE.getDefaultState(), 1));
+		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE), false), new BeamTransmute(Blocks.STONEBRICK.getDefaultState(), 1));
+		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.ROUGH), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 12));
+		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK), 16));
+		//Void fusion beam
+		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.ICE.getDefaultState(), false), new BeamTransmute(Blocks.SNOW.getDefaultState(), 0));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(ModBlocks.blockPureQuartz.getDefaultState(), false), new BeamTransmute(Blocks.SAND.getDefaultState(), 16));
+		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.STONE.getDefaultState(), false), new BeamTransmute(Blocks.COBBLESTONE.getDefaultState(), 1));
+		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.STONEBRICK.getDefaultState(), false), new BeamTransmute(Blocks.STONE.getDefaultState(), 1));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.NETHER_BRICK.getDefaultState(), false), new BeamTransmute(Blocks.NETHERRACK.getDefaultState(), 8));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState(), false), new BeamTransmute(Blocks.GRAVEL.getDefaultState(), 8));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 12));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 16));
 
 		//Sifter
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.sifter, 1), " * ", "-|-", " * ", '*', "gearIron", '-', "stickIron", '|', ModBlocks.itemChute));
@@ -331,7 +353,7 @@ public final class ModCrafting{
 		//Lens array
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.lensArray, 2), "*&*", "@ $", "***", '*', ModItems.pureQuartz, '&', "gemEmerald", '@', "gemRuby", '$', "gemDiamond"));
 		//Arcane Extractor
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.arcaneExtractor, 1), "***", "*# ", "***", '*', "stone", '#', ModItems.lensArray));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.arcaneExtractor, 1), "***", "*# ", "***", '*', "obsidian", '#', ModItems.lensArray));
 		//Small Quartz Stabilizer
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.smallQuartzStabilizer, 1), " * ", "*&*", "***", '*', ModItems.pureQuartz, '&', ModItems.lensArray));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.smallQuartzStabilizer, 1), " & ", "***", '&', ModItems.luminescentQuartz, '*', ModItems.pureQuartz));
@@ -385,7 +407,7 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.fluidSplitter, 1), ModBlocks.basicFluidSplitter, "dustRedstone", "dustRedstone", "dustRedstone"));
 		//Redstone Keyboard
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"));
-		
+
 		//Vanadium smelting
 		GameRegistry.addSmelting(ModItems.vanadium, new ItemStack(ModItems.vanadiumVOxide, 1), .7F);
 	}

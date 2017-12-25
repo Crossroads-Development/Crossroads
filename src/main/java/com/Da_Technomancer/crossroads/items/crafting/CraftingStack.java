@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class CraftingStack implements ICraftingStack{
+public class CraftingStack implements ICraftingStack<ItemStack>{
 
 	private final Item item;
 	private final int count;
@@ -36,7 +36,7 @@ public class CraftingStack implements ICraftingStack{
 	public CraftingStack(Item item, int count, int meta){
 		this.item = item;
 		this.count = count;
-		this.meta = meta == OreDictionary.WILDCARD_VALUE ? -1 : meta;
+		this.meta = meta == -1 ? OreDictionary.WILDCARD_VALUE : meta;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class CraftingStack implements ICraftingStack{
 			return false;
 		}
 
-		if(stack.getItem() == item && stack.getCount() == count && (meta == -1 || stack.getMetadata() == meta)){
+		if(stack.getItem() == item && stack.getCount() == count && (meta == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == meta)){
 			return true;
 		}
 
@@ -58,7 +58,7 @@ public class CraftingStack implements ICraftingStack{
 			return false;
 		}
 
-		if(stack.getItem() == item && (meta == -1 || stack.getMetadata() == meta)){
+		if(stack.getItem() == item && (meta == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == meta)){
 			return true;
 		}
 

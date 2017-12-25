@@ -28,11 +28,11 @@ public enum EnumGoggleLenses implements IInfoDevice{
 	QUARTZ(new CraftingStack(ModItems.pureQuartz, 1, 0), "_quartz", new QuartzGoggleEffect()),
 	VOID(new CraftingStack(ModItems.voidCrystal, 1, 0), "", new VoidGoggleEffect());
 	
-	private final ICraftingStack item;
+	private final ICraftingStack<ItemStack> item;
 	private final String texturePath;
 	private final IGoggleEffect effect;
 	
-	EnumGoggleLenses(ICraftingStack item, String texturePath, IGoggleEffect effect){
+	EnumGoggleLenses(ICraftingStack<ItemStack> item, String texturePath, IGoggleEffect effect){
 		this.item = item;
 		this.texturePath = texturePath;
 		this.effect = effect;

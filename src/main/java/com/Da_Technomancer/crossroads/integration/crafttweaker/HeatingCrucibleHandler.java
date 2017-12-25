@@ -66,11 +66,11 @@ public class HeatingCrucibleHandler{
 	
 	private static class Add implements IAction{
 
-		private final ICraftingStack in;
+		private final ICraftingStack<ItemStack> in;
 		private final FluidStack out;
 		private final String text;
 		
-		private Add(ICraftingStack input, FluidStack out, String text){
+		private Add(ICraftingStack<ItemStack> input, FluidStack out, String text){
 			this.in = input;
 			this.out = out;
 			this.text = text;
@@ -89,9 +89,9 @@ public class HeatingCrucibleHandler{
 	
 	private static class Remove implements IAction{
 
-		private final ICraftingStack input;
+		private final ICraftingStack<ItemStack> input;
 		
-		private Remove(ICraftingStack input){
+		private Remove(ICraftingStack<ItemStack> input){
 			this.input = input;
 		}
 		

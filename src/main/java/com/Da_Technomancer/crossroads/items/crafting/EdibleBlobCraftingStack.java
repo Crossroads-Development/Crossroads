@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class EdibleBlobCraftingStack implements ICraftingStack{
+public class EdibleBlobCraftingStack implements ICraftingStack<ItemStack>{
 
 	private final int hunger;
 	private final int saturation;

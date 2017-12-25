@@ -13,10 +13,10 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class HeatingCrucibleRecipe implements IRecipeWrapper{
 
-	private final ICraftingStack in;
+	private final ICraftingStack<ItemStack> in;
 	private final FluidStack out;
 
-	public HeatingCrucibleRecipe(ICraftingStack in, FluidStack out){
+	public HeatingCrucibleRecipe(ICraftingStack<ItemStack> in, FluidStack out){
 		this.in = in;
 		this.out = out;
 	}

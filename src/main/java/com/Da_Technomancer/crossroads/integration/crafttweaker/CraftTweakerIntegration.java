@@ -16,6 +16,7 @@ public class CraftTweakerIntegration{
 		CraftTweakerAPI.registerClass(FluidCoolingChamberHandler.class);
 		CraftTweakerAPI.registerClass(ArcaneExtractorHandler.class);
 		CraftTweakerAPI.registerClass(HeatingCrucibleHandler.class);
+		CraftTweakerAPI.registerClass(FusionBeamHandler.class);
 	}
 
 	private static final ItemStack[] EMPTY = new ItemStack[0];
