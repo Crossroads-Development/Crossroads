@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/tesla_coil_base",
+	"parent": "crossroads:block/phial_holder_base",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

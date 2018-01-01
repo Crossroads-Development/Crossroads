@@ -1,5 +1,31 @@
 {
+	"forge_marker": 1,
+	"defaults": {
+		"model": "crossroads:tesla_coil_base",
+		"uvlock": true
+	},
 	"variants": {
-		
+		"horiz_facing": {
+			"west": {
+				"y": 180
+			},
+			"east": {
+				
+			},
+			"north": {
+				"y": 270
+			},
+			"south": {
+				"y": 90
+			}
+		},
+		"active": {
+			"true": {
+				"submodel": "crossroads:tesla_coil_leyden"
+			},
+			"false": {
+				
+			}
+		}
 	}
 }

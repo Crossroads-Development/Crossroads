@@ -1,5 +1,8 @@
 {
-	"parent": "crossroads:block/tesla_coil_base",
+	"parent": "crossroads:block/flow_limiter",
+	"textures": {
+		"glass": "blocks/glass"
+	},
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

@@ -115,11 +115,6 @@ public class ReagentPump extends BlockContainer{
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state){
-		return false;
-	}
-
-	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return getStateFromMeta(meta);
 	}
