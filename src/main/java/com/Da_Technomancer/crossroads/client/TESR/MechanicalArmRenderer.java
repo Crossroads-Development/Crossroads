@@ -26,7 +26,10 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 			return;
 		}
 
-		double[] angle = new double[] {te.angle[0] * partialTicks + (1D - partialTicks) * (-te.speedRecord[0]), te.angle[1] * partialTicks + (1D - partialTicks) * (Math.min(MechanicalArmTileEntity.MAXIMUM_LOWER_ANGLE, Math.max(MechanicalArmTileEntity.MINIMUM_LOWER_ANGLE, MechanicalArmTileEntity.MAXIMUM_LOWER_ANGLE - Math.abs(te.speedRecord[1])))), te.angle[2] * partialTicks + (1D - partialTicks) * (Math.min(MechanicalArmTileEntity.MAXIMUM_UPPER_ANGLE, Math.max(MechanicalArmTileEntity.MINIMUM_UPPER_ANGLE, MechanicalArmTileEntity.MINIMUM_UPPER_ANGLE + Math.abs(te.speedRecord[2]))))};
+		float partialCycle = partialTicks + (float) (te.getWorld().getTotalWorldTime() % 2);//Based on a two tick cycle (to sync with redstone)
+		partialCycle /= 2F;
+		
+		double[] angle = new double[] {te.angle[0] * partialCycle + (1F - partialCycle) * te.angleRecord[0], te.angle[1] * partialCycle + (1F - partialCycle) * te.angleRecord[1], te.angle[2] * partialCycle + (1F - partialCycle) * te.angleRecord[2]};
 
 		Color colorGear = GearTypes.COPSHOWIUM.getColor();
 

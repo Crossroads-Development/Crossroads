@@ -47,13 +47,15 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	public double[][] motionData = new double[3][4];
 	/** In radians. */
 	public double[] angle = {0, MAXIMUM_LOWER_ANGLE, MINIMUM_UPPER_ANGLE};
-	/** Server side: A record of the last speeds sent to the client. Client side: A record of last tick's speeds, for rendering movement animation*/
-	public double[] speedRecord = new double[3];
+	/** A record of last tick's angles, for rendering movement animation & for release effect*/
+	public double[] angleRecord = new double[3];
+	/**Server side: A record of the last speeds sent to the client.*/
+	private double[] lastSentAngle = new double[3];
 	private static final double[] PHYS_DATA = new double[2];
 	/**
-	 * Math.min((redstone - 2) / 6, EFFECTS.length - 1) corresponds to action type, which are:
+	 * Math.min((redstone - 1) / 6, EFFECTS.length - 1) corresponds to action type, which are:
 	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Release entity with momentum, 7: Pickup one from inventory.
-	 * EnumFacing.getFront((redstone - 2) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4) vary based on EnumFacing. 
+	 * EnumFacing.getFront((redstone - 1) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4, 7) vary based on EnumFacing. 
 	 */
 	private int redstone = -1;
 	public EntityArmRidable ridable;
@@ -61,68 +63,66 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 
 	@Override
 	public void update(){
-
-		angle[0] = -motionData[0][0];
-		angle[1] = Math.min(MAXIMUM_LOWER_ANGLE, Math.max(MINIMUM_LOWER_ANGLE, MAXIMUM_LOWER_ANGLE - Math.abs(motionData[1][0])));
-		angle[2] = Math.min(MAXIMUM_UPPER_ANGLE, Math.max(MINIMUM_UPPER_ANGLE, MINIMUM_UPPER_ANGLE + Math.abs(motionData[2][0])));
-
-		if(!world.isRemote){
+		if(world.getTotalWorldTime() % 2 == 0){
 			for(int i = 0; i < 3; i++){
-				if(Math.abs(motionData[i][0] - speedRecord[i]) >= CLIENT_SPEED_MARGIN){
-					speedRecord[i] = motionData[i][0];
-
-					ModPackets.network.sendToAllAround(new SendDoubleToClient(Integer.toString(i), (float) speedRecord[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-				}
-			}
-		}else{
-			for(int i = 0; i < 3; i++){
-				speedRecord[i] = motionData[i][0];
-			}
-		}
-
-		if(!world.isRemote && world.getTotalWorldTime() % 2 == 0){
-			if(redstone == -1){
-				setRedstone(Ratiator.getPowerOnSide(world, pos, EnumFacing.NORTH, false));
+				angleRecord[i] = angle[i];
 			}
 
-			if(ridable == null || ridable.isDead){
-				if(ridableID != null){
-					for(EntityArmRidable ent : world.getEntities(EntityArmRidable.class, (EntityArmRidable filter) -> true)){
-						if(ridableID.equals(ent.getUniqueID())){
-							ridable = ent;
-							break;
-						}
+			if(!world.isRemote){
+				angle[0] = -motionData[0][0];
+				angle[1] = Math.min(MAXIMUM_LOWER_ANGLE, Math.max(MINIMUM_LOWER_ANGLE, MAXIMUM_LOWER_ANGLE - Math.abs(motionData[1][0])));
+				angle[2] = Math.min(MAXIMUM_UPPER_ANGLE, Math.max(MINIMUM_UPPER_ANGLE, MINIMUM_UPPER_ANGLE + Math.abs(motionData[2][0])));
+
+				for(int i = 0; i < 3; i++){
+					if(Math.abs(angle[i] - lastSentAngle[i]) >= CLIENT_SPEED_MARGIN){
+						lastSentAngle[i] = angle[i];
+						ModPackets.network.sendToAllAround(new SendDoubleToClient(Integer.toString(i), (float) angle[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 				}
-				if(ridable == null || ridable.isDead || !pos.equals(ridable.getOwnerPos())){//The position not matching could occur due to things like this block being copied with prototyping.
-					ridable = new EntityArmRidable(world);
-					ridableID = ridable.getUniqueID();
-					ridable.setOwnerPos(pos);
-					ridable.setPosition(.5D + (double) pos.getX(), 1D + (double) pos.getY(), .5D + (double) pos.getZ());
-					world.spawnEntity(ridable);
+
+				if(redstone == -1){
+					setRedstone(Ratiator.getPowerOnSide(world, pos, EnumFacing.NORTH, false));
 				}
-			}
 
-			int actionType = -1;
-			if(redstone != 0){
-				actionType = Math.min((redstone - 1) / 6, EFFECTS.length - 1);
-			}
+				if(ridable == null || ridable.isDead){
+					if(ridableID != null){
+						for(EntityArmRidable ent : world.getEntities(EntityArmRidable.class, (EntityArmRidable filter) -> true)){
+							if(ridableID.equals(ent.getUniqueID())){
+								ridable = ent;
+								break;
+							}
+						}
+					}
+					if(ridable == null || ridable.isDead || !pos.equals(ridable.getOwnerPos())){//The position not matching could occur due to things like this block being copied with prototyping.
+						ridable = new EntityArmRidable(world);
+						ridableID = ridable.getUniqueID();
+						ridable.setOwnerPos(pos);
+						ridable.setPosition(.5D + (double) pos.getX(), 1D + (double) pos.getY(), .5D + (double) pos.getZ());
+						world.spawnEntity(ridable);
+					}
+				}
 
-			EnumFacing side = EnumFacing.getFront((redstone - 1) % 6);
+				int actionType = -1;
+				if(redstone != 0){
+					actionType = Math.min((redstone - 1) / 6, EFFECTS.length - 1);
+				}
 
-			double lengthCross = Math.sqrt(Math.pow(LOWER_ARM_LENGTH, 2) + Math.pow(UPPER_ARM_LENGTH, 2) - (2D * LOWER_ARM_LENGTH * UPPER_ARM_LENGTH * Math.cos(angle[2])));
-			double thetaD = angle[1] + angle[2] + Math.asin(Math.sin(angle[2]) * LOWER_ARM_LENGTH / lengthCross);
-			double holder = -Math.cos(thetaD) * lengthCross;
+				EnumFacing side = EnumFacing.getFront((redstone - 1) % 6);
 
-			double posX = (holder * Math.cos(angle[0])) + .5D + (double) pos.getX();
-			double posY = (-Math.sin(thetaD) * lengthCross) + 1D + (double) pos.getY();
-			double posZ = (holder * Math.sin(angle[0])) + .5D + (double) pos.getZ();
-			BlockPos endPos = new BlockPos(posX, posY, posZ);
+				double lengthCross = Math.sqrt(Math.pow(LOWER_ARM_LENGTH, 2) + Math.pow(UPPER_ARM_LENGTH, 2) - (2D * LOWER_ARM_LENGTH * UPPER_ARM_LENGTH * Math.cos(angle[2])));
+				double thetaD = angle[1] + angle[2] + Math.asin(Math.sin(angle[2]) * LOWER_ARM_LENGTH / lengthCross);
+				double holder = -Math.cos(thetaD) * lengthCross;
 
-			ridable.setPositionAndUpdate(posX, posY, posZ);
+				double posX = (holder * Math.cos(angle[0])) + .5D + (double) pos.getX();
+				double posY = (-Math.sin(thetaD) * lengthCross) + 1D + (double) pos.getY();
+				double posZ = (holder * Math.sin(angle[0])) + .5D + (double) pos.getZ();
+				BlockPos endPos = new BlockPos(posX, posY, posZ);
 
-			if(actionType != -1 && EFFECTS[actionType].onTriggered(world, endPos, posX, posY, posZ, side, ridable, this)){
-				world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, .5F, .75F);
+				ridable.setPositionAndUpdate(posX, posY, posZ);
+
+				if(actionType != -1 && EFFECTS[actionType].onTriggered(world, endPos, posX, posY, posZ, side, ridable, this)){
+					world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, .5F, .75F);
+				}
 			}
 		}
 	}
@@ -135,19 +135,13 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	public void receiveDouble(String context, double message){
 		switch(context){
 			case "0":
-				speedRecord[0] = motionData[0][0];
-				motionData[0][0] = message;
-				angle[0] = -motionData[0][0];
+				angle[0] = message;
 				break;
 			case "1":
-				speedRecord[1] = motionData[1][0];
-				motionData[1][0] = message;
-				angle[1] = Math.min(MAXIMUM_LOWER_ANGLE, Math.max(MINIMUM_LOWER_ANGLE, MAXIMUM_LOWER_ANGLE - Math.abs(motionData[1][0])));
+				angle[1] = message;
 				break;
 			case "2":
-				speedRecord[2] = motionData[2][0];
-				motionData[2][0] = message;
-				angle[2] = Math.min(MAXIMUM_UPPER_ANGLE, Math.max(MINIMUM_UPPER_ANGLE, MINIMUM_UPPER_ANGLE + Math.abs(motionData[2][0])));
+				angle[2] = message;
 				break;
 			default:
 		}
@@ -179,6 +173,10 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		nbt.setDouble("angle1", angle[1]);
 		nbt.setDouble("angle2", angle[2]);
 
+		nbt.setDouble("l_angle0", angleRecord[0]);
+		nbt.setDouble("l_angle1", angleRecord[1]);
+		nbt.setDouble("l_angle2", angleRecord[2]);
+
 		if(ridableID != null){
 			nbt.setLong("id_greater", ridableID.getMostSignificantBits());
 			nbt.setLong("id_lesser", ridableID.getLeastSignificantBits());
@@ -196,9 +194,9 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		angle[1] = nbt.getDouble("angle1");
 		angle[2] = nbt.getDouble("angle2");
 
-		speedRecord[0] = motionData[0][0];
-		speedRecord[1] = motionData[1][0];
-		speedRecord[2] = motionData[2][0];
+		angleRecord[0] = nbt.getDouble("l_angle0");
+		angleRecord[1] = nbt.getDouble("l_angle1");
+		angleRecord[2] = nbt.getDouble("l_angle2");
 
 		ridableID = nbt.hasKey("id_lesser") ? new UUID(nbt.getLong("id_greater"), nbt.getLong("id_lesser")) : null;
 	}

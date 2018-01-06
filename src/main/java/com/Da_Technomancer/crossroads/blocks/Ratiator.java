@@ -172,7 +172,9 @@ public class Ratiator extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			if(ModConfig.isWrench(playerIn.getHeldItem(hand), false)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
+				IBlockState newState = state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY());
+				worldIn.setBlockState(pos, newState);
+				neighborChanged(newState, worldIn, pos, null, null);
 				return true;
 			}
 
