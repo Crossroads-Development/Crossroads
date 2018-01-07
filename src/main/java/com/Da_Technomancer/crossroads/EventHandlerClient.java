@@ -54,6 +54,9 @@ public final class EventHandlerClient{
 			boolean glow = helmet != null && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().hasKey(EnumGoggleLenses.VOID.name());
 			for(Entity ent : game.world.getLoadedEntityList()){
 				NBTTagCompound entNBT = ent.getEntityData();
+				if(entNBT == null){
+					continue;//Should never be null, but some mods override the entNBT method to return null for some reason
+				}
 				if(!entNBT.hasKey("glow")){
 					ent.setGlowing(false);
 				}else{
