@@ -29,7 +29,7 @@ public interface IReagent{
 	 * @return The type of solvent this acts as. 
 	 */
 	@Nullable
-	public default SolventType solventType(){
+	public default EnumSolventType solventType(){
 		return null;
 	}
 	
@@ -37,7 +37,7 @@ public interface IReagent{
 	 * @return The type of solvent this needs to be in to dissolve. 
 	 */
 	@Nullable
-	public default SolventType soluteType(){
+	public default EnumSolventType soluteType(){
 		return solventType();
 	}
 	

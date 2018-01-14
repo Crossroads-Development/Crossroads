@@ -68,7 +68,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		return (heat / amount) - 273D;
 	}
 
-	protected void correctReag(){
+	@Nullable
+	protected boolean[] correctReag(){
 		dirtyReag = false;
 		amount = 0;
 		for(ReagentStack r : contents){
@@ -77,26 +78,21 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			}
 		}
 		if(amount == 0){
-			return;
+			return null;
 		}
 		double endTemp = correctTemp();
 
-		boolean hasPolar = false;
-		boolean hasNonPolar = false;
-		boolean hasAquaRegia = false;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
+		boolean[] solvents = new boolean[EnumSolventType.values().length];
 
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = contents[i];
 			if(reag != null){
 				if(reag.getAmount() >= AlchemyCore.MIN_QUANTITY){
 					IReagent type = reag.getType();
-					hasAquaRegia |= i == 11;
+					solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
 					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
-						SolventType solv = type.solventType();
-						hasPolar |= solv == SolventType.POLAR || solv == SolventType.MIXED_POLAR;
-						hasNonPolar |= solv == SolventType.NON_POLAR || solv == SolventType.MIXED_POLAR;
-						hasAquaRegia |= solv == SolventType.AQUA_REGIA;
+						solvents[type.solventType().ordinal()] = true;
 					}
 				}else{
 					heat -= (endTemp + 273D) * reag.getAmount();
@@ -105,15 +101,16 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			}
 		}
 
-		hasAquaRegia &= hasPolar;
+		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
 
 		for(int i = 0; i < contents.length; i++){
 			ReagentStack reag = contents[i];
 			if(reag == null){
 				continue;
 			}
-			reag.updatePhase(endTemp, hasPolar, hasNonPolar, hasAquaRegia);
+			reag.updatePhase(endTemp, solvents);
 		}
+		return solvents;
 	}
 
 	@Override

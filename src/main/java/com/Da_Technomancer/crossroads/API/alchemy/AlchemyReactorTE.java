@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.WorldServer;
@@ -8,7 +10,7 @@ import net.minecraft.world.WorldServer;
  * Implementations must implement hasCapability and getCapability directly. 
  */
 public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReactionChamber{
-	
+
 	public AlchemyReactorTE(){
 		super();
 	}
@@ -26,21 +28,21 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	public double getHeat(){
 		return heat;
 	}
-	
+
 	@Override
 	public void setHeat(double heatIn){
 		heat = heatIn;
 	}
-	
+
 	@Override
 	public void addVisualEffect(EnumParticleTypes particleType, double speedX, double speedY, double speedZ, int... particleArgs){
 		if(!world.isRemote){
 			((WorldServer) world).spawnParticle(particleType, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, speedX, speedY, speedZ, 1F, particleArgs);
 		}
 	}
-	
+
 	protected boolean broken = false;
-	
+
 	@Override
 	public void destroyChamber(){
 		if(!broken){
@@ -56,7 +58,8 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	@Override
-	protected void correctReag(){
+	@Nullable
+	protected boolean[] correctReag(){
 		dirtyReag = false;
 		amount = 0;
 		for(ReagentStack r : contents){
@@ -65,27 +68,22 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			}
 		}
 		if(amount == 0){
-			return;
+			return null;
 		}
-		
+
 		double endTemp = correctTemp();
 
-		boolean hasPolar = false;
-		boolean hasNonPolar = false;
-		boolean hasAquaRegia = false;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
+		boolean[] solvents = new boolean[EnumSolventType.values().length];
 
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = contents[i];
 			if(reag != null){
 				if(reag.getAmount() >= AlchemyCore.MIN_QUANTITY){
 					IReagent type = reag.getType();
-					hasAquaRegia |= i == 11;
+					solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
 					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
-						SolventType solv = type.solventType();
-						hasPolar |= solv == SolventType.POLAR || solv == SolventType.MIXED_POLAR;
-						hasNonPolar |= solv == SolventType.NON_POLAR || solv == SolventType.MIXED_POLAR;
-						hasAquaRegia |= solv == SolventType.AQUA_REGIA;
+						solvents[type.solventType().ordinal()] = true;
 					}
 				}else{
 					heat -= (endTemp + 273D) * reag.getAmount();
@@ -94,7 +92,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			}
 		}
 
-		hasAquaRegia &= hasPolar;
+		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
 
 		boolean destroy = false;
 
@@ -103,7 +101,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			if(reag == null){
 				continue;
 			}
-			reag.updatePhase(endTemp, hasPolar, hasNonPolar, hasAquaRegia);
+			reag.updatePhase(endTemp, solvents);
 			if(glass && !reag.getType().canGlassContain()){
 				destroy |= reag.getType().destroysBadContainer();
 				contents[i] = null;
@@ -112,8 +110,9 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 
 		if(destroy){
 			destroyChamber();
-			return;
+			return null;
 		}
+		return solvents;
 	}
 
 	@Override
@@ -132,10 +131,34 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 		}
 	}
 
+	@Override
+	public double getReactionCapacity(){
+		return transferCapacity() * 1.5D;
+	}
+
 	protected void performReaction(){
+		boolean[] solvents = new boolean[EnumSolventType.values().length];
+
+		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+			ReagentStack reag = contents[i];
+			if(reag != null){
+				IReagent type = reag.getType();
+				solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
+
+				if(type.getMeltingPoint() <= correctTemp() && type.getBoilingPoint() > correctTemp()){
+					solvents[type.solventType().ordinal()] = true;
+				}
+			}
+		}
+
+		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
+
 		for(IReaction react : AlchemyCore.REACTIONS){
-			if(react.performReaction(this)){
-				correctReag();
+			if(react.performReaction(this, solvents)){
+				solvents = correctReag();
+				if(solvents == null){
+					return;
+				}
 				break;
 			}
 		}

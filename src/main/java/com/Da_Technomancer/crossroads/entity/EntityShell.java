@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumSolventType;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
-import com.Da_Technomancer.crossroads.API.alchemy.SolventType;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -51,13 +51,15 @@ public class EntityShell extends EntityThrowable{
 		super.readEntityFromNBT(nbt);
 		temp = nbt.getDouble("temp");
 
-		boolean hasPolar = nbt.getBoolean("po");
-		boolean hasNonPolar = nbt.getBoolean("np");
-		boolean hasAquaRegia = nbt.getBoolean("ar");
+		boolean[] solvents = new boolean[EnumSolventType.values().length];
+		
+		for(int i = 0; i < solvents.length; i++){
+			solvents[i] = nbt.getBoolean(i + "_solv");
+		}
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			if(nbt.hasKey(i + "_am")){
 				contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am"));
-				contents[i].updatePhase(temp, hasPolar, hasNonPolar, hasAquaRegia);
+				contents[i].updatePhase(temp, solvents);
 			}
 		}
 	}
@@ -68,34 +70,27 @@ public class EntityShell extends EntityThrowable{
 		nbt.setDouble("temp", temp);
 
 		if(contents != null){
-			boolean hasPolar = false;
-			boolean hasNonPolar = false;
-			boolean hasAquaRegia = false;
+			boolean[] solvents = new boolean[EnumSolventType.values().length];
+
 			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 				ReagentStack reag = contents[i];
-				if(reag == null){
-					continue;
+				if(reag != null){
+					nbt.setDouble(i + "_am", reag.getAmount());
+					
+					IReagent type = reag.getType();
+					solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
+
+					if(type.getMeltingPoint() <= temp && type.getBoilingPoint() > temp){
+						solvents[type.solventType().ordinal()] = true;
+					}
 				}
-
-				IReagent type = reag.getType();
-
-				if(i == 11){
-					hasAquaRegia = true;
-				}
-				if(type.getMeltingPoint() <= temp && type.getBoilingPoint() > temp){
-					SolventType solv = type.solventType();
-					hasPolar |= solv == SolventType.POLAR || solv == SolventType.MIXED_POLAR;
-					hasNonPolar |= solv == SolventType.NON_POLAR || solv == SolventType.MIXED_POLAR;
-					hasAquaRegia |= solv == SolventType.AQUA_REGIA;
-				}
-
-				hasAquaRegia &= hasPolar;
-
-				nbt.setDouble(i + "_am", reag.getAmount());
 			}
-			nbt.setBoolean("po", hasPolar);
-			nbt.setBoolean("np", hasNonPolar);
-			nbt.setBoolean("ar", hasAquaRegia);
+
+			solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
+			
+			for(int i = 0; i < solvents.length; i++){
+				nbt.setBoolean(i + "_solv", solvents[i]);
+			}
 		}
 	}
 }

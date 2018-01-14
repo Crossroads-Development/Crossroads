@@ -4,7 +4,7 @@ public enum EnumMatterPhase{
 	
 	GAS(true, true, false),
 	LIQUID(true, false, true),
-	SOLUTE(true, false, true),
+	SOLUTE(true, false, true),//Technically shouldn't be considered a separate phase, but it makes the code easier
 	SOLID(false, false, false),
 	FLAME(true, true, false);
 	

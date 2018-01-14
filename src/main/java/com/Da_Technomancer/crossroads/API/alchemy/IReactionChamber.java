@@ -51,6 +51,8 @@ public interface IReactionChamber{
 		return false;
 	}
 	
+	public double getReactionCapacity();
+	
 	/**
 	 * Note: might be called several times in quick succession. 
 	 */

@@ -18,7 +18,11 @@ public class ReagentStack{
 		return type;
 	}
 
-	public void updatePhase(double temp, boolean polar, boolean nonPolar, boolean aquaRegia){
+	/**
+	 * @param temp The temperature (degrees C)
+	 * @param solvents An array of the same size as {@link EnumSolventType#values()}, with each index representing the EnumSolventType of that ordinal
+	 */
+	public void updatePhase(double temp, boolean[] solvents){
 		if(type.isLockedFlame()){
 			phase = EnumMatterPhase.FLAME;
 			return;
@@ -28,37 +32,12 @@ public class ReagentStack{
 			return;
 		}
 		if(temp < type.getMeltingPoint()){
-			SolventType solvent = type.soluteType();
+			EnumSolventType solvent = type.soluteType();
 			if(solvent != null){
-				switch(solvent){
-					case AQUA_REGIA:
-						if(aquaRegia){
-							phase = EnumMatterPhase.SOLUTE;
-						}else{
-							phase = EnumMatterPhase.SOLID;
-						}
-						break;
-					case MIXED_POLAR:
-						if(polar || nonPolar){
-							phase = EnumMatterPhase.SOLUTE;
-						}else{
-							phase = EnumMatterPhase.SOLID;
-						}
-						break;
-					case POLAR:
-						if(polar){
-							phase = EnumMatterPhase.SOLUTE;
-						}else{
-							phase = EnumMatterPhase.SOLID;
-						}
-						break;
-					case NON_POLAR:
-						if(nonPolar){
-							phase = EnumMatterPhase.SOLUTE;
-						}else{
-							phase = EnumMatterPhase.SOLID;
-						}
-						break;
+				if(solvents[solvent.ordinal()]){
+					phase = EnumMatterPhase.SOLUTE;
+				}else{
+					phase = EnumMatterPhase.SOLID;
 				}
 			}else{
 				phase = EnumMatterPhase.SOLID;
@@ -76,7 +55,7 @@ public class ReagentStack{
 	@Nonnull
 	public EnumMatterPhase getPhase(double temp){
 		if(phase == null){
-			updatePhase(temp, false, false, false);
+			updatePhase(temp, new boolean[EnumSolventType.values().length]);
 		}
 		return phase;
 	}

@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/AlchemyCarrierTE.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/AlchemyReactorTE.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/IReaction.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/ITransparentReaction.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/ReagentStack.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/effects/goggles/RubyGoggleEffect.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/alchemy/MaxwellDemon.java=UTF-8
