@@ -91,7 +91,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 					IReagent type = reag.getType();
 					solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
-					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
+					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp && type.solventType() != null){
 						solvents[type.solventType().ordinal()] = true;
 					}
 				}else{

@@ -10,6 +10,8 @@ import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class ModEntities{
 
@@ -19,11 +21,14 @@ public final class ModEntities{
 		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "arm_ridable"), EntityArmRidable.class, "arm_ridable", id++, Main.instance, 64, 1, false);
 		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "shell"), EntityShell.class, "shell", id++, Main.instance, 64, 5, true);
 		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "nitro"), EntityShell.class, "nitro", id++, Main.instance, 64, 5, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "flame"), EntityFlame.class, "flame", id++, Main.instance, 64, Integer.MAX_VALUE, true);
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void clientInit(){
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, (RenderManager manager) -> (new RenderSnowball<EntityBullet>(manager, Items.IRON_NUGGET, Minecraft.getMinecraft().getRenderItem())));
 		RenderingRegistry.registerEntityRenderingHandler(EntityShell.class, (RenderManager manager) -> (new RenderSnowball<EntityShell>(manager, ModItems.shell, Minecraft.getMinecraft().getRenderItem())));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNitro.class, (RenderManager manager) -> (new RenderSnowball<EntityNitro>(manager, ModItems.nitroglycerin, Minecraft.getMinecraft().getRenderItem())));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFlame.class, (RenderManager manager) -> (new RenderFlameEntity(manager)));
 	}
 }

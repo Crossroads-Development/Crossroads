@@ -58,7 +58,7 @@ public interface IReagent{
 	 */
 	public Color getColor(EnumMatterPhase phase);
 	
-	public default void onRelease(World world, BlockPos pos, double amount, EnumMatterPhase phase){
+	public default void onRelease(World world, BlockPos pos, double amount, EnumMatterPhase phase, ReagentStack[] contents){
 		
 	}
 	
@@ -73,14 +73,6 @@ public interface IReagent{
 	 */
 	public default ItemStack getStackFromReagent(ReagentStack reag){
 		return ItemStack.EMPTY;
-	}
-	
-	public default boolean isAlkhest(){
-		return false;
-	}
-	
-	public default boolean isAntiAlkhest(){
-		return false;
 	}
 	
 	public default boolean isLockedFlame(){

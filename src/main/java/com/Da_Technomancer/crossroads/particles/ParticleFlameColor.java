@@ -65,9 +65,9 @@ public class ParticleFlameColor extends Particle{
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
 		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
 		float f7 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
-		int i = this.getBrightnessForRender(partialTicks);
-		int j = i >> 16 & 65535;
-		int k = i & 65535;
+		//int i = this.getBrightnessForRender(partialTicks);
+		int j = 240;//i >> 16 & 65535;
+		int k = 240;//i & 65535;
 		Vec3d[] avec3d = new Vec3d[] {new Vec3d((double) (-rotationX * f4 - rotationXY * f4), (double) (-rotationZ * f4), (double) (-rotationYZ * f4 - rotationXZ * f4)), new Vec3d((double) (-rotationX * f4 + rotationXY * f4), (double) (rotationZ * f4), (double) (-rotationYZ * f4 + rotationXZ * f4)), new Vec3d((double) (rotationX * f4 + rotationXY * f4), (double) (rotationZ * f4), (double) (rotationYZ * f4 + rotationXZ * f4)), new Vec3d((double) (rotationX * f4 - rotationXY * f4), (double) (-rotationZ * f4), (double) (rotationYZ * f4 - rotationXZ * f4))};
 
 		if(this.particleAngle != 0.0F){

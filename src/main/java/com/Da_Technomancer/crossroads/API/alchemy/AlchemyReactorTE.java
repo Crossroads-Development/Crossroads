@@ -2,8 +2,11 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.WorldServer;
 
 /**
@@ -48,10 +51,13 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 		if(!broken){
 			broken = true;
 			double temp = getTemp();
+			IBlockState state = world.getBlockState(pos);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
+			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
 			for(ReagentStack r : contents){
 				if(r != null){
-					r.getType().onRelease(world, pos, r.getAmount(), r.getPhase(temp));
+					r.getType().onRelease(world, pos, r.getAmount(), r.getPhase(temp), contents);
 				}
 			}
 		}
@@ -82,7 +88,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 					IReagent type = reag.getType();
 					solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
-					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp){
+					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp && type.solventType() != null){
 						solvents[type.solventType().ordinal()] = true;
 					}
 				}else{
@@ -145,7 +151,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 				IReagent type = reag.getType();
 				solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
-				if(type.getMeltingPoint() <= correctTemp() && type.getBoilingPoint() > correctTemp()){
+				if(type.getMeltingPoint() <= correctTemp() && type.getBoilingPoint() > correctTemp() && type.solventType() != null){
 					solvents[type.solventType().ordinal()] = true;
 				}
 			}

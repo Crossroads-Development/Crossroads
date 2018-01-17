@@ -99,7 +99,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 								for(int j = 0; j <= (int) moved; j++){
 									server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, 1F, new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()});
 								}
-								r.getType().onRelease(world, pos, r.getAmount(), phase);
+								r.getType().onRelease(world, pos, r.getAmount(), phase, null);
 								break;
 							case LIQUID:
 							case SOLUTE:
@@ -113,7 +113,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 										break;
 									}
 								}
-								r.getType().onRelease(world, searching, r.getAmount(), phase);
+								r.getType().onRelease(world, searching, r.getAmount(), phase, null);
 								break;
 							case FLAME:
 								//TODO

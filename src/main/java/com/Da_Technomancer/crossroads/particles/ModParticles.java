@@ -9,10 +9,12 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModParticles{
 
-	protected static final ResourceLocation PARTICLE_1_TEXTURE = new ResourceLocation(Main.MODID, "textures/particles/sheet_1.png");
+	public static final ResourceLocation PARTICLE_1_TEXTURE = new ResourceLocation(Main.MODID, "textures/particles/sheet_1.png");
 	protected static final ResourceLocation BASE_PARTICLE_TEXTURE = new ResourceLocation("textures/particle/particles.png");
 	
 	public static final EnumParticleTypes COLOR_FLAME;
@@ -36,6 +38,7 @@ public class ModParticles{
 	private static IParticleFactory liquidFact;
 	private static IParticleFactory solidFact;
 
+	@SideOnly(Side.CLIENT)
 	public static void clientInit(){
 		flameFact = new ParticleFlameColor.Factory();
 		Minecraft.getMinecraft().effectRenderer.registerParticle(COLOR_FLAME.getParticleID(), (int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... extraArgs) -> {Particle particle = flameFact.createParticle(particleID, worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, extraArgs); if(extraArgs.length >= 3) particle.setRBGColorF((float) (extraArgs[0]) / 255F, (float) (extraArgs[1]) / 255F, (float) (extraArgs[2]) / 255F); particle.setAlphaF(extraArgs.length < 4 ? 1F : ((float) extraArgs[3]) / 255F); return particle;});

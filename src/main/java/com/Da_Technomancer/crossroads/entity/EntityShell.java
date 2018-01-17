@@ -36,7 +36,7 @@ public class EntityShell extends EntityThrowable{
 				BlockPos targetPos = result.getBlockPos() == null ? result.entityHit.getPosition() : result.getBlockPos();
 				for(ReagentStack r : contents){
 					if(r != null){
-						r.getType().onRelease(world, targetPos, r.getAmount(), r.getPhase(temp));
+						r.getType().onRelease(world, targetPos, r.getAmount(), r.getPhase(temp), contents);
 					}
 				}
 			}
@@ -80,7 +80,7 @@ public class EntityShell extends EntityThrowable{
 					IReagent type = reag.getType();
 					solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
-					if(type.getMeltingPoint() <= temp && type.getBoilingPoint() > temp){
+					if(type.getMeltingPoint() <= temp && type.getBoilingPoint() > temp && type.solventType() != null){
 						solvents[type.solventType().ordinal()] = true;
 					}
 				}

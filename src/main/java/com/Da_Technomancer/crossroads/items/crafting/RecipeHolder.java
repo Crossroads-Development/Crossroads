@@ -74,11 +74,6 @@ public final class RecipeHolder{
 	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
 	 */
 	public static final HashMap<Item, MagicUnit> magExtractRecipes = new HashMap<Item, MagicUnit>();
-
-	/**
-	 * Recipes for the Sifter (from alchemy). Item is input, ItemStack is output, note that the input ignores metadata/nbt. 
-	 */
-	public static final HashMap<Item, ItemStack> sifterRecipes = new HashMap<Item, ItemStack>();
 	
 	/**
 	 * Stores the fusion beam conversion recipes. 

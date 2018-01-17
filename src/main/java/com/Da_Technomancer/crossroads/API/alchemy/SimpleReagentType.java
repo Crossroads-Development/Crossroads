@@ -17,7 +17,6 @@ public class SimpleReagentType implements IReagent{
 
 	private final double melting;
 	private final double boiling;
-	private final int catalType;
 	private final double itemAmount;
 	private final Item solid;
 	private final int containType;
@@ -50,7 +49,7 @@ public class SimpleReagentType implements IReagent{
 	 * @param base Whether this is a constant material (in all worlds). Doesn't matter if solid is null. 
 	 */
 	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base){
-		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, base, 0, null, null);
+		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, base, null, null);
 	}
 
 	/**
@@ -66,8 +65,8 @@ public class SimpleReagentType implements IReagent{
 	 * @param solventType Sets the solvent type
 	 * @param soluteType Sets the solute type
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, int catalType, @Nullable EnumSolventType solventType, @Nullable EnumSolventType soluteType){
-		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, base, catalType, solventType, soluteType, 0, null);
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, @Nullable EnumSolventType solventType, @Nullable EnumSolventType soluteType){
+		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, base, solventType, soluteType, 0, null);
 	}
 
 	/**
@@ -85,7 +84,7 @@ public class SimpleReagentType implements IReagent{
 	 * @param containType 0: Normal; 1: Vanishes in glass; 2: Destroys glass. 
 	 * @param effect The effect this has when released. Null for none. 
 	 */
-	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, double itemQuantity, boolean base, int catalType, @Nullable EnumSolventType solventType, @Nullable EnumSolventType soluteType, int containType, @Nullable IAlchEffect effect){
+	public SimpleReagentType(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, double itemQuantity, boolean base, @Nullable EnumSolventType solventType, @Nullable EnumSolventType soluteType, int containType, @Nullable IAlchEffect effect){
 		this.name = name;
 		if(boilingPoint <= meltingPoint){
 			throw Main.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));
@@ -101,7 +100,6 @@ public class SimpleReagentType implements IReagent{
 				AlchemyCore.ITEM_TO_REAGENT.put(solid, this);
 			}
 		}
-		this.catalType = catalType;
 		this.containType = containType;
 		this.effect = effect;
 		this.solvent = solventType;
@@ -140,16 +138,6 @@ public class SimpleReagentType implements IReagent{
 	}
 
 	@Override
-	public boolean isAlkhest(){
-		return catalType == 1;
-	}
-
-	@Override
-	public boolean isAntiAlkhest(){
-		return catalType == 2;
-	}
-
-	@Override
 	public boolean canGlassContain(){
 		return (containType & 3) == 0;
 	}
@@ -160,9 +148,9 @@ public class SimpleReagentType implements IReagent{
 	}
 
 	@Override
-	public void onRelease(World world, BlockPos pos, double amount, EnumMatterPhase phase){
+	public void onRelease(World world, BlockPos pos, double amount, EnumMatterPhase phase, ReagentStack[] contents){
 		if(effect != null){
-			effect.doEffect(world, pos, amount, phase);
+			effect.doEffectAdv(world, pos, amount, phase, contents);
 		}
 	}
 

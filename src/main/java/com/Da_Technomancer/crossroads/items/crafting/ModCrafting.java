@@ -135,9 +135,6 @@ public final class ModCrafting{
 		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(36, 24, 0, 0));
 		RecipeHolder.magExtractRecipes.put(Items.GLOWSTONE_DUST, new MagicUnit(1, 1, 1, 0));
 
-		RecipeHolder.sifterRecipes.put(Items.GUNPOWDER, new ItemStack(ModItems.sulfur, 1));
-		RecipeHolder.sifterRecipes.put(Item.getItemFromBlock(Blocks.COAL_BLOCK), new ItemStack(ModItems.vanadium, 1));
-
 		//Fusion beam
 		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.SNOW.getDefaultState(), false), new BeamTransmute(Blocks.ICE.getDefaultState(), 1));
 		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.SAND.getDefaultState(), false), new BeamTransmute(ModBlocks.blockPureQuartz.getDefaultState(), 16));
@@ -156,9 +153,6 @@ public final class ModCrafting{
 		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState(), false), new BeamTransmute(Blocks.GRAVEL.getDefaultState(), 8));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 12));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 16));
-
-		//Sifter
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.sifter, 1), " * ", "-|-", " * ", '*', "gearIron", '-', "stickIron", '|', ModBlocks.itemChute));
 
 		//Copshowium Creation Chamber
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModBlocks.fluidCoolingChamber));

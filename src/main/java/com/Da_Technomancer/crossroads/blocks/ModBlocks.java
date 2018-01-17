@@ -19,7 +19,6 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentPump;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentTank;
 import com.Da_Technomancer.crossroads.blocks.alchemy.RedsAlchemicalTube;
-import com.Da_Technomancer.crossroads.blocks.alchemy.Sifter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoil;
 import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
@@ -180,7 +179,6 @@ public final class ModBlocks{
 	public static PrototypePort prototypePort;
 	public static MechanicalArm mechanicalArm;
 	public static RedstoneRegistry redstoneRegistry;
-	public static Sifter sifter;
 	public static AlchemicalTube alchemicalTube;
 	public static FluidInjector fluidInjector;
 	public static FlowLimiter flowLimiter;
@@ -337,7 +335,6 @@ public final class ModBlocks{
 		prototypePort = new PrototypePort();
 		mechanicalArm = new MechanicalArm();
 		redstoneRegistry = new RedstoneRegistry();
-		sifter = new Sifter();
 		alchemicalTube = new AlchemicalTube();
 		fluidInjector = new FluidInjector();
 		flowLimiter = new FlowLimiter();

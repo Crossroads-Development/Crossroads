@@ -57,7 +57,11 @@ public class PrototypeWorldProvider extends WorldProvider{
 			protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		}
 		if(tickingTE.isEmpty() && !protWorld.tickableTileEntities.isEmpty()){
-			DimensionManager.createProviderFor(ModDimensions.PROTOTYPE_DIM_ID).onWorldUpdateEntities();
+			PrototypeWorldProvider provider = (PrototypeWorldProvider) DimensionManager.createProviderFor(ModDimensions.PROTOTYPE_DIM_ID);
+			if(provider.world == null){
+				return;
+			}
+			provider.onWorldUpdateEntities();
 		}
 
 		Iterator<TileEntity> iter = tickingTE.iterator();

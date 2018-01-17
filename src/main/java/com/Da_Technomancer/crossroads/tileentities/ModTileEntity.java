@@ -16,7 +16,6 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEn
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentTankTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.RedsAlchemicalTubeTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.SifterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.BasicFluidSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
@@ -159,7 +158,6 @@ public class ModTileEntity{
 		registerOld(PrototypePortTileEntity.class, "prototype_port");
 		register(MechanicalArmTileEntity.class, "mechanical_arm");
 		register(RedstoneRegistryTileEntity.class, "redstone_registry");
-		register(SifterTileEntity.class, "sifter");
 		register(AlchemicalTubeTileEntity.class, "alchemical_tube");
 		register(FluidInjectorTileEntity.class, "fluid_injector");
 		register(FlowLimiterTileEntity.class, "flow_limiter");
