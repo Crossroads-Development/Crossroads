@@ -19,7 +19,12 @@ public class PhelostogenEffect implements IAlchEffect{
 			
 			double angleIncrements = 1D / (double) elevationRadius;//Goes infinite
 			for(double yaw = 0D; yaw < 2D * Math.PI; yaw += angleIncrements){
-				EntityFlame flame = new EntityFlame(world, radius, false, false, 0, 0);//TODO
+				EntityFlame flame;
+				if(contents == null){
+					flame = new EntityFlame(world, radius, false, false, 0, 0);
+				}else{
+					flame = new EntityFlame(world, radius, contents[16] != null, contents[1] != null, contents[3] == null || contents[1] == null ? 0D : contents[3].getAmount() / contents[1].getAmount(), contents[13] == null || contents[1] == null ? 0D : contents[13].getAmount() / contents[1].getAmount());
+				}
 				flame.setPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 				//Moves 1 block/second (velocity is in blocks/tick)
 				flame.motionX = Math.cos(yaw) * Math.cos(pitch) / 20D;
@@ -28,9 +33,6 @@ public class PhelostogenEffect implements IAlchEffect{
 				world.spawnEntity(flame);
 			}
 		}
-		
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

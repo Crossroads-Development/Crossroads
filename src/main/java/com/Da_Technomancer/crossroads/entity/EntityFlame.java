@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.entity;
 
 import java.awt.Color;
 
+import com.Da_Technomancer.crossroads.API.effects.alchemy.AetherEffect;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -68,10 +70,15 @@ public class EntityFlame extends Entity{
 		if(!world.isRemote){
 			
 			BlockPos pos = new BlockPos(posX, posY, posZ);
-			if(world.getBlockState(pos).getBlock() == Blocks.AIR){
-				world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());//TODO temp for testing
+			if(hasAether){
+				AetherEffect.doTransmute(world, pos, sulfurRatio, qsilvrRatio);
 			}
-			//TODO effect
+			if(!temperedFlame){
+				float hardness = world.getBlockState(pos).getBlockHardness(world, pos);
+				if(hardness >= 0 && hardness <= 3F){
+					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+				}
+			}
 			if(--range <= 0){
 				setDead();
 			}

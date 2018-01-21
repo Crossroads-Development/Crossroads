@@ -9,6 +9,7 @@ import java.util.Random;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.API.effects.alchemy.AcidAlchemyEffect;
+import com.Da_Technomancer.crossroads.API.effects.alchemy.AetherEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.AquaRegiaAlchemyEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.ChlorineAlchemyEffect;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.PhelostogenEffect;
@@ -74,7 +75,7 @@ public final class AlchemyCore{
 				return true;
 			}
 		};
-		REAGENTS[1] = new SimpleReagentType("Aether", -275D, -274D, 1, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, true, null, null, 1, null);
+		REAGENTS[1] = new SimpleReagentType("Aether", -275D, -274D, 1, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, true, null, null, 1, new AetherEffect());
 		REAGENTS[2] = new SimpleReagentType("Adamant", Short.MAX_VALUE - 1, Short.MAX_VALUE, 2, (EnumMatterPhase phase) -> Color.GRAY, ModItems.adamant, 1, true, null, EnumSolventType.AQUA_REGIA, 0, null);
 		REAGENTS[3] = new SimpleReagentType("Sulfur", 115D, 445D, 3, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_YELLOW_COLOR : phase == EnumMatterPhase.LIQUID ? Color.RED : Color.YELLOW, ModItems.sulfur, 10, true, null, EnumSolventType.NON_POLAR, 0, null);
 		REAGENTS[4] = new SimpleReagentType("Water", 0D, 100D, 4, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_WHITE_COLOR : TRANSLUCENT_BLUE_COLOR, Item.getItemFromBlock(Blocks.PACKED_ICE), 50, true, EnumSolventType.POLAR, null, 0, null);

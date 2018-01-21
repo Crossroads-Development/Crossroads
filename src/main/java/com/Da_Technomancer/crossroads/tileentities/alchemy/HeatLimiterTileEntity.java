@@ -89,8 +89,6 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 			heatIn -= toTrans;
 			markDirty();
 		}
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

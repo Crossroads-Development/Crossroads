@@ -116,7 +116,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 								r.getType().onRelease(world, searching, r.getAmount(), phase, null);
 								break;
 							case FLAME:
-								//TODO
+								r.getType().onRelease(world, pos, r.getAmount(), phase, null);
 								break;
 							default:
 								break;	
