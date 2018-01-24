@@ -20,6 +20,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 
 /**
@@ -32,6 +33,10 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	protected double heat = 0;
 	protected double amount = 0;
 	protected boolean dirtyReag = false;
+	
+	protected Vec3d getParticlePos(){
+		return new Vec3d(pos).addVector(0.5D, 0.5D, 0.5D);
+	}
 
 	/**
 	 * @param chat Add info to this list, 1 line per entry. 
@@ -177,17 +182,20 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 				}
 			}
 		}
+		
+		Vec3d particlePos = getParticlePos();
+		
 		if(liqAmount > 0){
-			server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.02D, (Math.random() - 1D) * 0.02D, (Math.random() * 2D - 1D) * 0.02D, 1F, new int[] {(int) (liqCol[0] / liqAmount), (int) (liqCol[1] / liqAmount), (int) (liqCol[2] / liqAmount), (int) (liqCol[3] / liqAmount)});
+			server.spawnParticle(ModParticles.COLOR_LIQUID, false, particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.02D, (Math.random() - 1D) * 0.02D, (Math.random() * 2D - 1D) * 0.02D, 1F, new int[] {(int) (liqCol[0] / liqAmount), (int) (liqCol[1] / liqAmount), (int) (liqCol[2] / liqAmount), (int) (liqCol[3] / liqAmount)});
 		}
 		if(gasAmount > 0){
-			server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F, new int[] {(int) (gasCol[0] / gasAmount), (int) (gasCol[1] / gasAmount), (int) (gasCol[2] / gasAmount), (int) (gasCol[3] / gasAmount)});
+			server.spawnParticle(ModParticles.COLOR_GAS, false, particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F, new int[] {(int) (gasCol[0] / gasAmount), (int) (gasCol[1] / gasAmount), (int) (gasCol[2] / gasAmount), (int) (gasCol[3] / gasAmount)});
 		}
 		if(flameAmount > 0){
-			server.spawnParticle(ModParticles.COLOR_FLAME, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F, new int[] {(int) (flameCol[0] / flameAmount), (int) (flameCol[1] / flameAmount), (int) (flameCol[2] / flameAmount), (int) (flameCol[3] / flameAmount)});
+			server.spawnParticle(ModParticles.COLOR_FLAME, false, particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F, new int[] {(int) (flameCol[0] / flameAmount), (int) (flameCol[1] / flameAmount), (int) (flameCol[2] / flameAmount), (int) (flameCol[3] / flameAmount)});
 		}
 		if(solAmount > 0){
-			server.spawnParticle(ModParticles.COLOR_SOLID, false, (float) pos.getX() + 0.25F + world.rand.nextFloat() / 2F, (float) pos.getY() + .4F, (float) pos.getZ() + 0.25F + world.rand.nextFloat() / 2F, 0, 0, 0, 0, 1F, new int[] {(int) (solCol[0] / solAmount), (int) (solCol[1] / solAmount), (int) (solCol[2] / solAmount), (int) (solCol[3] / solAmount)});
+			server.spawnParticle(ModParticles.COLOR_SOLID, false, particlePos.x - 0.25D + world.rand.nextFloat() / 2F, particlePos.y - 0.1F, particlePos.z - 0.25D + world.rand.nextFloat() / 2F, 0, 0, 0, 0, 1F, new int[] {(int) (solCol[0] / solAmount), (int) (solCol[1] / solAmount), (int) (solCol[2] / solAmount), (int) (solCol[3] / solAmount)});
 		}
 	}
 

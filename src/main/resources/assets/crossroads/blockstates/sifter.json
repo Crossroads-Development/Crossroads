@@ -1,6 +1,0 @@
-{
-	"variants": {
-		"orient=true": { "model": "crossroads:sifter" },
-		"orient=false": { "model": "crossroads:sifter", "y":90 }
-	}
-}

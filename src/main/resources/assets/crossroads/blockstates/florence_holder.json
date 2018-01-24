@@ -1,13 +1,13 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:phial_holder_base",
+		"model": "crossroads:florence_holder_base",
 		"uvlock": true
 	},
 	"variants": {
 		"active": {
 			"true": {
-				"submodel": "crossroads:phial_holder_phial"
+				"submodel": "crossroads:florence_holder_phial"
 			},
 			"false": {
 				

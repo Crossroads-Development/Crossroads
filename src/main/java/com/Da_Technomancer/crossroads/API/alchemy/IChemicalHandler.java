@@ -7,8 +7,6 @@ import net.minecraft.util.EnumFacing;
 
 /**
  * Allows the transfer of alchemical reagents and heat. 
- * @author Max
- *
  */
 public interface IChemicalHandler{
 	

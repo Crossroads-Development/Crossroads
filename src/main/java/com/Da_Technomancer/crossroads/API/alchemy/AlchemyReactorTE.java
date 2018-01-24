@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 
 /**
@@ -40,7 +41,8 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	@Override
 	public void addVisualEffect(EnumParticleTypes particleType, double speedX, double speedY, double speedZ, int... particleArgs){
 		if(!world.isRemote){
-			((WorldServer) world).spawnParticle(particleType, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, speedX, speedY, speedZ, 1F, particleArgs);
+			Vec3d particlePos = getParticlePos();
+			((WorldServer) world).spawnParticle(particleType, false, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F, particleArgs);
 		}
 	}
 

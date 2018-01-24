@@ -86,7 +86,7 @@ public class CoolingCoil extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.LIGHT) ? 1 : 0) + state.getValue(Properties.HORIZONTAL_FACING).getHorizontalIndex() << 1;
+		return (state.getValue(Properties.LIGHT) ? 1 : 0) + (state.getValue(Properties.HORIZONTAL_FACING).getHorizontalIndex() << 1);
 	}
 
 	@Override

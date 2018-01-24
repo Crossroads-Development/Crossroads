@@ -20,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
@@ -120,5 +121,11 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
 		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
 		return output;
+	}
+	
+	@Override
+	protected Vec3d getParticlePos(){
+		return new Vec3d(pos).addVector(0.5D, 0.3D, 0.5D);
+		
 	}
 }
