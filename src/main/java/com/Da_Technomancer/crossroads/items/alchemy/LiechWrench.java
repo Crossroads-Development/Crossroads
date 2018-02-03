@@ -35,7 +35,7 @@ public class LiechWrench extends Item{
 
 	@Override
 	public int getHarvestLevel(ItemStack stack, String toolClass, @Nullable EntityPlayer player, @Nullable IBlockState blockState){
-		return maxStackSize;
+		return 1;
 
 	}
 

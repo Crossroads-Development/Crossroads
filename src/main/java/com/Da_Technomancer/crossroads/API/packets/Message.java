@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -53,6 +54,7 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		map(byte[][].class, Message::readByte2DArray, Message::writeByte2DArray);
 		map(int[].class, Message::readIntArray, Message::writeIntArray);
 		map(double[].class, Message::readDoubleArray, Message::writeDoubleArray);
+		map(UUID.class, Message::readUUID, Message::writeUUID);
 	}
 
 	// The thing you override!
@@ -193,6 +195,15 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 
 	private static void writeBoolean(boolean b, ByteBuf buf){
 		buf.writeBoolean(b);
+	}
+	
+	private static UUID readUUID(ByteBuf buf){
+		return new UUID(buf.readLong(), buf.readLong());
+	}
+	
+	private static void writeUUID(UUID id, ByteBuf buf){
+		buf.writeLong(id.getMostSignificantBits());
+		buf.writeLong(id.getLeastSignificantBits());
 	}
 
 	/*

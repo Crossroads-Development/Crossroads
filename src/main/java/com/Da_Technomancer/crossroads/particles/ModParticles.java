@@ -1,5 +1,8 @@
 package com.Da_Technomancer.crossroads.particles;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+
 import com.Da_Technomancer.crossroads.Main;
 
 import net.minecraft.client.Minecraft;
@@ -22,11 +25,57 @@ public class ModParticles{
 	public static final EnumParticleTypes COLOR_LIQUID;
 	public static final EnumParticleTypes COLOR_SOLID;
 
+	private static final Field INT_TO_PARTICLE;
+	private static final Field NAME_TO_PARTICLE;
+
 	static{
-		COLOR_FLAME = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_flame", new Class<?>[] {String.class, int.class, boolean.class}, Main.MODID + "_color_fire", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false);
-		COLOR_GAS = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_gas", new Class<?>[] {String.class, int.class, boolean.class}, Main.MODID + "_color_gas", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false);
-		COLOR_LIQUID = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_liquid", new Class<?>[] {String.class, int.class, boolean.class}, Main.MODID + "_color_liquid", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false);
-		COLOR_SOLID = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_liquid", new Class<?>[] {String.class, int.class, boolean.class}, Main.MODID + "_color_liquid", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false);
+		Field holder1 = null;
+		Field holder2 = null;
+		try{
+			for(Field f : EnumParticleTypes.class.getDeclaredFields()){
+				if(holder1 == null && ("field_179365_U".equals(f.getName()) || "PARTICLES".equals(f.getName()))){
+					holder1 = f;
+					holder1.setAccessible(true);
+				}else if(holder2 == null && ("field_186837_Z".equals(f.getName()) || "BY_NAME".equals(f.getName()))){
+					holder2 = f;
+					holder2.setAccessible(true);
+				}
+			}
+			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with this method, so the above for loop is used instead.
+		}catch(Exception e){
+			Main.logger.catching(e);
+		}
+		INT_TO_PARTICLE = holder1;
+		NAME_TO_PARTICLE = holder2;
+		
+		COLOR_FLAME = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_flame", new Class<?>[] {String.class, int.class, boolean.class, int.class}, Main.MODID + "_color_fire", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false, 4);
+		COLOR_GAS = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_gas", new Class<?>[] {String.class, int.class, boolean.class, int.class}, Main.MODID + "_color_gas", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false, 4);
+		COLOR_LIQUID = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_liquid", new Class<?>[] {String.class, int.class, boolean.class, int.class}, Main.MODID + "_color_liquid", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false, 4);
+		COLOR_SOLID = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_solid", new Class<?>[] {String.class, int.class, boolean.class, int.class}, Main.MODID + "_color_solid", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false, 4);
+		
+		if(INT_TO_PARTICLE == null || NAME_TO_PARTICLE == null){
+			Main.logger.error("NULL INT_TO_PARTICLE or NAME_TO_PARTICLE field! Report to mod author. Several Crossroads particles will not work properly!");
+		}else{
+			try{
+				@SuppressWarnings("unchecked")
+				Map<Integer, EnumParticleTypes> intMap = (Map<Integer, EnumParticleTypes>) INT_TO_PARTICLE.get(null);
+				@SuppressWarnings("unchecked")
+				Map<String, EnumParticleTypes> nameMap = (Map<String, EnumParticleTypes>) NAME_TO_PARTICLE.get(null);
+				
+				intMap.put(COLOR_FLAME.getParticleID(), COLOR_FLAME);
+				intMap.put(COLOR_GAS.getParticleID(), COLOR_GAS);
+				intMap.put(COLOR_LIQUID.getParticleID(), COLOR_LIQUID);
+				intMap.put(COLOR_SOLID.getParticleID(), COLOR_SOLID);
+				
+				nameMap.put(COLOR_FLAME.getParticleName(), COLOR_FLAME);
+				nameMap.put(COLOR_GAS.getParticleName(), COLOR_GAS);
+				nameMap.put(COLOR_LIQUID.getParticleName(), COLOR_LIQUID);
+				nameMap.put(COLOR_SOLID.getParticleName(), COLOR_SOLID);
+				
+			}catch(Exception e){
+				Main.logger.catching(e);
+			}
+		}
 	}
 
 	public static void init(){

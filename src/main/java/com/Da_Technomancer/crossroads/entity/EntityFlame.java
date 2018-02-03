@@ -3,12 +3,15 @@ package com.Da_Technomancer.crossroads.entity;
 import java.awt.Color;
 
 import com.Da_Technomancer.crossroads.API.effects.alchemy.AetherEffect;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendFlameInfoToClient;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class EntityFlame extends Entity{
 
@@ -20,10 +23,11 @@ public class EntityFlame extends Entity{
 	}
 
 	private int range;//Internally in 20th of a block. Relies on total velocity being 1 block/second 
-	private boolean temperedFlame;
-	private boolean hasAether;
-	private double sulfurRatio;
-	private double qsilvrRatio;
+	public boolean temperedFlame;
+	public boolean hasAether;
+	public double sulfurRatio;
+	public double qsilvrRatio;
+	private boolean synced = false;
 
 	public EntityFlame(World worldIn, double range, boolean temperedFlame, boolean hasAether, double sulfurRatio, double qsilvrRatio){
 		this(worldIn);
@@ -68,6 +72,11 @@ public class EntityFlame extends Entity{
 		this.posZ += this.motionZ;
 
 		if(!world.isRemote){
+			if(!synced){
+				synced = true;
+				ModPackets.network.sendToAllAround(new SendFlameInfoToClient(getUniqueID(), temperedFlame, hasAether, (float) sulfurRatio, (float) qsilvrRatio), new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 512));
+			}
+			
 			
 			BlockPos pos = new BlockPos(posX, posY, posZ);
 			if(hasAether){
@@ -86,6 +95,6 @@ public class EntityFlame extends Entity{
 	}
 
 	public Color getColor(){
-		return Color.RED;//TODO
+		return hasAether ? new Color(((int) (255D * sulfurRatio)), ((int) (128D * (1D - sulfurRatio))), ((int) (255D * (1D - sulfurRatio)))) : temperedFlame ? Color.CYAN : Color.RED;
 	}
 }
