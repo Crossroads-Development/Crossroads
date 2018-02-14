@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
@@ -30,13 +31,13 @@ public class RadiatorTileEntity extends TileEntity implements ITickable, IInfoTE
 	private FluidStack steam = null;
 	private FluidStack water = null;
 	private double temp;
-	private final int CAPACITY = 10_000;
+	private static final int CAPACITY = 10_000;
 	private boolean init = false;
 
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
 		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Temp: " + heatHandler.getTemp() + "°C");
+			chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
 			if(!(device instanceof Thermometer)){
 				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 			}

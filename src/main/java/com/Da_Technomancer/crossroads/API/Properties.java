@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.API;
 
-import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
-
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
@@ -13,9 +11,6 @@ public class Properties{
 	public static final UnlistedPropertyBooleanSixArray CONNECT = new UnlistedPropertyBooleanSixArray("connect");
 	public static final UnlistedPropertyIntegerSixArray CONNECT_MODE = new UnlistedPropertyIntegerSixArray("connect_mode");
 	public static final UnlistedPropertyIntegerSixArray PORT_TYPE = new UnlistedPropertyIntegerSixArray("port_type");
-	/**
-	 * Depending on the block, either means emitting light or made of alchemical crystal instead of normal materials
-	 */
 	public static final PropertyBool LIGHT = PropertyBool.create("light");
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
 	
@@ -41,6 +36,7 @@ public class Properties{
 	public static final PropertyBool HEAD = PropertyBool.create("head");
 	public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
 	public static final PropertyInteger TEMP_CHANGE = PropertyInteger.create("temp_change", 0, 4);
-	public static final PropertyEnum<EnumContainerType> CONTAINER_TYPE = PropertyEnum.create("container_type", EnumContainerType.class);
+	public static final PropertyBool CRYSTAL = PropertyBool.create("crystal");
 	public static final PropertyDirection HORIZONTAL_FACING = PropertyDirection.create("horiz_facing", (EnumFacing side) -> side.getAxis() != EnumFacing.Axis.Y);
+	public static final PropertyBool CONTAINER_TYPE = PropertyBool.create("container_type");
 }

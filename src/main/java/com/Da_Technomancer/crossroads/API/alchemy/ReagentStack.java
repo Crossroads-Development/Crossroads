@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import javax.annotation.Nonnull;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
+
 public class ReagentStack{
 
 	private final IReagent type;
@@ -82,6 +84,6 @@ public class ReagentStack{
 
 	@Override
 	public String toString(){
-		return type == null ? "EMPTY_REAGENT" : (type.getName() + ", Amount: " + amount);
+		return type == null ? "EMPTY_REAGENT" : (type.getName() + ", Amount: " + MiscOp.betterRound(amount, 3));
 	}
 }

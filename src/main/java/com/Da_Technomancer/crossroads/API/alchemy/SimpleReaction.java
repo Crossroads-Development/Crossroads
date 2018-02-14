@@ -49,7 +49,8 @@ public class SimpleReaction implements IReaction{
 		if(cat != null && reags[cat.getIndex()] == null){
 			return false;
 		}
-		if(chamb.getTemp() > maxTemp || chamb.getTemp() < minTemp){
+		double chambTemp = chamb.getTemp();
+		if(chambTemp > maxTemp || chambTemp < minTemp){
 			return false;
 		}
 		if(solvents != null){
@@ -59,8 +60,10 @@ public class SimpleReaction implements IReaction{
 				}
 			}
 		}
+		
+		double content = chamb.getContent();
 
-		double maxReactions = amountChange == 0 ? 200 : (chamb.getReactionCapacity() - chamb.getContent()) / (double) amountChange;
+		double maxReactions = amountChange == 0 ? 200 : (chamb.getReactionCapacity() - content) / (double) amountChange;
 
 		for(Pair<IReagent, Integer> reag : reagents){
 			if(reags[reag.getLeft().getIndex()] == null){
@@ -70,9 +73,10 @@ public class SimpleReaction implements IReaction{
 		}
 
 		//temperature change based limit
-		double allowedTempChange = heatChange < 0 ? maxTemp - chamb.getTemp() : minTemp - chamb.getTemp();
-		maxReactions = Math.min(maxReactions, -chamb.getContent() * allowedTempChange / (heatChange * HEAT_CONVERSION + (double) amountChange * allowedTempChange));
-
+		double allowedTempChange = heatChange < 0 ? maxTemp - chambTemp : minTemp - chambTemp;
+		
+		maxReactions = Math.min(maxReactions, -content * allowedTempChange / (heatChange * HEAT_CONVERSION));
+		
 		if(maxReactions <= 0D){
 			return false;
 		}
@@ -91,7 +95,8 @@ public class SimpleReaction implements IReaction{
 			}
 		}
 
-		chamb.addHeat((amountChange * chamb.getTemp() * maxReactions) - (heatChange * maxReactions * HEAT_CONVERSION));
+		chamb.addHeat(-heatChange * maxReactions * HEAT_CONVERSION);
+		chamb.addHeat(amountChange * (chamb.getHeat() / content) * maxReactions);
 		return true;
 	}
 }

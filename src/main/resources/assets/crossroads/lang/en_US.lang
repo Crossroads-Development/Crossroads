@@ -246,7 +246,8 @@ item.shell_cryst.name=Crystal Shell
 item.nitroglycerin.name=Bottle of Nitroglycerin
 tile.reds_alch_tube_glass.name=Glass Redstone Alchemical Tube
 tile.reds_alch_tube_cryst.name=Crystal Redstone Alchemical Tube
-tile.florence_holder.name=Florence Flask Stand
+tile.glassware_holder.name=Glassware Stand
+tile.alembic.name=Alembic
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

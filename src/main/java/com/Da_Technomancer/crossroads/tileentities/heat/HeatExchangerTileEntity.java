@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
@@ -41,8 +42,8 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
 		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Temp: " + handler.getTemp() + "°C");
-			chat.add("Buffered heat: " + bufferTemp + "°C");
+			chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
+			chat.add("Buffered heat: " + MiscOp.betterRound(bufferTemp, 3) + "°C");
 			if(!(device instanceof Thermometer)){
 				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 			}

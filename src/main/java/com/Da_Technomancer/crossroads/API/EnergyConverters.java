@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API;
 public final class EnergyConverters{
 
 	public static double convertBiomeTemp(double rawTemp){
-		return rawTemp * 17.5D - 2.5D;
+		return MiscOp.betterRound(rawTemp * 17.5D - 2.5D, 3);
 	}
 
 	/**

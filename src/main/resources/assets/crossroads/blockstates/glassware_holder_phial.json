@@ -1,19 +1,18 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:florence_holder_base",
 		"uvlock": true
 	},
 	"variants": {
 		"active": {
 			"true": {
-				"submodel": "crossroads:florence_holder_phial"
+				"submodel": "crossroads:phial_holder_phial"
 			},
 			"false": {
 				
 			}
 		},
-		"light": {
+		"crystal": {
 			"true": {
 				"textures": {
 					"glass": "crossroads:blocks/block_alch_crystal"
@@ -31,6 +30,14 @@
 			},
 			"false": {
 				
+			}
+		},
+		"container_type": {
+			"true": {
+				"submodel": "crossroads:florence_holder_base"
+			},
+			"false": {
+				"submodel": "crossroads:phial_holder_base"
 			}
 		}
 	}

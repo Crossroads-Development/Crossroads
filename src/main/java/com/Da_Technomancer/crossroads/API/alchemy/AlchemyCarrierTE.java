@@ -48,7 +48,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
 			if(amount != 0){
-				chat.add("Temp: " + (device == ModItems.omnimeter ? MiscOp.betterRound(handler.getTemp(), 2) : handler.getTemp()) + "°C");
+				chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
 			}else{
 				chat.add("No reagents");
 			}
@@ -70,7 +70,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	}
 
 	protected double correctTemp(){
-		return (heat / amount) - 273D;
+		return amount <= 0 ? -273D : (heat / amount) - 273D;
 	}
 
 	@Nullable

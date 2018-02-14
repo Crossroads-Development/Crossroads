@@ -1,13 +1,13 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:phial_holder_base",
+		"model": "crossroads:alembic",
 		"uvlock": true
 	},
 	"variants": {
 		"active": {
 			"true": {
-				"submodel": "crossroads:phial_holder_phial"
+				"submodel": "crossroads:alembic_phial"
 			},
 			"false": {
 				
@@ -23,14 +23,6 @@
 				"textures": {
 					"glass": "blocks/glass"
 				}
-			}
-		},
-		"redstone_bool": {
-			"true": {
-				
-			},
-			"false": {
-				
 			}
 		}
 	}

@@ -1,0 +1,44 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"uvlock": true
+	},
+	"variants": {
+		"active": {
+			"true": {
+				"submodel": "crossroads:florence_holder_phial"
+			},
+			"false": {
+				
+			}
+		},
+		"crystal": {
+			"true": {
+				"textures": {
+					"glass": "crossroads:blocks/block_alch_crystal"
+				}
+			},
+			"false": {
+				"textures": {
+					"glass": "blocks/glass"
+				}
+			}
+		},
+		"redstone_bool": {
+			"true": {
+				
+			},
+			"false": {
+				
+			}
+		},
+		"container_type": {
+			"true": {
+				"submodel": "crossroads:florence_holder_base"
+			},
+			"false": {
+				"submodel": "crossroads:phial_holder_base"
+			}
+		}
+	}
+}
