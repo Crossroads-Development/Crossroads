@@ -75,11 +75,6 @@ public class ArcaneReflector extends BlockContainer{
 	}
 
 	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
-	}
-
-	@Override
 	protected BlockStateContainer createBlockState(){
 		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
 	}

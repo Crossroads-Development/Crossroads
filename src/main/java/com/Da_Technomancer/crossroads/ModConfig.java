@@ -89,7 +89,7 @@ public final class ModConfig{
 		maximumPistolDamage = config.get(CAT_TECHNOMANCY, "Maximum pistol damage per shot, -1 for no cap. (Default -1)", -1);
 		addWrench = config.get(CAT_INTERNAL, "Add a wrench item? (Default true, must match server if false)", true);
 		SYNCED_PROPERTIES.add(wrenchTypes = config.get(CAT_INTERNAL, "Item ids for wrench items. Should be in format 'modid:itemregistryname', ex. minecraft:apple or crossroads:wrench.", new String[] {Main.MODID + ":wrench", Main.MODID + ":liech_wrench", "actuallyadditions:itemlaserwrench", "appliedenergistics2:certus_quartz_wrench", "appliedenergistics2:nether_quartz_wrench", "base:wrench", "enderio:itemyetawrench", "extrautils2:wrench", "bigreactors:wrench", "forestry:wrench", "progressiveautomation:wrench", "thermalfoundation:wrench", "redstonearsenal:tool.wrench_flux", "rftools:smartwrench", "immersiveengineering:tool"}));
-		electPerJoule = config.get(CAT_ALCHEMY, "FE generated from 10J. (Default 100)", 100, "", 0, Integer.MAX_VALUE);
+		electPerJoule = config.get(CAT_ALCHEMY, "FE generated from 10J. (Default 200)", 200, "", 0, Integer.MAX_VALUE);
 		growBlacklist = config.get(CAT_MISC, "Plant types that can not be grown by a potential beam. Should be in format 'modid:blockregistryname', ex. minecraft:wheat", new String[0]);
 	}
 

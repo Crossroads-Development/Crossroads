@@ -1,0 +1,8 @@
+{
+	"parent": "block/cube_bottom_top",
+	"textures": {
+		"side": "crossroads:blocks/fuel_heater_on",
+		"top": "crossroads:blocks/coal_heater_top",
+		"bottom": "blocks/furnace_top"
+	}
+}

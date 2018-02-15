@@ -7,12 +7,15 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
 import com.Da_Technomancer.crossroads.items.Thermometer;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,6 +24,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -32,6 +37,11 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 	private double temp;
 	private boolean init = false;
 
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
+	
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
 		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
@@ -68,7 +78,9 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 
 		if(burnTime != 0){
 			temp += 1D;
-			--burnTime;
+			if(--burnTime == 0){
+				world.setBlockState(pos, ModBlocks.fuelHeater.getDefaultState().withProperty(Properties.ACTIVE, false));
+			}
 			markDirty();
 		}
 
@@ -79,6 +91,7 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 			if(inventory.isEmpty() && item != null && item.hasContainerItem(inventory)){
 				inventory = item.getContainerItem(inventory);
 			}
+			world.setBlockState(pos, ModBlocks.fuelHeater.getDefaultState().withProperty(Properties.ACTIVE, true));
 			markDirty();
 		}
 	}

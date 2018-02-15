@@ -60,7 +60,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.RUBY){
-			chat.add("Temp: " + MiscOp.betterRound(cableTemp, 3) + "°C");
+			chat.add("Temp: " + MiscOp.betterRound(cableTemp, 3) + "Â°C");
 		}
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
 			if(amount == 0){

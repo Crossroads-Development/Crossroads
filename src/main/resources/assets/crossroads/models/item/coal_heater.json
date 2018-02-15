@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/coal_heater",
+	"parent": "crossroads:block/fuel_heater_off",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

@@ -23,6 +23,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 public class TeslaCoil extends BlockContainer{
@@ -60,13 +61,6 @@ public class TeslaCoil extends BlockContainer{
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		if(!(worldIn.getBlockState(pos.offset(EnumFacing.UP)).getBlock() instanceof TeslaCoilTop)){
-			worldIn.destroyBlock(pos, true);
-		}
-	}
-
-	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, placer == null ? EnumFacing.EAST : placer.getHorizontalFacing().getOpposite()).withProperty(Properties.ACTIVE, false);
 	}
@@ -74,6 +68,30 @@ public class TeslaCoil extends BlockContainer{
 	@Override
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos){
 		return super.canPlaceBlockAt(worldIn, pos) && super.canPlaceBlockAt(worldIn, pos.offset(EnumFacing.UP));
+	}
+
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos prevPos){
+		if(worldIn.isRemote){
+			return;
+		}
+		if(!(worldIn.getBlockState(pos.offset(EnumFacing.UP)).getBlock() instanceof TeslaCoilTop)){
+			worldIn.destroyBlock(pos, true);
+		}
+
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof TeslaCoilTileEntity){
+			TeslaCoilTileEntity ts = (TeslaCoilTileEntity) te;
+			if(worldIn.isBlockPowered(pos)){
+				if(!ts.redstone){
+					ts.redstone = true;
+					ts.markDirty();
+				}
+			}else if(ts.redstone){
+				ts.redstone = false;
+				ts.markDirty();
+			}
+		}
 	}
 
 	@Override
@@ -87,7 +105,12 @@ public class TeslaCoil extends BlockContainer{
 
 		if(ModConfig.isWrench(heldItem, worldIn.isRemote)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZONTAL_FACING));
+				if(playerIn.isSneaking()){
+					worldIn.setBlockState(pos, state.cycleProperty(Properties.LIGHT));
+					playerIn.sendMessage(new TextComponentString("Attack Mode: " + (state.getValue(Properties.LIGHT) ? "DISABLED" : "ENABLED")));
+				}else{
+					worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZONTAL_FACING));
+				}
 			}
 			return true;
 		}
@@ -132,19 +155,19 @@ public class TeslaCoil extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.HORIZONTAL_FACING, Properties.ACTIVE});
+		return new BlockStateContainer(this, new IProperty[] {Properties.HORIZONTAL_FACING, Properties.ACTIVE, Properties.LIGHT});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, EnumFacing.getHorizontal(meta & 3)).withProperty(Properties.ACTIVE, (meta & 4) != 0);
+		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, EnumFacing.getHorizontal(meta & 3)).withProperty(Properties.ACTIVE, (meta & 4) != 0).withProperty(Properties.LIGHT, (meta & 8) != 0);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZONTAL_FACING).getHorizontalIndex() + (state.getValue(Properties.ACTIVE) ? 4 : 0);
+		return state.getValue(Properties.HORIZONTAL_FACING).getHorizontalIndex() + (state.getValue(Properties.ACTIVE) ? 4 : 0) + (state.getValue(Properties.LIGHT) ? 8 : 0);
 	}
-	
+
 	@Override
 	public EnumPushReaction getMobilityFlag(IBlockState state){
 		return EnumPushReaction.BLOCK;

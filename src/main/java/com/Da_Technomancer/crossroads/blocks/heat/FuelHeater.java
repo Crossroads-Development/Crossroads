@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -12,8 +13,11 @@ import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
@@ -55,6 +59,21 @@ public class FuelHeater extends BlockContainer{
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
+	
+	@Override
+	protected BlockStateContainer createBlockState(){
+		return new BlockStateContainer(this, new IProperty[] {Properties.ACTIVE});
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta){
+		return getDefaultState().withProperty(Properties.ACTIVE, meta == 1);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state){
+		return state.getValue(Properties.ACTIVE) ? 1 : 0;
+	}
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
@@ -62,6 +81,11 @@ public class FuelHeater extends BlockContainer{
 			playerIn.openGui(Main.instance, GuiHandler.COALHEATER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
+	}
+	
+	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.ACTIVE, false);
 	}
 	
 	@Override

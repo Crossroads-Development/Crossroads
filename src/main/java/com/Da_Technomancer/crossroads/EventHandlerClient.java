@@ -272,8 +272,7 @@ public final class EventHandlerClient{
 						}
 
 						Vec3d vec = new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(next.x - game.player.posX, next.y - game.player.posY, next.z - game.player.posZ));
-						vec = vec.normalize();
-						vec = vec.scale(arcWidth / 2F);
+						vec = vec.normalize().scale(arcWidth / 2F);
 
 						buf.pos(next.x - vec.x, next.y - vec.y, next.z - vec.z).endVertex();
 						buf.pos(next.x + vec.x, next.y + vec.y, next.z + vec.z).endVertex();
@@ -303,8 +302,7 @@ public final class EventHandlerClient{
 						}
 
 						Vec3d vec = new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(next.x - game.player.posX, next.y - game.player.posY, next.z - game.player.posZ));
-						vec = vec.normalize();
-						vec = vec.scale(arcWidth / 2F);
+						vec = vec.normalize().scale(arcWidth / 2F);
 
 						buf.pos(next.x - vec.x, next.y - vec.y, next.z - vec.z).endVertex();
 						buf.pos(next.x + vec.x, next.y + vec.y, next.z + vec.z).endVertex();

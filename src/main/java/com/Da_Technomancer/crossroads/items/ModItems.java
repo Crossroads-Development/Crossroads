@@ -109,6 +109,7 @@ public final class ModItems{
 	public static FlorenceFlask florenceFlask;
 	public static Shell shell;
 	public static Nitroglycerin nitroglycerin;
+	public static BasicItem solidQuicksilver;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -180,6 +181,7 @@ public final class ModItems{
 		florenceFlask = new FlorenceFlask();
 		shell = new Shell();
 		nitroglycerin = new Nitroglycerin();
+		solidQuicksilver = new BasicItem("solid_quicksilver");
 	}
 
 	@SideOnly(Side.CLIENT)

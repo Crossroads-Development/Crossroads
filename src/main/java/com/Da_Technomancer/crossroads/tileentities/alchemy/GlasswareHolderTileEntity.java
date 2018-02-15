@@ -57,7 +57,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
 		if((device == ModItems.omnimeter || device == EnumGoggleLenses.RUBY) && occupied && amount > 0){
-			chat.add("Temp: " + MiscOp.betterRound(florence ? cableTemp : (heat / amount) - 273D, 3) + "°C");
+			chat.add("Temp: " + MiscOp.betterRound(florence ? cableTemp : (heat / amount) - 273D, 3) + "Â°C");
 		}
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
 			if(amount == 0){

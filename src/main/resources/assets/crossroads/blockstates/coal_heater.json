@@ -1,5 +1,6 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:coal_heater" }
+		"active=true": {"model": "crossroads:fuel_heater_on"},
+		"active=false": {"model": "crossroads:fuel_heater_off"}
 	}
 }

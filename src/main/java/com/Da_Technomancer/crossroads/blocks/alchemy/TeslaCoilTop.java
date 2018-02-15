@@ -56,7 +56,7 @@ public class TeslaCoilTop extends Block{
 					TileEntity te = worldIn.getTileEntity(pos.offset(EnumFacing.DOWN));
 					if(te instanceof TeslaCoilTileEntity){
 						BlockPos[] links = ((TeslaCoilTileEntity) te).linked;
-						if(prev.distanceSq(pos.offset(EnumFacing.DOWN)) <= TeslaCoilTileEntity.RANGE_SQUARED){
+						if(prev.distanceSq(pos.offset(EnumFacing.DOWN)) <= TeslaCoilTileEntity.RANGE * TeslaCoilTileEntity.RANGE){
 							for(int i = 0; i < 3; i++){
 								if(links[i] == null){
 									links[i] = prev;

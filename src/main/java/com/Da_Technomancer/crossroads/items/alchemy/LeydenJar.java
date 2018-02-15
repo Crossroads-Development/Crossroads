@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LeydenJar extends Item{
 
-	public static final int MAX_CHARGE = 10_000;
+	public static final int MAX_CHARGE = 100_000;
 	
 	public LeydenJar(){
 		String name = "leyden_jar";

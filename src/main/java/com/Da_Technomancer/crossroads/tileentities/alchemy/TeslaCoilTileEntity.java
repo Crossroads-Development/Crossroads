@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -12,19 +13,24 @@ import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -51,16 +57,18 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 		return oldState.getBlock() != newState.getBlock();
 	}
 
-	private static final int[] COLOR_CODES = {new Color(128, 0, 255, 128).getRGB(), new Color(64, 0, 255, 128).getRGB(), new Color(100, 0, 255, 128).getRGB()};
-	private static final int JOLT_CONSERVED = 600;
+	public static final int[] COLOR_CODES = {new Color(128, 0, 255, 128).getRGB(), new Color(64, 0, 255, 128).getRGB(), new Color(100, 0, 255, 128).getRGB()};
+	private static final int[] ATTACK_COLOR_CODES = {new Color(255, 32, 0, 128).getRGB(), new Color(255, 0, 32, 128).getRGB(), new Color(255, 32, 32, 128).getRGB()};
+	
+	private static final int JOLT_CONSERVED = 800;
 	private int stored = 0;
 	private Boolean hasJar = null;
 	private static final int JOLT_AMOUNT = 1000;
 	private static final int CAPACITY = 1000;
-	public static final int RANGE_SQUARED = 25;
+	public static final int RANGE = 5;
 
 	public BlockPos[] linked = new BlockPos[3];
-	
+	public boolean redstone = false;
 	
 	@Override
 	public void update(){
@@ -68,10 +76,42 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 			return;
 		}
 		if(hasJar == null){
+			IBlockState state = world.getBlockState(pos);
+			if(state.getBlock() != ModBlocks.teslaCoil){
+				invalidate();
+				return;
+			}
 			hasJar = world.getBlockState(pos).getValue(Properties.ACTIVE);
 		}
+		
+		if(!redstone && world.getTotalWorldTime() % 10 == 0 && stored >= JOLT_AMOUNT){
+			IBlockState state = world.getBlockState(pos);
+			if(state.getBlock() != ModBlocks.teslaCoil){
+				invalidate();
+				return;
+			}
+			
+			if(state.getValue(Properties.LIGHT)){
+				List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - RANGE, pos.getY() - RANGE, pos.getZ() - RANGE, pos.getX() + RANGE, pos.getY() + RANGE, pos.getZ() + RANGE), EntitySelectors.IS_ALIVE);
+				
+				if(!ents.isEmpty()){
+					EntityLivingBase ent = ents.get(world.rand.nextInt(ents.size()));
+					stored -= JOLT_AMOUNT;
+					markDirty();
 
-		if(world.getTotalWorldTime() % 10 == 0 && stored >= JOLT_AMOUNT){
+					NBTTagCompound nbt = new NBTTagCompound();
+
+					new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, ATTACK_COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
+					ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 5F, -5F);
+					//Sound may need tweaking
+					
+					ent.onStruckByLightning(new EntityLightningBolt(world, ent.posX, ent.posY, ent.posZ, true));
+					return;
+				}
+			}
+			
+			
 			for(BlockPos linkPos : linked){
 				if(linkPos != null){
 					TileEntity te = world.getTileEntity(linkPos);
@@ -125,6 +165,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 				nbt.setLong("link" + i, linked[i].toLong());
 			}
 		}
+		nbt.setBoolean("reds", redstone);
 		return nbt;
 	}
 
@@ -137,6 +178,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 				linked[i] = BlockPos.fromLong(nbt.getLong("link" + i));
 			}
 		}
+		redstone = nbt.getBoolean("reds");
 	}
 
 	@Nonnull

@@ -29,10 +29,10 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
 		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Upper Temp: " + MiscOp.betterRound(tempUp, 3) + "°C");
-			chat.add("Lower Temp: " + MiscOp.betterRound(tempDown, 3) + "°C");
+			chat.add("Upper Temp: " + MiscOp.betterRound(tempUp, 3) + "Â°C");
+			chat.add("Lower Temp: " + MiscOp.betterRound(tempDown, 3) + "Â°C");
 			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "Â°C");
 			}
 		}
 	}

@@ -248,6 +248,7 @@ tile.reds_alch_tube_glass.name=Glass Redstone Alchemical Tube
 tile.reds_alch_tube_cryst.name=Crystal Redstone Alchemical Tube
 tile.glassware_holder.name=Glassware Stand
 tile.alembic.name=Alembic
+item.solid_quicksilver.name=Frozen Quicksilver
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

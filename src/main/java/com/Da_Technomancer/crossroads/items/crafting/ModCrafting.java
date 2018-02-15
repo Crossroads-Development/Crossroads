@@ -134,6 +134,9 @@ public final class ModCrafting{
 		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));
 		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(36, 24, 0, 0));
 		RecipeHolder.magExtractRecipes.put(Items.GLOWSTONE_DUST, new MagicUnit(1, 1, 1, 0));
+		RecipeHolder.magExtractRecipes.put(ModItems.sulfur, new MagicUnit(60, 0, 0, 0));
+		RecipeHolder.magExtractRecipes.put(ModItems.solidQuicksilver, new MagicUnit(0, 60, 0, 0));
+		RecipeHolder.magExtractRecipes.put(ModItems.wasteSalt, new MagicUnit(0, 0, 60, 0));
 
 		//Fusion beam
 		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.SNOW.getDefaultState(), false), new BeamTransmute(Blocks.ICE.getDefaultState(), 1));
@@ -147,8 +150,8 @@ public final class ModCrafting{
 		//Void fusion beam
 		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.ICE.getDefaultState(), false), new BeamTransmute(Blocks.SNOW.getDefaultState(), 0));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(ModBlocks.blockPureQuartz.getDefaultState(), false), new BeamTransmute(Blocks.SAND.getDefaultState(), 16));
-		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.STONE.getDefaultState(), false), new BeamTransmute(Blocks.COBBLESTONE.getDefaultState(), 1));
-		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.STONEBRICK.getDefaultState(), false), new BeamTransmute(Blocks.STONE.getDefaultState(), 1));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.STONE.getDefaultState(), false), new BeamTransmute(Blocks.COBBLESTONE.getDefaultState(), 1));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.STONEBRICK.getDefaultState(), false), new BeamTransmute(Blocks.STONE.getDefaultState(), 1));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.NETHER_BRICK.getDefaultState(), false), new BeamTransmute(Blocks.NETHERRACK.getDefaultState(), 8));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState(), false), new BeamTransmute(Blocks.GRAVEL.getDefaultState(), 8));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 12));
