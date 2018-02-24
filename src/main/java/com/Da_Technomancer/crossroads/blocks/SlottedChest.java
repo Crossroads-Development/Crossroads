@@ -35,7 +35,7 @@ public class SlottedChest extends BlockContainer{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(2);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
 	}

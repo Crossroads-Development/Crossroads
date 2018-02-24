@@ -17,7 +17,7 @@ public class HandCrank extends Item{
 		String name = "hand_crank";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

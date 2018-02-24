@@ -27,7 +27,7 @@ public class MaxwellDemon extends BlockContainer{
 		String name = "maxwell_demon";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);

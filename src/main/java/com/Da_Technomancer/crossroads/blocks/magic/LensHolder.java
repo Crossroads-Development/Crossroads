@@ -42,7 +42,7 @@ public class LensHolder extends BlockContainer{
 		String name = "lens_holder";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

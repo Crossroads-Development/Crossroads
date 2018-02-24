@@ -37,7 +37,7 @@ public class FuelHeater extends BlockContainer{
 		String name = "coal_heater";//Registered as coal_heater for legacy reasons
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

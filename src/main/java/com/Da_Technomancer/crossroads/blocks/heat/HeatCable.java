@@ -72,7 +72,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(1);
-		setCreativeTab(ModItems.tabHeatCable);
+		setCreativeTab(ModItems.TAB_HEAT_CABLE);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this, false);	
 	}

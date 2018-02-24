@@ -31,7 +31,7 @@ public class QuartzStabilizer extends BlockContainer{
 		String name = (large ? "large" : "small") + "_quartz_stabilizer";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

@@ -23,7 +23,7 @@ public class FatCollector extends BlockContainer{
 		setSoundType(SoundType.METAL);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

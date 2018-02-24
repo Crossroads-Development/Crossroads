@@ -30,7 +30,7 @@ public class HeatExchanger extends BlockContainer{
 		String name = insul ? "insulated_heat_exchanger" : "heat_exchanger";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);

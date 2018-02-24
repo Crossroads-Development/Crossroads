@@ -29,7 +29,7 @@ public class ChemicalVent extends BlockContainer{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(2);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

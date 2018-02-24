@@ -43,7 +43,7 @@ public class RotaryDrill extends BlockContainer{
 		String name = "rotary_drill";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);

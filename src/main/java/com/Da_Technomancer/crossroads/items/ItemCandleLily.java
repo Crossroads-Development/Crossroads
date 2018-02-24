@@ -25,7 +25,7 @@ public class ItemCandleLily extends ItemLilyPad{
 		String name = "candle_lilypad";
 		setRegistryName(name);
 		setUnlocalizedName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

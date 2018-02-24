@@ -41,7 +41,7 @@ public class FluidTank extends BlockContainer{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setSoundType(SoundType.METAL);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

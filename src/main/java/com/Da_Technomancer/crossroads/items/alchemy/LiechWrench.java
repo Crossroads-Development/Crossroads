@@ -20,7 +20,7 @@ public class LiechWrench extends Item{
 		String name = "liech_wrench";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHarvestLevel("pickaxe", 1);
 		setHarvestLevel("shovel", 1);
 		setHarvestLevel("axe", 1);
@@ -49,12 +49,11 @@ public class LiechWrench extends Item{
 		return 1.0F;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot){
-		Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack){
+		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
-		if (equipmentSlot == EntityEquipmentSlot.MAINHAND){
+		if (slot == EntityEquipmentSlot.MAINHAND){
 			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 4, 0));
 			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4D, 0));
 		}

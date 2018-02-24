@@ -42,7 +42,7 @@ public class Brazier extends BlockContainer{
 		setUnlocalizedName(name);
 		setHardness(2);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
 	}

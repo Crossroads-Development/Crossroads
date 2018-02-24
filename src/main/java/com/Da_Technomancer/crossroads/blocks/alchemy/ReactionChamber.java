@@ -38,7 +38,7 @@ public class ReactionChamber extends BlockContainer{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(.5F);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		ModBlocks.toRegister.add(this);
 		Item item = new ItemBlock(this){

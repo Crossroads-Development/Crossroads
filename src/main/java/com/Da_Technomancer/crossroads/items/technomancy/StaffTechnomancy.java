@@ -26,7 +26,7 @@ public class StaffTechnomancy extends MagicUsingItem{
 		String name = "staff_technomancy";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

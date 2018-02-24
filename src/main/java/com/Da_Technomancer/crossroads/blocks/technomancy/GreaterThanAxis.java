@@ -30,7 +30,7 @@ public class GreaterThanAxis extends BlockContainer{
 		String name = "greater_than_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);

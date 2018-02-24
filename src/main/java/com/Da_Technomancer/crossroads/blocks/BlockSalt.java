@@ -38,7 +38,7 @@ public class BlockSalt extends BlockFalling{
 		String name = "block_salt";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(.5F);
 		setSoundType(SoundType.SAND);
 		setTickRandomly(true);

@@ -30,7 +30,7 @@ public class MechanicalBeamSplitter extends BlockContainer{
 		String name = "mechanical_beam_splitter";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

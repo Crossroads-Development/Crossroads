@@ -34,7 +34,7 @@ public class TeslaCoil extends BlockContainer{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(2);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

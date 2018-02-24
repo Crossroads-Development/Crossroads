@@ -17,7 +17,7 @@ public class DebugGearWriter extends Item{
 		String name = "debug_gear_writer";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

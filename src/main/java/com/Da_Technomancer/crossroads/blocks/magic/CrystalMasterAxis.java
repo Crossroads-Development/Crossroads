@@ -30,7 +30,7 @@ public class CrystalMasterAxis extends BlockContainer{
 		String name = "master_axis_crystal";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.STONE);
 		ModBlocks.toRegister.add(this);

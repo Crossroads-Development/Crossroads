@@ -31,6 +31,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -91,6 +92,11 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 		if(world.getTotalWorldTime() % AlchemyCore.ALCHEMY_TIME == 0){
 			performReaction();
 		}
+	}
+	
+	@Override
+	public void dropItem(ItemStack stack){
+		InventoryHelper.spawnItemStack(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
 	}
 
 	/**

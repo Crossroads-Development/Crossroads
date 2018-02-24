@@ -41,7 +41,7 @@ public final class AlchemyCore{
 	public static final int ALCHEMY_TIME = 2;//TODO
 	public static final double MIN_QUANTITY = 0.005D;
 
-	private static final List<ITransparentReaction> BASE_REACTIONS = new ArrayList<ITransparentReaction>();// TODO set size
+	private static final List<IReaction> BASE_REACTIONS = new ArrayList<IReaction>();// TODO set size
 	/** Note that the contained predicates have the side effect of performing the reaction. */
 	public static final List<IReaction> REACTIONS = new ArrayList<IReaction>();// TODO set size
 
@@ -92,8 +92,8 @@ public final class AlchemyCore{
 		REAGENTS[15] = new SimpleReagentType("Hydrogen Chloride", -110D, 90D, 15, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, true, EnumSolventType.POLAR, null, 0, ACID_EFFECT);// Salt that forms hydrochloric acid, AKA muriatic acid, in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve. 
 		REAGENTS[16] = new SimpleReagentType("Alchemical Salt", 900D, 1400D, 16, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, ModItems.wasteSalt, 10, true, null, EnumSolventType.POLAR, 0, new SaltAlchemyEffect());//Any salt byproduct that is too boring to bother adding separately. 
 		REAGENTS[17] = new SimpleReagentType("Ethanol", -110D, 80D, 17, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, true, EnumSolventType.NON_POLAR, null, 0, null);// If anyone asks, this is denatured alcohol for legal reasons.
-		REAGENTS[18] = new SimpleReagentType("Philosopher Stone", Short.MAX_VALUE - 1, Short.MAX_VALUE, 18, (EnumMatterPhase phase) -> Color.BLACK, ModItems.philosopherStone, 100, true, null, null, 2, null);
-		REAGENTS[19] = new SimpleReagentType("Practitioner Stone", Short.MAX_VALUE - 1, Short.MAX_VALUE, 19, (EnumMatterPhase phase) -> Color.BLACK, ModItems.practitionerStone, 100, true, null, null, 2, null);
+		REAGENTS[18] = new SimpleReagentType("Philosopher Stone", Short.MAX_VALUE - 1, Short.MAX_VALUE, 18, (EnumMatterPhase phase) -> Color.BLACK, ModItems.philosopherStone, 5, true, null, null, 2, null);
+		REAGENTS[19] = new SimpleReagentType("Practitioner Stone", Short.MAX_VALUE - 1, Short.MAX_VALUE, 19, (EnumMatterPhase phase) -> Color.BLACK, ModItems.practitionerStone, 5, true, null, null, 2, null);
 		REAGENTS[20] = new SimpleReagentType("Bedrock", Short.MAX_VALUE - 1, Short.MAX_VALUE, 20, (EnumMatterPhase phase) -> Color.GRAY, Item.getItemFromBlock(Blocks.BEDROCK), 50, true, null, EnumSolventType.AQUA_REGIA, 0, null);
 		REAGENTS[21] = new SimpleReagentType("Chlorine", -100D, -35D, 21, (EnumMatterPhase phase) -> TRANSLUCENT_LIME_COLOR, null, 1, true, EnumSolventType.NON_POLAR, EnumSolventType.NON_POLAR, 0, new ChlorineAlchemyEffect());
 		REAGENTS[22] = new SimpleReagentType("Alchemical Crystal", Short.MAX_VALUE - 1, Short.MAX_VALUE, 22, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, ModItems.alchCrystal, 1, true, null, null, 0, null);
@@ -143,9 +143,9 @@ public final class AlchemyCore{
 		//Phelostogen production
 		BASE_REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[26], 3)}, new Pair[] {Pair.of(REAGENTS[0], 1), Pair.of(REAGENTS[3], 1)}, REAGENTS[18], -300D, 200D, 0D, null, false));
 		//Aether production
-		BASE_REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[12], 1)}, new Pair[] {Pair.of(REAGENTS[1], 1), Pair.of(REAGENTS[13], 1), Pair.of(REAGENTS[8], 1)}, REAGENTS[18], -360D, Double.MAX_VALUE, 60D, null, false));
+		BASE_REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[12], 1)}, new Pair[] {Pair.of(REAGENTS[1], 1), Pair.of(REAGENTS[13], 1), Pair.of(REAGENTS[8], 1)}, REAGENTS[18], -360D, Double.MAX_VALUE, 0D, null, false));
 		//Adamant production
-		BASE_REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[20], 5)}, new Pair[] {Pair.of(REAGENTS[2], 1), Pair.of(REAGENTS[16], 4)}, REAGENTS[18], 0D, 100D, 100D, new EnumSolventType[] {EnumSolventType.AQUA_REGIA}, false));
+		BASE_REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[20], 5)}, new Pair[] {Pair.of(REAGENTS[2], 1), Pair.of(REAGENTS[16], 4)}, REAGENTS[18], 0D, 100D, 0D, new EnumSolventType[] {EnumSolventType.AQUA_REGIA}, false));
 		
 		//Gunpowder washing
 		BASE_REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[26], 3)}, new Pair[] {Pair.of(REAGENTS[3], 1)}, null, -300D, 200D, 0D, new EnumSolventType[] {EnumSolventType.POLAR}, false));
@@ -184,6 +184,8 @@ public final class AlchemyCore{
 
 			}
 		});
+		//Crystal formation
+		BASE_REACTIONS.add(new CrystalFormationReaction());
 		// TODO reactions
 	}
 

@@ -40,7 +40,7 @@ public class BasicBlock extends Block{
 		}
 		setUnlocalizedName(unlocName);
 		setRegistryName(unlocName);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(hardness);
 		if(sound != null){
 			setSoundType(sound);

@@ -18,7 +18,7 @@ public class PigZombieChestsplate extends ItemArmor{
 		String name = "pig_zombie_chestplate";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

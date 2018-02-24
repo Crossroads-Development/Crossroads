@@ -30,7 +30,7 @@ public class SquareRootAxis extends BlockContainer{
 		String name = "square_root_axis";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);

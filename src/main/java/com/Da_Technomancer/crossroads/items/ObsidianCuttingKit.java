@@ -15,7 +15,7 @@ public class ObsidianCuttingKit extends Item{
 		String name = "obsidian_cutting_kit";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

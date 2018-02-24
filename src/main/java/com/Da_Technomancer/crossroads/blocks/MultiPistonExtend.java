@@ -27,7 +27,7 @@ public class MultiPistonExtend extends Block{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(0.5F);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setDefaultState(getDefaultState().withProperty(Properties.FACING, EnumFacing.NORTH).withProperty(Properties.HEAD, false));
 		ModBlocks.toRegister.add(this);
 	}

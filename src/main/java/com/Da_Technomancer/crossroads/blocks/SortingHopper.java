@@ -56,7 +56,7 @@ public class SortingHopper extends BlockContainer{
 		setRegistryName(name);
 		setHardness(2);
 		setSoundType(SoundType.METAL);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setDefaultState(getDefaultState().withProperty(FACING, EnumFacing.DOWN).withProperty(ENABLED, Boolean.valueOf(true)));
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

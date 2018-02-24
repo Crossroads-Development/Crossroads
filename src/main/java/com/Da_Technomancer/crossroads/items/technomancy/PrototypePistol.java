@@ -63,7 +63,7 @@ public class PrototypePistol extends MagicUsingItem{
 		String name = "prototype_pistol";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

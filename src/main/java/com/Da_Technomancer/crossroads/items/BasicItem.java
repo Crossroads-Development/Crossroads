@@ -26,7 +26,7 @@ public class BasicItem extends Item{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		if(tab){
-			setCreativeTab(ModItems.tabCrossroads);
+			setCreativeTab(ModItems.TAB_CROSSROADS);
 		}
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);

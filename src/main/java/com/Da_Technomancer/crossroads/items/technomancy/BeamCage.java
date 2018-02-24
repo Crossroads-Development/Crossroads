@@ -22,7 +22,7 @@ public class BeamCage extends Item{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		maxStackSize = 1;
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

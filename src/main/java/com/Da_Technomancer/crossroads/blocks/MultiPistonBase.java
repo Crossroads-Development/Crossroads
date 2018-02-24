@@ -52,7 +52,7 @@ public class MultiPistonBase extends Block{
 		setRegistryName(name);
 		this.sticky = sticky;
 		setHardness(0.5F);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setDefaultState(getDefaultState().withProperty(Properties.FACING, EnumFacing.NORTH).withProperty(Properties.REDSTONE_BOOL, false));
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

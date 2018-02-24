@@ -51,7 +51,7 @@ public class PrototypePort extends BlockContainer{
 		String name = "prototype_port";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		setResistance(2000);

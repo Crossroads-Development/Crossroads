@@ -25,17 +25,17 @@ import net.minecraft.world.World;
 
 public class ColorChart extends Block{
 	
-	private static final AxisAlignedBB BBNORTH = new AxisAlignedBB(0, 0, .5D, 1, 1, 1);
-	private static final AxisAlignedBB BBSOUTH = new AxisAlignedBB(0, 0, 0, 1, 1, .5D);
-	private static final AxisAlignedBB BBWEST = new AxisAlignedBB(.5D, 0, 0, 1, 1, 1);
-	private static final AxisAlignedBB BBEAST = new AxisAlignedBB(0, 0, 0, .5D, 1, 1);
+	private static final AxisAlignedBB BBNORTH = new AxisAlignedBB(0, 0, 0.9375D, 1, 1, 1);
+	private static final AxisAlignedBB BBSOUTH = new AxisAlignedBB(0, 0, 0, 1, 1, 0.0625D);
+	private static final AxisAlignedBB BBWEST = new AxisAlignedBB(0.9375D, 0, 0, 1, 1, 1);
+	private static final AxisAlignedBB BBEAST = new AxisAlignedBB(0, 0, 0, 0.0625D, 1, 1);
 	
 	public ColorChart(){
 		super(Material.WOOD);
 		String name = "color_chart";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

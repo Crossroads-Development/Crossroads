@@ -29,7 +29,7 @@ public class Phial extends AbstractGlassware{
 		hasSubtypes = true;
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.toClientRegister.put(Pair.of((Item) this, 0), LOCAT_GLASS);
 		ModItems.toClientRegister.put(Pair.of((Item) this, 1), LOCAT_CRYSTAL);

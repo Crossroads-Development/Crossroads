@@ -40,7 +40,7 @@ public class LargeGear extends Item{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		type = typeIn;
-		setCreativeTab(ModItems.tabGear);
+		setCreativeTab(ModItems.TAG_GEAR);
 		ModItems.toRegister.add(this);
 		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
 	}

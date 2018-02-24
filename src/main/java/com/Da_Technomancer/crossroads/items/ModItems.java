@@ -10,6 +10,8 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.items.alchemy.CustomMaterial;
+import com.Da_Technomancer.crossroads.items.alchemy.CustomTool;
 import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
 import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
 import com.Da_Technomancer.crossroads.items.alchemy.LiechWrench;
@@ -42,25 +44,25 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class ModItems{
 
-	public static final CreativeTabs tabCrossroads = new CreativeTabs(Main.MODID){
+	public static final CreativeTabs TAB_CROSSROADS = new CreativeTabs(Main.MODID){
 		@Override
 		public ItemStack getTabIconItem(){
 			return new ItemStack(omnimeter, 1);
 		}
 	};
-	public static final CreativeTabs tabHeatCable = new CreativeTabs("heatCable"){
+	public static final CreativeTabs TAB_HEAT_CABLE = new CreativeTabs("heatCable"){
 		@Override
 		public ItemStack getTabIconItem(){
 			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 1);
 		}
 	};
-	public static final CreativeTabs tabGear = new CreativeTabs("gear"){
+	public static final CreativeTabs TAG_GEAR = new CreativeTabs("gear"){
 		@Override
 		public ItemStack getTabIconItem(){
 			return new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.BRONZE));
 		}
 	};
-	protected static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 100, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F).setRepairItem(new ItemStack(Items.POISONOUS_POTATO));
+	public static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 100, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F).setRepairItem(new ItemStack(Items.POISONOUS_POTATO));
 	public static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[4], 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
 
 	public static DebugGearWriter debugGearWriter;
@@ -110,6 +112,7 @@ public final class ModItems{
 	public static Shell shell;
 	public static Nitroglycerin nitroglycerin;
 	public static BasicItem solidQuicksilver;
+	public static CustomMaterial customMaterial;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -182,6 +185,11 @@ public final class ModItems{
 		shell = new Shell();
 		nitroglycerin = new Nitroglycerin();
 		solidQuicksilver = new BasicItem("solid_quicksilver");
+		new CustomTool("pickaxe");
+		new CustomTool("axe");
+		new CustomTool("shovel");
+		new CustomTool("sword");
+		customMaterial = new CustomMaterial();
 	}
 
 	@SideOnly(Side.CLIENT)

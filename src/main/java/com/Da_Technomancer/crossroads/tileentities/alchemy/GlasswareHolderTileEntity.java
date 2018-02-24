@@ -279,7 +279,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 					}
 				}
 			}
-		}else if(stack.getItem() instanceof AbstractGlassware){
+		}else if(stack.getItem() == ModItems.phial || stack.getItem() == ModItems.florenceFlask){
 			//Add item into TE
 			Triple<ReagentStack[], Double, Double> phialCont = ((AbstractGlassware) stack.getItem()).getReagants(stack);
 			this.heat = phialCont.getMiddle();

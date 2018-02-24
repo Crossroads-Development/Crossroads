@@ -24,7 +24,7 @@ public class RainIdol extends Item{
 		String name = "rain_idol";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		maxStackSize = 1;
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);

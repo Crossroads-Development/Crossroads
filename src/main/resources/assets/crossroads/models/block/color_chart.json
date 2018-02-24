@@ -6,15 +6,15 @@
 		"front": "crossroads:blocks/color_chart_front"
 	},
     "elements": [
-        {	"from": [ 0, 0, 8 ],
+        {	"from": [ 0, 0, 15 ],
         	"to": [ 16, 16, 16 ],
             "faces": {
-                "down":  { "uv": [ 0, 0, 16, 8 ], "texture": "#side", "cullface": "down" },
-                "up":    { "uv": [ 0, 0, 16, 8 ], "texture": "#side", "cullface": "up" },
+                "down":  { "uv": [ 0, 0, 16, 1 ], "texture": "#side", "cullface": "down" },
+                "up":    { "uv": [ 0, 0, 16, 1 ], "texture": "#side", "cullface": "up" },
                 "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#front" },
                 "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#side", "cullface": "south" },
-                "west":  { "uv": [ 0, 0, 8, 16 ], "texture": "#side", "cullface": "west" },
-                "east":  { "uv": [ 0, 0, 8, 16 ], "texture": "#side", "cullface": "east" }
+                "west":  { "uv": [ 0, 0, 1, 16 ], "texture": "#side", "cullface": "west" },
+                "east":  { "uv": [ 0, 0, 1, 16 ], "texture": "#side", "cullface": "east" }
             }
         }
     ]

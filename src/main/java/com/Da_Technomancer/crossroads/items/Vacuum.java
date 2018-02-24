@@ -23,7 +23,7 @@ public class Vacuum extends Item{
 		String name = "vacuum";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		maxStackSize = 1;
 		setMaxDamage(1200);
 		ModItems.toRegister.add(this);

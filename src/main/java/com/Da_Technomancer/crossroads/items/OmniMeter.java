@@ -37,7 +37,7 @@ public class OmniMeter extends Item implements IInfoDevice{
 		String name = "omnimeter";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

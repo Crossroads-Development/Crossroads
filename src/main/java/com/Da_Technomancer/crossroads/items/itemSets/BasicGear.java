@@ -39,7 +39,7 @@ public class BasicGear extends Item{
 		String name = "gear_" + typeIn.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabGear);
+		setCreativeTab(ModItems.TAG_GEAR);
 		type = typeIn;
 		ModItems.toRegister.add(this);
 		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);

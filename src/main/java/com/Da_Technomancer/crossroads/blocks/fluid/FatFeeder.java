@@ -20,7 +20,7 @@ public class FatFeeder extends BlockContainer{
 		setUnlocalizedName(name);
 		setSoundType(SoundType.METAL);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

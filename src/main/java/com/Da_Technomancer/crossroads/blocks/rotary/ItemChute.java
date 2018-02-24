@@ -30,7 +30,7 @@ public class ItemChute extends Block{
 		String name = "item_chute";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(1.5F);
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);

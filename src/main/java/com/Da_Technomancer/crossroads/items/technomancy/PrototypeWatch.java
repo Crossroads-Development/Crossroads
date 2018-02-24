@@ -60,7 +60,7 @@ public class PrototypeWatch extends MagicUsingItem{
 		String name = "prototype_watch";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		for(int i = 0; i < 8; i++){
 			ModItems.toClientRegister.put(Pair.of(this, i), new ModelResourceLocation(Main.MODID + ":watch_" + i));

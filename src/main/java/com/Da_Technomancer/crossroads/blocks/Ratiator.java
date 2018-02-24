@@ -44,7 +44,7 @@ public class Ratiator extends BlockContainer{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(0);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
 	}

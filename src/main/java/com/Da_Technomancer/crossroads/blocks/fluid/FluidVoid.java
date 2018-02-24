@@ -26,7 +26,7 @@ public class FluidVoid extends BlockContainer{
 		String name = "fluid_void";
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.tabCrossroads);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(.6F);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
