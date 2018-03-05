@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseBeamToClient;
@@ -46,21 +46,21 @@ public class StaffTechnomancy extends MagicUsingItem{
 			
 			NBTTagCompound cageNbt = cage.getTagCompound();
 			NBTTagCompound nbt = stack.getTagCompound();
-			int energy = nbt.getInteger(MagicElements.ENERGY.name());
-			int potential = nbt.getInteger(MagicElements.POTENTIAL.name());
-			int stability = nbt.getInteger(MagicElements.STABILITY.name());
-			int voi = nbt.getInteger(MagicElements.VOID.name());
-			if(energy <= cageNbt.getInteger("stored_" + MagicElements.ENERGY.name()) && potential <= cageNbt.getInteger("stored_" + MagicElements.POTENTIAL.name()) && stability <= cageNbt.getInteger("stored_" + MagicElements.STABILITY.name()) && voi <= cageNbt.getInteger("stored_" + MagicElements.VOID.name())){
+			int energy = nbt.getInteger(EnumMagicElements.ENERGY.name());
+			int potential = nbt.getInteger(EnumMagicElements.POTENTIAL.name());
+			int stability = nbt.getInteger(EnumMagicElements.STABILITY.name());
+			int voi = nbt.getInteger(EnumMagicElements.VOID.name());
+			if(energy <= cageNbt.getInteger("stored_" + EnumMagicElements.ENERGY.name()) && potential <= cageNbt.getInteger("stored_" + EnumMagicElements.POTENTIAL.name()) && stability <= cageNbt.getInteger("stored_" + EnumMagicElements.STABILITY.name()) && voi <= cageNbt.getInteger("stored_" + EnumMagicElements.VOID.name())){
 				if(energy + potential + stability + voi > 0){
-					cageNbt.setInteger("stored_" + MagicElements.ENERGY.name(), cageNbt.getInteger("stored_" + MagicElements.ENERGY.name()) - energy);
-					cageNbt.setInteger("stored_" + MagicElements.POTENTIAL.name(), cageNbt.getInteger("stored_" + MagicElements.POTENTIAL.name()) - potential);
-					cageNbt.setInteger("stored_" + MagicElements.STABILITY.name(), cageNbt.getInteger("stored_" + MagicElements.STABILITY.name()) - stability);
-					cageNbt.setInteger("stored_" + MagicElements.VOID.name(), cageNbt.getInteger("stored_" + MagicElements.VOID.name()) - voi);
+					cageNbt.setInteger("stored_" + EnumMagicElements.ENERGY.name(), cageNbt.getInteger("stored_" + EnumMagicElements.ENERGY.name()) - energy);
+					cageNbt.setInteger("stored_" + EnumMagicElements.POTENTIAL.name(), cageNbt.getInteger("stored_" + EnumMagicElements.POTENTIAL.name()) - potential);
+					cageNbt.setInteger("stored_" + EnumMagicElements.STABILITY.name(), cageNbt.getInteger("stored_" + EnumMagicElements.STABILITY.name()) - stability);
+					cageNbt.setInteger("stored_" + EnumMagicElements.VOID.name(), cageNbt.getInteger("stored_" + EnumMagicElements.VOID.name()) - voi);
 					MagicUnit mag = new MagicUnit(energy, potential, stability, voi);
 					RayTraceResult ray = MiscOp.rayTrace(player, 32);
 					Vec3d lookVec = player.getLookVec().scale(32D);
 					BlockPos endPos = ray == null ? player.getPosition().add(new Vec3i(lookVec.x, lookVec.y, lookVec.z)) : ray.getBlockPos();
-					IEffect effect = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
+					IEffect effect = EnumMagicElements.getElement(mag).getMixEffect(mag.getRGB());
 					if(effect != null){
 						effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()));
 					}

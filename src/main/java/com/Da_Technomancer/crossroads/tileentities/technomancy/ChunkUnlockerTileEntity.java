@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -58,7 +58,7 @@ public class ChunkUnlockerTileEntity extends TileEntity{
 
 		@Override
 		public void setMagic(MagicUnit mag){
-			if(MagicElements.getElement(mag) == MagicElements.TIME && mag.getVoid() == 0){
+			if(EnumMagicElements.getElement(mag) == EnumMagicElements.TIME && mag.getVoid() == 0){
 				if(!FieldWorldSavedData.get(world).fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))){
 					if(--timer <= 0){
 						//This is routed through to the block via world in order to easily add a 1 tick delay.

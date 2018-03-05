@@ -92,4 +92,9 @@ public class CraftingStack implements ICraftingStack<ItemStack>{
 	public String toString(){
 		return "CraftingStack[Item: " + item + ", Count: " + count + ", Meta: " + meta + "]";
 	}
+	
+	@Override
+	public int hashCode(){
+		return (item.hashCode() << 4) + ((count & 7) << 1) + (meta & 1);
+	}
 }

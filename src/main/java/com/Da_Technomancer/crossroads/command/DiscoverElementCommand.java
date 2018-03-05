@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.command;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 
 import net.minecraft.command.CommandBase;
@@ -40,8 +40,8 @@ public class DiscoverElementCommand extends CommandBase{
 			}
 			nbt = nbt.getCompoundTag("elements");
 
-			for(MagicElements element : MagicElements.values()){
-				if(!nbt.hasKey(element.name()) && element != MagicElements.NO_MATCH){
+			for(EnumMagicElements element : EnumMagicElements.values()){
+				if(!nbt.hasKey(element.name()) && element != EnumMagicElements.NO_MATCH){
 					nbt.setBoolean(element.name(), true);
 					sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.toString()));
 				}
@@ -50,10 +50,10 @@ public class DiscoverElementCommand extends CommandBase{
 			return;
 		}
 
-		MagicElements element;
+		EnumMagicElements element;
 
 		try{
-			element = MagicElements.valueOf(args[0].toUpperCase());
+			element = EnumMagicElements.valueOf(args[0].toUpperCase());
 		}catch(IllegalArgumentException | NullPointerException e){
 			sender.sendMessage(new TextComponentString("That element does not exist!"));
 			return;

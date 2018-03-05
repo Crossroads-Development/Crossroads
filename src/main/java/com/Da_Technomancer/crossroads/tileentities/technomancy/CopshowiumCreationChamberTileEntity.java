@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
@@ -82,7 +82,7 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 
 		@Override
 		public void setMagic(MagicUnit mag){
-			if(MagicElements.getElement(mag) == MagicElements.TIME){
+			if(EnumMagicElements.getElement(mag) == EnumMagicElements.TIME){
 				if(content != null){
 					if(content.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium()){
 						content = null;

@@ -97,11 +97,16 @@ public class MagicUnit{
 	@Override
 	public String toString(){
 		Color col = getRGB();
-		return "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue() + ", Element: " + MagicElements.getElement(this).toString() + ", Energy: " + energy + ", Potential: " + potential + ", Stability: " + stability + ", Void: " + voi;
+		return "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue() + ", Element: " + EnumMagicElements.getElement(this).toString() + ", Energy: " + energy + ", Potential: " + potential + ", Stability: " + stability + ", Void: " + voi;
 	}
 
 	@Override
 	public boolean equals(Object other){
 		return other == this || (other instanceof MagicUnit && ((MagicUnit) other).getEnergy() == energy && ((MagicUnit) other).getStability() == stability && ((MagicUnit) other).getPotential() == potential && ((MagicUnit) other).getVoid() == voi);
+	}
+	
+	@Override
+	public int hashCode(){
+		return (energy << 12) + ((potential & 0xE) << 8) + ((stability & 0xE) << 4) + (voi & 0xE);
 	}
 }

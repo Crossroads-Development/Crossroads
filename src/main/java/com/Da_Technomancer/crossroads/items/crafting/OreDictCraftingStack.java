@@ -70,4 +70,9 @@ public class OreDictCraftingStack implements ICraftingStack<ItemStack>{
 	public String toString(){
 		return "OreDictCraftingStack[OreDict: " + oreDict + ", Count: " + count + "]";
 	}
+	
+	@Override
+	public int hashCode(){
+		return (oreDict.hashCode() << 4) + (count & 0xE);
+	}
 }

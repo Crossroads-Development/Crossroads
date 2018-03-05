@@ -12,7 +12,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -205,7 +205,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || mag.getStability() == 0 ? null : new MagicUnit(0, 0, mag.getStability(), 0), world);
 					break;
 				case 4:
-					if(MagicElements.getElement(mag) == MagicElements.LIGHT){
+					if(EnumMagicElements.getElement(mag) == EnumMagicElements.LIGHT){
 						world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 5));
 					}
 					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, world);
@@ -214,7 +214,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, world);
 					break;
 				case 6:
-					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || MagicElements.getElement(mag) != MagicElements.RIFT ? null : new MagicUnit(0, 0, 0, mag.getPower()), world);
+					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || EnumMagicElements.getElement(mag) != EnumMagicElements.RIFT ? null : new MagicUnit(0, 0, 0, mag.getPower()), world);
 					break;
 			}
 

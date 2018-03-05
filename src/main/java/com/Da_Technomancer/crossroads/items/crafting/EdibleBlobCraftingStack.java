@@ -73,4 +73,9 @@ public class EdibleBlobCraftingStack implements ICraftingStack<ItemStack>{
 		
 		return false;
 	}
+	
+	@Override
+	public int hashCode(){
+		return (hunger << 8) + (saturation << 4) + (count & 15);
+	}
 }

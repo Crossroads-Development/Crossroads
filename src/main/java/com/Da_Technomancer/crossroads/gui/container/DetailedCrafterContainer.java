@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -91,7 +91,7 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world) && nbt.getCompoundTag("elements").hasKey(MagicElements.TIME.name()) && ModConfig.getConfigBool(ModConfig.technomancy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("alchemy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("alchemy"))){
+		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world) && nbt.getCompoundTag("elements").hasKey(EnumMagicElements.TIME.name()) && ModConfig.getConfigBool(ModConfig.technomancy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("alchemy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("alchemy"))){
 			for(int i = 0; i < 9; i++){
 				inInv.decrStackSize(i, 1);
 			}
@@ -124,8 +124,8 @@ public class DetailedCrafterContainer extends Container{
 
 	private static boolean passesAlchemyCriteria(NBTTagCompound elementTag){
 		//In order to unlock alchemy, the player needs to have discovered all elements other than void and time. (Discovering void and/or time doesn't hurt)
-		for(MagicElements element : MagicElements.values()){
-			if(element != MagicElements.TIME && element != MagicElements.VOID && element != MagicElements.NO_MATCH && !elementTag.getBoolean(element.name())){
+		for(EnumMagicElements element : EnumMagicElements.values()){
+			if(element != EnumMagicElements.TIME && element != EnumMagicElements.VOID && element != EnumMagicElements.NO_MATCH && !elementTag.getBoolean(element.name())){
 				return false;
 			}
 		}

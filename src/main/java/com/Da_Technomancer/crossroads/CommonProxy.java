@@ -50,7 +50,6 @@ public class CommonProxy{
 		ModDimensions.init();
 		ModEntities.init();
 		ModParticles.init();
-		ModIntegration.preInit();
 	}
 
 	protected void init(FMLInitializationEvent e){
@@ -111,6 +110,8 @@ public class CommonProxy{
 			registry.register(recipe);
 		}
 		ModCrafting.toRegister.clear();
+		
+		ModIntegration.preInit();
 	}
 
 	/**

@@ -15,7 +15,7 @@ import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
@@ -68,7 +68,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		this(EnumFacing.NORTH);
 	}
 
-	public MagicElements getElement(){
+	public EnumMagicElements getElement(){
 		return currentElement;
 	}
 
@@ -101,10 +101,10 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 			return;
 		}
 
-		sumEnergy = runLoss(rotaryMembers, currentElement == MagicElements.STABILITY ? (voi ? 1.5D : 1D) : 1.001D);
-		sumEnergy += Math.signum(sumEnergy) * (currentElement == MagicElements.ENERGY ? (voi ? -10 : 10) : 0);
-		sumEnergy += currentElement == MagicElements.CHARGE ? (voi ? -10 : 10) : 0;
-		sumEnergy = currentElement == MagicElements.EQUALIBRIUM ? (voi ? ((7D * sumEnergy) - (3D * lastSumEnergy)) / 4D : (sumEnergy + (3D * lastSumEnergy)) / 4D) : sumEnergy;
+		sumEnergy = runLoss(rotaryMembers, currentElement == EnumMagicElements.STABILITY ? (voi ? 1.5D : 1D) : 1.001D);
+		sumEnergy += Math.signum(sumEnergy) * (currentElement == EnumMagicElements.ENERGY ? (voi ? -10 : 10) : 0);
+		sumEnergy += currentElement == EnumMagicElements.CHARGE ? (voi ? -10 : 10) : 0;
+		sumEnergy = currentElement == EnumMagicElements.EQUALIBRIUM ? (voi ? ((7D * sumEnergy) - (3D * lastSumEnergy)) / 4D : (sumEnergy + (3D * lastSumEnergy)) / 4D) : sumEnergy;
 
 		if(sumEnergy < 1 && sumEnergy > -1){
 			sumEnergy = 0;
@@ -159,7 +159,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 		time = nbt.getInteger("time");
 		voi = nbt.getBoolean("voi");
-		currentElement = nbt.hasKey("elem") ? MagicElements.valueOf(nbt.getString("elem")) : null;
+		currentElement = nbt.hasKey("elem") ? EnumMagicElements.valueOf(nbt.getString("elem")) : null;
 	}
 
 	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
@@ -263,7 +263,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		return super.getCapability(cap, side);
 	}
 
-	private MagicElements currentElement;
+	private EnumMagicElements currentElement;
 	private boolean voi;
 	private int time;
 
@@ -272,7 +272,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		@Override
 		public void setMagic(MagicUnit mag){
 			if(mag != null){
-				MagicElements newElem = MagicElements.getElement(mag);
+				EnumMagicElements newElem = EnumMagicElements.getElement(mag);
 				if(newElem != currentElement || voi != (mag.getVoid() != 0)){
 					currentElement = newElem;
 					voi = mag.getVoid() != 0;

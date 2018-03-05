@@ -54,6 +54,11 @@ public class BlockCraftingStack implements ICraftingStack<IBlockState>{
 
 		return false;
 	}
+	
+	@Override
+	public int hashCode(){
+		return (state.hashCode() << 1) + (ignoreMeta ? 1 : 0);
+	}
 
 	@Override
 	public String toString(){

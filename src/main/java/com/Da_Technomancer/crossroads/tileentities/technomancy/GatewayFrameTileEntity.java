@@ -14,7 +14,7 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -264,7 +264,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 		@Override
 		public void setMagic(MagicUnit mag){
-			if(MagicElements.getElement(mag) == MagicElements.RIFT){
+			if(EnumMagicElements.getElement(mag) == EnumMagicElements.RIFT){
 				magicPassed = true;
 				markDirty();
 			}

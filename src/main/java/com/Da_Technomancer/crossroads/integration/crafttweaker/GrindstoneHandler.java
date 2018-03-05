@@ -36,7 +36,7 @@ public class GrindstoneHandler{
 		if(in.isEmpty()){
 			return;
 		}
-		CraftTweakerAPI.apply(new Add(new CraftingStack(in.getItem(), in.getCount(), in.getMetadata()), CraftTweakerIntegration.toItemStack(output1, output2, output3)));
+		CraftTweakerAPI.apply(new Add(new CraftingStack(in.getItem(), 1, in.getMetadata()), CraftTweakerIntegration.toItemStack(output1, output2, output3)));
 	}
 
 	/** Add a new ore dict recipe.
@@ -58,47 +58,6 @@ public class GrindstoneHandler{
 		CraftTweakerAPI.apply(new Add(new OreDictCraftingStack(key, 1), CraftTweakerIntegration.toItemStack(output1, output2, output3)));
 	}
 
-	/** Adds a new grindstone recipe and updates JEI Integration.
-	 *
-	 * @param input
-	 *            the key that represents the input item
-	 * @param outputs
-	 *            the results of the grindstone operation */
-	private static ItemStack[] addGrindstoneRecipe(ICraftingStack<ItemStack> input, ItemStack[] outputs){
-		return RecipeHolder.grindRecipes.put(input, outputs);
-	}
-
-	/** Remove the recipe for the grindstone and return the previously registered output stack for that key (if it exists).
-	 * If the outputs are specified via the parameter, the recipe is only removed if the output stacks matches!
-	 *
-	 * @param input
-	 *            key for the input of the grindstone recipe
-	 * @param outputs
-	 *            output stacks of the recipe, can be null if it should be removed regardless of what output was registered
-	 * @param overwritten
-	 *            the previously registered output for the input, that will be added again
-	 * @return the output stack that was registered for the input key */
-	private static ItemStack[] replaceGrindstoneRecipe(ICraftingStack<ItemStack> input, ItemStack[] outputs, ItemStack[] overwritten){
-		if(outputs != null){
-			// remove only if the exact output is registered
-			if(RecipeHolder.grindRecipes.remove(input, outputs)){
-				if(overwritten != null){
-					addGrindstoneRecipe(input, overwritten);
-				}
-				return outputs;
-			}else{
-				return null;
-			}
-		}else{
-			// remove any recipe registered for that entry
-			ItemStack[] removedStack = RecipeHolder.grindRecipes.remove(input);
-			if(overwritten != null){
-				addGrindstoneRecipe(input, overwritten);
-			}
-			return removedStack;
-		}
-	}
-
 	/** Operation to add a new recipe. */
 	private static class Add implements IAction{
 		private final ICraftingStack<ItemStack> input;
@@ -111,7 +70,7 @@ public class GrindstoneHandler{
 
 		@Override
 		public void apply(){
-			addGrindstoneRecipe(input, outputs);
+			RecipeHolder.grindRecipes.put(input, outputs);
 		}
 
 		@Override
@@ -130,7 +89,7 @@ public class GrindstoneHandler{
 			return;
 		}
 
-		CraftTweakerAPI.apply(new Remove(new CraftingStack(in.getItem(), in.getCount(), in.getMetadata())));
+		CraftTweakerAPI.apply(new Remove(new CraftingStack(in.getItem(), 1, in.getMetadata())));
 	}
 
 	/** Remove a grindstone recipe for the ore dictionary entry of the input item stack.
@@ -155,12 +114,12 @@ public class GrindstoneHandler{
 
 		@Override
 		public void apply(){
-			replaceGrindstoneRecipe(input, null, null);
+			System.out.println("input: " + input + ": " + RecipeHolder.grindRecipes.remove(input));
 		}
 
 		@Override
 		public String describe(){
-			return "Removing grindstone recipe for " + input;
+			return "Removing Grindstone recipe for " + input;
 		}
 	}
 }

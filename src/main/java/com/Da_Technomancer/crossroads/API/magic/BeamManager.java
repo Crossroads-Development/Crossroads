@@ -72,7 +72,7 @@ public class BeamManager{
 				wipe(world);
 				end = pos.offset(dir, i);
 				if(mag != null && mag.getRGB() != null){
-					IEffect e = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
+					IEffect e = EnumMagicElements.getElement(mag).getMixEffect(mag.getRGB());
 					if(e != null){
 						e.doEffect(world, pos.offset(dir, i), Math.min(64, mag.getPower()));
 					}

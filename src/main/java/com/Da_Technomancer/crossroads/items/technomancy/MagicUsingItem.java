@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Keys;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMagicItemToServer;
 
@@ -29,15 +29,15 @@ public abstract class MagicUsingItem extends Item{
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
 		if(player.world.isRemote && getMaxItemUseDuration(stack) == count){
-			MagicElements elemChanged = null;
+			EnumMagicElements elemChanged = null;
 			if(Keys.controlEnergy.isKeyDown()){
-				elemChanged = MagicElements.ENERGY;
+				elemChanged = EnumMagicElements.ENERGY;
 			}else if(Keys.controlPotential.isKeyDown()){
-				elemChanged = MagicElements.POTENTIAL;
+				elemChanged = EnumMagicElements.POTENTIAL;
 			}else if(Keys.controlStability.isKeyDown()){
-				elemChanged = MagicElements.STABILITY;
+				elemChanged = EnumMagicElements.STABILITY;
 			}else if(Keys.controlVoid.isKeyDown()){
-				elemChanged = MagicElements.VOID;
+				elemChanged = EnumMagicElements.VOID;
 			}
 			if(elemChanged != null && player instanceof EntityPlayer){
 				player.world.playSound((EntityPlayer) player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 5, (float) Math.random());
@@ -59,10 +59,10 @@ public abstract class MagicUsingItem extends Item{
 		if(nbt == null){
 			nbt = new NBTTagCompound();
 		}
-		tooltip.add("Energy usage: " + nbt.getInteger(MagicElements.ENERGY.name()));
-		tooltip.add("Potential usage: " + nbt.getInteger(MagicElements.POTENTIAL.name()));
-		tooltip.add("Stability usage: " + nbt.getInteger(MagicElements.STABILITY.name()));
-		tooltip.add("Void usage: " + nbt.getInteger(MagicElements.VOID.name()));
+		tooltip.add("Energy usage: " + nbt.getInteger(EnumMagicElements.ENERGY.name()));
+		tooltip.add("Potential usage: " + nbt.getInteger(EnumMagicElements.POTENTIAL.name()));
+		tooltip.add("Stability usage: " + nbt.getInteger(EnumMagicElements.STABILITY.name()));
+		tooltip.add("Void usage: " + nbt.getInteger(EnumMagicElements.VOID.name()));
 	}
 	
 	@Override

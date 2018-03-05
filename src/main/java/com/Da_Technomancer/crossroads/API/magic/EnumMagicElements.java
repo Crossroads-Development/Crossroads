@@ -20,7 +20,7 @@ import com.Da_Technomancer.crossroads.API.effects.TimeEffect;
 
 import net.minecraft.init.Blocks;
 
-public enum MagicElements{
+public enum EnumMagicElements{
 	
 	TIME(new TimeEffect(), new TimeEffect.VoidTimeEffect(), new Color(255, 100, 0), 16),
 	ENCHANTMENT(new EnchantEffect(), new EnchantEffect.DisenchantEffect(), new Color(251, 255, 184), 16),
@@ -44,7 +44,7 @@ public enum MagicElements{
 	private final Color mid;
 	private final int range;
 	
-	MagicElements(IEffect eff, IEffect voidEff, Color cent, int range){
+	EnumMagicElements(IEffect eff, IEffect voidEff, Color cent, int range){
 		this.effect = eff;
 		this.voidEffect = voidEff;
 		this.mid = cent;
@@ -90,12 +90,12 @@ public enum MagicElements{
 	}
 	
 	@Nullable
-	public static MagicElements getElement(@Nullable MagicUnit magic){
+	public static EnumMagicElements getElement(@Nullable MagicUnit magic){
 		return magic == null ? null : getElement(magic.getTrueRGB());
 	}
 	
-	public static MagicElements getElement(Color col){
-		for(MagicElements elem : MagicElements.values()){
+	public static EnumMagicElements getElement(Color col){
+		for(EnumMagicElements elem : EnumMagicElements.values()){
 			if(elem.contains(col)){
 				return elem;
 			}

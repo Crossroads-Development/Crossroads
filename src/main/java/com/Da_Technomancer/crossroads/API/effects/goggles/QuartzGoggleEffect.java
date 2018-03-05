@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
@@ -39,10 +39,10 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 				for(int i = 0; i < mag.length; i++){
 					MagicUnit check = mag[i];
 					if(check != null){
-						if(!nbt.hasKey(MagicElements.getElement(check).name())){
-							nbt.setBoolean(MagicElements.getElement(check).name(), true);
+						if(!nbt.hasKey(EnumMagicElements.getElement(check).name())){
+							nbt.setBoolean(EnumMagicElements.getElement(check).name(), true);
 							//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
-							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString() + TextFormatting.RESET.toString()));
+							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumMagicElements.getElement(check).toString() + TextFormatting.RESET.toString()));
 							StoreNBTToClient.syncNBTToClient((EntityPlayerMP) player, false);
 						}
 						chat.add(EnumFacing.getFront(i).toString() + ": " + check.toString());

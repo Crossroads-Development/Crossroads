@@ -6,14 +6,11 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;

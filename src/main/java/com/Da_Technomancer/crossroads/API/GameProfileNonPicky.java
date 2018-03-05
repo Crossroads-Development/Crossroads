@@ -53,6 +53,13 @@ public class GameProfileNonPicky extends GameProfile{
 		return true;
 	}
 	
+	@Override
+	public int hashCode(){
+		String name = getName();
+		UUID id = getId();
+		return ((name == null ? 0 : name.hashCode()) << 8) + ((id == null ? 0 : id.hashCode()) & 0xEE);
+	}
+	
 	public void writeToNBT(NBTTagCompound nbt, String name){
 		String profName = getName();
 		UUID id = getId();

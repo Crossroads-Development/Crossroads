@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.entity;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -35,7 +35,7 @@ public class EntityBullet extends EntityThrowable{
 				result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), (float) damage);
 			}
 			if(mag != null && (result.getBlockPos() != null || result.entityHit != null)){
-				IEffect effect = MagicElements.getElement(mag).getMixEffect(mag.getRGB());
+				IEffect effect = EnumMagicElements.getElement(mag).getMixEffect(mag.getRGB());
 				if(effect != null){
 					effect.doEffect(world, result.getBlockPos() == null ? result.entityHit.getPosition() : result.getBlockPos(), Math.min(64, mag.getPower()));
 				}

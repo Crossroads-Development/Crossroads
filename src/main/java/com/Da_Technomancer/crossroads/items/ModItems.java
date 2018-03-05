@@ -113,6 +113,9 @@ public final class ModItems{
 	public static Nitroglycerin nitroglycerin;
 	public static BasicItem solidQuicksilver;
 	public static CustomMaterial customMaterial;
+	public static BasicItem solidFusas;
+	public static BasicItem solidEldrine;
+	public static BasicItem solidStasisol;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -190,6 +193,9 @@ public final class ModItems{
 		new CustomTool("shovel");
 		new CustomTool("sword");
 		customMaterial = new CustomMaterial();
+		solidFusas = new BasicItem("solid_fusas");
+		solidEldrine = new BasicItem("solid_eldrine");
+		solidStasisol = new BasicItem("solid_stasisol");
 	}
 
 	@SideOnly(Side.CLIENT)

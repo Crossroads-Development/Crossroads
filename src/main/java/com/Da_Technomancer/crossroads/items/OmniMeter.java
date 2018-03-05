@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
@@ -83,9 +83,9 @@ public class OmniMeter extends Item implements IInfoDevice{
 								}
 								nbt = nbt.getCompoundTag("elements");
 
-								if(!nbt.hasKey(MagicElements.getElement(check).name())){
-									nbt.setBoolean(MagicElements.getElement(check).name(), true);
-									playerIn.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + MagicElements.getElement(check).toString()));
+								if(!nbt.hasKey(EnumMagicElements.getElement(check).name())){
+									nbt.setBoolean(EnumMagicElements.getElement(check).name(), true);
+									playerIn.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumMagicElements.getElement(check).toString()));
 									StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerIn, false);
 								}
 

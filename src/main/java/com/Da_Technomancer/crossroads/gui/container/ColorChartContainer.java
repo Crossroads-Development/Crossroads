@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
@@ -96,14 +96,14 @@ public class ColorChartContainer extends Container{
 				return ItemStack.EMPTY;
 			}
 			NBTTagCompound elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
-			ItemStack item = new ItemStack(elementTag.hasKey(MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name()) ? ModItems.invisItem : Item.getItemFromBlock(Blocks.BARRIER), 1);
+			ItemStack item = new ItemStack(elementTag.hasKey(EnumMagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name()) ? ModItems.invisItem : Item.getItemFromBlock(Blocks.BARRIER), 1);
 			NBTTagCompound nbt = new NBTTagCompound();
 			NBTTagList nbtlist = new NBTTagList();
 			Color col = getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos);
 			nbtlist.appendTag(new NBTTagString("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
 			nbt.setTag("Lore", nbtlist);
 			item.setTagInfo("display", nbt);
-			item.setStackDisplayName(elementTag.hasKey(MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name()) ? MagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name() : "UNDISCOVERED");
+			item.setStackDisplayName(elementTag.hasKey(EnumMagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name()) ? EnumMagicElements.getElement(getColor(inventorySlots.get(index).xPos, inventorySlots.get(index).yPos)).name() : "UNDISCOVERED");
 
 			return item;
 		}

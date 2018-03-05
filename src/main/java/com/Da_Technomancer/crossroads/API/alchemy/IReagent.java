@@ -38,7 +38,7 @@ public interface IReagent{
 	 */
 	@Nullable
 	public default EnumSolventType soluteType(){
-		return solventType();
+		return null;
 	}
 	
 	public default boolean canGlassContain(){

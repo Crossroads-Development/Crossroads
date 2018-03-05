@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.WorkspaceWorldProvider;
 
@@ -85,10 +85,10 @@ public class TimeEffect implements IEffect{
 				ChunkPos base = worldIn.getChunkFromBlockCoords(pos).getPos();
 				for(int i = 0; i < severity; i++){
 					BlockPos effectPos = base.getBlock(RAND.nextInt(16), RAND.nextInt(256), RAND.nextInt(16));
-					MagicElements element = null;
+					EnumMagicElements element = null;
 					do{
-						element = MagicElements.values()[RAND.nextInt(MagicElements.values().length)];
-					}while(element == MagicElements.TIME || element.getEffect() == null);
+						element = EnumMagicElements.values()[RAND.nextInt(EnumMagicElements.values().length)];
+					}while(element == EnumMagicElements.TIME || element.getEffect() == null);
 					element.getEffect().doEffect(worldIn, effectPos, severity);
 				}
 			}else if(ModConfig.blastChunk.getBoolean()){

@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Level;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
@@ -148,7 +148,7 @@ public final class EventHandlerCommon{
 						BlockPos pos = calcFields(datum.getValue()[0], datum.getValue()[1], data.nodeForces.get(key)[0], data.nodeForces.get(key)[1]);
 						if(pos != null){
 							toRemove.add(key);
-							MagicElements.TIME.getVoidEffect().doEffect(e.world, MiscOp.getChunkPosFromLong(key).getBlock(pos.getX(), pos.getY(), pos.getZ()), 64);
+							EnumMagicElements.TIME.getVoidEffect().doEffect(e.world, MiscOp.getChunkPosFromLong(key).getBlock(pos.getX(), pos.getY(), pos.getZ()), 64);
 						}
 					}catch(Exception ex){
 						toRemove.add(key);

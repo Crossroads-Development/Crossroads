@@ -13,7 +13,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicElements;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
@@ -193,16 +193,16 @@ public class PrototypePistol extends MagicUsingItem{
 					return;
 				}
 
-				int energy = nbt.getInteger(MagicElements.ENERGY.name());
-				int potential = nbt.getInteger(MagicElements.POTENTIAL.name());
-				int stability = nbt.getInteger(MagicElements.STABILITY.name());
-				int voi = nbt.getInteger(MagicElements.VOID.name());
-				if(energy <= cageNbt.getInteger("stored_" + MagicElements.ENERGY.name()) && potential <= cageNbt.getInteger("stored_" + MagicElements.POTENTIAL.name()) && stability <= cageNbt.getInteger("stored_" + MagicElements.STABILITY.name()) && voi <= cageNbt.getInteger("stored_" + MagicElements.VOID.name())){
+				int energy = nbt.getInteger(EnumMagicElements.ENERGY.name());
+				int potential = nbt.getInteger(EnumMagicElements.POTENTIAL.name());
+				int stability = nbt.getInteger(EnumMagicElements.STABILITY.name());
+				int voi = nbt.getInteger(EnumMagicElements.VOID.name());
+				if(energy <= cageNbt.getInteger("stored_" + EnumMagicElements.ENERGY.name()) && potential <= cageNbt.getInteger("stored_" + EnumMagicElements.POTENTIAL.name()) && stability <= cageNbt.getInteger("stored_" + EnumMagicElements.STABILITY.name()) && voi <= cageNbt.getInteger("stored_" + EnumMagicElements.VOID.name())){
 					if(energy + potential + stability + voi > 0){
-						cageNbt.setInteger("stored_" + MagicElements.ENERGY.name(), cageNbt.getInteger("stored_" + MagicElements.ENERGY.name()) - energy);
-						cageNbt.setInteger("stored_" + MagicElements.POTENTIAL.name(), cageNbt.getInteger("stored_" + MagicElements.POTENTIAL.name()) - potential);
-						cageNbt.setInteger("stored_" + MagicElements.STABILITY.name(), cageNbt.getInteger("stored_" + MagicElements.STABILITY.name()) - stability);
-						cageNbt.setInteger("stored_" + MagicElements.VOID.name(), cageNbt.getInteger("stored_" + MagicElements.VOID.name()) - voi);
+						cageNbt.setInteger("stored_" + EnumMagicElements.ENERGY.name(), cageNbt.getInteger("stored_" + EnumMagicElements.ENERGY.name()) - energy);
+						cageNbt.setInteger("stored_" + EnumMagicElements.POTENTIAL.name(), cageNbt.getInteger("stored_" + EnumMagicElements.POTENTIAL.name()) - potential);
+						cageNbt.setInteger("stored_" + EnumMagicElements.STABILITY.name(), cageNbt.getInteger("stored_" + EnumMagicElements.STABILITY.name()) - stability);
+						cageNbt.setInteger("stored_" + EnumMagicElements.VOID.name(), cageNbt.getInteger("stored_" + EnumMagicElements.VOID.name()) - voi);
 						port.getCapPrototype(Capabilities.MAGIC_HANDLER_CAPABILITY).setMagic(new MagicUnit(energy, potential, stability, voi));
 					}
 				}
@@ -326,25 +326,25 @@ public class PrototypePistol extends MagicUsingItem{
 							offhand.setTagCompound(new NBTTagCompound());
 						}
 						NBTTagCompound nbt = offhand.getTagCompound();
-						int energy = nbt.getInteger("stored_" + MagicElements.ENERGY.name());
+						int energy = nbt.getInteger("stored_" + EnumMagicElements.ENERGY.name());
 						energy += mag.getEnergy();
 						energy = Math.min(1024, energy);
-						nbt.setInteger("stored_" + MagicElements.ENERGY.name(), energy);
+						nbt.setInteger("stored_" + EnumMagicElements.ENERGY.name(), energy);
 
-						int potential = nbt.getInteger("stored_" + MagicElements.POTENTIAL.name());
+						int potential = nbt.getInteger("stored_" + EnumMagicElements.POTENTIAL.name());
 						potential += mag.getPotential();
 						potential = Math.min(1024, potential);
-						nbt.setInteger("stored_" + MagicElements.POTENTIAL.name(), potential);
+						nbt.setInteger("stored_" + EnumMagicElements.POTENTIAL.name(), potential);
 
-						int stability = nbt.getInteger("stored_" + MagicElements.STABILITY.name());
+						int stability = nbt.getInteger("stored_" + EnumMagicElements.STABILITY.name());
 						stability += mag.getStability();
 						stability = Math.min(1024, stability);
-						nbt.setInteger("stored_" + MagicElements.STABILITY.name(), stability);
+						nbt.setInteger("stored_" + EnumMagicElements.STABILITY.name(), stability);
 
-						int voi = nbt.getInteger("stored_" + MagicElements.VOID.name());
+						int voi = nbt.getInteger("stored_" + EnumMagicElements.VOID.name());
 						voi += mag.getVoid();
 						voi = Math.min(1024, voi);
-						nbt.setInteger("stored_" + MagicElements.VOID.name(), voi);
+						nbt.setInteger("stored_" + EnumMagicElements.VOID.name(), voi);
 					}
 				}
 			}
