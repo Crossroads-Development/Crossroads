@@ -196,7 +196,7 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 					return stack;
 				}
 				int oldCount = inventory[slot].getCount();
-				int cap = Math.min(stack.getCount(), inventory[0].getMaxStackSize() - oldCount);
+				int cap = Math.min(stack.getCount(), stack.getMaxStackSize() - oldCount);
 				ItemStack out = stack.copy();
 				out.setCount(stack.getCount() - cap);
 
@@ -291,7 +291,7 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 				return stack;
 			}
 			int oldCount = inventory[0].getCount();
-			int cap = Math.min(stack.getCount(), inventory[0].getMaxStackSize() - oldCount);
+			int cap = Math.min(stack.getCount(), stack.getMaxStackSize() - oldCount);
 			ItemStack out = stack.copy();
 			out.setCount(stack.getCount() - cap);
 

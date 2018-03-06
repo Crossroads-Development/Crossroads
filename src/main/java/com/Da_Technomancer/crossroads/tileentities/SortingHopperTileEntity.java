@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -19,7 +18,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityHopper;
@@ -29,46 +27,22 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class SortingHopperTileEntity extends TileEntityLockable implements IHopper, ITickable{
+public class SortingHopperTileEntity extends TileEntityLockable implements ITickable{
 
 	public SortingHopperTileEntity(){
 		super();
-		for(int i = 0; i < 5; i++){
-			inventory[i] = ItemStack.EMPTY;
-		}
+		clear();
 	}
-	
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return (oldState.getBlock() != newState.getBlock());
-	}
-	
-	private void updateHopper(){
-		if(world != null && !world.isRemote){
-			if(!isOnTransferCooldown() && BlockHopper.isEnabled(getBlockMetadata())){
-				boolean flag = false;
-
-				if(!isFull()){
-					flag = captureDroppedItems(this);
-				}
-
-				if(!this.isEmpty()){
-					flag = transferItemsOut() || flag;
-				}
-
-				if(flag){
-					transferCooldown = 8;
-					markDirty();
-				}
-			}
-		}
 	}
 
 	@Override
@@ -77,10 +51,10 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	}
 
 	@Override
-	protected net.minecraftforge.items.IItemHandler createUnSidedHandler(){
-		return new HopperItemHandler(this);
+	protected IItemHandler createUnSidedHandler(){
+		return new HopperItemHandler();
 	}
-	
+
 	@Override
 	public boolean hasCustomName(){
 		return false;
@@ -93,19 +67,19 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	 * VanillaHopperItemHandler modified to take SortingHopper
 	 */
 	private class HopperItemHandler extends InvWrapper{
-		private final SortingHopperTileEntity hopper;
 
-		public HopperItemHandler(SortingHopperTileEntity hopper){
-			super(hopper);
-			this.hopper = hopper;
+		public HopperItemHandler(){
+			super(SortingHopperTileEntity.this);
 		}
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(stack.isEmpty())
+			if(stack.isEmpty()){
 				return ItemStack.EMPTY;
-			if(simulate || !hopper.mayTransfer())
+			}
+			if(simulate || !mayTransfer()){
 				return super.insertItem(slot, stack, simulate);
+			}
 
 			int curStackSize = stack.getCount();
 			ItemStack itemStack = super.insertItem(slot, stack, false);
@@ -115,7 +89,7 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 			return itemStack;
 		}
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -133,12 +107,12 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 		super.writeToNBT(nbt);
 
 		for(int i = 0; i < 5; i++){
-				if(!inventory[i].isEmpty()){
-					NBTTagCompound stackNBT = new NBTTagCompound();
-					this.inventory[i].writeToNBT(stackNBT);
-					nbt.setTag("inv" + i, stackNBT);
-				}
+			if(!inventory[i].isEmpty()){
+				NBTTagCompound stackNBT = new NBTTagCompound();
+				inventory[i].writeToNBT(stackNBT);
+				nbt.setTag("inv" + i, stackNBT);
 			}
+		}
 
 		nbt.setInteger("transferCooldown", transferCooldown);
 
@@ -167,7 +141,7 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	 */
 	@Override
 	public ItemStack decrStackSize(int index, int count){
-		if(count > 4 || inventory[index].isEmpty()){
+		if(index > 4 || inventory[index].isEmpty()){
 			return ItemStack.EMPTY;
 		}
 		return inventory[index].splitStack(count);
@@ -217,17 +191,17 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	 */
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player){
-		return world.getTileEntity(pos) != this ? false : player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
+		return world.getTileEntity(pos) != this ? false : player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64D;
 	}
 
 	@Override
 	public void openInventory(EntityPlayer player){
-		
+
 	}
 
 	@Override
 	public void closeInventory(EntityPlayer player){
-		
+
 	}
 
 	/**
@@ -245,11 +219,26 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	@Override
 	public void update(){
 		if(world != null && !world.isRemote){
-			--transferCooldown;
-
-			if(!isOnTransferCooldown()){
+			if(--transferCooldown <= 0){
 				transferCooldown = 0;
-				updateHopper();
+				if(world != null && !world.isRemote){
+					if(transferCooldown <= 0 && BlockHopper.isEnabled(getBlockMetadata())){
+						boolean flag = false;
+
+						if(!isFull()){
+							flag = transferItemsIn();
+						}
+
+						if(!isEmpty()){
+							flag = transferItemsOut() || flag;
+						}
+
+						if(flag){
+							transferCooldown = 8;
+							markDirty();
+						}
+					}
+				}
 			}
 		}
 	}
@@ -275,17 +264,34 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 		return true;
 	}
 
+
+
 	private boolean transferItemsOut(){
-		if(insertHook(this, EnumFacing.getFront(getBlockMetadata() & 7))){
-			return true;
+		EnumFacing facing = EnumFacing.getFront(getBlockMetadata() & 7);
+		TileEntity te = world.getTileEntity(pos.offset(facing));
+
+		//Insertion via IItemHandler
+		if(te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())){
+			IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+			for(int i = 0; i < getSizeInventory(); i++){
+				ItemStack stackInSlot = getStackInSlot(i);
+				if(!stackInSlot.isEmpty()){
+					ItemStack insert = stackInSlot.copy();
+					insert.setCount(1);
+					ItemStack newStack = ItemHandlerHelper.insertItem(handler, insert, true);
+					if(newStack.isEmpty()){
+						ItemHandlerHelper.insertItem(handler, decrStackSize(i, 1), false);
+						markDirty();
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 		
-		EnumFacing facing = BlockHopper.getFacing(getBlockMetadata());
-		/**
-		 * Returns the IInventory (if applicable) of the TileEntity at the
-		 * specified position
-		 */
-		IInventory iinventory = getInventoryAtPosition(world, getXPos() + facing.getFrontOffsetX(), getYPos() + facing.getFrontOffsetY(), getZPos() +facing.getFrontOffsetZ());
+		//Returns the IInventory (if applicable) of the TileEntity at the specified position
+		IInventory iinventory = getInventoryAtPosition(world, pos.offset(facing));
 
 		if(iinventory == null){
 			return false;
@@ -297,8 +303,8 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 			}else{
 				for(int i = 0; i < getSizeInventory(); i++){
 					if(!getStackInSlot(i).isEmpty()){
-						ItemStack itemstack = this.getStackInSlot(i).copy();
-						ItemStack itemstack1 = putStackInInventoryAllSlots(iinventory, this.decrStackSize(i, 1), enumfacing);
+						ItemStack itemstack = getStackInSlot(i).copy();
+						ItemStack itemstack1 = putStackInInventoryAllSlots(iinventory, decrStackSize(i, 1), enumfacing);
 
 						if(itemstack1.isEmpty()){
 							iinventory.markDirty();
@@ -312,33 +318,6 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 				return false;
 			}
 		}
-	}
-
-	private static boolean insertHook(IHopper hopper, EnumFacing facing){
-		TileEntity tileEntity = hopper.getWorld().getTileEntity(new BlockPos(hopper.getXPos(), hopper.getYPos(), hopper.getZPos()).offset(facing));
-
-		if(tileEntity == null)
-			return false;
-		if(!tileEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()))
-			return false;
-
-		IItemHandler handler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-
-		for(int i = 0; i < hopper.getSizeInventory(); i++){
-			ItemStack stackInSlot = hopper.getStackInSlot(i);
-			if(!stackInSlot.isEmpty()){
-				ItemStack insert = stackInSlot.copy();
-				insert.setCount(1);
-				ItemStack newStack = ItemHandlerHelper.insertItem(handler, insert, true);
-				if(newStack.isEmpty()){
-					ItemHandlerHelper.insertItem(handler, hopper.decrStackSize(i, 1), false);
-					hopper.markDirty();
-					return true;
-				}
-			}
-		}
-
-		return true;
 	}
 
 	/**
@@ -399,25 +378,45 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 		return true;
 	}
 
-	private static boolean captureDroppedItems(IHopper hopper){
-		Boolean ret = net.minecraftforge.items.VanillaInventoryCodeHooks.extractHook(hopper);
-		if(ret != null)
-			return ret;
-		IInventory iinventory = getHopperInventory(hopper);
+	private boolean transferItemsIn(){
+		TileEntity fromTE = world.getTileEntity(pos.offset(EnumFacing.UP));
+
+
+		//Transfer from IItemHandler
+		if(fromTE != null && fromTE.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			IItemHandler handler = fromTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
+			IItemHandler thisHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+
+			for (int i = 0; i < handler.getSlots(); i++){
+				ItemStack extractItem = handler.extractItem(i, 1, false);
+				if (!extractItem.isEmpty()){
+
+					for (int j = 0; j < getSizeInventory(); j++){
+						if(thisHandler.insertItem(j, extractItem, false).isEmpty()){
+							return true;
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
+
+		//Transfer from IInventory
+		IInventory iinventory = getInventoryAtPosition(world, pos.offset(EnumFacing.UP));
 
 		if(iinventory != null){
-			EnumFacing enumfacing = EnumFacing.DOWN;
-
-			if(isInventoryEmpty(iinventory, enumfacing)){
+			if(isInventoryEmpty(iinventory, EnumFacing.DOWN)){
 				return false;
 			}
 
 			if(iinventory instanceof ISidedInventory){
 				ISidedInventory isidedinventory = (ISidedInventory) iinventory;
-				int[] aint = isidedinventory.getSlotsForFace(enumfacing);
+				int[] aint = isidedinventory.getSlotsForFace(EnumFacing.DOWN);
 
 				for(int i : aint){
-					if(pullItemFromSlot(hopper, iinventory, i, enumfacing)){
+					if(pullItemFromSlot(iinventory, i, EnumFacing.DOWN)){
 						return true;
 					}
 				}
@@ -425,14 +424,15 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 				int j = iinventory.getSizeInventory();
 
 				for(int k = 0; k < j; ++k){
-					if(pullItemFromSlot(hopper, iinventory, k, enumfacing)){
+					if(pullItemFromSlot(iinventory, k, EnumFacing.DOWN)){
 						return true;
 					}
 				}
 			}
 		}else{
-			for(EntityItem entityitem : getCaptureItems(hopper.getWorld(), hopper.getXPos(), hopper.getYPos(), hopper.getZPos())){
-				if(putDropInInventoryAllSlots(hopper, entityitem)){
+			//Suck up dropped items
+			for(EntityItem entityitem : world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.getX(), pos.getY() + 0.5D, pos.getZ(), pos.getX() + 1, pos.getY() + 2D, pos.getZ() + 1), EntitySelectors.IS_ALIVE)){
+				if(putDropInInventoryAllSlots(this, entityitem)){
 					return true;
 				}
 			}
@@ -445,12 +445,12 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	 * Pulls from the specified slot in the inventory and places in any
 	 * available slot in the hopper. Returns true if the entire stack was moved
 	 */
-	private static boolean pullItemFromSlot(IHopper hopper, IInventory inventoryIn, int index, EnumFacing direction){
+	private boolean pullItemFromSlot(IInventory inventoryIn, int index, EnumFacing direction){
 		ItemStack itemstack = inventoryIn.getStackInSlot(index);
 
 		if(!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction)){
 			ItemStack itemstack1 = itemstack.copy();
-			ItemStack itemstack2 = putStackInInventoryAllSlots(hopper, inventoryIn.decrStackSize(index, 1), (EnumFacing) null);
+			ItemStack itemstack2 = putStackInInventoryAllSlots(this, inventoryIn.decrStackSize(index, 1), (EnumFacing) null);
 
 			if(itemstack2.isEmpty()){
 				inventoryIn.markDirty();
@@ -511,8 +511,8 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 			}
 		}
 
-		if(!stack.isEmpty()){
-			stack = ItemStack.EMPTY;
+		if(stack.isEmpty()){
+			return ItemStack.EMPTY;
 		}
 
 		return stack;
@@ -582,47 +582,27 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 		return stack;
 	}
 
-	/**
-	 * Returns the IInventory for the specified hopper
-	 */
-	private static IInventory getHopperInventory(IHopper hopper){
-		/**
-		 * Returns the IInventory (if applicable) of the TileEntity at the
-		 * specified position
-		 */
-		return getInventoryAtPosition(hopper.getWorld(), hopper.getXPos(), hopper.getYPos() + 1.0D, hopper.getZPos());
-	}
-
-	public static List<EntityItem> getCaptureItems(World worldIn, double p_184292_1_, double p_184292_3_, double p_184292_5_){
-		return worldIn.<EntityItem> getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(p_184292_1_ - 0.5D, p_184292_3_, p_184292_5_ - 0.5D, p_184292_1_ + 0.5D, p_184292_3_ + 1.5D, p_184292_5_ + 0.5D), EntitySelectors.IS_ALIVE);
-	}
 
 	/**
 	 * Returns the IInventory (if applicable) of the TileEntity at the specified
 	 * position
 	 */
-	public static IInventory getInventoryAtPosition(World worldIn, double x, double y, double z){
+	private static IInventory getInventoryAtPosition(World worldIn, BlockPos targetPos){
 		IInventory iinventory = null;
-		int i = MathHelper.floor(x);
-		int j = MathHelper.floor(y);
-		int k = MathHelper.floor(z);
-		BlockPos blockpos = new BlockPos(i, j, k);
-		Block block = worldIn.getBlockState(blockpos).getBlock();
+		Block block = worldIn.getBlockState(targetPos).getBlock();
 
-		if(block instanceof BlockContainer){
-			TileEntity tileentity = worldIn.getTileEntity(blockpos);
+		TileEntity te = worldIn.getTileEntity(targetPos);
+		if(te instanceof IInventory){
+			iinventory = (IInventory) te;
 
-			if(tileentity instanceof IInventory){
-				iinventory = (IInventory) tileentity;
-
-				if(iinventory instanceof TileEntityChest && block instanceof BlockChest){
-					iinventory = ((BlockChest) block).getContainer(worldIn, blockpos, true);
-				}
+			if(iinventory instanceof TileEntityChest && block instanceof BlockChest){
+				iinventory = ((BlockChest) block).getContainer(worldIn, targetPos, true);
 			}
 		}
 
+
 		if(iinventory == null){
-			List<Entity> list = worldIn.getEntitiesInAABBexcluding((Entity) null, new AxisAlignedBB(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D), EntitySelectors.HAS_INVENTORY);
+			List<Entity> list = worldIn.getEntitiesInAABBexcluding((Entity) null, new AxisAlignedBB(targetPos.getX(), targetPos.getY(), targetPos.getZ(), targetPos.getX() + 1, targetPos.getY() + 1, targetPos.getZ() + 1), EntitySelectors.HAS_INVENTORY);
 
 			if(!list.isEmpty()){
 				iinventory = (IInventory) list.get(worldIn.rand.nextInt(list.size()));
@@ -640,34 +620,6 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	public String getGuiID(){
 		return "minecraft:hopper";
 	}
-	
-	/**
-	 * Gets the world X position for this hopper entity.
-	 */
-	@Override
-	public double getXPos(){
-		return pos.getX() + 0.5D;
-	}
-
-	/**
-	 * Gets the world Y position for this hopper entity.
-	 */
-	@Override
-	public double getYPos(){
-		return pos.getY() + 0.5D;
-	}
-
-	/**
-	 * Gets the world Z position for this hopper entity.
-	 */
-	@Override
-	public double getZPos(){
-		return pos.getZ() + 0.5D;
-	}
-
-	public boolean isOnTransferCooldown(){
-		return transferCooldown > 0;
-	}
 
 	public boolean mayTransfer(){
 		return transferCooldown <= 1;
@@ -680,6 +632,7 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 
 	@Override
 	public void setField(int id, int value){
+
 	}
 
 	@Override
@@ -690,7 +643,7 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	@Override
 	public void clear(){
 		for(int i = 0; i < 5; ++i){
-			this.inventory[i] = ItemStack.EMPTY;
+			inventory[i] = ItemStack.EMPTY;
 		}
 	}
 
