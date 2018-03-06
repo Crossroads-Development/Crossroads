@@ -22,7 +22,7 @@ public class ElementalReagent implements IDynamicReagent, IElementReagent{
 	 * Energy, potential, and stability determine base composition, void determines possible variance from that at randomization.
 	 */
 	private final MagicUnit possibleRange;
-	private MagicUnit range;
+	private MagicUnit range = new MagicUnit(1, 1, 1, 0);
 	
 	private final Color color;
 	private final IAlchEffect effect;
@@ -30,8 +30,8 @@ public class ElementalReagent implements IDynamicReagent, IElementReagent{
 	private final int maxMelt;
 	private final int minBoil;
 	private final int maxBoil;
-	private int melt;
-	private int boil;
+	private int melt = 0;
+	private int boil = 1;
 	private final Item solidForm;
 	
 	public ElementalReagent(int index, byte level, int minMelt, int maxMelt, int minBoil, int maxBoil, Color color, IAlchEffect effect, boolean destroyContainer, MagicUnit possibleRange, @Nullable Item solidForm){
@@ -107,10 +107,10 @@ public class ElementalReagent implements IDynamicReagent, IElementReagent{
 
 	@Override
 	public void setProperties(int seed){
-		melt = minMelt + ((seed >> 1) % (1 + maxMelt - minMelt));
-		boil = Math.min(melt + 1, minBoil + ((seed >> 3) % (1 + maxBoil - minBoil)));
+		melt = minMelt + ((seed >>> 1) % (1 + maxMelt - minMelt));
+		boil = Math.min(melt + 1, minBoil + ((seed >>> 3) % (1 + maxBoil - minBoil)));
 		int variance = possibleRange.getVoid() + 1;
-		range = new MagicUnit(possibleRange.getEnergy() + ((seed >> 1) % variance), possibleRange.getPotential() + ((seed >> 4) % variance), possibleRange.getStability() + ((seed >> 8) % variance), 0);
+		range = new MagicUnit(possibleRange.getEnergy() + ((seed >>> 1) % variance), possibleRange.getPotential() + ((seed >>> 4) % variance), possibleRange.getStability() + ((seed >>> 8) % variance), 0);
 		
 		AlchemyCore.ELEMENTAL_REAGS.add(this);
 	}

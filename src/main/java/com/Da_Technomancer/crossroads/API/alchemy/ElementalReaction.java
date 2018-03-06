@@ -36,7 +36,9 @@ public class ElementalReaction implements IReaction{
 			}
 			
 			Color goal = product.getAlignment().getTrueRGB();
-			
+			if(goal == null || unit == null){
+				return false;
+			}
 			if(Math.abs(goal.getRed() - unit.getRed()) <= COLOR_BOUND && Math.abs(goal.getGreen() - unit.getGreen()) <= COLOR_BOUND && Math.abs(goal.getBlue() - unit.getBlue()) <= COLOR_BOUND){
 				double created = 0;
 				created += reags[0] == null ? 0 : reags[0].getAmount();

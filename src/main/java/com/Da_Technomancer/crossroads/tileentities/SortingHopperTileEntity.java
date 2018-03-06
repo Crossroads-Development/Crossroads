@@ -276,20 +276,26 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 	}
 
 	private boolean transferItemsOut(){
-		if(insertHook(this)){
+		if(insertHook(this, EnumFacing.getFront(getBlockMetadata() & 7))){
 			return true;
 		}
-		IInventory iinventory = this.getInventoryForHopperTransfer();
+		
+		EnumFacing facing = BlockHopper.getFacing(getBlockMetadata());
+		/**
+		 * Returns the IInventory (if applicable) of the TileEntity at the
+		 * specified position
+		 */
+		IInventory iinventory = getInventoryAtPosition(world, getXPos() + facing.getFrontOffsetX(), getYPos() + facing.getFrontOffsetY(), getZPos() +facing.getFrontOffsetZ());
 
 		if(iinventory == null){
 			return false;
 		}else{
-			EnumFacing enumfacing = BlockHopper.getFacing(getBlockMetadata()).getOpposite();
+			EnumFacing enumfacing = facing.getOpposite();
 
 			if(isInventoryFull(iinventory, enumfacing)){
 				return false;
 			}else{
-				for(int i = 0; i < getSizeInventory(); ++i){
+				for(int i = 0; i < getSizeInventory(); i++){
 					if(!getStackInSlot(i).isEmpty()){
 						ItemStack itemstack = this.getStackInSlot(i).copy();
 						ItemStack itemstack1 = putStackInInventoryAllSlots(iinventory, this.decrStackSize(i, 1), enumfacing);
@@ -306,13 +312,6 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 				return false;
 			}
 		}
-	}
-
-	/**
-	 * A version of the forge hook that takes this tile entity
-	 */
-	private static boolean insertHook(SortingHopperTileEntity hopper){
-		return insertHook(hopper, EnumFacing.getFront(hopper.getBlockMetadata() & 7));
 	}
 
 	private static boolean insertHook(IHopper hopper, EnumFacing facing){
@@ -581,18 +580,6 @@ public class SortingHopperTileEntity extends TileEntityLockable implements IHopp
 		}
 
 		return stack;
-	}
-
-	/**
-	 * Returns the IInventory that this hopper is pointing into
-	 */
-	private IInventory getInventoryForHopperTransfer(){
-		EnumFacing enumfacing = BlockHopper.getFacing(this.getBlockMetadata());
-		/**
-		 * Returns the IInventory (if applicable) of the TileEntity at the
-		 * specified position
-		 */
-		return getInventoryAtPosition(world, this.getXPos() + enumfacing.getFrontOffsetX(), this.getYPos() + enumfacing.getFrontOffsetY(), this.getZPos() + enumfacing.getFrontOffsetZ());
 	}
 
 	/**

@@ -27,7 +27,7 @@ public final class EnergyConverters{
 	public static final int FAT_PER_VALUE = 100;
 	
 	/**
-	 * The RATE up equivalent to 1 speed(Fields). 
+	 * The RATE up equivalent to 1 speed (Fields). 
 	 */
 	public static final double RATE_PER_SPEED = 16;
 	

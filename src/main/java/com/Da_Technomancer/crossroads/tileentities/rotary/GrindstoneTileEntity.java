@@ -192,7 +192,7 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
 			if(slot == 0){
-				if(!inventory[slot].isEmpty() && !stack.isEmpty() && !ItemStack.areItemsEqual(stack, inventory[slot]) && !ItemStack.areItemStackTagsEqual(stack, inventory[slot])){
+				if(!inventory[slot].isEmpty() && !stack.isEmpty() && (!ItemStack.areItemsEqual(stack, inventory[slot]) || !ItemStack.areItemStackTagsEqual(stack, inventory[slot]))){
 					return stack;
 				}
 				int oldCount = inventory[slot].getCount();
@@ -287,7 +287,7 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || (!inventory[0].isEmpty() && !stack.isEmpty() && !ItemStack.areItemsEqual(stack, inventory[0]) && !ItemStack.areItemStackTagsEqual(stack, inventory[0]))){
+			if(slot != 0 || (!inventory[0].isEmpty() && !stack.isEmpty() && (!ItemStack.areItemsEqual(stack, inventory[0]) || !ItemStack.areItemStackTagsEqual(stack, inventory[0])))){
 				return stack;
 			}
 			int oldCount = inventory[0].getCount();
