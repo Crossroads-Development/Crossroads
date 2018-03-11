@@ -40,7 +40,7 @@ public class ResetReagentNameCommand extends CommandBase{
 			return;
 		}
 
-		AlchemyCore.CUST_REAG_NAMES[id - AlchemyCore.REAGENT_COUNT] = null;
+		AlchemyCore.CUST_REAG_NAMES[id - AlchemyCore.RESERVED_REAGENT_COUNT] = null;
 		AlchemWorldSavedData.saveData(server.getWorld(0));
 	}
 

@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/AlchemyCarrierTE.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/AlchemyReactorTE.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/IDynamicReagent.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/IReaction.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/ITransparentReaction.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/API/alchemy/ReagentStack.java=UTF-8
@@ -17,6 +18,7 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/heat/RedstoneHeatC
 encoding//src/main/java/com/Da_Technomancer/crossroads/blocks/heat/SaltReactor.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/gui/RedstoneKeyboardGuiContainer.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/gui/RedstoneRegistryGuiContainer.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/gui/SamplingBenchGuiContainer.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/gui/container/RedstoneKeyboardContainer.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/GuideAPI/GuideBooks.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/GuideAPI/SmartEntry.java=UTF-8

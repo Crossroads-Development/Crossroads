@@ -254,6 +254,8 @@ item.custom_tool_sword.name=Alchemical Sword
 item.custom_tool_pickaxe.name=Alchemical Pickaxe
 item.custom_tool_shovel.name=Alchemical Shovel
 item.custom_tool_axe.name=Alchemical Axe
+container.sampling_bench=Sampling Bench
+tile.sampling_bench.name=Sampling Bench
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

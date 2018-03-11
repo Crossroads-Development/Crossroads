@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 public interface IDynamicReagent extends IReagent{
 
+	public static final String UNKNOWN_NAME = "‽‽‽";
+	
 	@Override
 	public default String getName(){
 		int index = getIndex();
@@ -13,7 +15,7 @@ public interface IDynamicReagent extends IReagent{
 			name = null;
 		}
 		if(name == null){
-			return "???";
+			return UNKNOWN_NAME;
 		}
 		return name;
 	}

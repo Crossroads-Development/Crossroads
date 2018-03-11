@@ -8,9 +8,11 @@ import com.Da_Technomancer.crossroads.gui.container.HeatingChamberContainer;
 import com.Da_Technomancer.crossroads.gui.container.PrototypePortContainer;
 import com.Da_Technomancer.crossroads.gui.container.PrototypingTableContainer;
 import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
+import com.Da_Technomancer.crossroads.gui.container.SamplingBenchContainer;
 import com.Da_Technomancer.crossroads.gui.container.SlottedChestContainer;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.SlottedChestTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.SamplingBenchTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
@@ -35,6 +37,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int PROTOTYPING_GUI = 7;
 	public static final int PROTOTYPE_PORT_GUI = 8;
 	public static final int REDSTONE_REGISTRY_GUI = 9;
+	public static final int SAMPLING_BENCH_GUI = 10;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -59,6 +62,8 @@ public class GuiHandler implements IGuiHandler{
 				return new PrototypePortContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case REDSTONE_REGISTRY_GUI:
 				return new RedstoneKeyboardContainer();//Shares Container with the RedstoneKeyboard because their Container function is identical.
+			case SAMPLING_BENCH_GUI:
+				return new SamplingBenchContainer(player.inventory, ((SamplingBenchTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 
 		return null;
@@ -87,6 +92,8 @@ public class GuiHandler implements IGuiHandler{
 				return new PrototypePortGuiContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case REDSTONE_REGISTRY_GUI:
 				return new RedstoneRegistryGuiContainer(((RedstoneRegistryTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case SAMPLING_BENCH_GUI:
+				return new SamplingBenchGuiContainer(player.inventory, ((SamplingBenchTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 
 		return null;

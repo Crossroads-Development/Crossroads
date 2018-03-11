@@ -45,7 +45,7 @@ public class HeatingChamberGuiContainer extends GuiContainer{
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		String s = this.te.getDisplayName().getUnformattedText();
 		fontRenderer.drawString(s, 88 - fontRenderer.getStringWidth(s) / 2, 6, 4210752);
-		fontRenderer.drawString(this.playerInv.getDisplayName().getUnformattedText(), 8, 72, 4210752);
+		fontRenderer.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 72, 4210752);
 	}
 
 	private int getBurnLeftScaled(int pixels){

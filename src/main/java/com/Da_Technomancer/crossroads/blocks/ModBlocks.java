@@ -19,6 +19,7 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentPump;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentTank;
 import com.Da_Technomancer.crossroads.blocks.alchemy.RedsAlchemicalTube;
+import com.Da_Technomancer.crossroads.blocks.alchemy.SamplingBench;
 import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoil;
 import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
@@ -197,6 +198,7 @@ public final class ModBlocks{
 	public static GlasswareHolder glasswareHolder;
 	public static RedsAlchemicalTube redsAlchemicalTube;
 	public static Alembic alembic;
+	public static SamplingBench samplingBench;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -353,6 +355,7 @@ public final class ModBlocks{
 		glasswareHolder = new GlasswareHolder();
 		redsAlchemicalTube = new RedsAlchemicalTube();
 		alembic = new Alembic();
+		samplingBench = new SamplingBench();
 	}
 
 	@SideOnly(Side.CLIENT)
