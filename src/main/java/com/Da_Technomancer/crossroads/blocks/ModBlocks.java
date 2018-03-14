@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemicalTube;
+import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemyChart;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Alembic;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ChemicalVent;
 import com.Da_Technomancer.crossroads.blocks.alchemy.CoolingCoil;
@@ -199,6 +200,7 @@ public final class ModBlocks{
 	public static RedsAlchemicalTube redsAlchemicalTube;
 	public static Alembic alembic;
 	public static SamplingBench samplingBench;
+	public static AlchemyChart alchemyChart;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -356,6 +358,7 @@ public final class ModBlocks{
 		redsAlchemicalTube = new RedsAlchemicalTube();
 		alembic = new Alembic();
 		samplingBench = new SamplingBench();
+		alchemyChart = new AlchemyChart();
 	}
 
 	@SideOnly(Side.CLIENT)

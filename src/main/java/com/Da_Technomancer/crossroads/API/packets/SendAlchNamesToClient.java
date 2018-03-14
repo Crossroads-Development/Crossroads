@@ -15,9 +15,13 @@ public class SendAlchNamesToClient extends Message<SendAlchNamesToClient>{
 	}
 
 	public String[] names;
+	public boolean fullReset;
+	public long seed;
 	
-	public SendAlchNamesToClient(String[] names){
+	public SendAlchNamesToClient(String[] names, boolean fullReset, long seed){
 		this.names = names;
+		this.fullReset = fullReset;
+		this.seed = seed;
 	}
 
 	@Override
@@ -35,16 +39,20 @@ public class SendAlchNamesToClient extends Message<SendAlchNamesToClient>{
 		minecraft.addScheduledTask(new Runnable(){
 			@Override
 			public void run(){
-				processMessage(names);
+				processMessage(names, fullReset, seed);
 			}
 		});
 
 		return null;
 	}
 
-	public void processMessage(String[] names){
+	public void processMessage(String[] names, boolean fullReset, long seed){
 		for(int i = 0; i < names.length; i++){
 			AlchemyCore.CUST_REAG_NAMES[i] = names[i];
+		}
+		
+		if(fullReset){
+			AlchemyCore.setup(null, seed);
 		}
 	}
 }

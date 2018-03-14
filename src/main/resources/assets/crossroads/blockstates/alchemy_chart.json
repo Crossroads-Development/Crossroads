@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:alchemy_chart"},
+		"facing=south": { "model": "crossroads:alchemy_chart", "y": 180 },
+		"facing=east": { "model": "crossroads:alchemy_chart", "y": 90 },
+		"facing=west": { "model": "crossroads:alchemy_chart", "y": 270 }
+	}
+}

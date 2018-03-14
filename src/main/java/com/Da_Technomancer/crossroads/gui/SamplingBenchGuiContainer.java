@@ -68,7 +68,7 @@ public class SamplingBenchGuiContainer extends GuiContainer{
 		if(reag == null){
 			fontRenderer.drawString("Empty", 88 - fontRenderer.getStringWidth("Empty") / 2, 18, 4210752);
 		}else{
-			String line = reag.getType().getName();
+			String line = reag.getType().getName() + " (" + reag.getType().getIndex() + ")";
 			fontRenderer.drawString(line, 88 - fontRenderer.getStringWidth(line) / 2, 18, 4210752);
 			fontRenderer.drawString("Boiling: ", 32, 28, 4210752);
 			line = reag.getType().getBoilingPoint() < -273 ? "Always" : (reag.getType().getBoilingPoint() + "°C");

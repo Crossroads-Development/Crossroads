@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.gui;
 
+import com.Da_Technomancer.crossroads.gui.container.AlchemyChartContainer;
 import com.Da_Technomancer.crossroads.gui.container.CoalHeaterContainer;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
@@ -28,31 +29,32 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 public class GuiHandler implements IGuiHandler{
 
 	public static final int GRINDSTONE_GUI = 0;
-	public static final int COALHEATER_GUI = 1;
-	public static final int HEATINGCHAMBER_GUI = 2;
-	public static final int SLOTTEDCHEST_GUI = 3;
-	public static final int COLORCHART_GUI = 4;
-	public static final int REDSTONEKEYBOARD_GUI = 5;
+	public static final int COAL_HEATER_GUI = 1;
+	public static final int HEATING_CHAMBER_GUI = 2;
+	public static final int SLOTTED_CHEST_GUI = 3;
+	public static final int COLOR_CHART_GUI = 4;
+	public static final int REDSTONE_KEYBOARD_GUI = 5;
 	public static final int CRAFTER_GUI = 6;
 	public static final int PROTOTYPING_GUI = 7;
 	public static final int PROTOTYPE_PORT_GUI = 8;
 	public static final int REDSTONE_REGISTRY_GUI = 9;
 	public static final int SAMPLING_BENCH_GUI = 10;
+	public static final int ALCHEMY_CHART_GUI = 11;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
 		switch(ID){
 			case GRINDSTONE_GUI:
 				return new GrindstoneContainer(player.inventory, ((GrindstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case COALHEATER_GUI:
+			case COAL_HEATER_GUI:
 				return new CoalHeaterContainer(player.inventory, ((FuelHeaterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case HEATINGCHAMBER_GUI:
+			case HEATING_CHAMBER_GUI:
 				return new HeatingChamberContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case SLOTTEDCHEST_GUI:
+			case SLOTTED_CHEST_GUI:
 				return new SlottedChestContainer(player.inventory, ((SlottedChestTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case COLORCHART_GUI:
+			case COLOR_CHART_GUI:
 				return new ColorChartContainer(player, world, new BlockPos(x, y, z));
-			case REDSTONEKEYBOARD_GUI:
+			case REDSTONE_KEYBOARD_GUI:
 				return new RedstoneKeyboardContainer();
 			case CRAFTER_GUI:
 				return new DetailedCrafterContainer(player.inventory, new BlockPos(x, y, z));
@@ -64,6 +66,8 @@ public class GuiHandler implements IGuiHandler{
 				return new RedstoneKeyboardContainer();//Shares Container with the RedstoneKeyboard because their Container function is identical.
 			case SAMPLING_BENCH_GUI:
 				return new SamplingBenchContainer(player.inventory, ((SamplingBenchTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case ALCHEMY_CHART_GUI:
+				return new AlchemyChartContainer(player, world);
 		}
 
 		return null;
@@ -74,15 +78,15 @@ public class GuiHandler implements IGuiHandler{
 		switch(ID){
 			case GRINDSTONE_GUI:
 				return new GrindstoneGuiContainer(player.inventory, ((GrindstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case COALHEATER_GUI:
+			case COAL_HEATER_GUI:
 				return new CoalHeaterGuiContainer(player.inventory, ((FuelHeaterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case HEATINGCHAMBER_GUI:
+			case HEATING_CHAMBER_GUI:
 				return new HeatingChamberGuiContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case SLOTTEDCHEST_GUI:
+			case SLOTTED_CHEST_GUI:
 				return new SlottedChestGuiContainer(player.inventory, ((SlottedChestTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case COLORCHART_GUI:
+			case COLOR_CHART_GUI:
 				return new ColorChartGuiContainer(player, world, new BlockPos(x, y, z));
-			case REDSTONEKEYBOARD_GUI:
+			case REDSTONE_KEYBOARD_GUI:
 				return new RedstoneKeyboardGuiContainer(((RedstoneKeyboardTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case CRAFTER_GUI:
 				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z));
@@ -94,6 +98,8 @@ public class GuiHandler implements IGuiHandler{
 				return new RedstoneRegistryGuiContainer(((RedstoneRegistryTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case SAMPLING_BENCH_GUI:
 				return new SamplingBenchGuiContainer(player.inventory, ((SamplingBenchTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case ALCHEMY_CHART_GUI:
+				return new AlchemyChartGuiContainer(player, world);
 		}
 
 		return null;

@@ -33,8 +33,13 @@ public class ElementalReagent implements IDynamicReagent, IElementReagent{
 	private int melt = 0;
 	private int boil = 1;
 	private final Item solidForm;
+	private final IElementReagent secondaryBase;
 	
 	public ElementalReagent(int index, byte level, int minMelt, int maxMelt, int minBoil, int maxBoil, Color color, IAlchEffect effect, boolean destroyContainer, MagicUnit possibleRange, @Nullable Item solidForm){
+		this(index, level, minMelt, maxMelt, minBoil, maxBoil, color, effect, destroyContainer, possibleRange, solidForm, null);
+	}
+	
+	public ElementalReagent(int index, byte level, int minMelt, int maxMelt, int minBoil, int maxBoil, Color color, IAlchEffect effect, boolean destroyContainer, MagicUnit possibleRange, @Nullable Item solidForm, @Nullable IElementReagent secondaryBase){
 		this.index = index;
 		this.destroyContainer = destroyContainer;
 		this.level = level;
@@ -46,6 +51,7 @@ public class ElementalReagent implements IDynamicReagent, IElementReagent{
 		this.maxMelt = maxMelt;
 		this.color = color;
 		this.solidForm = solidForm;
+		this.secondaryBase = secondaryBase;
 	}
 	
 	@Override
@@ -117,11 +123,16 @@ public class ElementalReagent implements IDynamicReagent, IElementReagent{
 
 	@Override
 	public void setReactions(int seed){
-		
+		//In AlchemyCore
 	}
 
 	@Override
 	public byte getLevel(){
 		return level;
+	}
+
+	@Override
+	public IElementReagent getSecondaryBase(){
+		return secondaryBase;
 	}	
 }

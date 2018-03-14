@@ -27,4 +27,8 @@ public class BaseElementReagent extends StaticReagent implements IElementReagent
 		return 0;
 	}
 
+	@Override
+	public IElementReagent getSecondaryBase(){
+		return null;
+	}
 }

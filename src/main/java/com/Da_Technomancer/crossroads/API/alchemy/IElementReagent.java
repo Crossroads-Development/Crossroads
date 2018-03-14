@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
 public interface IElementReagent extends IReagent{
@@ -12,5 +14,8 @@ public interface IElementReagent extends IReagent{
 	 * 2: Tertiary
 	 */
 	public byte getLevel();
+	
+	@Nullable
+	public IElementReagent getSecondaryBase();
 
 }

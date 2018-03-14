@@ -36,7 +36,7 @@ public class RedstoneKeyboard extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			ModPackets.network.sendTo(new SendDoubleToClient("output", ((RedstoneKeyboardTileEntity) worldIn.getTileEntity(pos)).output, pos), (EntityPlayerMP) playerIn);
-			playerIn.openGui(Main.instance, GuiHandler.REDSTONEKEYBOARD_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(Main.instance, GuiHandler.REDSTONE_KEYBOARD_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}

@@ -45,7 +45,7 @@ public class AlchemWorldSavedData extends WorldSavedData{
 	}
 	
 	private static void syncNamesToClient(World world){
-		SendAlchNamesToClient packet = new SendAlchNamesToClient(AlchemyCore.CUST_REAG_NAMES);
+		SendAlchNamesToClient packet = new SendAlchNamesToClient(AlchemyCore.CUST_REAG_NAMES, false, 0);
 		for(EntityPlayerMP play : world.getMinecraftServer().getPlayerList().getPlayers()){
 			ModPackets.network.sendTo(packet, play);
 		}

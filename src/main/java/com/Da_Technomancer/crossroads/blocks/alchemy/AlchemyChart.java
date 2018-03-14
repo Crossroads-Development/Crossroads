@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.blocks.magic;
+package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import java.util.List;
 
@@ -23,16 +23,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class ColorChart extends Block{
+public class AlchemyChart extends Block{
 	
 	private static final AxisAlignedBB BBNORTH = new AxisAlignedBB(0, 0, 0.9375D, 1, 1, 1);
 	private static final AxisAlignedBB BBSOUTH = new AxisAlignedBB(0, 0, 0, 1, 1, 0.0625D);
 	private static final AxisAlignedBB BBWEST = new AxisAlignedBB(0.9375D, 0, 0, 1, 1, 1);
 	private static final AxisAlignedBB BBEAST = new AxisAlignedBB(0, 0, 0, 0.0625D, 1, 1);
 	
-	public ColorChart(){
+	public AlchemyChart(){
 		super(Material.WOOD);
-		String name = "color_chart";
+		String name = "alchemy_chart";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -44,7 +44,7 @@ public class ColorChart extends Block{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			playerIn.openGui(Main.instance, GuiHandler.COLOR_CHART_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(Main.instance, GuiHandler.ALCHEMY_CHART_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}

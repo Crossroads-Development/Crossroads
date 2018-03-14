@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
@@ -108,9 +110,9 @@ public final class AlchemyCore{
 		//Dynamic reagents
 		REAGENTS[RESERVED_REAGENT_COUNT] = new ElementalReagent(RESERVED_REAGENT_COUNT, (byte) 1, -275, -275, -274, -274, Color.WHITE, null, false, new MagicUnit(32, 32, 32, 8), null);//Lumen TODO effect
 		REAGENTS[RESERVED_REAGENT_COUNT + 1] = new ElementalReagent(RESERVED_REAGENT_COUNT + 1, (byte) 1, -100, 300, -100, 350, Color.MAGENTA, null, true, new MagicUnit(32, 0, 32, 8), ModItems.solidEldrine);//Eldrine TODO effect
-		REAGENTS[RESERVED_REAGENT_COUNT + 2] = new ElementalReagent(RESERVED_REAGENT_COUNT + 2, (byte) 1, 500, 1500, 1300, 2500, new Color(255, 128, 255), null, false, new MagicUnit(32, 0, 32, 8), ModItems.solidStasisol);//Stasisol
-		REAGENTS[RESERVED_REAGENT_COUNT + 3] = new ElementalReagent(RESERVED_REAGENT_COUNT + 3, (byte) 2, 1200, 2100, Short.MAX_VALUE, Short.MAX_VALUE, Color.CYAN, null, false, new MagicUnit(8, 32, 32, 8), null);//Fusas
-		REAGENTS[RESERVED_REAGENT_COUNT + 4] = new ElementalReagent(RESERVED_REAGENT_COUNT + 4, (byte) 2, -275, -275, -274, -274, Color.YELLOW, null, true, new MagicUnit(32, 32, 8, 8), null);//Voltus TODO effect
+		REAGENTS[RESERVED_REAGENT_COUNT + 2] = new ElementalReagent(RESERVED_REAGENT_COUNT + 2, (byte) 1, 500, 1500, 1300, 2500, new Color(255, 128, 255), null, false, new MagicUnit(32, 16, 32, 8), ModItems.solidStasisol);//Stasisol
+		REAGENTS[RESERVED_REAGENT_COUNT + 3] = new ElementalReagent(RESERVED_REAGENT_COUNT + 3, (byte) 2, 1200, 2100, Short.MAX_VALUE, Short.MAX_VALUE, Color.CYAN, null, false, new MagicUnit(16, 32, 32, 8), null, (IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT + 2]);//Fusas
+		REAGENTS[RESERVED_REAGENT_COUNT + 4] = new ElementalReagent(RESERVED_REAGENT_COUNT + 4, (byte) 2, -275, -275, -274, -274, Color.YELLOW, null, true, new MagicUnit(32, 32, 8, 8), null, (IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT]);//Voltus TODO effect
 
 		//TODO REAGENTS[]
 
@@ -199,22 +201,25 @@ public final class AlchemyCore{
 		//Crystal formation
 		BASE_REACTIONS.add(new CrystalFormationReaction());
 		//Lumen production
-		BASE_REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT], null));
+		BASE_REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT]));
 		//Eldrine production
-		BASE_REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT + 1], null));
+		BASE_REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT + 1]));
 		//Stasisol production
-		BASE_REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT + 2], null));
+		BASE_REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT + 2]));
 		//Fusas production
-		BASE_REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT + 3], (IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT + 2]));
+		BASE_REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT + 3]));
 		//Voltus production
-		BASE_REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT + 4], (IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT]));
+		BASE_REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS[RESERVED_REAGENT_COUNT + 4]));
 
 		// TODO reactions
 	}
-
-	public static void setup(World world, long seed){
-		AlchemWorldSavedData.loadData(world);
-
+	
+	//If world is null, it must be client side.
+	public static void setup(@Nullable World world, long seed){
+		if(world != null && !world.isRemote){
+			AlchemWorldSavedData.loadData(world);
+		}
+		
 		Random rand = new Random(seed);
 
 		REACTIONS.clear();

@@ -28,8 +28,7 @@ public class ColorChartContainer extends Container{
 	private int index = 0;
 	private static final int xCENTER = 142;
 	private static final int yCENTER = 142;
-	private static final int VAR_PER_ITEM = 2;
-	private static final int RADIUS = 256 / VAR_PER_ITEM;
+	private static final int RADIUS = 128;
 	private final World world;
 
 	public ColorChartContainer(EntityPlayer player, World world, BlockPos pos){

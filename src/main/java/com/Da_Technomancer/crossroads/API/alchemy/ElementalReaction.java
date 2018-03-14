@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import java.awt.Color;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
 public class ElementalReaction implements IReaction{
@@ -11,12 +9,9 @@ public class ElementalReaction implements IReaction{
 	private static final int COLOR_BOUND = 30;
 	
 	private final IElementReagent product;
-	@Nullable
-	private final IElementReagent secondaryBase;
 	
-	public ElementalReaction(IElementReagent product, @Nullable IElementReagent secondaryBase){
+	public ElementalReaction(IElementReagent product){
 		this.product = product;
-		this.secondaryBase = secondaryBase;
 	}
 	
 	@Override
@@ -24,12 +19,12 @@ public class ElementalReaction implements IReaction{
 		if(chamber.isCharged()){
 			ReagentStack[] reags = chamber.getReagants();
 			Color unit;
-			if(secondaryBase != null){
-				if(reags[secondaryBase.getIndex()] == null){
+			if(product.getSecondaryBase() != null){
+				if(reags[product.getSecondaryBase().getIndex()] == null){
 					return false;
 				}
-				double secondAmount = reags[secondaryBase.getIndex()].getAmount();
-				Color baseCol = secondaryBase.getAlignment().getTrueRGB();
+				double secondAmount = reags[product.getSecondaryBase().getIndex()].getAmount();
+				Color baseCol = product.getSecondaryBase().getAlignment().getTrueRGB();
 				unit = new MagicUnit((int) (baseCol.getRed() * secondAmount + 255 * (reags[0] == null ? 0 : reags[0].getAmount())), (int) (baseCol.getGreen() * secondAmount + 255 * (reags[1] == null ? 0 : reags[1].getAmount())), (int) (baseCol.getBlue() * secondAmount + 255 * (reags[2] == null ? 0 : reags[2].getAmount())), 0).getTrueRGB();
 			}else{
 				unit = new MagicUnit((int) (255 * (reags[0] == null ? 0 : reags[0].getAmount())), (int) (255 * (reags[1] == null ? 0 : reags[1].getAmount())), (int) (255 * (reags[2] == null ? 0 : reags[2].getAmount())), 0).getTrueRGB();
@@ -44,9 +39,9 @@ public class ElementalReaction implements IReaction{
 				created += reags[0] == null ? 0 : reags[0].getAmount();
 				created += reags[1] == null ? 0 : reags[1].getAmount();
 				created += reags[2] == null ? 0 : reags[2].getAmount();
-				if(secondaryBase != null){
-					created += reags[secondaryBase.getIndex()].getAmount();
-					reags[secondaryBase.getIndex()] = null;
+				if(product.getSecondaryBase() != null){
+					created += reags[product.getSecondaryBase().getIndex()].getAmount();
+					reags[product.getSecondaryBase().getIndex()] = null;
 				}
 				reags[0] = null;
 				reags[1] = null;

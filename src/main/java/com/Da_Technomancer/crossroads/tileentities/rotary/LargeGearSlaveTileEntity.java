@@ -41,7 +41,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	}
 
 	public void passBreak(EnumFacing side, boolean drop){
-		if(world.getTileEntity(masterPos) instanceof LargeGearMasterTileEntity){
+		if(masterPos != null && world.getTileEntity(masterPos) instanceof LargeGearMasterTileEntity){
 			((LargeGearMasterTileEntity) world.getTileEntity(masterPos)).breakGroup(side, drop);
 		}
 	}
@@ -56,25 +56,29 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
-		nbt.setLong("mast", masterPos.toLong());
+		if(masterPos != null){
+			nbt.setLong("mast", masterPos.toLong());
+		}
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		this.masterPos = BlockPos.fromLong(nbt.getLong("mast"));
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setLong("mast", masterPos.toLong());
+		if(masterPos != null){
+			nbt.setLong("mast", masterPos.toLong());
+		}
 		return nbt;
 	}
 
 	private final ICogHandler handler = new CogHandler();
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if(capability == Capabilities.COG_HANDLER_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(Properties.FACING) == facing){
@@ -93,7 +97,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 			return super.getCapability(capability, facing);
 		}
 	}
-	
+
 	private class CogHandler implements ICogHandler{
 
 		@Override
