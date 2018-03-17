@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEnt
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlembicTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ChemicalVentTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.CoolingCoilTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.DensusPlateTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
@@ -177,6 +178,7 @@ public class ModTileEntity{
 		register(RedsAlchemicalTubeTileEntity.class, "reds_alchemical_tube");
 		register(AlembicTileEntity.class, "alembic");
 		register(SamplingBenchTileEntity.class, "sampling_bench");
+		register(DensusPlateTileEntity.class, "densus_plate");
 	}
 
 	/**

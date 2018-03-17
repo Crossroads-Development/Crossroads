@@ -257,6 +257,8 @@ item.custom_tool_axe.name=Alchemical Axe
 container.sampling_bench=Sampling Bench
 tile.sampling_bench.name=Sampling Bench
 tile.alchemy_chart.name=Alchemy Chart
+tile.densus_plate.name=Density Plate
+tile.anti_densus_plate.name=Anti-Density Plate
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemyChart;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Alembic;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ChemicalVent;
 import com.Da_Technomancer.crossroads.blocks.alchemy.CoolingCoil;
+import com.Da_Technomancer.crossroads.blocks.alchemy.DensusPlate;
 import com.Da_Technomancer.crossroads.blocks.alchemy.Dynamo;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FlowLimiter;
 import com.Da_Technomancer.crossroads.blocks.alchemy.FluidInjector;
@@ -201,6 +202,7 @@ public final class ModBlocks{
 	public static Alembic alembic;
 	public static SamplingBench samplingBench;
 	public static AlchemyChart alchemyChart;
+	public static DensusPlate densusPlate;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -359,6 +361,7 @@ public final class ModBlocks{
 		alembic = new Alembic();
 		samplingBench = new SamplingBench();
 		alchemyChart = new AlchemyChart();
+		densusPlate = new DensusPlate();
 	}
 
 	@SideOnly(Side.CLIENT)
