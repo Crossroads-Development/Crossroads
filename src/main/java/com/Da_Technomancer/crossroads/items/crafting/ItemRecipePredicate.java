@@ -11,49 +11,32 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class CraftingStack implements ICraftingStack<ItemStack>{
+public class ItemRecipePredicate implements RecipePredicate<ItemStack>{
 
 	private final Item item;
-	private final int count;
 	private final int meta;
 
 	/**
 	 * 
 	 * @param block
-	 * @param count
 	 * @param meta A value of -1 means to ignore metadata
 	 */
-	public CraftingStack(Block block, int count, int meta){
-		this(Item.getItemFromBlock(block), count, meta);
+	public ItemRecipePredicate(Block block, int meta){
+		this(Item.getItemFromBlock(block), meta);
 	}
 
 	/**
 	 * 
 	 * @param item
-	 * @param count
 	 * @param meta A value of -1 or OreDictionary.WILDCARD_VALUE means to ignore metadata
 	 */
-	public CraftingStack(Item item, int count, int meta){
+	public ItemRecipePredicate(Item item, int meta){
 		this.item = item;
-		this.count = count;
 		this.meta = meta == -1 ? OreDictionary.WILDCARD_VALUE : meta;
 	}
 
 	@Override
-	public boolean match(ItemStack stack){
-		if(stack.isEmpty()){
-			return false;
-		}
-
-		if(stack.getItem() == item && stack.getCount() == count && (meta == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == meta)){
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean softMatch(ItemStack stack){
+	public boolean test(ItemStack stack){
 		if(stack.isEmpty()){
 			return false;
 		}
@@ -68,7 +51,7 @@ public class CraftingStack implements ICraftingStack<ItemStack>{
 	@Override
 	public List<ItemStack> getMatchingList(){
 		if(meta != -1 || !item.getHasSubtypes()){
-			return ImmutableList.of(new ItemStack(item, count, meta));
+			return ImmutableList.of(new ItemStack(item, 1, meta));
 		}
 		NonNullList<ItemStack> list = NonNullList.create();
 		item.getSubItems(CreativeTabs.SEARCH, list);
@@ -80,9 +63,9 @@ public class CraftingStack implements ICraftingStack<ItemStack>{
 		if(other == this){
 			return true;
 		}
-		if(other instanceof CraftingStack){
-			CraftingStack otherStack = (CraftingStack) other;
-			return item == otherStack.item && meta == otherStack.meta && count == otherStack.count;
+		if(other instanceof ItemRecipePredicate){
+			ItemRecipePredicate otherStack = (ItemRecipePredicate) other;
+			return item == otherStack.item && meta == otherStack.meta;
 		}
 		
 		return false;
@@ -90,11 +73,11 @@ public class CraftingStack implements ICraftingStack<ItemStack>{
 	
 	@Override
 	public String toString(){
-		return "CraftingStack[Item: " + item + ", Count: " + count + ", Meta: " + meta + "]";
+		return "CraftingStack[Item: " + item + ", Meta: " + meta + "]";
 	}
 	
 	@Override
 	public int hashCode(){
-		return (item.hashCode() << 4) + ((count & 7) << 1) + (meta & 1);
+		return (item.hashCode() << 1) + (meta & 1);
 	}
 }

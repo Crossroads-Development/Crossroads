@@ -125,7 +125,6 @@ public class GlasswareHolder extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		//On this device, light is being re-used. True means crystal, false means glass. 
 		return new BlockStateContainer(this, new IProperty[] {Properties.CRYSTAL, Properties.ACTIVE, Properties.REDSTONE_BOOL, Properties.CONTAINER_TYPE});
 	}
 

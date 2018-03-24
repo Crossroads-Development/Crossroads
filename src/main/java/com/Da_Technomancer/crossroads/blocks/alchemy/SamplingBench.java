@@ -82,7 +82,6 @@ public class SamplingBench extends BlockContainer{
 		if(te instanceof SamplingBenchTileEntity){
 			SamplingBenchTileEntity bench = (SamplingBenchTileEntity) te;
 			InventoryHelper.spawnItemStack(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, bench.getGlassware());
-			InventoryHelper.spawnItemStack(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, bench.paper);
 		}
 		super.breakBlock(world, pos, blockstate);
 	}

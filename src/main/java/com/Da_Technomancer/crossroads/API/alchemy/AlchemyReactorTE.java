@@ -61,7 +61,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
 			for(ReagentStack r : contents){
 				if(r != null){
-					r.getType().onRelease(world, pos, r.getAmount(), r.getPhase(temp), contents);
+					r.getType().onRelease(world, pos, r.getAmount(), temp, r.getPhase(temp), contents);
 				}
 			}
 		}

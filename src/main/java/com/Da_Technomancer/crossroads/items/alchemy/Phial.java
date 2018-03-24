@@ -53,7 +53,7 @@ public class Phial extends AbstractGlassware{
 				double temp = (contents.getMiddle() / contents.getRight()) + 273D;
 				for(ReagentStack r : contents.getLeft()){
 					if(r != null){
-						r.getType().onRelease(worldIn, pos, r.getAmount(), r.getPhase(temp), contents.getLeft());
+						r.getType().onRelease(worldIn, pos, r.getAmount(), temp, r.getPhase(temp), contents.getLeft());
 					}
 				}
 				if(!playerIn.isCreative()){

@@ -2,15 +2,12 @@ package com.Da_Technomancer.crossroads;
 
 import org.apache.logging.log4j.Logger;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.command.DiscoverElementCommand;
 import com.Da_Technomancer.crossroads.command.ResetPathCommand;
-import com.Da_Technomancer.crossroads.command.ResetReagentNameCommand;
 import com.Da_Technomancer.crossroads.command.SpawnReagentCommand;
 import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -63,10 +60,6 @@ public final class Main{
 		e.registerServerCommand(new ResetPathCommand());
 		e.registerServerCommand(new DiscoverElementCommand());
 		e.registerServerCommand(new SpawnReagentCommand());
-		e.registerServerCommand(new ResetReagentNameCommand());
-		WorldServer world0 = e.getServer().worlds[0];
-		//world0.getGameRules().addGameRule("alchemyTransSpread", "true", ValueType.BOOLEAN_VALUE);
-		AlchemyCore.setup(world0, world0.getSeed());
 	}
 
 	@Mod.EventHandler

@@ -8,38 +8,23 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class EdibleBlobCraftingStack implements ICraftingStack<ItemStack>{
+public class EdibleBlobRecipePredicate implements RecipePredicate<ItemStack>{
 
 	private final int hunger;
 	private final int saturation;
-	private final int count;
 
 	/**
 	 * @param hunger The hunger value of the accepted blob.
 	 * @param saturation The saturation value of the accepted blob.
 	 * @param count
 	 */
-	public EdibleBlobCraftingStack(int hunger, int saturation, int count){
+	public EdibleBlobRecipePredicate(int hunger, int saturation){
 		this.hunger = hunger;
 		this.saturation = saturation;
-		this.count = count;
 	}
 
 	@Override
-	public boolean match(ItemStack stack){
-		if(stack.isEmpty()){
-			return false;
-		}
-
-		if(stack.getItem() == ModItems.edibleBlob && stack.getCount() == count && stack.hasTagCompound() && stack.getTagCompound().getInteger("food") == hunger && stack.getTagCompound().getInteger("sat") == saturation){
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean softMatch(ItemStack stack){
+	public boolean test(ItemStack stack){
 		if(stack.isEmpty()){
 			return false;
 		}
@@ -53,7 +38,7 @@ public class EdibleBlobCraftingStack implements ICraftingStack<ItemStack>{
 
 	@Override
 	public List<ItemStack> getMatchingList(){
-		ItemStack out = new ItemStack(ModItems.edibleBlob, count);
+		ItemStack out = new ItemStack(ModItems.edibleBlob, 1);
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setInteger("food", hunger);
 		nbt.setInteger("sat", saturation);
@@ -66,9 +51,9 @@ public class EdibleBlobCraftingStack implements ICraftingStack<ItemStack>{
 		if(other == this){
 			return true;
 		}
-		if(other instanceof EdibleBlobCraftingStack){
-			EdibleBlobCraftingStack otherStack = (EdibleBlobCraftingStack) other;
-			return hunger == otherStack.hunger && saturation == otherStack.saturation && count == otherStack.count;
+		if(other instanceof EdibleBlobRecipePredicate){
+			EdibleBlobRecipePredicate otherStack = (EdibleBlobRecipePredicate) other;
+			return hunger == otherStack.hunger && saturation == otherStack.saturation;
 		}
 		
 		return false;
@@ -76,6 +61,6 @@ public class EdibleBlobCraftingStack implements ICraftingStack<ItemStack>{
 	
 	@Override
 	public int hashCode(){
-		return (hunger << 8) + (saturation << 4) + (count & 15);
+		return (hunger << 4) + saturation;
 	}
 }

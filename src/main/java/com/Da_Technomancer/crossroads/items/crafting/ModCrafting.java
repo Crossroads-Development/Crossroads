@@ -76,27 +76,27 @@ public final class ModCrafting{
 		}
 		toRegisterOreDict.clear();
 
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("oreCopper", 1), new ItemStack[] {new ItemStack(ModItems.dustCopper, 2), new ItemStack(Blocks.SAND)});
-		RecipeHolder.grindRecipes.put(new CraftingStack(Items.WHEAT, 1, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
-		RecipeHolder.grindRecipes.put(new CraftingStack(Blocks.PUMPKIN, 1, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
-		RecipeHolder.grindRecipes.put(new CraftingStack(Items.MELON, 1, 0), new ItemStack[] {new ItemStack(Items.MELON_SEEDS, 3)});
-		RecipeHolder.grindRecipes.put(new CraftingStack(Items.BONE, 1, 0), new ItemStack[] {new ItemStack(Items.DYE, 5, EnumDyeColor.WHITE.getDyeDamage())});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("blockCoal", 1), new ItemStack[] {new ItemStack(Items.GUNPOWDER, 1)});
-		RecipeHolder.grindRecipes.put(new CraftingStack(Blocks.NETHER_WART_BLOCK, 1, 0), new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("cropPotato", 1), new ItemStack[] {new ItemStack(ModItems.mashedPotato, 1)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("gravel", 1), new ItemStack[] {new ItemStack(Items.FLINT)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("blockRedstone", 1), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("cobblestone", 1), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("ingotCopper", 1), new ItemStack[] {new ItemStack(ModItems.dustCopper, 1)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("stone", 1),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("oreCopper"), new ItemStack[] {new ItemStack(ModItems.dustCopper, 2), new ItemStack(Blocks.SAND)});
+		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Items.WHEAT, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
+		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Blocks.PUMPKIN, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
+		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Items.MELON, 0), new ItemStack[] {new ItemStack(Items.MELON_SEEDS, 3)});
+		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Items.BONE, 0), new ItemStack[] {new ItemStack(Items.DYE, 5, EnumDyeColor.WHITE.getDyeDamage())});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("blockCoal"), new ItemStack[] {new ItemStack(Items.GUNPOWDER, 1)});
+		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Blocks.NETHER_WART_BLOCK, 0), new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("cropPotato"), new ItemStack[] {new ItemStack(ModItems.mashedPotato, 1)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("gravel"), new ItemStack[] {new ItemStack(Items.FLINT)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("blockRedstone"), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("cobblestone"), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("ingotCopper"), new ItemStack[] {new ItemStack(ModItems.dustCopper, 1)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("stone"),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
 
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotIron", 1), new FluidStack(BlockMoltenIron.getMoltenIron(), 144), "minecraft:blocks/iron_block"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotGold", 1), new FluidStack(BlockMoltenGold.getMoltenGold(), 144), "minecraft:blocks/gold_block"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotTin", 1), new FluidStack(BlockMoltenTin.getMoltenTin(), 144), Main.MODID + ":blocks/block_tin"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotCopper", 1), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/block_copper"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("dustCopper", 1), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/ore_native_copper"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("oreCopper", 1), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/ore_copper"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("cobblestone", 1), new FluidStack(FluidRegistry.LAVA, 200), "minecraft:blocks/cobblestone"));
+		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotIron"), new FluidStack(BlockMoltenIron.getMoltenIron(), 144), "minecraft:blocks/iron_block"));
+		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotGold"), new FluidStack(BlockMoltenGold.getMoltenGold(), 144), "minecraft:blocks/gold_block"));
+		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotTin"), new FluidStack(BlockMoltenTin.getMoltenTin(), 144), Main.MODID + ":blocks/block_tin"));
+		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotCopper"), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/block_copper"));
+		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("dustCopper"), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/ore_native_copper"));
+		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("oreCopper"), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/ore_copper"));
+		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("cobblestone"), new FluidStack(FluidRegistry.LAVA, 200), "minecraft:blocks/cobblestone"));
 
 		// Heating, order of decreasing effectiveness
 		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Pair.of(true, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D)));
@@ -117,18 +117,18 @@ public final class ModCrafting{
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE, 1), -10D, 1D)));
 		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopshowium.getMoltenCopshowium(), Pair.of(144, Triple.of(new ItemStack(OreSetup.ingotCopshowium, 1), 1000D, 100D)));
 
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Blocks.HOPPER, 1, 0), new OreDictCraftingStack("wool", 1), new CraftingStack(ModBlocks.fluidTube, 1, 0)}, getFilledHopper()));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BREAD, 1, 0), new OreDictCraftingStack("dyeMagenta", 1), new OreDictCraftingStack("dustGlowstone", 1)}, new ItemStack(ModItems.magentaBread)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Blocks.HOPPER, 0), new OreDictCraftingStack("wool"), new ItemRecipePredicate(ModBlocks.fluidTube, 0)}, getFilledHopper()));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Items.BREAD, 0), new OreDictCraftingStack("dyeMagenta"), new OreDictCraftingStack("dustGlowstone")}, new ItemStack(ModItems.magentaBread)));
 		if(ModConfig.weatherControl.getBoolean()){
-			RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("gemLapis", 1), new OreDictCraftingStack("cobblestone", 1), new OreDictCraftingStack("nuggetGold", 1)}, new ItemStack(ModItems.rainIdol, 1)));
+			RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new OreDictCraftingStack("gemLapis"), new OreDictCraftingStack("cobblestone"), new OreDictCraftingStack("nuggetGold")}, new ItemStack(ModItems.rainIdol, 1)));
 		}
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new OreDictCraftingStack("feather", 1), new OreDictCraftingStack("leather", 1), new CraftingStack(Blocks.WATERLILY, 1, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.DYE, 1, EnumDyeColor.BLACK.getDyeDamage()), new CraftingStack(Items.FISH, 1, 3), new OreDictCraftingStack("leather", 1)}, new ItemStack(ModItems.squidHelmet, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BLAZE_POWDER, 1, 0), new OreDictCraftingStack("leather", 1), new CraftingStack(Items.PORKCHOP, 1, 0)}, new ItemStack(ModItems.pigZombieChestplate, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.MILK_BUCKET, 1, 0), new OreDictCraftingStack("leather", 1), new CraftingStack(Items.BEEF, 1, 0)}, new ItemStack(ModItems.cowLeggings, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Items.BLAZE_ROD, 1, 0), new CraftingStack(Items.DRAGON_BREATH, 1, 0), new CraftingStack(Items.GOLDEN_APPLE, 1, -1)}, new ItemStack(ModItems.chaosRod, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new CraftingStack(Blocks.SPONGE, 1, 0), new CraftingStack(ModBlocks.fluidTube, 1, 0), new CraftingStack(ModItems.voidCrystal, 1, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new ICraftingStack[] {new EdibleBlobCraftingStack(4, 2, 1), new OreDictCraftingStack("stickIron", 1), new OreDictCraftingStack("nuggetCopshowium", 1)}, new ItemStack(ModBlocks.hamsterWheel, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new OreDictCraftingStack("feather"), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Blocks.WATERLILY, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Items.DYE, EnumDyeColor.BLACK.getDyeDamage()), new ItemRecipePredicate(Items.FISH, 3), new OreDictCraftingStack("leather")}, new ItemStack(ModItems.squidHelmet, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Items.BLAZE_POWDER, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.PORKCHOP, 0)}, new ItemStack(ModItems.pigZombieChestplate, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Items.MILK_BUCKET, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.BEEF, 0)}, new ItemStack(ModItems.cowLeggings, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Items.BLAZE_ROD, 0), new ItemRecipePredicate(Items.DRAGON_BREATH, 0), new ItemRecipePredicate(Items.GOLDEN_APPLE, -1)}, new ItemStack(ModItems.chaosRod, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(ModBlocks.fluidTube, 0), new ItemRecipePredicate(ModItems.voidCrystal, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new EdibleBlobRecipePredicate(4, 2), new OreDictCraftingStack("stickIron"), new OreDictCraftingStack("nuggetCopshowium")}, new ItemStack(ModBlocks.hamsterWheel, 1)));
 
 		RecipeHolder.magExtractRecipes.put(Items.REDSTONE, new MagicUnit(24, 36, 0, 0));
 		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));
@@ -139,23 +139,23 @@ public final class ModCrafting{
 		RecipeHolder.magExtractRecipes.put(ModItems.wasteSalt, new MagicUnit(0, 0, 60, 0));
 
 		//Fusion beam
-		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.SNOW.getDefaultState(), false), new BeamTransmute(Blocks.ICE.getDefaultState(), 1));
-		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.SAND.getDefaultState(), false), new BeamTransmute(ModBlocks.blockPureQuartz.getDefaultState(), 16));
-		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.NETHERRACK.getDefaultState(), false), new BeamTransmute(Blocks.NETHER_BRICK.getDefaultState(), 8));
-		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.GRAVEL.getDefaultState(), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 8));
-		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.COBBLESTONE.getDefaultState(), false), new BeamTransmute(Blocks.STONE.getDefaultState(), 1));
-		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE), false), new BeamTransmute(Blocks.STONEBRICK.getDefaultState(), 1));
-		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.ROUGH), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 12));
-		RecipeHolder.fusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK), 16));
+		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.SNOW.getDefaultState(), false), new BeamTransmute(Blocks.ICE.getDefaultState(), 1));
+		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.SAND.getDefaultState(), false), new BeamTransmute(ModBlocks.blockPureQuartz.getDefaultState(), 16));
+		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.NETHERRACK.getDefaultState(), false), new BeamTransmute(Blocks.NETHER_BRICK.getDefaultState(), 8));
+		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.GRAVEL.getDefaultState(), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 8));
+		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.COBBLESTONE.getDefaultState(), false), new BeamTransmute(Blocks.STONE.getDefaultState(), 1));
+		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE), false), new BeamTransmute(Blocks.STONEBRICK.getDefaultState(), 1));
+		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.ROUGH), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 12));
+		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK), 16));
 		//Void fusion beam
-		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.ICE.getDefaultState(), false), new BeamTransmute(Blocks.SNOW.getDefaultState(), 0));
-		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(ModBlocks.blockPureQuartz.getDefaultState(), false), new BeamTransmute(Blocks.SAND.getDefaultState(), 16));
-		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.STONE.getDefaultState(), false), new BeamTransmute(Blocks.COBBLESTONE.getDefaultState(), 1));
-		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.STONEBRICK.getDefaultState(), false), new BeamTransmute(Blocks.STONE.getDefaultState(), 1));
-		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.NETHER_BRICK.getDefaultState(), false), new BeamTransmute(Blocks.NETHERRACK.getDefaultState(), 8));
-		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState(), false), new BeamTransmute(Blocks.GRAVEL.getDefaultState(), 8));
-		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 12));
-		RecipeHolder.vFusionBeamRecipes.put(new BlockCraftingStack(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 16));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.ICE.getDefaultState(), false), new BeamTransmute(Blocks.SNOW.getDefaultState(), 0));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(ModBlocks.blockPureQuartz.getDefaultState(), false), new BeamTransmute(Blocks.SAND.getDefaultState(), 16));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.STONE.getDefaultState(), false), new BeamTransmute(Blocks.COBBLESTONE.getDefaultState(), 1));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.STONEBRICK.getDefaultState(), false), new BeamTransmute(Blocks.STONE.getDefaultState(), 1));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.NETHER_BRICK.getDefaultState(), false), new BeamTransmute(Blocks.NETHERRACK.getDefaultState(), 8));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState(), false), new BeamTransmute(Blocks.GRAVEL.getDefaultState(), 8));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 12));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 16));
 
 		//Custom tool 
 		//(sword)

@@ -18,7 +18,7 @@ import net.minecraft.world.WorldServer;
 public class ChlorineAlchemyEffect implements IAlchEffect{
 
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase){
+	public void doEffect(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase){
 		int radius = 2 * (int) Math.pow(amount, 1D / 3D);//This affects a cubic area instead of a spherical one because it's so much easier to do a cube. 
 		WorldServer worldS = (WorldServer) world;
 		Color col = AlchemyCore.REAGENTS[21].getColor(EnumMatterPhase.GAS);

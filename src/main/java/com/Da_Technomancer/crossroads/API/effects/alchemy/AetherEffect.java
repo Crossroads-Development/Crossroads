@@ -1,8 +1,17 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
+import java.util.ArrayList;
+import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
+
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.crafting.BlockRecipePredicate;
 
+import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -10,64 +19,95 @@ import net.minecraft.world.World;
 
 public class AetherEffect implements IAlchEffect{
 
-	@Override
-	public void doEffectAdv(World world, BlockPos pos, double amount, EnumMatterPhase phase, ReagentStack[] contents){
-		doTransmute(world, pos, contents[3] == null ? 0 : contents[3].getAmount() / amount, contents[13] == null ? 0 : contents[13].getAmount() / amount);
+	protected static final ArrayList<Predicate<IBlockState>> SOIL_GROUP = new ArrayList<Predicate<IBlockState>>();
+	protected static final ArrayList<Predicate<IBlockState>> ROCK_GROUP = new ArrayList<Predicate<IBlockState>>();
+	protected static final ArrayList<Predicate<IBlockState>> FLUD_GROUP = new ArrayList<Predicate<IBlockState>>();//Was going to be named FLUID_GROUP, but the other two fields had the samed name lengths and I couldn't resist
+	protected static final ArrayList<Predicate<IBlockState>> CRYS_GROUP = new ArrayList<Predicate<IBlockState>>();
+
+	static{
+		SOIL_GROUP.add(new MaterialPredicate(Material.GROUND));
+		SOIL_GROUP.add(new MaterialPredicate(Material.SAND));
+		SOIL_GROUP.add(new MaterialPredicate(Material.SNOW));
+		SOIL_GROUP.add(new MaterialPredicate(Material.CRAFTED_SNOW));
+		SOIL_GROUP.add(new MaterialPredicate(Material.CLAY));
+		ROCK_GROUP.add(new MaterialPredicate(Material.ROCK));
+		ROCK_GROUP.add(new MaterialPredicate(Material.PACKED_ICE));
+		FLUD_GROUP.add(new MaterialPredicate(Material.WATER));
+		FLUD_GROUP.add(new MaterialPredicate(Material.ICE));
+		FLUD_GROUP.add(new MaterialPredicate(Material.LAVA));
+		CRYS_GROUP.add(new MaterialPredicate(Material.GLASS));
+		CRYS_GROUP.add(new BlockRecipePredicate(ModBlocks.blockPureQuartz.getDefaultState(), false));
 	}
 
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase){
-		
+	public void doEffect(World world, BlockPos pos, double amount,double heat, EnumMatterPhase phase){
+		doTransmute(world, pos);
 	}
-	
-	public static void doTransmute(World world, BlockPos pos, double sulfurRatio, double quicksilverRatio){
+
+	private static void doTransmute(World world, BlockPos pos){
 		IBlockState oldState = world.getBlockState(pos);
-		float fromHardness = oldState.getBlockHardness(world, pos);
-		if(oldState.getBlock().isAir(oldState, world, pos)){
+		if(oldState.getBlock().isAir(oldState, world, pos) || oldState.getBlockHardness(world, pos) < 0){
 			return;
 		}
-		
-		if(fromHardness < 0){
-			if(oldState.getBlock() == Blocks.BEDROCK){
-				fromHardness = 100;
-			}else{
+
+		for(Predicate<IBlockState> pred : CRYS_GROUP){
+			if(pred.test(oldState)){
+				if(oldState != Blocks.GLASS.getDefaultState()){
+					world.setBlockState(pos, Blocks.GLASS.getDefaultState());
+				}
 				return;
 			}
 		}
-		
-		if(sulfurRatio > 0.8D || sulfurRatio * 32D >= fromHardness){
-			IBlockState newState = Blocks.AIR.getDefaultState();
-			
-			switch((int) (quicksilverRatio * 10D)){
-				case 0:
-					break;
-				case 1:
-					newState = Blocks.WATER.getDefaultState();
-					break;
-				case 2:
-					newState = Blocks.ICE.getDefaultState();
-					break;
-				case 3:
-					newState = Blocks.SAND.getDefaultState();
-					break;
-				case 4:
-					newState = Blocks.DIRT.getDefaultState();
-					break;
-				case 5:
-					newState = Blocks.CLAY.getDefaultState();
-					break;
-				case 6:
-					newState = Blocks.STONE.getDefaultState();
-					break;
-				case 7:
-					newState = Blocks.OBSIDIAN.getDefaultState();
-					break;
-				default:
-					newState = Blocks.LAVA.getDefaultState();
-					break;
+		for(Predicate<IBlockState> pred : FLUD_GROUP){
+			if(pred.test(oldState)){
+				if(oldState != Blocks.WATER.getDefaultState()){
+					world.setBlockState(pos, Blocks.WATER.getDefaultState());
+				}
+				return;
 			}
-			
-			world.setBlockState(pos, newState);
 		}
+		for(Predicate<IBlockState> pred : ROCK_GROUP){
+			if(pred.test(oldState)){
+				if(oldState != Blocks.STONE.getDefaultState()){
+					world.setBlockState(pos, Blocks.STONE.getDefaultState());
+				}
+				return;
+			}
+		}
+		for(Predicate<IBlockState> pred : SOIL_GROUP){
+			if(pred.test(oldState)){
+				if(oldState != Blocks.DIRT.getDefaultState()){
+					world.setBlockState(pos, Blocks.DIRT.getDefaultState());
+				}
+				return;
+			}
+		}
+	}
+
+	protected static class MaterialPredicate implements Predicate<IBlockState>{
+
+		private final Material m;
+
+		public MaterialPredicate(Material m){
+			this.m = m;
+		}
+
+		@Override
+		public boolean test(IBlockState toCheck){
+			if(toCheck.getMaterial() == m && !(toCheck.getBlock() instanceof ITileEntityProvider)){
+				return true;
+			}
+			return false;
+		}
+	}
+	
+	@Override
+	public void doEffectAdv(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase, @Nullable ReagentStack[] contents){
+		IBlockState oldState = world.getBlockState(pos);
+		if(contents != null && contents[13] != null && oldState.getBlock().isAir(oldState, world, pos)){
+			world.setBlockState(pos, Blocks.DIRT.getDefaultState());
+			return;
+		}
+		doEffect(world, pos, amount, temp, phase);
 	}
 }

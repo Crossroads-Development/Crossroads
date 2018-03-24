@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.effects.goggles.DiamondGoggleEffect;
@@ -10,8 +11,7 @@ import com.Da_Technomancer.crossroads.API.effects.goggles.QuartzGoggleEffect;
 import com.Da_Technomancer.crossroads.API.effects.goggles.RubyGoggleEffect;
 import com.Da_Technomancer.crossroads.API.effects.goggles.VoidGoggleEffect;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.crafting.CraftingStack;
-import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,24 +22,24 @@ import net.minecraft.world.World;
 public enum EnumGoggleLenses implements IInfoDevice{
 	
 	//Don't reorder these unless you want to rename all the goggle texture files.
-	RUBY(new OreDictCraftingStack("gemRuby", 1), "_ruby", new RubyGoggleEffect()),
-	EMERALD(new OreDictCraftingStack("gemEmerald", 1), "_emerald", new EmeraldGoggleEffect()),
-	DIAMOND(new OreDictCraftingStack("gemDiamond", 1), "_diamond", new DiamondGoggleEffect()),
-	QUARTZ(new CraftingStack(ModItems.pureQuartz, 1, 0), "_quartz", new QuartzGoggleEffect()),
-	VOID(new CraftingStack(ModItems.voidCrystal, 1, 0), "", new VoidGoggleEffect());
+	RUBY(new OreDictCraftingStack("gemRuby"), "_ruby", new RubyGoggleEffect()),
+	EMERALD(new OreDictCraftingStack("gemEmerald"), "_emerald", new EmeraldGoggleEffect()),
+	DIAMOND(new OreDictCraftingStack("gemDiamond"), "_diamond", new DiamondGoggleEffect()),
+	QUARTZ(new ItemRecipePredicate(ModItems.pureQuartz, 0), "_quartz", new QuartzGoggleEffect()),
+	VOID(new ItemRecipePredicate(ModItems.voidCrystal, 0), "", new VoidGoggleEffect());
 	
-	private final ICraftingStack<ItemStack> item;
+	private final Predicate<ItemStack> item;
 	private final String texturePath;
 	private final IGoggleEffect effect;
 	
-	EnumGoggleLenses(ICraftingStack<ItemStack> item, String texturePath, IGoggleEffect effect){
+	EnumGoggleLenses(Predicate<ItemStack> item, String texturePath, IGoggleEffect effect){
 		this.item = item;
 		this.texturePath = texturePath;
 		this.effect = effect;
 	}
 
 	public boolean matchesRecipe(ItemStack stack){
-		return item.softMatch(stack);
+		return item.test(stack);
 	}
 	
 	public String getTexturePath(){

@@ -26,7 +26,7 @@ public class SaltAlchemyEffect implements IAlchEffect{
 	private static final Predicate<Entity> FILTER = (Entity e) -> (e instanceof EntitySlime || e instanceof EntityCreeper) && EntitySelectors.IS_ALIVE.apply(e);
 
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase){
+	public void doEffect(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase){
 		int radius = Math.min(1, (int) amount / 100);
 		for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos.add(-radius, -radius, -radius), pos.add(radius, radius, radius)), FILTER)){
 			if(e instanceof EntitySlime){

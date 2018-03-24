@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 public interface IAlchEffect{
 	
-	public void doEffect(World world, BlockPos pos, double amount, EnumMatterPhase phase);
+	public void doEffect(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase);
 	
 	/**
 	 * @param world
@@ -19,7 +19,7 @@ public interface IAlchEffect{
 	 * @param phase
 	 * @param contents The full contents of the caller. Null if not applicable. 
 	 */
-	public default void doEffectAdv(World world, BlockPos pos, double amount, EnumMatterPhase phase, @Nullable ReagentStack[] contents){
-		doEffect(world, pos, amount, phase);
+	public default void doEffectAdv(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase, @Nullable ReagentStack[] contents){
+		doEffect(world, pos, amount, temp, phase);
 	}
 }

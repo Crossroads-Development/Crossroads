@@ -12,46 +12,37 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ElementalReagent implements IDynamicReagent, IElementReagent{
+public class ElementalReagent implements IElementReagent{
 	
 	private final int index;
 	private final boolean destroyContainer;
 	private final byte level;
-	
-	/**
-	 * Energy, potential, and stability determine base composition, void determines possible variance from that at randomization.
-	 */
-	private final MagicUnit possibleRange;
-	private MagicUnit range = new MagicUnit(1, 1, 1, 0);
-	
+	private final String name;
+	private final MagicUnit range;
 	private final Color color;
 	private final IAlchEffect effect;
-	private final int minMelt;
-	private final int maxMelt;
-	private final int minBoil;
-	private final int maxBoil;
-	private int melt = 0;
-	private int boil = 1;
+	private final int melt;
+	private final int boil;
 	private final Item solidForm;
 	private final IElementReagent secondaryBase;
 	
-	public ElementalReagent(int index, byte level, int minMelt, int maxMelt, int minBoil, int maxBoil, Color color, IAlchEffect effect, boolean destroyContainer, MagicUnit possibleRange, @Nullable Item solidForm){
-		this(index, level, minMelt, maxMelt, minBoil, maxBoil, color, effect, destroyContainer, possibleRange, solidForm, null);
+	public ElementalReagent(String name, int index, byte level, int melt, int boil, IAlchEffect effect, boolean destroyContainer, MagicUnit range, @Nullable Item solidForm){
+		this(name, index, level, melt, boil, effect, destroyContainer, range, solidForm, null);
 	}
 	
-	public ElementalReagent(int index, byte level, int minMelt, int maxMelt, int minBoil, int maxBoil, Color color, IAlchEffect effect, boolean destroyContainer, MagicUnit possibleRange, @Nullable Item solidForm, @Nullable IElementReagent secondaryBase){
+	public ElementalReagent(String name, int index, byte level, int melt, int boil, IAlchEffect effect, boolean destroyContainer, MagicUnit range, @Nullable Item solidForm, @Nullable IElementReagent secondaryBase){
+		this.name = name;
 		this.index = index;
 		this.destroyContainer = destroyContainer;
 		this.level = level;
-		this.possibleRange = possibleRange;
+		this.range = range;
 		this.effect = effect;
-		this.minBoil = minBoil;
-		this.maxBoil = maxBoil;
-		this.minMelt = minMelt;
-		this.maxMelt = maxMelt;
-		this.color = color;
+		this.boil = boil;
+		this.melt = melt;
 		this.solidForm = solidForm;
 		this.secondaryBase = secondaryBase;
+		this.color = range.getTrueRGB();
+		AlchemyCore.ELEMENTAL_REAGS.add(this);
 	}
 	
 	@Override
@@ -85,9 +76,9 @@ public class ElementalReagent implements IDynamicReagent, IElementReagent{
 	}
 	
 	@Override
-	public void onRelease(World world, BlockPos pos, double amount, EnumMatterPhase phase, ReagentStack[] contents){
+	public void onRelease(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase, ReagentStack[] contents){
 		if(effect != null){
-			effect.doEffectAdv(world, pos, amount, phase, contents);
+			effect.doEffectAdv(world, pos, amount, temp, phase, contents);
 		}
 	}
 
@@ -112,21 +103,6 @@ public class ElementalReagent implements IDynamicReagent, IElementReagent{
 	}
 
 	@Override
-	public void setProperties(int seed){
-		melt = minMelt + ((seed >>> 1) % (1 + maxMelt - minMelt));
-		boil = Math.min(melt + 1, minBoil + ((seed >>> 3) % (1 + maxBoil - minBoil)));
-		int variance = possibleRange.getVoid() + 1;
-		range = new MagicUnit(possibleRange.getEnergy() + ((seed >>> 1) % variance), possibleRange.getPotential() + ((seed >>> 4) % variance), possibleRange.getStability() + ((seed >>> 8) % variance), 0);
-		
-		AlchemyCore.ELEMENTAL_REAGS.add(this);
-	}
-
-	@Override
-	public void setReactions(int seed){
-		//In AlchemyCore
-	}
-
-	@Override
 	public byte getLevel(){
 		return level;
 	}
@@ -134,5 +110,10 @@ public class ElementalReagent implements IDynamicReagent, IElementReagent{
 	@Override
 	public IElementReagent getSecondaryBase(){
 		return secondaryBase;
+	}
+
+	@Override
+	public String getName(){
+		return name;
 	}	
 }

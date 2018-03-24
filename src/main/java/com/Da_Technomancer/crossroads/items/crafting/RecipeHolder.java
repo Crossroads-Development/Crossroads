@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.items.crafting;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
@@ -42,7 +43,7 @@ public final class RecipeHolder{
 	 * CraftingStack is input, the array is the outputs. HAVE NO MORE THAN 3 ITEMSTACKS IN THE ARRAY.
 	 * 
 	 */
-	public static final HashMap<ICraftingStack<ItemStack>, ItemStack[]> grindRecipes = new HashMap<ICraftingStack<ItemStack>, ItemStack[]>();
+	public static final HashMap<RecipePredicate<ItemStack>, ItemStack[]> grindRecipes = new HashMap<RecipePredicate<ItemStack>, ItemStack[]>();
 
 	/**
 	 * Block is input, blockstate is the created block, Double1 is heat created, Double2 is the limit, boolean is whether to show this recipe in JEI. 
@@ -60,7 +61,7 @@ public final class RecipeHolder{
 	/**
 	 * Stores the heating crucible recipes. BE CAREFUL, the contained FluidStack is mutable. The ICraftingStack is the ingredient, FluidStack is output, and String is the unmelted texture
 	 */
-	public static final ArrayList<Triple<ICraftingStack<ItemStack>, FluidStack, String>> heatingCrucibleRecipes = new ArrayList<Triple<ICraftingStack<ItemStack>, FluidStack, String>>();
+	public static final ArrayList<Triple<RecipePredicate<ItemStack>, FluidStack, String>> heatingCrucibleRecipes = new ArrayList<Triple<RecipePredicate<ItemStack>, FluidStack, String>>();
 	
 	/**
 	 * A list of all recipes, Item Array are the ingredients, and itemstack is
@@ -68,7 +69,7 @@ public final class RecipeHolder{
 	 * 
 	 * Under no condition is anyone to add support for the Bobo recipes in JEI (or any other recipe helper). 
 	 */
-	protected static final ArrayList<Pair<ICraftingStack<ItemStack>[], ItemStack>> brazierBoboRecipes = new ArrayList<Pair<ICraftingStack<ItemStack>[], ItemStack>>();
+	protected static final ArrayList<Pair<Predicate<ItemStack>[], ItemStack>> brazierBoboRecipes = new ArrayList<Pair<Predicate<ItemStack>[], ItemStack>>();
 
 	/**
 	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
@@ -78,12 +79,12 @@ public final class RecipeHolder{
 	/**
 	 * Stores the fusion beam conversion recipes. 
 	 */
-	public static final CraftStackMap<IBlockState, BlockCraftingStack, BeamTransmute> fusionBeamRecipes = new CraftStackMap<IBlockState, BlockCraftingStack, BeamTransmute>();
+	public static final PredicateMap<IBlockState, BeamTransmute> fusionBeamRecipes = new PredicateMap<IBlockState, BeamTransmute>();
 	
 	/**
 	 * Stores the void-fusion beam conversion recipes. 
 	 */
-	public static final CraftStackMap<IBlockState, BlockCraftingStack, BeamTransmute> vFusionBeamRecipes = new CraftStackMap<IBlockState, BlockCraftingStack, BeamTransmute>();
+	public static final PredicateMap<IBlockState, BeamTransmute> vFusionBeamRecipes = new PredicateMap<IBlockState, BeamTransmute>();
 
 	/**
 	 * The recipes for the Detailed Crafter that require technomancy to be unlocked.
@@ -107,7 +108,7 @@ public final class RecipeHolder{
 	 */
 	public static void rebind(){
 		ArrayList<IRecipeWrapper> currentRecipes = new ArrayList<IRecipeWrapper>();
-		for(Entry<ICraftingStack<ItemStack>, ItemStack[]> rec : grindRecipes.entrySet()){
+		for(Entry<RecipePredicate<ItemStack>, ItemStack[]> rec : grindRecipes.entrySet()){
 			currentRecipes.add(new GrindstoneRecipe(rec));
 		}
 		JEIWrappers.put(GrindstoneCategory.ID, currentRecipes);
@@ -136,7 +137,7 @@ public final class RecipeHolder{
 		JEIWrappers.put(DetailedCrafterCategory.ID, currentRecipes);
 		
 		currentRecipes = new ArrayList<IRecipeWrapper>();
-		for(Triple<ICraftingStack<ItemStack>, FluidStack, String> rec : heatingCrucibleRecipes){
+		for(Triple<RecipePredicate<ItemStack>, FluidStack, String> rec : heatingCrucibleRecipes){
 			currentRecipes.add(new HeatingCrucibleRecipe(rec.getLeft(), rec.getMiddle()));
 		}
 		JEIWrappers.put(HeatingCrucibleCategory.ID, currentRecipes);
@@ -148,10 +149,10 @@ public final class RecipeHolder{
 		JEIWrappers.put(ArcaneExtractorCategory.ID, currentRecipes);
 		
 		currentRecipes = new ArrayList<IRecipeWrapper>();
-		for(Pair<BlockCraftingStack, BeamTransmute> rec : fusionBeamRecipes.entrySet()){
+		for(Pair<Predicate<IBlockState>, BeamTransmute> rec : fusionBeamRecipes.entrySet()){
 			currentRecipes.add(new FusionBeamRecipe(rec.getKey(), rec.getRight().state, rec.getRight().minPower, false));
 		}
-		for(Pair<BlockCraftingStack, BeamTransmute> rec : vFusionBeamRecipes.entrySet()){
+		for(Pair<Predicate<IBlockState>, BeamTransmute> rec : vFusionBeamRecipes.entrySet()){
 			currentRecipes.add(new FusionBeamRecipe(rec.getKey(), rec.getRight().state, rec.getRight().minPower, true));
 		}
 		JEIWrappers.put(FusionBeamCategory.ID, currentRecipes);
@@ -176,13 +177,13 @@ public final class RecipeHolder{
 			return ItemStack.EMPTY;
 		}
 
-		for(Pair<ICraftingStack<ItemStack>[], ItemStack> craft : brazierBoboRecipes){
+		for(Pair<Predicate<ItemStack>[], ItemStack> craft : brazierBoboRecipes){
 			ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
 			itemCop.addAll(items);
 
-			for(ICraftingStack<ItemStack> cStack : craft.getLeft()){
+			for(Predicate<ItemStack> cStack : craft.getLeft()){
 				for(ItemStack stack : items){
-					if(itemCop.contains(stack) && cStack.softMatch(stack)){
+					if(itemCop.contains(stack) && cStack.test(stack)){
 						itemCop.remove(stack);
 						break;
 					}

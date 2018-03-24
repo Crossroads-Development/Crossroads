@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.integration.crafttweaker;
 
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.Da_Technomancer.crossroads.items.crafting.CraftingStack;
-import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
+import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
@@ -31,7 +31,7 @@ public class HeatingCrucibleHandler{
 	@ZenMethod
 	public static void addRecipe(IItemStack input, ILiquidStack out, String texture){
 		ItemStack in = CraftTweakerMC.getItemStack(input);
-		CraftTweakerAPI.apply(new Add(new CraftingStack(in.getItem(), 1, in.getMetadata()), CraftTweakerMC.getLiquidStack(out), texture));
+		CraftTweakerAPI.apply(new Add(new ItemRecipePredicate(in.getItem(), in.getMetadata()), CraftTweakerMC.getLiquidStack(out), texture));
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class HeatingCrucibleHandler{
 	 */
 	@ZenMethod
 	public static void addRecipe(IOreDictEntry input, ILiquidStack out, String texture){
-		CraftTweakerAPI.apply(new Add(new OreDictCraftingStack(input.getName(), 1), CraftTweakerMC.getLiquidStack(out), texture));
+		CraftTweakerAPI.apply(new Add(new OreDictCraftingStack(input.getName()), CraftTweakerMC.getLiquidStack(out), texture));
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class HeatingCrucibleHandler{
 	@ZenMethod
 	public static void removeRecipe(IItemStack input){
 		ItemStack in = CraftTweakerMC.getItemStack(input);
-		CraftTweakerAPI.apply(new Remove(new CraftingStack(in.getItem(), 1, in.getMetadata())));
+		CraftTweakerAPI.apply(new Remove(new ItemRecipePredicate(in.getItem(), in.getMetadata())));
 	}
 	
 	/**
@@ -61,16 +61,16 @@ public class HeatingCrucibleHandler{
 	 */
 	@ZenMethod
 	public static void removeRecipe(IOreDictEntry input){
-		CraftTweakerAPI.apply(new Remove(new OreDictCraftingStack(input.getName(), 1)));
+		CraftTweakerAPI.apply(new Remove(new OreDictCraftingStack(input.getName())));
 	}
 	
 	private static class Add implements IAction{
 
-		private final ICraftingStack<ItemStack> in;
+		private final RecipePredicate<ItemStack> in;
 		private final FluidStack out;
 		private final String text;
 		
-		private Add(ICraftingStack<ItemStack> input, FluidStack out, String text){
+		private Add(RecipePredicate<ItemStack> input, FluidStack out, String text){
 			this.in = input;
 			this.out = out;
 			this.text = text;
@@ -89,9 +89,9 @@ public class HeatingCrucibleHandler{
 	
 	private static class Remove implements IAction{
 
-		private final ICraftingStack<ItemStack> input;
+		private final RecipePredicate<ItemStack> input;
 		
-		private Remove(ICraftingStack<ItemStack> input){
+		private Remove(RecipePredicate<ItemStack> input){
 			this.input = input;
 		}
 		

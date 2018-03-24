@@ -58,7 +58,7 @@ public interface IReagent{
 	 */
 	public Color getColor(EnumMatterPhase phase);
 	
-	public default void onRelease(World world, BlockPos pos, double amount, EnumMatterPhase phase, ReagentStack[] contents){
+	public default void onRelease(World world, BlockPos pos, double amount, double heat, EnumMatterPhase phase, ReagentStack[] contents){
 		
 	}
 	

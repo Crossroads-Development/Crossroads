@@ -27,6 +27,7 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
@@ -34,6 +35,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -87,6 +89,24 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Override
 	protected double transferCapacity(){
 		return occupied ? florence ? ModItems.florenceFlask.getCapacity() : ModItems.phial.getCapacity() : 0;
+	}
+
+	@Override
+	public void destroyChamber(){
+		double temp = getTemp();
+		IBlockState state = world.getBlockState(pos);
+		world.setBlockState(pos, state.withProperty(Properties.ACTIVE, false).withProperty(Properties.CRYSTAL, false).withProperty(Properties.CONTAINER_TYPE, false));
+		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
+		occupied = false;
+		florence = false;
+		this.heat = 0;
+		this.contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
+		dirtyReag = true;
+		for(ReagentStack r : contents){
+			if(r != null){
+				r.getType().onRelease(world, pos, r.getAmount(), temp, r.getPhase(temp), contents);
+			}
+		}
 	}
 
 	public void onBlockDestoyed(IBlockState state){
@@ -149,6 +169,15 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 					}
 				}				
 			}else if(stack.getItem() instanceof AbstractGlassware){
+				if(stack.getMetadata() == 0){
+					//Refuse if made of glass and cannot hold contents
+					for(ReagentStack reag : contents){
+						if(reag != null && !reag.getType().canGlassContain()){
+							return stack;
+						}
+					}
+				}
+				
 				Triple<ReagentStack[], Double, Double> phial = ((AbstractGlassware) stack.getItem()).getReagants(stack);
 				ReagentStack[] reag = phial.getLeft();
 				double endHeat = phial.getMiddle();

@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraft.inventory.InventoryHelper;
@@ -123,8 +123,8 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 	}
 
 	private ItemStack[] getOutput(){
-		for(Entry<ICraftingStack<ItemStack>, ItemStack[]> recipe: RecipeHolder.grindRecipes.entrySet()){
-			if(recipe.getKey().softMatch(inventory[0])){
+		for(Entry<RecipePredicate<ItemStack>, ItemStack[]> recipe: RecipeHolder.grindRecipes.entrySet()){
+			if(recipe.getKey().test(inventory[0])){
 				return recipe.getValue();
 			}
 		}

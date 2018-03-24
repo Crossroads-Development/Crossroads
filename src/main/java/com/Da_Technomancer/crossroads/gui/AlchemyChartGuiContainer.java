@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.IDynamicReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.IElementReagent;
 import com.Da_Technomancer.crossroads.gui.container.AlchemyChartContainer;
 import com.google.common.collect.ImmutableList;
@@ -109,7 +108,7 @@ public class AlchemyChartGuiContainer extends GuiContainer{
 
 		private void drawNode(boolean secondStage){
 			if(secondStage){
-				drawModalRectWithCustomSizedTexture(xPos + xSize / 2 - 8, yPos + ySize / 2 - 8, 16 * type, reag.getName().equals(IDynamicReagent.UNKNOWN_NAME) ? 16 : 0, 16, 16, 64, 64);
+				drawModalRectWithCustomSizedTexture(xPos + xSize / 2 - 8, yPos + ySize / 2 - 8, 16 * type, 0, 16, 16, 64, 64);
 			}else{
 
 				if(type != 0){

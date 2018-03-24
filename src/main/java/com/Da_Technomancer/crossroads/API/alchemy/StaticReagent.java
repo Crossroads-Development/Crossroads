@@ -35,7 +35,7 @@ public class StaticReagent implements IReagent{
 	 * @param color A function giving the color of this reagent based on phase. 
 	 */
 	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color){
-		this(name, meltingPoint, boilingPoint, index, color, null, 0, false);
+		this(name, meltingPoint, boilingPoint, index, color, null, 0);
 	}
 
 	/**
@@ -46,10 +46,9 @@ public class StaticReagent implements IReagent{
 	 * @param color A function giving the color of this reagent based on phase. 
 	 * @param solid The item that represents this in solid form. 
 	 * @param itemQuantity The amount of reagent 1 item is equivalent to. 
-	 * @param base Whether this is a constant material (in all worlds). Doesn't matter if solid is null. 
 	 */
-	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base){
-		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, base, null, null);
+	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity){
+		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, null, null);
 	}
 
 	/**
@@ -59,14 +58,12 @@ public class StaticReagent implements IReagent{
 	 * @param index The index in the {@link AlchemyCore#REAGENTS} array.
 	 * @param color A function giving the color of this reagent based on phase. 
 	 * @param solid The item that represents this in solid form. 
-	 * @param itemQuantity The amount of reagent 1 item is equivalent to. 
-	 * @param base Whether this is a constant material (in all worlds). 
-	 * @param catalType 0: None; 1: Alkhest; 2: Anti-Alkhest
+	 * @param itemQuantity The amount of reagent 1 item is equivalent to.
 	 * @param solventType Sets the solvent type
 	 * @param soluteType Sets the solute type
 	 */
-	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, boolean base, @Nullable EnumSolventType solventType, @Nullable EnumSolventType soluteType){
-		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, base, solventType, soluteType, 0, null);
+	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, @Nullable EnumSolventType solventType, @Nullable EnumSolventType soluteType){
+		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, solventType, soluteType, 0, null);
 	}
 
 	/**
@@ -77,14 +74,12 @@ public class StaticReagent implements IReagent{
 	 * @param color A function giving the color of this reagent based on phase. 
 	 * @param solid The item that represents this in solid form. 
 	 * @param itemQuantity The amount of reagent 1 item is equivelent to. 
-	 * @param base Whether this is a constant material (in all worlds). 
-	 * @param catalType 0: None; 1: Alkhest; 2: Anti-Alkhest
 	 * @param solventType Sets the solvent type
 	 * @param soluteType Sets the solute type
 	 * @param containType 0: Normal; 1: Vanishes in glass; 2: Destroys glass. 
 	 * @param effect The effect this has when released. Null for none. 
 	 */
-	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, double itemQuantity, boolean base, @Nullable EnumSolventType solventType, @Nullable EnumSolventType soluteType, int containType, @Nullable IAlchEffect effect){
+	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, double itemQuantity, @Nullable EnumSolventType solventType, @Nullable EnumSolventType soluteType, int containType, @Nullable IAlchEffect effect){
 		this.name = name;
 		if(boilingPoint <= meltingPoint){
 			throw Main.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));
@@ -94,11 +89,7 @@ public class StaticReagent implements IReagent{
 		this.solid = solid;
 		this.itemAmount = itemQuantity;
 		if(solid != null){
-			if(base){
-				AlchemyCore.BASE_ITEM_TO_REAGENT.put(solid, this);
-			}else{
-				AlchemyCore.ITEM_TO_REAGENT.put(solid, this);
-			}
+			AlchemyCore.ITEM_TO_REAGENT.put(solid, this);
 		}
 		this.containType = containType;
 		this.effect = effect;
@@ -149,9 +140,9 @@ public class StaticReagent implements IReagent{
 	}
 
 	@Override
-	public void onRelease(World world, BlockPos pos, double amount, EnumMatterPhase phase, ReagentStack[] contents){
+	public void onRelease(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase, ReagentStack[] contents){
 		if(effect != null){
-			effect.doEffectAdv(world, pos, amount, phase, contents);
+			effect.doEffectAdv(world, pos, amount, temp, phase, contents);
 		}
 	}
 

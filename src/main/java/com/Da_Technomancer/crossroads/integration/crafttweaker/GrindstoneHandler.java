@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.crafttweaker;
 
-import com.Da_Technomancer.crossroads.items.crafting.CraftingStack;
-import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
+import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
@@ -36,7 +36,7 @@ public class GrindstoneHandler{
 		if(in.isEmpty()){
 			return;
 		}
-		CraftTweakerAPI.apply(new Add(new CraftingStack(in.getItem(), 1, in.getMetadata()), CraftTweakerIntegration.toItemStack(output1, output2, output3)));
+		CraftTweakerAPI.apply(new Add(new ItemRecipePredicate(in.getItem(), in.getMetadata()), CraftTweakerIntegration.toItemStack(output1, output2, output3)));
 	}
 
 	/** Add a new ore dict recipe.
@@ -55,15 +55,15 @@ public class GrindstoneHandler{
 		if(key == null){
 			return;
 		}
-		CraftTweakerAPI.apply(new Add(new OreDictCraftingStack(key, 1), CraftTweakerIntegration.toItemStack(output1, output2, output3)));
+		CraftTweakerAPI.apply(new Add(new OreDictCraftingStack(key), CraftTweakerIntegration.toItemStack(output1, output2, output3)));
 	}
 
 	/** Operation to add a new recipe. */
 	private static class Add implements IAction{
-		private final ICraftingStack<ItemStack> input;
+		private final RecipePredicate<ItemStack> input;
 		private final ItemStack[] outputs;
 
-		private Add(ICraftingStack<ItemStack> input, ItemStack[] outputs){
+		private Add(RecipePredicate<ItemStack> input, ItemStack[] outputs){
 			this.input = input;
 			this.outputs = outputs;
 		}
@@ -89,7 +89,7 @@ public class GrindstoneHandler{
 			return;
 		}
 
-		CraftTweakerAPI.apply(new Remove(new CraftingStack(in.getItem(), 1, in.getMetadata())));
+		CraftTweakerAPI.apply(new Remove(new ItemRecipePredicate(in.getItem(), in.getMetadata())));
 	}
 
 	/** Remove a grindstone recipe for the ore dictionary entry of the input item stack.
@@ -101,14 +101,14 @@ public class GrindstoneHandler{
 		if(key == null)
 			return;
 
-		CraftTweakerAPI.apply(new Remove(new OreDictCraftingStack(key, 1)));
+		CraftTweakerAPI.apply(new Remove(new OreDictCraftingStack(key)));
 	}
 
 	/** Operation to remove a grindstone recipe. */
 	private static class Remove implements IAction{
-		ICraftingStack<ItemStack> input;
+		RecipePredicate<ItemStack> input;
 
-		Remove(ICraftingStack<ItemStack> input){
+		Remove(RecipePredicate<ItemStack> input){
 			this.input = input;
 		}
 

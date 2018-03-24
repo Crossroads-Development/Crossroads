@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.crafttweaker;
 
 import com.Da_Technomancer.crossroads.items.crafting.BeamTransmute;
-import com.Da_Technomancer.crossroads.items.crafting.BlockCraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.BlockRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import crafttweaker.CraftTweakerAPI;
@@ -42,14 +42,14 @@ public class FusionBeamHandler{
 	
 	private static class Add implements IAction{
 
-		private final BlockCraftingStack input;
+		private final BlockRecipePredicate input;
 		private final int minPower;
 		private final IBlockState output;
 		private final boolean voi;
 		
 		@SuppressWarnings("deprecation")
 		private Add(Block input, int inputMeta, int minPower, Block output, int outMeta, boolean voi){
-			this.input = new BlockCraftingStack(inputMeta == OreDictionary.WILDCARD_VALUE ? input.getDefaultState() : input.getStateFromMeta(inputMeta), inputMeta == OreDictionary.WILDCARD_VALUE);
+			this.input = new BlockRecipePredicate(inputMeta == OreDictionary.WILDCARD_VALUE ? input.getDefaultState() : input.getStateFromMeta(inputMeta), inputMeta == OreDictionary.WILDCARD_VALUE);
 			this.minPower = minPower;
 			this.output = output.getStateFromMeta(outMeta);
 			this.voi = voi;
@@ -72,12 +72,12 @@ public class FusionBeamHandler{
 	
 	private static class Remove implements IAction{
 
-		private final BlockCraftingStack input;
+		private final BlockRecipePredicate input;
 		private final boolean voi;
 		
 		@SuppressWarnings("deprecation")
 		private Remove(Block input, int inputMeta, boolean voi){
-			this.input = new BlockCraftingStack(inputMeta == OreDictionary.WILDCARD_VALUE ? input.getDefaultState() : input.getStateFromMeta(inputMeta), inputMeta == OreDictionary.WILDCARD_VALUE);
+			this.input = new BlockRecipePredicate(inputMeta == OreDictionary.WILDCARD_VALUE ? input.getDefaultState() : input.getStateFromMeta(inputMeta), inputMeta == OreDictionary.WILDCARD_VALUE);
 			this.voi = voi;
 		}
 		

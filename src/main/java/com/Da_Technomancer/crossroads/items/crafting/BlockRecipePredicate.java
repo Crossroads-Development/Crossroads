@@ -6,32 +6,27 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.state.IBlockState;
 
-public class BlockCraftingStack implements ICraftingStack<IBlockState>{
+public class BlockRecipePredicate implements RecipePredicate<IBlockState>{
 
 	private final IBlockState state;
 	private final boolean ignoreMeta;
-
+	
 	/**
 	 * 
 	 * @param state
 	 * @param ignoreMeta If true, ignore all properties and only focus on blocktype
 	 */
-	public BlockCraftingStack(IBlockState state, boolean ignoreMeta){
+	public BlockRecipePredicate(IBlockState state, boolean ignoreMeta){
 		this.state = state;
 		this.ignoreMeta = ignoreMeta;
 	}
 
 	@Override
-	public boolean match(IBlockState state){
+	public boolean test(IBlockState state){
 		if(ignoreMeta){
 			return state.getBlock() == this.state.getBlock();
 		}
 		return state == this.state;
-	}
-
-	@Override
-	public boolean softMatch(IBlockState state){
-		return match(state);
 	}
 
 	@Override
@@ -47,8 +42,8 @@ public class BlockCraftingStack implements ICraftingStack<IBlockState>{
 		if(other == this){
 			return true;
 		}
-		if(other instanceof BlockCraftingStack){
-			BlockCraftingStack otherStack = (BlockCraftingStack) other;
+		if(other instanceof BlockRecipePredicate){
+			BlockRecipePredicate otherStack = (BlockRecipePredicate) other;
 			return state == otherStack.state && ignoreMeta == otherStack.ignoreMeta;
 		}
 

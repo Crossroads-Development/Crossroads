@@ -43,7 +43,7 @@ public class EntityArmRidable extends Entity{
 		}
 	}
 
-	int ticksExisted = 0;
+	private int ticksExisted = 0;
 
 	@Override
 	public void onUpdate(){

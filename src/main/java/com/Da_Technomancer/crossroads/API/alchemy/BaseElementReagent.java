@@ -12,8 +12,8 @@ public class BaseElementReagent extends StaticReagent implements IElementReagent
 
 	private final MagicUnit alignment;
 	
-	public BaseElementReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, Item solid, double itemQuantity, boolean base, EnumSolventType solventType, EnumSolventType soluteType, int containType, IAlchEffect effect, MagicUnit alignment){
-		super(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, base, solventType, soluteType, containType, effect);
+	public BaseElementReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, Item solid, double itemQuantity, EnumSolventType solventType, EnumSolventType soluteType, int containType, IAlchEffect effect, MagicUnit alignment){
+		super(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, solventType, soluteType, containType, effect);
 		this.alignment = alignment;
 	}
 

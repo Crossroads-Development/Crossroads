@@ -1,13 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import java.io.IOException;
-
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.alchemy.IDynamicReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
-import com.Da_Technomancer.crossroads.API.gui.TexturedButtonGuiObject;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendStringToServer;
 import com.Da_Technomancer.crossroads.gui.container.SamplingBenchContainer;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.SamplingBenchTileEntity;
 
@@ -19,11 +13,9 @@ import net.minecraft.util.ResourceLocation;
 public class SamplingBenchGuiContainer extends GuiContainer{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID + ":textures/gui/container/sampling_bench_gui.png");
-	private static final ResourceLocation QUILL_TEXTURES = new ResourceLocation(Main.MODID + ":textures/gui/container/quill.png");
 
 	private final IInventory playerInv;
 	private final SamplingBenchTileEntity te;
-	private TexturedButtonGuiObject button;
 
 	public SamplingBenchGuiContainer(IInventory playerInv, SamplingBenchTileEntity te){
 		super(new SamplingBenchContainer(playerInv, te));
@@ -32,13 +24,6 @@ public class SamplingBenchGuiContainer extends GuiContainer{
 	}
 	
 	@Override
-	public void initGui(){
-		super.initGui();
-
-		button = new TexturedButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 152, 19, 16, 16, QUILL_TEXTURES, 0, 0, 16, 16, 16, 16);
-	}
-
-	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(GUI_TEXTURES);
@@ -46,8 +31,6 @@ public class SamplingBenchGuiContainer extends GuiContainer{
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
-		
-		button.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 	}
 
 	@Override
@@ -82,16 +65,6 @@ public class SamplingBenchGuiContainer extends GuiContainer{
 			fontRenderer.drawString("Disolves: ", 32, 58, 4210752);
 			line = reag.getType().solventType() == null ? "None" : reag.getType().solventType().toString();
 			fontRenderer.drawString(line, 144 - fontRenderer.getStringWidth(line), 58, 4210752);
-		}
-		
-		button.drawFore(mouseX, mouseY, fontRenderer);
-	}
-	
-	@Override
-	protected void mouseClicked(int x, int y, int button) throws IOException {
-		super.mouseClicked(x, y, button);
-		if(this.button.mouseClicked(x, y, button) && te.reag != null && te.reag.getType().getName().equals(IDynamicReagent.UNKNOWN_NAME) && !te.paper.isEmpty()){
-			ModPackets.network.sendToServer(new SendStringToServer("new_name", te.paper.getDisplayName(), te.getPos(), te.getWorld().provider.getDimension()));
 		}
 	}
 }

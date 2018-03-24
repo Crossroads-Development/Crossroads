@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.ingredients.IIngredients;
@@ -17,7 +17,7 @@ public class GrindstoneRecipe implements IRecipeWrapper{
 	private List<ItemStack> inputs;
 	private List<ItemStack> outputs;
 
-	public GrindstoneRecipe(Entry<ICraftingStack<ItemStack>, ItemStack[]> in){
+	public GrindstoneRecipe(Entry<RecipePredicate<ItemStack>, ItemStack[]> in){
 		outputs = Arrays.asList(in.getValue());
 		inputs = in.getKey().getMatchingList();
 	}

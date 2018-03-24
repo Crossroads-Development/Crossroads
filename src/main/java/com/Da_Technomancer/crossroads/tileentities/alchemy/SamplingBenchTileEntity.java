@@ -1,16 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemWorldSavedData;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.IDynamicReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
-import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -22,7 +17,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class SamplingBenchTileEntity extends TileEntity implements IStringReceiver{
+public class SamplingBenchTileEntity extends TileEntity{
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
@@ -51,7 +46,6 @@ public class SamplingBenchTileEntity extends TileEntity implements IStringReceiv
 
 	public ReagentStack reag = null;
 	private ItemStack glassware = ItemStack.EMPTY;
-	public ItemStack paper = ItemStack.EMPTY;
 
 	public WrapperInv inv = new WrapperInv();
 
@@ -59,7 +53,6 @@ public class SamplingBenchTileEntity extends TileEntity implements IStringReceiv
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		glassware = nbt.hasKey("phial") ? new ItemStack(nbt.getCompoundTag("phial")) : ItemStack.EMPTY;
-		paper = nbt.hasKey("paper") ? new ItemStack(nbt.getCompoundTag("paper")) : ItemStack.EMPTY;
 		
 		reag = null;
 		if(!glassware.isEmpty() && glassware.getItem() instanceof AbstractGlassware){
@@ -76,9 +69,6 @@ public class SamplingBenchTileEntity extends TileEntity implements IStringReceiv
 		super.writeToNBT(nbt);
 		if(!glassware.isEmpty()){
 			nbt.setTag("phial", glassware.writeToNBT(new NBTTagCompound()));
-		}
-		if(!paper.isEmpty()){
-			nbt.setTag("paper", paper.writeToNBT(new NBTTagCompound()));
 		}
 		return nbt;
 	}
@@ -112,15 +102,13 @@ public class SamplingBenchTileEntity extends TileEntity implements IStringReceiv
 
 		@Override
 		public boolean isEmpty(){
-			return glassware.isEmpty() && paper.isEmpty();
+			return glassware.isEmpty();
 		}
 
 		@Override
 		public ItemStack getStackInSlot(int index){
 			if(index == 0){
 				return glassware;
-			}else if(index == 1){
-				return paper;
 			}
 			return ItemStack.EMPTY;
 		}
@@ -134,12 +122,6 @@ public class SamplingBenchTileEntity extends TileEntity implements IStringReceiv
 				out.setCount(count);
 				glassware.shrink(count);
 				markDirty();
-			}else if(index == 1){
-				out = paper.copy();
-				count = Math.min(out.getCount(), count);
-				out.setCount(count);
-				paper.shrink(count);
-				markDirty();
 			}
 			return out;
 		}
@@ -151,10 +133,6 @@ public class SamplingBenchTileEntity extends TileEntity implements IStringReceiv
 				out = glassware;
 				glassware = ItemStack.EMPTY;
 				markDirty();
-			}else if(index == 1){
-				out = paper;
-				paper = ItemStack.EMPTY;
-				markDirty();
 			}
 			return out;
 		}
@@ -163,9 +141,6 @@ public class SamplingBenchTileEntity extends TileEntity implements IStringReceiv
 		public void setInventorySlotContents(int index, ItemStack stack){
 			if(index == 0){
 				setGlassware(stack);
-			}else if(index == 1){
-				paper = stack;
-				markDirty();
 			}
 		}
 
@@ -223,28 +198,7 @@ public class SamplingBenchTileEntity extends TileEntity implements IStringReceiv
 		@Override
 		public void clear(){
 			glassware = ItemStack.EMPTY;
-			paper = ItemStack.EMPTY;
 			markDirty();
-		}
-	}
-
-	@Override
-	public void receiveString(String context, String message, EntityPlayerMP sender){
-		if("new_name".equals(context) && !world.isRemote){
-			//Double checks all the data on server side.
-			if(reag != null && reag.getType().getName().equals(IDynamicReagent.UNKNOWN_NAME) && !paper.isEmpty()){
-				String name = message;
-				if(name.equals(new ItemStack(Items.PAPER).getDisplayName())){
-					return;
-				}
-				
-				paper = ItemStack.EMPTY;
-				markDirty();
-				
-				AlchemyCore.CUST_REAG_NAMES[reag.getType().getIndex() - AlchemyCore.RESERVED_REAGENT_COUNT] = name;
-				AlchemWorldSavedData.saveData(world);
-				world.getMinecraftServer().getPlayerList().sendMessage(new TextComponentString(sender.getName() + " has discovered a new element and named it: " + name));
-			}
 		}
 	}
 }

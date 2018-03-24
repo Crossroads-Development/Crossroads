@@ -3,20 +3,20 @@ package com.Da_Technomancer.crossroads.items.crafting;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * For storing recipes with ICraftingStack keys
+ * For storing recipes with Predicate keys
  * 
  * This (intentionally) does not follow the contract of the map interface, so it does not actually extend map. 
- * @param <T> What the ICraftingStack compares
- * @param <K> The type of CraftingStack
+ * @param <T> What the Predicate compares
  * @param <V> The stored value type
  */
-public class CraftStackMap<T, K extends ICraftingStack<T>, V>{
+public class PredicateMap<T, V>{
 
-	HashSet<Pair<K, V>> entries = new HashSet<Pair<K, V>>();
+	HashSet<Pair<Predicate<T>, V>> entries = new HashSet<Pair<Predicate<T>, V>>();
 
 	public int size(){
 		return entries.size();
@@ -26,8 +26,8 @@ public class CraftStackMap<T, K extends ICraftingStack<T>, V>{
 		return entries.isEmpty();
 	}
 
-	public boolean containsKey(K key){
-		for(Pair<K, V> ent : entries){
+	public boolean containsKey(Predicate<T> key){
+		for(Pair<Predicate<T>, V> ent : entries){
 			if(ent.getKey().equals(key)){
 				return true;
 			}
@@ -37,8 +37,8 @@ public class CraftStackMap<T, K extends ICraftingStack<T>, V>{
 	}
 
 	public V get(T target){
-		for(Pair<K, V> ent : entries){
-			if(ent.getKey().softMatch(target)){
+		for(Pair<Predicate<T>, V> ent : entries){
+			if(ent.getKey().test(target)){
 				return ent.getValue();
 			}
 		}
@@ -46,9 +46,9 @@ public class CraftStackMap<T, K extends ICraftingStack<T>, V>{
 		return null;
 	}
 
-	public V put(K key, V value){
+	public V put(Predicate<T> key, V value){
 		V prevValue = null;
-		for(Entry<K, V> ent : entries){
+		for(Entry<Predicate<T>, V> ent : entries){
 			if(ent.getKey().equals(key)){
 				prevValue = ent.getValue();
 				entries.remove(ent);
@@ -59,9 +59,9 @@ public class CraftStackMap<T, K extends ICraftingStack<T>, V>{
 		return prevValue;
 	}
 
-	public V remove(K key){
+	public V remove(Predicate<T> key){
 		V prevValue = null;
-		for(Entry<K, V> ent : entries){
+		for(Entry<Predicate<T>, V> ent : entries){
 			if(ent.getKey().equals(key)){
 				prevValue = ent.getValue();
 				entries.remove(ent);
@@ -75,7 +75,7 @@ public class CraftStackMap<T, K extends ICraftingStack<T>, V>{
 		entries.clear();
 	}
 
-	public Set<Pair<K, V>> entrySet(){
+	public Set<Pair<Predicate<T>, V>> entrySet(){
 		return entries;
 	}
 }

@@ -21,7 +21,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
 import com.Da_Technomancer.crossroads.items.Thermometer;
-import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraft.block.state.IBlockState;
@@ -98,8 +98,8 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 			return Pair.of(null, null);
 		}
 
-		for(Triple<ICraftingStack<ItemStack>, FluidStack, String> rec : RecipeHolder.heatingCrucibleRecipes){
-			if(rec.getLeft().softMatch(stack)){
+		for(Triple<RecipePredicate<ItemStack>, FluidStack, String> rec : RecipeHolder.heatingCrucibleRecipes){
+			if(rec.getLeft().test(stack)){
 				return Pair.of(rec.getMiddle(), rec.getRight());
 			}
 		}

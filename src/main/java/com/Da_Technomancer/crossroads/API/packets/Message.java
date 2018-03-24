@@ -196,11 +196,11 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 	private static void writeBoolean(boolean b, ByteBuf buf){
 		buf.writeBoolean(b);
 	}
-	
+
 	private static UUID readUUID(ByteBuf buf){
 		return new UUID(buf.readLong(), buf.readLong());
 	}
-	
+
 	private static void writeUUID(UUID id, ByteBuf buf){
 		buf.writeLong(id.getMostSignificantBits());
 		buf.writeLong(id.getLeastSignificantBits());
@@ -211,7 +211,7 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 	 * 
 	 * private static void writeChar(char c, ByteBuf buf) { buf.writeChar(c); }
 	 */
-	
+
 	private static byte[][] readByte2DArray(ByteBuf buf){
 		int outerSize = buf.readInt();
 		int innerSize = buf.readInt();
@@ -231,7 +231,7 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 			buf.writeBytes(inner);
 		}
 	}
-	
+
 	private static int[] readIntArray(ByteBuf buf){
 		int size = buf.readInt();
 		int[] out = new int[size];
@@ -247,7 +247,7 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 			buf.writeInt(inner);
 		}
 	}
-	
+
 	private static double[] readDoubleArray(ByteBuf buf){
 		int size = buf.readInt();
 		double[] out = new double[size];
@@ -272,8 +272,8 @@ public class Message<REQ extends Message> implements Serializable, IMessage, IMe
 		ByteBufUtils.writeUTF8String(buf, s);
 	}
 
-	private static NBTTagCompound readNBT(ByteBuf buf) { return
-			ByteBufUtils.readTag(buf);
+	private static NBTTagCompound readNBT(ByteBuf buf) { 
+		return ByteBufUtils.readTag(buf);
 	}
 
 	private static void writeNBT(NBTTagCompound cmp, ByteBuf buf) {

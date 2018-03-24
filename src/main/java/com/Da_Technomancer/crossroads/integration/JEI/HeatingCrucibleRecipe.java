@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.items.crafting.ICraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.ingredients.IIngredients;
@@ -13,10 +13,10 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class HeatingCrucibleRecipe implements IRecipeWrapper{
 
-	private final ICraftingStack<ItemStack> in;
+	private final RecipePredicate<ItemStack> in;
 	private final FluidStack out;
 
-	public HeatingCrucibleRecipe(ICraftingStack<ItemStack> in, FluidStack out){
+	public HeatingCrucibleRecipe(RecipePredicate<ItemStack> in, FluidStack out){
 		this.in = in;
 		this.out = out;
 	}

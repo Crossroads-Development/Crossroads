@@ -36,7 +36,7 @@ public class EntityShell extends EntityThrowable{
 				BlockPos targetPos = result.getBlockPos() == null ? result.entityHit.getPosition() : result.getBlockPos();
 				for(ReagentStack r : contents){
 					if(r != null){
-						r.getType().onRelease(world, targetPos, r.getAmount(), r.getPhase(temp), contents);
+						r.getType().onRelease(world, targetPos, r.getAmount(), temp, r.getPhase(temp), contents);
 					}
 				}
 			}
