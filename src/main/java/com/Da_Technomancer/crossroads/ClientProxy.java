@@ -34,6 +34,7 @@ public class ClientProxy extends CommonProxy{
 	protected void init(FMLInitializationEvent e){
 		super.init(e);
 		GearFactory.clientInit();
+		ModItems.clientInit();
 		AAModTESR.registerBlockRenderer();
 		Keys.init();
 		ModParticles.clientInit();

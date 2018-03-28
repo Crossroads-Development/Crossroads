@@ -1,6 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/gear_base_toggle"
+		"layer0": "crossroads:items/gear_base",
+		"layer1": "crossroads:items/gear_base_toggle"
 	}
 }

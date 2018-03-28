@@ -1,11 +1,8 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -66,8 +63,8 @@ public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipe>{
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, GrindstoneRecipe recipeWrapper, IIngredients ingredients){
-		if (ingredients.getInputs(ItemStack.class).get(0).isEmpty()) {
-			// Might happen if MineTweaker added a wrong recipe
+		if(ingredients.getInputs(ItemStack.class).get(0).isEmpty()){
+			// Might happen if CraftTweaker added an invalid recipe
 			return;
 		}
 
@@ -80,16 +77,6 @@ public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipe>{
 		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(ItemStack.class).size() >= 1 ? ingredients.getOutputs(ItemStack.class).get(0) : null);
 		recipeLayout.getItemStacks().set(2, ingredients.getOutputs(ItemStack.class).size() >= 2 ? ingredients.getOutputs(ItemStack.class).get(1) : null);
 		recipeLayout.getItemStacks().set(3, ingredients.getOutputs(ItemStack.class).size() == 3 ? ingredients.getOutputs(ItemStack.class).get(2) : null);
-	}
-
-	@Override
-	public IDrawable getIcon(){
-		return null;
-	}
-
-	@Override
-	public List<String> getTooltipStrings(int mouseX, int mouseY){
-		return ImmutableList.of();
 	}
 
 	@Override

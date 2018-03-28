@@ -39,7 +39,7 @@ public class GearFactory{
 			IItemColor itemColoring = new IItemColor(){
 				@Override
 				public int colorMultiplier(ItemStack stack, int tintIndex){
-					return colorCode;
+					return tintIndex == 0 ? colorCode : -1;
 				}
 			};
 			itemColor.registerItemColorHandler(itemColoring, new Item[]{BASIC_GEARS.get(typ), LARGE_GEARS.get(typ)});

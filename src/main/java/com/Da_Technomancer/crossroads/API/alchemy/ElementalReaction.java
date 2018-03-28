@@ -18,6 +18,9 @@ public class ElementalReaction implements IReaction{
 	public boolean performReaction(IReactionChamber chamber, boolean[] solvents){
 		if(chamber.isCharged()){
 			ReagentStack[] reags = chamber.getReagants();
+			if(reags[19] == null){
+				return false;//Requires practitioner's catalyst
+			}
 			Color unit;
 			if(product.getSecondaryBase() != null){
 				if(reags[product.getSecondaryBase().getIndex()] == null){

@@ -1,6 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/phial_glass"
+		"layer0": "crossroads:items/phial_inner",
+		"layer1": "crossroads:items/phial_glass"
 	}
 }

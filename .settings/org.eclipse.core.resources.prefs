@@ -26,6 +26,7 @@ encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/FluidCool
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/FusionBeamRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatExchangerRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/HeatingCrucibleRecipe.java=UTF-8
+encoding//src/main/java/com/Da_Technomancer/crossroads/integration/JEI/ReactionRecipe.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/integration/crafttweaker/HeatingCrucibleHandler.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/OmniMeter.java=UTF-8
 encoding//src/main/java/com/Da_Technomancer/crossroads/items/Thermometer.java=UTF-8

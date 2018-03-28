@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.items.alchemy.CustomMaterial;
 import com.Da_Technomancer.crossroads.items.alchemy.CustomTool;
 import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
@@ -27,6 +28,7 @@ import com.Da_Technomancer.crossroads.items.technomancy.PrototypePistol;
 import com.Da_Technomancer.crossroads.items.technomancy.PrototypeWatch;
 import com.Da_Technomancer.crossroads.items.technomancy.StaffTechnomancy;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -204,5 +206,10 @@ public final class ModItems{
 			ModelLoader.setCustomModelResourceLocation(modeling.getKey().getLeft(), modeling.getKey().getRight(), modeling.getValue());
 		}
 		toClientRegister.clear();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void clientInit(){
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phial, florenceFlask, shell);
 	}
 }

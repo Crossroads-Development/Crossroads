@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
+import java.awt.Color;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -26,6 +27,38 @@ public abstract class AbstractGlassware extends Item{
 
 	public abstract double getCapacity();
 
+	public static final int getColorRGB(ItemStack stack){
+		if(!(stack.getItem() instanceof AbstractGlassware)){
+			return -1;
+		}
+		
+		Triple<ReagentStack[], Double, Double> info = ((AbstractGlassware) stack.getItem()).getReagants(stack);
+		
+		double r = 0;
+		double g = 0;
+		double b = 0;
+		double a = 0;
+		double amount = info.getRight();
+		
+		if(amount <= AlchemyCore.MIN_QUANTITY){
+			return stack.getMetadata() == 1 ? 0xFFD0D0FF : 0xFFD0D0D0;
+		}
+		
+		ReagentStack[] reags = info.getLeft();
+		double temp = info.getMiddle() / amount - 273D;
+		
+		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+			if(reags[i] != null){
+				Color color = reags[i].getType().getColor(reags[i].getPhase(temp));
+				r += reags[i].getAmount() * (double) color.getRed();
+				g += reags[i].getAmount() * (double) color.getGreen();
+				b += reags[i].getAmount() * (double) color.getBlue();
+				a += reags[i].getAmount() * (double) color.getAlpha();
+			}
+		}
+		return new Color((int) (r / amount), (int) (g / amount), (int) (b / amount), (int) (a / amount)).getRGB();
+	}
+	
 	/**
 	 * Cache the result to minimize calls to this method. 
 	 * @param stack

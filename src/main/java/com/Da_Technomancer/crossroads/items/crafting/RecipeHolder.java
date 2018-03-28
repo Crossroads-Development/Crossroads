@@ -10,6 +10,9 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
+import com.Da_Technomancer.crossroads.API.alchemy.IReaction;
+import com.Da_Technomancer.crossroads.API.alchemy.ITransparentReaction;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.integration.JEI.ArcaneExtractorCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.ArcaneExtractorRecipe;
@@ -25,6 +28,8 @@ import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerRecipe;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleCategory;
 import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
+import com.Da_Technomancer.crossroads.integration.JEI.ReactionCategory;
+import com.Da_Technomancer.crossroads.integration.JEI.ReactionRecipe;
 
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
@@ -62,7 +67,7 @@ public final class RecipeHolder{
 	 * Stores the heating crucible recipes. BE CAREFUL, the contained FluidStack is mutable. The ICraftingStack is the ingredient, FluidStack is output, and String is the unmelted texture
 	 */
 	public static final ArrayList<Triple<RecipePredicate<ItemStack>, FluidStack, String>> heatingCrucibleRecipes = new ArrayList<Triple<RecipePredicate<ItemStack>, FluidStack, String>>();
-	
+
 	/**
 	 * A list of all recipes, Item Array are the ingredients, and itemstack is
 	 * output. A list for poisonous potato recipes and mashed potato recipes.
@@ -75,12 +80,12 @@ public final class RecipeHolder{
 	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
 	 */
 	public static final HashMap<Item, MagicUnit> magExtractRecipes = new HashMap<Item, MagicUnit>();
-	
+
 	/**
 	 * Stores the fusion beam conversion recipes. 
 	 */
 	public static final PredicateMap<IBlockState, BeamTransmute> fusionBeamRecipes = new PredicateMap<IBlockState, BeamTransmute>();
-	
+
 	/**
 	 * Stores the void-fusion beam conversion recipes. 
 	 */
@@ -92,7 +97,7 @@ public final class RecipeHolder{
 	 * ONLY USE ShapedOreRecipe and ShapelessOreRecipe. Using any other type require changing the JEI integration (DetailedCrafterRecipeWrapper) or it will crash.
 	 */
 	public static final ArrayList<IRecipe> technomancyRecipes = new ArrayList<IRecipe>();
-	
+
 	/**
 	 * The recipes for the Detailed Crafter that require alchemy to be unlocked.
 	 * Recipes can have a null group (it is unused). 
@@ -112,13 +117,13 @@ public final class RecipeHolder{
 			currentRecipes.add(new GrindstoneRecipe(rec));
 		}
 		JEIWrappers.put(GrindstoneCategory.ID, currentRecipes);
-		
+
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> rec : fluidCoolingRecipes.entrySet()){
 			currentRecipes.add(new FluidCoolingRecipe(rec));
 		}
 		JEIWrappers.put(FluidCoolingCategory.ID, currentRecipes);
-		
+
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<Block, Pair<Boolean, Triple<IBlockState, Double, Double>>> rec : envirHeatSource.entrySet()){
 			if(rec.getValue().getLeft()){
@@ -126,7 +131,7 @@ public final class RecipeHolder{
 			}
 		}
 		JEIWrappers.put(HeatExchangerCategory.ID, currentRecipes);
-		
+
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(IRecipe rec : technomancyRecipes){
 			currentRecipes.add(new DetailedCrafterRecipe(rec, 0));
@@ -135,19 +140,19 @@ public final class RecipeHolder{
 			currentRecipes.add(new DetailedCrafterRecipe(rec, 1));
 		}
 		JEIWrappers.put(DetailedCrafterCategory.ID, currentRecipes);
-		
+
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Triple<RecipePredicate<ItemStack>, FluidStack, String> rec : heatingCrucibleRecipes){
 			currentRecipes.add(new HeatingCrucibleRecipe(rec.getLeft(), rec.getMiddle()));
 		}
 		JEIWrappers.put(HeatingCrucibleCategory.ID, currentRecipes);
-		
+
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<Item, MagicUnit> rec : magExtractRecipes.entrySet()){
 			currentRecipes.add(new ArcaneExtractorRecipe(new ItemStack(rec.getKey(), 1, OreDictionary.WILDCARD_VALUE), rec.getValue()));
 		}
 		JEIWrappers.put(ArcaneExtractorCategory.ID, currentRecipes);
-		
+
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Pair<Predicate<IBlockState>, BeamTransmute> rec : fusionBeamRecipes.entrySet()){
 			currentRecipes.add(new FusionBeamRecipe(rec.getKey(), rec.getRight().state, rec.getRight().minPower, false));
@@ -156,6 +161,14 @@ public final class RecipeHolder{
 			currentRecipes.add(new FusionBeamRecipe(rec.getKey(), rec.getRight().state, rec.getRight().minPower, true));
 		}
 		JEIWrappers.put(FusionBeamCategory.ID, currentRecipes);
+
+		currentRecipes = new ArrayList<IRecipeWrapper>();
+		for(IReaction react : AlchemyCore.REACTIONS){
+			if(react instanceof ITransparentReaction){
+				currentRecipes.add(new ReactionRecipe((ITransparentReaction) react));
+			}
+		}
+		JEIWrappers.put(ReactionCategory.ID, currentRecipes);
 	}
 
 	@Nonnull
