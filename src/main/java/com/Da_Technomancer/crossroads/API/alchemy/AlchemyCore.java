@@ -44,11 +44,11 @@ public final class AlchemyCore{
 
 
 	/** Note that the contained predicates have the side effect of performing the reaction. */
-	public static final List<IReaction> REACTIONS = new ArrayList<IReaction>();// TODO set size
+	public static final List<IReaction> REACTIONS = new ArrayList<IReaction>();
 
-	public static final LinkedHashMap<Item, IReagent> ITEM_TO_REAGENT = new LinkedHashMap<Item, IReagent>();// TODO set size
-	public static final BiMap<Fluid, IReagent> FLUID_TO_LIQREAGENT = HashBiMap.create(); // For liquid phase. TODO set size
-	public static final BiMap<Fluid, IReagent> FLUID_TO_GASREAGENT = HashBiMap.create(); // For gas phase. TODO set size
+	public static final LinkedHashMap<Item, IReagent> ITEM_TO_REAGENT = new LinkedHashMap<Item, IReagent>();
+	public static final BiMap<Fluid, IReagent> FLUID_TO_LIQREAGENT = HashBiMap.create(5); // For liquid phase. 
+	public static final BiMap<Fluid, IReagent> FLUID_TO_GASREAGENT = HashBiMap.create(1); // For gas phase. 
 	public static final ArrayList<IElementReagent> ELEMENTAL_REAGS = new ArrayList<IElementReagent>(8);
 
 	public static final IReagent[] REAGENTS = new IReagent[REAGENT_COUNT];
@@ -117,6 +117,8 @@ public final class AlchemyCore{
 				return true;
 			}
 		};
+		REAGENTS[38] = new StaticReagent("Densus", Short.MIN_VALUE - 1, Short.MAX_VALUE, 38, (EnumMatterPhase phase) -> Color.BLUE, ModItems.solidDensus, 20, null, EnumSolventType.NON_POLAR, 0, null);
+		REAGENTS[39] = new StaticReagent("Densus", Short.MIN_VALUE - 1, Short.MAX_VALUE, 39, (EnumMatterPhase phase) -> Color.ORANGE, ModItems.solidAntiDensus, 20, null, EnumSolventType.NON_POLAR, 0, null);
 
 		//TODO REAGENTS[]
 
@@ -238,6 +240,8 @@ public final class AlchemyCore{
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[25], 5)}, new Pair[] {Pair.of(REAGENTS[11], 1), Pair.of(REAGENTS[5], 5)}, REAGENTS[18], -40D, 560D, -10D, null, false));
 		//Ignus Infernum production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[0], 5), Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[36], 2)}, new Pair[] {Pair.of(REAGENTS[37], 1)}, REAGENTS[19], 1500D, Short.MAX_VALUE, -100D, null, false));
+		//TODO densus and antidensus production
+		
 		
 		// TODO reactions
 	}

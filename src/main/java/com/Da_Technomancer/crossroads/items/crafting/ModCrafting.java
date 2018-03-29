@@ -1,12 +1,14 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
@@ -54,6 +56,11 @@ public final class ModCrafting{
 	public static void init(){
 
 		toRegisterOreDict.add(Pair.of(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), new String[] {"wool"}));
+		toRegisterOreDict.add(Pair.of(Items.CHICKEN, new String[] {"meatRaw"}));
+		toRegisterOreDict.add(Pair.of(Items.PORKCHOP, new String[] {"meatRaw"}));
+		toRegisterOreDict.add(Pair.of(Items.BEEF, new String[] {"meatRaw"}));
+		toRegisterOreDict.add(Pair.of(Items.RABBIT, new String[] {"meatRaw"}));
+		toRegisterOreDict.add(Pair.of(Items.MUTTON, new String[] {"meatRaw"}));
 
 		for(Pair<Object, String[]> oreDictMapping : toRegisterOreDict){
 			Object left = oreDictMapping.getLeft();
@@ -117,19 +124,22 @@ public final class ModCrafting{
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE, 1), -10D, 1D)));
 		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopshowium.getMoltenCopshowium(), Pair.of(144, Triple.of(new ItemStack(OreSetup.ingotCopshowium, 1), 1000D, 100D)));
 
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Blocks.HOPPER, 0), new OreDictCraftingStack("wool"), new ItemRecipePredicate(ModBlocks.fluidTube, 0)}, getFilledHopper()));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Items.BREAD, 0), new OreDictCraftingStack("dyeMagenta"), new OreDictCraftingStack("dustGlowstone")}, new ItemStack(ModItems.magentaBread)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.HOPPER, 0), new OreDictCraftingStack("wool"), new ItemRecipePredicate(ModBlocks.fluidTube, 0)}, getFilledHopper()));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.BREAD, 0), new OreDictCraftingStack("dyeMagenta"), new OreDictCraftingStack("dustGlowstone")}, new ItemStack(ModItems.magentaBread)));
 		if(ModConfig.weatherControl.getBoolean()){
-			RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new OreDictCraftingStack("gemLapis"), new OreDictCraftingStack("cobblestone"), new OreDictCraftingStack("nuggetGold")}, new ItemStack(ModItems.rainIdol, 1)));
+			RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new OreDictCraftingStack("gemLapis"), new OreDictCraftingStack("cobblestone"), new OreDictCraftingStack("nuggetGold")}, new ItemStack(ModItems.rainIdol, 1)));
 		}
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new OreDictCraftingStack("feather"), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Blocks.WATERLILY, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Items.DYE, EnumDyeColor.BLACK.getDyeDamage()), new ItemRecipePredicate(Items.FISH, 3), new OreDictCraftingStack("leather")}, new ItemStack(ModItems.squidHelmet, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Items.BLAZE_POWDER, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.PORKCHOP, 0)}, new ItemStack(ModItems.pigZombieChestplate, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Items.MILK_BUCKET, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.BEEF, 0)}, new ItemStack(ModItems.cowLeggings, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Items.BLAZE_ROD, 0), new ItemRecipePredicate(Items.DRAGON_BREATH, 0), new ItemRecipePredicate(Items.GOLDEN_APPLE, -1)}, new ItemStack(ModItems.chaosRod, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(ModBlocks.fluidTube, 0), new ItemRecipePredicate(ModItems.voidCrystal, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new RecipePredicate[] {new EdibleBlobRecipePredicate(4, 2), new OreDictCraftingStack("stickIron"), new OreDictCraftingStack("nuggetCopshowium")}, new ItemStack(ModBlocks.hamsterWheel, 1)));
-
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new OreDictCraftingStack("feather"), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Blocks.WATERLILY, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.DYE, EnumDyeColor.BLACK.getDyeDamage()), new ItemRecipePredicate(Items.FISH, 3), new OreDictCraftingStack("leather")}, new ItemStack(ModItems.squidHelmet, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.BLAZE_POWDER, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.PORKCHOP, 0)}, new ItemStack(ModItems.pigZombieChestplate, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.MILK_BUCKET, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.BEEF, 0)}, new ItemStack(ModItems.cowLeggings, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.BLAZE_ROD, 0), new ItemRecipePredicate(Items.DRAGON_BREATH, 0), new ItemRecipePredicate(Items.GOLDEN_APPLE, -1)}, new ItemStack(ModItems.chaosRod, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(ModBlocks.fluidTube, 0), new ItemRecipePredicate(ModItems.voidCrystal, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new EdibleBlobRecipePredicate(4, 2), new OreDictCraftingStack("stickIron"), new OreDictCraftingStack("nuggetCopshowium")}, new ItemStack(ModBlocks.hamsterWheel, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(ModItems.wrench, 0), new ItemRecipePredicate(ModItems.handCrank, 0), new ItemRecipePredicate(ModItems.staffTechnomancy, 0)}, new ItemStack(ModItems.liechWrench, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 6), new OreDictCraftingStack("ingotCopper")}, new ItemStack(ModBlocks.maxwellDemon, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new OreDictCraftingStack("meatRaw"), new OreDictCraftingStack("gunpowder"), (Predicate<ItemStack>) (ItemStack stack) -> {if(stack.getItem() == ModItems.phial){ ReagentStack reag = ModItems.phial.getReagants(stack).getLeft()[5]; return reag != null && reag.getAmount() >= 5;} return false;}}, new ItemStack(ModItems.nitroglycerin, 8)));
+		
 		RecipeHolder.magExtractRecipes.put(Items.REDSTONE, new MagicUnit(24, 36, 0, 0));
 		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));
 		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(36, 24, 0, 0));
@@ -173,6 +183,65 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{0, 1, 1}, {0, 2, 1}, {0, 2, 0}}));
 		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{1, 1, 0}, {2, 1, 0}, {2, 0, 0}}));
 		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{0, 1, 1}, {0, 1, 2}, {0, 0, 2}}));
+		//Phial
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.phial, 8, 0), "* *", "* *", " * ", '*', "blockGlass"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.phial, 8, 1), "* *", "* *", " * ", '*', "gemAlcCryst"));
+		//Florence Flask
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.florenceFlask, 2, 0), " * ", "* *", "***", '*', "blockGlass"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.florenceFlask, 2, 1), " * ", "* *", "***", '*', "gemAlcCryst"));
+		//Shell
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.shell, 8, 0), " * ", "***", " * ", '*', "blockGlass"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.shell, 8, 1), " * ", "***", " * ", '*', "gemAlcCryst"));
+		//Leyden Jar
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.leydenJar, 1), " | ", "*r*", "***", '|', "stickIron", 'r', "dustRedstone", '*', "nuggetIron"));
+		//Alchemical Tube
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.alchemicalTube, 8, 0), "***", "   ", "***", '*', "blockGlass"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.alchemicalTube, 8, 1), "***", "   ", "***", '*', "gemAlcCryst"));
+		//Alchemy Chart
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.alchemyChart, 1, 0), "***", "*#*", "***", '*', ModItems.wasteSalt, '#', ModBlocks.colorChart));
+		//Alembic
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.alembic, 1, 0), "** ", "***", "** ", '*', "ingotCopper"));
+		//Chemical Vent
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.chemicalVent, 1, 0), "*#*", "###", "*#*", '*', "ingotTin", '#', Blocks.IRON_BARS));
+		//Cooling Coil
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.coolingCoil, 4, 0), "* *", " * ", '*', "blockGlass"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.coolingCoil, 4, 1), "* *", " * ", '*', "gemAlcCryst"));
+		//Densus Plate
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.densusPlate, 6, 0), "***", '*', ModItems.solidDensus));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.densusPlate, 6, 1), "***", '*', ModItems.solidAntiDensus));
+		//Dynamo
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.dynamo, 1, 0), "-@-", "===", '@', "gearCopper", '-', "stickIron", '=', "ingotIron"));
+		//Flow Limiter
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.flowLimiter, 2, 0), "*:*", '*', "blockGlass", ':', "ingotGold"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.flowLimiter, 2, 1), "*:*", '*', "gemAlcCryst", ':', "ingotGold"));
+		//Fluid Injector
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidInjector, 1, 0), "*|*", ": :", "*|*", '*', "ingotBronze", '|', ModBlocks.fluidTube, ':', "blockGlass"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidInjector, 1, 1), "*|*", ": :", "*|*", '*', "ingotBronze", '|', ModBlocks.fluidTube, ':', "gemAlcCryst"));
+		//Glassware Holder
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.glasswareHolder, 1, 0), "^^^", "^ ^", '^', "nuggetIron"));
+		//Heated Tube
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatedTube, 2, 0), "*#*", '*', "blockGlass", '#', "ingotCopper"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatedTube, 2, 1), "*#*", '*', "gemAlcCryst", '#', "ingotCopper"));
+		//Heat Limiter
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatLimiter, 4, 0), "*&*", "*&*", "*#*", '*', "obsidian", '#', "dustRedstone", '&', "ingotCopper"));
+		//Reaction Chamber
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1, 0), "*^*", "^#^", "*^*", '*', "ingotBronze", '^', "ingotCopper", '#', new ItemStack(ModBlocks.reagentTank, 1, 0)));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1, 1), "*^*", "^#^", "*^*", '*', "ingotBronze", '^', "ingotCopper", '#', new ItemStack(ModBlocks.reagentTank, 1, 1)));
+		//Reagent Pump
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentPump, 1, 0), "***", "*&*", "***", '&', "ingotBronze", '*', "blockGlass"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentPump, 1, 1), "***", "*&*", "***", '&', "ingotBronze", '*', "gemAlcCryst"));
+		//Reagent Tank
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 0), "*_*", "_^_", "*_*", '*', "ingotBronze", '_', "blockGlass", '^', ModItems.wasteSalt));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 1), "*_*", "_^_", "*_*", '*', "ingotBronze", '_', "gemAlcCryst", '^', ModItems.wasteSalt));
+		//Redstone Alchemical Tube
+		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTube, 1, 0), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTube, 1, 0)));
+		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTube, 1, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTube, 1, 1)));
+		//Sampling Bench
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.samplingBench, 1, 0), "^/ ", "---", "| |", '^', ModBlocks.glasswareHolder, '-', "slabWood", '|', "plankWood", '/', "paper"));
+		//Tesla Coil
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoil, 2), "***", " | ", "|^|", '*', "ingotCopper", '|', "ingotIron", '^', "dustRedstone"));
+		//Vanadium
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.vanadium, 4), "***", "*B*", "***", '*', Items.COAL, 'B', "blockCoal"));
 		
 		//Copshowium Creation Chamber
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModBlocks.fluidCoolingChamber));
@@ -421,7 +490,12 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.fluidSplitter, 1), ModBlocks.basicFluidSplitter, "dustRedstone", "dustRedstone", "dustRedstone"));
 		//Redstone Keyboard
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"));
-
+		//Wrench
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.wrench, 1), "* *", "*|*", " | ", '*', "ingotIron", '|', "stickIron"));
+		//Port Extender
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.portExtender, 1), " # ", "#h#", " # ", '#', "ingotTin", 'h', Blocks.HOPPER));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.portExtender, 1), " # ", "#h#", " # ", '#', "ingotTin", 'h', ModBlocks.sortingHopper));
+		
 		//Vanadium smelting
 		GameRegistry.addSmelting(ModItems.vanadium, new ItemStack(ModItems.vanadiumVOxide, 1), .7F);
 	}

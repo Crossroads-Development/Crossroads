@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.items.alchemy;
+package com.Da_Technomancer.crossroads.items.technomancy;
 
 import javax.annotation.Nullable;
 

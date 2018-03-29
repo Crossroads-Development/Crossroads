@@ -15,7 +15,6 @@ import com.Da_Technomancer.crossroads.items.alchemy.CustomMaterial;
 import com.Da_Technomancer.crossroads.items.alchemy.CustomTool;
 import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
 import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
-import com.Da_Technomancer.crossroads.items.alchemy.LiechWrench;
 import com.Da_Technomancer.crossroads.items.alchemy.Nitroglycerin;
 import com.Da_Technomancer.crossroads.items.alchemy.Phial;
 import com.Da_Technomancer.crossroads.items.alchemy.PhilStone;
@@ -23,6 +22,7 @@ import com.Da_Technomancer.crossroads.items.alchemy.Shell;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
+import com.Da_Technomancer.crossroads.items.technomancy.LiechWrench;
 import com.Da_Technomancer.crossroads.items.technomancy.ModuleGoggles;
 import com.Da_Technomancer.crossroads.items.technomancy.PrototypePistol;
 import com.Da_Technomancer.crossroads.items.technomancy.PrototypeWatch;
@@ -118,6 +118,8 @@ public final class ModItems{
 	public static BasicItem solidFusas;
 	public static BasicItem solidEldrine;
 	public static BasicItem solidStasisol;
+	public static BasicItem solidDensus;
+	public static BasicItem solidAntiDensus;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -173,8 +175,8 @@ public final class ModItems{
 		vanadiumVOxide = new BasicItem("vanadium_5_oxide");
 		philosopherStone = new PhilStone();
 		practitionerStone = new BasicItem("prac_stone");
-		alchCrystal = new BasicItem("alch_crystal");
-		wasteSalt = new BasicItem("waste_salt");
+		alchCrystal = new BasicItem("alch_crystal", "gemAlcCryst");
+		wasteSalt = new BasicItem("waste_salt", "dustSalt");
 		phial = new Phial();
 		if(ModConfig.getConfigBool(ModConfig.addWrench, false)){
 			wrench = new BasicItem("wrench"){
@@ -198,6 +200,8 @@ public final class ModItems{
 		solidFusas = new BasicItem("solid_fusas");
 		solidEldrine = new BasicItem("solid_eldrine");
 		solidStasisol = new BasicItem("solid_stasisol");
+		solidDensus = new BasicItem("solid_densus");
+		solidAntiDensus = new BasicItem("solid_antid_ensus");
 	}
 
 	@SideOnly(Side.CLIENT)
