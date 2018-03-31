@@ -3,6 +3,6 @@
 	"textures": {
 		"side": "crossroads:blocks/maxwell_demon_side",
 		"top": "crossroads:blocks/maxwell_demon_top",
-		"bottom": "crossroads:blocks/maxwell_demon_bottom"
+		"bottom": "crossroads:blocks/maxwell_demon_top"
 	}
 }

@@ -27,7 +27,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		return oldState.getBlock() != newState.getBlock();
 	}
 	
-	private static final double[] LIMITS = new double[] {0.5D, 1, 2, 4};
+	private static final double[] LIMITS = new double[] {0.25D, 0.5D, 1, 2, 4, 8, 16};
 
 	private int limitIndex = 0;
 

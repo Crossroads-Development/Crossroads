@@ -1,9 +1,5 @@
 {
-	"parent": "crossroads:block/flow_limiter",
-	"textures": {
-		"glass": "crossroads:blocks/alch_tube/glass_tube_out",
-		"cap": "crossroads:blocks/alch_tube/glass_tube_cap"
-	},
+	"parent": "crossroads:block/sampling_bench_base",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

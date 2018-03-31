@@ -3,7 +3,8 @@
 	"defaults": {
 		"model": "crossroads:flow_limiter",
 		"textures": {
-			"glass": "blocks/glass"
+			"glass": "crossroads:blocks/alch_tube/glass_tube_out",
+			"cap": "crossroads:blocks/alch_tube/glass_tube_cap"
 		},
 		"uvlock": false
 	},
@@ -33,7 +34,8 @@
 		"light": {
 			"true": {
 				"textures": {
-					"glass": "crossroads:blocks/block_alch_crystal"
+					"glass": "crossroads:blocks/alch_tube/cryst_tube_out",
+					"cap": "crossroads:blocks/alch_tube/cryst_tube_cap"
 				}
 			},
 			"false": {

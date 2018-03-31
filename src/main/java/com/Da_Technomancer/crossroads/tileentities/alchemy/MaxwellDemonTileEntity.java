@@ -47,8 +47,8 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 			heatHandlerUp.init();
 		}
 
-		if(tempUp < 2000D){
-			tempUp = Math.min(2000D, tempUp + 15D);
+		if(tempUp < 2500D){
+			tempUp = Math.min(2500D, tempUp + 15D);
 			markDirty();
 		}
 		if(tempDown > -250D){

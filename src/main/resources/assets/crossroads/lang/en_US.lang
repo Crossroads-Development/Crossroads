@@ -259,6 +259,11 @@ tile.sampling_bench.name=Sampling Bench
 tile.alchemy_chart.name=Alchemy Chart
 tile.densus_plate.name=Density Plate
 tile.anti_densus_plate.name=Anti-Density Plate
+item.solid_eldrine.name=Solidified Eldrine
+item.solid_stasisol.name=Solidified Stasisol
+item.solid_fusas.name=Solidified Fusas
+item.solid_densus.name=Densus Chunk
+item.solid_anti_densus.name=Anti-Densus Chunk
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

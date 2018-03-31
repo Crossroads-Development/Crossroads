@@ -1,12 +1,13 @@
 {
 	"forge_marker": 1,
 	"defaults": {
+		"model": "crossroads:sampling_bench_base",
 		"uvlock": true
 	},
 	"variants": {
 		"active": {
 			"true": {
-				"submodel": "crossroads:phial_holder_phial"
+				"submodel": "crossroads:sampling_bench_phial"
 			},
 			"false": {
 				
@@ -24,20 +25,18 @@
 				}
 			}
 		},
-		"redstone_bool": {
-			"true": {
-				
+		"horiz_facing": {
+			"north": {
+				"y": 180
 			},
-			"false": {
-				
-			}
-		},
-		"container_type": {
-			"true": {
-				"submodel": "crossroads:florence_holder_base"
+			"south": {
+				"y": 0
 			},
-			"false": {
-				"submodel": "crossroads:phial_holder_base"
+			"east": {
+				"y": 270
+			},
+			"west": {
+				"y": 90
 			}
 		}
 	}

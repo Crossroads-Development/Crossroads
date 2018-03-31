@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/reds_alch_tube_glass"
+		"layer0": "crossroads:items/alch_tube_glass_reds"
 	}
 }

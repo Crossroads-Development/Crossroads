@@ -87,8 +87,8 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 		}.setMaxDamage(0).setHasSubtypes(true);
 		item.setRegistryName(name);
 		ModItems.toRegister.add(item);
-		ModItems.toClientRegister.put(Pair.of(item, 0), new ModelResourceLocation(Main.MODID + ":alch_tube_glass", "inventory"));
-		ModItems.toClientRegister.put(Pair.of(item, 1), new ModelResourceLocation(Main.MODID + ":alch_tube_cryst", "inventory"));
+		ModItems.toClientRegister.put(Pair.of(item, 0), new ModelResourceLocation(Main.MODID + ":reds_alch_tube_glass", "inventory"));
+		ModItems.toClientRegister.put(Pair.of(item, 1), new ModelResourceLocation(Main.MODID + ":reds_alch_tube_cryst", "inventory"));
 	}
 
 	@Override
@@ -147,7 +147,7 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 					Integer[] conMode = ((RedsAlchemicalTubeTileEntity) te).getConnectMode(false);
 
 					switch(conMode[face]){
-						case -1:
+						case 0:
 							conMode[face] = 1;
 							((RedsAlchemicalTubeTileEntity) te).markSideChanged(face);
 							break;
@@ -156,7 +156,7 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 							((RedsAlchemicalTubeTileEntity) te).markSideChanged(face);
 							break;
 						case 2:
-							conMode[face] = -1;
+							conMode[face] = 0;
 							((RedsAlchemicalTubeTileEntity) te).markSideChanged(face);
 							break;
 					}

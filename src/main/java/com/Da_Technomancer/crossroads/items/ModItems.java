@@ -201,7 +201,7 @@ public final class ModItems{
 		solidEldrine = new BasicItem("solid_eldrine");
 		solidStasisol = new BasicItem("solid_stasisol");
 		solidDensus = new BasicItem("solid_densus");
-		solidAntiDensus = new BasicItem("solid_antid_ensus");
+		solidAntiDensus = new BasicItem("solid_anti_densus");
 	}
 
 	@SideOnly(Side.CLIENT)

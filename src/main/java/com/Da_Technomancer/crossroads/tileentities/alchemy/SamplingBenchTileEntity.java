@@ -36,7 +36,7 @@ public class SamplingBenchTileEntity extends TileEntity{
 			}
 		}
 		
-		world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.ACTIVE, glassware.isEmpty()).withProperty(Properties.CRYSTAL, !glassware.isEmpty() && glassware.getMetadata() == 1));
+		world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.ACTIVE, !glassware.isEmpty()).withProperty(Properties.CRYSTAL, !glassware.isEmpty() && glassware.getMetadata() == 1));
 		markDirty();
 	}
 

@@ -108,59 +108,59 @@ public class AdvConduitBakedModel implements IBakedModel{
 
 		if(connectMode[1] != 0){
 			TextureAtlasSprite spriteUp = bakedTextureGetter.apply(((IAdvConduitModel) state.getBlock()).getTexture(state, connectMode[1]));
-			quads.add(createQuad(new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, size), spriteUp, tSize, 0, 0, 16, EnumFacing.EAST));
-			quads.add(createQuad(new Vec3d(size, 1, 1 - size), new Vec3d(size, 1, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1 - size, 1 - size), spriteUp, tSize, 0, 0, 16, EnumFacing.WEST));
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1, size), new Vec3d(1 - size, 1, size), spriteUp, 0, 16, tSize, 0, EnumFacing.NORTH));
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(size, 1, 1 - size), spriteUp, 0, 16, tSize, 0, EnumFacing.SOUTH));
+			quads.add(createQuad(new Vec3d(1 - size, 1, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1, size), spriteUp, 0, 0, 16, tSize, EnumFacing.EAST));
+			quads.add(createQuad(new Vec3d(size, 1, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1, 1 - size), spriteUp, 0, 0, 16, tSize, EnumFacing.WEST));
+			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(size, 1, size), new Vec3d(1 - size, 1, size), new Vec3d(1 - size, 1 - size, size), spriteUp, 16, tSize, 0, 0, EnumFacing.NORTH));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1, 1 - size), new Vec3d(size, 1, 1 - size), new Vec3d(size, 1 - size, 1 - size), spriteUp, 16, tSize, 0, 0, EnumFacing.SOUTH));
 		}else{
 			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, size), new Vec3d(size, 1 - size, size), spriteCap, EnumFacing.UP));
 		}
 
 		if(connectMode[0] != 0){
 			TextureAtlasSprite spriteDown = bakedTextureGetter.apply(((IAdvConduitModel) state.getBlock()).getTexture(state, connectMode[0]));
-			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 0, 1 - size), new Vec3d(1 - size, 0, size), spriteDown, 0, 0, tSize, 16, EnumFacing.EAST));
-			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(size, size, size), new Vec3d(size, 0, size), new Vec3d(size, 0, 1 - size), spriteDown, 0, 0, tSize, 16, EnumFacing.WEST));
-			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, 0, size), new Vec3d(size, 0, size), spriteDown, 0, 0, tSize, 16, EnumFacing.NORTH));
-			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(size, size, 1 - size), new Vec3d(size, 0, 1 - size), new Vec3d(1 - size, 0, 1 - size), spriteDown, 0, 0, tSize, 16, EnumFacing.SOUTH));
+			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 0, 1 - size), new Vec3d(1 - size, 0, size), new Vec3d(1 - size, size, size), spriteDown, 0, tSize, 16, 0, EnumFacing.EAST));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, 0, size), new Vec3d(size, 0, 1 - size), new Vec3d(size, size, 1 - size), spriteDown, 0, tSize, 16, 0, EnumFacing.WEST));
+			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1 - size, 0, size), new Vec3d(size, 0, size), new Vec3d(size, size, size), spriteDown, 0, tSize, 16, 0, EnumFacing.NORTH));
+			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(size, 0, 1 - size), new Vec3d(1 - size, 0, 1 - size), new Vec3d(1 - size, size, 1 - size), spriteDown, 0, tSize, 16, 0, EnumFacing.SOUTH));
 		}else{
 			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 1 - size), new Vec3d(size, size, 1 - size), spriteCap, EnumFacing.DOWN));
 		}
 
 		if(connectMode[5] != 0){
 			TextureAtlasSprite spriteEast = bakedTextureGetter.apply(((IAdvConduitModel) state.getBlock()).getTexture(state, connectMode[5]));
-			quads.add(createQuad(new Vec3d(1, 1 - size, 1 - size), new Vec3d(1, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 1 - size), spriteEast, tSize, 0, 0, 16, EnumFacing.UP));
-			quads.add(createQuad(new Vec3d(1, size, size), new Vec3d(1, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, size, size), spriteEast, tSize, 0, 0, 16, EnumFacing.DOWN));
-			quads.add(createQuad(new Vec3d(1, 1 - size, size), new Vec3d(1, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, 1 - size, size), spriteEast, tSize, 0, 0, 16, EnumFacing.NORTH));
-			quads.add(createQuad(new Vec3d(1, size, 1 - size), new Vec3d(1, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, size, 1 - size), spriteEast, tSize, 0, 0, 16, EnumFacing.SOUTH));
+			quads.add(createQuad(new Vec3d(1, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1, 1 - size, 1 - size), spriteEast, 0, 0, 16, tSize, EnumFacing.UP));
+			quads.add(createQuad(new Vec3d(1, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, size, size), new Vec3d(1, size, size), spriteEast, 0, 0, 16, tSize, EnumFacing.DOWN));
+			quads.add(createQuad(new Vec3d(1, size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1, 1 - size, size), spriteEast, 0, 0, 16, tSize, EnumFacing.NORTH));
+			quads.add(createQuad(new Vec3d(1, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1, size, 1 - size), spriteEast, 0, 0, 16, tSize, EnumFacing.SOUTH));
 		}else{
 			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, size, 1 - size), spriteCap, EnumFacing.EAST));
 		}
 
 		if(connectMode[4] != 0){
 			TextureAtlasSprite spriteWest = bakedTextureGetter.apply(((IAdvConduitModel) state.getBlock()).getTexture(state, connectMode[4]));
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, size), new Vec3d(0, 1 - size, size), new Vec3d(0, 1 - size, 1 - size), spriteWest, tSize, 16, EnumFacing.UP));
-			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, size, 1 - size), new Vec3d(0, size, 1 - size), new Vec3d(0, size, size), spriteWest, tSize, 16, EnumFacing.DOWN));
-			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(size, size, size), new Vec3d(0, size, size), new Vec3d(0, 1 - size, size), spriteWest, tSize, 16, EnumFacing.NORTH));
-			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(0, 1 - size, 1 - size), new Vec3d(0, size, 1 - size), spriteWest, tSize, 16, EnumFacing.SOUTH));
+			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(0, 1 - size, size), new Vec3d(0, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), spriteWest, 0, tSize, 16, 0, EnumFacing.UP));
+			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(0, size, 1 - size), new Vec3d(0, size, size), new Vec3d(size, size, size), spriteWest, 0, tSize, 16, 0, EnumFacing.DOWN));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(0, size, size), new Vec3d(0, 1 - size, size), new Vec3d(size, 1 - size, size), spriteWest, 0, tSize, 16, 0, EnumFacing.NORTH));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(0, 1 - size, 1 - size), new Vec3d(0, size, 1 - size), new Vec3d(size, size, 1 - size), spriteWest, 0, tSize, 16, 0, EnumFacing.SOUTH));
 		}else{
 			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, size), new Vec3d(size, size, size), spriteCap, EnumFacing.WEST));
 		}
 
 		if(connectMode[2] != 0){
 			TextureAtlasSprite spriteNorth = bakedTextureGetter.apply(((IAdvConduitModel) state.getBlock()).getTexture(state, connectMode[2]));
-			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 0), new Vec3d(size, 1 - size, 0), spriteNorth, 0, 16, tSize, 0, EnumFacing.UP));
-			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(size, size, size), new Vec3d(size, size, 0), new Vec3d(1 - size, size, 0), spriteNorth, 0, 16, tSize, 0, EnumFacing.DOWN));
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 0), new Vec3d(1 - size, 1 - size, 0), spriteNorth, 0, 16, tSize, 0, EnumFacing.EAST));
-			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, 1 - size, size), new Vec3d(size, 1 - size, 0), new Vec3d(size, size, 0), spriteNorth, 0, 16, tSize, 0, EnumFacing.WEST));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, 1 - size, 0), new Vec3d(size, 1 - size, 0), new Vec3d(size, 1 - size, size), spriteNorth, 16, tSize, 0, 0, EnumFacing.UP));
+			quads.add(createQuad(new Vec3d(size, size, size), new Vec3d(size, size, 0), new Vec3d(1 - size, size, 0), new Vec3d(1 - size, size, size), spriteNorth, 16, tSize, 0, 0, EnumFacing.DOWN));
+			quads.add(createQuad(new Vec3d(1 - size, size, size), new Vec3d(1 - size, size, 0), new Vec3d(1 - size, 1 - size, 0), new Vec3d(1 - size, 1 - size, size), spriteNorth, 16, tSize, 0, 0, EnumFacing.EAST));
+			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(size, 1 - size, 0), new Vec3d(size, size, 0), new Vec3d(size, size, size), spriteNorth, 16, tSize, 0, 0, EnumFacing.WEST));
 		}else{
 			quads.add(createQuad(new Vec3d(size, 1 - size, size), new Vec3d(1 - size, 1 - size, size), new Vec3d(1 - size, size, size), new Vec3d(size, size, size), spriteCap, EnumFacing.NORTH));
 		}
 		if(connectMode[3] != 0){
 			TextureAtlasSprite spriteSouth = bakedTextureGetter.apply(((IAdvConduitModel) state.getBlock()).getTexture(state, connectMode[3]));
-			quads.add(createQuad(new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1), new Vec3d(1 - size, 1 - size, 1), spriteSouth, tSize, 16, EnumFacing.UP));
-			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, size, 1), new Vec3d(size, size, 1), spriteSouth, tSize, 16, EnumFacing.DOWN));
-			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1), new Vec3d(1 - size, size, 1), spriteSouth, tSize, 16, EnumFacing.EAST));
-			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, size, 1 - size), new Vec3d(size, size, 1), new Vec3d(size, 1 - size, 1), spriteSouth, tSize, 16, EnumFacing.WEST));
+			quads.add(createQuad(new Vec3d(size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1), new Vec3d(1 - size, 1 - size, 1), new Vec3d(1 - size, 1 - size, 1 - size), spriteSouth, 0, tSize, 16, 0, EnumFacing.UP));
+			quads.add(createQuad(new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, size, 1), new Vec3d(size, size, 1), new Vec3d(size, size, 1 - size), spriteSouth, 0, tSize, 16, 0, EnumFacing.DOWN));
+			quads.add(createQuad(new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(1 - size, 1 - size, 1), new Vec3d(1 - size, size, 1), new Vec3d(1 - size, size, 1 - size), spriteSouth, 0, tSize, 16, 0, EnumFacing.EAST));
+			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(size, size, 1), new Vec3d(size, 1 - size, 1), new Vec3d(size, 1 - size, 1 - size), spriteSouth, 0, tSize, 16, 0, EnumFacing.WEST));
 		}else{
 			quads.add(createQuad(new Vec3d(size, size, 1 - size), new Vec3d(1 - size, size, 1 - size), new Vec3d(1 - size, 1 - size, 1 - size), new Vec3d(size, 1 - size, 1 - size), spriteCap, EnumFacing.SOUTH));
 		}

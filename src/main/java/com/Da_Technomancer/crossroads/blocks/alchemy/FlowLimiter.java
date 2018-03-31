@@ -72,6 +72,7 @@ public class FlowLimiter extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
+		System.out.println(meta + " " + ((meta & 1) == 0));
 		return new FlowLimiterTileEntity((meta & 1) == 0);
 	}
 
@@ -88,7 +89,7 @@ public class FlowLimiter extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.LIGHT) ? 1 : 0) + state.getValue(Properties.FACING).getIndex() << 1;
+		return (state.getValue(Properties.LIGHT) ? 1 : 0) + (state.getValue(Properties.FACING).getIndex() << 1);
 	}
 
 	@Override

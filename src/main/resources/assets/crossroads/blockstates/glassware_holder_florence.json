@@ -15,12 +15,14 @@
 		"crystal": {
 			"true": {
 				"textures": {
-					"glass": "crossroads:blocks/block_alch_crystal"
+					"glass": "crossroads:blocks/crystal_thin",
+					"stem": "crossroads:blocks/crystal_thin"
 				}
 			},
 			"false": {
 				"textures": {
-					"glass": "blocks/glass"
+					"glass": "crossroads:blocks/glass_thin",
+					"stem": "crossroads:blocks/glass_thin"
 				}
 			}
 		},

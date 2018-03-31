@@ -22,8 +22,8 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 		ReagentStack[] reag = new ReagentStack[AlchemyCore.REAGENT_COUNT];
 		reag[ingredient.getReag().getIndex()] = new ReagentStack(AlchemyCore.REAGENTS[ingredient.getReag().getIndex()], ModItems.phial.getCapacity());
-		reag[ingredient.getReag().getIndex()].updatePhase(100, new boolean[EnumSolventType.values().length]);
-		ModItems.phial.setReagents(toGive, reag, (100 + 273D) * ModItems.phial.getCapacity(), ModItems.phial.getCapacity());
+		reag[ingredient.getReag().getIndex()].updatePhase(50, new boolean[EnumSolventType.values().length]);
+		ModItems.phial.setReagents(toGive, reag, (50 + 273D) * ModItems.phial.getCapacity(), ModItems.phial.getCapacity());
 		return toGive;
 	}
 	

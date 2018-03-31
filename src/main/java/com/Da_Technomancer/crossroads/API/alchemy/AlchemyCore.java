@@ -118,7 +118,7 @@ public final class AlchemyCore{
 			}
 		};
 		REAGENTS[38] = new StaticReagent("Densus", Short.MIN_VALUE - 1, Short.MAX_VALUE, 38, (EnumMatterPhase phase) -> Color.BLUE, ModItems.solidDensus, 20, null, EnumSolventType.NON_POLAR, 0, null);
-		REAGENTS[39] = new StaticReagent("Densus", Short.MIN_VALUE - 1, Short.MAX_VALUE, 39, (EnumMatterPhase phase) -> Color.ORANGE, ModItems.solidAntiDensus, 20, null, EnumSolventType.NON_POLAR, 0, null);
+		REAGENTS[39] = new StaticReagent("Anti-Densus", Short.MIN_VALUE - 1, Short.MAX_VALUE, 39, (EnumMatterPhase phase) -> Color.ORANGE, ModItems.solidAntiDensus, 20, null, EnumSolventType.NON_POLAR, 0, null);
 
 		//TODO REAGENTS[]
 
@@ -239,7 +239,7 @@ public final class AlchemyCore{
 		//Tin decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[25], 5)}, new Pair[] {Pair.of(REAGENTS[11], 1), Pair.of(REAGENTS[5], 5)}, REAGENTS[18], -40D, 560D, -10D, null, false));
 		//Ignus Infernum production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[0], 5), Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[36], 2)}, new Pair[] {Pair.of(REAGENTS[37], 1)}, REAGENTS[19], 1500D, Short.MAX_VALUE, -100D, null, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[0], 5), Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[36], 2)}, new Pair[] {Pair.of(REAGENTS[37], 1)}, REAGENTS[19], 2250D, Short.MAX_VALUE, -200D, null, false));
 		//TODO densus and antidensus production
 		
 		

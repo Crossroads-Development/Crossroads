@@ -20,7 +20,13 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntReceiver{
 
-	private final Integer[] connectMode = {0, 0, 0, 0, 0, 0};
+	/**
+	 * 0: Locked
+	 * 1: Out
+	 * 2: In
+	 */
+	private Integer[] connectMode = null;
+	private final boolean[] hasMatch = new boolean[6];
 
 	public AlchemicalTubeTileEntity(){
 		super();
@@ -31,39 +37,56 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	}
 
 	public Integer[] getConnectMode(boolean forRender){
-		return forRender ? new Integer[] {Math.max(0, connectMode[0]), Math.max(0, connectMode[1]), Math.max(0, connectMode[2]), Math.max(0, connectMode[3]), Math.max(0, connectMode[4]), Math.max(0, connectMode[5])} : connectMode;
+		init();
+		if(forRender && !world.isRemote){
+			Integer[] out = new Integer[6];
+			for(int i = 0; i < 6; i++){
+				out[i] = hasMatch[i] ? connectMode[i] : 0;
+			}
+			return out;
+		}
+		return connectMode;
+	}
+
+	private void init(){
+		if(connectMode == null){
+			connectMode = world.isRemote ? new Integer[] {0, 0, 0, 0, 0, 0} : new Integer[] {1, 1, 1, 1, 1, 1};
+		}
 	}
 
 	public void markSideChanged(int index){
+		init();
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendIntToClient(index, connectMode[index], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient(index, hasMatch[index] ? connectMode[index] : 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	@Override
 	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sender){
 		if(identifier < 6){
+			init();
 			connectMode[identifier] = message;
 			world.markBlockRangeForRenderUpdate(pos, pos);
 		}
 	}
-	
+
+	@Override
+	public void update(){
+		init();
+		super.update();
+	}
+
 	@Override
 	protected void performTransfer(){
+		init();
 		for(int i = 0; i < 6; i++){
 			EnumFacing side = EnumFacing.getFront(i);
 			TileEntity te = null;
-			if(connectMode[i] != -1){
+			
+			if(connectMode[i] != 0){
 				te = world.getTileEntity(pos.offset(side));
-				if(te == null){
-					if(connectMode[i] != 0){
-						connectMode[i] = 0;
-						markSideChanged(i);
-					}
-					continue;
-				}
-				if(!te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
-					if(connectMode[i] != 0){
-						connectMode[i] = 0;
+				if(te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+					if(hasMatch[i]){
+						hasMatch[i] = false;
 						markSideChanged(i);
 					}
 					continue;
@@ -72,15 +95,15 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 				if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
-					if(connectMode[i] != 0){
-						connectMode[i] = 0;
+					if(hasMatch[i]){
+						hasMatch[i] = false;
 						markSideChanged(i);
 					}
 					continue;
 				}
 
-				if(connectMode[i] == 0){
-					connectMode[i] = 1;
+				if(!hasMatch[i]){
+					hasMatch[i] = true;
 					markSideChanged(i);
 					continue;
 				}else if(amount != 0 && connectMode[i] == 1){
@@ -96,16 +119,21 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
+		connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
 		for(int i = 0; i < 6; i++){
-			connectMode[i] = nbt.getInteger("mode_" + i);
+			connectMode[i] = Math.max(0, nbt.getInteger("mode_" + i));
+			hasMatch[i] = nbt.getBoolean("match_" + i);
 		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		for(int i = 0; i < 6; i++){
-			nbt.setInteger("mode_" + i, connectMode[i]);
+		if(connectMode != null){
+			for(int i = 0; i < 6; i++){
+				nbt.setInteger("mode_" + i, connectMode[i]);
+				nbt.setBoolean("match_" + i, hasMatch[i]);
+			}
 		}
 		return nbt;
 	}
@@ -114,14 +142,15 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound out = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
-			out.setInteger("mode_" + i, connectMode[i]);
+			out.setInteger("mode_" + i, hasMatch[i] ? connectMode[i] : 0);
 		}
 		return out;
 	}
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || connectMode[side.getIndex()] != -1)){
+		init();
+		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -130,7 +159,8 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || connectMode[side.getIndex()] != -1)){
+		init();
+		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);
@@ -139,8 +169,9 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = new EnumTransferMode[6];
+		init();
 		for(int i = 0; i < 6; i++){
-			output[i] = connectMode[i] <= 0 ? EnumTransferMode.NONE : connectMode[i] == 1 ? EnumTransferMode.OUTPUT : EnumTransferMode.INPUT;
+			output[i] = connectMode[i] == 0 ? EnumTransferMode.NONE : connectMode[i] == 1 ? EnumTransferMode.OUTPUT : EnumTransferMode.INPUT;
 		}
 		return output;
 	}

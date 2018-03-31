@@ -146,7 +146,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 					Integer[] conMode = ((AlchemicalTubeTileEntity) te).getConnectMode(false);
 
 					switch(conMode[face]){
-						case -1:
+						case 0:
 							conMode[face] = 1;
 							((AlchemicalTubeTileEntity) te).markSideChanged(face);
 							break;
@@ -155,7 +155,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 							((AlchemicalTubeTileEntity) te).markSideChanged(face);
 							break;
 						case 2:
-							conMode[face] = -1;
+							conMode[face] = 0;
 							((AlchemicalTubeTileEntity) te).markSideChanged(face);
 							break;
 					}
@@ -221,6 +221,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World source, BlockPos pos){

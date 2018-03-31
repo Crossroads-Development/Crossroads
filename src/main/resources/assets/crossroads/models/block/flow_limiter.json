@@ -3,6 +3,7 @@
 	"textures": {
 		"particle": "crossroads:blocks/flow_limiter_middle",
 		"glass": "#glass",
+		"cap": "#cap",
 		"mid": "crossroads:blocks/flow_limiter_middle",
 		"gold": "blocks/gold_block"
     },
@@ -15,7 +16,7 @@
                 "east": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
                 "south": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
                 "west": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "down": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "down" }
+                "down": { "texture": "#cap", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "down" }
             }
         },
         {
@@ -38,7 +39,7 @@
                 "east": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
                 "south": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
                 "west": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "up": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "up" }
+                "up": { "texture": "#cap", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "up" }
             }
         }
     ]

@@ -23,7 +23,13 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntReceiver{
 
-	private final Integer[] connectMode = {0, 0, 0, 0, 0, 0};
+	/**
+	 * 0: Locked
+	 * 1: Out
+	 * 2: In
+	 */
+	private Integer[] connectMode = null;
+	private final boolean[] hasMatch = new boolean[6];
 
 	private boolean locked = true;
 
@@ -40,7 +46,14 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 		super(glass);
 	}
 
+	private void init(){
+		if(connectMode == null){
+			connectMode = world.isRemote ? new Integer[] {0, 0, 0, 0, 0, 0} : new Integer[] {1, 1, 1, 1, 1, 1};
+		}
+	}
+
 	public void setLocked(boolean lockIn){
+		init();
 		locked = lockIn;
 		markDirty();
 		for(int i = 0; i < 6; i++){
@@ -49,24 +62,41 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 	}
 
 	public Integer[] getConnectMode(boolean forRender){
-		return forRender ? new Integer[] {Math.max(0, connectMode[0]), Math.max(0, connectMode[1]), Math.max(0, connectMode[2]), Math.max(0, connectMode[3]), Math.max(0, connectMode[4]), Math.max(0, connectMode[5])} : connectMode;
+		init();
+		if(forRender && !world.isRemote){
+			Integer[] out = new Integer[6];
+			for(int i = 0; i < 6; i++){
+				out[i] = hasMatch[i] ? connectMode[i] : 0;
+			}
+			return out;
+		}
+		return connectMode;
 	}
 
 	public void markSideChanged(int index){
+		init();
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendIntToClient(index, connectMode[index], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient(index, hasMatch[index] ? connectMode[index] : 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	@Override
 	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sender){
 		if(identifier < 6){
+			init();
 			connectMode[identifier] = message;
 			world.markBlockRangeForRenderUpdate(pos, pos);
 		}
 	}
 
 	@Override
+	public void update(){
+		init();
+		super.update();
+	}
+
+	@Override
 	protected void performTransfer(){
+		init();
 		if(locked){
 			return;
 		}
@@ -74,7 +104,8 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 		for(int i = 0; i < 6; i++){
 			EnumFacing side = EnumFacing.getFront(i);
 			TileEntity te = null;
-			if(connectMode[i] != -1){
+			
+			if(connectMode[i] != 0){
 				te = world.getTileEntity(pos.offset(side));
 				if(te == null){
 					if(connectMode[i] != 0){
@@ -101,8 +132,8 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 					continue;
 				}
 
-				if(connectMode[i] == 0){
-					connectMode[i] = 1;
+				if(!hasMatch[i]){
+					hasMatch[i] = true;
 					markSideChanged(i);
 					continue;
 				}else if(amount != 0 && connectMode[i] == 1){
@@ -118,8 +149,10 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
+		connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
 		for(int i = 0; i < 6; i++){
-			connectMode[i] = nbt.getInteger("mode_" + i);
+			connectMode[i] = Math.max(0, nbt.getInteger("mode_" + i));
+			hasMatch[i] = nbt.getBoolean("match_" + i);
 		}
 		locked = nbt.getBoolean("lock");
 	}
@@ -127,8 +160,11 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		for(int i = 0; i < 6; i++){
-			nbt.setInteger("mode_" + i, connectMode[i]);
+		if(connectMode != null){
+			for(int i = 0; i < 6; i++){
+				nbt.setInteger("mode_" + i, connectMode[i]);
+				nbt.setBoolean("match_" + i, hasMatch[i]);
+			}
 		}
 		nbt.setBoolean("lock", locked);
 		return nbt;
@@ -138,14 +174,14 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound out = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
-			out.setInteger("mode_" + i, connectMode[i]);
+			out.setInteger("mode_" + i, hasMatch[i] ? connectMode[i] : 0);
 		}
 		return out;
 	}
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && !locked && (side == null || connectMode[side.getIndex()] != -1)){
+		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && !locked && (side == null || connectMode[side.getIndex()] != 0)){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -154,7 +190,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && !locked && (side == null || connectMode[side.getIndex()] != -1)){
+		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && !locked && (side == null || connectMode[side.getIndex()] != 0)){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);
@@ -163,8 +199,9 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = new EnumTransferMode[6];
+		init();
 		for(int i = 0; i < 6; i++){
-			output[i] = connectMode[i] <= 0 ? EnumTransferMode.NONE : connectMode[i] == 1 ? EnumTransferMode.OUTPUT : EnumTransferMode.INPUT;
+			output[i] = connectMode[i] == 0 ? EnumTransferMode.NONE : connectMode[i] == 1 ? EnumTransferMode.OUTPUT : EnumTransferMode.INPUT;
 		}
 		return output;
 	}
