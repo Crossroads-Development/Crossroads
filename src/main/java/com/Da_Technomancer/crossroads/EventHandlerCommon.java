@@ -176,8 +176,8 @@ public final class EventHandlerCommon{
 			ArrayList<PrototypeInfo> prototypes = PrototypeWorldSavedData.get(false).prototypes;
 			WorldServer prototypeWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			HashMap<Long, byte[][][]> fieldsProt = prototypeWorld == null ? null : FieldWorldSavedData.get(prototypeWorld).fieldNodes;
-			ArrayList<Entity> entities = new ArrayList<Entity>();
-			entities.addAll(e.world.loadedEntityList); //A copy of the original list is used to avoid ConcurrentModificationExceptions that arise from entities removing themselves when ticked. 
+			//A copy of the original list is used to avoid ConcurrentModificationExceptions that arise from entities removing themselves when ticked.
+			ArrayList<Entity> entities = new ArrayList<Entity>(e.world.loadedEntityList);
 			for(Entity ent : entities){
 				NBTTagCompound entNBT = ent.getEntityData();
 				if(!entNBT.hasKey("fStop")){
