@@ -1,17 +1,11 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.ModItems;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModuleGoggles extends ItemArmor{
 	
@@ -51,14 +49,14 @@ public class ModuleGoggles extends ItemArmor{
 				}
 			}
 			if(!chat.isEmpty()){
-				String out = "";
+				StringBuilder out = new StringBuilder();
 				for(String line : chat){
-					if(!out.equals("")){
-						out += "\n";
+					if(out.length() != 0){
+						out.append("\n");
 					}
-					out += line;
+					out.append(line);
 				}
-				ModPackets.network.sendTo(new SendChatToClient(out, CHAT_ID), (EntityPlayerMP) player);
+				ModPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (EntityPlayerMP) player);
 			}
 		}
 	}
@@ -80,15 +78,15 @@ public class ModuleGoggles extends ItemArmor{
 	
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
-		String path = Main.MODID + ":textures/models/armor/goggles/goggle";
+		StringBuilder path = new StringBuilder(Main.MODID + ":textures/models/armor/goggles/goggle");
 		if(stack.hasTagCompound()){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(stack.getTagCompound().hasKey(lens.name())){
-					path += lens.getTexturePath();
+					path.append(lens.getTexturePath());
 				}
 			}
 		}
-		path += ".png";
-		return path;
+		path.append(".png");
+		return path.toString();
 	}
 }

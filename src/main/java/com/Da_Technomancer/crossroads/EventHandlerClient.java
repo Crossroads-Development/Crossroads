@@ -251,7 +251,7 @@ public final class EventHandlerClient{
 				boolean invalidState = false;
 
 				if(arc.lastTick != game.world.getTotalWorldTime()){
-					invalidState = (game.world.getTotalWorldTime() % 5 == 0) || (arc.lastTick < 0);//TODO
+					invalidState = (game.world.getTotalWorldTime() % 5 == 0) || (arc.lastTick < 0);
 					arc.lastTick = game.world.getTotalWorldTime();
 					if(arc.lifeTime-- < 0){
 						toRemove.add(arc);

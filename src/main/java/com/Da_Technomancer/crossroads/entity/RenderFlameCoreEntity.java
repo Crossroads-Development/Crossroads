@@ -1,17 +1,16 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import org.lwjgl.opengl.GL11;
-
 import com.Da_Technomancer.crossroads.Main;
-
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class RenderFlameCoreEntity extends Render<EntityFlameCore>{
 
@@ -92,5 +91,10 @@ public class RenderFlameCoreEntity extends Render<EntityFlameCore>{
 		GlStateManager.disableBlend();
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
+	}
+
+	@Override
+	public boolean shouldRender(EntityFlameCore livingEntity, ICamera camera, double camX, double camY, double camZ){
+		return true;
 	}
 }

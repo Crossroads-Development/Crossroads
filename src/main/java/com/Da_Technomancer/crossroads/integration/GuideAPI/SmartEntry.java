@@ -110,7 +110,7 @@ public class SmartEntry extends EntryItemStack{
 			return;
 		}
 		if(input instanceof Boolean){
-			if(((Boolean) input).booleanValue()){
+			if(((Boolean) input)){
 				active += "</n>";
 			}
 			return;

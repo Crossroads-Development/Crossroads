@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.integration.crafttweaker;
 
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
@@ -94,7 +95,8 @@ public class GrindstoneHandler{
 
 	/** Remove a grindstone recipe for the ore dictionary entry of the input item stack.
 	 *
-	 * @param input */
+	 * @param input the input for the recipe
+	 */
 	@ZenMethod
 	public static void removeRecipe(IOreDictEntry input){
 		String key = input.getName();
@@ -114,7 +116,7 @@ public class GrindstoneHandler{
 
 		@Override
 		public void apply(){
-			System.out.println("input: " + input + ": " + RecipeHolder.grindRecipes.remove(input));
+			Main.logger.info("input: " + input + ": " + RecipeHolder.grindRecipes.remove(input));
 		}
 
 		@Override

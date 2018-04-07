@@ -14,6 +14,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -30,6 +31,7 @@ public class AetherEffect implements IAlchEffect{
 		SOIL_GROUP.add(new MaterialPredicate(Material.SNOW));
 		SOIL_GROUP.add(new MaterialPredicate(Material.CRAFTED_SNOW));
 		SOIL_GROUP.add(new MaterialPredicate(Material.CLAY));
+		SOIL_GROUP.add(new MaterialPredicate(Material.GRASS));
 		ROCK_GROUP.add(new MaterialPredicate(Material.ROCK));
 		ROCK_GROUP.add(new MaterialPredicate(Material.PACKED_ICE));
 		FLUD_GROUP.add(new MaterialPredicate(Material.WATER));
@@ -76,7 +78,12 @@ public class AetherEffect implements IAlchEffect{
 		}
 		for(Predicate<IBlockState> pred : SOIL_GROUP){
 			if(pred.test(oldState)){
-				if(oldState != Blocks.DIRT.getDefaultState()){
+				IBlockState upState = world.getBlockState(pos.offset(EnumFacing.UP));
+				if(upState.getBlock().isAir(upState, world, pos.offset(EnumFacing.UP))){
+					if(oldState != Blocks.GRASS.getDefaultState()){
+						world.setBlockState(pos, Blocks.GRASS.getDefaultState());
+					}
+				}else if(oldState != Blocks.DIRT.getDefaultState()){
 					world.setBlockState(pos, Blocks.DIRT.getDefaultState());
 				}
 				return;
@@ -94,10 +101,7 @@ public class AetherEffect implements IAlchEffect{
 
 		@Override
 		public boolean test(IBlockState toCheck){
-			if(toCheck.getMaterial() == m && !(toCheck.getBlock() instanceof ITileEntityProvider)){
-				return true;
-			}
-			return false;
+			return toCheck.getMaterial() == m && !(toCheck.getBlock() instanceof ITileEntityProvider);
 		}
 	}
 	

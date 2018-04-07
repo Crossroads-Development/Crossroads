@@ -39,11 +39,11 @@ public class Nitroglycerin extends Item{
 
 		worldIn.playSound((EntityPlayer) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-		//if(!worldIn.isRemote){
+		if(!worldIn.isRemote){
 			EntityNitro entitysnowball = new EntityNitro(worldIn, playerIn);
 			entitysnowball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
 			worldIn.spawnEntity(entitysnowball);
-		//}
+		}
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, held);
 	}
 

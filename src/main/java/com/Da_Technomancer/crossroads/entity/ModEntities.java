@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.ModItems;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
@@ -20,9 +19,9 @@ public final class ModEntities{
 		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "bullet"), EntityBullet.class, "bullet", id++, Main.instance, 64, 5, true);
 		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "arm_ridable"), EntityArmRidable.class, "arm_ridable", id++, Main.instance, 64, 1, false);
 		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "shell"), EntityShell.class, "shell", id++, Main.instance, 64, 5, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "nitro"), EntityShell.class, "nitro", id++, Main.instance, 64, 5, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "nitro"), EntityNitro.class, "nitro", id++, Main.instance, 64, 5, true);
 		id++;
-		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "flame_core"), EntityFlameCore.class, "flame_core", id++, Main.instance, 64, 1, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "flame_core"), EntityFlameCore.class, "flame_core", id++, Main.instance, 64, 20, true);
 	}
 
 	@SideOnly(Side.CLIENT)

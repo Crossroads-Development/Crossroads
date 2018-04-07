@@ -3,14 +3,12 @@ package com.Da_Technomancer.crossroads.entity;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumSolventType;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.packets.INbtReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityClient;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +24,7 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 	/**
 	 * In order to avoid iterating over a large ReagentStack[] that is mostly empty several times a tick, this list is created to store all non-null reagent stacks
 	 */
-	private ArrayList<ReagentStack> reagList = new ArrayList<ReagentStack>();
+	private ArrayList<ReagentStack> reagList = new ArrayList<>();
 	protected Color col;
 
 	public EntityFlameCore(World worldIn){
@@ -40,31 +38,7 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 	public void setInitialValues(ReagentStack[] reags, double temp, int radius){
 		this.reags = reags == null ? new ReagentStack[AlchemyCore.REAGENT_COUNT] : reags;
 		this.temp = temp;
-		reagList.clear();
-		double r = 0;
-		double g = 0;
-		double b = 0;
-		double a = 0;
-		double amount = 0;
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			if(reags[i] != null){
-				Color color = reags[i].getType().getColor(reags[i].getPhase(temp));
-				r += reags[i].getAmount() * (double) color.getRed();
-				g += reags[i].getAmount() * (double) color.getGreen();
-				b += reags[i].getAmount() * (double) color.getBlue();
-				a += reags[i].getAmount() * (double) color.getAlpha();
-				amount += reags[i].getAmount();
-
-				if(i != 0 && i != 37){//Skips i=0 (phelostigen) & i=37 (ignus infernum)
-					reagList.add(reags[i]);
-				}
-			}
-		}
 		maxRadius = radius;
-		NBTTagCompound nbt = new NBTTagCompound();
-		col = new Color((int) (r / amount), (int) (g / amount), (int) (b / amount), (int) (a / amount));
-		nbt.setInteger("col", col.getRGB());
-		ModPackets.network.sendToAllAround(new NbtToEntityClient(getUniqueID(), nbt), new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 512));
 	}
 
 	private ReagentStack[] reags = null;
@@ -139,69 +113,96 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 
 	@Override
 	public void onUpdate(){
-		if(col == null){
+		ticksExisted++;
+		super.onUpdate();
+
+		if(world.isRemote){
 			return;
 		}
 
-		super.onUpdate();
+		if(col == null){
+			reagList.clear();
+			double r = 0;
+			double g = 0;
+			double b = 0;
+			double a = 0;
+			double amount = 0;
+			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+				if(this.reags[i] != null){
+					Color color = this.reags[i].getType().getColor(this.reags[i].getPhase(temp));
+					r += this.reags[i].getAmount() * (double) color.getRed();
+					g += this.reags[i].getAmount() * (double) color.getGreen();
+					b += this.reags[i].getAmount() * (double) color.getBlue();
+					a += this.reags[i].getAmount() * (double) color.getAlpha();
+					amount += this.reags[i].getAmount();
 
-		ticksExisted++;
+					if(i != 0 && i != 37){//Skips i=0 (phelostigen) & i=37 (ignus infernum)
+						reagList.add(this.reags[i]);
+					}
+				}
+			}
+			NBTTagCompound nbt = new NBTTagCompound();
+			col = new Color((int) (r / amount), (int) (g / amount), (int) (b / amount), (int) (a / amount));
+			nbt.setInteger("col", col.getRGB());
+			nbt.setInteger("life", ticksExisted);
+			ModPackets.network.sendToAllAround(new NbtToEntityClient(getUniqueID(), nbt), new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 512));
+		}
 
-		if(!world.isRemote && ticksExisted % 8 == 0){
+		if(ticksExisted % 8 == 0){
 			int radius = (int) Math.round(FLAME_VEL * (float) ticksExisted);
 			BlockPos pos = new BlockPos(posX, posY, posZ);
-
+			boolean lastAction = maxRadius <= radius;
 
 			for(int i = 0; i <= radius; i++){
 				for(int j = 0; j <= radius; j++){
 					//x-z plane
-					act(reagList, reags, temp, world, pos.add(i, -radius, j));
-					act(reagList, reags, temp, world, pos.add(i - radius, -radius, j));
-					act(reagList, reags, temp, world, pos.add(i, -radius, j - radius));
-					act(reagList, reags, temp, world, pos.add(i - radius, -radius, j - radius));
-					act(reagList, reags, temp, world, pos.add(i, radius, j));
-					act(reagList, reags, temp, world, pos.add(i - radius, radius, j));
-					act(reagList, reags, temp, world, pos.add(i, radius, j - radius));
-					act(reagList, reags, temp, world, pos.add(i - radius, radius, j - radius));
+					act(reagList, reags, temp, world, pos.add(i, -radius, j), lastAction);
+					act(reagList, reags, temp, world, pos.add(i - radius, -radius, j), lastAction);
+					act(reagList, reags, temp, world, pos.add(i, -radius, j - radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(i - radius, -radius, j - radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(i, radius, j), lastAction);
+					act(reagList, reags, temp, world, pos.add(i - radius, radius, j), lastAction);
+					act(reagList, reags, temp, world, pos.add(i, radius, j - radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(i - radius, radius, j - radius), lastAction);
 					//x-y plane
-					act(reagList, reags, temp, world, pos.add(i, j, -radius));
-					act(reagList, reags, temp, world, pos.add(i - radius, j, -radius));
-					act(reagList, reags, temp, world, pos.add(i, j - radius, -radius));
-					act(reagList, reags, temp, world, pos.add(i - radius, j - radius, -radius));
-					act(reagList, reags, temp, world, pos.add(i, j, radius));
-					act(reagList, reags, temp, world, pos.add(i - radius, j, radius));
-					act(reagList, reags, temp, world, pos.add(i, j - radius, radius));
-					act(reagList, reags, temp, world, pos.add(i - radius, j - radius, radius));
+					act(reagList, reags, temp, world, pos.add(i, j, -radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(i - radius, j, -radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(i, j - radius, -radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(i - radius, j - radius, -radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(i, j, radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(i - radius, j, radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(i, j - radius, radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(i - radius, j - radius, radius), lastAction);
 					//y-z plane
-					act(reagList, reags, temp, world, pos.add(-radius, i, j));
-					act(reagList, reags, temp, world, pos.add(-radius, i - radius, j));
-					act(reagList, reags, temp, world, pos.add(-radius, i, j - radius));
-					act(reagList, reags, temp, world, pos.add(-radius, i - radius, j - radius));
-					act(reagList, reags, temp, world, pos.add(radius, i, j));
-					act(reagList, reags, temp, world, pos.add(radius, i - radius, j));
-					act(reagList, reags, temp, world, pos.add(radius, i, j - radius));
-					act(reagList, reags, temp, world, pos.add(radius, i - radius, j - radius));
+					act(reagList, reags, temp, world, pos.add(-radius, i, j), lastAction);
+					act(reagList, reags, temp, world, pos.add(-radius, i - radius, j), lastAction);
+					act(reagList, reags, temp, world, pos.add(-radius, i, j - radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(-radius, i - radius, j - radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(radius, i, j), lastAction);
+					act(reagList, reags, temp, world, pos.add(radius, i - radius, j), lastAction);
+					act(reagList, reags, temp, world, pos.add(radius, i, j - radius), lastAction);
+					act(reagList, reags, temp, world, pos.add(radius, i - radius, j - radius), lastAction);
 				}
 			}
 
-			if(maxRadius <= radius){
+			if(lastAction){
 				setDead();
 			}
 		}
 	}
 
-	private static void act(ArrayList<ReagentStack> reagList, ReagentStack[] reags, double temp, World world, BlockPos pos){
+	private static void act(ArrayList<ReagentStack> reagList, ReagentStack[] reags, double temp, World world, BlockPos pos, boolean lastAction){
 		if(reags[16] == null){
-			float hardness = world.getBlockState(pos).getBlockHardness(world, pos);
+			IBlockState state = world.getBlockState(pos);
 
-			if(hardness >= 0 && hardness <= 3F){
-				world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			if(state.getBlockHardness(world, pos) >= 0){
+				world.setBlockState(pos, lastAction && Math.random() > 0.75D && Blocks.FIRE.canPlaceBlockAt(world, pos) ? Blocks.FIRE.getDefaultState() : Blocks.AIR.getDefaultState(), lastAction ? 3 : 18);
 			}
 		}
 
 		for(ReagentStack r : reagList){
 			if(r != null){//Should never contain null
-				r.getType().onRelease(world, pos, r.getAmount(), temp, r.getPhase(temp), reags);
+				r.getType().onRelease(world, pos, r.getAmount(), temp, EnumMatterPhase.FLAME, reags);
 			}
 		}
 	}
@@ -216,5 +217,6 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 		int colorCode = nbt.getInteger("col");
 		col = Color.decode(Integer.toString(colorCode & 0xFFFFFF));
 		col = new Color(col.getRed(), col.getGreen(), col.getBlue(), colorCode >>> 24);
+		ticksExisted = nbt.getInteger("life");
 	}
 }

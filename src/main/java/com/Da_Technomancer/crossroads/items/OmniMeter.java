@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.items;
 
-import java.util.ArrayList;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
@@ -14,7 +12,6 @@ import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -27,9 +24,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+
+import java.util.ArrayList;
 
 public class OmniMeter extends Item implements IInfoDevice{
 
@@ -94,23 +95,28 @@ public class OmniMeter extends Item implements IInfoDevice{
 						}
 					}
 				}
+
+				if(te.hasCapability(CapabilityEnergy.ENERGY, null)){
+					IEnergyStorage batt = te.getCapability(CapabilityEnergy.ENERGY, null);
+					chat.add("Charge: " + batt.getEnergyStored() + "/" + batt.getMaxEnergyStored() + "FE");
+				}
 				
 				if(te instanceof IInfoTE){
 					((IInfoTE) te).addInfo(chat, this, playerIn, facing);
 				}
 				if(!chat.isEmpty()){
-					String out = "";
+					StringBuilder out = new StringBuilder();
 					for(String line : chat){
-						if(!out.equals("")){
-							out += "\n";
+						if(out.length() != 0){
+							out.append("\n");
 						}
-						out += line;
+						out.append(line);
 					}
-					ModPackets.network.sendTo(new SendChatToClient(out, CHAT_ID), (EntityPlayerMP) playerIn);
+					ModPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (EntityPlayerMP) playerIn);
 				}
 			}
 		}
 		
-		return te instanceof IInfoTE || te instanceof RatiatorTileEntity ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
+		return te instanceof IInfoTE ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 	}
 }

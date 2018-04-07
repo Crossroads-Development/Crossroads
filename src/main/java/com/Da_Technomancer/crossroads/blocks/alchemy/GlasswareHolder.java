@@ -80,7 +80,7 @@ public class GlasswareHolder extends BlockContainer{
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof GlasswareHolderTileEntity){
-			((GlasswareHolderTileEntity) te).onBlockDestoyed(blockstate);
+			((GlasswareHolderTileEntity) te).onBlockDestroyed(blockstate);
 		}
 		super.breakBlock(world, pos, blockstate);
 	}

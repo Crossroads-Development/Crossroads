@@ -1,11 +1,5 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -16,7 +10,6 @@ import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -38,12 +31,16 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
+import javax.annotation.Nonnull;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickable{
 
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.EMERALD){
-			chat.add("Charge: " + stored + "FE");
 			for(int i = 0; i < 3; i++){
 				if(linked[i] != null){
 					chat.add("Linked Position: X=" + linked[i].getX() + " Y=" + linked[i].getY() + " Z=" + linked[i].getZ());

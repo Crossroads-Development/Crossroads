@@ -25,8 +25,8 @@ public class AcidAlchemyEffect implements IAlchEffect{
 	
 	@Override
 	public void doEffect(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase){
-		if((phase == EnumMatterPhase.SOLUTE || phase == EnumMatterPhase.LIQUID) && amount >= .02D){
-			for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(2, 2, 2)), EntitySelectors.IS_ALIVE)){
+		if(phase != EnumMatterPhase.SOLID && phase != EnumMatterPhase.GAS && amount >= .02D){
+			for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, phase == EnumMatterPhase.FLAME ? new AxisAlignedBB(pos, pos.add(1, 1, 1)) : new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(2, 2, 2)), EntitySelectors.IS_ALIVE)){
 				e.attackEntityFrom(ACID_DAMAGE, ((float) (amount)));
 			}
 			
@@ -55,8 +55,6 @@ public class AcidAlchemyEffect implements IAlchEffect{
 						break;
 				}
 			}
-			
-			//TODO think of a few more acid effects
 		}
 	}
 }

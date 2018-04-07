@@ -17,6 +17,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public class EmeraldGoggleEffect implements IGoggleEffect{
 
@@ -40,7 +42,12 @@ public class EmeraldGoggleEffect implements IGoggleEffect{
 				}else if(te.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
 					chat.add("Total Energy: " + te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy());
 				}
-				
+
+				if(te.hasCapability(CapabilityEnergy.ENERGY, null)){
+					IEnergyStorage batt = te.getCapability(CapabilityEnergy.ENERGY, null);
+					chat.add("Charge: " + batt.getEnergyStored() + "/" + batt.getMaxEnergyStored() + "FE");
+				}
+
 				if(te instanceof IInfoTE){
 					((IInfoTE) te).addInfo(chat, EnumGoggleLenses.EMERALD, player, ray.sideHit);
 				}

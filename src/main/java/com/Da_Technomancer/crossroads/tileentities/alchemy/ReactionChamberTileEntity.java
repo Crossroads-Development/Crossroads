@@ -1,43 +1,34 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.Level;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyReactorTE;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.ModItems;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.logging.log4j.Level;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
@@ -56,9 +47,6 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.RUBY){
 			chat.add("Temp: " + cableTemp + "°C");
-		}		
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.EMERALD){
-			chat.add("Energy: " + energy + "/" + ENERGY_CAPACITY + "FE");
 		}
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
 			if(amount == 0){

@@ -1,26 +1,16 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.ModItems;
-
+import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,24 +18,11 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class DynamoTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class DynamoTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return oldState.getBlock() != newState.getBlock();
-	}
-
-	/**
-	 * @param chat Add info to this list, 1 line per entry. 
-	 * @param device The device type calling this method. 
-	 * @param player The player using the info device.
-	 * @param side The viewed EnumFacing (only used by goggles).
-	 */
-	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.EMERALD){
-			chat.add(energyHandler.getEnergyStored() + "/" + CHARGE_CAPACITY + " FE");
-		}
 	}
 	
 	private double[] motionData = new double[4];

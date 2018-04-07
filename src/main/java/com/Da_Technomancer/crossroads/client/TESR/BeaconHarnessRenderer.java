@@ -63,7 +63,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 
 				final double small = 0 - (trip[dir].getRight().doubleValue() / 16D);
 				final double big = 0 + (trip[dir].getRight().doubleValue() / 16D);
-				final int length = trip[dir].getMiddle().intValue();
+				final int length = trip[dir].getMiddle();
 
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				//+Z

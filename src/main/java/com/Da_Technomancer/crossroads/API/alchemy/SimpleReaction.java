@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
 
 public class SimpleReaction implements IReaction{
 
@@ -41,10 +41,12 @@ public class SimpleReaction implements IReaction{
 
 	@Override
 	public boolean performReaction(IReactionChamber chamb, boolean[] solventsIn){
+
 		//Check charged, catalyst, temperature, and solvent requirements
 		if(charged && !chamb.isCharged()){
 			return false;
 		}
+
 		ReagentStack[] reags = chamb.getReagants();
 		if(cat != null && reags[cat.getIndex()] == null){
 			return false;
@@ -63,7 +65,7 @@ public class SimpleReaction implements IReaction{
 		
 		double content = chamb.getContent();
 
-		double maxReactions = amountChange == 0 ? 200 : (chamb.getReactionCapacity() - content) / (double) amountChange;
+		double maxReactions = amountChange <= 0 ? 200 : (chamb.getReactionCapacity() - content) / (double) amountChange;
 
 		for(Pair<IReagent, Integer> reag : reagents){
 			if(reags[reag.getLeft().getIndex()] == null){
@@ -76,7 +78,7 @@ public class SimpleReaction implements IReaction{
 		double allowedTempChange = heatChange < 0 ? maxTemp - chambTemp : minTemp - chambTemp;
 		
 		maxReactions = Math.min(maxReactions, -content * allowedTempChange / (heatChange * HEAT_CONVERSION));
-		
+
 		if(maxReactions <= 0D){
 			return false;
 		}

@@ -44,6 +44,9 @@ public final class ModConfig{
 	public static Property wrenchTypes;
 	public static Property electPerJoule;
 	public static Property growBlacklist;
+	public static Property allowHellfire;
+	public static Property voltusUsage;
+	public static Property atmosEffect;
 
 	private static final ArrayList<Property> SYNCED_PROPERTIES = new ArrayList<Property>();
 	public static NBTTagCompound syncPropNBT;
@@ -91,13 +94,16 @@ public final class ModConfig{
 		SYNCED_PROPERTIES.add(wrenchTypes = config.get(CAT_INTERNAL, "Item ids for wrench items. Should be in format 'modid:itemregistryname', ex. minecraft:apple or crossroads:wrench.", new String[] {Main.MODID + ":wrench", Main.MODID + ":liech_wrench", "actuallyadditions:itemlaserwrench", "appliedenergistics2:certus_quartz_wrench", "appliedenergistics2:nether_quartz_wrench", "base:wrench", "enderio:itemyetawrench", "extrautils2:wrench", "bigreactors:wrench", "forestry:wrench", "progressiveautomation:wrench", "thermalfoundation:wrench", "redstonearsenal:tool.wrench_flux", "rftools:smartwrench", "immersiveengineering:tool"}));
 		electPerJoule = config.get(CAT_ALCHEMY, "FE generated from 10J. (Default 200)", 200, "", 0, Integer.MAX_VALUE);
 		growBlacklist = config.get(CAT_MISC, "Plant types that can not be grown by a potential beam. Should be in format 'modid:blockregistryname', ex. minecraft:wheat", new String[0]);
+		SYNCED_PROPERTIES.add(allowHellfire = config.get(CAT_ALCHEMY, "Whether to allow crafting Ignis Infernum. (Default true)",true));
+		SYNCED_PROPERTIES.add(voltusUsage = config.get(CAT_ALCHEMY, "Voltus used to charge atmosphere per 1000FE (Default 0.01)", 0.01D));
+		//TODO atmosEffect = config.get(CAT_ALCHEMY, );
 	}
 
 	/**
 	 * Returns the value of the Property, but if client side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
 	 * 
 	 * @param prop The property to get the value of.
-	 * @param client Whether this is on the virtual client.
+	 * @param client Whether this is on the virtual client. Pass this param. true if unknown.
 	 * @return The config value.
 	 */
 	public static boolean getConfigBool(Property prop, boolean client){
@@ -117,9 +123,31 @@ public final class ModConfig{
 
 	/**
 	 * Returns the value of the Property, but if client side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
+	 *
+	 * @param prop The property to get the value of.
+	 * @param client Whether this is on the virtual client. Pass this param. true if unknown.
+	 * @return The config value.
+	 */
+	public static double getConfigDouble(Property prop, boolean client){
+		if(prop.getType() != Property.Type.DOUBLE || prop.isList()){
+			throw new ClassCastException(Main.MODID + ": Incorrect config property type.");
+		}
+		//The NBT should never be null, but just to be safe, it is better to have the wrong client config than crash.
+		if(!client || syncPropNBT == null){
+			return prop.getDouble();
+		}
+		int index = SYNCED_PROPERTIES.indexOf(prop);
+		if(index == -1){
+			return prop.getDouble();
+		}
+		return syncPropNBT.getDouble("p_" + index);
+	}
+
+	/**
+	 * Returns the value of the Property, but if client side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
 	 * 
 	 * @param prop The property to get the value of.
-	 * @param client Whether this is on the virtual client.
+	 * @param client Whether this is on the virtual client. Pass this param. true if unknown.
 	 * @return The config value.
 	 */
 	public static int getConfigInt(Property prop, boolean client){
@@ -141,7 +169,7 @@ public final class ModConfig{
 	 * Returns the value of the Property, but if client side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
 	 * 
 	 * @param prop The property to get the value of.
-	 * @param client Whether this is on the virtual client.
+	 * @param client Whether this is on the virtual client. Pass this param. true if unknown.
 	 * @return The config value.
 	 */
 	public static String getConfigString(Property prop, boolean client){
@@ -163,7 +191,7 @@ public final class ModConfig{
 	 * Returns the value of the Property, but if client side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
 	 * 
 	 * @param prop The property to get the value of.
-	 * @param client Whether this is on the virtual client.
+	 * @param client Whether this is on the virtual client. Pass this param. true if unknown.
 	 * @return The config value.
 	 */
 	public static String[] getConfigStringList(Property prop, boolean client){
@@ -201,7 +229,11 @@ public final class ModConfig{
 					//Not supported
 					break;
 				case DOUBLE:
-					//Not supported
+					if(!prop.isList()){
+						out.setDouble("p_" + i, prop.getDouble());
+					}else{
+						//Not supported
+					}
 					break;
 				case INTEGER:
 					if(!prop.isList()){

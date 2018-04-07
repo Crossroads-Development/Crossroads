@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import net.minecraft.client.util.ITooltipFlag;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
@@ -29,6 +30,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ReactionChamber extends BlockContainer{
 
@@ -110,5 +114,11 @@ public class ReactionChamber extends BlockContainer{
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list){
 		list.add(new ItemStack(this, 1, 0));
 		list.add(new ItemStack(this, 1, 1));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		tooltip.add("Consumes: -10FE/tick (Optional)");
 	}
 }

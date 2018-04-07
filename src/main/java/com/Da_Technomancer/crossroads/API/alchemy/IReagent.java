@@ -53,11 +53,19 @@ public interface IReagent{
 	
 	/**
 	 * Gets the (purely visual) color. 
-	 * @param phase Will never be called for solid phase. 
+	 * @param phase
 	 * @return A color for rendering. Alpha is used. 
 	 */
 	public Color getColor(EnumMatterPhase phase);
-	
+
+	/**
+	 * @param world
+	 * @param pos
+	 * @param amount
+	 * @param heat
+	 * @param phase This is NOT necessarily the actual phase, this is the phase the reagent should pretend to be/act as when performing the effect. EnumMatterPhase.FLAME when performed as part of a phelostigen effect.
+	 * @param contents
+	 */
 	public default void onRelease(World world, BlockPos pos, double amount, double heat, EnumMatterPhase phase, ReagentStack[] contents){
 		
 	}

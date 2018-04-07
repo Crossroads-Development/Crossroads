@@ -5,17 +5,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.API.effects.alchemy.*;
+import com.Da_Technomancer.crossroads.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.Da_Technomancer.crossroads.API.effects.alchemy.AcidAlchemyEffect;
-import com.Da_Technomancer.crossroads.API.effects.alchemy.AetherEffect;
-import com.Da_Technomancer.crossroads.API.effects.alchemy.AquaRegiaAlchemyEffect;
-import com.Da_Technomancer.crossroads.API.effects.alchemy.ChlorineAlchemyEffect;
-import com.Da_Technomancer.crossroads.API.effects.alchemy.EldrineEffect;
-import com.Da_Technomancer.crossroads.API.effects.alchemy.FusasEffect;
-import com.Da_Technomancer.crossroads.API.effects.alchemy.PhelostogenEffect;
-import com.Da_Technomancer.crossroads.API.effects.alchemy.SaltAlchemyEffect;
-import com.Da_Technomancer.crossroads.API.effects.alchemy.StasisolEffect;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
@@ -110,8 +103,8 @@ public final class AlchemyCore{
 		REAGENTS[33] = new ElementalReagent("Eldrine", 33, (byte) 1, -100, 350, new EldrineEffect(), true, new MagicUnit(32, 0, 32, 0), ModItems.solidEldrine);
 		REAGENTS[34] = new ElementalReagent("Stasisol", 34, (byte) 1, 800, 1800, new StasisolEffect(), false, new MagicUnit(32, 16, 32, 0), ModItems.solidStasisol);
 		REAGENTS[35] = new ElementalReagent("Fusas", 35, (byte) 2, Short.MAX_VALUE - 1, Short.MAX_VALUE, new FusasEffect(), false, new MagicUnit(16, 32, 32, 0), ModItems.solidFusas, (IElementReagent) REAGENTS[34]);
-		REAGENTS[36] = new ElementalReagent("Voltus", 36, (byte) 2, -275, -274, null, true, new MagicUnit(32, 32, 8, 0), null, (IElementReagent) REAGENTS[32]);//TODO effect
-		REAGENTS[37] = new StaticReagent("Ignus Infernum", -275D, -274D, 37, (EnumMatterPhase phase) -> Color.RED, null, 10, EnumSolventType.FLAME, null, 2, new PhelostogenEffect((Double amount) -> (int) Math.min(64, amount * 2D))){
+		REAGENTS[36] = new ElementalReagent("Voltus", 36, (byte) 2, -275, -274, new VoltusEffect(), true, new MagicUnit(32, 32, 8, 0), null, (IElementReagent) REAGENTS[32]);//TODO effect
+		REAGENTS[37] = new StaticReagent("Ignis Infernum", -275D, -274D, 37, (EnumMatterPhase phase) -> Color.RED, null, 10, EnumSolventType.FLAME, null, 2, new PhelostogenEffect((Double amount) -> (int) Math.min(64, amount * 2D))){
 			@Override
 			public boolean isLockedFlame(){
 				return true;
@@ -119,8 +112,6 @@ public final class AlchemyCore{
 		};
 		REAGENTS[38] = new StaticReagent("Densus", Short.MIN_VALUE - 1, Short.MAX_VALUE, 38, (EnumMatterPhase phase) -> Color.BLUE, ModItems.solidDensus, 20, null, EnumSolventType.NON_POLAR, 0, null);
 		REAGENTS[39] = new StaticReagent("Anti-Densus", Short.MIN_VALUE - 1, Short.MAX_VALUE, 39, (EnumMatterPhase phase) -> Color.ORANGE, ModItems.solidAntiDensus, 20, null, EnumSolventType.NON_POLAR, 0, null);
-
-		//TODO REAGENTS[]
 
 		FLUID_TO_LIQREAGENT.put(BlockDistilledWater.getDistilledWater(), REAGENTS[4]);
 		FLUID_TO_LIQREAGENT.put(BlockMoltenCopper.getMoltenCopper(), REAGENTS[23]);
@@ -136,7 +127,7 @@ public final class AlchemyCore{
 			public boolean performReaction(IReactionChamber chamb, boolean[] solventsIn){
 				boolean performed = super.performReaction(chamb, solventsIn);
 				if(performed){
-					chamb.addVisualEffect(ModParticles.COLOR_FLAME, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, new int[] {128, 0, 255, 128});
+					chamb.addVisualEffect(ModParticles.COLOR_FLAME, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 128, 0, 255, 128);
 				}
 
 				return performed;
@@ -233,13 +224,15 @@ public final class AlchemyCore{
 		//Gold decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[14], 5)}, new Pair[] {Pair.of(REAGENTS[11], 1), Pair.of(REAGENTS[13], 5)}, REAGENTS[18], -40D, 560D, -10D, null, false));
 		//Copper decomposition
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[23], 5)}, new Pair[] {Pair.of(REAGENTS[11], 1), Pair.of(REAGENTS[3], 5)}, REAGENTS[18], -40D, 560D, -10D, null, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[23], 5)}, new Pair[] {Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[13], 5)}, REAGENTS[18], -40D, 560D, -10D, null, false));
 		//Iron decomposition
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[24], 5)}, new Pair[] {Pair.of(REAGENTS[11], 1), Pair.of(REAGENTS[10], 5)}, REAGENTS[18], -40D, 560D, -10D, null, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[24], 5)}, new Pair[] {Pair.of(REAGENTS[10], 1), Pair.of(REAGENTS[13], 5)}, REAGENTS[18], -40D, 560D, -10D, null, false));
 		//Tin decomposition
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[25], 5)}, new Pair[] {Pair.of(REAGENTS[11], 1), Pair.of(REAGENTS[5], 5)}, REAGENTS[18], -40D, 560D, -10D, null, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[25], 5)}, new Pair[] {Pair.of(REAGENTS[5], 1), Pair.of(REAGENTS[13], 5)}, REAGENTS[18], -40D, 560D, -10D, null, false));
 		//Ignus Infernum production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[0], 5), Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[36], 2)}, new Pair[] {Pair.of(REAGENTS[37], 1)}, REAGENTS[19], 2250D, Short.MAX_VALUE, -200D, null, false));
+		if(ModConfig.getConfigBool(ModConfig.allowHellfire, true)){//Passes true to client as sided-ness is unknown.
+			REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[0], 5), Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[36], 2)}, new Pair[] {Pair.of(REAGENTS[37], 1)}, REAGENTS[19], 2250D, Short.MAX_VALUE, -200D, null, false));
+		}
 		//TODO densus and antidensus production
 		
 		

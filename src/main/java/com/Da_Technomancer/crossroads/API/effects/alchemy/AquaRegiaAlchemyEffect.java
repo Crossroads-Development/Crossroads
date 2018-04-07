@@ -20,7 +20,7 @@ public class AquaRegiaAlchemyEffect implements IAlchEffect{
 	@Override
 	public void doEffect(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase){
 		if(amount >= .1D){
-			for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(2, 2, 2)), EntitySelectors.IS_ALIVE)){
+			for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, phase == EnumMatterPhase.FLAME ? new AxisAlignedBB(pos, pos.add(1, 1, 1)) : new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(2, 2, 2)), EntitySelectors.IS_ALIVE)){
 				e.attackEntityFrom(AcidAlchemyEffect.ACID_DAMAGE, ((float) (amount * 2D)));
 			}
 			
@@ -59,8 +59,6 @@ public class AquaRegiaAlchemyEffect implements IAlchEffect{
 						break;
 				}
 			}
-			
-			//TODO think of a few more acid effects
 		}
 	}
 }

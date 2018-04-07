@@ -1,18 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -32,6 +26,9 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class FluidTank extends BlockContainer{
 
@@ -102,7 +99,7 @@ public class FluidTank extends BlockContainer{
 
 	@Override
 	public BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.REDSTONE});
+		return new BlockStateContainer(this, Properties.REDSTONE);
 	}
 	
 	@Override

@@ -1,24 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.AlembicTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.ChemicalVentTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.CoolingCoilTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.DensusPlateTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.GlasswareHolderTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatedTubeTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.MaxwellDemonTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentPumpTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentTankTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.RedsAlchemicalTubeTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.SamplingBenchTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.*;
 import com.Da_Technomancer.crossroads.tileentities.fluid.BasicFluidSplitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
@@ -179,6 +162,8 @@ public class ModTileEntity{
 		register(AlembicTileEntity.class, "alembic");
 		register(SamplingBenchTileEntity.class, "sampling_bench");
 		register(DensusPlateTileEntity.class, "densus_plate");
+		register(ChargingStandTileEntity.class, "charging_stand");
+		register(AtmosChargerTileEntity.class, "atmos_charger");
 	}
 
 	/**

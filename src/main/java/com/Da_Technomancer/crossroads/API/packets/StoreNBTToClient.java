@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-
+import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +26,7 @@ public class StoreNBTToClient extends Message<StoreNBTToClient>{
 			ModPackets.network.sendTo(new StoreNBTToClient(ModConfig.nbtToSyncConfig(), true), player);
 		}
 	}
-	
+
 	public StoreNBTToClient(){
 
 	}
@@ -44,7 +44,7 @@ public class StoreNBTToClient extends Message<StoreNBTToClient>{
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
+			Main.logger.error("MessageToClient received on wrong side:" + context.side);
 			return null;
 		}
 

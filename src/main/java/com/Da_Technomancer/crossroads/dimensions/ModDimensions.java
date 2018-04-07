@@ -1,18 +1,12 @@
 package com.Da_Technomancer.crossroads.dimensions;
 
-import java.util.HashMap;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDimLoadToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
-
+import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +18,9 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class ModDimensions{
 
@@ -58,7 +55,7 @@ public class ModDimensions{
 			for(int id : playerDim.values()){
 				DimensionManager.registerDimension(id, workspaceDimType);
 			}
-			ModPackets.network.sendToAll(new SendDimLoadToClient(playerDim.values().toArray(new Integer[playerDim.size()])));
+			ModPackets.network.sendToAll(new SendDimLoadToClient(playerDim.values().toArray(new Integer[0])));
 		}catch(Exception ex){
 			if(ModConfig.wipeInvalidMappings.getBoolean()){
 				if(playerDim != null){
@@ -86,8 +83,7 @@ public class ModDimensions{
 		HashMap<GameProfileNonPicky, Integer> playerDim = data.playerDim;
 		
 		if(playerDim.containsKey(play)){
-			int dim = playerDim.get(play);
-			return dim;
+			return playerDim.get(play);
 		}
 
 		int dim = DimensionManager.getNextFreeDimId();
@@ -101,7 +97,6 @@ public class ModDimensions{
 	/** Sets up the next available prototype dimension chunk, reserves the chunk, and returns the index. Returns -1 if it failed.
 	 * portPos should be chunk relative when passed to this method. The method adjusts accordingly.
 	 */
-	@Nullable
 	public static int nextFreePrototypeChunk(PrototypePortTypes[] ports, BlockPos[] portPos){
 		// This method assumes that all chunks saved in PrototypeWorldSavedData are in the layout this would create.
 		// It creates a grid layout of chunks containing only barriers & air, with the remaining chunks being used for prototypes. The grid is centered on chunk 0,0 (non prototype).
