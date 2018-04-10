@@ -1,78 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import java.util.ArrayList;
-
 import com.Da_Technomancer.crossroads.blocks.alchemy.*;
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.blocks.fluid.BasicFluidSplitter;
-import com.Da_Technomancer.crossroads.blocks.fluid.FatCollector;
-import com.Da_Technomancer.crossroads.blocks.fluid.FatCongealer;
-import com.Da_Technomancer.crossroads.blocks.fluid.FatFeeder;
-import com.Da_Technomancer.crossroads.blocks.fluid.FluidSplitter;
-import com.Da_Technomancer.crossroads.blocks.fluid.FluidTank;
-import com.Da_Technomancer.crossroads.blocks.fluid.FluidTube;
-import com.Da_Technomancer.crossroads.blocks.fluid.FluidVoid;
-import com.Da_Technomancer.crossroads.blocks.fluid.Radiator;
-import com.Da_Technomancer.crossroads.blocks.fluid.RedstoneFluidTube;
-import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPump;
-import com.Da_Technomancer.crossroads.blocks.fluid.SteamBoiler;
-import com.Da_Technomancer.crossroads.blocks.fluid.SteamTurbine;
-import com.Da_Technomancer.crossroads.blocks.fluid.WaterCentrifuge;
-import com.Da_Technomancer.crossroads.blocks.heat.FluidCoolingChamber;
-import com.Da_Technomancer.crossroads.blocks.heat.FuelHeater;
-import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
-import com.Da_Technomancer.crossroads.blocks.heat.HeatExchanger;
-import com.Da_Technomancer.crossroads.blocks.heat.HeatingChamber;
-import com.Da_Technomancer.crossroads.blocks.heat.HeatingCrucible;
-import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCable;
-import com.Da_Technomancer.crossroads.blocks.heat.SaltReactor;
-import com.Da_Technomancer.crossroads.blocks.magic.ArcaneExtractor;
-import com.Da_Technomancer.crossroads.blocks.magic.ArcaneReflector;
-import com.Da_Technomancer.crossroads.blocks.magic.BeaconHarness;
-import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitter;
-import com.Da_Technomancer.crossroads.blocks.magic.BeamSplitterBasic;
-import com.Da_Technomancer.crossroads.blocks.magic.ColorChart;
-import com.Da_Technomancer.crossroads.blocks.magic.CrystalMasterAxis;
-import com.Da_Technomancer.crossroads.blocks.magic.CrystallinePrism;
-import com.Da_Technomancer.crossroads.blocks.magic.LensHolder;
-import com.Da_Technomancer.crossroads.blocks.magic.QuartzStabilizer;
-import com.Da_Technomancer.crossroads.blocks.rotary.Axle;
-import com.Da_Technomancer.crossroads.blocks.rotary.Grindstone;
-import com.Da_Technomancer.crossroads.blocks.rotary.ItemChute;
-import com.Da_Technomancer.crossroads.blocks.rotary.ItemChutePort;
-import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
-import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
-import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxis;
-import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
-import com.Da_Technomancer.crossroads.blocks.rotary.SidedGearHolder;
-import com.Da_Technomancer.crossroads.blocks.technomancy.AdditionAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.ArcCosAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.ArcSinAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.CageCharger;
-import com.Da_Technomancer.crossroads.blocks.technomancy.ChunkUnlocker;
-import com.Da_Technomancer.crossroads.blocks.technomancy.CopshowiumCreationChamber;
-import com.Da_Technomancer.crossroads.blocks.technomancy.CosAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.EqualsAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.FluxManipulator;
-import com.Da_Technomancer.crossroads.blocks.technomancy.FluxReaderAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.GatewayFrame;
-import com.Da_Technomancer.crossroads.blocks.technomancy.GreaterThanAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.LessThanAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalArm;
-import com.Da_Technomancer.crossroads.blocks.technomancy.MechanicalBeamSplitter;
-import com.Da_Technomancer.crossroads.blocks.technomancy.MultiplicationAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.Prototype;
-import com.Da_Technomancer.crossroads.blocks.technomancy.PrototypePort;
-import com.Da_Technomancer.crossroads.blocks.technomancy.PrototypingTable;
-import com.Da_Technomancer.crossroads.blocks.technomancy.RateManipulator;
-import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.RedstoneRegistry;
-import com.Da_Technomancer.crossroads.blocks.technomancy.SinAxis;
-import com.Da_Technomancer.crossroads.blocks.technomancy.SquareRootAxis;
+import com.Da_Technomancer.crossroads.blocks.fluid.*;
+import com.Da_Technomancer.crossroads.blocks.heat.*;
+import com.Da_Technomancer.crossroads.blocks.magic.*;
+import com.Da_Technomancer.crossroads.blocks.rotary.*;
+import com.Da_Technomancer.crossroads.blocks.technomancy.*;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -80,6 +15,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
 
 public final class ModBlocks{
 
@@ -191,7 +129,7 @@ public final class ModBlocks{
 	
 	/**
 	 * Registers the item form of a block and the item model.
-	 * @param block
+	 * @param block The block to register
 	 * @return The passed block for convenience. 
 	 */
 	public static <T extends Block> T blockAddQue(T block){
@@ -200,7 +138,7 @@ public final class ModBlocks{
 	
 	/**
 	 * Registers the item form of a block and an if registerModel item model.
-	 * @param block
+	 * @param block The block to register
 	 * @param registerModel whether to register a model.
 	 * @return The passed block for convenience. 
 	 */
@@ -231,7 +169,7 @@ public final class ModBlocks{
 	 * Registers the item form of a block and the item model for each metadata up to endMeta. 
 	 * @param block
 	 * @param endMeta The end meta value of the item.
-	 * @param location The location of the model. 
+	 * @param multiItem
 	 * @return The block for convenience. 
 	 */
 	public static <T extends Block> T blockAddQueRange(T block, int endMeta, Item multiItem){
@@ -243,7 +181,7 @@ public final class ModBlocks{
 		return block;
 	}
 
-	public static final void init(){
+	public static void init(){
 		masterAxis = new MasterAxis();
 		grindstone = new Grindstone();
 		sidedGearHolder = new SidedGearHolder();

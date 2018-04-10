@@ -129,15 +129,15 @@ public final class ModItems{
 
 	/**
 	 * Convenience method to add an Item to the toClientRegister map. 
-	 * @param item
-	 * @return
+	 * @param item The item to register the model of
+	 * @return The passed item
 	 */
 	public static <T extends Item> T itemAddQue(T item){
 		toClientRegister.put(Pair.of(item, 0), new ModelResourceLocation(item.getRegistryName(), "inventory"));
 		return item;
 	}
 
-	public static final void init(){
+	public static void init(){
 		debugGearWriter = new DebugGearWriter();
 		handCrank = new HandCrank();
 		debugHeatWriter = new DebugHeatWriter();

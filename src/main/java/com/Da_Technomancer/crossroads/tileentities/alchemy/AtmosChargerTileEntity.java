@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -29,7 +30,8 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.EMERALD){
 			chat.add(voltusAmount + "/" + VOLTUS_CAPACITY + " Voltus");
-			chat.add(AtmosChargeSavedData.getCharge(world) + "/" + AtmosChargeSavedData.CAPACITY + "FE in atmosphere");
+			int charge = AtmosChargeSavedData.getCharge(world);
+			chat.add(charge + "/" + AtmosChargeSavedData.CAPACITY + "FE in atmosphere (" + MiscOp.betterRound(100D * charge / AtmosChargeSavedData.CAPACITY, 1) + "%)");
 		}
 	}
 

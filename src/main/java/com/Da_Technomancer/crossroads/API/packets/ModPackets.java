@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.Main;
-
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,5 +34,6 @@ public class ModPackets{
 		network.registerMessage(SendSpinToClient.class, SendSpinToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendLooseArcToClient.class, SendLooseArcToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(NbtToEntityClient.class, NbtToEntityClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendBiomeUpdateToClient.class, SendBiomeUpdateToClient.class, packetId++, Side.CLIENT);
 	}
 }

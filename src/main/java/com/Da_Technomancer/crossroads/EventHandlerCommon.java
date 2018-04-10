@@ -1,16 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.Level;
-
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -23,10 +14,13 @@ import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.BrazierTileEntity;
-
+import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityWitch;
+import net.minecraft.entity.passive.EntitySkeletonHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
@@ -37,8 +31,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
@@ -54,20 +50,30 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import org.apache.logging.log4j.Level;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.Map.Entry;
 
 public final class EventHandlerCommon{
 
 	@SubscribeEvent
-	public void cancelWitchSpawns(LivingSpawnEvent e){
+	public void onEntitySpawn(LivingSpawnEvent e){
 		if(e.getEntity() instanceof EntityWitch){
 			// 64 squared
 			int RANGE_SQUARED = 4096;
 
 			for(TileEntity te : e.getWorld().tickableTileEntities){
-				if(te instanceof BrazierTileEntity && ((BrazierTileEntity) te).getState() == 2 && te.getDistanceSq(e.getX(), e.getY(), e.getZ()) <= RANGE_SQUARED){
+				if(te instanceof BrazierTileEntity && te.getDistanceSq(e.getX(), e.getY(), e.getZ()) <= RANGE_SQUARED && ((BrazierTileEntity) te).getState() == 2){
 					e.setResult(Result.DENY);
 				}
 			}
+		}else if(e.getEntity() instanceof EntityCreeper && (float) AtmosChargeSavedData.getCharge(e.getWorld()) / (float) AtmosChargeSavedData.CAPACITY >= 0.9F && (ModConfig.getConfigInt(ModConfig.atmosEffect, false) & 2) == 2){
+			NBTTagCompound nbt = new NBTTagCompound();
+			e.getEntityLiving().writeEntityToNBT(nbt);
+			nbt.setBoolean("powered", true);
+			e.getEntityLiving().readEntityFromNBT(nbt);
 		}
 	}
 
@@ -113,7 +119,7 @@ public final class EventHandlerCommon{
 	}
 
 	@SubscribeEvent
-	public void runRetrogenAndLoadChunks(WorldTickEvent e){
+	public void worldTick(WorldTickEvent e){
 		//Retrogen
 		if(TO_RETROGEN.size() != 0){
 			Chunk chunk = TO_RETROGEN.get(0);
@@ -251,13 +257,69 @@ public final class EventHandlerCommon{
 			}
 			e.world.profiler.endSection();
 		}
+
+		//Atmospheric overcharge effect
+		if(!e.world.isRemote && (ModConfig.getConfigInt(ModConfig.atmosEffect, false) & 1) == 1){
+			e.world.profiler.startSection(Main.MODNAME + ": Overcharge lightning effects");
+			float chargeLevel = (float) AtmosChargeSavedData.getCharge(e.world) / (float) AtmosChargeSavedData.CAPACITY;
+			if(chargeLevel > 0.5F){
+				Iterator<Chunk> iterator = e.world.getPersistentChunkIterable(((WorldServer) (e.world)).getPlayerChunkMap().getChunkIterator());
+				while(iterator.hasNext()){
+					Chunk chunk = iterator.next();
+					int j = chunk.x * 16;
+					int k = chunk.z * 16;
+					chunk.enqueueRelightChecks();
+					chunk.onTick(false);
+
+					if (e.world.provider.canDoLightning(chunk) && e.world.rand.nextInt(350_000 - (int) (300_000 * chargeLevel)) == 0){
+						BlockPos blockpos = adjustPosToNearbyEntity(((WorldServer) (e.world)), new BlockPos(j + e.world.rand.nextInt(16), 0, k + e.world.rand.nextInt(16)));
+						DifficultyInstance difficultyinstance = e.world.getDifficultyForLocation(blockpos);
+
+						if (e.world.getGameRules().getBoolean("doMobSpawning") && e.world.rand.nextDouble() < (double)difficultyinstance.getAdditionalDifficulty() * 0.01D){
+							EntitySkeletonHorse entityskeletonhorse = new EntitySkeletonHorse(e.world);
+							entityskeletonhorse.setTrap(true);
+							entityskeletonhorse.setGrowingAge(0);
+							entityskeletonhorse.setPosition((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ());
+							e.world.spawnEntity(entityskeletonhorse);
+							e.world.addWeatherEffect(new EntityLightningBolt(e.world, (double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), true));
+						}else{
+							e.world.addWeatherEffect(new EntityLightningBolt(e.world, (double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), false));
+						}
+					}
+				}
+			}
+			e.world.profiler.endSection();
+		}
+	}
+
+	/**
+	 * A re-implementation of a protected WorldServer method
+	 */
+	private static BlockPos adjustPosToNearbyEntity(WorldServer w, BlockPos pos){
+		BlockPos blockpos = w.getPrecipitationHeight(pos);
+		AxisAlignedBB axisalignedbb = (new AxisAlignedBB(blockpos, new BlockPos(blockpos.getX(), w.getHeight(), blockpos.getZ()))).grow(3.0D);
+		List<EntityLivingBase> list = w.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb, new Predicate<EntityLivingBase>(){
+			public boolean apply(@Nullable EntityLivingBase p_apply_1_){
+				return p_apply_1_ != null && p_apply_1_.isEntityAlive() && w.canSeeSky(p_apply_1_.getPosition());
+			}
+		});
+
+		if (!list.isEmpty()){
+			return ((EntityLivingBase)list.get(w.rand.nextInt(list.size()))).getPosition();
+		}else{
+			if (blockpos.getY() == -1){
+				blockpos = blockpos.up(2);
+			}
+
+			return blockpos;
+		}
 	}
 
 	//private static final float ADJACENT_RATE_COEFFICIENT = .5F;
 
 	/**
-	 * Performs the field calculations for one chunk. 
-	 * @return A non-null value if the chunk fields should be wiped and there should be a flux event at the returned position (which is relative to 0, 0, 0 in the chunk, not the world). 
+	 * Performs the field calculations for one chunk.
+	 * @return A non-null value if the chunk fields should be wiped and there should be a flux event at the returned position (which is relative to 0, 0, 0 in the chunk, not the world).
 	 */
 	@Nullable
 	private static BlockPos calcFields(byte[][] fluxIn, byte[][] rateIn, short[][] fluxForceIn, short[][] rateForceIn){
@@ -269,10 +331,6 @@ public final class EventHandlerCommon{
 
 				if(rate != 0){
 					float change = rateForceIn[x][z];
-					//change += x == 0 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x - 1][z];
-					//change += z == 0 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x][z - 1];
-					//change += x == 7 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x + 1][z];
-					//change += z == 7 ? 0 : ADJACENT_RATE_COEFFICIENT * (float) rateForceIn[x][z + 1];
 
 					rate = (int) Math.max(1, Math.min(8 + change, 128));
 					flux += Math.abs(rate - rateIn[x][z]) / 2;
@@ -334,7 +392,7 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	public void syncPlayerTagToClient(EntityJoinWorldEvent e){
-		//The down-side of using this event is that every time the player switches dimension, the update data has to be resent. 
+		//The down-side of using this event is that every time the player switches dimension, the update data has to be resent.
 
 		if(e.getEntity() instanceof EntityPlayerMP){
 			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) e.getEntity(), false);
@@ -345,7 +403,7 @@ public final class EventHandlerCommon{
 	public void damageTaken(LivingHurtEvent e){
 		if(e.getSource() == DamageSource.FALL){
 			EntityLivingBase ent = e.getEntityLiving();
-			
+
 			ItemStack boots = ent.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 			if(boots.getItem() == ModItems.chickenBoots && boots.getItemDamage() != ModItems.chickenBoots.getMaxDamage(boots)){
 				e.setCanceled(true);
@@ -353,7 +411,7 @@ public final class EventHandlerCommon{
 				ent.getEntityWorld().playSound(null, ent.posX, ent.posY, ent.posZ, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 				return;
 			}
-			
+
 			if(ent instanceof EntityPlayer){
 				EntityPlayer player = (EntityPlayer) ent;
 				if(player.inventory.clearMatchingItems(ModItems.nitroglycerin, -1, -1, null) > 0){

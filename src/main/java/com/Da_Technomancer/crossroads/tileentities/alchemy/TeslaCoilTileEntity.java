@@ -62,7 +62,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 	private Boolean hasJar = null;
 	private static final int JOLT_AMOUNT = 1000;
 	private static final int CAPACITY = 1000;
-	public static final int RANGE = 5;
+	public static final int RANGE = 8;
 
 	public BlockPos[] linked = new BlockPos[3];
 	public boolean redstone = false;
@@ -98,7 +98,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 
 					NBTTagCompound nbt = new NBTTagCompound();
 
-					new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, ATTACK_COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
+					new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, 1F, ATTACK_COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
 					ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 5F, -5F);
 					//Sound may need tweaking
@@ -122,7 +122,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 
 							NBTTagCompound nbt = new NBTTagCompound();
 
-							new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, linkPos.getX() + 0.5F, linkPos.getY() + 2F, linkPos.getZ() + 0.5F, 5, 0.6F, COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
+							new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, linkPos.getX() + 0.5F, linkPos.getY() + 2F, linkPos.getZ() + 0.5F, 5, 0.6F, 1F, COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
 							ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 							world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 5F, -5F);
 							//Sound may need tweaking

@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.Main;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -34,13 +33,12 @@ public class AtmosChargeSavedData extends WorldSavedData{
 
 	private static AtmosChargeSavedData get(World world){
 		MapStorage storage = world.getMapStorage();
-		AtmosChargeSavedData data = (AtmosChargeSavedData) storage.getOrLoadData(FieldWorldSavedData.class, ID);
+		AtmosChargeSavedData data = (AtmosChargeSavedData) storage.getOrLoadData(AtmosChargeSavedData.class, ID);
 
 		if (data == null) {
 			data = new AtmosChargeSavedData();
 			storage.setData(ID, data);
 		}
-		data.setDirty(true);
 		return data;
 	}
 

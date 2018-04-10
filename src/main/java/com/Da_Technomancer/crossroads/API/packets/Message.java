@@ -9,7 +9,7 @@
  * File Created @ [11/01/2016, 22:00:30 (GMT)]
  */
 
-/**
+/*
  * Let me, (Technomancer), be clear, Vazkii made this class and I take no credit for it. Using the class is permitted by the license.
  */
 package com.Da_Technomancer.crossroads.API.packets;

@@ -1,11 +1,5 @@
 package com.Da_Technomancer.crossroads;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Random;
-
-import org.lwjgl.opengl.GL11;
-
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
@@ -14,7 +8,6 @@ import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.technomancy.MagicUsingItem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -37,6 +30,12 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public final class EventHandlerClient{
 
@@ -51,7 +50,7 @@ public final class EventHandlerClient{
 
 		//Goggle entity glowing
 		if(game.world.getTotalWorldTime() % 5 == 0){
-			boolean glow = helmet != null && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().hasKey(EnumGoggleLenses.VOID.name());
+			boolean glow = helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().hasKey(EnumGoggleLenses.VOID.name());
 			for(Entity ent : game.world.getLoadedEntityList()){
 				NBTTagCompound entNBT = ent.getEntityData();
 				if(entNBT == null){
@@ -246,7 +245,9 @@ public final class EventHandlerClient{
 				BufferBuilder buf = tes.getBuffer();
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-				float distance = (float) Math.sqrt(Math.pow(arc.xEn - arc.xSt, 2D) + Math.pow(arc.yEn - arc.ySt, 2D) + Math.pow(arc.zEn - arc.zSt, 2D));
+				Pair<Vec3d, Vec3d> sourceVec = arc.getCurrentEndpoints(e.getPartialTicks());
+
+				float distance = (float) sourceVec.getLeft().subtract(sourceVec.getRight()).lengthVector();//(float) Math.sqrt(Math.pow(arc.xEn - arc.xSt, 2D) + Math.pow(arc.yEn - arc.ySt, 2D) + Math.pow(arc.zEn - arc.zSt, 2D));
 
 				boolean invalidState = false;
 
@@ -260,20 +261,21 @@ public final class EventHandlerClient{
 
 				int diverged = (int) (arc.diffusionRate * arc.count);
 
+				Vec3d deltaVec = sourceVec.getRight().subtract(sourceVec.getLeft());
+				Vec3d stepVec = deltaVec.scale(arc.length / distance);
 				for(int i = 0; i < arc.count - diverged; i++){
-					Vec3d prev = new Vec3d(arc.xSt, arc.ySt, arc.zSt);
-					for(int node = 0; node < (int) distance - 1; node++){
+					Vec3d prev = sourceVec.getLeft();
+					for(int node = 0; node < (int) (distance / arc.length) - 1; node++){
 						Vec3d next = arc.states[i][node];
 
 
 						if(invalidState){
-							next = new Vec3d(arc.xSt + (arc.xEn - arc.xSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.ySt + (arc.yEn - arc.ySt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.zSt + (arc.zEn - arc.zSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F);
+							next = sourceVec.getLeft().add(stepVec.scale(node + 1)).addVector(RAND.nextFloat() - .5F, RAND.nextFloat() - .5F, RAND.nextFloat() - .5F);//next = new Vec3d(arc.xSt + (arc.xEn - arc.xSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.ySt + (arc.yEn - arc.ySt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.zSt + (arc.zEn - arc.zSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F);
 							arc.states[i][node] = next;
 						}
 
-						Vec3d vec = new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(next.x - game.player.posX, next.y - game.player.posY, next.z - game.player.posZ));
+						Vec3d vec = next.subtract(prev).crossProduct(game.player.getLook(e.getPartialTicks()));//new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(next.x - game.player.posX, next.y - game.player.posY, next.z - game.player.posZ));
 						vec = vec.normalize().scale(arcWidth / 2F);
-
 						buf.pos(next.x - vec.x, next.y - vec.y, next.z - vec.z).endVertex();
 						buf.pos(next.x + vec.x, next.y + vec.y, next.z + vec.z).endVertex();
 						buf.pos(prev.x + vec.x, prev.y + vec.y, prev.z + vec.z).endVertex();
@@ -282,26 +284,26 @@ public final class EventHandlerClient{
 						prev = next;
 					}
 
-					Vec3d normal = new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(arc.xEn - game.player.posX, arc.yEn - game.player.posY, arc.zEn - game.player.posZ));
+					Vec3d normal = prev.subtract(sourceVec.getRight()).crossProduct(game.player.getLook(e.getPartialTicks()));//new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(sourceVec.getRight().x - game.player.posX, sourceVec.getRight().y - game.player.posY, sourceVec.getRight().z - game.player.posZ));
 					normal = normal.normalize().scale(arcWidth / 2F);
 
-					buf.pos(arc.xEn - normal.x, arc.yEn - normal.y, arc.zEn - normal.z).endVertex();
-					buf.pos(arc.xEn + normal.x, arc.yEn + normal.y, arc.zEn + normal.z).endVertex();
+					buf.pos(sourceVec.getRight().x - normal.x, sourceVec.getRight().y - normal.y, sourceVec.getRight().z - normal.z).endVertex();
+					buf.pos(sourceVec.getRight().x + normal.x, sourceVec.getRight().y + normal.y, sourceVec.getRight().z + normal.z).endVertex();
 					buf.pos(prev.x + normal.x, prev.y + normal.y, prev.z + normal.z).endVertex();
 					buf.pos(prev.x - normal.x, prev.y - normal.y, prev.z - normal.z).endVertex();
 				}
 
 				for(int i = arc.count - diverged; i < arc.count; i++){
-					Vec3d prev = new Vec3d(arc.xSt, arc.ySt, arc.zSt);
-					for(int node = 0; node < (int) distance - 1; node++){
+					Vec3d prev = sourceVec.getLeft();//new Vec3d(arc.xSt, arc.ySt, arc.zSt);
+					for(int node = 0; node < (int) (distance / arc.length) - 1; node++){
 						Vec3d next = arc.states[i][node];
 
 						if(invalidState){
-							next = new Vec3d(prev.x + (arc.xEn - arc.xSt) * (RAND.nextFloat() * 0.2F - .05F) + RAND.nextFloat() * 0.5 - .25F, prev.y + (arc.yEn - arc.ySt) * (RAND.nextFloat() * .2F - .05F) + RAND.nextFloat() * 0.5 - .25F, prev.z + (arc.zEn - arc.zSt) * (RAND.nextFloat() * .2F - .05F) + RAND.nextFloat() * 0.5 - .25F);
+							next = new Vec3d(prev.x + deltaVec.x * (RAND.nextFloat() * 0.2F - .05F) + RAND.nextFloat() * 0.5 - .25F, prev.y + deltaVec.y * (RAND.nextFloat() * .2F - .05F) + RAND.nextFloat() * 0.5 - .25F, prev.z + deltaVec.z * (RAND.nextFloat() * .2F - .05F) + RAND.nextFloat() * 0.5 - .25F);
 							arc.states[i][node] = next;
 						}
 
-						Vec3d vec = new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(next.x - game.player.posX, next.y - game.player.posY, next.z - game.player.posZ));
+						Vec3d vec = next.subtract(prev).crossProduct(game.player.getLook(e.getPartialTicks()));//new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(next.x - game.player.posX, next.y - game.player.posY, next.z - game.player.posZ));
 						vec = vec.normalize().scale(arcWidth / 2F);
 
 						buf.pos(next.x - vec.x, next.y - vec.y, next.z - vec.z).endVertex();
