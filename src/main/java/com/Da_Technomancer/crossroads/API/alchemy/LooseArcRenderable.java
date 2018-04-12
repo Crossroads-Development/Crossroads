@@ -22,7 +22,7 @@ public class LooseArcRenderable{
 	public final float diffusionRate;
 	public final int color;
 	public byte lifeTime;
-	public final byte lifeSpan;
+	private final byte lifeSpan;
 	public long lastTick = -1;
 	public final float length;
 	
@@ -55,7 +55,7 @@ public class LooseArcRenderable{
 	}
 
 	public Pair<Vec3d, Vec3d> getCurrentEndpoints(float partialTicks){
-		float mult = ((float) lifeTime + partialTicks) / (float) lifeSpan;
+		float mult = ((float) lifeSpan - lifeTime + partialTicks) / (float) lifeSpan;
 		return Pair.of(new Vec3d(mult * (xStFin - xSt) + xSt, mult * (yStFin - ySt) + ySt, mult * (zStFin - zSt) + zSt), new Vec3d(mult * (xEnFin - xEn) + xEn, mult * (yEnFin - yEn) + yEn, mult * (zEnFin - zEn) + zEn));
 	}
 

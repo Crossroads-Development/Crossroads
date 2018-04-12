@@ -2,30 +2,13 @@ package com.Da_Technomancer.crossroads.client.TESR;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.HamsterWheelTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.AtmosChargerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneExtractorTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.ArcaneReflectorTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.BeaconHarnessTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterBasicTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.BeamSplitterTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.CrystallinePrismTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.AxleTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.SidedGearHolderTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.AdditionAxisTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalBeamSplitterTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
-
+import com.Da_Technomancer.crossroads.tileentities.magic.*;
+import com.Da_Technomancer.crossroads.tileentities.rotary.*;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -62,7 +45,6 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(MechanicalArmTileEntity.class, new MechanicalArmRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(HeatingCrucibleTileEntity.class, new HeatingCrucibleRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(DynamoTileEntity.class, new DynamoRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(AtmosChargerTileEntity.class, new AtmosChargerRenderer());
 	}
 
 	public static void reg(Block block){

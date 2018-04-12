@@ -61,9 +61,9 @@ public class DynamoTileEntity extends TileEntity implements ITickable{
 			efficiency = ModConfig.getConfigInt(ModConfig.electPerJoule, false);
 		}
 
-		int operations = (int) motionData[1];
+		int operations = (int) Math.abs(motionData[1]);
 		if(operations > 0){
-			motionData[1] -= operations;
+			motionData[1] -= operations * Math.signum(motionData[1]);
 			energyHandler.setEnergy(energyHandler.getEnergyStored() + operations * efficiency);
 			markDirty();
 		}

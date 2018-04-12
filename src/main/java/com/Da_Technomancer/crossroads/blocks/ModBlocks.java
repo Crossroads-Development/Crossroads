@@ -304,5 +304,6 @@ public final class ModBlocks{
 		alchemicalTube.initModel();
 		redsAlchemicalTube.initModel();
 		glasswareHolder.initModel();
+		atmosCharger.initModel();
 	}
 }

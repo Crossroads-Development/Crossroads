@@ -57,11 +57,11 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 	public static final int[] COLOR_CODES = {new Color(128, 0, 255, 128).getRGB(), new Color(64, 0, 255, 128).getRGB(), new Color(100, 0, 255, 128).getRGB()};
 	private static final int[] ATTACK_COLOR_CODES = {new Color(255, 32, 0, 128).getRGB(), new Color(255, 0, 32, 128).getRGB(), new Color(255, 32, 32, 128).getRGB()};
 	
-	private static final int JOLT_CONSERVED = 800;
+	private static final int JOLT_CONSERVED = 900;
 	private int stored = 0;
 	private Boolean hasJar = null;
 	private static final int JOLT_AMOUNT = 1000;
-	private static final int CAPACITY = 1000;
+	private static final int CAPACITY = 2000;
 	public static final int RANGE = 8;
 
 	public BlockPos[] linked = new BlockPos[3];

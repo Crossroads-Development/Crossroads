@@ -5,11 +5,18 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 
+import java.util.HashMap;
+
 public class BakedModelLoader implements ICustomModelLoader{
 
-	protected static final ConduitModel CONDUIT_MODEL = new ConduitModel();
-	protected static final PrototypeModel PROTOTYPE_MODEL = new PrototypeModel();
-	protected static final AdvConduitModel ADV_CONDUIT_MODEL = new AdvConduitModel();
+	protected static final HashMap<ResourceLocation, IModel> MODEL_MAP = new HashMap<>();
+
+	static{
+		MODEL_MAP.put(ConduitBakedModel.BAKED_MODEL, new ConduitModel());
+		MODEL_MAP.put(PrototypeBakedModel.BAKED_MODEL, new PrototypeModel());
+		MODEL_MAP.put(AdvConduitBakedModel.BAKED_MODEL, new AdvConduitModel());
+		MODEL_MAP.put(AtmosChargerBakedModel.BAKED_MODEL, new AtmosChargerModel());
+	}
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager){
@@ -18,11 +25,11 @@ public class BakedModelLoader implements ICustomModelLoader{
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation){
-		return modelLocation == ConduitBakedModel.BAKED_MODEL || modelLocation == PrototypeBakedModel.BAKED_MODEL || modelLocation == AdvConduitBakedModel.BAKED_MODEL;
+		return MODEL_MAP.containsKey(modelLocation);
 	}
 
 	@Override
-	public IModel loadModel(ResourceLocation modelLocation) throws Exception{
-		return modelLocation == ConduitBakedModel.BAKED_MODEL ? CONDUIT_MODEL : modelLocation == AdvConduitBakedModel.BAKED_MODEL ? ADV_CONDUIT_MODEL : PROTOTYPE_MODEL;
+	public IModel loadModel(ResourceLocation modelLocation){
+		return MODEL_MAP.get(modelLocation);
 	}
 }
