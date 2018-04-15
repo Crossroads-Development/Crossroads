@@ -1,33 +1,13 @@
 package com.Da_Technomancer.crossroads.items;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
-import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
-import com.Da_Technomancer.crossroads.items.alchemy.CustomMaterial;
-import com.Da_Technomancer.crossroads.items.alchemy.CustomTool;
-import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
-import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
-import com.Da_Technomancer.crossroads.items.alchemy.Nitroglycerin;
-import com.Da_Technomancer.crossroads.items.alchemy.Phial;
-import com.Da_Technomancer.crossroads.items.alchemy.PhilStone;
-import com.Da_Technomancer.crossroads.items.alchemy.Shell;
+import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
-import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
-import com.Da_Technomancer.crossroads.items.technomancy.LiechWrench;
-import com.Da_Technomancer.crossroads.items.technomancy.ModuleGoggles;
-import com.Da_Technomancer.crossroads.items.technomancy.PrototypePistol;
-import com.Da_Technomancer.crossroads.items.technomancy.PrototypeWatch;
-import com.Da_Technomancer.crossroads.items.technomancy.StaffTechnomancy;
-
+import com.Da_Technomancer.crossroads.items.technomancy.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -43,6 +23,11 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public final class ModItems{
 
@@ -120,6 +105,7 @@ public final class ModItems{
 	public static BasicItem solidStasisol;
 	public static BasicItem solidDensus;
 	public static BasicItem solidAntiDensus;
+	public static FlyingMachine flyingMachine;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -202,6 +188,7 @@ public final class ModItems{
 		solidStasisol = new BasicItem("solid_stasisol");
 		solidDensus = new BasicItem("solid_densus");
 		solidAntiDensus = new BasicItem("solid_anti_densus");
+		flyingMachine = new FlyingMachine();
 	}
 
 	@SideOnly(Side.CLIENT)

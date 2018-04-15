@@ -266,6 +266,8 @@ item.solid_densus.name=Densus Chunk
 item.solid_anti_densus.name=Anti-Densus Chunk
 tile.charging_stand.name=Charging Stand
 tile.atmos_charger.name=Atmospheric Energizer
+item.flying_machine.name=Flying Machine
+entity.flying_machine.name=Flying Machine
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

@@ -34,6 +34,7 @@ public class ModPackets{
 		network.registerMessage(SendSpinToClient.class, SendSpinToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendLooseArcToClient.class, SendLooseArcToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(NbtToEntityClient.class, NbtToEntityClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(NbtToEntityServer.class, NbtToEntityServer.class, packetId++, Side.SERVER);
 		network.registerMessage(SendBiomeUpdateToClient.class, SendBiomeUpdateToClient.class, packetId++, Side.CLIENT);
 	}
 }

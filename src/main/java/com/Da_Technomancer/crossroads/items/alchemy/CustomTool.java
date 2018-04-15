@@ -37,7 +37,7 @@ public class CustomTool extends Item{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setMaxStackSize(1);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		//setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 		setMaxDamage(1);
