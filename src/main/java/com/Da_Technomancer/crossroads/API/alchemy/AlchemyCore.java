@@ -56,7 +56,7 @@ public final class AlchemyCore{
 		Color TRANSLUCENT_YELLOW_COLOR = new Color(255, 255, 0, 200);
 		Color BROWN_COLOR = new Color(130, 50, 0, 255);
 		Color FAINT_BLUE_COLOR = new Color(0, 100, 255, 100);
-		Color FAINT_RED_COLOR = new Color(255, 100, 0, 100);
+		Color FAINT_RED_COLOR = new Color(200, 20, 0, 100);
 		// Various effects
 		AcidAlchemyEffect ACID_EFFECT = new AcidAlchemyEffect();
 		SaltAlchemyEffect SALT_EFFECT = new SaltAlchemyEffect();
@@ -99,11 +99,11 @@ public final class AlchemyCore{
 		REAGENTS[29] = new StaticReagent("Diamond", 2000D, 3000D, 29, (EnumMatterPhase phase) -> Color.CYAN, Items.DIAMOND, 25, null, null, 0, null);
 
 		//Dynamic reagents
-		REAGENTS[32] = new ElementalReagent("Lumen", 32, (byte) 1, -275, -274, null, false, new MagicUnit(32, 32, 32, 0), null);//TODO effect
+		REAGENTS[32] = new ElementalReagent("Lumen", 32, (byte) 1, -275, -274, null, false, new MagicUnit(32, 32, 32, 0), null);
 		REAGENTS[33] = new ElementalReagent("Eldrine", 33, (byte) 1, -100, 350, new EldrineEffect(), true, new MagicUnit(32, 0, 32, 0), ModItems.solidEldrine);
 		REAGENTS[34] = new ElementalReagent("Stasisol", 34, (byte) 1, 800, 1800, new StasisolEffect(), false, new MagicUnit(32, 16, 32, 0), ModItems.solidStasisol);
 		REAGENTS[35] = new ElementalReagent("Fusas", 35, (byte) 2, Short.MAX_VALUE - 1, Short.MAX_VALUE, new FusasEffect(), false, new MagicUnit(16, 32, 32, 0), ModItems.solidFusas, (IElementReagent) REAGENTS[34]);
-		REAGENTS[36] = new ElementalReagent("Voltus", 36, (byte) 2, -275, -274, new VoltusEffect(), true, new MagicUnit(32, 32, 8, 0), null, (IElementReagent) REAGENTS[32]);//TODO effect
+		REAGENTS[36] = new ElementalReagent("Voltus", 36, (byte) 2, -275, -274, new VoltusEffect(), true, new MagicUnit(32, 32, 8, 0), null, (IElementReagent) REAGENTS[32]);
 		REAGENTS[37] = new StaticReagent("Ignis Infernum", -275D, -274D, 37, (EnumMatterPhase phase) -> Color.RED, null, 10, EnumSolventType.FLAME, null, 2, new PhelostogenEffect((Double amount) -> (int) Math.min(64, amount * 2D))){
 			@Override
 			public boolean isLockedFlame(){
@@ -156,11 +156,11 @@ public final class AlchemyCore{
 		//Aether production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[12], 1)}, new Pair[] {Pair.of(REAGENTS[1], 1), Pair.of(REAGENTS[13], 1), Pair.of(REAGENTS[8], 1)}, REAGENTS[18], -360D, Double.MAX_VALUE, 0D, null, false));
 		//Adamant production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[20], 5)}, new Pair[] {Pair.of(REAGENTS[2], 1), Pair.of(REAGENTS[16], 4)}, REAGENTS[18], 0D, 100D, 0D, new EnumSolventType[] {EnumSolventType.AQUA_REGIA}, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[20], 5)}, new Pair[] {Pair.of(REAGENTS[2], 2), Pair.of(REAGENTS[16], 3)}, REAGENTS[18], 0D, 100D, 0D, new EnumSolventType[] {EnumSolventType.AQUA_REGIA}, false));
 
 		//Gunpowder washing
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[26], 3)}, new Pair[] {Pair.of(REAGENTS[3], 1)}, null, -300D, 200D, 0D, new EnumSolventType[] {EnumSolventType.POLAR}, false));
-		//Cinnebar decomposition
+		//Cinnabar decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[12], 1)}, new Pair[] {Pair.of(REAGENTS[13], 1), Pair.of(REAGENTS[8], 1)}, null, 360D, Double.MAX_VALUE, 60D, null, false));
 		//Hydrochloric Acid production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[6], 2), Pair.of(REAGENTS[10], 1)}, new Pair[] {Pair.of(REAGENTS[16], 1), Pair.of(REAGENTS[15], 2)}, null, 90D, Double.MAX_VALUE, 30D, new EnumSolventType[] {EnumSolventType.POLAR}, false));
@@ -233,9 +233,11 @@ public final class AlchemyCore{
 		if(ModConfig.getConfigBool(ModConfig.allowHellfire, true)){//Passes true to client as sided-ness is unknown.
 			REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[0], 5), Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[36], 2)}, new Pair[] {Pair.of(REAGENTS[37], 1)}, REAGENTS[19], 2250D, Short.MAX_VALUE, -200D, null, false));
 		}
-		//TODO densus and antidensus production
-		
-		
-		// TODO reactions
+		//Densus production
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[1], 3), Pair.of(REAGENTS[28], 1)}, new Pair[] {Pair.of(REAGENTS[38], 3)}, null, -273D, 30D, -5D, null, true));
+		//Anti-Densus production
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[38], 1), Pair.of(REAGENTS[0], 1)}, new Pair[] {Pair.of(REAGENTS[39], 2)}, null, 200D, 3000D, 20D, null, true));
+		//Bedrock production
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[2], 1), Pair.of(REAGENTS[16], 4)}, new Pair[] {Pair.of(REAGENTS[20], 5)}, REAGENTS[19], 0D, 100D, 0D, null, false));
 	}
 }

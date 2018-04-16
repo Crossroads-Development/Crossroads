@@ -242,7 +242,13 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoil, 2), "***", " | ", "|^|", '*', "ingotCopper", '|', "ingotIron", '^', "dustRedstone"));
 		//Vanadium
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.vanadium, 4), "***", "*B*", "***", '*', Items.COAL, 'B', "blockCoal"));
-		
+		//Charging Stand
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.chargingStand, 1), " * ", "| |", " ^ ", '*', "ingotIron", '|', "stickIron", '^', ModBlocks.glasswareHolder));
+		//Atmos Charger
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.atmosCharger, 1), "| |", "| |", "*$*", '|', "stickIron", '*', "ingotIron", '$', ModItems.leydenJar));
+
+		//Flying Machine
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.flyingMachine, 1), "___", "@-@", "|+|", '_', "ingotBronze", '@', "gearCopshowium", '-', new ItemStack(ModBlocks.densusPlate, 1, 1), '+', new ItemStack(ModBlocks.densusPlate, 1, 0), '|', "stickIron"));
 		//Copshowium Creation Chamber
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModBlocks.fluidCoolingChamber));
 		//Chunk Unlocker
@@ -491,7 +497,9 @@ public final class ModCrafting{
 		//Redstone Keyboard
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"));
 		//Wrench
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.wrench, 1), "* *", "*|*", " | ", '*', "ingotIron", '|', "stickIron"));
+		if(ModConfig.getConfigBool(ModConfig.addWrench, true)){
+			toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.wrench, 1), "* *", "*|*", " | ", '*', "ingotIron", '|', "stickIron"));
+		}
 		//Port Extender
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.portExtender, 1), " # ", "#h#", " # ", '#', "ingotTin", 'h', Blocks.HOPPER));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.portExtender, 1), " # ", "#h#", " # ", '#', "ingotTin", 'h', ModBlocks.sortingHopper));

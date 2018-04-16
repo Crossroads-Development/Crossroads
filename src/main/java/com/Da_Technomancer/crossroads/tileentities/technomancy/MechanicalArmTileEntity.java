@@ -1,26 +1,15 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import java.util.UUID;
-
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.effects.mechArm.IMechArmEffect;
-import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmDepositEffect;
-import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmDropEntityEffect;
-import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupBlockEffect;
-import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupEntityEffect;
-import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupFromInvEffect;
-import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmPickupOneFromInvEffect;
-import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmReleaseEntityEffect;
-import com.Da_Technomancer.crossroads.API.effects.mechArm.MechArmUseEffect;
+import com.Da_Technomancer.crossroads.API.effects.mechArm.*;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.Ratiator;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
-
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -32,6 +21,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
+import java.util.UUID;
+
 public class MechanicalArmTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
 
 	public static final double LOWER_ARM_LENGTH = 3;
@@ -42,7 +33,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	public static final double MINIMUM_UPPER_ANGLE = Math.PI / 4D;//In radians, from straight down.
 	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
 
-	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect(), new MechArmPickupFromInvEffect(), new MechArmUseEffect(), new MechArmDepositEffect(), new MechArmDropEntityEffect(), new MechArmReleaseEntityEffect(), new MechArmPickupOneFromInvEffect()};
+	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect(), new MechArmPickupFromInvEffect(), new MechArmUseEffect(), new MechArmDepositEffect(), new MechArmDropEntityEffect(), new MechArmThrowEntityEffect(), new MechArmPickupOneFromInvEffect()};
 
 	public double[][] motionData = new double[3][4];
 	/** In radians. */
@@ -54,7 +45,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	private static final double[] PHYS_DATA = new double[2];
 	/**
 	 * Math.min((redstone - 1) / 6, EFFECTS.length - 1) corresponds to action type, which are:
-	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Release entity with momentum, 7: Pickup one from inventory.
+	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Throw entity, 7: Pickup one from inventory.
 	 * EnumFacing.getFront((redstone - 1) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4, 7) vary based on EnumFacing. 
 	 */
 	private int redstone = -1;
@@ -64,9 +55,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	@Override
 	public void update(){
 		if(world.getTotalWorldTime() % 2 == 0){
-			for(int i = 0; i < 3; i++){
-				angleRecord[i] = angle[i];
-			}
+			System.arraycopy(angle, 0, angleRecord, 0, 3);
 
 			if(!world.isRemote){
 				angle[0] = -motionData[0][0];
