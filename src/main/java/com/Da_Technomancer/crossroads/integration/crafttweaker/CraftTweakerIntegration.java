@@ -1,14 +1,13 @@
 package com.Da_Technomancer.crossroads.integration.crafttweaker;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 
-/** Provide CraftTweaker integration for the mod. */
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class CraftTweakerIntegration{
 
 	public static void init(){
@@ -17,6 +16,7 @@ public class CraftTweakerIntegration{
 		CraftTweakerAPI.registerClass(ArcaneExtractorHandler.class);
 		CraftTweakerAPI.registerClass(HeatingCrucibleHandler.class);
 		CraftTweakerAPI.registerClass(FusionBeamHandler.class);
+		CraftTweakerAPI.registerClass(EnvHeatSourceHandler.class);
 	}
 
 	private static final ItemStack[] EMPTY = new ItemStack[0];
