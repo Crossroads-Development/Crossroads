@@ -110,7 +110,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			if(reag == null){
 				continue;
 			}
-			reag.updatePhase(endTemp, solvents);
+			reag.updatePhase(endTemp);
 		}
 		return solvents;
 	}
@@ -167,7 +167,6 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 						flameCol[3] += r.getAmount() * (double) col.getAlpha();
 						break;
 					case SOLID:
-					case SOLUTE:
 						solAmount += r.getAmount();
 						solCol[0] += r.getAmount() * (double) col.getRed();
 						solCol[1] += r.getAmount() * (double) col.getGreen();

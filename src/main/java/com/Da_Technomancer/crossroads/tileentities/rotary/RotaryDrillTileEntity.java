@@ -26,8 +26,8 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 	private static final DamageSource DRILL = new DamageSource("drill").setDamageBypassesArmor();
 
 	private int ticksExisted = 0;
-	private final double ENERGY_USE = .5D;
-	private final double SPEED_PER_HARDNESS = .1D;
+	public static final double ENERGY_USE = .5D;
+	private static final double SPEED_PER_HARDNESS = .1D;
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){

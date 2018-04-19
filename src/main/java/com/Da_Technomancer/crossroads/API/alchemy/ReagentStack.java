@@ -22,9 +22,8 @@ public class ReagentStack{
 
 	/**
 	 * @param temp The temperature (degrees C)
-	 * @param solvents An array of the same size as {@link EnumSolventType#values()}, with each index representing the EnumSolventType of that ordinal
 	 */
-	public void updatePhase(double temp, boolean[] solvents){
+	public void updatePhase(double temp){
 		if(type.isLockedFlame()){
 			phase = EnumMatterPhase.FLAME;
 			return;
@@ -34,16 +33,7 @@ public class ReagentStack{
 			return;
 		}
 		if(temp < type.getMeltingPoint()){
-			EnumSolventType solvent = type.soluteType();
-			if(solvent != null){
-				if(solvents[solvent.ordinal()]){
-					phase = EnumMatterPhase.SOLUTE;
-				}else{
-					phase = EnumMatterPhase.SOLID;
-				}
-			}else{
-				phase = EnumMatterPhase.SOLID;
-			}
+			phase = EnumMatterPhase.SOLID;
 			return;
 		}
 
@@ -52,12 +42,12 @@ public class ReagentStack{
 
 	/**
 	 * @param temp Current temperature. Optional, only used if phase hasn't been set yet to update the phase. If phase should already have been set, this can be left as 0. 
-	 * @return
+	 * @return The phase
 	 */
 	@Nonnull
 	public EnumMatterPhase getPhase(double temp){
 		if(phase == null){
-			updatePhase(temp, new boolean[EnumSolventType.values().length]);
+			updatePhase(temp);
 		}
 		return phase;
 	}
@@ -71,8 +61,8 @@ public class ReagentStack{
 
 	public void setAmount(double amountIn){
 		amount = Math.max(0, amountIn);
-	}
 
+}
 	/**
 	 * @param amountChange
 	 * @return The new amount. 

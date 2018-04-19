@@ -1,18 +1,9 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import java.awt.Color;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Triple;
-
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumSolventType;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -22,12 +13,18 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Triple;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.awt.*;
+import java.util.List;
 
 public abstract class AbstractGlassware extends Item{
 
 	public abstract double getCapacity();
 
-	public static final int getColorRGB(ItemStack stack){
+	public static int getColorRGB(ItemStack stack){
 		if(!(stack.getItem() instanceof AbstractGlassware)){
 			return -1;
 		}
@@ -83,7 +80,7 @@ public abstract class AbstractGlassware extends Item{
 			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 				if(nbt.hasKey(i + "_am")){
 					reagents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am"));
-					reagents[i].updatePhase(temp, solvents);
+					reagents[i].updatePhase(temp);
 				}
 			}
 		}

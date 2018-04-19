@@ -74,5 +74,6 @@ public class RotaryPump extends BlockContainer{
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Mass: 375");
 		tooltip.add("I: 8");
+		tooltip.add("Consumes: Up to 200J/t while running");
 	}
 }

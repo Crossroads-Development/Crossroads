@@ -1,21 +1,15 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.awt.Color;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
+
+import java.awt.*;
 
 public class ChemicalVentTileEntity extends TileEntity{
 
@@ -102,7 +96,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 								r.getType().onRelease(world, pos, r.getAmount(), callerTemp, phase, null);
 								break;
 							case LIQUID:
-							case SOLUTE:
+							case SOLID:
 								for(int j = 0; j <= (int) moved; j++){
 									server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.02D, -Math.random(), (Math.random() * 2D - 1D) * 0.02D, 1F, new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()});
 								}

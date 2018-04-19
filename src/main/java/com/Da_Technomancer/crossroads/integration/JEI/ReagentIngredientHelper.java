@@ -1,18 +1,16 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import java.awt.Color;
-import java.util.HashSet;
-import java.util.List;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumSolventType;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.ModItems;
-
 import mezz.jei.api.ingredients.IIngredientHelper;
 import net.minecraft.item.ItemStack;
+
+import java.awt.*;
+import java.util.HashSet;
+import java.util.List;
 
 public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
@@ -22,7 +20,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 		ReagentStack[] reag = new ReagentStack[AlchemyCore.REAGENT_COUNT];
 		reag[ingredient.getReag().getIndex()] = new ReagentStack(AlchemyCore.REAGENTS[ingredient.getReag().getIndex()], ModItems.phial.getCapacity());
-		reag[ingredient.getReag().getIndex()].updatePhase(50, new boolean[EnumSolventType.values().length]);
+		reag[ingredient.getReag().getIndex()].updatePhase(50);
 		ModItems.phial.setReagents(toGive, reag, (50 + 273D) * ModItems.phial.getCapacity(), ModItems.phial.getCapacity());
 		return toGive;
 	}

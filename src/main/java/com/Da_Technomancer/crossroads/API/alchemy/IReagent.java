@@ -1,12 +1,11 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import java.awt.Color;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.awt.*;
 
 public interface IReagent{
 
@@ -30,14 +29,6 @@ public interface IReagent{
 	 */
 	@Nullable
 	public default EnumSolventType solventType(){
-		return null;
-	}
-	
-	/**
-	 * @return The type of solvent this needs to be in to dissolve. 
-	 */
-	@Nullable
-	public default EnumSolventType soluteType(){
 		return null;
 	}
 	

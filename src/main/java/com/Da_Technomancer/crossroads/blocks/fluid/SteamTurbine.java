@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
@@ -74,5 +75,7 @@ public class SteamTurbine extends BlockContainer{
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Mass: 375");
 		tooltip.add("I: 8");
+		tooltip.add("Consumes: " + 100 * SteamTurbineTileEntity.LIMIT + "mB/t steam");
+		tooltip.add("Produces: " + ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE + "J/t while running");
 	}
 }

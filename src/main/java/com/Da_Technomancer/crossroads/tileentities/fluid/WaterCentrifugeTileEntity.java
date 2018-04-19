@@ -32,7 +32,7 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 	private FluidStack water;
 	private FluidStack dWater;
 	private final int CAPACITY = 10_000;
-	private final double TIP_POINT = .5D;
+	private static final double TIP_POINT = .5D;
 	private boolean neg;
 
 	private final double[] motionData = new double[4];

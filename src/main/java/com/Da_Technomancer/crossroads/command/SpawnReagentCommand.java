@@ -1,10 +1,8 @@
 package com.Da_Technomancer.crossroads.command;
 
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumSolventType;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.items.ModItems;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -50,7 +48,7 @@ public class SpawnReagentCommand extends CommandBase{
 		
 		ReagentStack[] reag = new ReagentStack[AlchemyCore.REAGENT_COUNT];
 		reag[id] = new ReagentStack(AlchemyCore.REAGENTS[id], ModItems.phial.getCapacity());
-		reag[id].updatePhase(temp, new boolean[EnumSolventType.values().length]);
+		reag[id].updatePhase(temp);
 		ModItems.phial.setReagents(toGive, reag, (temp + 273D) * ModItems.phial.getCapacity(), ModItems.phial.getCapacity());
 		((EntityPlayerMP) sender).addItemStackToInventory(toGive);
 	}

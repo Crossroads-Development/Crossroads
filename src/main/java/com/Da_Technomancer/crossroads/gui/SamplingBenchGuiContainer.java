@@ -59,9 +59,6 @@ public class SamplingBenchGuiContainer extends GuiContainer{
 			fontRenderer.drawString("Melting: ", 32, 38, 4210752);
 			line = reag.getType().getMeltingPoint() < -273 ? "Always" : (reag.getType().getMeltingPoint() + "°C");
 			fontRenderer.drawString(line, 144 - fontRenderer.getStringWidth(line), 38, 4210752);
-			fontRenderer.drawString("Soluble in: ", 32, 48, 4210752);
-			line = reag.getType().soluteType() == null ? "None" : reag.getType().soluteType().toString();
-			fontRenderer.drawString(line, 144 - fontRenderer.getStringWidth(line), 48, 4210752);
 			fontRenderer.drawString("Disolves: ", 32, 58, 4210752);
 			line = reag.getType().solventType() == null ? "None" : reag.getType().solventType().toString();
 			fontRenderer.drawString(line, 144 - fontRenderer.getStringWidth(line), 58, 4210752);

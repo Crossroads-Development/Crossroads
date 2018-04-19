@@ -1,21 +1,17 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import net.minecraft.client.util.ITooltipFlag;
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
@@ -30,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -96,7 +93,7 @@ public class ReactionChamber extends BlockContainer{
 	@Override
 	protected BlockStateContainer createBlockState(){
 		//On this device, light is being re-used. True means crystal, false means glass. 
-		return new BlockStateContainer(this, new IProperty[] {Properties.LIGHT});
+		return new BlockStateContainer(this, Properties.LIGHT);
 	}
 
 	@Override
@@ -119,6 +116,6 @@ public class ReactionChamber extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Consumes: -10FE/tick (Optional)");
+		tooltip.add("Consumes: -10FE/t (Optional)");
 	}
 }

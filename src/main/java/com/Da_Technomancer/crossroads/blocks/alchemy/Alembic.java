@@ -10,17 +10,24 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class Alembic extends BlockContainer{
 
-	//TODO BB
+	private static final AxisAlignedBB[] BB = {new AxisAlignedBB(0.125D, 0, 0.25D, 0.875D, 1, 1), new AxisAlignedBB(0, 0, 0.125D, 0.75D, 1, 0.875D), new AxisAlignedBB(0.125D, 0, 0, 0.875D, 1, 0.75D), new AxisAlignedBB(0.25D, 0, 0.125D, 1, 1, 0.875D)};
 
 	public Alembic(){
 		super(Material.IRON);
@@ -40,6 +47,11 @@ public class Alembic extends BlockContainer{
 	}
 
 	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
+	}
+
+	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(ModConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
@@ -55,6 +67,16 @@ public class Alembic extends BlockContainer{
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> list, @Nullable Entity entityIn, boolean p_185477_7_){
+		addCollisionBoxToList(pos, entityBox, list, BB[state.getValue(Properties.HORIZONTAL_FACING).getHorizontalIndex()]);
+	}
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		return BB[state.getValue(Properties.HORIZONTAL_FACING).getHorizontalIndex()];
 	}
 
 	@Override

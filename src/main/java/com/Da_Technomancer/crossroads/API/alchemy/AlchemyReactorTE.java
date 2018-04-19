@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -11,6 +9,8 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
+
+import javax.annotation.Nullable;
 
 /**
  * Implementations must implement hasCapability and getCapability directly. 
@@ -111,7 +111,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			if(reag == null){
 				continue;
 			}
-			reag.updatePhase(endTemp, solvents);
+			reag.updatePhase(endTemp);
 			if(glass && !reag.getType().canGlassContain()){
 				destroy |= reag.getType().destroysBadContainer();
 				contents[i] = null;

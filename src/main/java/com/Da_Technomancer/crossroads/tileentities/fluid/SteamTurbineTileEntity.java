@@ -27,7 +27,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 	private FluidStack steamContent;
 	private FluidStack waterContent;
 	private static final int CAPACITY = 10_000;
-	private static final int LIMIT = 5;
+	public static final int LIMIT = 5;
 
 	private final double[] motionData = new double[4];
 	private final double[] physData = new double[] {375, 8};

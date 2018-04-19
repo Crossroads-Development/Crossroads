@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumSolventType;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
@@ -32,8 +31,8 @@ public class EntityShell extends EntityThrowable{
 	@Override
 	protected void onImpact(RayTraceResult result){
 		if(!world.isRemote){
-			if(contents != null && (result.getBlockPos() != null || result.entityHit != null)){
-				BlockPos targetPos = result.getBlockPos() == null ? result.entityHit.getPosition() : result.getBlockPos();
+			if(contents != null){
+				BlockPos targetPos = result.getBlockPos();
 				for(ReagentStack r : contents){
 					if(r != null){
 						r.getType().onRelease(world, targetPos, r.getAmount(), temp, r.getPhase(temp), contents);
@@ -59,7 +58,7 @@ public class EntityShell extends EntityThrowable{
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			if(nbt.hasKey(i + "_am")){
 				contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am"));
-				contents[i].updatePhase(temp, solvents);
+				contents[i].updatePhase(temp);
 			}
 		}
 	}

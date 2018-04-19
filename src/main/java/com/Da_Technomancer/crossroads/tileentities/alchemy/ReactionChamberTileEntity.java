@@ -237,7 +237,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			double endTemp = handler.getTemp();
 			while(iter.hasNext()){
 				IReagent reag = iter.next();
-				fakeInventory[index] = contents[reag.getIndex()] != null && (contents[reag.getIndex()].getPhase(endTemp) == EnumMatterPhase.SOLID || contents[reag.getIndex()].getPhase(endTemp) == EnumMatterPhase.SOLUTE) ? reag.getStackFromReagent(contents[reag.getIndex()]) : ItemStack.EMPTY;
+				fakeInventory[index] = contents[reag.getIndex()] != null && contents[reag.getIndex()].getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(contents[reag.getIndex()]) : ItemStack.EMPTY;
 				index++;
 			}
 		}

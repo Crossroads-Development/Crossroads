@@ -1,29 +1,8 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:alembic",
-		"uvlock": true
-	},
 	"variants": {
-		"active": {
-			"true": {
-				"submodel": "crossroads:alembic_phial"
-			},
-			"false": {
-				
-			}
-		},
-		"light": {
-			"true": {
-				"textures": {
-					"glass": "crossroads:blocks/block_alch_crystal"
-				}
-			},
-			"false": {
-				"textures": {
-					"glass": "blocks/glass"
-				}
-			}
-		}
+		"horiz_facing=north": { "model": "crossroads:alembic", "y": 90},
+		"horiz_facing=south": { "model": "crossroads:alembic", "y": 270 },
+		"horiz_facing=east": { "model": "crossroads:alembic", "y": 180 },
+		"horiz_facing=west": { "model": "crossroads:alembic" }
 	}
 }

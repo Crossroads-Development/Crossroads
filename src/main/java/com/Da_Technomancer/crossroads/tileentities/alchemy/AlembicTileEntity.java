@@ -1,32 +1,12 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Triple;
-
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumSolventType;
-import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
-import com.Da_Technomancer.crossroads.API.alchemy.IReaction;
-import com.Da_Technomancer.crossroads.API.alchemy.IReactionChamber;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.*;
+import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
-
+import com.Da_Technomancer.crossroads.particles.ModParticles;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,14 +21,22 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
+import org.apache.commons.lang3.tuple.Triple;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class AlembicTileEntity extends TileEntity implements IReactionChamber, ITickable, IInfoTE{
 
 	protected ReagentStack[] contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
 	protected double heat = 0;
 	protected double amount = 0;
-	protected boolean dirtyReag = false;
+	private boolean dirtyReag = false;
 	private static final double CAPACITY = 3000;
 	private double cableTemp = 0;
 	private boolean init = false;
@@ -194,7 +182,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 					return stack;
 				}
 				double callerTemp = other_phial.getMiddle() / other_phial.getRight();//In kelvin
-				boolean changed = false;
+				boolean changed;
 
 				HashSet<Integer> validIds = new HashSet<Integer>(4);
 				double totalValid = 0;
@@ -379,8 +367,6 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 		}
 
 		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
-
-		boolean destroy = false;
 		boolean[] blankSolvents = new boolean[EnumSolventType.values().length];
 		double ambientTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 
@@ -392,7 +378,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			if(reag == null){
 				continue;
 			}
-			reag.updatePhase(endTemp, solvents);
+			reag.updatePhase(endTemp);
 
 
 			//Movement of upwards-flowing phases from alembic to phial
@@ -401,15 +387,16 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 				heat -= (endTemp + 273D) * reag.getAmount();
 				amount -= reag.getAmount();
 
-				reag.updatePhase(ambientTemp, blankSolvents);
+				reag.updatePhase(ambientTemp);
 				
 				movedContents[reag.getType().getIndex()] = reag;
 				markDirty();
 			}
 		}
 		
-		
-		TileEntity te = world.getTileEntity(pos.offset(world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING)));
+
+		EnumFacing dir = world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
+		TileEntity te = world.getTileEntity(pos.offset(dir));
 		if(te instanceof GlasswareHolderTileEntity){
 			GlasswareHolderTileEntity gh = (GlasswareHolderTileEntity) te;
 			
@@ -418,23 +405,18 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 				handler.insertReagents(movedContents, EnumFacing.UP, null);
 			}
 		}
-		
-		for(int i = 0; i < movedContents.length; i++){
-			ReagentStack reag = movedContents[i];
+
+		for(ReagentStack reag : movedContents){
 			if(reag == null){
 				continue;
 			}
+			Color c = reag.getType().getColor(reag.getPhase(ambientTemp));
 			if(reag.getPhase(ambientTemp).flowsDown()){
-				//Drip particles TODO
-				
-			}else{
-				//Emission particles TODO
-			}
-		}
+				((WorldServer) world).spawnParticle(ModParticles.COLOR_LIQUID, false, pos.getX() + 0.5D + dir.getFrontOffsetX(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getFrontOffsetZ(), 0, 0, (Math.random() * 0.05D) - 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 
-		if(destroy){
-			destroyChamber();
-			return null;
+			}else{
+				((WorldServer) world).spawnParticle(ModParticles.COLOR_GAS, false, pos.getX() + 0.5D + dir.getFrontOffsetX(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getFrontOffsetZ(), 0, 0, (Math.random() * -0.05D) + 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+			}
 		}
 		return solvents;
 	}

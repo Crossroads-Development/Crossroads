@@ -35,7 +35,7 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
-		double used = Math.min(Math.floor(Math.abs(motionData[1])), REQUIRED - progress);
+		double used = (int) Math.min(Math.abs(motionData[1]), REQUIRED - progress);
 		progress += used;
 		axleHandler.addEnergy(-used, false, false);
 	}

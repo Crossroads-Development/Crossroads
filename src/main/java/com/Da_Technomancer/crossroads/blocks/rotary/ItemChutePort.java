@@ -94,23 +94,21 @@ public class ItemChutePort extends BlockContainer{
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Mass: 500");
 		tooltip.add("I: 2");
+		tooltip.add("Consumes: 0.5J/operation");
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
+		return new BlockStateContainer(this, Properties.FACING);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
-		return getDefaultState().withProperty(Properties.FACING, facing);
+		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		EnumFacing facing = state.getValue(Properties.FACING);
-		int facingbits = facing.getIndex();
-		return facingbits;
+		return state.getValue(Properties.FACING).getIndex();
 	}
 }

@@ -1,14 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -27,6 +24,8 @@ import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
+import javax.annotation.Nullable;
 
 public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntReceiver{
 
@@ -47,7 +46,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		Block fluidBlock = fluidBlockstate.getBlock();
 		//If anyone knows a builtin way to simplify this if statement, be my guest. It's so long it scares me...
 		if(FluidRegistry.lookupFluidForBlock(fluidBlock) != null && (fluidBlock instanceof BlockFluidClassic && ((BlockFluidClassic) fluidBlock).isSourceBlock(world, pos.offset(EnumFacing.DOWN)) || fluidBlockstate.getValue(BlockLiquid.LEVEL) == 0) && (content == null || (CAPACITY - content.amount >= 1000 && content.getFluid() == FluidRegistry.lookupFluidForBlock(fluidBlock)))){
-			double holder = motionData[1] < 0 ? 0 : Math.min(Math.floor(motionData[1]), REQUIRED - progress);
+			double holder = motionData[1] < 0 ? 0 : (int) Math.min(motionData[1], REQUIRED - progress);
 			motionData[1] -= holder;
 			progress += holder;
 		}else{

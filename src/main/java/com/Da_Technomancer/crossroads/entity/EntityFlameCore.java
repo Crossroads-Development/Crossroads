@@ -1,13 +1,9 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import java.awt.Color;
-import java.util.ArrayList;
-
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.packets.INbtReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityClient;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -17,6 +13,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 public class EntityFlameCore extends Entity implements INbtReceiver{
 
@@ -60,16 +59,11 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 		reags = new ReagentStack[AlchemyCore.REAGENT_COUNT];
 		temp = nbt.getDouble("temp");
 		maxRadius = nbt.getInteger("rad");
-		boolean[] solvents = new boolean[EnumSolventType.values().length];
-
-		for(int i = 0; i < solvents.length; i++){
-			solvents[i] = nbt.getBoolean(i + "_solv");
-		}
 
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			if(nbt.hasKey(i + "_am")){
 				reags[i] = new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am"));
-				reags[i].updatePhase(temp, solvents);
+				reags[i].updatePhase(temp);
 			}
 		}
 

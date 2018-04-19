@@ -103,6 +103,6 @@ public class ChargingStand extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Consumes: -10FE/tick");
+		tooltip.add("Consumes: -10FE/t");
 	}
 }
