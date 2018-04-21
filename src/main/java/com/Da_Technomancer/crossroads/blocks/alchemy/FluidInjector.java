@@ -1,17 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -31,6 +27,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class FluidInjector extends BlockContainer{
 
@@ -80,23 +77,22 @@ public class FluidInjector extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.LIGHT) ? 1 : 0);
+		return (state.getValue(Properties.CRYSTAL) ? 1 : 0);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.LIGHT, (meta & 1) == 1);
+		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1);
 	}
 
 	@Override
 	public int damageDropped(IBlockState state){
-		return state.getValue(Properties.LIGHT) ? 1 : 0;
+		return state.getValue(Properties.CRYSTAL) ? 1 : 0;
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		//On this device, light is being re-used. True means crystal, false means glass. 
-		return new BlockStateContainer(this, new IProperty[] {Properties.LIGHT});
+		return new BlockStateContainer(this, Properties.CRYSTAL);
 	}
 
 	@Override

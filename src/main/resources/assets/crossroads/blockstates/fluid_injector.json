@@ -1,6 +1,6 @@
 {
 	"variants": {
-		"light=true": { "model": "crossroads:fluid_injector_cryst" },
-		"light=false": { "model": "crossroads:fluid_injector_glass" }
+		"crystal=true": { "model": "crossroads:fluid_injector_cryst" },
+		"crystal=false": { "model": "crossroads:fluid_injector_glass" }
 	}
 }

@@ -31,7 +31,7 @@
 				"x": 270
 			}
 		},
-		"light": {
+		"crystal": {
 			"true": {
 				"textures": {
 					"glass": "crossroads:blocks/alch_tube/cryst_tube_out",

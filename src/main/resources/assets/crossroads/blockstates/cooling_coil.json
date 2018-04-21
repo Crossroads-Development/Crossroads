@@ -5,7 +5,7 @@
 		"uvlock": false
 	},
 	"variants": {
-		"light": {
+		"crystal": {
 			"true": {
 				"textures": {
 					"glass": "crossroads:blocks/alch_tube/cryst_tube_cap",

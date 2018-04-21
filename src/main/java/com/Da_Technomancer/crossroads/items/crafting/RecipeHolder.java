@@ -1,36 +1,10 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.function.Predicate;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
-
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.IReaction;
 import com.Da_Technomancer.crossroads.API.alchemy.ITransparentReaction;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.crossroads.integration.JEI.ArcaneExtractorCategory;
-import com.Da_Technomancer.crossroads.integration.JEI.ArcaneExtractorRecipe;
-import com.Da_Technomancer.crossroads.integration.JEI.DetailedCrafterCategory;
-import com.Da_Technomancer.crossroads.integration.JEI.DetailedCrafterRecipe;
-import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingCategory;
-import com.Da_Technomancer.crossroads.integration.JEI.FluidCoolingRecipe;
-import com.Da_Technomancer.crossroads.integration.JEI.FusionBeamCategory;
-import com.Da_Technomancer.crossroads.integration.JEI.FusionBeamRecipe;
-import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneCategory;
-import com.Da_Technomancer.crossroads.integration.JEI.GrindstoneRecipe;
-import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerCategory;
-import com.Da_Technomancer.crossroads.integration.JEI.HeatExchangerRecipe;
-import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleCategory;
-import com.Da_Technomancer.crossroads.integration.JEI.HeatingCrucibleRecipe;
-import com.Da_Technomancer.crossroads.integration.JEI.ReactionCategory;
-import com.Da_Technomancer.crossroads.integration.JEI.ReactionRecipe;
-
+import com.Da_Technomancer.crossroads.integration.JEI.*;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -41,6 +15,14 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 public final class RecipeHolder{
 
@@ -191,8 +173,7 @@ public final class RecipeHolder{
 		}
 
 		for(Pair<Predicate<ItemStack>[], ItemStack> craft : brazierBoboRecipes){
-			ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>();
-			itemCop.addAll(items);
+			ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>(items);
 
 			for(Predicate<ItemStack> cStack : craft.getLeft()){
 				for(ItemStack stack : items){

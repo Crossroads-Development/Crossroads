@@ -3,12 +3,12 @@
 	"textures": {
 		"particle": "crossroads:blocks/block_cast_iron",
 		"base": "crossroads:blocks/block_cast_iron",
-		"in": "crossroads:blocks/tesla_in",
-		"out": "crossroads:blocks/tesla_out"
+		"in": "#in",
+		"out": "#out"
     },
     "elements": [
         {
-            "from": [ 0.0, 0.0, 0.0 ], 
+            "from": [ 0.0, -0.001, 0.0 ],
             "to": [ 16.0, 2.0, 16.0 ], 
             "faces": {
                 "north": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
@@ -21,7 +21,7 @@
         },
         {
             "from": [ 0.0, 14.0, 0.0 ], 
-            "to": [ 16.0, 16.0, 16.0 ], 
+            "to": [ 16.0, 16.001, 16.0 ],
             "faces": {
             	 "north": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
             	 "east": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },

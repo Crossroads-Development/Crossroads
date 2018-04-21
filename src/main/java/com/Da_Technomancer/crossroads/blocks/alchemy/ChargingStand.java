@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ChargingStandTileEntity;
@@ -9,6 +10,8 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,6 +22,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -98,6 +102,21 @@ public class ChargingStand extends BlockContainer{
 			}
 		}
 		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void initModel(){
+		StateMapperBase glasswareMapper = new StateMapperBase(){
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state){
+				if(state.getValue(Properties.CONTAINER_TYPE)){
+					return new ModelResourceLocation(Main.MODID + ":charging_stand_florence", getPropertyString(state.getProperties()));
+				}else{
+					return new ModelResourceLocation(Main.MODID + ":charging_stand_phial", getPropertyString(state.getProperties()));
+				}
+			}
+		};
+		ModelLoader.setCustomStateMapper(this, glasswareMapper);
 	}
 
 	@Override

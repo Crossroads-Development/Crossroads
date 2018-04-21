@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
@@ -10,13 +8,14 @@ import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
+import javax.annotation.Nullable;
 
 public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntReceiver{
 
@@ -80,7 +79,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 		init();
 		for(int i = 0; i < 6; i++){
 			EnumFacing side = EnumFacing.getFront(i);
-			TileEntity te = null;
+			TileEntity te;
 			
 			if(connectMode[i] != 0){
 				te = world.getTileEntity(pos.offset(side));
@@ -94,7 +93,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 
 				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-				if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
+				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
 					if(hasMatch[i]){
 						hasMatch[i] = false;
 						markSideChanged(i);
@@ -105,7 +104,6 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 				if(!hasMatch[i]){
 					hasMatch[i] = true;
 					markSideChanged(i);
-					continue;
 				}else if(amount != 0 && connectMode[i] == 1){
 					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
 						correctReag();

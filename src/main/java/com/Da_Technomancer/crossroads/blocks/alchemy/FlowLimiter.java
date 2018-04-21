@@ -81,12 +81,12 @@ public class FlowLimiter extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.LIGHT) ? 1 : 0) + (state.getValue(Properties.FACING).getIndex() << 1);
+		return (state.getValue(Properties.CRYSTAL) ? 1 : 0) + (state.getValue(Properties.FACING).getIndex() << 1);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.LIGHT, (meta & 1) == 1).withProperty(Properties.FACING, EnumFacing.getFront(meta >> 1));
+		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(Properties.FACING, EnumFacing.getFront(meta >> 1));
 	}
 	
 	@Override
@@ -110,13 +110,12 @@ public class FlowLimiter extends BlockContainer{
 
 	@Override
 	public int damageDropped(IBlockState state){
-		return state.getValue(Properties.LIGHT) ? 1 : 0;
+		return state.getValue(Properties.CRYSTAL) ? 1 : 0;
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		//On this device, light is being re-used. True means crystal, false means glass. 
-		return new BlockStateContainer(this, Properties.LIGHT, Properties.FACING);
+		return new BlockStateContainer(this, Properties.CRYSTAL, Properties.FACING);
 	}
 
 	@Override

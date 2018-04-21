@@ -1,8 +1,8 @@
 {
-	"parent": "crossroads:block/tesla_coil_base",
+	"parent": "crossroads:block/heated_tube",
 	"textures": {
-		"in": "crossroads:blocks/tesla_in",
-		"out": "crossroads:blocks/tesla_out"
+		"glass": "crossroads:blocks/alch_tube/glass_tube_out",
+		"cap": "crossroads:blocks/alch_tube/glass_tube_cap"
 	},
 	"display": {
 		"thirdperson": {

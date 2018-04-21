@@ -1,5 +1,17 @@
 {
+	"forge_marker": 1,
+	"defaults": {
+		"model": "crossroads:atmos_charger",
+		"uvlock": true
+	},
 	"variants": {
-		"normal": { "model": "crossroads:atmos_charger" }
+		"active": {
+			"true": {
+
+			},
+			"false": {
+
+			}
+		}
 	}
 }

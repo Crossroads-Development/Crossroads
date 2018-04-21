@@ -2,7 +2,7 @@
 	"parent": "crossroads:block/tesla_coil_base",
 	"textures": {
 		"in": "crossroads:blocks/tesla_in",
-		"out": "crossroads:blocks/tesla_out"
+		"out": "crossroads:blocks/tesla_in"
 	},
 	"display": {
 		"thirdperson": {
