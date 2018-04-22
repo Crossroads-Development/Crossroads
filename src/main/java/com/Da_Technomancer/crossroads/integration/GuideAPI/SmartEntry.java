@@ -36,7 +36,7 @@ public class SmartEntry extends EntryItemStack{
 	 * @param unlocalizedName The unlocalized name of this entry.
 	 * @param icon The ItemStack displayed on this entry in the category.
 	 * @param contents Determines what this entry contains. IPages will be stitched in, Strings will be localized, wrapped, and added (with formatting), IRecipes will be converted to a recipe page, ResourceLocations converted to an image page, Pair{@literal<String, Object[]>} will be treated as a String with the Object[] formatted in, a true boolean value will cause a page break, an Object[] will have each member interpreted in order, null or a false boolean value will be ignored, and a {@link java.util.function.Supplier}{@literal <Object>} will act as whatever is returned by the get() method.
-	 * Any time formatting is used, it should be specified as �r�(formatting character). It will last until either the next formatting code or forced page break (due to ex. recipes). It will be carried over across true values.
+	 * Any time formatting is used, it should be specified as §r§(formatting character). It will last until either the next formatting code or forced page break (due to ex. recipes). It will be carried over across true values.
 	 * 
 	 * This updates its contents every time it is reopened. 
 	 */
@@ -48,7 +48,7 @@ public class SmartEntry extends EntryItemStack{
 	 * @param unlocalizedName The unlocalized name of this entry.
 	 * @param canSee Controls whether the player can see this entry at all. A null value means this can always be seen.
 	 * @param icon The ItemStack displayed on this entry in the category.
-	 * @param contents Determines what this entry contains. IPages will be stitched in, Strings will be localized, wrapped, and added (with formatting), IRecipes will be converted to a recipe page, ResourceLocations converted to an image page, Pair{@literal<String, Object[]>} will be treated as a String with the Object[] formatted in, a true boolean value will cause a page break, an Object[] will have each member interpreted in order, null or a false boolean value will be ignored, and a {@link java.util.function.Supplier}{@literal <Object>} will act as whatever is returned by the get() method.
+	 * @param contents Determines what this entry contains. IPages will be stitched in, Strings will be localized, wrapped, and added (with formatting), IRecipes will be converted to a recipe page, ResourceLocations converted to an image page, Pair{String, Object[]} will be treated as a String with the Object[] formatted in, a true boolean value will cause a page break, an Object[] will have each member interpreted in order, null or a false boolean value will be ignored, and a {@link java.util.function.Supplier}{@literal <Object>} will act as whatever is returned by the get() method.
 	 * Any time formatting is used, it should be specified as §r§(formatting character). It will last until either the next formatting code or forced page break (due to ex. recipes). It will be carried over across true values.
 	 * 
 	 * This updates its contents every time it is reopened. 

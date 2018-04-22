@@ -20,7 +20,7 @@ public class OreDictCraftingStack implements RecipePredicate<ItemStack>{
 		}
 
 		for(int ID : OreDictionary.getOreIDs(stack)){
-			if(OreDictionary.getOreName(ID) == oreDict){
+			if(oreDict.equals(OreDictionary.getOreName(ID))){
 				return true;
 			}
 		}

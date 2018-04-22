@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads;
 
-import java.util.ArrayList;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+
+import java.util.ArrayList;
 
 public final class ModConfig{
 
@@ -90,7 +90,7 @@ public final class ModConfig{
 		blockedPrototype = config.get(CAT_TECHNOMANCY, "Blocks disallowed to be used in prototypes. Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'.", new String[] {Main.MODID + ":large_gear_slave", Main.MODID + ":large_gear_master", Main.MODID + ":prototype", Main.MODID + ":gateway_frame", "minecraft:portal", "rftools:matter_transmitter", "bloodmagic:blockteleposer"}, "Use to prevent exploits, bugs, travel to the prototype dimension, griefing, and other naughty things. Also, most modded multiblocks should be blocked to prevent bugs.");
 		SYNCED_PROPERTIES.add(allowPrototype = config.get(CAT_TECHNOMANCY, "Restrictions on prototyping. (Default 0)", 0, "-1: Prototyping is disabled. May block large amounts of the mod. 0: Default value. 1: Prototyping destroys the template structure the prototype was made from instead of copying the template. (prevents unintended dupe exploits). 2: Prototyping works as normal, except prototype blocks themselves cannot be placed, only used within other compatible devices (such as the watch).", -1, 2));
 		maximumPistolDamage = config.get(CAT_TECHNOMANCY, "Maximum pistol damage per shot, -1 for no cap. (Default -1)", -1);
-		addWrench = config.get(CAT_INTERNAL, "Add a wrench item? (Default true, must match server if false)", true);
+		addWrench = config.get(CAT_INTERNAL, "Show the Crossroads wrench in the creative menu? (Default true)", true);
 		SYNCED_PROPERTIES.add(wrenchTypes = config.get(CAT_INTERNAL, "Item ids for wrench items. Should be in format 'modid:itemregistryname', ex. minecraft:apple or crossroads:wrench.", new String[] {Main.MODID + ":wrench", Main.MODID + ":liech_wrench", "actuallyadditions:itemlaserwrench", "appliedenergistics2:certus_quartz_wrench", "appliedenergistics2:nether_quartz_wrench", "base:wrench", "enderio:itemyetawrench", "extrautils2:wrench", "bigreactors:wrench", "forestry:wrench", "progressiveautomation:wrench", "thermalfoundation:wrench", "redstonearsenal:tool.wrench_flux", "rftools:smartwrench", "immersiveengineering:tool"}));
 		electPerJoule = config.get(CAT_ALCHEMY, "FE generated from 1J. Set to 0 to effectively disable the dynamo. (Default 20)", 20, "", 0, Integer.MAX_VALUE);
 		growBlacklist = config.get(CAT_MISC, "Plant types that can not be grown by a potential beam. Should be in format 'modid:blockregistryname', ex. minecraft:wheat", new String[0]);

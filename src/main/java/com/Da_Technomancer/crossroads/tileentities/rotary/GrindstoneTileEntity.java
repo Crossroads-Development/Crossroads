@@ -24,8 +24,8 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 
 	private ItemStack[] inventory =  {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
 
-	private int progress = 0;
-	public static final int REQUIRED = 100;
+	private double progress = 0;
+	public static final double REQUIRED = 100;
 
 	private final double[] motionData = new double[4];
 	private final double[] physData = new double[] {125, 1};
@@ -35,7 +35,7 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
-		double used = (int) Math.min(Math.abs(motionData[1]), REQUIRED - progress);
+		double used = Math.min(Math.abs(motionData[1]), REQUIRED - progress);
 		progress += used;
 		axleHandler.addEnergy(-used, false, false);
 	}
@@ -379,7 +379,7 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 	}
 
 	public int getProgress(){
-		return progress;
+		return (int) progress;
 	}
 
 	public void setProgress(int value){

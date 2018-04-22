@@ -1,32 +1,11 @@
 package com.Da_Technomancer.crossroads.integration.GuideAPI;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.function.Supplier;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-
 import amerifrance.guideapi.api.GuideAPI;
 import amerifrance.guideapi.api.GuideBook;
 import amerifrance.guideapi.api.IGuideBook;
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.Book;
+import amerifrance.guideapi.api.impl.BookBinder;
 import amerifrance.guideapi.api.impl.Page;
 import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
@@ -37,6 +16,18 @@ import amerifrance.guideapi.page.PageFurnaceRecipe;
 import amerifrance.guideapi.page.PageIRecipe;
 import amerifrance.guideapi.page.PageImage;
 import amerifrance.guideapi.page.PageText;
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
+import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -49,14 +40,23 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.function.Supplier;
 
 /**
  * TODO I intend to re-write/re-format most of the entries in the Technician's Manual to be better organized and more concise. This will not happen all in one update.
  */
 public final class GuideBooks{
 
-	public static final Book MAIN = new Book();
-	public static final Book INFO = new Book();
+	public static final BookBinder MAIN = new BookBinder(new ResourceLocation(Main.MODID, "crossroadsmainguide"));
+	public static final BookBinder INFO = new BookBinder(new ResourceLocation(Main.MODID, "info_guide"));
+	public static Book MAIN_BOOK;
+	public static Book INFO_BOOK;
 
 	@GuideBook
 	public static class MainGuide implements IGuideBook{
@@ -175,6 +175,7 @@ public final class GuideBooks{
 			createPages(pages, "lore.ratiator.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', ModItems.luminescentQuartz, '#', ModItems.pureQuartz, '^', "stone"), "lore.ratiator.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "ratiator"), new EntryItemStack(pages, "Ratiator", new ItemStack(ModBlocks.ratiator, 1), true));
 			pages = new ArrayList<IPage>();
+			entries.put(new ResourceLocation(Main.MODID, "redstone_keyboard"), new SmartEntry("lore.redstone_keyboard.name", new ItemStack(ModBlocks.redstoneKeyboard, 1), "lore.redstone_keyboard", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"), 0)));
 
 			categories.add(new CategoryItemStack(entries, "Miscellaneous", new ItemStack(ModBlocks.brazier, 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
@@ -219,16 +220,18 @@ public final class GuideBooks{
 			//TECHNOMANCY
 			entries.put(new ResourceLocation(Main.MODID, "copshowium_chamber"), new SmartEntry("lore.copshowium_chamber.name", new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "lore.copshowium_chamber", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModBlocks.fluidCoolingChamber), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "goggles"), new SmartEntry("lore.goggles.name", new ItemStack(ModItems.moduleGoggles, 1), "lore.goggles", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.moduleGoggles, 1), "***", "^&^", '&', "ingotCopshowium", '*', "ingotBronze", '^', "blockGlass"), 0)));
-			entries.put(new ResourceLocation(Main.MODID, "redstone_keyboard"), new SmartEntry("lore.redstone_keyboard.name", new ItemStack(ModBlocks.redstoneKeyboard, 1), "lore.redstone_keyboard", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"), 0)));
-			entries.put(new ResourceLocation(Main.MODID, "redstone_registry"), new SmartEntry("lore.redstone_registry.name", new ItemStack(ModBlocks.redstoneRegistry, 1), "lore.redstone_registry", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneRegistry, 1), "*&*", "&^&", "*&*", '*', "nuggetTin", '&', ModBlocks.redstoneKeyboard, '^', "ingotCopshowium"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "rotary_math"), new SmartEntry("lore.rotary_math_devices.name", new ItemStack(ModBlocks.redstoneAxis, 1), "lore.rotary_math_devices", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.masterAxis, 1), "***", "*#*", "*&*", '*', "nuggetIron", '#', "nuggetCopshowium", '&', "stickIron"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneAxis, 1), "*^*", "^&^", "*^*", '*', "dustRedstone", '^', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.multiplicationAxis, 1), "***", "%^&", "***", '*', "nuggetBronze", '%', "gearCopshowium", '^', "wool", '&', "stickIron"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.multiplicationAxis, 1), "***", "%^&", "***", '*', "nuggetBronze", '%', "gearCopshowium", '^', "leather", '&', "stickIron"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.additionAxis, 1), "***", "&^&", "***", '*', "nuggetBronze", '&', "stickIron", '^', "gearCopshowium"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.equalsAxis, 1), "***", " & ", "***", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.greaterThanAxis, 1), false, "** ", " &*", "** ", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.lessThanAxis, 1), false, " **", "*& ", " **", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.squareRootAxis, 1), " **", "*& ", " * ", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.sinAxis, 1), " **", " & ", "** ", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.cosAxis, 1), " * ", "*&*", "* *", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.arcsinAxis, 1), ModBlocks.sinAxis), 0), new PageDetailedRecipe(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.arccosAxis, 1), ModBlocks.cosAxis), 0)));
+			entries.put(new ResourceLocation(Main.MODID, "redstone_registry"), new SmartEntry("lore.redstone_registry.name", new ItemStack(ModBlocks.redstoneRegistry, 1), "lore.redstone_registry", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneRegistry, 1), "*&*", "&^&", "*&*", '*', "nuggetTin", '&', ModBlocks.redstoneKeyboard, '^', "ingotCopshowium"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "workspace_dim"), new SmartEntry("lore.workspace_dim.name", new ItemStack(ModBlocks.gatewayFrame, 1), "lore.workspace_dim", new ResourceLocation(Main.MODID, "textures/book/gateway.png"), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.gatewayFrame, 3), "***", "^^^", "%^%", '*', Blocks.STONE, '^', "ingotCopshowium", '%', "obsidian"), 0)));
-			entries.put(new ResourceLocation(Main.MODID, "mech_arm"), new SmartEntry("lore.mech_arm.name", new ItemStack(ModBlocks.mechanicalArm, 1), "lore.mech_arm", new ResourceLocation(Main.MODID, "textures/book/mech_arm.png"), "lore.mech_arm.post_image", new ResourceLocation(Main.MODID, "textures/book/mech_arm_equat_1.png"), "lore.mech_arm.post_calc_1", new ResourceLocation(Main.MODID, "textures/book/mech_arm_equat_2.png"), "lore.mech_arm.post_calc_2", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.mechanicalArm, 1), " * ", " ||", "***", '|', "stickIron", '*', "gearCopshowium"), 0)));
+			entries.put(new ResourceLocation(Main.MODID, "mech_arm"), new SmartEntry("lore.mech_arm.name", new ItemStack(ModBlocks.mechanicalArm, 1), "lore.mech_arm", new ResourceLocation(Main.MODID, "textures/book/mech_arm.png"), "lore.mech_arm.post_image", new ResourceLocation(Main.MODID, "textures/book/mech_arm_equat_1.png"), "lore.mech_arm.post_calc_1", new ResourceLocation(Main.MODID, "textures/book/mech_arm_equat_2.png"), "lore.mech_arm.post_calc_2", new ResourceLocation(Main.MODID, "textures/book/mech_arm_table.png"), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.mechanicalArm, 1), " * ", " ||", "***", '|', "stickIron", '*', "gearCopshowium"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "mech_beam_splitter"), new SmartEntry("lore.mech_beam_splitter.name", new ItemStack(ModBlocks.mechanicalBeamSplitter, 1), "lore.mech_beam_splitter", new PageDetailedRecipe(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.mechanicalBeamSplitter, 1), ModBlocks.beamSplitter, "ingotCopshowium", "ingotCopshowium", "stickIron"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "beam_cage_+_staff"), new SmartEntry("lore.beam_cage_+_staff.name", new ItemStack(ModItems.beamCage, 1), "lore.beam_cage_+_staff", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.beamCage, 1), "*&*", '*', ModBlocks.largeQuartzStabilizer, '&', "ingotCopshowium"), 0), new PageDetailedRecipe(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.cageCharger, 1), "ingotBronze", "ingotBronze", "ingotCopshowium", ModItems.pureQuartz), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.staffTechnomancy, 1), "*&*", " & ", " | ", '*', ModItems.lensArray, '&', "ingotCopshowium", '|', "stickIron"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "prototyping"), new SmartEntry("lore.prototyping.name", (EntityPlayer play) -> {return ModConfig.getConfigInt(ModConfig.allowPrototype, true) != -1;}, new ItemStack(ModBlocks.prototype, 1), ((Supplier<Object>) () -> {int setting = ModConfig.getConfigInt(ModConfig.allowPrototype, true); return setting == 0 ? "lore.prototyping.default" : setting == 1 ? "lore.prototyping.consume" : "lore.prototyping.device";}), "lore.prototyping.pistol", true, new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.prototypingTable, 1), "*&*", "&%&", "*&*", '*', "ingotBronze", '&', "ingotCopshowium", '%', ModBlocks.detailedCrafter), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.prototypePort, 1), "*&*", "& &", "*&*", '*', "ingotBronze", '&', "nuggetCopshowium"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.pistol, 1), "CBB", "CA ", 'C', "ingotCopshowium", 'B', "ingotBronze", 'A', ModItems.lensArray), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "fields"), new SmartEntry("lore.fields.name", new ItemStack(ModBlocks.chunkUnlocker, 1), "lore.fields", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.chunkUnlocker, 1), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', ModItems.lensArray), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxReaderAxis, 1), "***", "*&*", "***", '*', "nuggetCopshowium", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxManipulator, 2), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', "gemRuby"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.rateManipulator, 2), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', "gemEmerald"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "watch"), new SmartEntry("lore.watch.name", (EntityPlayer play) -> {return ModConfig.getConfigInt(ModConfig.allowPrototype, true) != -1;}, new ItemStack(ModItems.watch, 1), "lore.watch", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.watch, 1), " * ", "*&*", " * ", '*', "ingotBronze", '&', "ingotCopshowium"), 0)));
+
+			//ALCHEMY
+
 
 			categories.add(new CategoryItemStack(entries, "lore.cat_technomancy.name", new ItemStack(ModBlocks.redstoneKeyboard, 1)){
 				@Override
@@ -238,26 +241,28 @@ public final class GuideBooks{
 			});
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
-			MAIN.setTitle("Main Menu");
-			MAIN.setWelcomeMessage("Welcome to Crossroads");
-			MAIN.setDisplayName("mysterious_journal");
+			MAIN.setGuideTitle("Main Menu");
+			MAIN.setHeader("Welcome to Crossroads");
+			MAIN.setItemName("mysterious_journal");
 			MAIN.setColor(Color.GRAY);
-			MAIN.setCategoryList(categories);
-			MAIN.setRegistryName(new ResourceLocation(Main.MODID, "crossroadsMainGuide"));
-			MAIN.setSpawnWithBook(true);
-			return MAIN;
+			for(CategoryAbstract c : categories){
+				MAIN.addCategory(c);
+			}
+			MAIN.setSpawnWithBook();
+			MAIN_BOOK = MAIN.build();
+			return MAIN_BOOK;
 		}
 
 		@Override
 		public void handleModel(ItemStack bookStack){
-			GuideAPI.setModel(MAIN);
+			GuideAPI.setModel(MAIN_BOOK);
 
 		}
 
 		@Override
 		public void handlePost(ItemStack bookStack){
 			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_journal"), null, bookStack, CraftingHelper.getIngredient(Items.BOOK), CraftingHelper.getIngredient(Items.COMPASS));
-			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_manual_to_journal"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(INFO)));
+			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_manual_to_journal"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(INFO_BOOK)));
 		}
 	}
 
@@ -361,6 +366,7 @@ public final class GuideBooks{
 			createPages(pages, "info.item_sorting", new ShapedOreRecipe(null, new ItemStack(ModBlocks.sortingHopper, 1), "# #", "#&#", " # ", '#', "ingotCopper", '&', "chestWood"), new ShapedOreRecipe(null, new ItemStack(ModBlocks.sortingHopper, 1), "#&#", "###", '#', "ingotCopper", '&', "chestWood"), new ShapedOreRecipe(null, new ItemStack(ModBlocks.slottedChest, 1), "###", "$@$", "###", '#', "slabWood", '$', Blocks.TRAPDOOR, '@', "chestWood"));
 			entries.put(new ResourceLocation(Main.MODID, "item_sorting"), new EntryItemStack(pages, "Sorting Devices", new ItemStack(ModBlocks.sortingHopper, 1), true));
 			pages = new ArrayList<IPage>();
+			entries.put(new ResourceLocation(Main.MODID, "wrench"), new SmartEntry("info.wrench.name", new ItemStack(ModItems.wrench, 1), "info.wrench"));
 			createPages(pages, "info.ob_cutting", new ShapedOreRecipe(null, new ItemStack(ModItems.obsidianKit, 4), " # ", "#$#", " # ", '$', "obsidian", '#', Items.FLINT));
 			entries.put(new ResourceLocation(Main.MODID, "ob_cutting"), new EntryItemStack(pages, "Obsidian Cutting Kits", new ItemStack(ModItems.obsidianKit, 1), true));
 			pages = new ArrayList<IPage>();
@@ -376,6 +382,7 @@ public final class GuideBooks{
 			createPages(pages, "info.ratiator", new ShapedOreRecipe(null, new ItemStack(ModBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', ModItems.luminescentQuartz, '#', ModItems.pureQuartz, '^', "stone"));
 			entries.put(new ResourceLocation(Main.MODID, "ratiator"), new EntryItemStack(pages, "Ratiator", new ItemStack(ModBlocks.ratiator, 1), true));
 			pages = new ArrayList<IPage>();
+			entries.put(new ResourceLocation(Main.MODID, "redstone_keyboard"), new SmartEntry("info.redstone_keyboard.name", new ItemStack(ModBlocks.redstoneKeyboard, 1), "info.redstone_keyboard", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"), 0)));
 
 			categories.add(new CategoryItemStack(entries, "Miscellaneous", new ItemStack(ModBlocks.brazier, 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
@@ -422,11 +429,10 @@ public final class GuideBooks{
 			//TECHNOMANCY
 			entries.put(new ResourceLocation(Main.MODID, "copshowium_chamber"), new SmartEntry("info.copshowium_chamber.name", new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "info.copshowium_chamber", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModBlocks.fluidCoolingChamber), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "goggles"), new SmartEntry("info.goggles.name", new ItemStack(ModItems.moduleGoggles, 1), "info.goggles", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.moduleGoggles, 1), "***", "^&^", '&', "ingotCopshowium", '*', "ingotBronze", '^', "blockGlass"), 0)));
-			entries.put(new ResourceLocation(Main.MODID, "redstone_keyboard"), new SmartEntry("info.redstone_keyboard.name", new ItemStack(ModBlocks.redstoneKeyboard, 1), "info.redstone_keyboard", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"), 0)));
-			entries.put(new ResourceLocation(Main.MODID, "redstone_registry"), new SmartEntry("info.redstone_registry.name", new ItemStack(ModBlocks.redstoneRegistry, 1), "info.redstone_registry", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneRegistry, 1), "*&*", "&^&", "*&*", '*', "nuggetTin", '&', ModBlocks.redstoneKeyboard, '^', "ingotCopshowium"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "rotary_math"), new SmartEntry("info.rotary_math_devices.name", new ItemStack(ModBlocks.redstoneAxis, 1), "info.rotary_math_devices", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.masterAxis, 1), "***", "*#*", "*&*", '*', "nuggetIron", '#', "nuggetCopshowium", '&', "stickIron"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneAxis, 1), "*^*", "^&^", "*^*", '*', "dustRedstone", '^', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.multiplicationAxis, 1), "***", "%^&", "***", '*', "nuggetBronze", '%', "gearCopshowium", '^', "wool", '&', "stickIron"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.multiplicationAxis, 1), "***", "%^&", "***", '*', "nuggetBronze", '%', "gearCopshowium", '^', "leather", '&', "stickIron"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.additionAxis, 1), "***", "&^&", "***", '*', "nuggetBronze", '&', "stickIron", '^', "gearCopshowium"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.equalsAxis, 1), "***", " & ", "***", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.greaterThanAxis, 1), false, "** ", " &*", "** ", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.lessThanAxis, 1), false, " **", "*& ", " **", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.squareRootAxis, 1), " **", "*& ", " * ", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.sinAxis, 1), " **", " & ", "** ", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.cosAxis, 1), " * ", "*&*", "* *", '*', "nuggetBronze", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.arcsinAxis, 1), ModBlocks.sinAxis), 0), new PageDetailedRecipe(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.arccosAxis, 1), ModBlocks.cosAxis), 0)));
+			entries.put(new ResourceLocation(Main.MODID, "redstone_registry"), new SmartEntry("info.redstone_registry.name", new ItemStack(ModBlocks.redstoneRegistry, 1), "info.redstone_registry", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneRegistry, 1), "*&*", "&^&", "*&*", '*', "nuggetTin", '&', ModBlocks.redstoneKeyboard, '^', "ingotCopshowium"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "workspace_dim"), new SmartEntry("info.workspace_dim.name", new ItemStack(ModBlocks.gatewayFrame, 1), "info.workspace_dim", new ResourceLocation(Main.MODID, "textures/book/gateway.png"), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.gatewayFrame, 3), "***", "^^^", "%^%", '*', Blocks.STONE, '^', "ingotCopshowium", '%', "obsidian"), 0)));
-			entries.put(new ResourceLocation(Main.MODID, "mech_arm"), new SmartEntry("info.mech_arm.name", new ItemStack(ModBlocks.mechanicalArm, 1), "info.mech_arm", new ResourceLocation(Main.MODID, "textures/book/mech_arm.png"), "info.mech_arm.post_image", new ResourceLocation(Main.MODID, "textures/book/mech_arm_equat_1.png"), "info.mech_arm.post_calc_1", new ResourceLocation(Main.MODID, "textures/book/mech_arm_equat_2.png"), "info.mech_arm.post_calc_2", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.mechanicalArm, 1), " * ", " ||", "***", '|', "stickIron", '*', "gearCopshowium"), 0)));
+			entries.put(new ResourceLocation(Main.MODID, "mech_arm"), new SmartEntry("info.mech_arm.name", new ItemStack(ModBlocks.mechanicalArm, 1), "info.mech_arm", new ResourceLocation(Main.MODID, "textures/book/mech_arm.png"), "info.mech_arm.post_image", new ResourceLocation(Main.MODID, "textures/book/mech_arm_equat_1.png"), "info.mech_arm.post_calc_1", new ResourceLocation(Main.MODID, "textures/book/mech_arm_equat_2.png"), "info.mech_arm.post_calc_2", new ResourceLocation(Main.MODID, "textures/book/mech_arm_table.png"), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.mechanicalArm, 1), " * ", " ||", "***", '|', "stickIron", '*', "gearCopshowium"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "mech_beam_splitter"), new SmartEntry("info.mech_beam_splitter.name", new ItemStack(ModBlocks.mechanicalBeamSplitter, 1), "info.mech_beam_splitter", new PageDetailedRecipe(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.mechanicalBeamSplitter, 1), ModBlocks.beamSplitter, "ingotCopshowium", "ingotCopshowium", "stickIron"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "beam_cage_+_staff"), new SmartEntry("info.beam_cage_+_staff.name", new ItemStack(ModItems.beamCage, 1), "info.beam_cage_+_staff", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.beamCage, 1), "*&*", '*', ModBlocks.largeQuartzStabilizer, '&', "ingotCopshowium"), 0), new PageDetailedRecipe(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.cageCharger, 1), "ingotBronze", "ingotBronze", "ingotCopshowium", ModItems.pureQuartz), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.staffTechnomancy, 1), "*&*", " & ", " | ", '*', ModItems.lensArray, '&', "ingotCopshowium", '|', "stickIron"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "prototyping"), new SmartEntry("info.prototyping.name", (EntityPlayer play) -> {return ModConfig.getConfigInt(ModConfig.allowPrototype, true) != -1;}, new ItemStack(ModBlocks.prototype, 1), ((Supplier<Object>) () -> {int setting = ModConfig.getConfigInt(ModConfig.allowPrototype, true); return setting == 0 ? "info.prototyping.default" : setting == 1 ? "info.prototyping.consume" : "info.prototyping.device";}), "info.prototyping.pistol", true, new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.prototypingTable, 1), "*&*", "&%&", "*&*", '*', "ingotBronze", '&', "ingotCopshowium", '%', ModBlocks.detailedCrafter), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.prototypePort, 1), "*&*", "& &", "*&*", '*', "ingotBronze", '&', "nuggetCopshowium"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.pistol, 1), "CBB", "CA ", 'C', "ingotCopshowium", 'B', "ingotBronze", 'A', ModItems.lensArray), 0)));
@@ -441,24 +447,25 @@ public final class GuideBooks{
 			});
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
-			INFO.setTitle("Main Menu");
-			INFO.setWelcomeMessage("Welcome to Crossroads");
-			INFO.setDisplayName("technician_manual");
+			INFO.setGuideTitle("Main Menu");
+			INFO.setHeader("Welcome to Crossroads");
+			INFO.setItemName("technician_manual");
 			INFO.setColor(Color.CYAN);
-			INFO.setCategoryList(categories);
-			INFO.setRegistryName(new ResourceLocation(Main.MODID, "info_guide"));
-			INFO.setSpawnWithBook(false);
-			return INFO;
+			for(CategoryAbstract c : categories){
+				INFO.addCategory(c);
+			}
+			INFO_BOOK = INFO.build();
+			return INFO_BOOK;
 		}
 
 		@Override
 		public void handleModel(ItemStack bookStack){
-			GuideAPI.setModel(INFO);
+			GuideAPI.setModel(INFO_BOOK);
 		}
 
 		@Override
 		public void handlePost(ItemStack bookStack){
-			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_journal_to_manual"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(MAIN)));
+			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_journal_to_manual"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(MAIN_BOOK)));
 		}
 	}
 

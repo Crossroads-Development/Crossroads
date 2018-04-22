@@ -41,11 +41,8 @@ public class ItemRecipePredicate implements RecipePredicate<ItemStack>{
 			return false;
 		}
 
-		if(stack.getItem() == item && (meta == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == meta)){
-			return true;
-		}
+		return stack.getItem() == item && (meta == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == meta);
 
-		return false;
 	}
 
 	@Override

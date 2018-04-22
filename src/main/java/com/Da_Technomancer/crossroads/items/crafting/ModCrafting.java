@@ -136,7 +136,7 @@ public final class ModCrafting{
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.BLAZE_ROD, 0), new ItemRecipePredicate(Items.DRAGON_BREATH, 0), new ItemRecipePredicate(Items.GOLDEN_APPLE, -1)}, new ItemStack(ModItems.chaosRod, 1)));
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(ModBlocks.fluidTube, 0), new ItemRecipePredicate(ModItems.voidCrystal, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new EdibleBlobRecipePredicate(4, 2), new OreDictCraftingStack("stickIron"), new OreDictCraftingStack("nuggetCopshowium")}, new ItemStack(ModBlocks.hamsterWheel, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(ModItems.wrench, 0), new ItemRecipePredicate(ModItems.handCrank, 0), new ItemRecipePredicate(ModItems.staffTechnomancy, 0)}, new ItemStack(ModItems.liechWrench, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {(Object s) -> ModConfig.isWrench((ItemStack) s, false), new ItemRecipePredicate(ModItems.handCrank, 0), new ItemRecipePredicate(ModItems.staffTechnomancy, 0)}, new ItemStack(ModItems.liechWrench, 1)));
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 6), new OreDictCraftingStack("ingotCopper")}, new ItemStack(ModBlocks.maxwellDemon, 1)));
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new OreDictCraftingStack("meatRaw"), new OreDictCraftingStack("gunpowder"), (Predicate<ItemStack>) (ItemStack stack) -> {if(stack.getItem() == ModItems.phial){ ReagentStack reag = ModItems.phial.getReagants(stack).getLeft()[5]; return reag != null && reag.getAmount() >= 5;} return false;}}, new ItemStack(ModItems.nitroglycerin, 8)));
 		
@@ -497,9 +497,7 @@ public final class ModCrafting{
 		//Redstone Keyboard
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"));
 		//Wrench
-		if(ModConfig.getConfigBool(ModConfig.addWrench, true)){
-			toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.wrench, 1), "* *", "*|*", " | ", '*', "ingotIron", '|', "stickIron"));
-		}
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.wrench, 1), "* *", "*|*", " | ", '*', "ingotIron", '|', "stickIron"));
 		//Port Extender
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.portExtender, 1), " # ", "#h#", " # ", '#', "ingotTin", 'h', Blocks.HOPPER));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.portExtender, 1), " # ", "#h#", " # ", '#', "ingotTin", 'h', ModBlocks.sortingHopper));

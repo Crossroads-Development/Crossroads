@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
 import com.Da_Technomancer.crossroads.items.ModItems;
-
+import com.Da_Technomancer.crossroads.items.OmniMeter;
+import com.Da_Technomancer.crossroads.items.Thermometer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,20 +24,33 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class FatCollectorTileEntity extends TileEntity implements ITickable{
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+
+public class FatCollectorTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private double temp;
 	private boolean init = false;
 	private FluidStack content = null;
-	private final int CAPACITY = 2_000;
+	private static final int CAPACITY = 2_000;
 	private ItemStack inv = ItemStack.EMPTY;
 	/**
 	 * Below the first double the machine does not operate, above the last
 	 * double all fat is wasted, between the 2nd and 3rd double is the peak
 	 * efficiency
 	 */
-	private final double[] BRACKETS = new double[] {100D, 140D, 160D, 200D};
-	private final double USE_PER_VALUE = .8D;
+	private static final double[] BRACKETS = new double[] {100D, 140D, 160D, 200D};
+	private static final double USE_PER_VALUE = .8D;
+
+	@Override
+	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
+		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
+			chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
+			if(!(device instanceof Thermometer)){
+				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+			}
+		}
+	}
 
 	@Override
 	public void update(){

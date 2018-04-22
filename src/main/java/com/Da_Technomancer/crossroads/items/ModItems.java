@@ -164,14 +164,12 @@ public final class ModItems{
 		alchCrystal = new BasicItem("alch_crystal", "gemAlcCryst");
 		wasteSalt = new BasicItem("waste_salt", "dustSalt");
 		phial = new Phial();
-		if(ModConfig.getConfigBool(ModConfig.addWrench, false)){
-			wrench = new BasicItem("wrench"){
-				@Override
-				public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player){
-					return true;
-				}
-			};
-		}
+		wrench = new BasicItem("wrench", null, ModConfig.getConfigBool(ModConfig.addWrench, false)){
+			@Override
+			public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player){
+				return true;
+			}
+		};
 		liechWrench = new LiechWrench();
 		leydenJar = new LeydenJar();
 		florenceFlask = new FlorenceFlask();
@@ -198,7 +196,7 @@ public final class ModItems{
 		}
 		toClientRegister.clear();
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static void clientInit(){
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phial, florenceFlask, shell);
