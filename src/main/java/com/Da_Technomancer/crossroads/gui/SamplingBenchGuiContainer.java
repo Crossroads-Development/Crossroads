@@ -43,25 +43,25 @@ public class SamplingBenchGuiContainer extends GuiContainer{
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		String s = te.getDisplayName().getUnformattedText();
-		fontRenderer.drawString(s, 88 - fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		fontRenderer.drawString(s, 98 - fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		fontRenderer.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 72, 4210752);
 
 		ReagentStack reag = te.reag;
 
 		if(reag == null){
-			fontRenderer.drawString("Empty", 88 - fontRenderer.getStringWidth("Empty") / 2, 18, 4210752);
+			fontRenderer.drawString("Empty", 98 - fontRenderer.getStringWidth("Empty") / 2, 18, 4210752);
 		}else{
 			String line = reag.getType().getName() + " (" + reag.getType().getIndex() + ")";
-			fontRenderer.drawString(line, 88 - fontRenderer.getStringWidth(line) / 2, 18, 4210752);
+			fontRenderer.drawString(line, 98 - fontRenderer.getStringWidth(line) / 2, 18, 4210752);
 			fontRenderer.drawString("Boiling: ", 32, 28, 4210752);
 			line = reag.getType().getBoilingPoint() < -273 ? "Always" : (reag.getType().getBoilingPoint() + "°C");
-			fontRenderer.drawString(line, 144 - fontRenderer.getStringWidth(line), 28, 4210752);
+			fontRenderer.drawString(line, 164 - fontRenderer.getStringWidth(line), 28, 4210752);
 			fontRenderer.drawString("Melting: ", 32, 38, 4210752);
 			line = reag.getType().getMeltingPoint() < -273 ? "Always" : (reag.getType().getMeltingPoint() + "°C");
-			fontRenderer.drawString(line, 144 - fontRenderer.getStringWidth(line), 38, 4210752);
-			fontRenderer.drawString("Disolves: ", 32, 58, 4210752);
+			fontRenderer.drawString(line, 164 - fontRenderer.getStringWidth(line), 38, 4210752);
+			fontRenderer.drawString("Dissolves: ", 32, 58, 4210752);
 			line = reag.getType().solventType() == null ? "None" : reag.getType().solventType().toString();
-			fontRenderer.drawString(line, 144 - fontRenderer.getStringWidth(line), 58, 4210752);
+			fontRenderer.drawString(line, 164 - fontRenderer.getStringWidth(line), 58, 4210752);
 		}
 	}
 }

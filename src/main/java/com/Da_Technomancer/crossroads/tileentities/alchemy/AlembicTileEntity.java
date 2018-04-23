@@ -239,7 +239,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 					}else{
 						contents[toAdd.getIndex()].increaseAmount(toAddStack.getAmount());
 					}
-					heat += Math.min(toAdd.getMeltingPoint() + 263D, 290D) * toAddStack.getAmount();
+					heat += Math.max(0, Math.min(toAdd.getMeltingPoint() + 273D, EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + 273D)) * toAddStack.getAmount();
 					markDirty();
 					dirtyReag = true;
 					stack.shrink(1);
@@ -327,7 +327,8 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 
 	private double correctTemp(){
 		//Shares heat between internal cable & contents
-		cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);		
+		cableTemp = amount <= 0 ? cableTemp : ((273D + cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * heat) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D)) - 273D;
+		//cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
 		heat = (cableTemp + 273D) * amount;
 		return cableTemp;
 	}

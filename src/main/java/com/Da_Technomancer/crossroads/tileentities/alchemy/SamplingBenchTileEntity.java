@@ -24,7 +24,7 @@ public class SamplingBenchTileEntity extends TileEntity{
 		return oldState.getBlock() != newState.getBlock();
 	}
 
-	public void setGlassware(ItemStack stack){
+	private void setGlassware(ItemStack stack){
 		glassware = stack;
 		
 		reag = null;

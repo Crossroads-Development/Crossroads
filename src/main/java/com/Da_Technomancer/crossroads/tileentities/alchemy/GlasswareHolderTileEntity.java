@@ -1,32 +1,12 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Triple;
-
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyReactorTE;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.*;
+import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
-
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,6 +20,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import org.apache.commons.lang3.tuple.Triple;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
@@ -183,7 +169,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 				double endHeat = phial.getMiddle();
 				double endAmount = phial.getRight();
 
-				if(phial.getRight() <= 0){
+				if(phial.getRight() <= AlchemyCore.MIN_QUANTITY){
 					//Move from block to item
 
 					double space = ((AbstractGlassware) stack.getItem()).getCapacity() - endAmount;
@@ -269,7 +255,9 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 						amount += moved;
 						space -= moved;
 						double heatTrans = moved * callerTemp;
-						if(r.increaseAmount(-moved) <= 0){
+						if(r.increaseAmount(-moved) <= AlchemyCore.MIN_QUANTITY){
+							endHeat -= r.getAmount() * callerTemp;
+							endAmount -= r.getAmount();
 							reag[i] = null;
 						}
 						endAmount -= moved;
@@ -285,7 +273,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 					if(changed){
 						dirtyReag = true;
 						markDirty();
-						((AbstractGlassware) stack.getItem()).setReagents(stack, reag, endHeat, endAmount);
+						((AbstractGlassware) stack.getItem()).setReagents(stack, reag, Math.max(0, endHeat), Math.max(0, endAmount));
 					}
 					return stack;
 				}
@@ -300,7 +288,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 						}else{
 							contents[toAdd.getIndex()].increaseAmount(toAddStack.getAmount());
 						}
-						heat += Math.min(toAdd.getMeltingPoint() + 263D, 290D) * toAddStack.getAmount();
+						heat += Math.max(0, Math.min(toAdd.getMeltingPoint() + 273D, EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + 273D)) * toAddStack.getAmount();
 						markDirty();
 						dirtyReag = true;
 						stack.shrink(1);
@@ -334,7 +322,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	protected double correctTemp(){
 		if(florence){
 			//Shares heat between internal cable & contents
-			cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);		
+			cableTemp = amount <= 0 ? cableTemp : ((273D + cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * heat) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D)) - 273D;
 			heat = (cableTemp + 273D) * amount;
 			return cableTemp;
 		}
@@ -353,7 +341,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 			IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
 			EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-			if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
+			if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
 				return;
 			}
 

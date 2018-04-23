@@ -22,17 +22,19 @@
 			}
 		},
 		"horiz_facing": {
-			"north": {
+			"west": {
+				"x": 90,
 				"y": 270
 			},
-			"south": {
+			"east": {
+				"x": 90,
 				"y": 90
 			},
-			"east": {
-				"y": 0
+			"north": {
+				"x": 90
 			},
-			"west": {
-				"y": 180
+			"south": {
+				"x": 270
 			}
 		}
 	}

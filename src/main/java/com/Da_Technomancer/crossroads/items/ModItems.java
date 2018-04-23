@@ -105,6 +105,10 @@ public final class ModItems{
 	public static BasicItem solidStasisol;
 	public static BasicItem solidDensus;
 	public static BasicItem solidAntiDensus;
+	public static BasicItem solidFortis;
+	public static BasicItem solidVitriol;
+	public static BasicItem solidMuriatic;
+	public static BasicItem solidRegia;
 	public static FlyingMachine flyingMachine;
 
 	/**
@@ -186,6 +190,10 @@ public final class ModItems{
 		solidStasisol = new BasicItem("solid_stasisol");
 		solidDensus = new BasicItem("solid_densus");
 		solidAntiDensus = new BasicItem("solid_anti_densus");
+		solidFortis = new BasicItem("solid_fortis");
+		solidVitriol = new BasicItem("solid_vitriol");
+		solidMuriatic = new BasicItem("solid_muriatic");
+		solidRegia = new BasicItem("solid_regia");
 		flyingMachine = new FlyingMachine();
 	}
 

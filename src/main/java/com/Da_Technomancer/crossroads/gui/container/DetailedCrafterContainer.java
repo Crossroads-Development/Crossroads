@@ -91,7 +91,7 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world) && nbt.getCompoundTag("elements").hasKey(EnumMagicElements.TIME.name()) && ModConfig.getConfigBool(ModConfig.technomancy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("alchemy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("alchemy"))){
+		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world) && nbt.getCompoundTag("elements").hasKey(EnumMagicElements.TIME.name()) && ModConfig.getConfigBool(ModConfig.technomancy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy"))){
 			for(int i = 0; i < 9; i++){
 				inInv.decrStackSize(i, 1);
 			}
@@ -108,7 +108,7 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(UNLOCK_ALCHEMY.matches(inInv, world) && passesAlchemyCriteria(nbt.getCompoundTag("elements")) && ModConfig.getConfigBool(ModConfig.alchemy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("technomancy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) ? true : !nbt.getCompoundTag("path").getBoolean("technomancy"))){
+		}else if(UNLOCK_ALCHEMY.matches(inInv, world) && passesAlchemyCriteria(nbt.getCompoundTag("elements")) && ModConfig.getConfigBool(ModConfig.alchemy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("technomancy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("technomancy"))){
 			for(int i = 0; i < 9; i++){
 				inInv.decrStackSize(i, 1);
 			}
@@ -161,7 +161,7 @@ public class DetailedCrafterContainer extends Container{
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index){
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(index);
+		Slot slot = inventorySlots.get(index);
 
 		if(slot != null && slot.getHasStack()){
 			ItemStack itemstack1 = slot.getStack();
@@ -286,6 +286,9 @@ public class DetailedCrafterContainer extends Container{
 			IRecipe recipe = null;
 			if(nbt.getBoolean("technomancy")){
 				recipe = findMatchingSpecialRecipe(craftMatrix, player.world, RecipeHolder.technomancyRecipes);
+			}
+			if(recipe == null && nbt.getBoolean("alchemy")){
+				recipe = findMatchingSpecialRecipe(craftMatrix, player.world, RecipeHolder.alchemyRecipes);
 			}
 			NonNullList<ItemStack> nonnulllist;
 

@@ -120,7 +120,7 @@ public class StaticReagent implements IReagent{
 	 */
 	@Override
 	public ItemStack getStackFromReagent(ReagentStack reag){
-		return reag != null && reag.getType() == this && reag.getAmount() >= itemAmount ? new ItemStack(solid, (int) (reag.getAmount() / itemAmount)) : ItemStack.EMPTY;
+		return reag != null && reag.getType() == this && reag.getAmount() >= itemAmount - AlchemyCore.MIN_QUANTITY ? new ItemStack(solid, (int) ((reag.getAmount() + AlchemyCore.MIN_QUANTITY) / itemAmount)) : ItemStack.EMPTY;
 	}
 
 	@Override

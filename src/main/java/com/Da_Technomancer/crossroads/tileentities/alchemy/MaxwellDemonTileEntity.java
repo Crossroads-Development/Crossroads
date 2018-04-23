@@ -48,11 +48,11 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		if(tempUp < 2500D){
-			tempUp = Math.min(2500D, tempUp + 15D);
+			tempUp = Math.min(2500D, tempUp + 5D);
 			markDirty();
 		}
 		if(tempDown > -250D){
-			tempDown = Math.max(-250D, tempDown - 15D);
+			tempDown = Math.max(-250D, tempDown - 5D);
 			markDirty();
 		}
 	}

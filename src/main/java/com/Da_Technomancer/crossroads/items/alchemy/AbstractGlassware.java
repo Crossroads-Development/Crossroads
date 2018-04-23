@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumSolventType;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
@@ -138,11 +139,11 @@ public abstract class AbstractGlassware extends Item{
 			return;
 		}
 		double amount = nbt.getDouble("am");
-		tooltip.add("Temperature: " + (amount == 0 ? 0 : (nbt.getDouble("he") / amount) - 273D) + "°C");
+		tooltip.add("Temperature: " + MiscOp.betterRound(amount == 0 ? 0 : (nbt.getDouble("he") / amount) - 273D, 3) + "°C");
 
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			if(nbt.hasKey(i + "_am")){
-				tooltip.add(new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am")).toString());
+				tooltip.add(new ReagentStack(AlchemyCore.REAGENTS[i], MiscOp.betterRound(nbt.getDouble(i + "_am"), 3)).toString());
 			}
 		}
 	}

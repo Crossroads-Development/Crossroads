@@ -47,8 +47,8 @@ public class MaxwellDemon extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Heats top to 2500°C while running at 15°C/t");
-		tooltip.add("Cools bottom to -250°C while running at -15°C/t");
+		tooltip.add("Heats top to 2500°C while running at 5°C/t");
+		tooltip.add("Cools bottom to -250°C while running at -5°C/t");
 		tooltip.add("More like Max's Demon.");
 	}
 }

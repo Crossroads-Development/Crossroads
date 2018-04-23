@@ -72,17 +72,17 @@ public final class AlchemyCore{
 		REAGENTS[2] = new BaseElementReagent("Adamant", Short.MAX_VALUE - 1, Short.MAX_VALUE, 2, (EnumMatterPhase phase) -> Color.GRAY, ModItems.adamant, 1, null, 1, null, new MagicUnit(0, 0, 1, 0));
 		REAGENTS[3] = new StaticReagent("Sulfur", 115D, 445D, 3, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_YELLOW_COLOR : phase == EnumMatterPhase.LIQUID ? Color.RED : Color.YELLOW, ModItems.sulfur, 10, null, 0, null);
 		REAGENTS[4] = new StaticReagent("Water", 0D, 100D, 4, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_WHITE_COLOR : TRANSLUCENT_BLUE_COLOR, Item.getItemFromBlock(Blocks.PACKED_ICE), 50, EnumSolventType.POLAR, 0, null);
-		REAGENTS[5] = new StaticReagent("Salt of Aqua Fortis", -40D, 80D, 5, (EnumMatterPhase phase) -> Color.YELLOW, null, 1, null, 0, ACID_EFFECT);// Salt that forms nitric acid, AKA aqua fortis, in water.
-		REAGENTS[6] = new StaticReagent("Mundane Salt", 800D, 1400D, 6, (EnumMatterPhase phase) -> phase == EnumMatterPhase.LIQUID ? Color.ORANGE : Color.WHITE, ModItems.dustSalt, 1, null, 0, SALT_EFFECT);// AKA table salt (sodium chloride).
+		REAGENTS[5] = new StaticReagent("Salt of Aqua Fortis", -40D, 80D, 5, (EnumMatterPhase phase) -> Color.YELLOW, ModItems.solidFortis, 10, EnumSolventType.POLAR, 0, ACID_EFFECT);// Salt that forms nitric acid, AKA aqua fortis, in water.
+		REAGENTS[6] = new StaticReagent("Mundane Salt", 800D, 1400D, 6, (EnumMatterPhase phase) -> phase == EnumMatterPhase.LIQUID ? Color.ORANGE : Color.WHITE, ModItems.dustSalt, 10, null, 0, SALT_EFFECT);// AKA table salt (sodium chloride).
 		REAGENTS[7] = new StaticReagent("Vanadium Oxide", 690D, 1750D, 7, (EnumMatterPhase phase) -> Color.YELLOW, ModItems.vanadiumVOxide, 1, null, 0, null);// Vanadium (V) oxide. This should decompose at the specified boiling point, but there isn't any real point to adding that.
 		REAGENTS[8] = new StaticReagent("Sulfur Dioxide", -72D, -10D, 8, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, 1, EnumSolventType.POLAR, 0, null);
 		REAGENTS[9] = new StaticReagent("Sulfur Trioxide", 20D, 40D, 9, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, 1, null, 0, null);
-		REAGENTS[10] = new StaticReagent("Salt of Oil of Vitriol", 10D, 340D, 10, (EnumMatterPhase phase) -> BROWN_COLOR, null, 1, null, 0, ACID_EFFECT);// Hydrogen Sulfate, salt that forms sulfuric acid, AKA Oil of Vitriol, in water.
-		REAGENTS[11] = new StaticReagent("Salt of Aqua Regia", -40D, 100D, 11, (EnumMatterPhase phase) -> Color.ORANGE, null, 1, EnumSolventType.AQUA_REGIA, 0, new AquaRegiaAlchemyEffect());// Shouldn't really be its own substance (actually a mixture of nitric and hydrochloric acid), but the code is greatly simplified by making it a separate substance.
+		REAGENTS[10] = new StaticReagent("Salt of Oil of Vitriol", 10D, 340D, 10, (EnumMatterPhase phase) -> BROWN_COLOR, ModItems.solidVitriol, 10, EnumSolventType.POLAR, 0, ACID_EFFECT);// Hydrogen Sulfate, salt that forms sulfuric acid, AKA Oil of Vitriol, in water.
+		REAGENTS[11] = new StaticReagent("Salt of Aqua Regia", -40D, 200D, 11, (EnumMatterPhase phase) -> Color.ORANGE, ModItems.solidRegia, 10, EnumSolventType.AQUA_REGIA, 0, new AquaRegiaAlchemyEffect());// Shouldn't really be its own substance (actually a mixture of nitric and hydrochloric acid), but the code is greatly simplified by making it a separate substance.
 		REAGENTS[12] = new StaticReagent("Cinnabar", 580D, Short.MAX_VALUE, 12, (EnumMatterPhase phase) -> Color.RED, Items.REDSTONE, 5, null, 0, null);// Mercury (II) sulfide.
-		REAGENTS[13] = new StaticReagent("Quicksilver", -40D, 560D, 13, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, ModItems.solidQuicksilver, 10, null, 0, null);// AKA murcury
+		REAGENTS[13] = new StaticReagent("Quicksilver", -40D, 560D, 13, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, ModItems.solidQuicksilver, 10, EnumSolventType.NON_POLAR, 0, null);// AKA murcury
 		REAGENTS[14] = new StaticReagent("Gold", 1100D, 3000D, 14, (EnumMatterPhase phase) -> Color.YELLOW, Items.GOLD_NUGGET, 16, null, 0, null);
-		REAGENTS[15] = new StaticReagent("Salt of Muriatic Acid", -110D, 90D, 15, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, EnumSolventType.POLAR, 0, ACID_EFFECT);// Hydrogen Chloride, salt that forms hydrochloric acid, AKA muriatic acid, in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve.
+		REAGENTS[15] = new StaticReagent("Salt of Muriatic Acid", -110D, 90D, 15, (EnumMatterPhase phase) -> CLEAR_COLOR, ModItems.solidMuriatic, 10, EnumSolventType.POLAR, 0, ACID_EFFECT);// Hydrogen Chloride, salt that forms hydrochloric acid, AKA muriatic acid, in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve.
 		REAGENTS[16] = new StaticReagent("Alchemical Salt", 900D, 1400D, 16, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, ModItems.wasteSalt, 10, null, 0, new SaltAlchemyEffect());//Any salt byproduct that is too boring to bother adding separately.
 		//
 		REAGENTS[18] = new StaticReagent("Philosopher Stone", Short.MAX_VALUE - 1, Short.MAX_VALUE, 18, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, ModItems.philosopherStone, 5, null, 2, null);
@@ -93,7 +93,7 @@ public final class AlchemyCore{
 		REAGENTS[23] = new StaticReagent("Copper", 1000D, 2560D, 23, (EnumMatterPhase phase) -> Color.ORANGE, OreSetup.nuggetCopper, 16, null, 0, null);
 		REAGENTS[24] = new StaticReagent("Iron", 1500D, 2560D, 24, (EnumMatterPhase phase) -> phase == EnumMatterPhase.SOLID ? Color.GRAY : Color.RED, Items.IRON_NUGGET, 16, null, 0, null);
 		REAGENTS[25] = new StaticReagent("Tin", 230D, 2560D, 25, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, OreSetup.nuggetTin, 16, null, 0, null);
-		REAGENTS[26] = new StaticReagent("Gunpowder", -275D, -274D, 26, (EnumMatterPhase phase) -> Color.GRAY, Items.GUNPOWDER, 10, null, 0, null);
+		REAGENTS[26] = new StaticReagent("Gunpowder", 300D, 301D, 26, (EnumMatterPhase phase) -> Color.GRAY, Items.GUNPOWDER, 10, null, 0, null);
 		REAGENTS[27] = new StaticReagent("Ruby", 2000D, 3000D, 27, (EnumMatterPhase phase) -> Color.RED, OreSetup.gemRuby, 25, null, 0, null);
 		REAGENTS[28] = new StaticReagent("Emerald", 2000D, 3000D, 28, (EnumMatterPhase phase) -> Color.GREEN, Items.EMERALD, 25, null, 0, null);//Couldn't find actual figures on melting/boiling points of emerald/diamond, perhaps due to large variance.
 		REAGENTS[29] = new StaticReagent("Diamond", 2000D, 3000D, 29, (EnumMatterPhase phase) -> Color.CYAN, Items.DIAMOND, 25, null, 0, null);
@@ -167,15 +167,15 @@ public final class AlchemyCore{
 		//Nitric Acid production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[4], 1)}, new Pair[] {Pair.of(REAGENTS[5], 2)}, null, 100D, Double.MAX_VALUE, 70D, new EnumSolventType[] {EnumSolventType.POLAR}, true));
 		//Aqua Regia production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[5], 1), Pair.of(REAGENTS[15], 3)}, new Pair[] {Pair.of(REAGENTS[11], 4)}, null, -300D, Double.MAX_VALUE, 0D, new EnumSolventType[] {EnumSolventType.POLAR}, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[5], 1), Pair.of(REAGENTS[15], 3)}, new Pair[] {Pair.of(REAGENTS[11], 4)}, null, -300D, Double.MAX_VALUE, 0D, null, false));
 		//Chlorine gas production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[6], 2), Pair.of(REAGENTS[4], 2)}, new Pair[] {Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[16], 2)}, null, 100D, 600D, 0D, null, true));
 		//Bedrock decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[20], 5)}, new Pair[] {Pair.of(REAGENTS[16], 4)}, null, 0D, 100D, 100D, new EnumSolventType[] {EnumSolventType.AQUA_REGIA}, false));
 		//Alchemical Crystal production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[13], 2), Pair.of(REAGENTS[16], 1)}, new Pair[] {Pair.of(REAGENTS[22], 3)}, null, -300D, -40D, -35D, null, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[13], 2), Pair.of(REAGENTS[16], 1)}, new Pair[] {Pair.of(REAGENTS[22], 3)}, REAGENTS[25], -300D, -40D, -35D, null, false));
 		//Philosopher's Stone creation
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[13], 1), Pair.of(REAGENTS[14], 1), Pair.of(REAGENTS[16], 1)}, new Pair[] {Pair.of(REAGENTS[18], 4)}, null, -300D, -40D, -500D, new EnumSolventType[] {EnumSolventType.AQUA_REGIA}, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[13], 1), Pair.of(REAGENTS[14], 1), Pair.of(REAGENTS[16], 1)}, new Pair[] {Pair.of(REAGENTS[18], 4)}, null, -300D, -20D, -500D, new EnumSolventType[] {EnumSolventType.AQUA_REGIA}, false));
 		//Practitioner's Stone creation (destroys chamber if proportions are wrong.)
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[0], 1), Pair.of(REAGENTS[1], 1), Pair.of(REAGENTS[2], 1), Pair.of(REAGENTS[14], 1)}, new Pair[] {Pair.of(REAGENTS[19], 4)}, null, -300D, -20D, -5000D, new EnumSolventType[] {EnumSolventType.AQUA_REGIA}, false){
 			@Override

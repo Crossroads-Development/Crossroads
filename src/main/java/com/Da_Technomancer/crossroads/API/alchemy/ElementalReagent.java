@@ -94,7 +94,7 @@ public class ElementalReagent implements IElementReagent{
 	 */
 	@Override
 	public ItemStack getStackFromReagent(ReagentStack reag){
-		return reag != null && reag.getType() == this && reag.getAmount() >= 1 ? new ItemStack(solidForm, (int) reag.getAmount()) : ItemStack.EMPTY;
+		return reag != null && reag.getType() == this && reag.getAmount() >= 1 - AlchemyCore.MIN_QUANTITY ? new ItemStack(solidForm, (int) (reag.getAmount() + AlchemyCore.MIN_QUANTITY)) : ItemStack.EMPTY;
 	}
 	
 	@Override
