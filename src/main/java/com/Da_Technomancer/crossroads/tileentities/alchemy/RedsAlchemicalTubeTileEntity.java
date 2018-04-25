@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
@@ -10,7 +8,6 @@ import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
+import javax.annotation.Nullable;
 
 public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntReceiver{
 
@@ -57,7 +56,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 		locked = lockIn;
 		markDirty();
 		for(int i = 0; i < 6; i++){
-			ModPackets.network.sendToAllAround(new SendIntToClient(i, locked ? 0 : connectMode[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendIntToClient(i, locked || !hasMatch[i] ? 0 : connectMode[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 
@@ -103,7 +102,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 
 		for(int i = 0; i < 6; i++){
 			EnumFacing side = EnumFacing.getFront(i);
-			TileEntity te = null;
+			TileEntity te;
 			
 			if(connectMode[i] != 0){
 				te = world.getTileEntity(pos.offset(side));
@@ -124,7 +123,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 
 				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-				if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
+				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
 					if(connectMode[i] != 0){
 						connectMode[i] = 0;
 						markSideChanged(i);
@@ -135,7 +134,6 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 				if(!hasMatch[i]){
 					hasMatch[i] = true;
 					markSideChanged(i);
-					continue;
 				}else if(amount != 0 && connectMode[i] == 1){
 					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
 						correctReag();

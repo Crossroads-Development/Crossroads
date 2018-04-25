@@ -2,9 +2,7 @@ package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.SamplingBenchTileEntity;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -24,22 +22,14 @@ public class SamplingBenchContainer extends Container{
 			}
 		});
 
-		// Paper slot, ID 1
-		addSlotToContainer(new Slot(te.inv, 1, 152, 35){
-			@Override
-			public boolean isItemValid(ItemStack stack){
-				return stack.getItem() == Items.PAPER;
-			}
-		});
-
-		// Player Inventory, Slots 9-35, Slot IDs 2-28
+		// Player Inventory, Slots 9-35, Slot IDs 1-27
 		for(int y = 0; y < 3; ++y){
 			for(int x = 0; x < 9; ++x){
 				addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
 			}
 		}
 
-		// Player Inventory, Slot 0-8, Slot IDs 29-37
+		// Player Inventory, Slot 0-8, Slot IDs 28-36
 		for(int x = 0; x < 9; ++x){
 			addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 142));
 		}
@@ -59,13 +49,13 @@ public class SamplingBenchContainer extends Container{
 			ItemStack current = slot.getStack();
 			previous = current.copy();
 
-			if(fromSlot == 0 || fromSlot == 1){
+			if(fromSlot == 0){
 				// From TE Inventory to Player Inventory
-				if(!mergeItemStack(current, 2, 38, true))
+				if(!mergeItemStack(current, 1, 37, true))
 					return ItemStack.EMPTY;
 			}else{
 				// From Player Inventory to TE Inventory
-				if(!mergeItemStack(current, 0, 2, false))
+				if(!mergeItemStack(current, 0, 1, false))
 					return ItemStack.EMPTY;
 			}
 

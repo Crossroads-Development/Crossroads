@@ -34,7 +34,6 @@ public class ConduitModel implements IModel{
 				textures.add(new ResourceLocation(Main.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + theme.name() + "-redstone"));
 			}
 		}
-		textures.add(new ResourceLocation(Main.MODID, "blocks/block_bronze"));
 		return ImmutableSet.copyOf(textures);
 	}
 

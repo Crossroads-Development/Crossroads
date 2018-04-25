@@ -1,19 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.client.bakedModel.ConduitBakedModel;
-import com.Da_Technomancer.crossroads.client.bakedModel.IConduitModel;
+import com.Da_Technomancer.crossroads.client.bakedModel.AdvConduitBakedModel;
+import com.Da_Technomancer.crossroads.client.bakedModel.IAdvConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTubeTileEntity;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -30,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -41,20 +37,23 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class FluidTube extends BlockContainer implements IConduitModel{
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
-	private static final double size = .3125D;
-	private static final AxisAlignedBB BB = new AxisAlignedBB(size, size, size, 1 - size, 1 - size, 1 - size);
-	private static final AxisAlignedBB DOWN = new AxisAlignedBB(size, 0, size, 1 - size, size, 1 - size);
-	private static final AxisAlignedBB UP = new AxisAlignedBB(size, 1, size, 1 - size, 1 - size, 1 - size);
-	private static final AxisAlignedBB NORTH = new AxisAlignedBB(size, size, 0, 1 - size, 1 - size, size);
-	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(size, size, 1, 1 - size, 1 - size, 1 - size);
-	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, size, size, size, 1 - size, 1 - size);
-	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, size, size, 1 - size, 1 - size, 1 - size);
+public class FluidTube extends BlockContainer implements IAdvConduitModel{
+
+	private static final double SIZE = .3125D;
+	private static final AxisAlignedBB BB = new AxisAlignedBB(SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
+	private static final AxisAlignedBB DOWN = new AxisAlignedBB(SIZE, 0, SIZE, 1 - SIZE, SIZE, 1 - SIZE);
+	private static final AxisAlignedBB UP = new AxisAlignedBB(SIZE, 1, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
+	private static final AxisAlignedBB NORTH = new AxisAlignedBB(SIZE, SIZE, 0, 1 - SIZE, 1 - SIZE, SIZE);
+	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(SIZE, SIZE, 1, 1 - SIZE, 1 - SIZE, 1 - SIZE);
+	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE);
+	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
 	
 	public FluidTube(){
 		super(Material.IRON);
@@ -78,28 +77,61 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 		return EnumBlockRenderType.MODEL;
 	}
 
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		if(ModConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+			if(!worldIn.isRemote){
+				int face;
+				if(hitY < SIZE){
+					face = 0;//Down
+				}else if(hitY > 1F - (float) SIZE){
+					face = 1;//Up
+				}else if(hitX < (float) SIZE){
+					face = 4;//West
+				}else if(hitX > 1F - (float) SIZE){
+					face = 5;//East
+				}else if(hitZ < (float) SIZE){
+					face = 2;//North
+				}else if(hitZ > 1F - (float) SIZE){
+					face = 3;//South
+				}else{
+					face = side.getIndex();
+				}
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(te instanceof FluidTubeTileEntity){
+					Integer[] conMode = ((FluidTubeTileEntity) te).getConnectMode(false);
+
+					conMode[face] = (conMode[face] + 1) % 4;
+					((FluidTubeTileEntity) te).markSideChanged(face);
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World source, BlockPos pos){
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, source, pos);
 		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		if(exState.getValue(Properties.CONNECT)[0]){
+		Integer[] connectMode = exState.getValue(Properties.CONNECT_MODE);
+		if(connectMode[0] != 0){
 			list.add(DOWN);
 		}
-		if(exState.getValue(Properties.CONNECT)[1]){
+		if(connectMode[1] != 0){
 			list.add(UP);
 		}
-		if(exState.getValue(Properties.CONNECT)[2]){
+		if(connectMode[2] != 0){
 			list.add(NORTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[3]){
+		if(connectMode[3] != 0){
 			list.add(SOUTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[4]){
+		if(connectMode[4] != 0){
 			list.add(WEST);
 		}
-		if(exState.getValue(Properties.CONNECT)[5]){
+		if(connectMode[5] != 0){
 			list.add(EAST);
 		}
 		EntityPlayer play = Minecraft.getMinecraft().player;
@@ -115,23 +147,24 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
 		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
+		Integer[] connectMode = exState.getValue(Properties.CONNECT_MODE);
 		list.add(BB);
-		if(exState.getValue(Properties.CONNECT)[0]){
+		if(connectMode[0]  != 0){
 			list.add(DOWN);
 		}
-		if(exState.getValue(Properties.CONNECT)[1]){
+		if(connectMode[1]  != 0){
 			list.add(UP);
 		}
-		if(exState.getValue(Properties.CONNECT)[2]){
+		if(connectMode[2]  != 0){
 			list.add(NORTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[3]){
+		if(connectMode[3]  != 0){
 			list.add(SOUTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[4]){
+		if(connectMode[4]  != 0){
 			list.add(WEST);
 		}
-		if(exState.getValue(Properties.CONNECT)[5]){
+		if(connectMode[5]  != 0){
 			list.add(EAST);
 		}
 		
@@ -150,23 +183,24 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean nobodyKnows){
 		addCollisionBoxToList(pos, mask, list, BB);
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
-		
-		if(exState.getValue(Properties.CONNECT)[0]){
+		Integer[] connectMode = exState.getValue(Properties.CONNECT_MODE);
+
+		if(connectMode[0]  != 0){
 			addCollisionBoxToList(pos, mask, list, DOWN);
 		}
-		if(exState.getValue(Properties.CONNECT)[1]){
+		if(connectMode[1]  != 0){
 			addCollisionBoxToList(pos, mask, list, UP);
 		}
-		if(exState.getValue(Properties.CONNECT)[2]){
+		if(connectMode[2]  != 0){
 			addCollisionBoxToList(pos, mask, list, NORTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[3]){
+		if(connectMode[3]  != 0){
 			addCollisionBoxToList(pos, mask, list, SOUTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[4]){
+		if(connectMode[4]  != 0){
 			addCollisionBoxToList(pos, mask, list, WEST);
 		}
-		if(exState.getValue(Properties.CONNECT)[5]){
+		if(connectMode[5]  != 0){
 			addCollisionBoxToList(pos, mask, list, EAST);
 		}
 	}
@@ -176,15 +210,19 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 		StateMapperBase ignoreState = new StateMapperBase(){
 			@Override
 			protected ModelResourceLocation getModelResourceLocation(IBlockState IBlockState){
-				return ConduitBakedModel.BAKED_MODEL;
+				return AdvConduitBakedModel.BAKED_MODEL;
 			}
 		};
 		ModelLoader.setCustomStateMapper(this, ignoreState);
 	}
 
+	private static final ResourceLocation CAP = new ResourceLocation(Main.MODID, "blocks/block_bronze");
+	private static final ResourceLocation OUT = new ResourceLocation(Main.MODID, "blocks/fluid_tube_out");
+	private static final ResourceLocation IN = new ResourceLocation(Main.MODID, "blocks/fluid_tube_in");
+
 	@Override
-	public ResourceLocation getTexture(){
-		return new ResourceLocation(Main.MODID, "blocks/block_bronze");
+	public ResourceLocation getTexture(IBlockState state, int mode){
+		return mode == 0 || mode == 1 ? CAP : mode == 2 ? OUT : IN;
 	}
 
 	@Override
@@ -199,19 +237,15 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] {Properties.CONNECT});
+		return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] {Properties.CONNECT_MODE});
 	}
 
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
-		Boolean[] connect = {false, false, false, false, false, false};
+		TileEntity te = world.getTileEntity(pos);
+		return extendedBlockState.withProperty(Properties.CONNECT_MODE, te instanceof FluidTubeTileEntity ? ((FluidTubeTileEntity) te).getConnectMode(true) : new Integer[] {0, 0, 0, 0, 0, 0});
 
-		for(EnumFacing direction : EnumFacing.values()){
-			TileEntity te = world.getTileEntity(pos.offset(direction));
-			connect[direction.getIndex()] = te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite());
-		}
-		return extendedBlockState.withProperty(Properties.CONNECT, connect);
 	}
 
 	@Override
@@ -221,6 +255,6 @@ public class FluidTube extends BlockContainer implements IConduitModel{
 
 	@Override
 	public double getSize(){
-		return size;
+		return SIZE;
 	}
 }

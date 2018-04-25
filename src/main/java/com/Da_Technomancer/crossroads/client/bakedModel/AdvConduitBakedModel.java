@@ -190,7 +190,7 @@ public class AdvConduitBakedModel implements IBakedModel{
 
 	@Override
 	public TextureAtlasSprite getParticleTexture(){
-		return bakedTextureGetter.apply(new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_cap"));
+		return bakedTextureGetter.apply(new ResourceLocation(Main.MODID, "blocks/block_bronze"));
 	}
 
 	@Override

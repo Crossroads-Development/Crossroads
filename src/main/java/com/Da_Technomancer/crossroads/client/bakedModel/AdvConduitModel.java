@@ -32,6 +32,9 @@ public class AdvConduitModel implements IModel{
 		textures.add(new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_cap"));
 		textures.add(new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_out"));
 		textures.add(new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_in"));
+		textures.add(new ResourceLocation(Main.MODID, "blocks/block_bronze"));
+		textures.add(new ResourceLocation(Main.MODID, "blocks/fluid_tube_out"));
+		textures.add(new ResourceLocation(Main.MODID, "blocks/fluid_tube_in"));
 		return ImmutableSet.copyOf(textures);
 	}
 

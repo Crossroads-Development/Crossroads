@@ -300,7 +300,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected EnumTransferMode[] getModes(){
-		return new EnumTransferMode[] {EnumTransferMode.OUTPUT, EnumTransferMode.OUTPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT};
+		return new EnumTransferMode[] {EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH};
 	}
 
 	@Override
