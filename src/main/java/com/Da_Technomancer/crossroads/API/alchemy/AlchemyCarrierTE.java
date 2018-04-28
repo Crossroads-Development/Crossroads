@@ -1,19 +1,19 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	protected double heat = 0;
 	protected double amount = 0;
 	protected boolean dirtyReag = false;
-	
+
 	protected Vec3d getParticlePos(){
 		return new Vec3d(pos).addVector(0.5D, 0.5D, 0.5D);
 	}
@@ -178,9 +178,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 				}
 			}
 		}
-		
+
 		Vec3d particlePos = getParticlePos();
-		
+
 		if(liqAmount > 0){
 			server.spawnParticle(ModParticles.COLOR_LIQUID, false, particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.02D, (Math.random() - 1D) * 0.02D, (Math.random() * 2D - 1D) * 0.02D, 1F, (int) (liqCol[0] / liqAmount), (int) (liqCol[1] / liqAmount), (int) (liqCol[2] / liqAmount), (int) (liqCol[3] / liqAmount));
 		}
@@ -193,6 +193,120 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		if(solAmount > 0){
 			server.spawnParticle(ModParticles.COLOR_SOLID, false, particlePos.x - 0.25D + world.rand.nextFloat() / 2F, particlePos.y - 0.1F, particlePos.z - 0.25D + world.rand.nextFloat() / 2F, 0, 0, 0, 0, 1F, (int) (solCol[0] / solAmount), (int) (solCol[1] / solAmount), (int) (solCol[2] / solAmount), (int) (solCol[3] / solAmount));
 		}
+	}
+
+	/*
+	 * Helper method for moving reagents with glassware/solid items. Use is optional, and must be added in the block if used.
+	 */
+	@Nonnull
+	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking){
+		double temp = correctTemp() + 273D;//Kelvin
+		ItemStack out = stack.copy();
+
+		//Move solids from carrier into hand
+		if(stack.isEmpty()){
+			for(int i = 0; i < contents.length; i++){
+				if(contents[i] != null && contents[i].getPhase(temp) == EnumMatterPhase.SOLID){
+					out = contents[i].getType().getStackFromReagent(contents[i]);
+					if(!out.isEmpty()){
+						double amountRemoved = AlchemyCore.REAGENTS[i].getReagentFromStack(out).getAmount() * (double) out.getCount();
+						if(contents[i].increaseAmount(-amountRemoved) <= AlchemyCore.MIN_QUANTITY){
+							amount -= contents[i].getAmount();
+							heat -= temp * contents[i].getAmount();
+							contents[i] = null;
+						}
+						amount -= amountRemoved;
+						heat -= temp * amountRemoved;
+					}
+				}
+			}
+		}else if(stack.getItem() instanceof AbstractGlassware){
+			//Move reagents between glassware and carrier
+			Triple<ReagentStack[], Double, Double> phial = ((AbstractGlassware) stack.getItem()).getReagants(stack);
+			ReagentStack[] reag = phial.getLeft();
+			double phialHeat = phial.getMiddle();
+			double phialAmount = phial.getRight();
+			if(phialAmount <= AlchemyCore.MIN_QUANTITY){
+				//Move from carrier to glassware
+				if(stack.getMetadata() == 0){
+					//Refuse if made of glass and cannot hold contents
+					for(ReagentStack r : contents){
+						if(r != null && !r.getType().canGlassContain()){
+							return stack;
+						}
+					}
+				}
+
+				phialAmount = 0;
+				phialHeat = 0;
+
+				double ratioToMove = Math.max(0, Math.min(1D, ((AbstractGlassware) stack.getItem()).getCapacity() / amount));
+
+				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+					if(contents[i] != null){
+						double toMove = contents[i].getAmount() * ratioToMove;
+						reag[i] = new ReagentStack(AlchemyCore.REAGENTS[i], toMove);
+						phialHeat += temp * toMove;
+						phialAmount += toMove;
+						if(contents[i].increaseAmount(-toMove) <= AlchemyCore.MIN_QUANTITY){
+							amount -= contents[i].getAmount();
+							heat -= temp * contents[i].getAmount();
+							contents[i] = null;
+						}
+						heat -= temp *toMove;
+						amount -= toMove;
+					}
+				}
+				((AbstractGlassware) out.getItem()).setReagents(out, reag, phialHeat, phialAmount);
+			}else{
+				//Move from glassware to carrier
+				double ratioToMove = Math.max(0, Math.min(1D, (transferCapacity() - amount) / phialAmount));
+				double phialTemp = phialAmount == 0 ? 0 : phialHeat / phialAmount;//Kelvin
+				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+					if(reag[i] != null){
+						double toMove = reag[i].getAmount() * ratioToMove;
+						if(contents[i] == null){
+							contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], toMove);
+						}else{
+							contents[i].increaseAmount(toMove);
+						}
+						heat += phialTemp * toMove;
+						amount += toMove;
+						if(reag[i].increaseAmount(-toMove) <= AlchemyCore.MIN_QUANTITY){
+							phialAmount -= reag[i].getAmount();
+							phialHeat -= phialTemp * reag[i].getAmount();
+							reag[i] = null;
+						}
+						phialHeat -= phialTemp *toMove;
+						phialAmount -= toMove;
+					}
+				}
+				((AbstractGlassware) out.getItem()).setReagents(out, reag, phialHeat, phialAmount);
+			}
+		}else{
+			//Move solids from hand into carrier
+			IReagent typeProduced = AlchemyCore.ITEM_TO_REAGENT.get(stack.getItem());
+			if(typeProduced != null){
+				double amountProduced = typeProduced.getReagentFromStack(stack).getAmount();
+				if(amountProduced <= transferCapacity() - amount){
+					amount += amountProduced;
+					heat += Math.max(0, Math.min(typeProduced.getMeltingPoint() + 273D, EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + 273D)) * amountProduced;
+					out.shrink(1);
+					if(contents[typeProduced.getIndex()] == null){
+						contents[typeProduced.getIndex()] = new ReagentStack(typeProduced, amountProduced);
+					}else{
+						contents[typeProduced.getIndex()].increaseAmount(amountProduced);
+					}
+				}
+			}
+		}
+
+		if(!ItemStack.areItemsEqual(out, stack) || !ItemStack.areItemStackTagsEqual(out, stack)){
+			markDirty();
+			dirtyReag = true;
+		}
+
+		return out;
 	}
 
 	/**

@@ -73,13 +73,14 @@ public abstract class AbstractGlassware extends Item{
 			totalAmount = nbt.getDouble("am");
 			double temp = totalAmount == 0 ? 0 : (heat / totalAmount) - 273D;
 			boolean[] solvents = new boolean[EnumSolventType.values().length];
-
+			totalAmount = 0;
 			for(int i = 0; i < solvents.length; i++){
 				solvents[i] = nbt.getBoolean(i + "_solv");
 			}
 
 			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 				if(nbt.hasKey(i + "_am")){
+					totalAmount += nbt.getDouble(i + "_am");
 					reagents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am"));
 					reagents[i].updatePhase(temp);
 				}
@@ -100,18 +101,25 @@ public abstract class AbstractGlassware extends Item{
 			stack.setTagCompound(new NBTTagCompound());
 		}
 
-		double temp = amount == 0 ? 0 : (heat / amount) - 273D;		
+		double temp = amount == 0 ? 0 : (heat / amount) - 273D;
+		double trueAmount = 0;
 		NBTTagCompound nbt = stack.getTagCompound();
 
 		boolean[] solvents = new boolean[EnumSolventType.values().length];
 
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = reagents[i];
-			if(reag == null){
+			//Clean out old tags, as well as any ReagentStacks that are too small
+			if(reag == null || reag.getAmount() <= AlchemyCore.MIN_QUANTITY){
 				nbt.removeTag(i + "_am");
+				if(reag != null){
+					heat -= temp * reag.getAmount();
+					amount -= reag.getAmount();
+					temp = amount == 0 ? 0 : (heat / amount) - 273D;
+				}
 			}else{
 				nbt.setDouble(i + "_am", reag.getAmount());
-
+				trueAmount += reag.getAmount();
 				IReagent type = reag.getType();
 				solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
 
@@ -128,7 +136,7 @@ public abstract class AbstractGlassware extends Item{
 		}
 
 		nbt.setDouble("he", heat);
-		nbt.setDouble("am", amount);
+		nbt.setDouble("am", trueAmount);
 	}
 
 	@Override

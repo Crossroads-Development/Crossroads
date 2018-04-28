@@ -1,6 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -8,10 +11,10 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentTankTileEntity
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +28,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ReagentTank extends BlockContainer{
 
@@ -72,23 +78,59 @@ public class ReagentTank extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.LIGHT) ? 1 : 0);
+		return (state.getValue(Properties.CRYSTAL) ? 1 : 0);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.LIGHT, (meta & 1) == 1);
+		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1);
 	}
 
 	@Override
 	public int damageDropped(IBlockState state){
-		return state.getValue(Properties.LIGHT) ? 1 : 0;
+		return state.getValue(Properties.CRYSTAL) ? 1 : 0;
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		//On this device, light is being re-used. True means crystal, false means glass. 
-		return new BlockStateContainer(this, new IProperty[] {Properties.LIGHT});
+		return new BlockStateContainer(this, Properties.CRYSTAL);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		if(stack.hasTagCompound()){
+			double am = 0;
+			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+				if(stack.getTagCompound().hasKey(i + "_am")){
+					double amount = stack.getTagCompound().getDouble(i + "_am");
+					am += amount;
+					tooltip.add(new ReagentStack(AlchemyCore.REAGENTS[i], amount).toString());
+				}
+			}
+
+			tooltip.add("Temp: " + MiscOp.betterRound(stack.getTagCompound().getDouble("heat") / am - 273D, 3));
+		}
+	}
+
+	@Override
+	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stackIn){
+		if(!(te instanceof ReagentTankTileEntity) || ((ReagentTankTileEntity) te).getAmount() <= AlchemyCore.MIN_QUANTITY){
+			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
+		}else{
+			player.addExhaustion(0.005F);
+			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
+			stack.setTagCompound(((ReagentTankTileEntity) te).getContentNBT());
+			spawnAsEntity(worldIn, pos, stack);
+		}
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		if(stack.hasTagCompound()){
+			ReagentTankTileEntity te = (ReagentTankTileEntity) world.getTileEntity(pos);
+			te.writeContentNBT(stack.getTagCompound());
+		}
 	}
 
 	@Override
@@ -103,13 +145,14 @@ public class ReagentTank extends BlockContainer{
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(!worldIn.isRemote){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(te instanceof ReagentTankTileEntity){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof ReagentTankTileEntity){
+			if(!worldIn.isRemote){
 				playerIn.setHeldItem(hand, ((ReagentTankTileEntity) te).rightClickWithItem(playerIn.getHeldItem(hand), playerIn.isSneaking()));
 			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override

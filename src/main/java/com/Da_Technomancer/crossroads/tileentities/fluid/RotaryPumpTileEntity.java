@@ -29,8 +29,8 @@ import javax.annotation.Nullable;
 
 public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntReceiver{
 
-	private final int REQUIRED = 200;
-	private int progress = 0;
+	private static final double REQUIRED = 50;
+	private double progress = 0;
 	private int lastProgress = 0;
 
 	private final double[] motionData = new double[4];
@@ -46,7 +46,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		Block fluidBlock = fluidBlockstate.getBlock();
 		//If anyone knows a builtin way to simplify this if statement, be my guest. It's so long it scares me...
 		if(FluidRegistry.lookupFluidForBlock(fluidBlock) != null && (fluidBlock instanceof BlockFluidClassic && ((BlockFluidClassic) fluidBlock).isSourceBlock(world, pos.offset(EnumFacing.DOWN)) || fluidBlockstate.getValue(BlockLiquid.LEVEL) == 0) && (content == null || (CAPACITY - content.amount >= 1000 && content.getFluid() == FluidRegistry.lookupFluidForBlock(fluidBlock)))){
-			double holder = motionData[1] < 0 ? 0 : (int) Math.min(motionData[1], REQUIRED - progress);
+			double holder = motionData[1] < 0 ? 0 : Math.min(motionData[1], REQUIRED - progress);
 			motionData[1] -= holder;
 			progress += holder;
 		}else{
@@ -59,14 +59,14 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 			world.setBlockToAir(pos.offset(EnumFacing.DOWN));
 		}
 
-		if(lastProgress != progress){
-			SendIntToClient msg = new SendIntToClient(0, progress, pos);
+		if(lastProgress != (int) progress){
+			SendIntToClient msg = new SendIntToClient(0, (int) progress, pos);
 			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			lastProgress = progress;
+			lastProgress = (int) progress;
 		}
 	}
 
-	private final int CAPACITY = 3000;
+	private static final int CAPACITY = 3000;
 	private FluidStack content = null;
 
 	public float getCompletion(){
@@ -84,7 +84,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
-		progress = nbt.getInteger("prog");
+		progress = nbt.getDouble("prog");
 		for(int i = 0; i < 4; i++){
 			motionData[i] = nbt.getDouble("motion" + i);
 		}
@@ -96,7 +96,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		if(content != null){
 			content.writeToNBT(nbt);
 		}
-		nbt.setInteger("prog", progress);
+		nbt.setDouble("prog", progress);
 		for(int i = 0; i < 4; i++){
 			nbt.setDouble("motion" + i, motionData[i]);
 		}
