@@ -31,6 +31,11 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	@Override
+	public EnumContainerType getChannel(){
+		return EnumContainerType.NONE;
+	}
+
+	@Override
 	public double getHeat(){
 		return heat;
 	}
@@ -113,6 +118,8 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			}
 			reag.updatePhase(endTemp);
 			if(glass && !reag.getType().canGlassContain()){
+				heat -= (endTemp + 273D) * reag.getAmount();
+				amount -= reag.getAmount();
 				destroy |= reag.getType().destroysBadContainer();
 				contents[i] = null;
 			}

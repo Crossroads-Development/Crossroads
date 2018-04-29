@@ -119,7 +119,7 @@ public class ReagentTank extends BlockContainer{
 			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
 		}else{
 			player.addExhaustion(0.005F);
-			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
+			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1, getMetaFromState(state));
 			stack.setTagCompound(((ReagentTankTileEntity) te).getContentNBT());
 			spawnAsEntity(worldIn, pos, stack);
 		}

@@ -231,8 +231,8 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentPump, 1, 0), "***", "*&*", "***", '&', "ingotBronze", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentPump, 1, 1), "***", "*&*", "***", '&', "ingotBronze", '*', "gemAlcCryst"));
 		//Reagent Tank
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 0), "*_*", "_^_", "*_*", '*', "ingotBronze", '_', "blockGlass", '^', ModItems.wasteSalt));
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 1), "*_*", "_^_", "*_*", '*', "ingotBronze", '_', "gemAlcCryst", '^', ModItems.wasteSalt));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 0), "*_*", "_^_", "*_*", '*', "ingotBronze", '_', "blockGlass", '^', "dustSalt"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 1), "*_*", "_^_", "*_*", '*', "ingotBronze", '_', "gemAlcCryst", '^', "dustSalt"));
 		//Redstone Alchemical Tube
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTube, 1, 0), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTube, 1, 0)));
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTube, 1, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTube, 1, 1)));
@@ -501,7 +501,12 @@ public final class ModCrafting{
 		//Port Extender
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.portExtender, 1), " # ", "#h#", " # ", '#', "ingotTin", 'h', Blocks.HOPPER));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.portExtender, 1), " # ", "#h#", " # ", '#', "ingotTin", 'h', ModBlocks.sortingHopper));
-		
+		//Reagent Tank and Reaction Chamber emptying
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1), new ItemStack(ModBlocks.reagentTank, 1, 0)));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1), new ItemStack(ModBlocks.reactionChamber, 1, 0)));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 1), new ItemStack(ModBlocks.reagentTank, 1, 1)));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1, 1), new ItemStack(ModBlocks.reactionChamber, 1, 1)));
+
 		//Vanadium smelting
 		GameRegistry.addSmelting(ModItems.vanadium, new ItemStack(ModItems.vanadiumVOxide, 1), .7F);
 	}

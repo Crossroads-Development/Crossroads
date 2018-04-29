@@ -33,6 +33,9 @@ public class EntityShell extends EntityThrowable{
 		if(!world.isRemote){
 			if(contents != null){
 				BlockPos targetPos = result.getBlockPos();
+				if(targetPos == null){
+					targetPos = result.entityHit.getPosition();
+				}
 				for(ReagentStack r : contents){
 					if(r != null){
 						r.getType().onRelease(world, targetPos, r.getAmount(), temp, r.getPhase(temp), contents);

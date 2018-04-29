@@ -20,17 +20,7 @@ import net.minecraft.world.chunk.Chunk;
 public final class MiscOp{
 
 	public static double betterRound(double numIn, int decPlac){
-		double opOn = Math.round(numIn * Math.pow(10, decPlac)) / Math.pow(10D, decPlac);
-		return opOn;
-	}
-
-	/**
-	 * An alternate version of Math.round. Instead of
-	 * hitting ints, it uses the secong arg ex. tiers = 1 is like round, tiers =
-	 * 2 means goes to closest .5 value, etc.
-	 */
-	public static double tiersRound(double numIn, int tiers){
-		return ((double) Math.round(numIn * (double) tiers)) / (double) tiers;
+		return Math.round(numIn * Math.pow(10, decPlac)) / Math.pow(10D, decPlac);
 	}
 
 	public static double findEfficiency(double speedIn, double lowerLimit, double upperLimit){
@@ -39,7 +29,7 @@ public final class MiscOp{
 	}
 
 	public static int posOrNeg(int in){
-		return in == 0 ? 0 : (in < 0 ? -1 : 1);
+		return Integer.compare(in, 0);
 	}
 
 	public static double posOrNeg(double in, double zeroCase){
@@ -77,8 +67,7 @@ public final class MiscOp{
 		if(!tag.hasKey(Main.MODID)){
 			tag.setTag(Main.MODID, new NBTTagCompound());
 		}
-		NBTTagCompound out = tag.getCompoundTag(Main.MODID); 
-		return out;
+		return tag.getCompoundTag(Main.MODID);
 	}
 
 	/**

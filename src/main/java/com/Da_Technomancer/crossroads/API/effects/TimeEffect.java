@@ -37,7 +37,7 @@ public class TimeEffect implements IEffect{
 				}
 			}
 
-			for(int i = 0; i < mult * BeamManager.BEAM_TIME; i++){
+			for(int i = 0; i < mult * BeamManager.BEAM_TIME * 16; i++){
 				//Each tick the TileEntity is queried again because some TileEntities destroy themselves on tick. 
 				((ITickable) worldIn.getTileEntity(pos)).update();
 				if(!(worldIn.getTileEntity(pos) instanceof ITickable)){

@@ -108,6 +108,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 						}
 						amount -= amountRemoved;
 						heat -= temp * amountRemoved;
+						break;
 					}
 				}
 			}

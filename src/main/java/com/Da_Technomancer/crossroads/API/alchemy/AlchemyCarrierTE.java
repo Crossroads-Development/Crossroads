@@ -217,6 +217,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 						}
 						amount -= amountRemoved;
 						heat -= temp * amountRemoved;
+						break;
 					}
 				}
 			}
@@ -370,6 +371,10 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		return nbt;
 	}
 
+	protected EnumContainerType getChannel(){
+		return glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL;
+	}
+
 	protected IChemicalHandler handler = new AlchHandler();
 
 	protected class AlchHandler implements IChemicalHandler{
@@ -385,7 +390,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 
 		@Override
 		public EnumContainerType getChannel(EnumFacing side){
-			return glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL;
+			return AlchemyCarrierTE.this.getChannel();
 		}
 
 		@Override

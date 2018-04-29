@@ -110,8 +110,8 @@ public final class AlchemyCore{
 				return true;
 			}
 		};
-		REAGENTS[38] = new StaticReagent("Densus", Short.MIN_VALUE - 1, Short.MAX_VALUE, 38, (EnumMatterPhase phase) -> Color.BLUE, ModItems.solidDensus, 20, null, 0, null);
-		REAGENTS[39] = new StaticReagent("Anti-Densus", Short.MIN_VALUE - 1, Short.MAX_VALUE, 39, (EnumMatterPhase phase) -> Color.ORANGE, ModItems.solidAntiDensus, 20, null, 0, null);
+		REAGENTS[38] = new StaticReagent("Densus", Short.MAX_VALUE - 1, Short.MAX_VALUE, 38, (EnumMatterPhase phase) -> Color.BLUE, ModItems.solidDensus, 20, null, 0, null);
+		REAGENTS[39] = new StaticReagent("Anti-Densus", Short.MAX_VALUE - 1, Short.MAX_VALUE, 39, (EnumMatterPhase phase) -> Color.ORANGE, ModItems.solidAntiDensus, 20, null, 0, null);
 
 		FLUID_TO_LIQREAGENT.put(BlockDistilledWater.getDistilledWater(), REAGENTS[4]);
 		FLUID_TO_LIQREAGENT.put(BlockMoltenCopper.getMoltenCopper(), REAGENTS[23]);

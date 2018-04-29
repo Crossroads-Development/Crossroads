@@ -1,17 +1,14 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
-import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
-import net.minecraft.item.ItemStack;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
-import org.apache.commons.lang3.tuple.Triple;
-
-import javax.annotation.Nonnull;
-import java.util.HashSet;
 
 public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
@@ -52,6 +49,11 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
+	public EnumContainerType getChannel(){
+		return EnumContainerType.NONE;
+	}
+
+	@Override
 	protected EnumTransferMode[] getModes(){
 		return new EnumTransferMode[] {EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH};
 	}
@@ -71,5 +73,50 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public boolean[] correctReag(){
+		boolean[] out = super.correctReag();
+		boolean destroy = false;
+
+		if(glass){
+			for(int i = 0; i < contents.length; i++){
+				ReagentStack reag = contents[i];
+				if(reag == null){
+					continue;
+				}
+				if(!reag.getType().canGlassContain()){
+					heat -= (heat / amount) * reag.getAmount();
+					amount -= reag.getAmount();
+					destroy |= reag.getType().destroysBadContainer();
+					contents[i] = null;
+				}
+			}
+			if(destroy){
+				destroyChamber();
+				return null;
+			}
+		}
+
+		return out;
+	}
+
+	private boolean broken = false;
+
+	private void destroyChamber(){
+		if(!broken){
+			broken = true;
+			double temp = heat / amount - 273D;
+			IBlockState state = world.getBlockState(pos);
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
+			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
+			for(ReagentStack r : contents){
+				if(r != null){
+					r.getType().onRelease(world, pos, r.getAmount(), temp, r.getPhase(temp), contents);
+				}
+			}
+		}
 	}
 }

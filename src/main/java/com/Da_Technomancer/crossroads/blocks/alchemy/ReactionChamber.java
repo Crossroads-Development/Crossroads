@@ -1,6 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -63,6 +66,26 @@ public class ReactionChamber extends BlockContainer{
 	}
 
 	@Override
+	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stackIn){
+		if(!(te instanceof ReactionChamberTileEntity) || ((ReactionChamberTileEntity) te).getAmount() <= AlchemyCore.MIN_QUANTITY){
+			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
+		}else{
+			player.addExhaustion(0.005F);
+			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1, getMetaFromState(state));
+			stack.setTagCompound(((ReactionChamberTileEntity) te).getContentNBT());
+			spawnAsEntity(worldIn, pos, stack);
+		}
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		if(stack.hasTagCompound()){
+			ReactionChamberTileEntity te = (ReactionChamberTileEntity) world.getTileEntity(pos);
+			te.writeContentNBT(stack.getTagCompound());
+		}
+	}
+
+	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
@@ -75,23 +98,22 @@ public class ReactionChamber extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.LIGHT) ? 1 : 0);
+		return (state.getValue(Properties.CRYSTAL) ? 1 : 0);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.LIGHT, (meta & 1) == 1);
+		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1);
 	}
 
 	@Override
 	public int damageDropped(IBlockState state){
-		return state.getValue(Properties.LIGHT) ? 1 : 0;
+		return state.getValue(Properties.CRYSTAL) ? 1 : 0;
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		//On this device, light is being re-used. True means crystal, false means glass. 
-		return new BlockStateContainer(this, Properties.LIGHT);
+		return new BlockStateContainer(this, Properties.CRYSTAL);
 	}
 
 	@Override
@@ -125,6 +147,18 @@ public class ReactionChamber extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		if(stack.hasTagCompound()){
+			double am = 0;
+			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+				if(stack.getTagCompound().hasKey(i + "_am")){
+					double amount = stack.getTagCompound().getDouble(i + "_am");
+					am += amount;
+					tooltip.add(new ReagentStack(AlchemyCore.REAGENTS[i], amount).toString());
+				}
+			}
+
+			tooltip.add("Temp: " + MiscOp.betterRound(stack.getTagCompound().getDouble("heat") / am - 273D, 3));
+		}
 		tooltip.add("Consumes: -10FE/t (Optional)");
 	}
 }
