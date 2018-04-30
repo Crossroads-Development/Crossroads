@@ -24,14 +24,6 @@ public interface IReagent{
 	 */
 	public double getBoilingPoint();
 	
-	/**
-	 * @return The type of solvent this acts as. 
-	 */
-	@Nullable
-	public default EnumSolventType solventType(){
-		return null;
-	}
-	
 	public default boolean canGlassContain(){
 		return true;
 	}

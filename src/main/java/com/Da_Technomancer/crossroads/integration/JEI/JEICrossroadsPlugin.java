@@ -64,6 +64,6 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry){
 		IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
-		registry.addRecipeCategories(new GrindstoneCategory(guiHelper), new FluidCoolingCategory(guiHelper), new HeatingCrucibleCategory(guiHelper), new HeatExchangerCategory(guiHelper), new DetailedCrafterCategory(guiHelper), new ArcaneExtractorCategory(guiHelper), new FusionBeamCategory(guiHelper), new ReactionCategory(guiHelper));	
+		registry.addRecipeCategories(new GrindstoneCategory(guiHelper), new FluidCoolingCategory(guiHelper), new HeatingCrucibleCategory(guiHelper), new HeatExchangerCategory(guiHelper), new DetailedCrafterCategory(guiHelper), new ArcaneExtractorCategory(guiHelper), new FusionBeamCategory(guiHelper), new ReactionCategory(guiHelper), new ReagInfoCategory(guiHelper));
 	}
 }

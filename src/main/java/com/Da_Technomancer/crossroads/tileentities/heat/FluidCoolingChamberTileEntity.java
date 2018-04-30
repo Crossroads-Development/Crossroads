@@ -1,23 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Triple;
-
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
 import com.Da_Technomancer.crossroads.items.Thermometer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,17 +20,19 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Triple;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class FluidCoolingChamberTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private FluidStack content = null;
 	private static final int CAPACITY = 16000;
-	private static final int ECAP = 10;
 	private boolean init = false;
 	private double temp;
 	private ItemStack inventory = ItemStack.EMPTY;
 	private int ticksExisted = 0;
-	private static final Random RAND = new Random();
 
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
@@ -67,7 +57,7 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 
 		if(++ticksExisted % 10 == 0 && content != null && RecipeHolder.fluidCoolingRecipes.containsKey(content.getFluid()) && content.amount >= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()){
 			Triple<ItemStack, Double, Double> trip = RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getRight();
-			if((inventory.isEmpty() || (ItemStack.areItemsEqual(trip.getLeft(), inventory) && 16 - inventory.getCount() >= trip.getLeft().getCount())) && temp < trip.getMiddle() - RAND.nextInt(ECAP * trip.getRight().intValue())){
+			if((inventory.isEmpty() || (ItemStack.areItemsEqual(trip.getLeft(), inventory) && 16 - inventory.getCount() >= trip.getLeft().getCount())) && temp < trip.getMiddle()){
 				temp += trip.getRight();
 				if((content.amount -= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()) <= 0){
 					content = null;

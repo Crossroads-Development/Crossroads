@@ -71,8 +71,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		return amount <= 0 ? -273D : (heat / amount) - 273D;
 	}
 
-	@Nullable
-	protected boolean[] correctReag(){
+	protected boolean correctReag(){
 		dirtyReag = false;
 		amount = 0;
 		for(ReagentStack r : contents){
@@ -81,30 +80,17 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			}
 		}
 		if(amount == 0){
-			return null;
+			return true;
 		}
 		double endTemp = correctTemp();
 
-		boolean[] solvents = new boolean[EnumSolventType.values().length];
-
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = contents[i];
-			if(reag != null){
-				if(reag.getAmount() >= AlchemyCore.MIN_QUANTITY){
-					IReagent type = reag.getType();
-					solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
-
-					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp && type.solventType() != null){
-						solvents[type.solventType().ordinal()] = true;
-					}
-				}else{
+			if(reag != null && reag.getAmount() < AlchemyCore.MIN_QUANTITY){
 					heat -= (endTemp + 273D) * reag.getAmount();
 					contents[i] = null;
-				}
 			}
 		}
-
-		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
 
 		for(ReagentStack reag : contents){
 			if(reag == null){
@@ -112,7 +98,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			}
 			reag.updatePhase(endTemp);
 		}
-		return solvents;
+		return true;
 	}
 
 	@Override

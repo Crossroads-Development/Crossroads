@@ -10,8 +10,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 
-import javax.annotation.Nullable;
-
 /**
  * Implementations must implement hasCapability and getCapability directly. 
  */
@@ -73,8 +71,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	@Override
-	@Nullable
-	protected boolean[] correctReag(){
+	protected boolean correctReag(){
 		dirtyReag = false;
 		amount = 0;
 		for(ReagentStack r : contents){
@@ -83,31 +80,18 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			}
 		}
 		if(amount == 0){
-			return null;
+			return true;
 		}
 
 		double endTemp = correctTemp();
 
-		boolean[] solvents = new boolean[EnumSolventType.values().length];
-
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = contents[i];
-			if(reag != null){
-				if(reag.getAmount() >= AlchemyCore.MIN_QUANTITY){
-					IReagent type = reag.getType();
-					solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
-
-					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp && type.solventType() != null){
-						solvents[type.solventType().ordinal()] = true;
-					}
-				}else{
-					heat -= (endTemp + 273D) * reag.getAmount();
-					contents[i] = null;
-				}
+			if(reag != null && reag.getAmount() < AlchemyCore.MIN_QUANTITY){
+				heat -= (endTemp + 273D) * reag.getAmount();
+				contents[i] = null;
 			}
 		}
-
-		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
 
 		boolean destroy = false;
 
@@ -127,9 +111,8 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 
 		if(destroy){
 			destroyChamber();
-			return null;
 		}
-		return solvents;
+		return !destroy;
 	}
 
 	@Override
@@ -152,35 +135,16 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	public double getReactionCapacity(){
 		return transferCapacity() * 1.5D;
 	}
-	
+
 	@Override
 	public void dropItem(ItemStack stack){
 		InventoryHelper.spawnItemStack(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
 	}
 
 	protected void performReaction(){
-		boolean[] solvents = new boolean[EnumSolventType.values().length];
-
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			ReagentStack reag = contents[i];
-			if(reag != null){
-				IReagent type = reag.getType();
-				solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
-
-				if(type.getMeltingPoint() <= correctTemp() && type.getBoilingPoint() > correctTemp() && type.solventType() != null){
-					solvents[type.solventType().ordinal()] = true;
-				}
-			}
-		}
-
-		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
-
 		for(IReaction react : AlchemyCore.REACTIONS){
-			if(react.performReaction(this, solvents)){
-				solvents = correctReag();
-				if(solvents == null){
-					return;
-				}
+			if(react.performReaction(this)){
+				correctReag();
 				break;
 			}
 		}

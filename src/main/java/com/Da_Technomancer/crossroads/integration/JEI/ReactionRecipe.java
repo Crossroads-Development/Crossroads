@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import com.Da_Technomancer.crossroads.API.alchemy.EnumSolventType;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ITransparentReaction;
 import com.google.common.collect.ImmutableList;
@@ -27,7 +26,6 @@ public class ReactionRecipe implements IRecipeWrapper{
 	private final double minTemp;
 	private final double maxTemp;
 	private final double deltaHeat;
-	private final String[] solvents;
 
 	public ReactionRecipe(ITransparentReaction reaction){
 		ingr = new ArrayList<ReagIngr>(reaction.getReagents().length);
@@ -43,15 +41,6 @@ public class ReactionRecipe implements IRecipeWrapper{
 		minTemp = reaction.minTemp();
 		maxTemp = reaction.maxTemp();
 		deltaHeat = reaction.deltaHeatPer();
-		EnumSolventType[] solv = reaction.requiredSolvents();
-		if(solv == null){
-			solvents = new String[0];
-		}else{
-			solvents = new String[solv.length];
-			for(int i = 0; i < solv.length; i++){
-				solvents[i] = solv[i].toString();
-			}
-		}
 	}
 
 	@Override
@@ -69,18 +58,6 @@ public class ReactionRecipe implements IRecipeWrapper{
 		fontRenderer.drawString(line, 90 - fontRenderer.getStringWidth(line) / 2, 42, 4210752);
 		line = deltaHeat > 0 ? "Endothermic" : deltaHeat < 0 ? "Exothermic" : "Isothermic";
 		fontRenderer.drawString(line, 90 - fontRenderer.getStringWidth(line) / 2, 62, 4210752);
-		line = "Solvents: ";
-		for(int i = 0; i < solvents.length; i++){
-			line += solvents[i];
-			if(i != solvents.length - 1){
-				line += "; ";
-			}
-		}
-		if(solvents.length == 0){
-			line += "None";
-		}
-		
-		fontRenderer.drawString(line, 90 - fontRenderer.getStringWidth(line) / 2, 82, 4210752);
 
 		if(charged){
 			GlStateManager.color(1, 1, 1);

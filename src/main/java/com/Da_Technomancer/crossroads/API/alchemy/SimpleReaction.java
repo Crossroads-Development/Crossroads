@@ -11,21 +11,19 @@ public class SimpleReaction implements IReaction{
 	protected final double maxTemp;
 	protected final IReagent cat;
 	protected final boolean charged;
-	protected final EnumSolventType[] solvents;
 	protected final Pair<IReagent, Integer>[] reagents;
 	protected final Pair<IReagent, Integer>[] products;
 	protected final int amountChange;
 
 	protected static final double HEAT_CONVERSION = 5;//5 was picked somewhat arbitrarily as a conversion factor from J/mol * mol to *C
 
-	public SimpleReaction(Pair<IReagent, Integer>[] reagents, Pair<IReagent, Integer>[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, @Nullable EnumSolventType[] solvents, boolean charged){
+	public SimpleReaction(Pair<IReagent, Integer>[] reagents, Pair<IReagent, Integer>[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, boolean charged){
 		this.reagents = reagents;
 		this.products = products;
 		this.cat = cat;
 		this.minTemp = minTemp;
 		this.maxTemp = maxTemp;
 		this.heatChange = heatChange;
-		this.solvents = solvents;
 		this.charged = charged;
 		int change = 0;
 
@@ -40,7 +38,7 @@ public class SimpleReaction implements IReaction{
 	}
 
 	@Override
-	public boolean performReaction(IReactionChamber chamb, boolean[] solventsIn){
+	public boolean performReaction(IReactionChamber chamb){
 
 		//Check charged, catalyst, temperature, and solvent requirements
 		if(charged && !chamb.isCharged()){
@@ -54,13 +52,6 @@ public class SimpleReaction implements IReaction{
 		double chambTemp = chamb.getTemp();
 		if(chambTemp > maxTemp || chambTemp < minTemp){
 			return false;
-		}
-		if(solvents != null){
-			for(EnumSolventType solv : solvents){
-				if(!solventsIn[solv.ordinal()]){
-					return false;
-				}
-			}
 		}
 		
 		double content = chamb.getContent();

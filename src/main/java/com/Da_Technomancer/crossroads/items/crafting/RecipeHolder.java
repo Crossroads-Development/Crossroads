@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items.crafting;
 
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.IReaction;
+import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ITransparentReaction;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.integration.JEI.*;
@@ -151,6 +152,14 @@ public final class RecipeHolder{
 			}
 		}
 		JEIWrappers.put(ReactionCategory.ID, currentRecipes);
+
+		currentRecipes = new ArrayList<IRecipeWrapper>();
+		for(IReagent reag : AlchemyCore.REAGENTS){
+			if(reag != null){
+				currentRecipes.add(new ReagInfoRecipe(reag));
+			}
+		}
+		JEIWrappers.put(ReagInfoCategory.ID, currentRecipes);
 	}
 
 	@Nonnull

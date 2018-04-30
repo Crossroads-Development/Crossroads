@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumSolventType;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -72,11 +70,7 @@ public abstract class AbstractGlassware extends Item{
 			heat = nbt.getDouble("he");
 			totalAmount = nbt.getDouble("am");
 			double temp = totalAmount == 0 ? 0 : (heat / totalAmount) - 273D;
-			boolean[] solvents = new boolean[EnumSolventType.values().length];
 			totalAmount = 0;
-			for(int i = 0; i < solvents.length; i++){
-				solvents[i] = nbt.getBoolean(i + "_solv");
-			}
 
 			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 				if(nbt.hasKey(i + "_am")){
@@ -105,8 +99,6 @@ public abstract class AbstractGlassware extends Item{
 		double trueAmount = 0;
 		NBTTagCompound nbt = stack.getTagCompound();
 
-		boolean[] solvents = new boolean[EnumSolventType.values().length];
-
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = reagents[i];
 			//Clean out old tags, as well as any ReagentStacks that are too small
@@ -120,19 +112,7 @@ public abstract class AbstractGlassware extends Item{
 			}else{
 				nbt.setDouble(i + "_am", reag.getAmount());
 				trueAmount += reag.getAmount();
-				IReagent type = reag.getType();
-				solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
-
-				if(type.getMeltingPoint() <= temp && type.getBoilingPoint() > temp && type.solventType() != null){
-					solvents[type.solventType().ordinal()] = true;
-				}
 			}
-		}
-
-		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
-
-		for(int i = 0; i < solvents.length; i++){
-			nbt.setBoolean(i + "_solv", solvents[i]);
 		}
 
 		nbt.setDouble("he", heat);

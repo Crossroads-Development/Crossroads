@@ -20,7 +20,6 @@ public class StaticReagent implements IReagent{
 	private final int containType;
 	private final IAlchEffect effect;
 	private final String name;
-	private final EnumSolventType solvent;
 	private final Function<EnumMatterPhase, Color> color;
 	private final int index;
 
@@ -42,24 +41,10 @@ public class StaticReagent implements IReagent{
 	 * @param index The index in the {@link AlchemyCore#REAGENTS} array.
 	 * @param color A function giving the color of this reagent based on phase. 
 	 * @param solid The item that represents this in solid form. 
-	 * @param itemQuantity The amount of reagent 1 item is equivalent to. 
+	 * @param itemQuantity The amount of reagent 1 item is equivalent to.
 	 */
 	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity){
-		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, null);
-	}
-
-	/**
-	 * @param name Material name. 
-	 * @param meltingPoint Melting temperature. Must be lower than boilingPoint. 
-	 * @param boilingPoint Boiling temperature. Must be higher than meltingPoint. 
-	 * @param index The index in the {@link AlchemyCore#REAGENTS} array.
-	 * @param color A function giving the color of this reagent based on phase. 
-	 * @param solid The item that represents this in solid form. 
-	 * @param itemQuantity The amount of reagent 1 item is equivalent to.
-	 * @param solventType Sets the solvent type
-	 */
-	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, int itemQuantity, @Nullable EnumSolventType solventType){
-		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, solventType, 0, null);
+		this(name, meltingPoint, boilingPoint, index, color, solid, itemQuantity, 0, null);
 	}
 
 	/**
@@ -74,7 +59,7 @@ public class StaticReagent implements IReagent{
 	 * @param containType 0: Normal; 1: Vanishes in glass; 2: Destroys glass. 
 	 * @param effect The effect this has when released. Null for none. 
 	 */
-	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, double itemQuantity, @Nullable EnumSolventType solventType, int containType, @Nullable IAlchEffect effect){
+	public StaticReagent(String name, double meltingPoint, double boilingPoint, int index, Function<EnumMatterPhase, Color> color, @Nullable Item solid, double itemQuantity, int containType, @Nullable IAlchEffect effect){
 		this.name = name;
 		if(boilingPoint <= meltingPoint){
 			throw Main.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));
@@ -88,7 +73,6 @@ public class StaticReagent implements IReagent{
 		}
 		this.containType = containType;
 		this.effect = effect;
-		this.solvent = solventType;
 		this.color = color;
 		this.index = index;
 	}
@@ -138,15 +122,6 @@ public class StaticReagent implements IReagent{
 		if(effect != null){
 			effect.doEffectAdv(world, pos, amount, temp, phase, contents);
 		}
-	}
-
-	/**
-	 * @return The type of solvent this acts as. 
-	 */
-	@Override
-	@Nullable
-	public EnumSolventType solventType(){
-		return solvent;
 	}
 
 	@Override

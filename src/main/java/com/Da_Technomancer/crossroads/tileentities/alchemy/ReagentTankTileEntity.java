@@ -76,8 +76,8 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	public boolean[] correctReag(){
-		boolean[] out = super.correctReag();
+	public boolean correctReag(){
+		boolean out = super.correctReag();
 		boolean destroy = false;
 
 		if(glass){
@@ -95,7 +95,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			}
 			if(destroy){
 				destroyChamber();
-				return null;
+				return false;
 			}
 		}
 

@@ -230,8 +230,8 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
+		connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
 		for(int i = 0; i < 6; i++){
-			connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
 			connectMode[i] = Math.max(0, nbt.hasKey("mode_" + i) ? nbt.getInteger("mode_" + i) : 1);
 			hasMatch[i] = nbt.getBoolean("match_" + i);
 		}

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.packets;
 import com.Da_Technomancer.crossroads.Main;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -45,12 +45,13 @@ public class NbtToEntityServer extends Message<NbtToEntityServer>{
 		return null;
 	}
 
-	public void processMessage(World world, UUID entity, NBTTagCompound nbt){
+	public void processMessage(WorldServer world, UUID entity, NBTTagCompound nbt){
 		if(world == null || entity == null){
 			return;
 		}
 		Entity ent = null;
-		for(Entity loadedEnt : world.getLoadedEntityList()){
+
+		for(Entity loadedEnt : world.loadedEntityList){
 			if(entity.equals(loadedEnt.getUniqueID())){
 				ent = loadedEnt;
 				break;

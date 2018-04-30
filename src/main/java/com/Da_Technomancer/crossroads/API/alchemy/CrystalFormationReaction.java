@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 public class CrystalFormationReaction implements IReaction{
 
 	@Override
-	public boolean performReaction(IReactionChamber chamber, boolean[] solvents){
+	public boolean performReaction(IReactionChamber chamber){
 		ReagentStack[] reags = chamber.getReagants();
 		
 		if(reags[19] != null && reags[19].getAmount() >= 4.99 && chamber.getContent() - reags[19].getAmount() >= 19.99){

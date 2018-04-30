@@ -15,7 +15,7 @@ public class ElementalReaction implements IReaction{
 	}
 	
 	@Override
-	public boolean performReaction(IReactionChamber chamber, boolean[] solvents){
+	public boolean performReaction(IReactionChamber chamber){
 		if(chamber.isCharged()){
 			ReagentStack[] reags = chamber.getReagants();
 			if(reags[19] == null){

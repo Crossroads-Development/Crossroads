@@ -43,7 +43,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	@Override
 	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
-			chat.add("Temp: " + (device == ModItems.omnimeter ? MiscOp.betterRound(cableTemp, 2) : cableTemp) + "°C");
+			chat.add("Temp: " + MiscOp.betterRound(cableTemp, 3) + "°C");
 			if(amount == 0){
 				chat.add("No reagents");
 			}

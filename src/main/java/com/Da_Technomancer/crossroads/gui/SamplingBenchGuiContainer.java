@@ -54,14 +54,11 @@ public class SamplingBenchGuiContainer extends GuiContainer{
 			String line = reag.getType().getName() + " (" + reag.getType().getIndex() + ")";
 			fontRenderer.drawString(line, 98 - fontRenderer.getStringWidth(line) / 2, 18, 4210752);
 			fontRenderer.drawString("Boiling: ", 32, 28, 4210752);
-			line = reag.getType().getBoilingPoint() < -273 ? "Always" : (reag.getType().getBoilingPoint() + "°C");
+			line = reag.getType().getBoilingPoint() >= Short.MAX_VALUE - 10 ? "Never" : reag.getType().getBoilingPoint() < -273 ? "Always" : (reag.getType().getBoilingPoint() + "°C");
 			fontRenderer.drawString(line, 164 - fontRenderer.getStringWidth(line), 28, 4210752);
 			fontRenderer.drawString("Melting: ", 32, 38, 4210752);
-			line = reag.getType().getMeltingPoint() < -273 ? "Always" : (reag.getType().getMeltingPoint() + "°C");
+			line = reag.getType().getMeltingPoint() >= Short.MAX_VALUE - 10 ? "Never" : reag.getType().getMeltingPoint() < -273 ? "Always" : (reag.getType().getMeltingPoint() + "°C");
 			fontRenderer.drawString(line, 164 - fontRenderer.getStringWidth(line), 38, 4210752);
-			fontRenderer.drawString("Dissolves: ", 32, 58, 4210752);
-			line = reag.getType().solventType() == null ? "None" : reag.getType().solventType().toString();
-			fontRenderer.drawString(line, 164 - fontRenderer.getStringWidth(line), 58, 4210752);
 		}
 	}
 }

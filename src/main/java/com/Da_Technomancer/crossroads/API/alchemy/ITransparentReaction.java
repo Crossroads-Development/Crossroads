@@ -30,9 +30,6 @@ public interface ITransparentReaction extends IReaction{
 	 */
 	public double deltaHeatPer();
 	
-	@Nullable
-	public EnumSolventType[] requiredSolvents();
-	
 	/**
 	 * Each pair should consist of a required reagent type and the number of 'parts' required to perform the reaction. The number of parts is NOT the minimum quantity, and is only for specifying a ratio. 
 	 */

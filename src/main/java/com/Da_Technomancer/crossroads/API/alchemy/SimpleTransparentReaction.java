@@ -6,8 +6,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class SimpleTransparentReaction extends SimpleReaction implements ITransparentReaction{
 
-	public SimpleTransparentReaction(Pair<IReagent, Integer>[] reagents, Pair<IReagent, Integer>[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, EnumSolventType[] solvents, boolean charged){
-		super(reagents, products, cat, minTemp, maxTemp, heatChange, solvents, charged);
+	public SimpleTransparentReaction(Pair<IReagent, Integer>[] reagents, Pair<IReagent, Integer>[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, boolean charged){
+		super(reagents, products, cat, minTemp, maxTemp, heatChange, charged);
 	}
 
 	@Override
@@ -33,11 +33,6 @@ public class SimpleTransparentReaction extends SimpleReaction implements ITransp
 	@Override
 	public double deltaHeatPer(){
 		return heatChange;
-	}
-
-	@Override
-	public EnumSolventType[] requiredSolvents(){
-		return solvents;
 	}
 
 	@Override

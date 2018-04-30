@@ -71,7 +71,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			cableTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
-		
+
 		if(dirtyReag){
 			correctReag();
 		}
@@ -80,7 +80,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			performReaction();
 		}
 	}
-	
+
 	@Override
 	public void dropItem(ItemStack stack){
 		InventoryHelper.spawnItemStack(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
@@ -242,28 +242,9 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 	}
 
 	private void performReaction(){
-		boolean[] solvents = new boolean[EnumSolventType.values().length];
-
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			ReagentStack reag = contents[i];
-			if(reag != null){
-				IReagent type = reag.getType();
-				solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
-
-				if(type.getMeltingPoint() <= correctTemp() && type.getBoilingPoint() > correctTemp() && type.solventType() != null){
-					solvents[type.solventType().ordinal()] = true;
-				}
-			}
-		}
-
-		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
-
 		for(IReaction react : AlchemyCore.REACTIONS){
-			if(react.performReaction(this, solvents)){
-				solvents = correctReag();
-				if(solvents == null){
-					return;
-				}
+			if(react.performReaction(this)){
+				correctReag();
 				break;
 			}
 		}
@@ -283,8 +264,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 		return cableTemp;
 	}
 
-	@Nullable
-	private boolean[] correctReag(){
+	private boolean correctReag(){
 		dirtyReag = false;
 		amount = 0;
 		for(ReagentStack r : contents){
@@ -293,36 +273,24 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			}
 		}
 		if(amount == 0){
-			return null;
+			return false;
 		}
 
 		double endTemp = correctTemp();
 
-		boolean[] solvents = new boolean[EnumSolventType.values().length];
-
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = contents[i];
-			if(reag != null){
-				if(reag.getAmount() >= AlchemyCore.MIN_QUANTITY){
-					IReagent type = reag.getType();
-					solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
-
-					if(type.getMeltingPoint() <= endTemp && type.getBoilingPoint() > endTemp && type.solventType() != null){
-						solvents[type.solventType().ordinal()] = true;
-					}
-				}else{
-					heat -= (endTemp + 273D) * reag.getAmount();
-					contents[i] = null;
-				}
+			if(reag != null && reag.getAmount() < AlchemyCore.MIN_QUANTITY){
+				heat -= (endTemp + 273D) * reag.getAmount();
+				contents[i] = null;
 			}
 		}
 
-		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
 		double ambientTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 
-		
+
 		ReagentStack[] movedContents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
-		
+
 		for(int i = 0; i < contents.length; i++){
 			ReagentStack reag = contents[i];
 			if(reag == null){
@@ -338,18 +306,18 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 				amount -= reag.getAmount();
 
 				reag.updatePhase(ambientTemp);
-				
+
 				movedContents[reag.getType().getIndex()] = reag;
 				markDirty();
 			}
 		}
-		
+
 
 		EnumFacing dir = world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
 		TileEntity te = world.getTileEntity(pos.offset(dir));
 		if(te instanceof GlasswareHolderTileEntity){
 			GlasswareHolderTileEntity gh = (GlasswareHolderTileEntity) te;
-			
+
 			IChemicalHandler handler = gh.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.UP);
 			if(handler != null){
 				handler.insertReagents(movedContents, EnumFacing.UP, null);
@@ -368,7 +336,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 				((WorldServer) world).spawnParticle(ModParticles.COLOR_GAS, false, pos.getX() + 0.5D + dir.getFrontOffsetX(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getFrontOffsetZ(), 0, 0, (Math.random() * -0.05D) + 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 			}
 		}
-		return solvents;
+		return true;
 	}
 
 	@Override
@@ -439,7 +407,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			cableTemp = tempIn;
 			//Shares heat between internal cable & contents
 			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);		
+				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
 				heat = (cableTemp + 273D) * amount;
 				dirtyReag = true;
 			}
@@ -452,7 +420,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			cableTemp += tempChange;
 			//Shares heat between internal cable & contents
 			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);		
+				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
 				heat = (cableTemp + 273D) * amount;
 				dirtyReag = true;
 			}

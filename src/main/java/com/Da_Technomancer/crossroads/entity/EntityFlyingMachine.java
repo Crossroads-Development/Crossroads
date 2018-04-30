@@ -42,6 +42,23 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 
 	@Override
 	public void onUpdate(){
+		Entity controller = getControllingPassenger();
+
+		if(world.isRemote){
+			if(controller != null){
+				if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindForward)){
+					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) + (float) Math.PI / 20F);
+					NBTTagCompound nbt = new NBTTagCompound();
+					nbt.setFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
+					ModPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
+				}else if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindBack)){
+					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) - (float) Math.PI / 20F);
+					NBTTagCompound nbt = new NBTTagCompound();
+					nbt.setFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
+					ModPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
+				}
+			}
+		}
 		if(damage > 0){
 			damage--;
 		}
@@ -52,7 +69,6 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 		prevPosZ = this.posZ;
 		motionY -= 0.08D;
 
-		Entity controller = getControllingPassenger();
 		if(controller == null){
 			dataManager.set(GRAV_PLATE_ANGLE, 0F);
 		}else{
@@ -63,6 +79,7 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 			motionX += Math.sin(angle) * look.x * ACCEL;
 			motionZ += Math.sin(angle) * look.z * ACCEL;
 			rotationYaw = -(float) Math.atan2(look.z, look.x) * 180F / (float) Math.PI;
+			controller.velocityChanged = true;
 		}
 		markVelocityChanged();
 		move(MoverType.SELF, motionX, motionY, motionZ);
@@ -83,21 +100,6 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 		if(Math.abs(motionZ) < 0.003D){
 			motionZ = 0.0D;
 		}
-
-		if(world.isRemote && controller != null){
-			if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindForward)){
-				dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) + (float) Math.PI / 20F);
-				NBTTagCompound nbt = new NBTTagCompound();
-				nbt.setFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
-				ModPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
-			}else if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindBack)){
-				dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) - (float) Math.PI / 20F);
-				NBTTagCompound nbt = new NBTTagCompound();
-				nbt.setFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
-				ModPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
-			}
-		}
-
 		super.onUpdate();
 	}
 

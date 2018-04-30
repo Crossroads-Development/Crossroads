@@ -73,7 +73,6 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt){
-		boolean[] solvents = new boolean[EnumSolventType.values().length];
 
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = reags[i];
@@ -81,20 +80,7 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 				nbt.removeTag(i + "_am");
 			}else{
 				nbt.setDouble(i + "_am", reag.getAmount());
-
-				IReagent type = reag.getType();
-				solvents[EnumSolventType.AQUA_REGIA.ordinal()] |= i == 11;//Aqua regia is a special case where it works no matter the phase, but ONLY works at all if a polar solvent is present. 
-
-				if(type.getMeltingPoint() <= temp && type.getBoilingPoint() > temp && type.solventType() != null){
-					solvents[type.solventType().ordinal()] = true;
-				}
 			}
-		}
-
-		solvents[EnumSolventType.AQUA_REGIA.ordinal()] &= solvents[EnumSolventType.POLAR.ordinal()];
-
-		for(int i = 0; i < solvents.length; i++){
-			nbt.setBoolean(i + "_solv", solvents[i]);
 		}
 
 		nbt.setDouble("temp", temp);
