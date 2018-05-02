@@ -31,6 +31,10 @@ public class AcidAlchemyEffect implements IAlchEffect{
 			}
 			
 			IBlockState state = world.getBlockState(pos);
+			ItemStack itemForm = new ItemStack(state.getBlock());
+			if(itemForm.isEmpty()){
+				return;
+			}
 			int[] oreDict = OreDictionary.getOreIDs(new ItemStack(state.getBlock()));
 			for(int id : oreDict){
 				String name = OreDictionary.getOreName(id);

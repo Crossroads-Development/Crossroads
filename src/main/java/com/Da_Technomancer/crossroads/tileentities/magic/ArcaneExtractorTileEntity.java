@@ -25,7 +25,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -33,7 +33,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
 		}
 		return nbt;
-	}	
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
@@ -75,25 +75,16 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || stack.isEmpty() || !(RecipeHolder.magExtractRecipes.containsKey(stack.getItem()))){
+			if(slot != 0 || stack.isEmpty() || !inv.isEmpty() || !(RecipeHolder.magExtractRecipes.containsKey(stack.getItem()))){
 				return stack;
 			}
 
-			if(!inv.isEmpty() && !ItemStack.areItemsEqual(stack, inv)){
-				return stack;
-			}
-
-			int limit = Math.min(stack.getMaxStackSize() - inv.getCount(), stack.getCount());
 			if(!simulate){
-				if(inv.isEmpty()){
-					inv = new ItemStack(stack.getItem(), limit, stack.getMetadata());
-				}else{
-					inv.grow(limit);
-				}
+				inv = new ItemStack(stack.getItem(), 1, stack.getMetadata());
 				markDirty();
 			}
 
-			return stack.getCount() == limit ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - limit, stack.getMetadata());
+			return stack.getCount() == 1 ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - 1, stack.getMetadata());
 		}
 
 		@Override
@@ -103,7 +94,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 
 		@Override
 		public int getSlotLimit(int slot){
-			return slot == 0 ? 64 : 0;
+			return slot == 0 ? 1 : 0;
 		}
 	}
 

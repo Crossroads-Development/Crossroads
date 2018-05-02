@@ -25,11 +25,10 @@ public class ArcaneExtractorRecipe implements IRecipeWrapper{
 	
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY){
-		minecraft.fontRenderer.drawString("E:  P:  S:  V:", 80, 50, 4210752);
-		minecraft.fontRenderer.drawString(out.getEnergy() + ",", 80, 60, 4210752);
-		minecraft.fontRenderer.drawString(out.getPotential() + ",", 96, 60, 4210752);
-		minecraft.fontRenderer.drawString(out.getStability() + ",", 112, 60, 4210752);
-		minecraft.fontRenderer.drawString(out.getVoid() + "", 128, 60, 4210752);
+		minecraft.fontRenderer.drawString("Energy: " + out.getEnergy(), 80, 25, 4210752);
+		minecraft.fontRenderer.drawString("Potential: " + out.getPotential(), 80, 45, 4210752);
+		minecraft.fontRenderer.drawString("Stability: " + out.getStability(), 80, 65, 4210752);
+		minecraft.fontRenderer.drawString("Void: " + out.getVoid(), 80, 85, 4210752);
 	}
 	
 	@Override

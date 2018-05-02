@@ -73,7 +73,7 @@ public final class AlchemyCore{
 		REAGENTS[11] = new StaticReagent("Salt of Aqua Regia", -40D, 200D, 11, (EnumMatterPhase phase) -> Color.ORANGE, ModItems.solidRegia, 10, 0, new AquaRegiaAlchemyEffect());// Shouldn't really be its own substance (actually a mixture of nitric and hydrochloric acid), but the code is greatly simplified by making it a separate substance.
 		REAGENTS[12] = new StaticReagent("Cinnabar", 580D, Short.MAX_VALUE, 12, (EnumMatterPhase phase) -> Color.RED, Items.REDSTONE, 5, 0, null);// Mercury (II) sulfide.
 		REAGENTS[13] = new StaticReagent("Quicksilver", -40D, 560D, 13, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, ModItems.solidQuicksilver, 10, 0, null);// AKA murcury
-		REAGENTS[14] = new StaticReagent("Gold", 1100D, 3000D, 14, (EnumMatterPhase phase) -> Color.YELLOW, Items.GOLD_NUGGET, 16, 0, null);
+		REAGENTS[14] = new StaticReagent("Gold", 1100D, 3000D, 14, (EnumMatterPhase phase) -> Color.YELLOW, Items.GOLD_NUGGET, 2, 0, null);
 		REAGENTS[15] = new StaticReagent("Salt of Muriatic Acid", -110D, 90D, 15, (EnumMatterPhase phase) -> CLEAR_COLOR, ModItems.solidMuriatic, 10, 0, ACID_EFFECT);// Hydrogen Chloride, salt that forms hydrochloric acid, AKA muriatic acid, in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve.
 		REAGENTS[16] = new StaticReagent("Alchemical Salt", 900D, 1400D, 16, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, ModItems.wasteSalt, 10, 0, new SaltAlchemyEffect());//Any salt byproduct that is too boring to bother adding separately.
 		//
@@ -82,9 +82,9 @@ public final class AlchemyCore{
 		REAGENTS[20] = new StaticReagent("Bedrock", Short.MAX_VALUE - 1, Short.MAX_VALUE, 20, (EnumMatterPhase phase) -> Color.GRAY, Item.getItemFromBlock(Blocks.BEDROCK), 50, 0, null);
 		REAGENTS[21] = new StaticReagent("Chlorine", -100D, -35D, 21, (EnumMatterPhase phase) -> TRANSLUCENT_LIME_COLOR, null, 1, 0, new ChlorineAlchemyEffect());
 		REAGENTS[22] = new StaticReagent("Alchemical Crystal", Short.MAX_VALUE - 1, Short.MAX_VALUE, 22, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, ModItems.alchCrystal, 1, 0, null);
-		REAGENTS[23] = new StaticReagent("Copper", 1000D, 2560D, 23, (EnumMatterPhase phase) -> Color.ORANGE, OreSetup.nuggetCopper, 16, 0, null);
-		REAGENTS[24] = new StaticReagent("Iron", 1500D, 2560D, 24, (EnumMatterPhase phase) -> phase == EnumMatterPhase.SOLID ? Color.GRAY : Color.RED, Items.IRON_NUGGET, 16, 0, null);
-		REAGENTS[25] = new StaticReagent("Tin", 230D, 2560D, 25, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, OreSetup.nuggetTin, 16, 0, null);
+		REAGENTS[23] = new StaticReagent("Copper", 1000D, 2560D, 23, (EnumMatterPhase phase) -> Color.ORANGE, OreSetup.nuggetCopper, 2, 0, null);
+		REAGENTS[24] = new StaticReagent("Iron", 1500D, 2560D, 24, (EnumMatterPhase phase) -> phase == EnumMatterPhase.SOLID ? Color.GRAY : Color.RED, Items.IRON_NUGGET, 2, 0, null);
+		REAGENTS[25] = new StaticReagent("Tin", 230D, 2560D, 25, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, OreSetup.nuggetTin, 2, 0, null);
 		REAGENTS[26] = new StaticReagent("Gunpowder", Short.MAX_VALUE - 1, Short.MAX_VALUE, 26, (EnumMatterPhase phase) -> Color.GRAY, Items.GUNPOWDER, 10, 0, null);
 		REAGENTS[27] = new StaticReagent("Ruby", 2000D, 3000D, 27, (EnumMatterPhase phase) -> Color.RED, OreSetup.gemRuby, 25, 0, null);
 		REAGENTS[28] = new StaticReagent("Emerald", 2000D, 3000D, 28, (EnumMatterPhase phase) -> Color.GREEN, Items.EMERALD, 25, 0, null);//Couldn't find actual figures on melting/boiling points of emerald/diamond, perhaps due to large variance.
@@ -206,13 +206,13 @@ public final class AlchemyCore{
 		//Diamond production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[35], 2), Pair.of(REAGENTS[25], 1)}, new Pair[] {Pair.of(REAGENTS[29], 1)}, REAGENTS[19], -100, 1000, 0, false));
 		//Gold production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[11], 1), Pair.of(REAGENTS[13], 5)}, new Pair[] {Pair.of(REAGENTS[14], 5)}, REAGENTS[19], -40D, 560D, 10D, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[11], 1), Pair.of(REAGENTS[13], 5)}, new Pair[] {Pair.of(REAGENTS[14], 5)}, REAGENTS[2], -40D, 560D, 10D, false));
 		//Copper production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[13], 5)}, new Pair[] {Pair.of(REAGENTS[23], 5)}, REAGENTS[19], -40D, 560D, 10D, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[13], 5)}, new Pair[] {Pair.of(REAGENTS[23], 5)}, REAGENTS[2], -40D, 560D, 10D, false));
 		//Iron production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[10], 1), Pair.of(REAGENTS[13], 5)}, new Pair[] {Pair.of(REAGENTS[24], 5)}, REAGENTS[19], -40D, 560D, 10D, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[10], 1), Pair.of(REAGENTS[13], 5)}, new Pair[] {Pair.of(REAGENTS[24], 5)}, REAGENTS[2], -40D, 560D, 10D, false));
 		//Tin production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[5], 1), Pair.of(REAGENTS[13], 5)}, new Pair[] {Pair.of(REAGENTS[25], 5)}, REAGENTS[19], -40D, 560D, 10D, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[5], 1), Pair.of(REAGENTS[13], 5)}, new Pair[] {Pair.of(REAGENTS[25], 5)}, REAGENTS[2], -40D, 560D, 10D, false));
 		//Gold decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[14], 5)}, new Pair[] {Pair.of(REAGENTS[11], 1), Pair.of(REAGENTS[13], 5)}, REAGENTS[18], -40D, 560D, -10D, false));
 		//Copper decomposition

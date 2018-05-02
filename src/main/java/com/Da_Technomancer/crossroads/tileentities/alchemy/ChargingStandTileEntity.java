@@ -130,6 +130,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	 * Normal click with non-phial item: Try to add solid reagent
 	 */
 	@Nonnull
+	@Override
 	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking){
 		IBlockState state = world.getBlockState(pos);
 
@@ -166,7 +167,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 							return toRemove;
 						}
 					}
-				}				
+				}
 			}else if(stack.getItem() instanceof AbstractGlassware){
 				if(stack.getMetadata() == 0){
 					//Refuse if made of glass and cannot hold contents
@@ -290,22 +291,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 				}
 
 			}else{
-				IReagent toAdd = AlchemyCore.ITEM_TO_REAGENT.get(stack.getItem());
-				if(toAdd != null){
-					ReagentStack toAddStack = toAdd.getReagentFromStack(stack);
-					if(toAddStack != null && transferCapacity() - amount >= toAddStack.getAmount()){
-						if(contents[toAdd.getIndex()] == null){
-							contents[toAdd.getIndex()] = toAddStack;
-						}else{
-							contents[toAdd.getIndex()].increaseAmount(toAddStack.getAmount());
-						}
-						heat += Math.min(toAdd.getMeltingPoint() + 263D, 290D) * toAddStack.getAmount();
-						markDirty();
-						dirtyReag = true;
-						stack.shrink(1);
-						return stack;
-					}
-				}
+				return super.rightClickWithItem(stack, sneaking);
 			}
 		}else if(stack.getItem() == ModItems.phial || stack.getItem() == ModItems.florenceFlask){
 			//Add item into TE

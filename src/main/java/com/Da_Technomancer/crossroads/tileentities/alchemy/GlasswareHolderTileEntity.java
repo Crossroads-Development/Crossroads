@@ -116,6 +116,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	 * Normal click with non-phial item: Try to add solid reagent
 	 */
 	@Nonnull
+	@Override
 	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking){
 		IBlockState state = world.getBlockState(pos);
 

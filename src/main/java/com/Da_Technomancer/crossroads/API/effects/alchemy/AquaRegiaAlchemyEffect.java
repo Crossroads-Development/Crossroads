@@ -30,8 +30,11 @@ public class AquaRegiaAlchemyEffect implements IAlchEffect{
 				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 				return;
 			}
-			
-			int[] oreDict = OreDictionary.getOreIDs(new ItemStack(state.getBlock()));
+			ItemStack itemForm = new ItemStack(state.getBlock());
+			if(itemForm.isEmpty()){
+				return;
+			}
+			int[] oreDict = OreDictionary.getOreIDs(itemForm);
 			for(int id : oreDict){
 				String name = OreDictionary.getOreName(id);
 				switch(name){

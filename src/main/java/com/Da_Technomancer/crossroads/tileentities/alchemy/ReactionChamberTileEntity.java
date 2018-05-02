@@ -239,11 +239,9 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 		private void updateFakeInv(){
 			fakeInventory = new ItemStack[AlchemyCore.ITEM_TO_REAGENT.size()];
-			Iterator<IReagent> iter = AlchemyCore.ITEM_TO_REAGENT.values().iterator();
 			int index = 0;
 			double endTemp = handler.getTemp();
-			while(iter.hasNext()){
-				IReagent reag = iter.next();
+			for(IReagent reag : AlchemyCore.ITEM_TO_REAGENT.values()){
 				fakeInventory[index] = contents[reag.getIndex()] != null && contents[reag.getIndex()].getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(contents[reag.getIndex()]) : ItemStack.EMPTY;
 				index++;
 			}

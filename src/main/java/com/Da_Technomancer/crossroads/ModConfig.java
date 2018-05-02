@@ -95,7 +95,7 @@ public final class ModConfig{
 		electPerJoule = config.get(CAT_ALCHEMY, "FE generated from 1J. Set to 0 to effectively disable the dynamo. (Default 20)", 20, "", 0, Integer.MAX_VALUE);
 		growBlacklist = config.get(CAT_MISC, "Plant types that can not be grown by a potential beam. Should be in format 'modid:blockregistryname', ex. minecraft:wheat", new String[0]);
 		SYNCED_PROPERTIES.add(allowHellfire = config.get(CAT_ALCHEMY, "Whether to allow crafting Ignis Infernum. (Default true)",true));
-		SYNCED_PROPERTIES.add(voltusUsage = config.get(CAT_ALCHEMY, "Voltus used to charge atmosphere per 1000FE (Default 0.01)", 0.01D));
+		SYNCED_PROPERTIES.add(voltusUsage = config.get(CAT_ALCHEMY, "Voltus used to produce 1000FE of charge in the atmosphere (Default 0.1)", 0.1D));
 		atmosEffect = config.get(CAT_ALCHEMY, "Level of effects from overcharging the atmosphere (Default 3)", 3, "0: No negative effects. 1: Allow lightning strikes. 2: Allow creeper charging. 3: Allow lightning strikes & creeper charging.");
 	}
 

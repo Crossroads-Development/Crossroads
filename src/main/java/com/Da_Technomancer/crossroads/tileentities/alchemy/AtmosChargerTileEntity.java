@@ -104,13 +104,13 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 		}else{
 			int oldCharge = AtmosChargeSavedData.getCharge(world);
 			int op = Math.min(fe / 1000, (AtmosChargeSavedData.CAPACITY - oldCharge) / 1000);
-			op = (int) Math.min(op, voltusAmount / (ModConfig.getConfigDouble(ModConfig.voltusUsage, false)));
-			if(op <= 0){
+			int voltOp = Math.min((int) (voltusAmount / (ModConfig.getConfigDouble(ModConfig.voltusUsage, false))), (AtmosChargeSavedData.CAPACITY - oldCharge - op * 1000) / 1000);
+			if(op <= 0 && voltOp <= 0){
 				return;
 			}
 			fe -= op * 1000;
-			voltusAmount -= op * ModConfig.getConfigDouble(ModConfig.voltusUsage, false);
-			AtmosChargeSavedData.setCharge(world, oldCharge + op * 1000);
+			voltusAmount -= voltOp * ModConfig.getConfigDouble(ModConfig.voltusUsage, false);
+			AtmosChargeSavedData.setCharge(world, oldCharge + op * 1000 + voltOp * 1000);
 			markDirty();
 			if(renderTimer <= 0){
 				renderTimer = 10;

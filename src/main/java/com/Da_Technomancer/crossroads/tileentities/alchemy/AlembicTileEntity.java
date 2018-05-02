@@ -99,6 +99,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			for(int i = 0; i < contents.length; i++){
 				if(contents[i] != null && contents[i].getPhase(temp) == EnumMatterPhase.SOLID){
 					out = contents[i].getType().getStackFromReagent(contents[i]);
+					out.setCount(Math.min(out.getMaxStackSize(), out.getCount()));
 					if(!out.isEmpty()){
 						double amountRemoved = AlchemyCore.REAGENTS[i].getReagentFromStack(out).getAmount() * (double) out.getCount();
 						if(contents[i].increaseAmount(-amountRemoved) <= AlchemyCore.MIN_QUANTITY){
