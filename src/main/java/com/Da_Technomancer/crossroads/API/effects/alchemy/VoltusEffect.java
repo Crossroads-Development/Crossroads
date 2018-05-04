@@ -27,7 +27,7 @@ public class VoltusEffect implements IAlchEffect{
 			List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - 5, pos.getY() - 5, pos.getZ() - 5, pos.getX() + 5, pos.getY() + 5, pos.getZ() + 5), EntitySelectors.IS_ALIVE);
 			for(EntityLivingBase ent : ents){
 				ent.onStruckByLightning(null);
-				world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 5F, -5F);
+				world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.2F, 0F);
 				NBTTagCompound nbt = new NBTTagCompound();
 				new LooseArcRenderable((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 1, 0F, 1F, BOLT_COLORS[(int) (world.getTotalWorldTime() % 3)].getRGB()).saveToNBT(nbt);
 				ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));

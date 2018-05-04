@@ -57,7 +57,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 	public static final int[] COLOR_CODES = {new Color(128, 0, 255, 128).getRGB(), new Color(64, 0, 255, 128).getRGB(), new Color(100, 0, 255, 128).getRGB()};
 	private static final int[] ATTACK_COLOR_CODES = {new Color(255, 32, 0, 128).getRGB(), new Color(255, 0, 32, 128).getRGB(), new Color(255, 32, 32, 128).getRGB()};
 	
-	private static final int JOLT_CONSERVED = 900;
+	private static final int JOLT_CONSERVED = 950;
 	private int stored = 0;
 	private Boolean hasJar = null;
 	private static final int JOLT_AMOUNT = 1000;
@@ -100,7 +100,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 
 					new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, 1F, ATTACK_COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
 					ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 5F, -5F);
+					world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 					//Sound may need tweaking
 					
 					ent.onStruckByLightning(new EntityLightningBolt(world, ent.posX, ent.posY, ent.posZ, true));
@@ -124,7 +124,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 
 							new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, linkPos.getX() + 0.5F, linkPos.getY() + 2F, linkPos.getZ() + 0.5F, 5, 0.6F, 1F, COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
 							ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-							world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 5F, -5F);
+							world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 							//Sound may need tweaking
 							break;
 						}

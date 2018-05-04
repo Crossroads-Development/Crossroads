@@ -43,6 +43,9 @@ public class ElementalReagent implements IElementReagent{
 		this.secondaryBase = secondaryBase;
 		this.color = range.getTrueRGB();
 		AlchemyCore.ELEMENTAL_REAGS.add(this);
+		if(solidForm != null){
+			AlchemyCore.ITEM_TO_REAGENT.put(solidForm, this);
+		}
 	}
 	
 	@Override

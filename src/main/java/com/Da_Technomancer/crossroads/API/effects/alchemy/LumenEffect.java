@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 
-public class FusasEffect implements IAlchEffect{
+public class LumenEffect implements IAlchEffect{
 
 	@Override
 	public void doEffect(World world, BlockPos pos, double amount,double heat, EnumMatterPhase phase){
