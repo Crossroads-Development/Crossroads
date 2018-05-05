@@ -82,7 +82,7 @@ public class HeatedTube extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer(){
-		return BlockRenderLayer.CUTOUT;
+		return BlockRenderLayer.TRANSLUCENT;
 	}
 
 	@Override

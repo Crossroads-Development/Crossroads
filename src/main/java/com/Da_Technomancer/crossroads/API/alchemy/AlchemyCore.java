@@ -161,7 +161,7 @@ public final class AlchemyCore{
 		//Aqua Regia production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[5], 1), Pair.of(REAGENTS[15], 3)}, new Pair[] {Pair.of(REAGENTS[11], 4)}, null, -300D, Double.MAX_VALUE, 0D, false));
 		//Chlorine gas production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[6], 2), Pair.of(REAGENTS[4], 2)}, new Pair[] {Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[16], 2)}, null, 100D, 600D, 0D, true));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[6], 2), Pair.of(REAGENTS[4], 2)}, new Pair[] {Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[16], 2)}, null, 20D, 100D, 100D, true));
 		//Bedrock decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[20], 5)}, new Pair[] {Pair.of(REAGENTS[16], 4)}, REAGENTS[11], 0D, 100D, 100D, false));
 		//Alchemical Crystal production
@@ -222,7 +222,7 @@ public final class AlchemyCore{
 		//Tin decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[25], 5)}, new Pair[] {Pair.of(REAGENTS[5], 1), Pair.of(REAGENTS[13], 5)}, REAGENTS[18], -40D, 560D, -10D, false));
 		//Ignus Infernum production
-		if(ModConfig.getConfigBool(ModConfig.allowHellfire, true)){//Passes true to client as sided-ness is unknown.
+		if(ModConfig.getConfigBool(ModConfig.allowHellfire, true)){
 			REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[0], 5), Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[36], 2)}, new Pair[] {Pair.of(REAGENTS[37], 1)}, REAGENTS[19], 2250D, Short.MAX_VALUE, -200D, false));
 		}
 		//Densus production

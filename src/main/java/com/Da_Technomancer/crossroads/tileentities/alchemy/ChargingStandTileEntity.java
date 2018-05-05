@@ -39,7 +39,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	 */
 	private boolean florence = false;
 	private int fe = 0;
-	private static final int ENERGY_CAPACITY = 1000;
+	private static final int ENERGY_CAPACITY = 100;
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){

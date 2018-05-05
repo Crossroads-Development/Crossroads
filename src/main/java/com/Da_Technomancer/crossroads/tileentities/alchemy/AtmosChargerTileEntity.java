@@ -261,6 +261,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 
 		@Override
 		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
+			//Only allows insertion of voltus
 			if(voltusAmount >= VOLTUS_CAPACITY || reag[36] == null){
 				return false;
 			}

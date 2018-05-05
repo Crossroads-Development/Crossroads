@@ -1,17 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.util.Map;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
-
+import com.Da_Technomancer.crossroads.API.alchemy.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -26,6 +17,8 @@ import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
+import java.util.Map;
+
 public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
 	private static final double REAG_PER_MB = .05D;
@@ -37,12 +30,15 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
 	public FluidInjectorTileEntity(){
 		super();
-		this.handler = new AlchHandlerInjector();
 	}
 
 	public FluidInjectorTileEntity(boolean glass){
 		super(glass);
-		this.handler = new AlchHandlerInjector();
+	}
+
+	@Override
+	protected EnumTransferMode[] getModes(){
+		return new EnumTransferMode[] {EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
 	}
 
 	@Override
@@ -90,56 +86,6 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
 	private final FluidHandlerUp fluidHandlerUp = new FluidHandlerUp();
 	private final FluidHandlerDown fluidHandlerDown = new FluidHandlerDown();
-
-	private class AlchHandlerInjector extends AlchHandler{
-		@Override
-		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
-			double space = getTransferCapacity() - amount;
-			if(space <= 0){
-				return false;
-			}
-			double callerTemp = caller == null ? 293 : caller.getTemp() + 273D;
-			boolean changed = false;
-			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-				ReagentStack r = reag[i];
-				if(r != null){
-					EnumMatterPhase phase = r.getPhase(0);
-					if(ignorePhase || (phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp()))){
-						double moved = Math.min(space, r.getAmount());
-						if(moved <= 0D){
-							continue;
-						}
-						amount += moved;
-						changed = true;
-						space -= moved;
-						double heatTrans = moved * callerTemp;
-						if(r.increaseAmount(-moved) <= 0){
-							reag[i] = null;
-						}
-						heat += heatTrans;
-						if(caller != null){
-							caller.addHeat(-heatTrans);
-						}
-						if(contents[i] == null){
-							contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], moved);
-						}else{
-							contents[i].increaseAmount(moved);
-						}
-
-						if(space <= 0){
-							break;
-						}
-					}
-				}
-			}
-
-			if(changed){
-				dirtyReag = true;
-				markDirty();
-			}
-			return changed;
-		}
-	}
 
 	private class FluidHandlerUp implements IFluidHandler{
 
@@ -331,10 +277,5 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
 			return null;
 		}
-	}
-
-	@Override
-	protected EnumTransferMode[] getModes(){
-		return new EnumTransferMode[] {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
 	}
 }

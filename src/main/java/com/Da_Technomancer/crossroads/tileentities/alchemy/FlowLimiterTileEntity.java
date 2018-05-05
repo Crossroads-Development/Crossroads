@@ -20,7 +20,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
-	
+
 	private static final double[] LIMITS = new double[] {0.25D, 0.5D, 1, 2, 4, 8, 16};
 
 	private int limitIndex = 0;
@@ -39,7 +39,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		markDirty();
 		ModPackets.network.sendTo(new SendChatToClient("Reagent movement limit configured to: " + LIMITS[limitIndex], 25856), player);//CHAT_ID chosen at random
 	}
-	
+
 	@Override
 	protected void performTransfer(){
 		EnumFacing side = world.getBlockState(pos).getValue(Properties.FACING);
@@ -60,9 +60,11 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 				if(contents[i] != null){
 					double transLimit = Math.min(contents[i].getAmount(), limit - otherHandler.getContent(i));
-					transReag[i] = new ReagentStack(AlchemyCore.REAGENTS[i], transLimit);
-					if(contents[i].increaseAmount(-transLimit) <= 0){
-						contents[i] = null;
+					if(transLimit > 0){
+						transReag[i] = new ReagentStack(AlchemyCore.REAGENTS[i], transLimit);
+						if(contents[i].increaseAmount(-transLimit) <= 0){
+							contents[i] = null;
+						}
 					}
 				}
 			}
@@ -84,7 +86,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 			}
 		}
 	}
-	
+
 
 
 	@Override

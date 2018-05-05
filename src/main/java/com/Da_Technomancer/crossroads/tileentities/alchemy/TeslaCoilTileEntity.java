@@ -133,7 +133,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 			}
 		}
 		
-		if(stored > 0){
+		if(!redstone && stored > 0){
 			EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
 			TileEntity te = world.getTileEntity(pos.offset(facing));
 			if(te != null && te.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())){

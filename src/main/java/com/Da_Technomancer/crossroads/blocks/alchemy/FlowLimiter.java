@@ -76,7 +76,7 @@ public class FlowLimiter extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer(){
-		return BlockRenderLayer.CUTOUT;
+		return BlockRenderLayer.TRANSLUCENT;
 	}
 
 	@Override

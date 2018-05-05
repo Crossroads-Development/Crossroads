@@ -225,14 +225,14 @@ public final class ModCrafting{
 		//Heat Limiter
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatLimiter, 4, 0), "*&*", "*&*", "*#*", '*', "obsidian", '#', "dustRedstone", '&', "ingotCopper"));
 		//Reaction Chamber
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1, 0), "*^*", "^#^", "*^*", '*', "ingotBronze", '^', "ingotCopper", '#', new ItemStack(ModBlocks.reagentTank, 1, 0)));
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1, 1), "*^*", "^#^", "*^*", '*', "ingotBronze", '^', "ingotCopper", '#', new ItemStack(ModBlocks.reagentTank, 1, 1)));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1, 0), "*^*", "^#^", "*^*", '*', "ingotBronze", '^', "blockGlass", '#', new ItemStack(ModBlocks.reagentTank, 1, 0)));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1, 1), "*^*", "^#^", "*^*", '*', "ingotBronze", '^', "gemAlcCryst", '#', new ItemStack(ModBlocks.reagentTank, 1, 1)));
 		//Reagent Pump
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentPump, 1, 0), "***", "*&*", "***", '&', "ingotBronze", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentPump, 1, 1), "***", "*&*", "***", '&', "ingotBronze", '*', "gemAlcCryst"));
 		//Reagent Tank
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 0), "*_*", "_^_", "*_*", '*', "ingotBronze", '_', "blockGlass", '^', "dustSalt"));
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 1), "*_*", "_^_", "*_*", '*', "ingotBronze", '_', "gemAlcCryst", '^', "dustSalt"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 0), "*_*", "_ _", "*_*", '*', "ingotBronze", '_', "blockGlass"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 1), "*_*", "_ _", "*_*", '*', "ingotBronze", '_', "gemAlcCryst"));
 		//Redstone Alchemical Tube
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTube, 1, 0), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTube, 1, 0)));
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTube, 1, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTube, 1, 1)));

@@ -34,7 +34,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	private double cableTemp = 0;
 	private boolean init = false;
 	private int energy = 0;
-	private static final int ENERGY_CAPACITY = 1000;
+	private static final int ENERGY_CAPACITY = 100;
 
 	/**
 	 * @param chat Add info to this list, 1 line per entry. 

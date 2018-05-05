@@ -42,7 +42,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 
 				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-				if(cont != EnumContainerType.NONE && (cont == EnumContainerType.GLASS ? !glass : glass)){
+				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
 					continue;
 				}
 

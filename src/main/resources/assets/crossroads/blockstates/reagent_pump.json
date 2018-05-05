@@ -1,8 +1,8 @@
 {
 	"variants": {
-		"light=false,orient=false": { "model": "crossroads:reagent_pump_glass" },
-		"light=false,orient=true": { "model": "crossroads:reagent_pump_glass", "x": 180 },
-		"light=true,orient=false": { "model": "crossroads:reagent_pump_cryst" },
-		"light=true,orient=true": { "model": "crossroads:reagent_pump_cryst", "x": 180 }
+		"crystal=false,orient=false": { "model": "crossroads:reagent_pump_glass", "x": 180  },
+		"crystal=false,orient=true": { "model": "crossroads:reagent_pump_glass"},
+		"crystal=true,orient=false": { "model": "crossroads:reagent_pump_cryst", "x": 180  },
+		"crystal=true,orient=true": { "model": "crossroads:reagent_pump_cryst"}
 	}
 }

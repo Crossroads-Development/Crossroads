@@ -53,14 +53,14 @@ public class TeslaCoilTop extends Block{
 					}
 				}else if(heldItem.hasTagCompound() && heldItem.getTagCompound().hasKey("c_link")){
 					BlockPos prev = BlockPos.fromLong(heldItem.getTagCompound().getLong("c_link"));
-					TileEntity te = worldIn.getTileEntity(pos.offset(EnumFacing.DOWN));
+					TileEntity te = worldIn.getTileEntity(prev);
 					if(te instanceof TeslaCoilTileEntity){
 						BlockPos[] links = ((TeslaCoilTileEntity) te).linked;
 						if(prev.distanceSq(pos.offset(EnumFacing.DOWN)) <= TeslaCoilTileEntity.RANGE * TeslaCoilTileEntity.RANGE){
 							for(int i = 0; i < 3; i++){
 								if(links[i] == null){
-									links[i] = prev;
-									playerIn.sendMessage(new TextComponentString("Linked coil to send to " + prev + "."));
+									links[i] = pos.offset(EnumFacing.DOWN);
+									playerIn.sendMessage(new TextComponentString("Linked coil at " + prev + " to send to " + pos.offset(EnumFacing.DOWN) + "."));
 									heldItem.getTagCompound().removeTag("c_link");
 									return true;
 								}
