@@ -41,9 +41,9 @@ public class CustomToolRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
 						}
 						break;
 					case 1:
-						if(slot.getItem() != ModItems.customMaterial){
-							return false;
-						}
+//						if(slot.getItem() != ModItems.customMaterial){
+//							return false;
+//						}
 						break;
 					default:
 						if(slot.isEmpty()){
@@ -79,9 +79,9 @@ public class CustomToolRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
 		ArrayList<ItemStack> crystals = new ArrayList<ItemStack>();
 		for(int i = 0; i < inv.getSizeInventory(); i++){
 			ItemStack stack = inv.getStackInSlot(i);
-			if(stack.getItem() == ModItems.customMaterial){
-				crystals.add(stack);
-			}
+//			if(stack.getItem() == ModItems.customMaterial){
+//				crystals.add(stack);
+//			}
 		}
 
 		return CustomTool.craftCustomTool(toolClass, crystals);
@@ -117,7 +117,7 @@ public class CustomToolRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
 				if(pattern[i][j] == 0){
 					list.add(Ingredient.EMPTY);
 				}else if(pattern[i][j] == 1){
-					list.add(CraftingHelper.getIngredient(ModItems.customMaterial));
+					//list.add(CraftingHelper.getIngredient(ModItems.customMaterial));
 				}else{
 					list.add(CraftingHelper.getIngredient("stickWood"));
 				}

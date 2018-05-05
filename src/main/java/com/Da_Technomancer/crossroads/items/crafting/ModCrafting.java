@@ -167,22 +167,22 @@ public final class ModCrafting{
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 12));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 16));
 
-		//Custom tool 
-		//(sword)
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("sword", new byte[][] {{1, 0, 0}, {1, 0, 0}, {2, 0, 0}}));
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("sword", new byte[][] {{0, 1, 0}, {0, 1, 0}, {0, 2, 0}}));
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("sword", new byte[][] {{0, 0, 1}, {0, 0, 1}, {0, 0, 2}}));
-		//(pickaxe)
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("pickaxe", new byte[][] {{1, 1, 1}, {0, 2, 0}, {0, 2, 0}}));
-		//(shovel)
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("shovel", new byte[][] {{1, 0, 0}, {2, 0, 0}, {2, 0, 0}}));
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("shovel", new byte[][] {{0, 1, 0}, {0, 2, 0}, {0, 2, 0}}));
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("shovel", new byte[][] {{0, 0, 1}, {0, 0, 2}, {0, 0, 2}}));
-		//(axe)
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{1, 1, 0}, {1, 2, 0}, {0, 2, 0}}));
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{0, 1, 1}, {0, 2, 1}, {0, 2, 0}}));
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{1, 1, 0}, {2, 1, 0}, {2, 0, 0}}));
-		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{0, 1, 1}, {0, 1, 2}, {0, 0, 2}}));
+//		//Custom tool
+//		//(sword)
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("sword", new byte[][] {{1, 0, 0}, {1, 0, 0}, {2, 0, 0}}));
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("sword", new byte[][] {{0, 1, 0}, {0, 1, 0}, {0, 2, 0}}));
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("sword", new byte[][] {{0, 0, 1}, {0, 0, 1}, {0, 0, 2}}));
+//		//(pickaxe)
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("pickaxe", new byte[][] {{1, 1, 1}, {0, 2, 0}, {0, 2, 0}}));
+//		//(shovel)
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("shovel", new byte[][] {{1, 0, 0}, {2, 0, 0}, {2, 0, 0}}));
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("shovel", new byte[][] {{0, 1, 0}, {0, 2, 0}, {0, 2, 0}}));
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("shovel", new byte[][] {{0, 0, 1}, {0, 0, 2}, {0, 0, 2}}));
+//		//(axe)
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{1, 1, 0}, {1, 2, 0}, {0, 2, 0}}));
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{0, 1, 1}, {0, 2, 1}, {0, 2, 0}}));
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{1, 1, 0}, {2, 1, 0}, {2, 0, 0}}));
+//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{0, 1, 1}, {0, 1, 2}, {0, 0, 2}}));
 		//Phial
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.phial, 2, 0), "*", "*", "*", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.phial, 2, 1), "*", "*", "*", '*', "gemAlcCryst"));

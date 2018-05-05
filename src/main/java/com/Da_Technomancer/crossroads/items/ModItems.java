@@ -99,7 +99,7 @@ public final class ModItems{
 	public static Shell shell;
 	public static Nitroglycerin nitroglycerin;
 	public static BasicItem solidQuicksilver;
-	public static CustomMaterial customMaterial;
+	//public static CustomMaterial customMaterial;
 	public static BasicItem solidFusas;
 	public static BasicItem solidEldrine;
 	public static BasicItem solidStasisol;
@@ -180,11 +180,11 @@ public final class ModItems{
 		shell = new Shell();
 		nitroglycerin = new Nitroglycerin();
 		solidQuicksilver = new BasicItem("solid_quicksilver");
-		new CustomTool("pickaxe");
-		new CustomTool("axe");
-		new CustomTool("shovel");
-		new CustomTool("sword");
-		customMaterial = new CustomMaterial();
+//		new CustomTool("pickaxe");
+//		new CustomTool("axe");
+//		new CustomTool("shovel");
+//		new CustomTool("sword");
+		//customMaterial = new CustomMaterial();
 		solidFusas = new BasicItem("solid_fusas");
 		solidEldrine = new BasicItem("solid_eldrine");
 		solidStasisol = new BasicItem("solid_stasisol");

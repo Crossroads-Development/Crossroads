@@ -37,7 +37,7 @@ public class CustomMaterial extends Item{
 		nbt.setInteger("phel", reagents[0] == null ? 0 : (int) Math.round(100D * reagents[0].getAmount() / amount));
 		nbt.setInteger("aeth", reagents[1] == null ? 0 : (int) Math.round(100D * reagents[1].getAmount() / amount));
 		nbt.setInteger("adam", reagents[2] == null ? 0 : (int) Math.round(100D * reagents[2].getAmount() / amount));
-		ItemStack stack = new ItemStack(ModItems.customMaterial, 1);
+		ItemStack stack = ItemStack.EMPTY;//new ItemStack(ModItems.customMaterial, 1);
 		stack.setTagCompound(nbt);
 		return stack;
 	}
