@@ -1,27 +1,27 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
-import java.util.ArrayList;
-import java.util.function.Predicate;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.BlockRecipePredicate;
-
+import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class AetherEffect implements IAlchEffect{
 
@@ -73,8 +73,12 @@ public class AetherEffect implements IAlchEffect{
 		}
 		for(Predicate<IBlockState> pred : FLUD_GROUP){
 			if(pred.test(oldState)){
-				if(oldState != Blocks.WATER.getDefaultState()){
-					world.setBlockState(pos, Blocks.WATER.getDefaultState());
+				if(oldState != Blocks.WATER.getDefaultState() && oldState.getBlock() != ModBlocks.reactiveSpot){
+					world.setBlockState(pos, ModBlocks.reactiveSpot.getDefaultState());
+					TileEntity te = world.getTileEntity(pos);
+					if(te instanceof ReactiveSpotTileEntity){
+						((ReactiveSpotTileEntity) te).setTarget(Blocks.WATER.getDefaultState());
+					}
 				}
 				return;
 			}

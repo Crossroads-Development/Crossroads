@@ -124,6 +124,7 @@ public final class ModBlocks{
 	public static DensusPlate densusPlate;
 	public static ChargingStand chargingStand;
 	public static AtmosCharger atmosCharger;
+	public static ReactiveSpot reactiveSpot;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -285,6 +286,7 @@ public final class ModBlocks{
 		densusPlate = new DensusPlate();
 		chargingStand = new ChargingStand();
 		atmosCharger = new AtmosCharger();
+		reactiveSpot = new ReactiveSpot();
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -4,9 +4,12 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -41,8 +44,12 @@ public class EldrineEffect implements IAlchEffect{
 		}
 		for(Predicate<IBlockState> pred : AetherEffect.FLUD_GROUP){
 			if(pred.test(oldState)){
-				if(oldState != Blocks.LAVA.getDefaultState()){
-					world.setBlockState(pos, Blocks.LAVA.getDefaultState());
+				if(oldState != Blocks.LAVA.getDefaultState() && oldState.getBlock() != ModBlocks.reactiveSpot){
+					world.setBlockState(pos, ModBlocks.reactiveSpot.getDefaultState());
+					TileEntity te = world.getTileEntity(pos);
+					if(te instanceof ReactiveSpotTileEntity){
+						((ReactiveSpotTileEntity) te).setTarget(Blocks.LAVA.getDefaultState());
+					}
 				}
 				return;
 			}
