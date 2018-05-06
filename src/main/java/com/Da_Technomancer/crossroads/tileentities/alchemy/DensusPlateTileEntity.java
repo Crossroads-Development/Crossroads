@@ -34,6 +34,9 @@ public class DensusPlateTileEntity extends TileEntity implements ITickable{
 		}
 		List<Entity> ents = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos, pos.add(1, 1, 1).offset(facing, 64)), EntitySelectors.IS_ALIVE);
 		for(Entity ent : ents){
+			if(ent.isSneaking()){
+				continue;
+			}
 			switch(facing.getAxis()){
 				case X:
 					ent.addVelocity(0.6D * (ent.posX < pos.getX() ? 1D : -1D) * (anti ? -1D : 1D), 0, 0);

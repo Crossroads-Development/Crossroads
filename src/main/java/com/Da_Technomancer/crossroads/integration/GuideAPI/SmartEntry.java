@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import amerifrance.guideapi.page.PageTextImage;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
@@ -104,10 +105,19 @@ public class SmartEntry extends EntryItemStack{
 			active += TextHelper.localize((String) input);
 			return;
 		}
-		if(input instanceof Pair && ((Pair<?, ?>) input).getLeft() instanceof String && ((Pair<?, ?>) input).getRight() instanceof Object[]){
-			Pair<String, Object[]> pair = ((Pair<String, Object[]>) input);
-			active += TextHelper.localize(pair.getLeft(), pair.getRight());
-			return;
+		if(input instanceof Pair){
+			if(((Pair<?, ?>) input).getLeft() instanceof String && ((Pair<?, ?>) input).getRight() instanceof Object[]){
+				Pair<String, Object[]> pair = ((Pair<String, Object[]>) input);
+				active += TextHelper.localize(pair.getLeft(), pair.getRight());
+				return;
+			}
+			if(((Pair<?, ?>) input).getLeft() instanceof ResourceLocation && ((Pair<?, ?>) input).getRight() instanceof String){
+				Pair<ResourceLocation, String> pair = ((Pair<ResourceLocation, String>) input);
+				createTextPages();
+				pageList.add(new PageTextImage(TextHelper.localize(pair.getRight()), pair.getLeft(), false));
+				return;
+			}
+
 		}
 		if(input instanceof Boolean){
 			if(((Boolean) input)){

@@ -47,6 +47,7 @@ public final class ModConfig{
 	public static Property allowHellfire;
 	public static Property voltusUsage;
 	public static Property atmosEffect;
+	public static Property documentCrafttweaker;
 
 	private static final ArrayList<Property> SYNCED_PROPERTIES = new ArrayList<Property>();
 	public static NBTTagCompound syncPropNBT;
@@ -97,6 +98,7 @@ public final class ModConfig{
 		SYNCED_PROPERTIES.add(allowHellfire = config.get(CAT_ALCHEMY, "Whether to allow crafting Ignis Infernum. (Default true)",true));
 		SYNCED_PROPERTIES.add(voltusUsage = config.get(CAT_ALCHEMY, "Voltus used to produce 1000FE of charge in the atmosphere (Default 0.1)", 0.1D));
 		atmosEffect = config.get(CAT_ALCHEMY, "Level of effects from overcharging the atmosphere (Default 3)", 3, "0: No negative effects. 1: Allow lightning strikes. 2: Allow creeper charging. 3: Allow lightning strikes & creeper charging.");
+		SYNCED_PROPERTIES.add(documentCrafttweaker = config.get(CAT_INTERNAL, "Show CraftTweaker integration documentation in the guide book? (Default false)", false, "The documentation will appear in the misc section of Technician's Manual, NOT the Mysterious Journal. Pack makers: Turn this off before releasing the pack!"));
 	}
 
 	/**

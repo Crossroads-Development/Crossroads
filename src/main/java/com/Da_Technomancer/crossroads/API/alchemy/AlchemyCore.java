@@ -89,6 +89,7 @@ public final class AlchemyCore{
 		REAGENTS[27] = new StaticReagent("Ruby", 2000D, 3000D, 27, (EnumMatterPhase phase) -> Color.RED, OreSetup.gemRuby, 10, 0, null);
 		REAGENTS[28] = new StaticReagent("Emerald", 2000D, 3000D, 28, (EnumMatterPhase phase) -> Color.GREEN, Items.EMERALD, 10, 0, null);//Couldn't find actual figures on melting/boiling points of emerald/diamond, perhaps due to large variance.
 		REAGENTS[29] = new StaticReagent("Diamond", 2000D, 3000D, 29, (EnumMatterPhase phase) -> Color.CYAN, Items.DIAMOND, 10, 0, null);
+		REAGENTS[30] = new StaticReagent("Nether Quartz", 2000D, 3000D, 30, (EnumMatterPhase phase) -> Color.WHITE, Items.QUARTZ, 10, 0, null);
 
 		//Dynamic reagents
 		REAGENTS[32] = new ElementalReagent("Lumen", 32, (byte) 1, -275, -274, new LumenEffect(), false, new MagicUnit(32, 32, 32, 0), null);
@@ -161,7 +162,7 @@ public final class AlchemyCore{
 		//Aqua Regia production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[5], 1), Pair.of(REAGENTS[15], 3)}, new Pair[] {Pair.of(REAGENTS[11], 4)}, null, -300D, Double.MAX_VALUE, 0D, false));
 		//Chlorine gas production
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[6], 2), Pair.of(REAGENTS[4], 2)}, new Pair[] {Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[16], 2)}, null, 20D, 100D, 100D, true));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[6], 2), Pair.of(REAGENTS[4], 2)}, new Pair[] {Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[16], 2)}, null, 20D, 100D, 20D, true));
 		//Bedrock decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[20], 5)}, new Pair[] {Pair.of(REAGENTS[16], 4)}, REAGENTS[11], 0D, 100D, 100D, false));
 		//Alchemical Crystal production
@@ -205,6 +206,8 @@ public final class AlchemyCore{
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[35], 2), Pair.of(REAGENTS[24], 1)}, new Pair[] {Pair.of(REAGENTS[28], 1)}, REAGENTS[19], -100, 1000, 0,false));
 		//Diamond production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[35], 2), Pair.of(REAGENTS[25], 1)}, new Pair[] {Pair.of(REAGENTS[29], 1)}, REAGENTS[19], -100, 1000, 0, false));
+		//Quartz production
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[35], 2), Pair.of(REAGENTS[14], 1)}, new Pair[] {Pair.of(REAGENTS[30], 1)}, REAGENTS[19], -100, 1000, 0, false));
 		//Gold production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[11], 1), Pair.of(REAGENTS[13], 5)}, new Pair[] {Pair.of(REAGENTS[14], 5)}, REAGENTS[2], -40D, 560D, 10D, false));
 		//Copper production

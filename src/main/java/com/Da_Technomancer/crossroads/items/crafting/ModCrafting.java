@@ -236,8 +236,8 @@ public final class ModCrafting{
 		//Redstone Alchemical Tube
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTube, 1, 0), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTube, 1, 0)));
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTube, 1, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTube, 1, 1)));
-		//Sampling Bench
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.samplingBench, 1, 0), "^/ ", "---", "| |", '^', ModBlocks.glasswareHolder, '-', "slabWood", '|', "plankWood", '/', "paper"));
+//		//Sampling Bench
+//		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.samplingBench, 1, 0), "^/ ", "---", "| |", '^', ModBlocks.glasswareHolder, '-', "slabWood", '|', "plankWood", '/', "paper"));
 		//Tesla Coil
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoil, 2), "***", " | ", "|^|", '*', "ingotCopper", '|', "ingotIron", '^', "dustRedstone"));
 		//Vanadium

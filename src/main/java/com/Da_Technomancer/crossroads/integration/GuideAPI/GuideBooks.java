@@ -232,8 +232,7 @@ public final class GuideBooks{
 
 			//ALCHEMY
 
-
-			categories.add(new CategoryItemStack(entries, "lore.cat_technomancy.name", new ItemStack(ModBlocks.redstoneKeyboard, 1)){
+			categories.add(new CategoryItemStack(entries, "lore.cat_technomancy.name", new ItemStack(ModBlocks.mechanicalArm, 1)){
 				@Override
 				public boolean canSee(EntityPlayer player, ItemStack bookStack){
 					return StoreNBTToClient.clientPlayerTag.getCompoundTag("path").getBoolean("technomancy");
@@ -438,14 +437,38 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "prototyping"), new SmartEntry("info.prototyping.name", (EntityPlayer play) -> {return ModConfig.getConfigInt(ModConfig.allowPrototype, true) != -1;}, new ItemStack(ModBlocks.prototype, 1), ((Supplier<Object>) () -> {int setting = ModConfig.getConfigInt(ModConfig.allowPrototype, true); return setting == 0 ? "info.prototyping.default" : setting == 1 ? "info.prototyping.consume" : "info.prototyping.device";}), "info.prototyping.pistol", true, new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.prototypingTable, 1), "*&*", "&%&", "*&*", '*', "ingotBronze", '&', "ingotCopshowium", '%', ModBlocks.detailedCrafter), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.prototypePort, 1), "*&*", "& &", "*&*", '*', "ingotBronze", '&', "nuggetCopshowium"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.pistol, 1), "CBB", "CA ", 'C', "ingotCopshowium", 'B', "ingotBronze", 'A', ModItems.lensArray), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "fields"), new SmartEntry("info.fields.name", new ItemStack(ModBlocks.chunkUnlocker, 1), "info.fields", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.chunkUnlocker, 1), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', ModItems.lensArray), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxReaderAxis, 1), "***", "*&*", "***", '*', "nuggetCopshowium", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxManipulator, 2), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', "gemRuby"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.rateManipulator, 2), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', "gemEmerald"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "watch"), new SmartEntry("info.watch.name", (EntityPlayer play) -> {return ModConfig.getConfigInt(ModConfig.allowPrototype, true) != -1;}, new ItemStack(ModItems.watch, 1), "info.watch", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.watch, 1), " * ", "*&*", " * ", '*', "ingotBronze", '&', "ingotCopshowium"), 0)));
+			entries.put(new ResourceLocation(Main.MODID, "flying_machine"), new SmartEntry("info.flying_machine.name", new ItemStack(ModItems.flyingMachine, 1), "info.flying_machine"));
 
-			categories.add(new CategoryItemStack(entries, "info.cat_technomancy.name", new ItemStack(ModBlocks.redstoneKeyboard, 1)){
+			categories.add(new CategoryItemStack(entries, "info.cat_technomancy.name", new ItemStack(ModBlocks.mechanicalArm, 1)){
 				@Override
 				public boolean canSee(EntityPlayer player, ItemStack bookStack){
 					return StoreNBTToClient.clientPlayerTag.getCompoundTag("path").getBoolean("technomancy");
 				}
 			});
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
+
+			//ALCHEMY
+			entries.put(new ResourceLocation(Main.MODID, "alc_intro"), new SmartEntry("info.alc_intro.name", new ItemStack(ModItems.phial, 1), "info.alc_intro"));
+			entries.put(new ResourceLocation(Main.MODID, "man_glass"), new SmartEntry("info.man_glass.name", new ItemStack(ModItems.florenceFlask, 1), "info.man_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/man_glass.png"), "info.man_glass_pic")));//TODO pic
+			entries.put(new ResourceLocation(Main.MODID, "aut_glass"), new SmartEntry("info.aut_glass.name", new ItemStack(ModBlocks.reactionChamber, 1), "info.aut_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/aut_glass.png"), "info.aut_glass_pic")));//TODO pic
+			entries.put(new ResourceLocation(Main.MODID, "electric"), new SmartEntry("info.electric.name", new ItemStack(ModBlocks.teslaCoil, 1), "info.electric"));
+			entries.put(new ResourceLocation(Main.MODID, "acids"), new SmartEntry("info.acids.name", new ItemStack(ModItems.solidVitriol, 1), "info.acids"));
+			entries.put(new ResourceLocation(Main.MODID, "chlorine"), new SmartEntry("info.chlorine.name", new ItemStack(Items.FERMENTED_SPIDER_EYE, 1), "info.chlorine"));
+			entries.put(new ResourceLocation(Main.MODID, "phil_stone"), new SmartEntry("info.phil_stone.name", new ItemStack(ModItems.philosopherStone, 1), "info.phil_stone"));
+			entries.put(new ResourceLocation(Main.MODID, "metal_trans"), new SmartEntry("info.metal_trans.name", new ItemStack(OreSetup.nuggetCopper, 1), "info.metal_trans"));
+			entries.put(new ResourceLocation(Main.MODID, "early_terra"), new SmartEntry("info.early_terra.name", new ItemStack(Blocks.GRASS, 1), "info.early_terra"));
+			entries.put(new ResourceLocation(Main.MODID, "densus"), new SmartEntry("info.densus.name", new ItemStack(ModBlocks.densusPlate, 1), "info.densus"));
+			entries.put(new ResourceLocation(Main.MODID, "prac_stone"), new SmartEntry("info.prac_stone.name", new ItemStack(ModItems.practitionerStone, 1), "info.prac_stone"));
+			entries.put(new ResourceLocation(Main.MODID, "voltus"), new SmartEntry("info.voltus.name", new ItemStack(ModBlocks.atmosCharger, 1), Pair.of("info.voltus", new Object[] {1000F / ModConfig.getConfigDouble(ModConfig.voltusUsage, true)})));
+			entries.put(new ResourceLocation(Main.MODID, "gem_trans"), new SmartEntry("info.gem_trans.name", new ItemStack(Items.DIAMOND, 1), "info.gem_trans"));
+			entries.put(new ResourceLocation(Main.MODID, "late_terra"), new SmartEntry("info.late_terra.name", new ItemStack(Blocks.NETHERRACK, 1), "info.late_terra"));
+
+			categories.add(new CategoryItemStack(entries, "info.cat_alchemy.name", new ItemStack(ModItems.philosopherStone, 1)){
+				@Override
+				public boolean canSee(EntityPlayer player, ItemStack bookStack){
+					return StoreNBTToClient.clientPlayerTag.getCompoundTag("path").getBoolean("alchemy");
+				}
+			});
 
 			INFO.setGuideTitle("Main Menu");
 			INFO.setHeader("Welcome to Crossroads");

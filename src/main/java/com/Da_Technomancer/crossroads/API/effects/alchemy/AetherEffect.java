@@ -124,7 +124,7 @@ public class AetherEffect implements IAlchEffect{
 	public void doEffectAdv(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase, @Nullable ReagentStack[] contents){
 		IBlockState oldState = world.getBlockState(pos);
 		if(contents != null && contents[13] != null && oldState.getBlock().isAir(oldState, world, pos)){
-			world.setBlockState(pos, Blocks.DIRT.getDefaultState());
+			world.setBlockState(pos, Blocks.GRASS.getDefaultState());
 			return;
 		}
 		doEffect(world, pos, amount, temp, phase);

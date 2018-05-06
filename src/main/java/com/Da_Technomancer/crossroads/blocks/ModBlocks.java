@@ -119,7 +119,7 @@ public final class ModBlocks{
 	public static GlasswareHolder glasswareHolder;
 	public static RedsAlchemicalTube redsAlchemicalTube;
 	public static Alembic alembic;
-	public static SamplingBench samplingBench;
+	//public static SamplingBench samplingBench;
 	public static AlchemyChart alchemyChart;
 	public static DensusPlate densusPlate;
 	public static ChargingStand chargingStand;
@@ -281,7 +281,7 @@ public final class ModBlocks{
 		glasswareHolder = new GlasswareHolder();
 		redsAlchemicalTube = new RedsAlchemicalTube();
 		alembic = new Alembic();
-		samplingBench = new SamplingBench();
+		//samplingBench = new SamplingBench();
 		alchemyChart = new AlchemyChart();
 		densusPlate = new DensusPlate();
 		chargingStand = new ChargingStand();
