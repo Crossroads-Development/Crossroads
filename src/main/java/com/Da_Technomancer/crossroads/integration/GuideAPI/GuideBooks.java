@@ -382,6 +382,7 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "ratiator"), new EntryItemStack(pages, "Ratiator", new ItemStack(ModBlocks.ratiator, 1), true));
 			pages = new ArrayList<IPage>();
 			entries.put(new ResourceLocation(Main.MODID, "redstone_keyboard"), new SmartEntry("info.redstone_keyboard.name", new ItemStack(ModBlocks.redstoneKeyboard, 1), "info.redstone_keyboard", new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone")));
+			entries.put(new ResourceLocation(Main.MODID, "crafttweaker"), new SmartEntry("info.crafttweaker.name", (EntityPlayer play) -> ModConfig.getConfigBool(ModConfig.documentCrafttweaker, true), new ItemStack(Blocks.CRAFTING_TABLE, 1), "info.crafttweaker"));
 
 			categories.add(new CategoryItemStack(entries, "Miscellaneous", new ItemStack(ModBlocks.brazier, 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
@@ -461,7 +462,7 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "prac_stone"), new SmartEntry("info.prac_stone.name", new ItemStack(ModItems.practitionerStone, 1), "info.prac_stone"));
 			entries.put(new ResourceLocation(Main.MODID, "voltus"), new SmartEntry("info.voltus.name", new ItemStack(ModBlocks.atmosCharger, 1), Pair.of("info.voltus", new Object[] {1000F / ModConfig.getConfigDouble(ModConfig.voltusUsage, true)})));
 			entries.put(new ResourceLocation(Main.MODID, "gem_trans"), new SmartEntry("info.gem_trans.name", new ItemStack(Items.DIAMOND, 1), "info.gem_trans"));
-			entries.put(new ResourceLocation(Main.MODID, "late_terra"), new SmartEntry("info.late_terra.name", new ItemStack(Blocks.NETHERRACK, 1), "info.late_terra"));
+			entries.put(new ResourceLocation(Main.MODID, "late_terra"), new SmartEntry("info.late_terra.name", new ItemStack(Blocks.NETHERRACK, 1), "info.late_terra.main", (Supplier<String>)  () -> ModConfig.getConfigBool(ModConfig.allowHellfire, true) ? "info.late_terra.infer" : ""));
 
 			categories.add(new CategoryItemStack(entries, "info.cat_alchemy.name", new ItemStack(ModItems.philosopherStone, 1)){
 				@Override
