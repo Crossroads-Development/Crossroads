@@ -114,7 +114,9 @@ public class SmartEntry extends EntryItemStack{
 			if(((Pair<?, ?>) input).getLeft() instanceof ResourceLocation && ((Pair<?, ?>) input).getRight() instanceof String){
 				Pair<ResourceLocation, String> pair = ((Pair<ResourceLocation, String>) input);
 				createTextPages();
-				pageList.add(new PageTextImage(TextHelper.localize(pair.getRight()), pair.getLeft(), false));
+				PageTextImage imagePage = new PageTextImage(TextHelper.localize(pair.getRight()), pair.getLeft(), false);
+				imagePage.setUnicodeFlag(true);
+				pageList.add(imagePage);
 				return;
 			}
 
@@ -137,7 +139,9 @@ public class SmartEntry extends EntryItemStack{
 		}
 		if(input instanceof ResourceLocation){
 			createTextPages();
-			pageList.add(new PageImage((ResourceLocation) input));
+			PageImage imagePage = new PageImage((ResourceLocation) input);
+			imagePage.setUnicodeFlag(true);
+			pageList.add(imagePage);
 			return;
 		}
 

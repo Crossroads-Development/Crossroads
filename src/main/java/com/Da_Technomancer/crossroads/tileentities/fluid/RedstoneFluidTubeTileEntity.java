@@ -93,7 +93,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 			return;
 		}
 
-		if(world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){//TODO
+		if(world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			for(EnumFacing dir : EnumFacing.values()){
 				int ind = dir.getIndex();
 				TileEntity te = world.getTileEntity(pos.offset(dir));

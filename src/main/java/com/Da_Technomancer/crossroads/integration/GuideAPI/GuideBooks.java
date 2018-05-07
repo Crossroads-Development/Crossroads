@@ -77,7 +77,7 @@ public final class GuideBooks{
 
 			// INTRO
 			entries.put(new ResourceLocation(Main.MODID, "first_read"), new SmartEntry("READ ME FIRST", new ItemStack(Items.BOOK, 1), "lore.first_read"));
-			createPages(pages, "lore.intro.start", new ShapelessOreRecipe(null, Items.WRITTEN_BOOK, Items.BOOK, Items.COMPASS), "lore.intro.end");
+			createPages(pages, "lore.intro.start", new ShapelessOreRecipe(null, Items.WRITTEN_BOOK, Items.BOOK, "ingotIron"), "lore.intro.end");
 			entries.put(new ResourceLocation(Main.MODID, "intro"), new EntryItemStack(pages, "Introduction", new ItemStack(Items.PAPER, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, "lore.ores.start", new ResourceLocation(Main.MODID, "textures/blocks/ore_native_copper.png"), "lore.ores.copper", new ResourceLocation(Main.MODID, "textures/blocks/ore_copper.png"), "lore.ores.tin", new ResourceLocation(Main.MODID, "textures/blocks/ore_tin.png"), "lore.ores.ruby", new ResourceLocation(Main.MODID, "textures/blocks/ore_ruby.png"), "lore.ores.bronze", new ShapedOreRecipe(null, OreSetup.ingotBronze, "###", "#$#", "###", '#', "nuggetCopper", '$', "nuggetTin"), new ShapedOreRecipe(null, OreSetup.blockBronze, "###", "#$#", "###", '#', "ingotCopper", '$', "ingotTin"), new ShapedOreRecipe(null, new ItemStack(OreSetup.blockBronze, 9), "###", "#?#", "###", '#', "blockCopper", '?', "blockTin"), "lore.ores.salt", new ShapedOreRecipe(null, new ItemStack(ModBlocks.blockSalt, 1), "##", "##", '#', "dustSalt"), new ShapedOreRecipe(null, new ItemStack(ModItems.dustSalt, 4), "#", '#', "blockSalt"));
@@ -175,6 +175,7 @@ public final class GuideBooks{
 			createPages(pages, "lore.ratiator.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', ModItems.luminescentQuartz, '#', ModItems.pureQuartz, '^', "stone"), "lore.ratiator.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "ratiator"), new EntryItemStack(pages, "Ratiator", new ItemStack(ModBlocks.ratiator, 1), true));
 			pages = new ArrayList<IPage>();
+			entries.put(new ResourceLocation(Main.MODID, "port_extender"), new SmartEntry("lore.port_extender.name", new ItemStack(ModBlocks.portExtender, 1), "lore.port_extender"));
 			entries.put(new ResourceLocation(Main.MODID, "redstone_keyboard"), new SmartEntry("lore.redstone_keyboard.name", new ItemStack(ModBlocks.redstoneKeyboard, 1), "lore.redstone_keyboard", new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone")));
 
 			categories.add(new CategoryItemStack(entries, "Miscellaneous", new ItemStack(ModBlocks.brazier, 1)));
@@ -260,7 +261,7 @@ public final class GuideBooks{
 
 		@Override
 		public void handlePost(ItemStack bookStack){
-			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_journal"), null, bookStack, CraftingHelper.getIngredient(Items.BOOK), CraftingHelper.getIngredient(Items.COMPASS));
+			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_journal"), null, bookStack, CraftingHelper.getIngredient(Items.BOOK), CraftingHelper.getIngredient("ingotIron"));
 			GameRegistry.addShapelessRecipe(new ResourceLocation("guideapi", "guide_manual_to_journal"), null, bookStack, CraftingHelper.getIngredient(GuideAPI.getStackFromBook(INFO_BOOK)));
 		}
 	}
@@ -278,7 +279,7 @@ public final class GuideBooks{
 			createPages(pages, "info.first_read");
 			entries.put(new ResourceLocation(Main.MODID, "first_read"), new EntryItemStack(pages, "READ ME FIRST", new ItemStack(Items.BOOK, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "info.intro.pre_recipe", new ShapelessOreRecipe(null, Items.WRITTEN_BOOK, Items.BOOK, Items.COMPASS), "info.intro.post_recipe");
+			createPages(pages, "info.intro.pre_recipe", new ShapelessOreRecipe(null, Items.WRITTEN_BOOK, Items.BOOK, "ingotIron"), "info.intro.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "intro"), new EntryItemStack(pages, "Introduction", new ItemStack(Items.PAPER, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, "info.ores.native_copper", new ResourceLocation(Main.MODID, "textures/blocks/ore_native_copper.png"), "info.ores.copper", new ResourceLocation(Main.MODID, "textures/blocks/ore_copper.png"), "info.ores.tin", new ResourceLocation(Main.MODID, "textures/blocks/ore_tin.png"), "info.ores.ruby", new ResourceLocation(Main.MODID, "textures/blocks/ore_ruby.png"), "info.ores.bronze", new ShapedOreRecipe(null, OreSetup.ingotBronze, "###", "#$#", "###", '#', "nuggetCopper", '$', "nuggetTin"), new ShapedOreRecipe(null, OreSetup.blockBronze, "###", "#$#", "###", '#', "ingotCopper", '$', "ingotTin"), new ShapedOreRecipe(null, new ItemStack(OreSetup.blockBronze, 9), "###", "#?#", "###", '#', "blockCopper", '?', "blockTin"), "info.ores.salt", new ShapedOreRecipe(null, new ItemStack(ModBlocks.blockSalt, 1), "##", "##", '#', "dustSalt"), new ShapedOreRecipe(null, new ItemStack(ModItems.dustSalt, 4), "#", '#', "blockSalt"));
@@ -381,6 +382,7 @@ public final class GuideBooks{
 			createPages(pages, "info.ratiator", new ShapedOreRecipe(null, new ItemStack(ModBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', ModItems.luminescentQuartz, '#', ModItems.pureQuartz, '^', "stone"));
 			entries.put(new ResourceLocation(Main.MODID, "ratiator"), new EntryItemStack(pages, "Ratiator", new ItemStack(ModBlocks.ratiator, 1), true));
 			pages = new ArrayList<IPage>();
+			entries.put(new ResourceLocation(Main.MODID, "port_extender"), new SmartEntry("info.port_extender.name", new ItemStack(ModBlocks.portExtender, 1), "info.port_extender"));
 			entries.put(new ResourceLocation(Main.MODID, "redstone_keyboard"), new SmartEntry("info.redstone_keyboard.name", new ItemStack(ModBlocks.redstoneKeyboard, 1), "info.redstone_keyboard", new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone")));
 			entries.put(new ResourceLocation(Main.MODID, "crafttweaker"), new SmartEntry("info.crafttweaker.name", (EntityPlayer play) -> ModConfig.getConfigBool(ModConfig.documentCrafttweaker, true), new ItemStack(Blocks.CRAFTING_TABLE, 1), "info.crafttweaker"));
 
@@ -450,9 +452,10 @@ public final class GuideBooks{
 
 			//ALCHEMY
 			entries.put(new ResourceLocation(Main.MODID, "alc_intro"), new SmartEntry("info.alc_intro.name", new ItemStack(ModItems.phial, 1), "info.alc_intro"));
-			entries.put(new ResourceLocation(Main.MODID, "man_glass"), new SmartEntry("info.man_glass.name", new ItemStack(ModItems.florenceFlask, 1), "info.man_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/man_glass.png"), "info.man_glass_pic")));//TODO pic
-			entries.put(new ResourceLocation(Main.MODID, "aut_glass"), new SmartEntry("info.aut_glass.name", new ItemStack(ModBlocks.reactionChamber, 1), "info.aut_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/aut_glass.png"), "info.aut_glass_pic")));//TODO pic
+			entries.put(new ResourceLocation(Main.MODID, "man_glass"), new SmartEntry("info.man_glass.name", new ItemStack(ModItems.florenceFlask, 1), "info.man_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/man_glass.png"), "info.man_glass_pic")));
+			entries.put(new ResourceLocation(Main.MODID, "aut_glass"), new SmartEntry("info.aut_glass.name", new ItemStack(ModBlocks.reactionChamber, 1), "info.aut_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/aut_glass.png"), "info.aut_glass_pic")));
 			entries.put(new ResourceLocation(Main.MODID, "electric"), new SmartEntry("info.electric.name", new ItemStack(ModBlocks.teslaCoil, 1), "info.electric"));
+			entries.put(new ResourceLocation(Main.MODID, "heat_limiter"), new SmartEntry("info.heat_limiter.name", new ItemStack(ModBlocks.heatLimiter, 1), "info.heat_limiter"));
 			entries.put(new ResourceLocation(Main.MODID, "acids"), new SmartEntry("info.acids.name", new ItemStack(ModItems.solidVitriol, 1), "info.acids"));
 			entries.put(new ResourceLocation(Main.MODID, "chlorine"), new SmartEntry("info.chlorine.name", new ItemStack(Items.FERMENTED_SPIDER_EYE, 1), "info.chlorine"));
 			entries.put(new ResourceLocation(Main.MODID, "phil_stone"), new SmartEntry("info.phil_stone.name", new ItemStack(ModItems.philosopherStone, 1), "info.phil_stone"));
