@@ -43,7 +43,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 		if(device == ModItems.omnimeter || device == EnumGoggleLenses.EMERALD){
 			for(int i = 0; i < 3; i++){
 				if(linked[i] != null){
-					chat.add("Linked Position: X=" + linked[i].getX() + " Y=" + linked[i].getY() + " Z=" + linked[i].getZ());
+					chat.add("Linked Position: X=" + (pos.getX() + linked[i].getX()) + " Y=" + (pos.getY() + linked[i].getY()) + " Z=" + (pos.getZ() + linked[i].getZ()));
 				}
 			}
 		}
@@ -64,6 +64,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 	private static final int CAPACITY = 2000;
 	public static final int RANGE = 8;
 
+	//Relative to this TileEntity's position
 	public BlockPos[] linked = new BlockPos[3];
 	public boolean redstone = false;
 	
@@ -111,7 +112,8 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 			
 			for(BlockPos linkPos : linked){
 				if(linkPos != null){
-					TileEntity te = world.getTileEntity(linkPos);
+					BlockPos actualPos = linkPos.add(pos);
+					TileEntity te = world.getTileEntity(actualPos);
 					if(te instanceof TeslaCoilTileEntity){
 						TeslaCoilTileEntity tcTe = (TeslaCoilTileEntity) te;
 						if(tcTe.handlerIn.getMaxEnergyStored() - tcTe.stored > JOLT_CONSERVED){
@@ -122,7 +124,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 
 							NBTTagCompound nbt = new NBTTagCompound();
 
-							new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, linkPos.getX() + 0.5F, linkPos.getY() + 2F, linkPos.getZ() + 0.5F, 5, 0.6F, 1F, COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
+							new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 2F, actualPos.getZ() + 0.5F, 5, 0.6F, 1F, COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
 							ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 							world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 							//Sound may need tweaking

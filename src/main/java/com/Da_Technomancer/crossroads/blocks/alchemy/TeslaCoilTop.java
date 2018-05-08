@@ -59,7 +59,7 @@ public class TeslaCoilTop extends Block{
 						if(prev.distanceSq(pos.offset(EnumFacing.DOWN)) <= TeslaCoilTileEntity.RANGE * TeslaCoilTileEntity.RANGE){
 							for(int i = 0; i < 3; i++){
 								if(links[i] == null){
-									links[i] = pos.offset(EnumFacing.DOWN);
+									links[i] = pos.offset(EnumFacing.DOWN).subtract(prev);
 									playerIn.sendMessage(new TextComponentString("Linked coil at " + prev + " to send to " + pos.offset(EnumFacing.DOWN) + "."));
 									heldItem.getTagCompound().removeTag("c_link");
 									return true;

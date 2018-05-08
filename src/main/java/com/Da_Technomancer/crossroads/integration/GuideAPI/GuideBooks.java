@@ -230,8 +230,8 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "prototyping"), new SmartEntry("lore.prototyping.name", (EntityPlayer play) -> {return ModConfig.getConfigInt(ModConfig.allowPrototype, true) != -1;}, new ItemStack(ModBlocks.prototype, 1), ((Supplier<Object>) () -> {int setting = ModConfig.getConfigInt(ModConfig.allowPrototype, true); return setting == 0 ? "lore.prototyping.default" : setting == 1 ? "lore.prototyping.consume" : "lore.prototyping.device";}), "lore.prototyping.pistol", true, new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.prototypingTable, 1), "*&*", "&%&", "*&*", '*', "ingotBronze", '&', "ingotCopshowium", '%', ModBlocks.detailedCrafter), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.prototypePort, 1), "*&*", "& &", "*&*", '*', "ingotBronze", '&', "nuggetCopshowium"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.pistol, 1), "CBB", "CA ", 'C', "ingotCopshowium", 'B', "ingotBronze", 'A', ModItems.lensArray), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "fields"), new SmartEntry("lore.fields.name", new ItemStack(ModBlocks.chunkUnlocker, 1), "lore.fields", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.chunkUnlocker, 1), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', ModItems.lensArray), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxReaderAxis, 1), "***", "*&*", "***", '*', "nuggetCopshowium", '&', ModBlocks.masterAxis), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxManipulator, 2), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', "gemRuby"), 0), new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModBlocks.rateManipulator, 2), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', "gemEmerald"), 0)));
 			entries.put(new ResourceLocation(Main.MODID, "watch"), new SmartEntry("lore.watch.name", (EntityPlayer play) -> {return ModConfig.getConfigInt(ModConfig.allowPrototype, true) != -1;}, new ItemStack(ModItems.watch, 1), "lore.watch", new PageDetailedRecipe(new ShapedOreRecipe(null, new ItemStack(ModItems.watch, 1), " * ", "*&*", " * ", '*', "ingotBronze", '&', "ingotCopshowium"), 0)));
+			entries.put(new ResourceLocation(Main.MODID, "flying_machine"), new SmartEntry("lore.flying_machine.name", new ItemStack(ModItems.flyingMachine, 1), "lore.flying_machine"));
 
-			//ALCHEMY
 
 			categories.add(new CategoryItemStack(entries, "lore.cat_technomancy.name", new ItemStack(ModBlocks.mechanicalArm, 1)){
 				@Override
@@ -241,6 +241,31 @@ public final class GuideBooks{
 			});
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
+
+			//ALCHEMY
+			entries.put(new ResourceLocation(Main.MODID, "alc_intro"), new SmartEntry("lore.alc_intro.name", new ItemStack(ModItems.phial, 1), "lore.alc_intro"));
+			entries.put(new ResourceLocation(Main.MODID, "man_glass"), new SmartEntry("lore.man_glass.name", new ItemStack(ModItems.florenceFlask, 1), "lore.man_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/man_glass.png"), "lore.man_glass_pic")));
+			entries.put(new ResourceLocation(Main.MODID, "aut_glass"), new SmartEntry("lore.aut_glass.name", new ItemStack(ModBlocks.reactionChamber, 1), "lore.aut_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/aut_glass.png"), "lore.aut_glass_pic")));
+			entries.put(new ResourceLocation(Main.MODID, "electric"), new SmartEntry("lore.electric.name", new ItemStack(ModBlocks.teslaCoil, 1), "lore.electric"));
+			entries.put(new ResourceLocation(Main.MODID, "heat_limiter"), new SmartEntry("lore.heat_limiter.name", new ItemStack(ModBlocks.heatLimiter, 1), "lore.heat_limiter"));
+			entries.put(new ResourceLocation(Main.MODID, "acids"), new SmartEntry("lore.acids.name", new ItemStack(ModItems.solidVitriol, 1), "lore.acids"));
+			entries.put(new ResourceLocation(Main.MODID, "chlorine"), new SmartEntry("lore.chlorine.name", new ItemStack(Items.FERMENTED_SPIDER_EYE, 1), "lore.chlorine"));
+			entries.put(new ResourceLocation(Main.MODID, "phil_stone"), new SmartEntry("lore.phil_stone.name", new ItemStack(ModItems.philosopherStone, 1), "lore.phil_stone"));
+			entries.put(new ResourceLocation(Main.MODID, "metal_trans"), new SmartEntry("lore.metal_trans.name", new ItemStack(OreSetup.nuggetCopper, 1), "lore.metal_trans"));
+			entries.put(new ResourceLocation(Main.MODID, "early_terra"), new SmartEntry("lore.early_terra.name", new ItemStack(Blocks.GRASS, 1), "lore.early_terra"));
+			entries.put(new ResourceLocation(Main.MODID, "densus"), new SmartEntry("lore.densus.name", new ItemStack(ModBlocks.densusPlate, 1), "lore.densus"));
+			entries.put(new ResourceLocation(Main.MODID, "prac_stone"), new SmartEntry("lore.prac_stone.name", new ItemStack(ModItems.practitionerStone, 1), "lore.prac_stone"));
+			entries.put(new ResourceLocation(Main.MODID, "voltus"), new SmartEntry("lore.voltus.name", new ItemStack(ModBlocks.atmosCharger, 1), Pair.of("lore.voltus", new Object[] {1000F / ModConfig.getConfigDouble(ModConfig.voltusUsage, true)})));
+			entries.put(new ResourceLocation(Main.MODID, "gem_trans"), new SmartEntry("lore.gem_trans.name", new ItemStack(Items.DIAMOND, 1), "lore.gem_trans"));
+			entries.put(new ResourceLocation(Main.MODID, "late_terra"), new SmartEntry("lore.late_terra.name", new ItemStack(Blocks.NETHERRACK, 1), "lore.late_terra.main", (Supplier<String>)  () -> ModConfig.getConfigBool(ModConfig.allowHellfire, true) ? "lore.late_terra.infer" : ""));
+
+			categories.add(new CategoryItemStack(entries, "lore.cat_alchemy.name", new ItemStack(ModItems.philosopherStone, 1)){
+				@Override
+				public boolean canSee(EntityPlayer player, ItemStack bookStack){
+					return StoreNBTToClient.clientPlayerTag.getCompoundTag("path").getBoolean("alchemy");
+				}
+			});
+			
 			MAIN.setGuideTitle("Main Menu");
 			MAIN.setHeader("Welcome to Crossroads");
 			MAIN.setItemName("mysterious_journal");

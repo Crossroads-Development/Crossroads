@@ -77,7 +77,7 @@ public class BrazierTileEntity extends TileEntity implements ITickable{
 							item.setDead();
 						}
 
-						world.addWeatherEffect(new EntityLightningBolt(world, pos.getX(), pos.getY() + 1, pos.getZ(), false));
+						server.createExplosion(null, pos.getX() + 0.5D, pos.getY() + 1.5D, pos.getZ() + 0.5D, 0, false);
 						EntityItem item = new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), out.copy());
 						item.setEntityInvulnerable(true);
 						world.spawnEntity(item);
