@@ -1,25 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,11 +22,15 @@ import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.ITeleporter;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GatewayFrameTileEntity extends TileEntity implements ITickable, IInfoTE{
 
@@ -232,24 +224,21 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 	private boolean magicPassed = false;
 
-	private static class GatewayTeleporter extends Teleporter{
+	private static class GatewayTeleporter implements ITeleporter{
 
-		private final WorldServer worldOther;
 		private final double coordX;
 		private final double coordY;
 		private final double coordZ;
 
 		public GatewayTeleporter(WorldServer worldIn, double coordXIn, double coordYIn, double coordZIn){
-			super(worldIn);
-			worldOther = worldIn;
 			coordX = coordXIn;
 			coordY = coordYIn;
 			coordZ = coordZIn;
 		}
 
 		@Override
-		public void placeInPortal(@Nonnull Entity entity, float rotationYaw) {
-			worldOther.getBlockState(new BlockPos(coordX, coordY, coordZ));
+		public void placeEntity(World world, Entity entity, float yaw){
+			world.getBlockState(new BlockPos(coordX, coordY, coordZ));
 			entity.setPosition(coordX, coordY, coordZ);
 			entity.motionX = 0;
 			entity.motionY = 0;

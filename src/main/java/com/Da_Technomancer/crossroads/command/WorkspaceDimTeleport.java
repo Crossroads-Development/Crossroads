@@ -1,20 +1,15 @@
 package com.Da_Technomancer.crossroads.command;
 
-import javax.annotation.Nonnull;
-
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
-
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.ITeleporter;
 
 /**
  * This command teleports the player to (0, 33, 0) in their personal Workspace Dimension. If none exists, one is created. 
@@ -32,10 +27,10 @@ public class WorkspaceDimTeleport extends CommandBase{
 	}
 
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args){
 		if(sender instanceof EntityPlayerMP){
 			int dimId = ModDimensions.getDimForPlayer((EntityPlayerMP) sender);
-			server.getPlayerList().transferPlayerToDimension((EntityPlayerMP) sender, dimId, new NoPortalTeleporter(server.getWorld(dimId)));
+			server.getPlayerList().transferPlayerToDimension((EntityPlayerMP) sender, dimId, new NoPortalTeleporter());
 		}
 	}
 
@@ -44,17 +39,10 @@ public class WorkspaceDimTeleport extends CommandBase{
 		return 2;
 	}
 
-	private static class NoPortalTeleporter extends Teleporter{
-
-		private final World world;
-
-		public NoPortalTeleporter(WorldServer worldIn){
-			super(worldIn);
-			world = worldIn;
-		}
+	private static class NoPortalTeleporter implements ITeleporter{
 
 		@Override
-		public void placeInPortal(@Nonnull Entity entity, float rotationYaw) {
+		public void placeEntity(World world, Entity entity, float yaw){
 			world.getBlockState(new BlockPos(0, 33, 0));
 			entity.setPosition(.5D, 33, .5D);
 			entity.motionX = 0;
