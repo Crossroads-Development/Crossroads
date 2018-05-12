@@ -1,8 +1,0 @@
-{
-	"parent": "block/cube_bottom_top",
-	"textures": {
-		"top": "crossroads:blocks/port_extender_front",
-		"bottom": "crossroads:blocks/port_extender_side",
-		"side": "crossroads:blocks/port_extender_side"
-	}
-}
