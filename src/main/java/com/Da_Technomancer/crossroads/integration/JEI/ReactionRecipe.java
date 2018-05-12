@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.gui.GuiHelper;
+import mezz.jei.gui.elements.DrawableResource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -61,7 +61,7 @@ public class ReactionRecipe implements IRecipeWrapper{
 
 		if(charged){
 			if(bolt == null){
-				bolt = new GuiHelper().createDrawable(ReactionCategory.ICONS, 16, 0, 16, 16);
+				bolt = new DrawableResource(ReactionCategory.ICONS, 16, 0, 16, 16, 0, 0, 0, 0, 256, 256);
 			}
 			GlStateManager.color(1, 1, 1);
 			((IDrawable) bolt).draw(minecraft, 66, 2);

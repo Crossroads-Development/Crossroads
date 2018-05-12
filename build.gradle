@@ -8,7 +8,7 @@ buildscript {
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.12.2-1.7.1"
+version = "1.12.2-1.7.2"
 group = "com.Da_Technomancer.crossroads"
 archivesBaseName = "crossroads"
 
@@ -38,7 +38,7 @@ repositories {
 
 dependencies {
 	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.5-60"
-	deobfCompile "mezz.jei:jei_1.12.2:4.8.5.159"
+	deobfCompile "mezz.jei:jei_1.12.2:4.9.1.168"
 	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.6.465"
 }
 
