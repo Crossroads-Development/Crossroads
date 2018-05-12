@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
+import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;

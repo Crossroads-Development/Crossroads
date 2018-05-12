@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import java.util.UUID;
-
+import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
@@ -9,6 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.UUID;
 
 @SuppressWarnings("serial")
 public class NbtToEntityClient extends Message<NbtToEntityClient>{

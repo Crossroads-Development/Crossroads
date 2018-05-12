@@ -4,10 +4,10 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
 
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
@@ -43,7 +43,7 @@ public class TeslaCoilTop extends Block{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(ModConfig.isWrench(heldItem, worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				if(playerIn.isSneaking()){
 					playerIn.sendMessage(new TextComponentString("Clearing tesla coil links."));

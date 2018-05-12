@@ -30,8 +30,6 @@ public class ModTileEntity{
 		registerOld(HeatingChamberTileEntity.class, "heatingChamber");
 		registerOld(SaltReactorTileEntity.class, "saltReactor");
 		registerOld(FluidCoolingChamberTileEntity.class, "fluidCoolingChamber");
-		registerOld(SlottedChestTileEntity.class, "slottedChest");
-		registerOld(SortingHopperTileEntity.class, "sortingHopper");
 		registerOld(LargeGearSlaveTileEntity.class, "largeGearSlave");
 		registerOld(LargeGearMasterTileEntity.class, "largeGearMaster");
 		registerOld(ItemChutePortTileEntity.class, "itemChutePort");
@@ -89,7 +87,6 @@ public class ModTileEntity{
 		register(HeatedTubeTileEntity.class, "heated_tube");
 		register(CoolingCoilTileEntity.class, "cooling_coil");
 		register(ChemicalVentTileEntity.class, "chemical_vent");
-		register(PortExtenderTileEntity.class, "port_extender");
 		register(ReactionChamberTileEntity.class, "reaction_chamber");
 		register(HeatLimiterTileEntity.class, "heat_limiter");
 		register(DynamoTileEntity.class, "dynamo");

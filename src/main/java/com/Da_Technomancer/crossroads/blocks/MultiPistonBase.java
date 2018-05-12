@@ -5,11 +5,11 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.WorldBuffer;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.EnumPushReaction;
@@ -65,7 +65,7 @@ public class MultiPistonBase extends Block{
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(ModConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote) && getExtension(worldIn, pos, state.getValue(Properties.FACING)) == 0){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote) && getExtension(worldIn, pos, state.getValue(Properties.FACING)) == 0){
 			if(!worldIn.isRemote){
 				IBlockState endState = state.cycleProperty(Properties.FACING);
 				worldIn.setBlockState(pos, endState);

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.bakedModel.AtmosChargerBakedModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AtmosChargerTileEntity;
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -68,7 +69,7 @@ public class AtmosCharger extends BlockContainer{
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(ModConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycleProperty(Properties.ACTIVE));
 				playerIn.sendMessage(new TextComponentString("Attack Mode: " + (state.getValue(Properties.ACTIVE) ? "CHARGING MODE" : "DRAINING MODE")));

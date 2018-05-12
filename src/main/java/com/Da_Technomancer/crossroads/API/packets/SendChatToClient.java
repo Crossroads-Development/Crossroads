@@ -1,15 +1,15 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import java.lang.reflect.InvocationTargetException;
-
 import com.Da_Technomancer.crossroads.Main;
-
+import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("serial")
 public class SendChatToClient extends Message<SendChatToClient>{

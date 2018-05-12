@@ -2,12 +2,12 @@ package com.Da_Technomancer.crossroads.blocks;
 
 import java.util.Random;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
 
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockRedstoneDiode;
@@ -171,7 +171,7 @@ public class Ratiator extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			if(ModConfig.isWrench(playerIn.getHeldItem(hand), false)){
+			if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), false)){
 				IBlockState newState = state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY());
 				worldIn.setBlockState(pos, newState);
 				neighborChanged(newState, worldIn, pos, null, null);

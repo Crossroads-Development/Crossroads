@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;

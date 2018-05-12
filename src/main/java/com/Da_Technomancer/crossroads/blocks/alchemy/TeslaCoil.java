@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -102,7 +102,7 @@ public class TeslaCoil extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 
-		if(ModConfig.isWrench(heldItem, worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				if(playerIn.isSneaking()){
 					worldIn.setBlockState(pos, state.cycleProperty(Properties.LIGHT));

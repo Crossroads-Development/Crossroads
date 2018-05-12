@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
 
+import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

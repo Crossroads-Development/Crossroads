@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.magic;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -10,6 +9,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
 
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -103,8 +103,8 @@ public class LensHolder extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			ItemStack stack = playerIn.getHeldItem(hand);
-			
-			if(ModConfig.isWrench(stack, false)){
+
+			if(EssentialsConfig.isWrench(stack, false)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.ORIENT, !state.getValue(Properties.ORIENT)));
 				return true;
 			}

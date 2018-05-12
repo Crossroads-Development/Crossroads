@@ -12,8 +12,8 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockPrismarine;
 import net.minecraft.block.BlockStone;
 import net.minecraft.init.Blocks;
@@ -129,7 +129,7 @@ public final class ModCrafting{
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.BLAZE_ROD, 0), new ItemRecipePredicate(Items.DRAGON_BREATH, 0), new ItemRecipePredicate(Items.GOLDEN_APPLE, -1)}, new ItemStack(ModItems.chaosRod, 1)));
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(ModBlocks.fluidTube, 0), new ItemRecipePredicate(ModItems.voidCrystal, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new EdibleBlobRecipePredicate(4, 2), new OreDictCraftingStack("stickIron"), new OreDictCraftingStack("nuggetCopshowium")}, new ItemStack(ModBlocks.hamsterWheel, 1)));
-		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {(Object s) -> ModConfig.isWrench((ItemStack) s, false), new ItemRecipePredicate(ModItems.handCrank, 0), new ItemRecipePredicate(ModItems.staffTechnomancy, 0)}, new ItemStack(ModItems.liechWrench, 1)));
+		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {(Object s) -> EssentialsConfig.isWrench((ItemStack) s, false), new ItemRecipePredicate(ModItems.handCrank, 0), new ItemRecipePredicate(ModItems.staffTechnomancy, 0)}, new ItemStack(ModItems.liechWrench, 1)));
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 4), new OreDictCraftingStack("ingotCopper")}, new ItemStack(ModBlocks.maxwellDemon, 1)));
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new OreDictCraftingStack("meatRaw"), new OreDictCraftingStack("gunpowder"), (Predicate<ItemStack>) (ItemStack stack) -> {if(stack.getItem() == ModItems.phial){ ReagentStack reag = ModItems.phial.getReagants(stack).getLeft()[5]; return reag != null && reag.getAmount() >= 5;} return false;}}, new ItemStack(ModItems.nitroglycerin, 8)));
 		
@@ -379,8 +379,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump));
 		// Brazier
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.brazier, 1), "###", " $ ", " $ ", '$', "stoneAndesitePolished", '#', "stoneAndesite"));
-		// Obsidian Cutting Kit
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.obsidianKit, 4), " # ", "#$#", " # ", '$', "obsidian", '#', Items.FLINT));
 		// Thermometer
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', "stickIron", '?', "blockGlass"));
 		// Fluid Gauge
@@ -404,11 +402,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotIron", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper"));
 		// Fluid Cooling Chamber
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidCoolingChamber, 1), "###", "# #", "#%#", '#', "ingotIron", '%', "ingotCopper"));
-		// Slotted Chest
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.slottedChest, 1), "###", "$@$", "###", '#', "slabWood", '$', Blocks.TRAPDOOR, '@', "chestWood"));
-		// Sorting Hopper
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.sortingHopper, 1), "# #", "#&#", " # ", '#', "ingotCopper", '&', "chestWood"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.sortingHopper, 1), "#&#", "###", '#', "ingotCopper", '&', "chestWood"));
 		// Item Chute
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.itemChute, 4), "#$#", "#$#", "#$#", '#', "ingotIron", '$', "stickIron"));
 		// Item Chute Port
@@ -451,17 +444,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.beamSplitter, 1), ModBlocks.beamSplitterBasic, "dustRedstone", "dustRedstone", "dustRedstone"));
 		//Color Chart
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
-		//Fertile Soil
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 0), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', "cropWheat"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 1), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', "cropPotato"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 2), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', "cropCarrot"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 3), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', Items.BEETROOT));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 4), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.OAK.getMetadata())));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 5), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.BIRCH.getMetadata())));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 6), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.SPRUCE.getMetadata())));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 7), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.JUNGLE.getMetadata())));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 8), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.ACACIA.getMetadata())));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 9), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.DARK_OAK.getMetadata())));
 		//Piston
 		toRegister.add(new ShapelessOreRecipe(null, Blocks.PISTON, "cobblestone", "ingotIron", "dustRedstone", "logWood"));
 		//Multi-Piston
@@ -487,11 +469,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.fluidSplitter, 1), ModBlocks.basicFluidSplitter, "dustRedstone", "dustRedstone", "dustRedstone"));
 		//Redstone Keyboard
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"));
-		//Wrench
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.wrench, 1), "* *", "*|*", " | ", '*', "ingotIron", '|', "stickIron"));
-		//Port Extender
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.portExtender, 1), " # ", "#h#", " # ", '#', "ingotTin", 'h', Blocks.HOPPER));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.portExtender, 1), " # ", "#h#", " # ", '#', "ingotTin", 'h', ModBlocks.sortingHopper));
 		//Reagent Tank and Reaction Chamber emptying
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1), new ItemStack(ModBlocks.reagentTank, 1, 0)));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1), new ItemStack(ModBlocks.reactionChamber, 1, 0)));

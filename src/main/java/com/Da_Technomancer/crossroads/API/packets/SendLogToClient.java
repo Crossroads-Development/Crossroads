@@ -1,17 +1,16 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import java.awt.Color;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.gui.ILogUser;
 import com.Da_Technomancer.crossroads.API.gui.OutputLogGuiObject;
-
+import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+
+import javax.annotation.Nullable;
+import java.awt.*;
 
 @SuppressWarnings("serial")
 public class SendLogToClient extends Message<SendLogToClient>{

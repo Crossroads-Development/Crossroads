@@ -159,17 +159,17 @@ public final class GuideBooks{
 			createPages(pages, "lore.brazier.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.brazier, 1), "###", " $ ", " $ ", '$', "stoneAndesitePolished", '#', "stoneAndesite"), "lore.brazier.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "brazier"), new EntryItemStack(pages, "Brazier", new ItemStack(ModBlocks.brazier, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.item_sorting.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.sortingHopper, 1), "# #", "#&#", " # ", '#', "ingotCopper", '&', "chestWood"), new ShapedOreRecipe(null, new ItemStack(ModBlocks.sortingHopper, 1), "#&#", "###", '#', "ingotCopper", '&', "chestWood"), new ShapedOreRecipe(null, new ItemStack(ModBlocks.slottedChest, 1), "###", "$@$", "###", '#', "slabWood", '$', Blocks.TRAPDOOR, '@', "chestWood"), "lore.item_sorting.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "item_sorting"), new EntryItemStack(pages, "Sorting Devices", new ItemStack(ModBlocks.sortingHopper, 1), true));
+			createPages(pages, "lore.item_sorting.pre_recipe", new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.sortingHopper, 1), "# #", "#&#", " # ", '#', "ingotCopper", '&', "chestWood"), new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.sortingHopper, 1), "#&#", "###", '#', "ingotCopper", '&', "chestWood"), new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.slottedChest, 1), "###", "$@$", "###", '#', "slabWood", '$', Blocks.TRAPDOOR, '@', "chestWood"), "lore.item_sorting.post_recipe");
+			entries.put(new ResourceLocation(Main.MODID, "item_sorting"), new EntryItemStack(pages, "Sorting Devices", new ItemStack(EssentialsBlocks.sortingHopper, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.ob_cutting.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModItems.obsidianKit, 4), " # ", "#$#", " # ", '$', "obsidian", '#', Items.FLINT), "lore.ob_cutting.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "ob_cutting"), new EntryItemStack(pages, "Obsidian Cutting Kits", new ItemStack(ModItems.obsidianKit, 1), true));
+			createPages(pages, "lore.ob_cutting.pre_recipe", new ShapedOreRecipe(null, new ItemStack(EssentialsItems.obsidianKit, 4), " # ", "#$#", " # ", '$', "obsidian", '#', Items.FLINT), "lore.ob_cutting.post_recipe");
+			entries.put(new ResourceLocation(Main.MODID, "ob_cutting"), new EntryItemStack(pages, "Obsidian Cutting Kits", new ItemStack(EssentialsItems.obsidianKit, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, "lore.decorative.pre_recipe", new ShapelessOreRecipe(null, new ItemStack(EssentialsBlocks.candleLilyPad), Blocks.WATERLILY, "torch"), "lore.decorative.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "decorative"), new EntryItemStack(pages, "Decorative Blocks", new ItemStack(EssentialsItems.itemCandleLilypad, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.fertile_soil.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 0), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', "cropWheat"), "lore.fertile_soil.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "fertile_soil"), new EntryItemStack(pages, "Fertile Soil", new ItemStack(ModBlocks.fertileSoil, 1), true));
+			createPages(pages, "lore.fertile_soil.pre_recipe", new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoil, 3, 0), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', "cropWheat"), "lore.fertile_soil.post_recipe");
+			entries.put(new ResourceLocation(Main.MODID, "fertile_soil"), new EntryItemStack(pages, "Fertile Soil", new ItemStack(EssentialsBlocks.fertileSoil, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, "lore.multi_piston.pre_recipe", new ShapedOreRecipe(null, ModBlocks.multiPiston, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.PISTON), new ShapedOreRecipe(null, ModBlocks.multiPistonSticky, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.STICKY_PISTON), new ShapelessOreRecipe(null, ModBlocks.multiPistonSticky, ModBlocks.multiPiston, "slimeball"), "lore.multi_piston.post_recipe", new ShapelessOreRecipe(null, Blocks.PISTON, "cobblestone", "ingotIron", "dustRedstone", "logWood"));
 			entries.put(new ResourceLocation(Main.MODID, "multi_piston"), new EntryItemStack(pages, "Multi-Piston", new ItemStack(ModBlocks.multiPiston, 1), true));
@@ -177,7 +177,7 @@ public final class GuideBooks{
 			createPages(pages, "lore.ratiator.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', ModItems.luminescentQuartz, '#', ModItems.pureQuartz, '^', "stone"), "lore.ratiator.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "ratiator"), new EntryItemStack(pages, "Ratiator", new ItemStack(ModBlocks.ratiator, 1), true));
 			pages = new ArrayList<IPage>();
-			entries.put(new ResourceLocation(Main.MODID, "port_extender"), new SmartEntry("lore.port_extender.name", new ItemStack(ModBlocks.portExtender, 1), "lore.port_extender"));
+			entries.put(new ResourceLocation(Main.MODID, "port_extender"), new SmartEntry("lore.port_extender.name", new ItemStack(EssentialsBlocks.portExtender, 1), "lore.port_extender"));
 			entries.put(new ResourceLocation(Main.MODID, "redstone_keyboard"), new SmartEntry("lore.redstone_keyboard.name", new ItemStack(ModBlocks.redstoneKeyboard, 1), "lore.redstone_keyboard", new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone")));
 
 			categories.add(new CategoryItemStack(entries, "Miscellaneous", new ItemStack(ModBlocks.brazier, 1)));
@@ -390,18 +390,18 @@ public final class GuideBooks{
 			createPages(pages, "info.brazier", new ShapedOreRecipe(null, new ItemStack(ModBlocks.brazier, 1), "###", " $ ", " $ ", '$', "stoneAndesitePolished", '#', "stoneAndesite"));
 			entries.put(new ResourceLocation(Main.MODID, "brazier"), new EntryItemStack(pages, "Brazier", new ItemStack(ModBlocks.brazier, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "info.item_sorting", new ShapedOreRecipe(null, new ItemStack(ModBlocks.sortingHopper, 1), "# #", "#&#", " # ", '#', "ingotCopper", '&', "chestWood"), new ShapedOreRecipe(null, new ItemStack(ModBlocks.sortingHopper, 1), "#&#", "###", '#', "ingotCopper", '&', "chestWood"), new ShapedOreRecipe(null, new ItemStack(ModBlocks.slottedChest, 1), "###", "$@$", "###", '#', "slabWood", '$', Blocks.TRAPDOOR, '@', "chestWood"));
-			entries.put(new ResourceLocation(Main.MODID, "item_sorting"), new EntryItemStack(pages, "Sorting Devices", new ItemStack(ModBlocks.sortingHopper, 1), true));
+			createPages(pages, "info.item_sorting", new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.sortingHopper, 1), "# #", "#&#", " # ", '#', "ingotCopper", '&', "chestWood"), new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.sortingHopper, 1), "#&#", "###", '#', "ingotCopper", '&', "chestWood"), new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.slottedChest, 1), "###", "$@$", "###", '#', "slabWood", '$', Blocks.TRAPDOOR, '@', "chestWood"));
+			entries.put(new ResourceLocation(Main.MODID, "item_sorting"), new EntryItemStack(pages, "Sorting Devices", new ItemStack(EssentialsBlocks.sortingHopper, 1), true));
 			pages = new ArrayList<IPage>();
-			entries.put(new ResourceLocation(Main.MODID, "wrench"), new SmartEntry("info.wrench.name", new ItemStack(ModItems.wrench, 1), "info.wrench"));
-			createPages(pages, "info.ob_cutting", new ShapedOreRecipe(null, new ItemStack(ModItems.obsidianKit, 4), " # ", "#$#", " # ", '$', "obsidian", '#', Items.FLINT));
-			entries.put(new ResourceLocation(Main.MODID, "ob_cutting"), new EntryItemStack(pages, "Obsidian Cutting Kits", new ItemStack(ModItems.obsidianKit, 1), true));
+			entries.put(new ResourceLocation(Main.MODID, "wrench"), new SmartEntry("info.wrench.name", new ItemStack(EssentialsItems.wrench, 1), "info.wrench"));
+			createPages(pages, "info.ob_cutting", new ShapedOreRecipe(null, new ItemStack(EssentialsItems.obsidianKit, 4), " # ", "#$#", " # ", '$', "obsidian", '#', Items.FLINT));
+			entries.put(new ResourceLocation(Main.MODID, "ob_cutting"), new EntryItemStack(pages, "Obsidian Cutting Kits", new ItemStack(EssentialsItems.obsidianKit, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, "info.decorative", new ShapelessOreRecipe(null, new ItemStack(EssentialsBlocks.candleLilyPad), Blocks.WATERLILY, "torch"));
 			entries.put(new ResourceLocation(Main.MODID, "decorative"), new EntryItemStack(pages, "Decorative Blocks", new ItemStack(EssentialsItems.itemCandleLilypad, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "info.fertile_soil", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fertileSoil, 3, 0), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', "cropWheat"));
-			entries.put(new ResourceLocation(Main.MODID, "fertile_soil"), new EntryItemStack(pages, "Fertile Soil", new ItemStack(ModBlocks.fertileSoil, 1), true));
+			createPages(pages, "info.fertile_soil", new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoil, 3, 0), "#$#", "***", "^^^", '#', new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', "cropWheat"));
+			entries.put(new ResourceLocation(Main.MODID, "fertile_soil"), new EntryItemStack(pages, "Fertile Soil", new ItemStack(EssentialsBlocks.fertileSoil, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, "info.multi_piston", new ShapedOreRecipe(null, ModBlocks.multiPiston, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.PISTON), new ShapedOreRecipe(null, ModBlocks.multiPistonSticky, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.STICKY_PISTON), new ShapelessOreRecipe(null, ModBlocks.multiPistonSticky, ModBlocks.multiPiston, "slimeball"), new ShapelessOreRecipe(null, Blocks.PISTON, "cobblestone", "ingotIron", "dustRedstone", "logWood"));
 			entries.put(new ResourceLocation(Main.MODID, "multi_piston"), new EntryItemStack(pages, "Multi-Piston", new ItemStack(ModBlocks.multiPiston, 1), true));
@@ -409,7 +409,7 @@ public final class GuideBooks{
 			createPages(pages, "info.ratiator", new ShapedOreRecipe(null, new ItemStack(ModBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', ModItems.luminescentQuartz, '#', ModItems.pureQuartz, '^', "stone"));
 			entries.put(new ResourceLocation(Main.MODID, "ratiator"), new EntryItemStack(pages, "Ratiator", new ItemStack(ModBlocks.ratiator, 1), true));
 			pages = new ArrayList<IPage>();
-			entries.put(new ResourceLocation(Main.MODID, "port_extender"), new SmartEntry("info.port_extender.name", new ItemStack(ModBlocks.portExtender, 1), "info.port_extender"));
+			entries.put(new ResourceLocation(Main.MODID, "port_extender"), new SmartEntry("info.port_extender.name", new ItemStack(EssentialsBlocks.portExtender, 1), "info.port_extender"));
 			entries.put(new ResourceLocation(Main.MODID, "redstone_keyboard"), new SmartEntry("info.redstone_keyboard.name", new ItemStack(ModBlocks.redstoneKeyboard, 1), "info.redstone_keyboard", new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone")));
 			entries.put(new ResourceLocation(Main.MODID, "crafttweaker"), new SmartEntry("info.crafttweaker.name", (EntityPlayer play) -> ModConfig.getConfigBool(ModConfig.documentCrafttweaker, true), new ItemStack(Blocks.CRAFTING_TABLE, 1), "info.crafttweaker"));
 

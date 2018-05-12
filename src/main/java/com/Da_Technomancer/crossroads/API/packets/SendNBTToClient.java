@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
+import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.nbt.NBTTagCompound;

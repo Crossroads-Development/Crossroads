@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.items;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
@@ -11,14 +10,11 @@ import com.Da_Technomancer.crossroads.items.technomancy.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -60,7 +56,6 @@ public final class ModItems{
 	public static BasicItem dustSalt;
 	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
-	public static ObsidianCuttingKit obsidianKit;
 	public static BasicItem dustCopper;
 	public static Thermometer thermometer;
 	public static FluidGauge fluidGauge;
@@ -94,7 +89,6 @@ public final class ModItems{
 	public static BasicItem alchCrystal;
 	public static BasicItem wasteSalt;
 	public static Phial phial;
-	public static BasicItem wrench;
 	public static LiechWrench liechWrench;
 	public static LeydenJar leydenJar;
 	public static FlorenceFlask florenceFlask;
@@ -135,7 +129,6 @@ public final class ModItems{
 		debugHeatWriter = new DebugHeatWriter();
 		dustCopper = new BasicItem("dust_copper", "dustCopper");
 		dustSalt = new BasicItem("dust_salt", "dustSalt");
-		obsidianKit = new ObsidianCuttingKit();
 		mashedPotato = new MashedPotato();
 		thermometer = new Thermometer();
 		fluidGauge = new FluidGauge();
@@ -169,12 +162,6 @@ public final class ModItems{
 		alchCrystal = new BasicItem("alch_crystal", "gemAlcCryst");
 		wasteSalt = new BasicItem("waste_salt", "dustSalt");
 		phial = new Phial();
-		wrench = new BasicItem("wrench", null, ModConfig.getConfigBool(ModConfig.addWrench, false)){
-			@Override
-			public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player){
-				return true;
-			}
-		};
 		liechWrench = new LiechWrench();
 		leydenJar = new LeydenJar();
 		florenceFlask = new FlorenceFlask();

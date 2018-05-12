@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.items.technomancy.MagicUsingItem;
 
+import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

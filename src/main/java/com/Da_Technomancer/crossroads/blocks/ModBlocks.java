@@ -19,7 +19,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 
-public final class ModBlocks{
+public class ModBlocks{
 
 	public static SidedGearHolder sidedGearHolder;
 	public static MasterAxis masterAxis;
@@ -39,8 +39,6 @@ public final class ModBlocks{
 	public static HeatingChamber heatingChamber;
 	public static SaltReactor saltReactor;
 	public static FluidCoolingChamber fluidCoolingChamber;
-	public static SlottedChest slottedChest;
-	public static SortingHopper sortingHopper;
 	public static LargeGearMaster largeGearMaster;
 	public static LargeGearSlave largeGearSlave;
 	public static ItemChute itemChute;
@@ -60,7 +58,6 @@ public final class ModBlocks{
 	public static BasicBlock blockPureQuartz;
 	public static BeamSplitter beamSplitter;
 	public static ColorChart colorChart;
-	public static FertileSoil fertileSoil;
 	public static MultiPistonExtend multiPistonExtend;
 	public static MultiPistonExtend multiPistonExtendSticky;
 	public static MultiPistonBase multiPiston;
@@ -106,7 +103,6 @@ public final class ModBlocks{
 	public static HeatedTube heatedTube;
 	public static CoolingCoil coolingCoil;
 	public static ChemicalVent chemicalVent;
-	public static PortExtender portExtender;
 	public static ReactionChamber reactionChamber;
 	public static HeatLimiter heatLimiter;
 	public static Dynamo dynamo;
@@ -153,7 +149,7 @@ public final class ModBlocks{
 	
 	/**
 	 * Registers the item form of a block and the item model. 
-	 * @param block
+	 * @param block The block having an item model registered
 	 * @param meta The meta value of the item.
 	 * @param location The location of the model. 
 	 * @return The block for convenience. 
@@ -162,22 +158,6 @@ public final class ModBlocks{
 		Item item = new ItemBlock(block).setRegistryName(block.getRegistryName());
 		ModItems.toRegister.add(item);
 		ModItems.toClientRegister.put(Pair.of(item, meta), location);
-		return block;
-	}
-	
-	/**
-	 * Registers the item form of a block and the item model for each metadata up to endMeta. 
-	 * @param block
-	 * @param endMeta The end meta value of the item.
-	 * @param multiItem
-	 * @return The block for convenience. 
-	 */
-	public static <T extends Block> T blockAddQueRange(T block, int endMeta, Item multiItem){
-		ModItems.toRegister.add(multiItem);
-		multiItem.setRegistryName(block.getRegistryName());
-		for(int i = 0; i <= endMeta; i++){
-			ModItems.toClientRegister.put(Pair.of(multiItem, i), new ModelResourceLocation(block.getRegistryName(), "inventory"));
-		}
 		return block;
 	}
 
@@ -202,8 +182,6 @@ public final class ModBlocks{
 		heatingChamber = new HeatingChamber();
 		saltReactor = new SaltReactor();
 		fluidCoolingChamber = new FluidCoolingChamber();
-		slottedChest = new SlottedChest();
-		sortingHopper = new SortingHopper();
 		itemChute = new ItemChute();
 		itemChutePort = new ItemChutePort();
 		radiator = new Radiator();
@@ -221,7 +199,6 @@ public final class ModBlocks{
 		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz");
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
-		fertileSoil = new FertileSoil();
 		multiPistonExtend = new MultiPistonExtend(false);
 		multiPistonExtendSticky = new MultiPistonExtend(true);
 		multiPiston = new MultiPistonBase(false);
@@ -267,7 +244,6 @@ public final class ModBlocks{
 		heatedTube = new HeatedTube();
 		coolingCoil = new CoolingCoil();
 		chemicalVent = new ChemicalVent();
-		portExtender = new PortExtender();
 		reactionChamber = new ReactionChamber();
 		heatLimiter = new HeatLimiter();
 		dynamo = new Dynamo();

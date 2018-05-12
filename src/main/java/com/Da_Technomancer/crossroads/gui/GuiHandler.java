@@ -1,18 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.gui.container.AlchemyChartContainer;
-import com.Da_Technomancer.crossroads.gui.container.CoalHeaterContainer;
-import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
-import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
-import com.Da_Technomancer.crossroads.gui.container.GrindstoneContainer;
-import com.Da_Technomancer.crossroads.gui.container.HeatingChamberContainer;
-import com.Da_Technomancer.crossroads.gui.container.PrototypePortContainer;
-import com.Da_Technomancer.crossroads.gui.container.PrototypingTableContainer;
-import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
-import com.Da_Technomancer.crossroads.gui.container.SamplingBenchContainer;
-import com.Da_Technomancer.crossroads.gui.container.SlottedChestContainer;
+import com.Da_Technomancer.crossroads.gui.container.*;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.SlottedChestTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.SamplingBenchTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
@@ -20,7 +9,6 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -31,7 +19,6 @@ public class GuiHandler implements IGuiHandler{
 	public static final int GRINDSTONE_GUI = 0;
 	public static final int COAL_HEATER_GUI = 1;
 	public static final int HEATING_CHAMBER_GUI = 2;
-	public static final int SLOTTED_CHEST_GUI = 3;
 	public static final int COLOR_CHART_GUI = 4;
 	public static final int REDSTONE_KEYBOARD_GUI = 5;
 	public static final int CRAFTER_GUI = 6;
@@ -50,8 +37,6 @@ public class GuiHandler implements IGuiHandler{
 				return new CoalHeaterContainer(player.inventory, ((FuelHeaterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case HEATING_CHAMBER_GUI:
 				return new HeatingChamberContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case SLOTTED_CHEST_GUI:
-				return new SlottedChestContainer(player.inventory, ((SlottedChestTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case COLOR_CHART_GUI:
 				return new ColorChartContainer(player, world, new BlockPos(x, y, z));
 			case REDSTONE_KEYBOARD_GUI:
@@ -82,8 +67,6 @@ public class GuiHandler implements IGuiHandler{
 				return new CoalHeaterGuiContainer(player.inventory, ((FuelHeaterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case HEATING_CHAMBER_GUI:
 				return new HeatingChamberGuiContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case SLOTTED_CHEST_GUI:
-				return new SlottedChestGuiContainer(player.inventory, ((SlottedChestTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case COLOR_CHART_GUI:
 				return new ColorChartGuiContainer(player, world, new BlockPos(x, y, z));
 			case REDSTONE_KEYBOARD_GUI:
