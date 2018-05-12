@@ -1,25 +1,18 @@
 package com.Da_Technomancer.crossroads;
 
-import org.apache.logging.log4j.Logger;
-
 import com.Da_Technomancer.crossroads.command.DiscoverElementCommand;
 import com.Da_Technomancer.crossroads.command.ResetPathCommand;
 import com.Da_Technomancer.crossroads.command.SpawnReagentCommand;
 import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
-
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.*;
+import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Main.MODID, name = Main.MODNAME, version = Main.VERSION, acceptedMinecraftVersions = "[1.12,1.13)", dependencies = "required-after:forge@[13.20.0.2271,]; before:guideapi; after:jei; after:crafttweaker")
+@Mod(modid = Main.MODID, name = Main.MODNAME, version = Main.VERSION, acceptedMinecraftVersions = "[1.12,1.13)", dependencies = "required-after:forge@[14.23.3.2655,]; required-after:essentials; before:guideapi; after:jei; after:crafttweaker")
 public final class Main{
 
 	public static final String MODID = "crossroads";

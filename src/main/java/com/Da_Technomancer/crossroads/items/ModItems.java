@@ -68,7 +68,6 @@ public final class ModItems{
 	public static OmniMeter omnimeter;
 	public static Vacuum vacuum;
 	public static MagentaBread magentaBread;
-	public static ItemCandleLily itemCandleLilypad;
 	public static EdibleBlob edibleBlob;
 	public static RainIdol rainIdol;
 	public static BasicItem pureQuartz;
@@ -144,7 +143,6 @@ public final class ModItems{
 		omnimeter = new OmniMeter();
 		vacuum = new Vacuum();
 		magentaBread = new MagentaBread();
-		itemCandleLilypad = new ItemCandleLily();
 		edibleBlob = new EdibleBlob();
 		rainIdol = new RainIdol();
 		pureQuartz = new BasicItem("pure_quartz", "gemQuartz");

@@ -1,29 +1,17 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import java.util.ArrayList;
-import java.util.function.Predicate;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
-
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
-import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
-import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopshowium;
-import com.Da_Technomancer.crossroads.fluids.BlockMoltenGold;
-import com.Da_Technomancer.crossroads.fluids.BlockMoltenIron;
-import com.Da_Technomancer.crossroads.fluids.BlockMoltenTin;
+import com.Da_Technomancer.crossroads.fluids.*;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockPrismarine;
@@ -43,6 +31,11 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+
+import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public final class ModCrafting{
 
@@ -416,8 +409,6 @@ public final class ModCrafting{
 		// Sorting Hopper
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.sortingHopper, 1), "# #", "#&#", " # ", '#', "ingotCopper", '&', "chestWood"));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.sortingHopper, 1), "#&#", "###", '#', "ingotCopper", '&', "chestWood"));
-		// Candle Lilypad
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.candleLilyPad), Blocks.WATERLILY, "torch"));
 		// Item Chute
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.itemChute, 4), "#$#", "#$#", "#$#", '#', "ingotIron", '$', "stickIron"));
 		// Item Chute Port

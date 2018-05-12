@@ -43,7 +43,6 @@ public final class ModBlocks{
 	public static SortingHopper sortingHopper;
 	public static LargeGearMaster largeGearMaster;
 	public static LargeGearSlave largeGearSlave;
-	public static CandleLilyPad candleLilyPad;
 	public static ItemChute itemChute;
 	public static ItemChutePort itemChutePort;
 	public static Radiator radiator;
@@ -205,7 +204,6 @@ public final class ModBlocks{
 		fluidCoolingChamber = new FluidCoolingChamber();
 		slottedChest = new SlottedChest();
 		sortingHopper = new SortingHopper();
-		candleLilyPad = new CandleLilyPad();
 		itemChute = new ItemChute();
 		itemChutePort = new ItemChutePort();
 		radiator = new Radiator();
