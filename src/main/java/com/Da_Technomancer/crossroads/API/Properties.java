@@ -35,7 +35,6 @@ public class Properties{
 	public static final PropertyInteger PLANT = PropertyInteger.create("plant", 0, 9);
 	public static final PropertyBool HEAD = PropertyBool.create("head");
 	public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
-	public static final PropertyInteger TEMP_CHANGE = PropertyInteger.create("temp_change", 0, 4);
 	public static final PropertyBool CRYSTAL = PropertyBool.create("crystal");
 	public static final PropertyDirection HORIZONTAL_FACING = PropertyDirection.create("horiz_facing", (EnumFacing side) -> side.getAxis() != EnumFacing.Axis.Y);
 	public static final PropertyBool CONTAINER_TYPE = PropertyBool.create("container_type");

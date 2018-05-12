@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ITransparentReaction;
 import com.google.common.collect.ImmutableList;
-import mezz.jei.api.gui.IDrawableStatic;
+import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.gui.GuiHelper;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ReactionRecipe implements IRecipeWrapper{
 
-	private static final IDrawableStatic BOLT = new GuiHelper().createDrawable(ReactionCategory.ICONS, 16, 0, 16, 16);
+	private Object bolt;//Has to be kept as an Object to prevent crashes without JEI
 	
 	private final ArrayList<ReagIngr> ingr;
 	private final ArrayList<ReagIngr> prod;
@@ -60,9 +60,12 @@ public class ReactionRecipe implements IRecipeWrapper{
 		fontRenderer.drawString(line, 90 - fontRenderer.getStringWidth(line) / 2, 62, 4210752);
 
 		if(charged){
+			if(bolt == null){
+				bolt = new GuiHelper().createDrawable(ReactionCategory.ICONS, 16, 0, 16, 16);
+			}
 			GlStateManager.color(1, 1, 1);
-			BOLT.draw(minecraft, 66, 2);
-			BOLT.draw(minecraft, 98, 2);
+			((IDrawable) bolt).draw(minecraft, 66, 2);
+			((IDrawable) bolt).draw(minecraft, 98, 2);
 		}
 
 		if(catalyst != null){

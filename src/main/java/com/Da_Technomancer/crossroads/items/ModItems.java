@@ -37,18 +37,21 @@ public final class ModItems{
 			return new ItemStack(omnimeter, 1);
 		}
 	};
+
 	public static final CreativeTabs TAB_HEAT_CABLE = new CreativeTabs("heatCable"){
 		@Override
 		public ItemStack getTabIconItem(){
 			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 1);
 		}
 	};
+
 	public static final CreativeTabs TAG_GEAR = new CreativeTabs("gear"){
 		@Override
 		public ItemStack getTabIconItem(){
 			return new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.BRONZE));
 		}
 	};
+
 	public static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 100, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F).setRepairItem(new ItemStack(Items.POISONOUS_POTATO));
 	public static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[4], 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
 
