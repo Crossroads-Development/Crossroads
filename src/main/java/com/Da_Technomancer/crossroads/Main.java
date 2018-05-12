@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
-@Mod(modid = Main.MODID, name = Main.MODNAME, version = Main.VERSION, acceptedMinecraftVersions = "[1.12,1.13)", dependencies = "required-after:forge@[13.20.0.2271,]; before:guideapi; after:jei; after:crafttweaker")
+@Mod(modid = Main.MODID, name = Main.MODNAME, version = Main.VERSION, acceptedMinecraftVersions = "[1.12,1.13)", dependencies = "required-after:forge@[13.20.0.2655,]; before:guideapi; after:jei; after:crafttweaker")
 public final class Main{
 
 	public static final String MODID = "crossroads";
