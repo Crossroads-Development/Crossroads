@@ -97,7 +97,7 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 		sumEnergy = 0;
 
 		for(IAxleHandler gear : rotaryMembers){
-			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
+			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
 			sumEnergy += Math.signum(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(1.001D, -Math.abs(gear.getMotionData()[0]));
 		}
 
@@ -117,7 +117,7 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 			// set w
 			gear.getMotionData()[0] = gear.getRotationRatio() * baseSpeed;
 			// set energy
-			newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
+			newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getMoInertia() / 2D;
 			gear.getMotionData()[1] = newEnergy;
 			sumEnergy += newEnergy;
 			// set power
@@ -328,8 +328,7 @@ public class MultiplicationAxisTileEntity extends TileEntity implements ITickabl
 			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
-			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
-			memberCopy.addAll(rotaryMembers);
+			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>(rotaryMembers);
 			rotaryMembers.clear();
 			locked = false;
 			TileEntity te = world.getTileEntity(pos.offset(facing));

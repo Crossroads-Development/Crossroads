@@ -36,13 +36,13 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 				chat.add("Speed: " + axle.getMotionData()[0]);
 				chat.add("Energy: " + axle.getMotionData()[1]);
 				chat.add("Power: " + axle.getMotionData()[2]);
-				chat.add("I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio());
+				chat.add("I: " + axle.getMoInertia() + ", Rotation Ratio: " + axle.getRotationRatio());
 			}else if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit)){
 				IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit);
 				chat.add("Speed: " + axle.getMotionData()[0]);
 				chat.add("Energy: " + axle.getMotionData()[1]);
 				chat.add("Power: " + axle.getMotionData()[2]);
-				chat.add("I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio());
+				chat.add("I: " + axle.getMoInertia() + ", Rotation Ratio: " + axle.getRotationRatio());
 			}else if(te.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
 				chat.add("Total Energy: " + te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy());
 			}

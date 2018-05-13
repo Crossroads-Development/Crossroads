@@ -28,7 +28,6 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 	public static final double REQUIRED = 100;
 
 	private final double[] motionData = new double[4];
-	private final double[] physData = new double[] {125, 1};
 
 	private void runMachine(){
 		if(progress == REQUIRED){
@@ -336,8 +335,8 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public double[] getPhysData(){
-			return physData;
+		public double getMoInertia(){
+			return 1;
 		}
 
 		@Override

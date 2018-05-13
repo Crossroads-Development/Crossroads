@@ -23,7 +23,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 public class AxleTileEntity extends TileEntity implements ITickable, ISpinReceiver{
 
 	private double[] motionData = new double[4];
-	private double[] physData = {125, .25D};
 	private float angle;
 	private float clientW;
 
@@ -178,8 +177,8 @@ public class AxleTileEntity extends TileEntity implements ITickable, ISpinReceiv
 		}
 
 		@Override
-		public double[] getPhysData(){
-			return physData;
+		public double getMoInertia(){
+			return 0.25D;
 		}
 
 		@Override

@@ -26,7 +26,6 @@ public class DynamoTileEntity extends TileEntity implements ITickable{
 	}
 	
 	private double[] motionData = new double[4];
-	private static final double[] PHYS_DATA = {1125D, 140.625D};
 	private static final int CHARGE_CAPACITY = 100;
 
 	private static int efficiency = -1;
@@ -166,8 +165,8 @@ public class DynamoTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public double[] getPhysData(){
-			return PHYS_DATA;
+		public double getMoInertia(){
+			return 140.625D;
 		}
 
 		@Override

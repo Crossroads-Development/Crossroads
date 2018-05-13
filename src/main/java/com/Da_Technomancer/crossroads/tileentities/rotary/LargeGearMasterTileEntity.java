@@ -1,21 +1,14 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
-import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
-import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
+import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -31,11 +24,13 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiver, ITickable, IStringReceiver{
 	
 	private GearTypes type;
 	private double[] motionData = new double[4];
-	private double[] physData = new double[2];
+	private double inertia = 0;
 	private boolean borken = false;
 	/**
 	 * 0: angle, 1: clientW
@@ -50,8 +45,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 
-		physData[0] = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D, 2);
-		physData[1] = physData[0] * 1.125D;
+		inertia = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D * 1.125D, 2);
 		//1.125 because r*r/2 so 1.5*1.5/2
 	}
 
@@ -100,8 +94,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 		}
 		// member
 		type = nbt.hasKey("memb") ? GearTypes.valueOf(nbt.getString("memb")) : null;
-		physData[0] = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D, 2);
-		physData[1] = physData[0] * 1.125D;
+		inertia = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D * 1.125D, 2);
 		//1.125 because r*r/2 so 1.5*1.5/2
 
 		angleW[0] = nbt.getFloat("angle");
@@ -255,8 +248,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 		}
 
 		@Override
-		public double[] getPhysData(){
-			return physData;
+		public double getMoInertia(){
+			return inertia;
 		}
 
 		@Override

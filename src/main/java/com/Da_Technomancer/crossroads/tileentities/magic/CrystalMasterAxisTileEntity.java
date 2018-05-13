@@ -86,7 +86,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		// negative energy, but it makes the code easier.
 
 		for(IAxleHandler gear : rotaryMembers){
-			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
+			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
 		}
 
 		if(sumIRot == 0 || sumIRot != sumIRot){
@@ -108,7 +108,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 			// set w
 			gear.getMotionData()[0] = Math.signum(sumEnergy) * Math.signum(gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
 			// set energy
-			double newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
+			double newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getMoInertia() / 2D;
 			gear.getMotionData()[1] = newEnergy;
 			// set power
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;

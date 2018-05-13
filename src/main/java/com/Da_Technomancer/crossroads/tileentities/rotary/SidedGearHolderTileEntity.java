@@ -1,23 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
-import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
-import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
-import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-
+import com.Da_Technomancer.crossroads.API.packets.*;
+import com.Da_Technomancer.crossroads.API.rotary.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-//import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.AxisDirection;
@@ -26,6 +14,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+
+//import net.minecraft.nbt.NBTTagList;
 
 public class SidedGearHolderTileEntity extends TileEntity implements ITickable, IStringReceiver, ISpinReceiver{
 
@@ -37,8 +29,7 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 	private final double[][] motionData = new double[6][4];
 
 	// D-U-N-S-W-E
-	// [0]=m, [1]=I
-	private final double[][] physData = new double[6][2];
+	private final double[] inertia = new double[6];
 	private final GearTypes[] members = new GearTypes[6];
 
 	private boolean updateMembers = false;
@@ -321,9 +312,8 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			}
 		}
 
-		@Override
-		public double[] getPhysData(){
-			return physData[side];
+		public double getMoInertia(){
+			return inertia[side];
 		}
 
 		@Override
@@ -346,16 +336,14 @@ public class SidedGearHolderTileEntity extends TileEntity implements ITickable, 
 			// meter.
 			// mass is rounded to make things nicer for everyone
 			if(members[side] == null){
-				physData[side][0] = 0;
-				physData[side][1] = 0;
+				inertia[side] = 0;
 				motionData[side][0] = 0;
 				motionData[side][1] = 0;
 				motionData[side][2] = 0;
 				motionData[side][3] = 0;
 			}else{
-				physData[side][0] = MiscOp.betterRound(members[side].getDensity() / 8, 1);
+				inertia[side] = 0.125D * MiscOp.betterRound(members[side].getDensity() / 8, 1);
 				// .125 because r*r/2 so .5*.5/2
-				physData[side][1] = physData[side][0] * .125D;
 			}
 
 			if(sendPacket && !world.isRemote){

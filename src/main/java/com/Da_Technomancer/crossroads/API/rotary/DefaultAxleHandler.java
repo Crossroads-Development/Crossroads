@@ -21,7 +21,7 @@ public class DefaultAxleHandler implements IAxleHandler{
 	}
 	
 	private double[] motionData = new double[4];
-	private double[] physData = new double[2];
+	private double physData = 0;
 
 	@Override
 	public double[] getMotionData(){
@@ -29,7 +29,7 @@ public class DefaultAxleHandler implements IAxleHandler{
 	}
 
 	@Override
-	public double[] getPhysData(){
+	public double getMoInertia(){
 		return physData;
 	}
 

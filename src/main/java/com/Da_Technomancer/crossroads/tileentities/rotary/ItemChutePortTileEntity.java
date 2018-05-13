@@ -25,7 +25,6 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 
 	private ItemStack inventory = ItemStack.EMPTY;
 	private final double[] motionData = new double[4];
-	private final double[] physData = new double[] {500, 8};
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
@@ -176,8 +175,8 @@ public class ItemChutePortTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public double[] getPhysData(){
-			return physData;
+		public double getMoInertia(){
+			return 8;
 		}
 
 		@Override

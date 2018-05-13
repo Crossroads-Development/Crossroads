@@ -1,19 +1,12 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
-import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-
+import com.Da_Technomancer.crossroads.API.rotary.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,11 +21,13 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 public class ToggleGearTileEntity extends TileEntity implements ITickable, ISpinReceiver{
 
 	private GearTypes type;
 	private double[] motionData = new double[4];
-	private double[] physData = new double[2];
+	private double inertia = 0;
 	private float angle;
 	private float clientW;
 	private double compOut = 0;
@@ -44,8 +39,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, ISpin
 	public ToggleGearTileEntity(GearTypes type){
 		super();
 		this.type = type;
-		physData[0] = type.getDensity() / 8D;
-		physData[1] = type.getDensity() / 64D;
+		inertia = type.getDensity() / 64D;
 	}
 
 	public GearTypes getMember(){
@@ -65,9 +59,9 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, ISpin
 		}
 
 		if(!world.isRemote){
-			if(compOut != Math.abs(motionData[1] / physData[1]) * 15D){
+			if(compOut != Math.abs(motionData[1] / inertia) * 15D){
 				world.updateComparatorOutputLevel(pos, blockType);
-				compOut = Math.abs(motionData[1] / physData[1]) * 15D;
+				compOut = Math.abs(motionData[1] / inertia) * 15D;
 			}
 		}
 	}
@@ -107,8 +101,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, ISpin
 		//type
 		type = nbt.hasKey("type") ? GearTypes.valueOf(nbt.getString("type")) : null;
 		if(type != null){
-			physData[0] = type.getDensity() / 8D;
-			physData[1] = type.getDensity() / 64D;
+			inertia = type.getDensity() / 64D;
 		}
 		compOut = nbt.getDouble("comp");
 		clientW = nbt.getFloat("clientW");
@@ -265,8 +258,8 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, ISpin
 		}
 
 		@Override
-		public double[] getPhysData(){
-			return physData;
+		public double getMoInertia(){
+			return inertia;
 		}
 
 		@Override

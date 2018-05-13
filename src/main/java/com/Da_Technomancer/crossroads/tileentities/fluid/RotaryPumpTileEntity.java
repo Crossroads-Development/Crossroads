@@ -34,7 +34,6 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 	private int lastProgress = 0;
 
 	private final double[] motionData = new double[4];
-	private final double[] physData = new double[] {375, 8};
 
 	@Override
 	public void update(){
@@ -152,8 +151,8 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		}
 
 		@Override
-		public double[] getPhysData(){
-			return physData;
+		public double getMoInertia(){
+			return 8;
 		}
 
 		@Override

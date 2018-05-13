@@ -1,13 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
-import java.util.List;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +17,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+
+import java.util.List;
 
 public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 
@@ -39,7 +38,6 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 	 */
 	private float angle = 0;
 	private final double[] motionData = new double[4];
-	private final double[] physData = new double[] {520, 50D};
 
 	@Override
 	public void update(){
@@ -135,8 +133,8 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public double[] getPhysData(){
-			return physData;
+		public double getMoInertia(){
+			return 50;
 		}
 
 		@Override

@@ -30,7 +30,6 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 	public static final int LIMIT = 5;
 
 	private final double[] motionData = new double[4];
-	private final double[] physData = new double[] {375, 8};
 	
 	@Override
 	public void update(){
@@ -165,8 +164,8 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 		}
 
 		@Override
-		public double[] getPhysData(){
-			return physData;
+		public double getMoInertia(){
+			return 8;
 		}
 
 		@Override

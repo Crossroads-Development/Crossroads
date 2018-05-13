@@ -42,7 +42,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	public double[] angleRecord = new double[3];
 	/**Server side: A record of the last speeds sent to the client.*/
 	private double[] lastSentAngle = new double[3];
-	private static final double[] PHYS_DATA = new double[2];
+	private static final double PHYS_DATA = 0;
 	/**
 	 * Math.min((redstone - 1) / 6, EFFECTS.length - 1) corresponds to action type, which are:
 	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Throw entity, 7: Pickup one from inventory.
@@ -251,7 +251,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		}
 
 		@Override
-		public double[] getPhysData(){
+		public double getMoInertia(){
 			return PHYS_DATA;
 		}
 

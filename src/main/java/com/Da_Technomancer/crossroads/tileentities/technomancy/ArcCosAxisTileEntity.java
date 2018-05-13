@@ -1,25 +1,23 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-
+import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 
 public class ArcCosAxisTileEntity extends TileEntity implements ITickable{
 
@@ -59,7 +57,7 @@ public class ArcCosAxisTileEntity extends TileEntity implements ITickable{
 		double cost = 0;
 
 		for(IAxleHandler gear : rotaryMembers){
-			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
+			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
 			sumEnergy += Math.signum(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(1.001D, -Math.abs(gear.getMotionData()[0]));
 		}
 
@@ -80,7 +78,7 @@ public class ArcCosAxisTileEntity extends TileEntity implements ITickable{
 			// set w
 			gear.getMotionData()[0] = gear.getRotationRatio() * baseSpeed;
 			// set energy
-			newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
+			newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getMoInertia() / 2D;
 			gear.getMotionData()[1] = newEnergy;
 			sumEnergy += newEnergy;
 			// set power
@@ -243,8 +241,7 @@ public class ArcCosAxisTileEntity extends TileEntity implements ITickable{
 			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
-			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
-			memberCopy.addAll(rotaryMembers);
+			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>(rotaryMembers);
 			rotaryMembers.clear();
 			locked = false;
 			TileEntity te = world.getTileEntity(pos.offset(facing));

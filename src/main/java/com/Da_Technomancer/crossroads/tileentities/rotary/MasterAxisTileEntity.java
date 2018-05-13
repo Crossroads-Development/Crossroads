@@ -1,23 +1,21 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-
+import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 
 public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
@@ -54,7 +52,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		// negative energy, but it makes the code easier.
 
 		for(IAxleHandler gear : rotaryMembers){
-			sumIRot += gear.getPhysData()[1] * Math.pow(gear.getRotationRatio(), 2);
+			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
 		}
 
 		if(sumIRot == 0 || sumIRot != sumIRot){
@@ -71,7 +69,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			double newSpeed = Math.signum(sumEnergy * gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
 			gear.getMotionData()[0] = newSpeed;
 			// set energy
-			double newEnergy = Math.signum(newSpeed) * Math.pow(newSpeed, 2) * gear.getPhysData()[1] / 2D;
+			double newEnergy = Math.signum(newSpeed) * Math.pow(newSpeed, 2) * gear.getMoInertia() / 2D;
 			gear.getMotionData()[1] = newEnergy;
 			// set power
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20D;
@@ -213,8 +211,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
-			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
-			memberCopy.addAll(rotaryMembers);
+			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>(rotaryMembers);
 			rotaryMembers.clear();
 			locked = false;
 			TileEntity te = world.getTileEntity(pos.offset(facing));

@@ -26,10 +26,7 @@ public interface IAxleHandler{
 	 */
 	public void propogate(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius);
 
-	/**
-	 * [0]=m, [1]=I
-	 */
-	public double[] getPhysData();
+	public double getMoInertia();
 	
 	public double getRotationRatio();
 
