@@ -95,8 +95,7 @@ public class WaterCentrifuge extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Mass: 912.5");
-		tooltip.add("I: 114.0625");
+		tooltip.add("I: 115");
 		tooltip.add("Produces LoL players.");
 	}
 }

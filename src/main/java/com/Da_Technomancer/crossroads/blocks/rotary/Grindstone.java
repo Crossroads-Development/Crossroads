@@ -66,7 +66,6 @@ public class Grindstone extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Mass: 125");
 		tooltip.add("I: 1");
 		tooltip.add("Consumes: Up to 100J/t while running");
 	}

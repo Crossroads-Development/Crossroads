@@ -118,7 +118,6 @@ public class RotaryDrill extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Mass: 520");
 		tooltip.add("I: 50");
 		tooltip.add("Consumes: " + RotaryDrillTileEntity.ENERGY_USE + "J/t");
 	}

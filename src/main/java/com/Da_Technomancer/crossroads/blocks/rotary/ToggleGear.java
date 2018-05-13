@@ -1,24 +1,18 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -35,6 +29,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ToggleGear extends BlockContainer{
 
@@ -64,7 +61,6 @@ public class ToggleGear extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Mass: " + MiscOp.betterRound(type.getDensity() / 8D, 2));
 		tooltip.add("I: " + MiscOp.betterRound(type.getDensity() / 8D, 2) * .125D);
 	}
 
@@ -99,7 +95,7 @@ public class ToggleGear extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.REDSTONE_BOOL});
+		return new BlockStateContainer(this, Properties.REDSTONE_BOOL);
 	}
 
 	@Override

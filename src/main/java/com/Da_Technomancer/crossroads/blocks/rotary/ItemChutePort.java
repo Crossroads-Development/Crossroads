@@ -91,7 +91,6 @@ public class ItemChutePort extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Mass: 500");
 		tooltip.add("I: 2");
 		tooltip.add("Consumes: 0.5J/operation");
 	}

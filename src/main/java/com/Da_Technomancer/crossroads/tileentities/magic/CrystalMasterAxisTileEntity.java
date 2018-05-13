@@ -94,7 +94,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		}
 
 		sumEnergy = runLoss(rotaryMembers, currentElement == EnumMagicElements.STABILITY ? (voi ? 1.5D : 1D) : 1.001D);
-		sumEnergy += Math.signum(sumEnergy) * (currentElement == EnumMagicElements.ENERGY ? (voi ? -10 : 10) : 0);
+		sumEnergy += (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy)) * (currentElement == EnumMagicElements.ENERGY ? (voi ? -10 : 10) : 0);
 		sumEnergy += currentElement == EnumMagicElements.CHARGE ? (voi ? -10 : 10) : 0;
 		sumEnergy = currentElement == EnumMagicElements.EQUALIBRIUM ? (voi ? ((7D * sumEnergy) - (3D * lastSumEnergy)) / 4D : (sumEnergy + (3D * lastSumEnergy)) / 4D) : sumEnergy;
 

@@ -86,7 +86,6 @@ public class Dynamo extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Mass: 1125");
 		tooltip.add("I: 140.625");
 		tooltip.add("Produces: " + ModConfig.getConfigInt(ModConfig.electPerJoule, true) + "FE/J");
 	}

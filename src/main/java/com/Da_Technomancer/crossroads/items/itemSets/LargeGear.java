@@ -48,7 +48,6 @@ public class LargeGear extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Mass: " + MiscOp.betterRound(4.5D * type.getDensity(), 2));
 		tooltip.add("I: " + MiscOp.betterRound(4.5D * type.getDensity(), 2) * 1.125D);
 	}
 

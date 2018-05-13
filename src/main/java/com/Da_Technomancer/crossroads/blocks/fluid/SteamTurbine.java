@@ -73,7 +73,6 @@ public class SteamTurbine extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Mass: 375");
 		tooltip.add("I: 8");
 		tooltip.add("Consumes: " + 100 * SteamTurbineTileEntity.LIMIT + "mB/t steam");
 		tooltip.add("Produces: " + ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE + "J/t while running");

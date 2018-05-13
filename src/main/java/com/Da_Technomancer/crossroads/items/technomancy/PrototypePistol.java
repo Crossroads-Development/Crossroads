@@ -52,6 +52,7 @@ public class PrototypePistol extends MagicUsingItem{
 	 * Stores the IPrototypeOwners of active pistols to prevent them from being garbage collected. 
 	 */
 	private static final HashMap<Integer, PistolPrototypeOwner> pistolMap = new HashMap<Integer, PistolPrototypeOwner>();
+	private static final int MAG_SIZE = 6;
 
 	public PrototypePistol(){
 		String name = "prototype_pistol";
@@ -68,7 +69,7 @@ public class PrototypePistol extends MagicUsingItem{
 		if(!stack.hasTagCompound()){
 			stack.setTagCompound(new NBTTagCompound());
 		}
-		tooltip.add("Loaded: " + stack.getTagCompound().getBoolean("loaded"));
+		tooltip.add("Ammo: " + stack.getTagCompound().getInteger("ammo") + "/" + MAG_SIZE);
 		NBTTagCompound prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
 		if(prototypeNBT.hasKey("name")){
 			tooltip.add("Name: " + prototypeNBT.getString("name"));
@@ -78,22 +79,38 @@ public class PrototypePistol extends MagicUsingItem{
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand){
-		if(!worldIn.isRemote && playerIn.isSneaking() && hand == EnumHand.MAIN_HAND && playerIn.getHeldItem(hand).hasTagCompound() && !playerIn.getHeldItem(hand).getTagCompound().getBoolean("loaded")){
-			for(int i = 0; i < playerIn.inventory.getSizeInventory(); i++){
-				if(playerIn.inventory.getStackInSlot(i).getItem() == Items.IRON_NUGGET){
-					playerIn.getHeldItem(hand).getTagCompound().setBoolean("loaded", true);
-					playerIn.inventory.decrStackSize(i, 1);
-					worldIn.playSound(null, playerIn.getPosition(), SoundEvents.ITEM_ARMOR_EQUIP_IRON, SoundCategory.PLAYERS, 5, 1F);
+		if(!worldIn.isRemote && hand == EnumHand.MAIN_HAND && playerIn.getHeldItem(hand).hasTagCompound()){
+			NBTTagCompound nbt = playerIn.getHeldItem(hand).getTagCompound();
+			int index = nbt.getCompoundTag("prot").getInteger("index");
+			if(playerIn.isSneaking()){
+				if(nbt.getInteger("ammo") < MAG_SIZE){
+					for(int i = 0; i < playerIn.inventory.getSizeInventory(); i++){
+						if(playerIn.inventory.getStackInSlot(i).getItem() == Items.IRON_NUGGET){
+							playerIn.getHeldItem(hand).getTagCompound().setInteger("ammo", 1 + playerIn.getHeldItem(hand).getTagCompound().getInteger("ammo"));
+							playerIn.inventory.decrStackSize(i, 1);
+							worldIn.playSound(null, playerIn.getPosition(), SoundEvents.ITEM_ARMOR_EQUIP_IRON, SoundCategory.PLAYERS, 5, 1F);
+							return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
+						}
+					}
+				}
+				return new ActionResult<ItemStack>(EnumActionResult.FAIL, playerIn.getHeldItem(hand));
+			}else if(pistolMap.containsKey(index) && nbt.getInteger("ammo") != 0 && !playerIn.isSneaking()){
+				PistolPrototypeOwner owner = pistolMap.get(index);
+				if(owner.axle.getMotionData()[1] > 0){
+					EntityBullet bullet = new EntityBullet(playerIn.world, playerIn, getDamage(owner.axle.getMotionData()[0]));
+					bullet.setPosition(playerIn.posX, playerIn.posY + playerIn.getEyeHeight(), playerIn.posZ);
+					bullet.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0, getBulletSpeed(owner.axle.getMotionData()[0]) /*In blocks/tick*/, 0);
+					bullet.ignoreEntity = playerIn;
+					playerIn.world.spawnEntity(bullet);
+					nbt.setInteger("ammo", nbt.getInteger("ammo") - 1);
+					playerIn.resetActiveHand();
+					playerIn.world.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_METAL_PRESSPLATE_CLICK_ON, SoundCategory.PLAYERS, 15, ((float) getBulletSpeed(owner.axle.getMotionData()[0])) % 1F);
 					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 				}
 			}
-
-			return new ActionResult<ItemStack>(EnumActionResult.FAIL, playerIn.getHeldItem(hand));
 		}
 		return super.onItemRightClick(worldIn, playerIn, hand);
 	}
-
-	private static final double MASS_OF_BULLET = .035D;
 
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
@@ -118,29 +135,17 @@ public class PrototypePistol extends MagicUsingItem{
 					}
 				}
 			}
-			if(pistolMap.containsKey(index)){
-				PistolPrototypeOwner owner = pistolMap.get(index);
-				if(getMaxItemUseDuration(stack) - count >= 15 && stack.getTagCompound().getBoolean("loaded") && !player.isSneaking()){
-					if(owner.axle.getMotionData()[1] > 0){
-						//In blocks(meters)/s This would be the IRL formula if all energy were losslessly transfered.
-						double speed = Math.sqrt(owner.axle.getMotionData()[1] * 2D / MASS_OF_BULLET);
-						int maxDamage = ModConfig.getConfigInt(ModConfig.maximumPistolDamage, false);
-						EntityBullet bullet = new EntityBullet(player.world, player, maxDamage < 0 ? (int) Math.round(speed / 20D) : Math.min(maxDamage, (int) Math.round(speed / 20D)), owner.magic.lastOut);
-						bullet.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-						bullet.shoot(player, player.rotationPitch, player.rotationYaw, 0, (float) Math.min(speed / 20F, 5F) /*In blocks/tick*/, 0);
-						bullet.ignoreEntity = player;
-						player.world.spawnEntity(bullet);
-						stack.getTagCompound().setBoolean("loaded", false);
-						player.resetActiveHand();
-						player.world.playSound(null, player.getPosition(), SoundEvents.BLOCK_METAL_PRESSPLATE_CLICK_ON, SoundCategory.PLAYERS, 15, ((float) speed) % 1F);
-					}
-				}
-
-				if(BeamManager.beamStage == 0){
-					owner.magic.lastOut = null;
-				}
-			}
 		}
+	}
+
+	private float getBulletSpeed(double gearSpeed){
+		return (float) gearSpeed * 0.5F;
+	}
+
+	private int getDamage(double gearSpeed){
+		int maxDamage = ModConfig.getConfigInt(ModConfig.maximumPistolDamage, false);
+
+		return maxDamage < 0 ? (int) Math.round(gearSpeed * 4F) : Math.min(maxDamage, (int) Math.round(gearSpeed * 4F));
 	}
 
 	@Override
@@ -168,7 +173,7 @@ public class PrototypePistol extends MagicUsingItem{
 			}
 
 			PrototypeWorldProvider.tickChunk(new ChunkPos(((index % 100) * 2) - 99, (index / 50) - 99));
-			
+
 			if(entityIn instanceof EntityPlayer && BeamManager.beamStage == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).hasTagCompound()){
 				NBTTagCompound cageNbt = ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getTagCompound();
 				NBTTagCompound nbt = stack.getTagCompound();
@@ -244,19 +249,7 @@ public class PrototypePistol extends MagicUsingItem{
 
 		@Override
 		public boolean hasCap(Capability<?> cap, EnumFacing side){
-			if(!active){
-				return false;
-			}
-			if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == EnumFacing.UP){
-				return true;
-			}
-			if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && side == EnumFacing.SOUTH){
-				return true;
-			}
-			if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side == EnumFacing.WEST){
-				return true;
-			}
-			return false;
+			return cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == EnumFacing.UP || cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && side == EnumFacing.SOUTH || cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side == EnumFacing.WEST;
 		}
 
 		@SuppressWarnings("unchecked")
@@ -295,7 +288,7 @@ public class PrototypePistol extends MagicUsingItem{
 			active = false;
 			CommonProxy.masterKey++;
 		}
-		
+
 		@Override
 		public boolean shouldRun(){
 			return pistolMap.containsKey(index);
@@ -303,15 +296,8 @@ public class PrototypePistol extends MagicUsingItem{
 
 		private class MagicHandler implements IMagicHandler{
 
-			private MagicUnit lastOut;
-
 			@Override
 			public void setMagic(MagicUnit mag){
-				if(mouseActive){
-					lastOut = mag;
-					return;
-				}
-
 				if(mag != null && user instanceof EntityLivingBase){
 					EntityLivingBase ent = (EntityLivingBase) user;
 					ItemStack offhand = ent.getHeldItem(EnumHand.OFF_HAND);
@@ -355,7 +341,6 @@ public class PrototypePistol extends MagicUsingItem{
 		private class AxleHandler implements IAxleHandler{
 
 			private final double[] motionData = new double[4];
-			private final double physData = 10;
 
 			@Override
 			public double[] getMotionData(){
@@ -378,7 +363,7 @@ public class PrototypePistol extends MagicUsingItem{
 
 			@Override
 			public double getMoInertia(){
-				return physData;
+				return 10;
 			}
 
 			@Override

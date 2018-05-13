@@ -1,11 +1,5 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.API.effects.IEffect;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,16 +10,14 @@ import net.minecraft.world.World;
 public class EntityBullet extends EntityThrowable{
 
 	private int damage;
-	private MagicUnit mag;
 
 	public EntityBullet(World worldIn){
 		super(worldIn);
 	}
 
-	public EntityBullet(World worldIn, EntityLivingBase throwerIn, int damage, @Nullable MagicUnit mag){
+	public EntityBullet(World worldIn, EntityLivingBase throwerIn, int damage){
 		super(worldIn, throwerIn);
 		this.damage = damage;
-		this.mag = mag;
 	}
 
 	@Override
@@ -33,12 +25,6 @@ public class EntityBullet extends EntityThrowable{
 		if(!world.isRemote){
 			if(result.entityHit != null){
 				result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), (float) damage);
-			}
-			if(mag != null && (result.getBlockPos() != null || result.entityHit != null)){
-				IEffect effect = EnumMagicElements.getElement(mag).getMixEffect(mag.getRGB());
-				if(effect != null){
-					effect.doEffect(world, result.getBlockPos() == null ? result.entityHit.getPosition() : result.getBlockPos(), Math.min(64, mag.getPower()));
-				}
 			}
 			world.setEntityState(this, (byte) 3);
 			setDead();
@@ -49,15 +35,11 @@ public class EntityBullet extends EntityThrowable{
 	public void readEntityFromNBT(NBTTagCompound nbt){
 		super.readEntityFromNBT(nbt);
 		damage = nbt.getInteger("damage");
-		mag = MagicUnit.loadNBT(nbt, "mag");
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt){
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("damage", damage);
-		if(mag != null){
-			mag.setNBT(nbt, "mag");
-		}
 	}
 }
