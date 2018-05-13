@@ -132,7 +132,7 @@ public final class ModCrafting{
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {(Object s) -> EssentialsConfig.isWrench((ItemStack) s, false), new ItemRecipePredicate(ModItems.handCrank, 0), new ItemRecipePredicate(ModItems.staffTechnomancy, 0)}, new ItemStack(ModItems.liechWrench, 1)));
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 4), new OreDictCraftingStack("ingotCopper")}, new ItemStack(ModBlocks.maxwellDemon, 1)));
 		RecipeHolder.brazierBoboRecipes.add(Pair.of(new Predicate[] {new OreDictCraftingStack("meatRaw"), new OreDictCraftingStack("gunpowder"), (Predicate<ItemStack>) (ItemStack stack) -> {if(stack.getItem() == ModItems.phial){ ReagentStack reag = ModItems.phial.getReagants(stack).getLeft()[5]; return reag != null && reag.getAmount() >= 5;} return false;}}, new ItemStack(ModItems.nitroglycerin, 8)));
-		
+
 		RecipeHolder.magExtractRecipes.put(Items.REDSTONE, new MagicUnit(24, 36, 0, 0));
 		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));
 		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(36, 24, 0, 0));
@@ -239,6 +239,9 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.chargingStand, 1), " * ", "| |", " ^ ", '*', "ingotIron", '|', "stickIron", '^', ModBlocks.glasswareHolder));
 		//Atmos Charger
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.atmosCharger, 1), "| |", "| |", "*$*", '|', "stickIron", '*', "ingotIron", '$', ModItems.leydenJar));
+		//Detailed Crafting Table (Cheap Alchemy Recipe)
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.detailedCrafter, 1), "*&*", "&#&", "*&*", '*', "nuggetIron", '&', "nuggetTin", '#', Blocks.CRAFTING_TABLE));
+
 
 		//Flying Machine
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.flyingMachine, 1), "___", "@-@", "|+|", '_', "ingotBronze", '@', "gearCopshowium", '-', new ItemStack(ModBlocks.densusPlate, 1, 1), '+', new ItemStack(ModBlocks.densusPlate, 1, 0), '|', "stickIron"));
@@ -307,6 +310,9 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneRegistry, 1), "*&*", "&^&", "*&*", '*', "nuggetTin", '&', ModBlocks.redstoneKeyboard, '^', "ingotCopshowium"));
 		//Detailed Crafting Table (Cheap Technomancy Recipe)
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.detailedCrafter, 1), "*&*", "&#&", "*&*", '*', "nuggetIron", '&', "nuggetTin", '#', Blocks.CRAFTING_TABLE));
+		//Copshowium Axle
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumAxle, 1), "*", "|", "*", '*', "stone", '|', "ingotCopshowium"));
+
 
 		//Ores
 		//Tin

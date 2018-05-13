@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
@@ -9,7 +7,6 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -20,11 +17,26 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
+import javax.annotation.Nullable;
+
 public class AxleTileEntity extends TileEntity implements ITickable, ISpinReceiver{
 
 	private double[] motionData = new double[4];
 	private float angle;
 	private float clientW;
+	private double inertia;
+
+	public AxleTileEntity(){
+		this(false);
+	}
+
+	public AxleTileEntity(boolean massless){
+		inertia = massless ? 0 : 0.25D;
+	}
+
+	public boolean isMassless(){
+		return inertia < 0.001D;
+	}
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
@@ -61,6 +73,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, ISpinReceiv
 
 		nbt.setFloat("clientW", clientW);
 		nbt.setFloat("angle", angle);
+		nbt.setDouble("inert", inertia);
 		return nbt;
 	}
 
@@ -76,6 +89,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, ISpinReceiv
 
 		clientW = nbt.getFloat("clientW");
 		angle = nbt.getFloat("angle");
+		inertia = nbt.hasKey("inert") ? nbt.getDouble("inert") : 0.25D;//Backward compatability
 	}
 
 	@Override
@@ -178,7 +192,7 @@ public class AxleTileEntity extends TileEntity implements ITickable, ISpinReceiv
 
 		@Override
 		public double getMoInertia(){
-			return 0.25D;
+			return inertia;
 		}
 
 		@Override

@@ -120,6 +120,7 @@ public class ModBlocks{
 	public static ChargingStand chargingStand;
 	public static AtmosCharger atmosCharger;
 	public static ReactiveSpot reactiveSpot;
+	public static CopshowiumAxle copshowiumAxle;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -261,6 +262,7 @@ public class ModBlocks{
 		chargingStand = new ChargingStand();
 		atmosCharger = new AtmosCharger();
 		reactiveSpot = new ReactiveSpot();
+		copshowiumAxle = new CopshowiumAxle();
 	}
 
 	@SideOnly(Side.CLIENT)

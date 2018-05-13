@@ -253,6 +253,7 @@ tile.atmos_charger.name=Atmospheric Attenuator
 item.flying_machine.name=Flying Machine
 entity.flying_machine.name=Flying Machine
 tile.reactive_spot.name=Reactive Spot (Internal)
+tile.copshowium_axle.name=Copshowium Axle
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ
