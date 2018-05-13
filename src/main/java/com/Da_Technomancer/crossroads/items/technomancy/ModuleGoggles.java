@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,9 +44,10 @@ public class ModuleGoggles extends ItemArmor{
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
 		if(!world.isRemote && stack.hasTagCompound()){
 			ArrayList<String> chat = new ArrayList<String>();
+			RayTraceResult ray = MiscOp.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(stack.getTagCompound().hasKey(lens.name())){
-					lens.doEffect(world, player, chat, MiscOp.rayTrace(player, 8));
+				if(stack.getTagCompound().getBoolean(lens.name())){
+					lens.doEffect(world, player, chat, ray);
 				}
 			}
 			if(!chat.isEmpty()){
@@ -68,7 +70,11 @@ public class ModuleGoggles extends ItemArmor{
 		if(stack.hasTagCompound()){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(stack.getTagCompound().hasKey(lens.name())){
-					tooltip.add('-' + lens.name());
+					if(lens.getKey() == null){
+						tooltip.add('-' + lens.name());
+					}else{
+						tooltip.add('-' + lens.name() + "-" + (stack.getTagCompound().getBoolean(lens.name()) ? "ENABLED" : "DISABLED"));
+					}
 				}
 			}
 		}else{

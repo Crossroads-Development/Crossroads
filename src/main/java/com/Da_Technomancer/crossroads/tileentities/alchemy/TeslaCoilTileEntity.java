@@ -1,12 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
@@ -39,12 +37,10 @@ import java.util.List;
 public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickable{
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.EMERALD){
-			for(int i = 0; i < 3; i++){
-				if(linked[i] != null){
-					chat.add("Linked Position: X=" + (pos.getX() + linked[i].getX()) + " Y=" + (pos.getY() + linked[i].getY()) + " Z=" + (pos.getZ() + linked[i].getZ()));
-				}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+		for(int i = 0; i < 3; i++){
+			if(linked[i] != null){
+				chat.add("Linked Position: X=" + (pos.getX() + linked[i].getX()) + " Y=" + (pos.getY() + linked[i].getY()) + " Z=" + (pos.getZ() + linked[i].getZ()));
 			}
 		}
 	}
@@ -56,7 +52,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 
 	public static final int[] COLOR_CODES = {new Color(128, 0, 255, 128).getRGB(), new Color(64, 0, 255, 128).getRGB(), new Color(100, 0, 255, 128).getRGB()};
 	private static final int[] ATTACK_COLOR_CODES = {new Color(255, 32, 0, 128).getRGB(), new Color(255, 0, 32, 128).getRGB(), new Color(255, 32, 32, 128).getRGB()};
-	
+
 	private static final int JOLT_CONSERVED = 950;
 	private int stored = 0;
 	private Boolean hasJar = null;
@@ -67,7 +63,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 	//Relative to this TileEntity's position
 	public BlockPos[] linked = new BlockPos[3];
 	public boolean redstone = false;
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -81,17 +77,17 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 			}
 			hasJar = world.getBlockState(pos).getValue(Properties.ACTIVE);
 		}
-		
+
 		if(!redstone && world.getTotalWorldTime() % 10 == 0 && stored >= JOLT_AMOUNT){
 			IBlockState state = world.getBlockState(pos);
 			if(state.getBlock() != ModBlocks.teslaCoil){
 				invalidate();
 				return;
 			}
-			
+
 			if(state.getValue(Properties.LIGHT)){
 				List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - RANGE, pos.getY() - RANGE, pos.getZ() - RANGE, pos.getX() + RANGE, pos.getY() + RANGE, pos.getZ() + RANGE), EntitySelectors.IS_ALIVE);
-				
+
 				if(!ents.isEmpty()){
 					EntityLivingBase ent = ents.get(world.rand.nextInt(ents.size()));
 					stored -= JOLT_AMOUNT;
@@ -103,13 +99,13 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 					ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 					//Sound may need tweaking
-					
+
 					ent.onStruckByLightning(new EntityLightningBolt(world, ent.posX, ent.posY, ent.posZ, true));
 					return;
 				}
 			}
-			
-			
+
+
 			for(BlockPos linkPos : linked){
 				if(linkPos != null){
 					BlockPos actualPos = linkPos.add(pos);
@@ -134,7 +130,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 				}
 			}
 		}
-		
+
 		if(!redstone && stored > 0){
 			EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
 			TileEntity te = world.getTileEntity(pos.offset(facing));

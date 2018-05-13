@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
-import com.Da_Technomancer.crossroads.API.*;
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.OmniMeter;
-import com.Da_Technomancer.crossroads.items.Thermometer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -43,13 +43,9 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable, IIn
 	private static final double USE_PER_VALUE = .8D;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
-			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
-			}
-		}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
+		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override

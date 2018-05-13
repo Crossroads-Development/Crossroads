@@ -1,18 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import java.util.ArrayList;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.OmniMeter;
-import com.Da_Technomancer.crossroads.items.Thermometer;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -22,6 +15,8 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.ArrayList;
 
 public class HeatingChamberTileEntity extends AbstractInventory implements ITickable, IInfoTE{
 
@@ -34,15 +29,11 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 	private final static int MINTEMP = 200;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
-			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
-			}
-		}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
+		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -61,7 +52,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 				progress += 2;
 				if(progress >= REQUIRED){
 					progress = 0;
-					
+
 					if(inventory[1].isEmpty()){
 						inventory[1] = output;
 					}else{

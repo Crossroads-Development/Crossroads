@@ -1,12 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import net.minecraft.block.SoundType;
@@ -34,7 +32,7 @@ import java.util.HashSet;
 public class ChargingStandTileEntity extends AlchemyReactorTE{
 
 	private boolean occupied = false;
-	/** 
+	/**
 	 * Meaningless if !occupied. If true, florence flask, else phial.
 	 */
 	private boolean florence = false;
@@ -47,18 +45,16 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if((device == ModItems.omnimeter || device == EnumGoggleLenses.RUBY) && occupied && amount > 0){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		if(occupied && amount > 0){
 			chat.add("Temp: " + MiscOp.betterRound((heat / amount) - 273D, 3) + "°C");
 		}
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
-			if(amount == 0){
-				chat.add("No reagents");
-			}
-			for(ReagentStack reag : contents){
-				if(reag != null){
-					chat.add(reag.toString());
-				}
+		if(amount == 0){
+			chat.add("No reagents");
+		}
+		for(ReagentStack reag : contents){
+			if(reag != null){
+				chat.add(reag.toString());
 			}
 		}
 	}
@@ -177,7 +173,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 						}
 					}
 				}
-				
+
 				Triple<ReagentStack[], Double, Double> phial = ((AbstractGlassware) stack.getItem()).getReagants(stack);
 				ReagentStack[] reag = phial.getLeft();
 				double endHeat = phial.getMiddle();

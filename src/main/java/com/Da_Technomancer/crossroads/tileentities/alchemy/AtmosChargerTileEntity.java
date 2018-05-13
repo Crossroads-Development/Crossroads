@@ -4,10 +4,8 @@ import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
-import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -36,12 +34,10 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	private int renderTimer;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.EMERALD){
-			chat.add(MiscOp.betterRound(voltusAmount, 2) + "/" + VOLTUS_CAPACITY + " Voltus");
-			int charge = AtmosChargeSavedData.getCharge(world);
-			chat.add(charge + "/" + AtmosChargeSavedData.CAPACITY + "FE in atmosphere (" + MiscOp.betterRound(100D * charge / AtmosChargeSavedData.CAPACITY, 1) + "%)");
-		}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		chat.add(MiscOp.betterRound(voltusAmount, 2) + "/" + VOLTUS_CAPACITY + " Voltus");
+		int charge = AtmosChargeSavedData.getCharge(world);
+		chat.add(charge + "/" + AtmosChargeSavedData.CAPACITY + "FE in atmosphere (" + MiscOp.betterRound(100D * charge / AtmosChargeSavedData.CAPACITY, 1) + "%)");
 	}
 
 	@Override

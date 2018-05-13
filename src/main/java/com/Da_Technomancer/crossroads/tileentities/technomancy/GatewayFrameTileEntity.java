@@ -1,11 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.*;
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import net.minecraft.block.state.IBlockState;
@@ -37,7 +39,6 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 	private final IMagicHandler magicHandler = new MagicHandler();
 	private GameProfileNonPicky owner;
-	private double savedCoord = 0;
 
 	public void setOwner(GameProfileNonPicky owner){
 		this.owner = owner;
@@ -50,11 +51,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == EnumGoggleLenses.EMERALD && world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
-			GatewayFrameTileEntity xTE = dialedCoord(Axis.X);
-			if(xTE != null){
-				chat.add("Dialed: " + xTE.getCoord() + ", " + getCoord() + ", " + dialedCoord(Axis.Z).getCoord());
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		if(world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
+			BlockPos target = dialedCoord();
+			if(target != null){
+				chat.add("Dialed: " + target.getX() + ", " + target.getY() + ", " + target.getZ());
 			}
 		}
 	}
@@ -85,7 +86,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 								DimensionManager.initDimension(dim);
 							}
 
-							GatewayTeleporter porter = inDim ? new GatewayTeleporter(DimensionManager.getWorld(0), dialedCoord(Axis.X).savedCoord, savedCoord, dialedCoord(Axis.Z).savedCoord) : new GatewayTeleporter(DimensionManager.getWorld(dim), .5D, 33, .5D);
+							BlockPos target = dialedCoord();
+
+							GatewayTeleporter porter = inDim ? new GatewayTeleporter(DimensionManager.getWorld(0), target.getX(), target.getY(), target.getZ()) : new GatewayTeleporter(DimensionManager.getWorld(dim), .5D, 33, .5D);
 
 							PlayerList playerList = world.getMinecraftServer().getPlayerList();
 							for(Entity ent : toTransport){
@@ -101,33 +104,6 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 					}
 				}
 				magicPassed = false;
-			}
-
-
-			double prevCoord = savedCoord;
-			EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
-
-			if(facing == EnumFacing.UP){
-				for(EnumFacing dir : EnumFacing.HORIZONTALS){
-					TileEntity te = world.getTileEntity(pos.offset(dir));
-					if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite())){
-						savedCoord = Math.max(0, Math.min(250, savedCoord + te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite()).getMotionData()[0] / 20D));
-						break;
-					}
-				}
-			}else if(facing == EnumFacing.DOWN){
-				savedCoord = 0;
-			}else if(world.getBlockState(pos.offset(facing, 2).offset(EnumFacing.UP, 2)) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
-				TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
-				if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
-					savedCoord += te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[0] / 20D;
-				}
-			}else{
-				savedCoord = 0;
-			}
-
-			if(savedCoord != prevCoord){
-				markDirty();
 			}
 		}
 	}
@@ -165,21 +141,32 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	@Nullable
-	private GatewayFrameTileEntity dialedCoord(Axis axis){
-		//The frame in the negative direction controls the X coord. 
-		if(getAlignment() == null){
+	private BlockPos dialedCoord(){
+		//The frame in the negative direction controls the X coord.
+		Axis align = getAlignment();
+		if(align == null){
 			return null;
 		}
-		return (GatewayFrameTileEntity) world.getTileEntity(pos.offset(EnumFacing.DOWN, 2).offset(EnumFacing.getFacingFromAxis(axis == Axis.X ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE, getAlignment()), 2));
-	}
+		int[] coords = new int[3];
+		TileEntity te = world.getTileEntity(pos.offset(EnumFacing.DOWN, 2).offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align), 2));
+		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align))){
+			coords[0] = (int) Math.round(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align)).getMotionData()[0]);
+		}
+		te = world.getTileEntity(pos.offset(EnumFacing.DOWN, 2).offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align), 2));
+		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align))){
+			coords[0] = (int) Math.round(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align)).getMotionData()[0]);
+		}
+		te = world.getTileEntity(pos.offset(EnumFacing.UP));
+		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			coords[0] = (int) Math.round(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0]);
+		}
 
-	private double getCoord(){
-		return MiscOp.betterRound(savedCoord, 3);
+		return new BlockPos(coords[0], coords[1], coords[2]);
 	}
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == null) && world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
 			return true;
 		}
 
@@ -189,7 +176,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == null) && world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
 			return (T) magicHandler;
 		}
 
@@ -199,7 +186,6 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setDouble("coord", savedCoord);
 		if(owner != null){
 			owner.writeToNBT(nbt, "own");
 		}
@@ -211,11 +197,10 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	public void setWorldCreate(World world){
 		this.world = world;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		savedCoord = nbt.getDouble("coord");
 		owner = GameProfileNonPicky.readFromNBT(nbt, "own", world.getMinecraftServer() == null ? null : world.getMinecraftServer().getPlayerProfileCache());
 		if(owner != null && owner.isNewlyCompleted()){
 			markDirty();

@@ -1,20 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import java.util.ArrayList;
-
-import org.apache.commons.lang3.tuple.Triple;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.OmniMeter;
-import com.Da_Technomancer.crossroads.items.Thermometer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,6 +13,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import org.apache.commons.lang3.tuple.Triple;
+
+import java.util.ArrayList;
 
 public class HeatExchangerTileEntity extends TileEntity implements ITickable, IInfoTE{
 
@@ -40,14 +34,10 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
-			chat.add("Buffered heat: " + MiscOp.betterRound(bufferTemp, 3) + "°C");
-			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
-			}
-		}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+		chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
+		chat.add("Buffered heat: " + MiscOp.betterRound(bufferTemp, 3) + "°C");
+		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override

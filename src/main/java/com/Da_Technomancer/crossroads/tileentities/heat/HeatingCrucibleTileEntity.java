@@ -1,29 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
-
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.OmniMeter;
-import com.Da_Technomancer.crossroads.items.Thermometer;
-import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-
+import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -44,6 +28,11 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, IInfoTE, IStringReceiver{
 
@@ -74,13 +63,9 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
-			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
-			}
-		}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
+		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	/**
@@ -107,7 +92,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public void update(){		
+	public void update(){
 		if(world.isRemote){
 			return;
 		}
@@ -275,7 +260,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 				inventory = new ItemStack(stack.getItem(), amount + inventory.getCount(), stack.getMetadata());
 				solidText = rec.getRight();
 				markDirty();
-				
+
 			}
 
 			return amount == stack.getCount() ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - amount, stack.getMetadata());

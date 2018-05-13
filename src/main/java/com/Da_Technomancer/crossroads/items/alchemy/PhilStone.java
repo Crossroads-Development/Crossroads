@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.entity.item.EntityItem;
@@ -9,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
-public class PhilStone extends Item implements IInfoDevice{
+public class PhilStone extends Item{
 
 	public PhilStone(){
 		String name = "phil_stone";

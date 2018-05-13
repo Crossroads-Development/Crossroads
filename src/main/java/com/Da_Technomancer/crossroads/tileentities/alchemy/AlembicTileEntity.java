@@ -3,8 +3,6 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import net.minecraft.block.SoundType;
@@ -46,18 +44,15 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.RUBY){
-			chat.add("Temp: " + MiscOp.betterRound(cableTemp, 3) + "°C");
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		chat.add("Temp: " + MiscOp.betterRound(cableTemp, 3) + "°C");
+
+		if(amount == 0){
+			chat.add("No reagents");
 		}
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
-			if(amount == 0){
-				chat.add("No reagents");
-			}
-			for(ReagentStack reag : contents){
-				if(reag != null){
-					chat.add(reag.toString());
-				}
+		for(ReagentStack reag : contents){
+			if(reag != null){
+				chat.add(reag.toString());
 			}
 		}
 	}

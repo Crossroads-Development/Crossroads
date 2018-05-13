@@ -2,15 +2,12 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -43,18 +40,15 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	 * @param side The viewed EnumFacing (only used by goggles).
 	 */
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.RUBY){
-			chat.add("Temp: " + MiscOp.betterRound(cableTemp, 3) + "°C");
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		chat.add("Temp: " + MiscOp.betterRound(cableTemp, 3) + "°C");
+
+		if(amount == 0){
+			chat.add("No reagents");
 		}
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
-			if(amount == 0){
-				chat.add("No reagents");
-			}
-			for(ReagentStack reag : contents){
-				if(reag != null){
-					chat.add(reag.toString());
-				}
+		for(ReagentStack reag : contents){
+			if(reag != null){
+				chat.add(reag.toString());
 			}
 		}
 	}

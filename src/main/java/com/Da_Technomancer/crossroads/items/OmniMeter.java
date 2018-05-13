@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
@@ -11,7 +10,6 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -32,7 +30,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import java.util.ArrayList;
 
-public class OmniMeter extends Item implements IInfoDevice{
+public class OmniMeter extends Item{
 
 	public OmniMeter(){
 		String name = "omnimeter";
@@ -102,7 +100,7 @@ public class OmniMeter extends Item implements IInfoDevice{
 				}
 				
 				if(te instanceof IInfoTE){
-					((IInfoTE) te).addInfo(chat, this, playerIn, facing);
+					((IInfoTE) te).addInfo(chat, playerIn, facing);
 				}
 				if(!chat.isEmpty()){
 					StringBuilder out = new StringBuilder();

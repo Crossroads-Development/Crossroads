@@ -1,23 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.OmniMeter;
-import com.Da_Technomancer.crossroads.items.Thermometer;
-
+import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -28,6 +14,9 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable, IInfoTE{
 
@@ -47,13 +36,9 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
-			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
-			}
-		}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
+		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override
@@ -79,7 +64,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 		if(!world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
 			return;
 		}
-		
+
 		double prevTemp = temp;
 		transHeat();
 		runLoss(insulator.getRate());

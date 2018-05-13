@@ -379,14 +379,11 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump));
 		// Brazier
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.brazier, 1), "###", " $ ", " $ ", '$', "stoneAndesitePolished", '#', "stoneAndesite"));
-		// Thermometer
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.thermometer, 1), "#", "$", "?", '#', "dyeRed", '$', "stickIron", '?', "blockGlass"));
-		// Fluid Gauge
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.fluidGauge, 1), " * ", "*#*", " *$", '#', "blockGlass", '*', "ingotIron", '$', ModBlocks.fluidTube));
-		// Speedometer
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.speedometer, 1), "#", "$", '#', "string", '$', Items.COMPASS));
 		// OmniMeter
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.omnimeter, 1), " # ", "&$%", " ? ", '#', ModItems.fluidGauge, '&', ModItems.thermometer, '$', "ingotBronze", '%', ModItems.speedometer, '?', Items.CLOCK));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.omnimeter, 1), " * ", "*#*", " * ", '*', "ingotBronze", '#', Items.COMPASS));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.omnimeter, 1), ModItems.thermometer));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.omnimeter, 1), ModItems.speedometer));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.omnimeter, 1), ModItems.fluidGauge));
 		// Fluid Tank (second recipe is for clearing contents)
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidTank, 1), " $ ", "$#$", " $ ", '#', "ingotGold", '$', "ingotBronze"));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.fluidTank, 1), ModBlocks.fluidTank));

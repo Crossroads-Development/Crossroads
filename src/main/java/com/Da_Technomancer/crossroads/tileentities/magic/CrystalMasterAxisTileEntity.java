@@ -1,28 +1,16 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.OmniMeter;
-
+import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,6 +20,12 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 
 public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable, IInfoTE{
 
@@ -43,17 +37,15 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		}
 		CommonProxy.masterKey++;
 	}
-	
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
-	
+
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == EnumGoggleLenses.QUARTZ || device instanceof OmniMeter){
-			chat.add("Element: " + (currentElement == null ? "NONE" : currentElement.toString() + (voi ? " (VOID), " : ", ") + "Time: " + time));
-		}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		chat.add("Element: " + (currentElement == null ? "NONE" : currentElement.toString() + (voi ? " (VOID), " : ", ") + "Time: " + time));
 	}
 
 	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
@@ -113,12 +105,10 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		lastSumEnergy = sumEnergy;
 
 		for(IAxleHandler gear : rotaryMembers){
-			double newEnergy = 0;
-
 			// set w
 			gear.getMotionData()[0] = Math.signum(sumEnergy) * Math.signum(gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
 			// set energy
-			newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
+			double newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getPhysData()[1] / 2D;
 			gear.getMotionData()[1] = newEnergy;
 			// set power
 			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
@@ -273,7 +263,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		public void setMagic(MagicUnit mag){
 			if(mag != null){
 				EnumMagicElements newElem = EnumMagicElements.getElement(mag);
-				if(newElem != currentElement || voi != (mag.getVoid() != 0)){
+				if(newElem != currentElement || voi == (mag.getVoid() == 0)){
 					currentElement = newElem;
 					voi = mag.getVoid() != 0;
 					time = mag.getPower() * BeamManager.BEAM_TIME;
@@ -300,8 +290,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
-			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>();
-			memberCopy.addAll(rotaryMembers);
+			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>(rotaryMembers);
 			rotaryMembers.clear();
 			locked = false;
 			TileEntity te = world.getTileEntity(pos.offset(facing));

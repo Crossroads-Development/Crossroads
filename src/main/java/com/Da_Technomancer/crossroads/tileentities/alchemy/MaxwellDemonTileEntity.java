@@ -1,17 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.util.ArrayList;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.OmniMeter;
-import com.Da_Technomancer.crossroads.items.Thermometer;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -20,6 +13,8 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
+import java.util.ArrayList;
+
 public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private double tempUp = 0;
@@ -27,14 +22,10 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	private boolean init = false;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Upper Temp: " + MiscOp.betterRound(tempUp, 3) + "°C");
-			chat.add("Lower Temp: " + MiscOp.betterRound(tempDown, 3) + "°C");
-			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
-			}
-		}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+		chat.add("Upper Temp: " + MiscOp.betterRound(tempUp, 3) + "°C");
+		chat.add("Lower Temp: " + MiscOp.betterRound(tempDown, 3) + "°C");
+		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override

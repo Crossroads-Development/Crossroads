@@ -1,15 +1,13 @@
 package com.Da_Technomancer.crossroads.API.effects.goggles;
 
-import java.util.ArrayList;
-
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +17,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
+
+import java.util.ArrayList;
 
 public class QuartzGoggleEffect implements IGoggleEffect{
 
@@ -28,6 +30,29 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 			return;
 		}
 		TileEntity te = world.getTileEntity(ray.getBlockPos());
+		if(te != null){
+			if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit.getOpposite())){
+				IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit.getOpposite());
+				chat.add("Speed: " + axle.getMotionData()[0]);
+				chat.add("Energy: " + axle.getMotionData()[1]);
+				chat.add("Power: " + axle.getMotionData()[2]);
+				chat.add("I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio());
+			}else if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit)){
+				IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, ray.sideHit);
+				chat.add("Speed: " + axle.getMotionData()[0]);
+				chat.add("Energy: " + axle.getMotionData()[1]);
+				chat.add("Power: " + axle.getMotionData()[2]);
+				chat.add("I: " + axle.getPhysData()[1] + ", Rotation Ratio: " + axle.getRotationRatio());
+			}else if(te.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
+				chat.add("Total Energy: " + te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy());
+			}
+
+			if(te.hasCapability(CapabilityEnergy.ENERGY, null)){
+				IEnergyStorage batt = te.getCapability(CapabilityEnergy.ENERGY, null);
+				chat.add("Charge: " + batt.getEnergyStored() + "/" + batt.getMaxEnergyStored() + "FE");
+			}
+		}
+
 		if(te instanceof BeamRenderTEBase){
 			MagicUnit[] mag = ((BeamRenderTEBase) te).getLastFullSent();
 			if(mag != null){
@@ -52,7 +77,7 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 		}
 
 		if(te instanceof IInfoTE){
-			((IInfoTE) te).addInfo(chat, EnumGoggleLenses.QUARTZ, player, ray.sideHit);
+			((IInfoTE) te).addInfo(chat, player, ray.sideHit);
 		}
 	}
 }

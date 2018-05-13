@@ -1,8 +1,9 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import com.Da_Technomancer.crossroads.API.*;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,17 +44,15 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	 * @param side The viewed EnumFacing (only used by goggles).
 	 */
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
-			if(amount != 0){
-				chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
-			}else{
-				chat.add("No reagents");
-			}
-			for(ReagentStack reag : contents){
-				if(reag != null){
-					chat.add(reag.toString());
-				}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		if(amount != 0){
+			chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
+		}else{
+			chat.add("No reagents");
+		}
+		for(ReagentStack reag : contents){
+			if(reag != null){
+				chat.add(reag.toString());
 			}
 		}
 	}
@@ -87,8 +86,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = contents[i];
 			if(reag != null && reag.getAmount() < AlchemyCore.MIN_QUANTITY){
-					heat -= (endTemp + 273D) * reag.getAmount();
-					contents[i] = null;
+				heat -= (endTemp + 273D) * reag.getAmount();
+				contents[i] = null;
 			}
 		}
 

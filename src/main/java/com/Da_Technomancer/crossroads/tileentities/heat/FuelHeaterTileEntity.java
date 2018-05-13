@@ -1,20 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import java.util.ArrayList;
-
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.OmniMeter;
-import com.Da_Technomancer.crossroads.items.Thermometer;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -30,6 +19,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+import java.util.ArrayList;
+
 public class FuelHeaterTileEntity extends AbstractInventory implements ITickable, IInfoTE{
 
 	private ItemStack inventory = ItemStack.EMPTY;
@@ -41,15 +32,11 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
-	
+
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
-			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
-			}
-		}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+		chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
+		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override
@@ -172,9 +159,9 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 					}
 					return ItemStack.EMPTY;
 				}
-				
+
 				int moved = Math.min(inventory.getMaxStackSize() - inventory.getCount(), stack.getCount());
-				
+
 				if(!simulate){
 					inventory.grow(moved);
 					markDirty();
@@ -183,7 +170,7 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 				output.shrink(moved);
 				return output;
 			}
-			
+
 			return stack;
 		}
 
@@ -197,7 +184,7 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 			return slot == 0 ? 64 : 0;
 		}
 	}
-	
+
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){

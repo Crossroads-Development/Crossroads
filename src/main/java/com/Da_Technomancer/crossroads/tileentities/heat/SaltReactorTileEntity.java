@@ -1,20 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.OmniMeter;
-import com.Da_Technomancer.crossroads.items.Thermometer;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,6 +22,9 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+
 public class SaltReactorTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private FluidStack content = null;
@@ -43,15 +37,11 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable, IInf
 	private ItemStack inventory = ItemStack.EMPTY;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, EnumFacing side){
-		if(device instanceof OmniMeter || device == EnumGoggleLenses.RUBY || device instanceof Thermometer){
-			chat.add("Temp: " + heatHandler.getTemp() + "°C");
-			if(!(device instanceof Thermometer)){
-				chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
-			}
-		}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+		chat.add("Temp: " + heatHandler.getTemp() + "°C");
+		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
-	
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -140,7 +130,7 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable, IInf
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
 			return (T) heatHandler;
 		}
-		
+
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}
@@ -157,11 +147,11 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable, IInf
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
 			return true;
 		}
-		
+
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return true;
 		}
-		
+
 		return super.hasCapability(capability, facing);
 	}
 
@@ -182,14 +172,14 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable, IInf
 			if(slot != 0 || stack.isEmpty() || stack.getItem() != ModItems.dustSalt){
 				return stack;
 			}
-			
+
 			int amount = Math.min(16 - inventory.getCount(), stack.getCount());
-			
+
 			if(!simulate){
 				inventory = new ItemStack(ModItems.dustSalt, amount + inventory.getCount());
 				markDirty();
 			}
-			
+
 			return amount == stack.getCount() ? ItemStack.EMPTY : new ItemStack(ModItems.dustSalt, stack.getCount() - amount);
 		}
 
@@ -203,7 +193,7 @@ public class SaltReactorTileEntity extends TileEntity implements ITickable, IInf
 			return slot == 0 ? 16 : 0;
 		}
 	}
-	
+
 	private class InnerFluidHandler implements IFluidHandler{
 
 		@Override

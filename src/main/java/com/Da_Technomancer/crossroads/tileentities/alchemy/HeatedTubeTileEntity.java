@@ -1,21 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoDevice;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.ModItems;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +15,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 
@@ -41,16 +36,14 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	 * @param side The viewed EnumFacing (only used by goggles).
 	 */
 	@Override
-	public void addInfo(ArrayList<String> chat, IInfoDevice device, EntityPlayer player, @Nullable EnumFacing side){
-		if(device == ModItems.omnimeter || device == EnumGoggleLenses.DIAMOND){
-			chat.add("Temp: " + MiscOp.betterRound(cableTemp, 3) + "°C");
-			if(amount == 0){
-				chat.add("No reagents");
-			}
-			for(ReagentStack reag : contents){
-				if(reag != null){
-					chat.add(reag.toString());
-				}
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		chat.add("Temp: " + MiscOp.betterRound(cableTemp, 3) + "°C");
+		if(amount == 0){
+			chat.add("No reagents");
+		}
+		for(ReagentStack reag : contents){
+			if(reag != null){
+				chat.add(reag.toString());
 			}
 		}
 	}
@@ -66,7 +59,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected double correctTemp(){
 		//Shares heat between internal cable & contents
-		cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);		
+		cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
 		heat = (cableTemp + 273D) * amount;
 		return cableTemp;
 	}
@@ -154,7 +147,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 			cableTemp = tempIn;
 			//Shares heat between internal cable & contents
 			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);		
+				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
 				heat = (cableTemp + 273D) * amount;
 				dirtyReag = true;
 			}
@@ -167,7 +160,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 			cableTemp += tempChange;
 			//Shares heat between internal cable & contents
 			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);		
+				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
 				heat = (cableTemp + 273D) * amount;
 				dirtyReag = true;
 			}

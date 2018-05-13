@@ -380,9 +380,9 @@ public final class EventHandlerCommon{
 					if(!out.hasTagCompound()){
 						out.setTagCompound(new NBTTagCompound());
 					}
+					e.setCost((int) Math.pow(2, out.getTagCompound().getSize()));
 					out.getTagCompound().setBoolean(lens.name(), true);
 					e.setOutput(out);
-					e.setCost(2);
 					e.setMaterialCost(1);
 					break;
 				}

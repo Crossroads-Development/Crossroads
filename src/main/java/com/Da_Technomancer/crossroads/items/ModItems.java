@@ -57,8 +57,11 @@ public final class ModItems{
 	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
 	public static BasicItem dustCopper;
+	@Deprecated
 	public static Thermometer thermometer;
+	@Deprecated
 	public static FluidGauge fluidGauge;
+	@Deprecated
 	public static Speedometer speedometer;
 	public static OmniMeter omnimeter;
 	public static Vacuum vacuum;

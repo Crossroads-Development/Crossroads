@@ -2,7 +2,9 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
+import com.Da_Technomancer.crossroads.API.packets.SendGoggleConfigureToServer;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
@@ -28,6 +30,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import org.apache.commons.lang3.tuple.Pair;
@@ -50,7 +53,7 @@ public final class EventHandlerClient{
 
 		//Goggle entity glowing
 		if(game.world.getTotalWorldTime() % 5 == 0){
-			boolean glow = helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().hasKey(EnumGoggleLenses.VOID.name());
+			boolean glow = helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().getBoolean(EnumGoggleLenses.VOID.name());
 			for(Entity ent : game.world.getLoadedEntityList()){
 				NBTTagCompound entNBT = ent.getEntityData();
 				if(entNBT == null){
@@ -90,10 +93,10 @@ public final class EventHandlerClient{
 				GlStateManager.translate(chunk.getPos().getXStart() - game.player.getPositionEyes(e.getPartialTicks()).x, 0, chunk.getPos().getZStart() - game.player.getPositionEyes(e.getPartialTicks()).z);
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
-				for(int i = 1; i >= 0; i--){
-					if(i == 0 ? ModConfig.fieldLinesEnergy.getBoolean() : ModConfig.fieldLinesPotential.getBoolean()){
-						GlStateManager.translate(0, .01F, 0);
-						if(game.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getTagCompound().hasKey(i == 0 ? EnumGoggleLenses.RUBY.name() : EnumGoggleLenses.EMERALD.name())){
+				if(helmet.getTagCompound().hasKey(EnumGoggleLenses.QUARTZ.name())){
+					for(int i = 1; i >= 0; i--){
+						if(i == 0 ? ModConfig.fieldLinesEnergy.getBoolean() : ModConfig.fieldLinesPotential.getBoolean()){
+							GlStateManager.translate(0, .01F, 0);
 							GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, 0, .4F);
 							GlStateManager.glLineWidth(10F);
 							GlStateManager.disableTexture2D();
@@ -114,11 +117,9 @@ public final class EventHandlerClient{
 							tes.draw();
 							GlStateManager.color(1F, 1F, 1F);
 							GlStateManager.enableTexture2D();
-						}
-					}else{
-						game.getTextureManager().bindTexture(TEXTURE_FIELDS);
-						GlStateManager.translate(0, .01F, 0);
-						if(helmet.getTagCompound().hasKey(i == 0 ? EnumGoggleLenses.RUBY.name() : EnumGoggleLenses.EMERALD.name())){
+						}else{
+							game.getTextureManager().bindTexture(TEXTURE_FIELDS);
+							GlStateManager.translate(0, .01F, 0);
 							GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, 0, .4F);
 							buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 							for(int j = 0; j < 7; j++){
@@ -458,6 +459,21 @@ public final class EventHandlerClient{
 			}
 
 			SafeCallable.playerTickCount = 1;
+		}
+	}
+
+	@SubscribeEvent
+	public void toggleGoggles(InputEvent.KeyInputEvent e){
+		EntityPlayer play = Minecraft.getMinecraft().player;
+		ItemStack helmet = play.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		if(play.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).isEmpty() && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound()){
+			NBTTagCompound nbt = helmet.getTagCompound();
+			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
+				if(lens.getKey() != null && lens.getKey().isPressed() && nbt.hasKey(lens.name())){
+					ModPackets.network.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.name())));
+					break;
+				}
+			}
 		}
 	}
 }
