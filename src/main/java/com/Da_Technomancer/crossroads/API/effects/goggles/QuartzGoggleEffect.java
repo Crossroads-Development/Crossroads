@@ -6,13 +6,17 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -78,6 +82,15 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 
 		if(te instanceof IInfoTE){
 			((IInfoTE) te).addInfo(chat, player, ray.sideHit);
+		}
+
+		if(world.getTotalWorldTime() % 5 == 1){
+			long key = MiscOp.getLongFromChunkPos(new ChunkPos(player.getPosition()));
+			if(FieldWorldSavedData.get(world).fieldNodes.containsKey(key) && FieldWorldSavedData.get(world).fieldNodes.get(key).isActive){
+				ModPackets.network.sendTo(new SendFieldsToClient(FieldWorldSavedData.get(world).fieldNodes.get(key), key), (EntityPlayerMP) player);
+			}else{
+				ModPackets.network.sendTo(new SendFieldsToClient(null, key), (EntityPlayerMP) player);
+			}
 		}
 	}
 }

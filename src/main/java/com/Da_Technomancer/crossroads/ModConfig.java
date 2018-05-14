@@ -29,7 +29,6 @@ public final class ModConfig{
 	public static Property resetChunk;
 	public static Property magicChunk;
 	public static Property blastChunk;
-	public static Property fieldLinesEnergy;
 	public static Property fieldLinesPotential;
 	public static Property disableSlaves;
 	public static Property registerOres;
@@ -78,7 +77,6 @@ public final class ModConfig{
 		resetChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Reset disaster from Technomancy? (Default true)", true);
 		magicChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Magic-ifying disaster from Technomancy? (Default true)", true);
 		blastChunk = config.get(CAT_TECHNOMANCY, "Allow Explosion disaster from Technomancy? (Default true)", true);
-		fieldLinesEnergy = config.get(CAT_TECHNOMANCY, "Draw energy fields with lines (True: lines, False: planes)? (Default true)", true);
 		fieldLinesPotential = config.get(CAT_TECHNOMANCY, "Draw potential fields with lines (True: lines, False: planes)? (Default false)", false);
 		disableSlaves = config.get(CAT_INTERNAL, "If you are crashing from StackOverflow errors and you either have a tiny amount of RAM or built an insanely large & complicated rotary setup, then set this to true, destroy the setup, and set this to false. Also maybe send me a picture of the setup.", false);
 		registerOres = config.get(CAT_ORES, "Register OreDictionary for copper/tin/bronze? (Default true)", true, "Disabling this will make Crossroads copper/tin/bronze completely useless. The recipes will need copper/tin/bronze from other mods. Don't ask me why you'd want this.");

@@ -1,9 +1,10 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
+import com.Da_Technomancer.crossroads.API.technomancy.ChunkField;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
-
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -11,20 +12,24 @@ import net.minecraftforge.fml.relauncher.Side;
 
 @SuppressWarnings("serial")
 public class SendFieldsToClient extends Message<SendFieldsToClient>{
-	
+
 	public SendFieldsToClient(){
+
 	}
-	
-	public byte[][] fieldLayer;
-	public byte type;
+
+	public NBTTagCompound fieldNBT;
 	public long chunk;
-	
-	public SendFieldsToClient(byte[][] fieldLayer, byte type, long chunk){
-		this.fieldLayer = fieldLayer;
-		this.type = type;
+
+	public SendFieldsToClient(ChunkField field, long chunk){
+		this.fieldNBT = new NBTTagCompound();
+		if(field == null){
+			fieldNBT.setBoolean("dead", true);
+		}else{
+			field.writeToNBT(fieldNBT, chunk);
+		}
 		this.chunk = chunk;
 	}
-	
+
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.CLIENT){
@@ -35,26 +40,22 @@ public class SendFieldsToClient extends Message<SendFieldsToClient>{
 		Minecraft minecraft = Minecraft.getMinecraft();
 		minecraft.addScheduledTask(new Runnable(){
 			public void run(){
-				processMessage(fieldLayer, type, chunk, minecraft.world);
+				processMessage(fieldNBT.getBoolean("dead") ? null : ChunkField.readFromNBT(fieldNBT, chunk), chunk, minecraft.world);
 			}
 		});
 
 		return null;
 	}
 
-	public void processMessage(byte[][] fieldLayer, byte type, long chunk, World world){
+	public void processMessage(ChunkField field, long chunk, World world){
 		if(world == null){
 			return;
 		}
 		FieldWorldSavedData saved = FieldWorldSavedData.get(world);
-		if(type == -1){
+		if(field == null){
 			saved.fieldNodes.remove(chunk);
-			return;
+		}else{
+			saved.fieldNodes.put(chunk, field);
 		}
-		if(!saved.fieldNodes.containsKey(chunk)){
-			saved.fieldNodes.put(chunk, FieldWorldSavedData.getDefaultChunkFlux());
-		}
-		
-		saved.fieldNodes.get(chunk)[type] = fieldLayer;
 	}
 }

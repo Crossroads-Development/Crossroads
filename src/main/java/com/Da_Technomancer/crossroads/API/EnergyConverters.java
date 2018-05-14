@@ -30,13 +30,6 @@ public final class EnergyConverters{
 	 * The RATE up equivalent to 1 speed (Fields). 
 	 */
 	public static final double RATE_PER_SPEED = 16;
-	
-	/**
-	 * The gear speed equivalent to 1 FLUX up (Fields). 
-	 * Value derived from 1 revolution = 32 FLUX, if speed were maintained for 1 second. 
-	 */
-	public static final double SPEED_PER_FLUX = Math.PI / 16D;
-	
 	/**
 	 * The number of mB of molten copshowium produced from 1mb of molten copper OR 1mb of distilled water.
 	 * Based on balance and convenience. 

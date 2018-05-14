@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.technomancy.ChunkField;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -14,6 +13,7 @@ import net.minecraft.util.math.ChunkPos;
 public class RateManipulatorTileEntity extends TileEntity implements ITickable{
 
 	private boolean run = false;
+	public int range = 0;
 
 	@Override
 	public void update(){
@@ -23,7 +23,13 @@ public class RateManipulatorTileEntity extends TileEntity implements ITickable{
 				if(upTE != null && upTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 					FieldWorldSavedData data = FieldWorldSavedData.get(world);
 					if(data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))){
-						data.nodeForces.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[1][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] += upTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] * EnergyConverters.RATE_PER_SPEED;
+						ChunkField nodes = data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)));
+						int force = (int) Math.round(upTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0]);
+						for(int i = Math.max(0, MiscOp.getChunkRelativeCoord(pos.getX()) - range); i <= Math.min(15, MiscOp.getChunkRelativeCoord(pos.getX()) + range); i++){
+							for(int j = Math.max(0, MiscOp.getChunkRelativeCoord(pos.getZ()) - range); j <= Math.min(15, MiscOp.getChunkRelativeCoord(pos.getZ()) + range); j++){
+								nodes.nodeForce[i][j] += force;
+							}
+						}
 					}
 				}
 				run = true;
@@ -34,17 +40,19 @@ public class RateManipulatorTileEntity extends TileEntity implements ITickable{
 			}
 		}
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("run", run);
+		nbt.setInteger("range", range);
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		run = nbt.getBoolean("run");
+		range = nbt.getInteger("range");
 	}
 }

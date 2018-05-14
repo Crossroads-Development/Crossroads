@@ -116,7 +116,7 @@ public final class MiscOp{
 	}
 
 	/**
-	 * @returns The coordinate in chunk relative form. NOT the same as coord % 16. Note that this value should be divided by 2 for use with fieldNodes and nodeForces.
+	 * @returns The coordinate in chunk relative form. NOT the same as coord % 16.
 	 */
 	public static int getChunkRelativeCoord(int coord){
 		return coord - (16 * Math.floorDiv(coord, 16));

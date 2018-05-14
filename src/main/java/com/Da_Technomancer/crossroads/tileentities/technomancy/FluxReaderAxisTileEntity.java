@@ -1,13 +1,5 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOp;
@@ -15,13 +7,19 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
-
+import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.capabilities.Capability;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 
 public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 
@@ -53,7 +51,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 
 	private void runCalc(){
 		FieldWorldSavedData data = FieldWorldSavedData.get(world);
-		double baseSpeed = data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos))) ? EnergyConverters.SPEED_PER_FLUX * data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[0][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] : 0;
+		double baseSpeed = data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos))) ? (1 + data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos))).flux) : 0;
 
 		double sumIRot = 0;
 		sumEnergy = 0;

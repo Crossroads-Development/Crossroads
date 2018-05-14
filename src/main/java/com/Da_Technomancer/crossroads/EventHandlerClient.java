@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.API.packets.SendGoggleConfigureToServer;
+import com.Da_Technomancer.crossroads.API.technomancy.ChunkField;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
@@ -79,7 +80,7 @@ public final class EventHandlerClient{
 		if(helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound()){
 			game.mcProfiler.startSection(Main.MODNAME + ": Field Render");
 			Chunk chunk = game.world.getChunkFromBlockCoords(game.player.getPosition());
-			byte[][][] fields = FieldWorldSavedData.get(game.world).fieldNodes.get(MiscOp.getLongFromChunk(chunk));
+			ChunkField fields = FieldWorldSavedData.get(game.world).fieldNodes.get(MiscOp.getLongFromChunk(chunk));
 			if(fields != null){
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
@@ -94,46 +95,57 @@ public final class EventHandlerClient{
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
 				if(helmet.getTagCompound().hasKey(EnumGoggleLenses.QUARTZ.name())){
-					for(int i = 1; i >= 0; i--){
-						if(i == 0 ? ModConfig.fieldLinesEnergy.getBoolean() : ModConfig.fieldLinesPotential.getBoolean()){
-							GlStateManager.translate(0, .01F, 0);
-							GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, 0, .4F);
-							GlStateManager.glLineWidth(10F);
-							GlStateManager.disableTexture2D();
-							buf.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-							for(int j = 0; j < 8; j++){
-								for(int k = 0; k < 8; k++){
-									if(j < 7){
-										buf.pos(1 + (2 * j), (((float) fields[i][j][k]) + 1F) / 8F, 1 + (2 * k)).endVertex();
-										buf.pos(3 + (2 * j), (((float) fields[i][j + 1][k]) + 1F) / 8F, 1 + (2 * k)).endVertex();
-									}
-									//
-									if(k < 7){
-										buf.pos(1 + (2 * j), (((float) fields[i][j][k]) + 1F) / 8F, 1 + (2 * k)).endVertex();
-										buf.pos(1 + (2 * j), (((float) fields[i][j][k + 1]) + 1F) / 8F, 3 + (2 * k)).endVertex();
-									}
+
+					//Rate layer
+					GlStateManager.translate(0, .01F, 0);
+					if(ModConfig.fieldLinesPotential.getBoolean()){
+						GlStateManager.color(0, 1, 0);
+						GlStateManager.glLineWidth(10F);
+						GlStateManager.disableTexture2D();
+						buf.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+						for(int j = 0; j < 16; j++){
+							for(int k = 0; k < 16; k++){
+								if(j != 15){
+									buf.pos(0.5D + j, (((float) fields.nodes[j][k]) + 1F) / 8F, 0.5D + k).endVertex();
+									buf.pos(1.5D + j, (((float) fields.nodes[j + 1][k]) + 1F) / 8F, 0.5D + k).endVertex();
+								}
+								//
+								if(k != 15){
+									buf.pos(0.5D + j, (((float) fields.nodes[j][k]) + 1F) / 8F, 0.5D + k).endVertex();
+									buf.pos(0.5D + j, (((float) fields.nodes[j][k + 1]) + 1F) / 8F, 1.5D + k).endVertex();
 								}
 							}
-							tes.draw();
-							GlStateManager.color(1F, 1F, 1F);
-							GlStateManager.enableTexture2D();
-						}else{
-							game.getTextureManager().bindTexture(TEXTURE_FIELDS);
-							GlStateManager.translate(0, .01F, 0);
-							GlStateManager.color(i == 0 ? 1 : 0, i == 1 ? 1 : 0, 0, .4F);
-							buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-							for(int j = 0; j < 7; j++){
-								for(int k = 0; k < 7; k++){
-									buf.pos(1 + (2 * j), (((float) fields[i][j][k]) + 1F) / 8F, 1 + (2 * k)).tex(0, 0).endVertex();
-									buf.pos(3 + (2 * j), (((float) fields[i][j + 1][k]) + 1F) / 8F, 1 + (2 * k)).tex(1, 0).endVertex();
-									buf.pos(3 + (2 * j), (((float) fields[i][j + 1][k + 1]) + 1F) / 8F, 3 + (2 * k)).tex(1, 1).endVertex();
-									buf.pos(1 + (2 * j), (((float) fields[i][j][k + 1]) + 1F) / 8F, 3 + (2 * k)).tex(0, 1).endVertex();
-								}
-							}
-							tes.draw();
-							GlStateManager.color(1F, 1F, 1F);
 						}
+						tes.draw();
+						GlStateManager.color(1F, 1F, 1F);
+						GlStateManager.enableTexture2D();
+					}else{
+						game.getTextureManager().bindTexture(TEXTURE_FIELDS);
+						GlStateManager.color(0, 1, 0, .3F);
+						buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+						for(int j = 0; j < 15; j++){
+							for(int k = 0; k < 15; k++){
+								buf.pos(0.5D + j, (((float) fields.nodes[j][k]) + 1F) / 8F, 0.5D + k).tex(0, 0).endVertex();
+								buf.pos(1.5D + j, (((float) fields.nodes[j + 1][k]) + 1F) / 8F, 0.5D + k).tex(1, 0).endVertex();
+								buf.pos(1.5D + j, (((float) fields.nodes[j + 1][k + 1]) + 1F) / 8F, 1.5D + k).tex(1, 1).endVertex();
+								buf.pos(0.5D + j, (((float) fields.nodes[j][k + 1]) + 1F) / 8F, 1.5D + k).tex(0, 1).endVertex();
+							}
+						}
+						tes.draw();
+						GlStateManager.color(1F, 1F, 1F);
 					}
+
+					//Flux layer
+					GlStateManager.translate(0, .01F, 0);
+					game.getTextureManager().bindTexture(TEXTURE_FIELDS);
+					GlStateManager.color(1, 0, 0, .3F);
+					buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+					buf.pos(0.5D, (((float) fields.flux) + 1F) / 8F, 0.5D).tex(0, 0).endVertex();
+					buf.pos(15.5D, (((float) fields.flux) + 1F) / 8F, 0.5D).tex(1, 0).endVertex();
+					buf.pos(15.5D, (((float) fields.flux) + 1F) / 8F, 15.5D).tex(1, 1).endVertex();
+					buf.pos(0.5D, (((float) fields.flux) + 1F) / 8F, 15.5D).tex(0, 1).endVertex();
+					tes.draw();
+					GlStateManager.color(1F, 1F, 1F);
 				}
 
 				GlStateManager.enableCull();

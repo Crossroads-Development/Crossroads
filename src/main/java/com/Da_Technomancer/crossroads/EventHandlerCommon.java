@@ -3,10 +3,10 @@ package com.Da_Technomancer.crossroads;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
+import com.Da_Technomancer.crossroads.API.technomancy.ChunkField;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
@@ -142,34 +142,25 @@ public final class EventHandlerCommon{
 		}
 
 		//Field calculations
-		if(!e.world.isRemote && e.world.getTotalWorldTime() % 5 == 0){
+		if(!e.world.isRemote && e.world.getTotalWorldTime() % 5 == 0 && e.phase == TickEvent.Phase.END){
 			e.world.profiler.startSection(Main.MODNAME + "-Field Calculations");
 			FieldWorldSavedData data = FieldWorldSavedData.get(e.world);
-			if(e.phase == TickEvent.Phase.END){
-				HashSet<Long> toRemove = new HashSet<Long>();
+			HashSet<Long> toRemove = new HashSet<Long>();
 
-				for(Entry<Long, byte[][][]> datum : data.fieldNodes.entrySet()){
-					Long key = datum.getKey();
-					try{
-						BlockPos pos = calcFields(datum.getValue()[0], datum.getValue()[1], data.nodeForces.get(key)[0], data.nodeForces.get(key)[1]);
-						if(pos != null){
-							toRemove.add(key);
-							EnumMagicElements.TIME.getVoidEffect().doEffect(e.world, MiscOp.getChunkPosFromLong(key).getBlock(pos.getX(), pos.getY(), pos.getZ()), 64);
-						}
-					}catch(Exception ex){
+			for(Entry<Long, ChunkField> datum : data.fieldNodes.entrySet()){
+				Long key = datum.getKey();
+				try{
+					if(datum.getValue().tick(e.world, MiscOp.getChunkPosFromLong(key))){
 						toRemove.add(key);
-						Main.logger.log(Level.ERROR, "Caught an exception while calculating fields in dim: " + e.world.provider.getDimension() + ", ChunkPos: " + MiscOp.getChunkPosFromLong(key).toString(), ex);
 					}
+				}catch(Exception ex){
+					toRemove.add(key);
+					Main.logger.log(Level.ERROR, "Caught an exception while calculating fields in dim: " + e.world.provider.getDimension() + ", ChunkPos: " + MiscOp.getChunkPosFromLong(key).toString(), ex);
 				}
+			}
 
-				for(long remove : toRemove){
-					data.fieldNodes.remove(remove);
-				}
-
-				data.nodeForces.clear();
-				for(long key : data.fieldNodes.keySet()){
-					data.nodeForces.put(key, FieldWorldSavedData.getDefaultChunkForce());
-				}
+			for(long remove : toRemove){
+				data.fieldNodes.remove(remove);
 			}
 
 			e.world.profiler.endSection();
@@ -178,10 +169,10 @@ public final class EventHandlerCommon{
 		//Time Dilation
 		if(!e.world.isRemote && e.phase == Phase.START){
 			e.world.profiler.startSection(Main.MODNAME + ": Entity Time Dilation");
-			HashMap<Long, byte[][][]> fields = FieldWorldSavedData.get(e.world).fieldNodes;
+			HashMap<Long, ChunkField> fields = FieldWorldSavedData.get(e.world).fieldNodes;
 			ArrayList<PrototypeInfo> prototypes = PrototypeWorldSavedData.get(false).prototypes;
 			WorldServer prototypeWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-			HashMap<Long, byte[][][]> fieldsProt = prototypeWorld == null ? null : FieldWorldSavedData.get(prototypeWorld).fieldNodes;
+			HashMap<Long, ChunkField> fieldsProt = prototypeWorld == null ? null : FieldWorldSavedData.get(prototypeWorld).fieldNodes;
 			//A copy of the original list is used to avoid ConcurrentModificationExceptions that arise from entities removing themselves when ticked.
 			ArrayList<Entity> entities = new ArrayList<Entity>(e.world.loadedEntityList);
 			for(Entity ent : entities){
@@ -197,11 +188,11 @@ public final class EventHandlerCommon{
 				BlockPos entityPos = ent.getPosition();
 				long entityChunk = MiscOp.getLongFromChunkPos(new ChunkPos(entityPos));
 				if(fields.containsKey(entityChunk)){
-					byte[][][] entFields = fields.get(entityChunk);
-					int chunkRelX = MiscOp.getChunkRelativeCoord(entityPos.getX()) / 2;
-					int chunkRelZ = MiscOp.getChunkRelativeCoord(entityPos.getZ()) / 2;
-					potential = 1 + entFields[1][chunkRelX][chunkRelZ];
-					if(entFields[1][chunkRelX][chunkRelZ] > entFields[0][chunkRelX][chunkRelZ]){
+					ChunkField entFields = fields.get(entityChunk);
+					int chunkRelX = MiscOp.getChunkRelativeCoord(entityPos.getX());
+					int chunkRelZ = MiscOp.getChunkRelativeCoord(entityPos.getZ());
+					potential = 1 + entFields.nodes[chunkRelX][chunkRelZ];
+					if(entFields.nodes[chunkRelX][chunkRelZ] > entFields.flux){
 						potential = 0;
 					}
 				}
@@ -222,13 +213,11 @@ public final class EventHandlerCommon{
 								continue;
 							}
 
-							byte[][][] watchFields = fieldsProt.get(MiscOp.getLongFromChunkPos(prototypes.get(index).chunk));
+							ChunkField watchFields = fieldsProt.get(MiscOp.getLongFromChunkPos(prototypes.get(index).chunk));
 							if(watchFields != null){
-								offsetX /= 2;
-								offsetZ /= 2;
-								potential *= 1 + watchFields[1][offsetX][offsetZ];
+								potential *= 1 + watchFields.nodes[offsetX][offsetZ];
 								potential /= 8;
-								if(watchFields[1][offsetX][offsetZ] > watchFields[0][offsetX][offsetZ]){
+								if(watchFields.nodes[offsetX][offsetZ] > watchFields.flux){
 									potential = 0;
 								}
 							}
@@ -313,49 +302,6 @@ public final class EventHandlerCommon{
 
 			return blockpos;
 		}
-	}
-
-	//private static final float ADJACENT_RATE_COEFFICIENT = .5F;
-
-	/**
-	 * Performs the field calculations for one chunk.
-	 * @return A non-null value if the chunk fields should be wiped and there should be a flux event at the returned position (which is relative to 0, 0, 0 in the chunk, not the world).
-	 */
-	@Nullable
-	private static BlockPos calcFields(byte[][] fluxIn, byte[][] rateIn, short[][] fluxForceIn, short[][] rateForceIn){
-		for(int x = 0; x < 8; x++){
-			for(int z = 0; z < 8; z++){
-				int fluxForce = fluxForceIn[x][z];
-				int flux = ((int) fluxIn[x][z]) + 1;
-				int rate = ((int) rateIn[x][z]) + 1;
-
-				if(rate != 0){
-					float change = rateForceIn[x][z];
-
-					rate = (int) Math.max(1, Math.min(8 + change, 128));
-					flux += Math.abs(rate - rateIn[x][z]) / 2;
-				}
-				float holder = ((float) (flux - 8)) / 8F;
-				holder = holder == 0 ? 0 : RAND.nextInt((int) Math.copySign(Math.ceil(Math.abs(holder)), holder) + (int) (Math.abs(holder) / holder));
-
-				if(rate == 0 || flux + fluxForce + holder < rate){
-					flux += Math.max(1, 32 * Math.pow(2, fluxForce));
-					rate = 0;
-				}else{
-					flux += holder;
-					flux += fluxForce;
-				}
-
-				if(flux >= 128){
-					return new BlockPos(1 + (2 * x), RAND.nextInt(256), 1 + (2 * z));
-				}
-
-				fluxIn[x][z] = (byte) Math.min(127, Math.max(0, flux - 1));
-				rateIn[x][z] = (byte) Math.min(127, Math.max(-1, rate - 1));
-			}
-		}
-
-		return null;
 	}
 
 	@SubscribeEvent

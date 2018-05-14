@@ -90,11 +90,11 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 				}else if(content.getFluid() == BlockDistilledWater.getDistilledWater()){
 					FieldWorldSavedData data = FieldWorldSavedData.get(world);
 					if(data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))){
-						if(data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[1][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] + 1 < 8 * (content.amount / 72)){
+						if(data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos))).flux + 1 < 8 * (content.amount / 72)){
 							return;
 						}
 
-						data.nodeForces.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))[0][MiscOp.getChunkRelativeCoord(pos.getX()) / 2][MiscOp.getChunkRelativeCoord(pos.getZ()) / 2] -= 8 * (content.amount / 72);
+						data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos))).fluxForce -= 8 * (content.amount / 72);
 
 						content = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) content.amount) * EnergyConverters.COPSHOWIUM_PER_COPPER));
 						markDirty();
