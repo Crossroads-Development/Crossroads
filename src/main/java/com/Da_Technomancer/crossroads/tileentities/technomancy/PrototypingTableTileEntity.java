@@ -272,6 +272,8 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 				default:
 			}
 
+			String[] descArray = new String[6];
+
 			for(int x = startX; x < endX; x++){
 				for(int z = startZ; z < endZ; z++){
 					for(int y = startY; y < endY; y++){
@@ -284,6 +286,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 								IPrototypePort port = (IPrototypePort) teCheck;
 								int facing = port.getSide().getIndex();
 								ports[facing].add(Pair.of(port.getType(), pos.add(-startX, -startY, -startZ)));
+								descArray[port.getSide().getIndex()] = port.getDesc();
 							}
 						}
 					}
@@ -330,6 +333,11 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 				output.setTagCompound(new NBTTagCompound());
 				output.getTagCompound().setInteger("index", newChunk);
 				output.getTagCompound().setString("name", message);
+				for(int i = 0; i < 6; i++){
+					if(descArray[i] != null && !descArray[i].isEmpty()){
+						output.getTagCompound().setString("ttip" + i, descArray[i]);
+					}
+				}
 				markDirty();
 				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype created." , Color.WHITE, false), player);
 			}else{

@@ -3,6 +3,8 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nonnull;
+
 /**
  * Should be placed on the TileEntity.
  */
@@ -27,4 +29,7 @@ public interface IPrototypePort{
 	public int getIndex();
 	
 	public void setIndex(int index);
+
+	@Nonnull
+	public String getDesc();
 }

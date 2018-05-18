@@ -32,6 +32,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 
 	private int index = -1;
 	public String name = "";
+	public String[] tooltips = new String[6];
 	//For client side use only.
 	private PrototypePortTypes[] ports = new PrototypePortTypes[6];
 	private ChunkPos chunk = null;
@@ -84,6 +85,11 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		super.writeToNBT(nbt);
 		nbt.setInteger("index", index);
 		nbt.setString("name", name);
+		for(int i = 0; i < 6; i++){
+			if(tooltips[i] != null){
+				nbt.setString("ttip" + i, tooltips[i]);
+			}
+		}
 		return nbt;
 	}
 
@@ -96,6 +102,11 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		if(!world.isRemote){
+			for(int i = 0; i < 6; i++){
+				if(nbt.hasKey("ttip" + i)){
+					tooltips[i] = nbt.getString("ttip" + i);
+				}
+			}
 			index = nbt.getInteger("index");
 			name = nbt.getString("name");
 			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(false).prototypes;

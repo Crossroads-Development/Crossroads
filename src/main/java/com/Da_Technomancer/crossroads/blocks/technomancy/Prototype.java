@@ -112,6 +112,14 @@ public class Prototype extends BlockContainer{
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		if(stack.hasTagCompound()){
 			tooltip.add("Name: " + stack.getTagCompound().getString("name"));
+			for(int i = 0; i < 6; i++){
+				if(stack.getTagCompound().hasKey("ttip" + i)){
+					tooltip.add(EnumFacing.getFront(i).name().charAt(0) + EnumFacing.getFront(i).toString().substring(1) + ": " + stack.getTagCompound().getString("ttip" + i));
+				}
+			}
+			if(advanced == ITooltipFlag.TooltipFlags.ADVANCED){
+				tooltip.add("Index: " + stack.getTagCompound().getInteger("index"));
+			}
 		}
 	}
 
@@ -137,8 +145,7 @@ public class Prototype extends BlockContainer{
 		if(te instanceof PrototypeTileEntity){
 			ItemStack drop = new ItemStack(Item.getItemFromBlock(this), 1, 0);
 			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setInteger("index", ((PrototypeTileEntity) te).getIndex());
-			nbt.setString("name", ((PrototypeTileEntity) te).name);
+			te.writeToNBT(nbt);
 			drop.setTagCompound(nbt);
 			drops.add(drop);
 		}
@@ -164,6 +171,11 @@ public class Prototype extends BlockContainer{
 				if(PrototypeWorldSavedData.get(false).prototypes.size() > stack.getTagCompound().getInteger("index")){
 					te.setIndex(stack.getTagCompound().getInteger("index"));
 					te.name = stack.getTagCompound().getString("name");
+					for(int i = 0; i < 6; i++){
+						if(stack.getTagCompound().hasKey("ttip" + i)){
+							te.tooltips[i] = stack.getTagCompound().getString("ttip" + i);
+						}
+					}
 					//onLoad is normally called before onBlockPlacedBy, AKA before the index is set. It gets called again here so it can run with the index.
 					te.onLoad();
 					te.markDirty();

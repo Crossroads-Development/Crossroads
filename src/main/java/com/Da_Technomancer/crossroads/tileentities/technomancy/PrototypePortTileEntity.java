@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
+import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
@@ -13,11 +14,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class PrototypePortTileEntity extends TileEntity implements IIntReceiver, IPrototypePort{
+import javax.annotation.Nullable;
+
+public class PrototypePortTileEntity extends TileEntity implements IIntReceiver, IStringReceiver, IPrototypePort{
 
 	private EnumFacing side = EnumFacing.DOWN;
 	private PrototypePortTypes type = PrototypePortTypes.HEAT;
 	private boolean active;
+	public String desc = "";
 	private int index = -1;
 
 	@Override
@@ -27,6 +31,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		nbt.setString("type", type.name());
 		nbt.setBoolean("act", active);
 		nbt.setInteger("index", index);
+		nbt.setString("desc", desc);
 		return nbt;
 	}
 
@@ -37,6 +42,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		type = nbt.hasKey("type") ? PrototypePortTypes.valueOf(nbt.getString("type")) : PrototypePortTypes.HEAT;
 		active = nbt.getBoolean("act");
 		index = nbt.getInteger("index");
+		desc = nbt.getString("desc");
 	}
 
 	@Override
@@ -44,6 +50,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 		NBTTagCompound nbt = super.getUpdateTag();
 		nbt.setString("side", side.name());
 		nbt.setString("type", type.name());
+		nbt.setString("desc", desc);
 		return nbt;
 	}
 
@@ -70,6 +77,11 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	}
 
 	@Override
+	public String getDesc(){
+		return desc;
+	}
+
+	@Override
 	public void makeActive(){
 		active = true;
 	}
@@ -85,6 +97,14 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 			side = EnumFacing.getFront(message & 7);
 			type = PrototypePortTypes.values()[message >> 3];
 			world.markBlockRangeForRenderUpdate(pos, pos);
+			markDirty();
+		}
+	}
+
+	@Override
+	public void receiveString(String context, String message, @Nullable EntityPlayerMP sender){
+		if(context.equals("desc") && !message.equals(desc)){
+			desc = message;
 			markDirty();
 		}
 	}
