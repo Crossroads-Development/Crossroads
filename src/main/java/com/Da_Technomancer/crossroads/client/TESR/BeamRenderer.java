@@ -75,8 +75,8 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
 
-				final double halfWidth = trip[dir].getRight().doubleValue() / 16D;
-				final int length = trip[dir].getMiddle().intValue();
+				double halfWidth = trip[dir].getRight().doubleValue() / 16D;
+				int length = trip[dir].getMiddle();
 
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				//+Z

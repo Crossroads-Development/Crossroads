@@ -65,7 +65,7 @@ public class ChunkField{
 
 
 			int randGrowth = RAND.nextInt(1 + (int) Math.ceil(Math.abs(flux - 7) / 8F));
-			flux = (byte) Math.min(127, (int) flux + rateChange / 2);
+			flux = (byte) Math.min(127, (int) flux + rateChange / 8);
 
 			if((int) flux + (int) fluxForce + randGrowth + 1 < topRate){
 				//If time is stopped, flux manipulators and random growth stop applying

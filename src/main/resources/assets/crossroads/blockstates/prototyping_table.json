@@ -1,5 +1,8 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:prototyping_table" }
+		"horiz_facing=north": { "model": "crossroads:prototyping_table"},
+		"horiz_facing=south": { "model": "crossroads:prototyping_table", "y": 180 },
+		"horiz_facing=east": { "model": "crossroads:prototyping_table", "y": 90 },
+		"horiz_facing=west": { "model": "crossroads:prototyping_table", "y": 270 }
 	}
 }

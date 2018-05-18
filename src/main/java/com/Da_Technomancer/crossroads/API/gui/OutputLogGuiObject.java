@@ -76,7 +76,6 @@ public class OutputLogGuiObject implements IGuiObject{
 		if(text.isEmpty()){
 			return false;
 		}
-		//TODO smaller text
 		for(int i = 0; i < text.size(); i++){
 			fontRenderer.drawStringWithShadow(text.get(i).getLeft(), 5 + baseX, 6 + baseY + (20 * i), text.get(i).getRight().getRGB());
 		}

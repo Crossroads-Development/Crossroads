@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.packets.INbtReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityClient;
@@ -8,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -16,6 +19,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 import java.util.ArrayList;
+
+import static net.minecraft.tileentity.TileEntity.INFINITE_EXTENT_AABB;
 
 public class EntityFlameCore extends Entity implements INbtReceiver{
 
@@ -42,6 +47,11 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 
 	private ReagentStack[] reags = null;
 	private double temp = 0;
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return INFINITE_EXTENT_AABB;
+	}
 
 	@Override
 	protected void entityInit(){

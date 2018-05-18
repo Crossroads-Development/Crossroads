@@ -74,7 +74,7 @@ public class ArcaneExtractor extends BlockContainer{
 	
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
+		return new BlockStateContainer(this, Properties.FACING);
 	}
 	
 	@Override

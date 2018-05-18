@@ -1,14 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -16,11 +8,13 @@ import com.Da_Technomancer.crossroads.API.packets.SendLogToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
+import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryHelper;
@@ -30,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -39,12 +34,24 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PrototypingTableTileEntity extends AbstractInventory implements IStringReceiver{
 
 	private ItemStack copshowium = ItemStack.EMPTY;
 	private ItemStack template = ItemStack.EMPTY;
 	private ItemStack output = ItemStack.EMPTY;
+	public boolean visible = false;
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
 
 	public void dropItems(){
 		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), copshowium);
@@ -55,48 +62,16 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 		output = ItemStack.EMPTY;
 		markDirty();
 	}
-	
-	/** 
-	 * @return Pair<PrototypePortTypes[], BlockPos[]> representing ports if it passed, BlockPos if it failed with the actual pos of what it failed on.
-	 */
-	private static Object regionValid(World fromWorld, BlockPos startPos, int lengthX, int lengthY, int lengthZ){
-		List<String> blackList = Arrays.asList(ModConfig.blockedPrototype.getStringList());
-		PrototypePortTypes[] ports = new PrototypePortTypes[6];
-		BlockPos[] portPos = new BlockPos[6];
-
-		for(int x = startPos.getX(); x < startPos.getX() + lengthX; x++){
-			for(int z = startPos.getZ(); z < startPos.getZ() + lengthZ; z++){
-				for(int y = startPos.getY(); y < lengthY + startPos.getY(); y++){
-					BlockPos pos = new BlockPos(x, y, z);
-					if(blackList.contains(fromWorld.getBlockState(pos).getBlock().getRegistryName().toString())){
-						return pos;
-					}else{
-						TileEntity teCheck = fromWorld.getTileEntity(pos);
-						if(teCheck instanceof IPrototypePort){
-							IPrototypePort port = (IPrototypePort) teCheck;
-							int facing = port.getSide().getIndex();
-							if(ports[facing] != null){
-								return pos;
-							}
-							ports[facing] = port.getType();
-							portPos[facing] = new BlockPos(x - startPos.getX(), 16 + y - startPos.getY(), z - startPos.getZ());
-						}
-					}
-				}
-			}
-		}
-		return Pair.of(ports, portPos);
-	}
 
 	/**
 	 * @return true if something went wrong (an exception was caught). In this case, the caller should cancel the operation.
 	 */
-	private static boolean setChunk(Chunk copyTo, World fromWorld, BlockPos startPos, int lengthX, int lengthY, int lengthZ, int index, boolean wipeOld){
-		for(int x = 0; x < lengthX; x++){
-			for(int z = 0; z < lengthZ; z++){
+	private static boolean setChunk(Chunk copyTo, World fromWorld, BlockPos startPos, int index, boolean wipeOld){
+		for(int x = 0; x < 16; x++){
+			for(int z = 0; z < 16; z++){
 				copyTo.setBlockState(new BlockPos(x, 15, z), Blocks.BARRIER.getDefaultState());
-				copyTo.setBlockState(new BlockPos(x, 16 + lengthY, z), Blocks.BARRIER.getDefaultState());
-				for(int y = 16; y < lengthY + 16; y++){
+				copyTo.setBlockState(new BlockPos(x, 32, z), Blocks.BARRIER.getDefaultState());
+				for(int y = 16; y < 32; y++){
 					BlockPos oldPos = startPos.add(x, y - 16, z);
 					try{
 						BlockPos newPos = copyTo.getPos().getBlock(x, y, z);
@@ -135,129 +110,237 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 
 	@Override
 	public void receiveString(String context, String message, EntityPlayerMP player){
-		if(context.equals("create") && message != null){
-			if(!copshowium.isEmpty() && output.isEmpty() && ModConfig.allowPrototype.getInt() != -1){
-				if(!template.isEmpty()){
-					if(template.getItem() instanceof ItemBlock && ((ItemBlock) template.getItem()).getBlock() == ModBlocks.prototype){
-						if(ModConfig.allowPrototype.getInt() == 1){
-							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Copying disabled in config.", Color.YELLOW, false), player);
-							return;
-						}
+		if(player == null || !context.equals("create") || message == null){
+			return;
+		}
 
-						PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
-						ArrayList<PrototypeInfo> infoList = data.prototypes;
-						WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-						int index = template.getTagCompound().getInteger("index");
-						if(infoList.size() < index + 1){
-							template = ItemStack.EMPTY;
-							markDirty();
-							if(player != null){
-								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID/BUGGED TEMPLATE! Removing.", Color.RED, false), player);
-							}
-							return;
-						}
-						PrototypeInfo info = infoList.get(index);
-						if(info == null){
-							template = ItemStack.EMPTY;
-							markDirty();
-							if(player != null){
-								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID/BUGGED TEMPLATE! Removing.", Color.RED, false), player);
-							}
-							return;
-						}
-						int cost = 3;
-						if(cost > copshowium.getCount()){
-							if(player != null){
-								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Insufficient copshowium.", Color.YELLOW, false), player);
-							}
-							return;
-						}
-						//Even though regionValid should pass as the original already passed to be created, it should be checked again as the config may change.
-						if(regionValid(dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16) instanceof BlockPos){
-							infoList.set(index, null);
-							data.markDirty();
-							template = ItemStack.EMPTY;
-							markDirty();
-							if(player != null){
-								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID TEMPLATE! Blame config changes. Removing.", Color.RED, false), player);
-							}
-							return;
-						}
-						int newChunk = ModDimensions.nextFreePrototypeChunk(info.ports, info.portPos);
-						if(newChunk != -1){
-							ChunkPos chunkPos = infoList.get(newChunk).chunk;
-							if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.x, chunkPos.z), dimWorld, info.chunk.getBlock(0, 16, 0), 16, 16, 16, newChunk, false)){
-								infoList.set(newChunk, null);
-								data.markDirty();
-								if(player != null){
-									ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View logs for info.", Color.RED, false), player);
-								}
-								return;
-							}
-							copshowium.shrink(cost);
-							output = template.copy();
-							output.getTagCompound().setInteger("index", newChunk);
-							output.getTagCompound().setString("name", message);
-							markDirty();
-							if(player != null){
-								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype copied." , Color.WHITE, false), player);
-							}
+		if(ModConfig.allowPrototype.getInt() == -1){
+			ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototyping disabled in config.", Color.YELLOW, false), player);
+			return;
+		}
+		if(copshowium.isEmpty() || copshowium.getCount() < 3){
+			ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Insufficient copshowium.", Color.YELLOW, false), player);
+			return;
+		}
+		if(!output.isEmpty()){
+			ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Full output slot.", Color.YELLOW, false), player);
+			return;
+		}
+
+		//Copy or new prototype?
+		if(!template.isEmpty()){
+			//Sanity checks
+			if(!(template.getItem() instanceof ItemBlock) || ((ItemBlock) template.getItem()).getBlock() != ModBlocks.prototype){
+				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Invalid template item.", Color.YELLOW, false), player);
+				return;
+			}
+			if(ModConfig.allowPrototype.getInt() == 1){
+				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Copying disabled in config.", Color.YELLOW, false), player);
+				return;
+			}
+
+			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
+			ArrayList<PrototypeInfo> infoList = data.prototypes;
+			WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			int index = template.getTagCompound().getInteger("index");
+			//Sanity check
+			if(infoList.size() < index + 1){
+				template = ItemStack.EMPTY;
+				markDirty();
+				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID/BUGGED TEMPLATE! Removing.", Color.RED, false), player);
+				return;
+			}
+			PrototypeInfo info = infoList.get(index);
+			//Sanity check
+			if(info == null){
+				template = ItemStack.EMPTY;
+				markDirty();
+				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID/BUGGED TEMPLATE! Removing.", Color.RED, false), player);
+
+				return;
+			}
+
+
+
+			List<String> blackList = Arrays.asList(ModConfig.blockedPrototype.getStringList());
+			@SuppressWarnings("unchecked")
+			List<Pair<PrototypePortTypes, BlockPos>>[] ports = new List[] {new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()};
+			ArrayList<TemplateError> errors = new ArrayList<>();
+
+			for(int x = 0; x < 16; x++){
+				for(int z = 0; z < 16; z++){
+					for(int y = 16; y < 32; y++){
+						BlockPos pos = info.chunk.getBlock(x, y, z);
+						if(blackList.contains(dimWorld.getBlockState(pos).getBlock().getRegistryName().toString())){
+							errors.add(new TemplateError(0, "Illegal Block", pos));
 						}else{
-							if(player != null){
-								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
+							TileEntity teCheck = world.getTileEntity(pos);
+							if(teCheck instanceof IPrototypePort){
+								IPrototypePort port = (IPrototypePort) teCheck;
+								int facing = port.getSide().getIndex();
+								ports[facing].add(Pair.of(port.getType(), pos.add(0, -16, 0)));
 							}
-						}
-					}else{
-						return;
-					}
-				}else{
-					Object validityCheck = regionValid(world, pos.add(1, 1, 1), 16, 16, 16);
-					if(validityCheck instanceof BlockPos){
-						if(player != null){
-							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", world.getTileEntity((BlockPos) validityCheck) instanceof IPrototypePort ? "Only 1 port/side allowed." : "Blacklisted block at pos " + validityCheck.toString() + ".", Color.YELLOW, false), player);
-						}
-						return;
-					}
-					@SuppressWarnings("unchecked")
-					Pair<PrototypePortTypes[], BlockPos[]> portInfo = (Pair<PrototypePortTypes[], BlockPos[]>) validityCheck;
-					int cost = 3;
-					if(cost > copshowium.getCount()){
-						if(player != null){
-							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Insufficient copshowium.", Color.YELLOW, false), player);
-						}
-						return;
-					}
-					PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
-					ArrayList<PrototypeInfo> infoList = data.prototypes;
-					WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-					int newChunk = ModDimensions.nextFreePrototypeChunk(portInfo.getLeft(), portInfo.getRight());
-					if(newChunk != -1){
-						ChunkPos chunkPos = infoList.get(newChunk).chunk;
-						if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.x, chunkPos.z), world, pos.add(1, 1, 1), 16, 16, 16, newChunk, ModConfig.allowPrototype.getInt() == 1)){
-							infoList.set(newChunk, null);
-							data.markDirty();
-							if(player != null){
-								ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View server logs for info.", Color.RED, false), player);
-							}
-							return;
-						}
-						copshowium.shrink(cost);
-						output = new ItemStack(ModBlocks.prototype, 1);
-						output.setTagCompound(new NBTTagCompound());
-						output.getTagCompound().setInteger("index", newChunk);
-						output.getTagCompound().setString("name", message);
-						markDirty();
-						if(player != null){
-							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype created." , Color.WHITE, false), player);
-						}
-					}else{
-						if(player != null){
-							ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
 						}
 					}
 				}
 			}
+
+			PrototypePortTypes[] portArray = new PrototypePortTypes[6];
+			BlockPos[] posArray = new BlockPos[6];
+
+			for(int i = 0; i < 6; i++){
+				if(ports[i].size() > 1){
+					for(Pair<PrototypePortTypes, BlockPos> port : ports[i]){
+						errors.add(new TemplateError(2, "Duplicate port: " + EnumFacing.getFront(i), port.getRight()));
+					}
+				}else if(ports[i].size() == 1){
+					portArray[i] = ports[i].get(0).getLeft();
+					posArray[i] = ports[i].get(0).getRight();
+				}
+			}
+
+			//Even though regionValid should pass as the original already passed to be created, it should be checked again as the config may change.
+			if(!errors.isEmpty()){
+				for(TemplateError err : errors){
+					Main.logger.info(err.err + " at " + err.pos);
+				}
+				infoList.set(index, null);
+				data.markDirty();
+				template = ItemStack.EMPTY;
+				markDirty();
+				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID TEMPLATE! Removing.", Color.RED, false), player);
+				return;
+			}
+
+			int newChunk = ModDimensions.nextFreePrototypeChunk(portArray, posArray);
+			if(newChunk != -1){
+				ChunkPos chunkPos = infoList.get(newChunk).chunk;
+				if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.x, chunkPos.z), dimWorld, info.chunk.getBlock(0, 16, 0), newChunk, false)){
+					infoList.set(newChunk, null);
+					data.markDirty();
+					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View logs for info.", Color.RED, false), player);
+					return;
+				}
+				copshowium.shrink(3);
+				output = template.copy();
+				output.getTagCompound().setInteger("index", newChunk);
+				output.getTagCompound().setString("name", message);
+				markDirty();
+				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype copied." , Color.WHITE, false), player);
+
+			}else{
+				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
+			}
+		}else{
+			List<String> blackList = Arrays.asList(ModConfig.blockedPrototype.getStringList());
+			@SuppressWarnings("unchecked")
+			List<Pair<PrototypePortTypes, BlockPos>>[] ports = new List[] {new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()};
+			ArrayList<TemplateError> errors = new ArrayList<>();
+
+			int startY = pos.getY() + 1;
+			int endY = pos.getY() + 17;
+			int startX = pos.getX();
+			int startZ = pos.getZ();
+			int endX = pos.getX();
+			int endZ = pos.getZ();
+
+			switch(world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING)){
+				case NORTH:
+					endX -= 1;
+					startX -= 17;
+					startZ -= 17;
+					endZ -= 1;
+					break;
+				case SOUTH:
+					startX += 1;
+					endX += 17;
+					startZ += 1;
+					endZ += 17;
+					break;
+				case EAST:
+					startX -= 17;
+					endX -= 1;
+					startZ += 1;
+					endZ += 17;
+					break;
+				case WEST:
+					startX += 1;
+					endX += 17;
+					startZ -= 17;
+					endZ -= 1;
+					break;
+				default:
+			}
+
+			for(int x = startX; x < endX; x++){
+				for(int z = startZ; z < endZ; z++){
+					for(int y = startY; y < endY; y++){
+						BlockPos pos = new BlockPos(x, y, z);
+						if(blackList.contains(world.getBlockState(pos).getBlock().getRegistryName().toString())){
+							errors.add(new TemplateError(0, "Illegal Block", pos));
+						}else{
+							TileEntity teCheck = world.getTileEntity(pos);
+							if(teCheck instanceof IPrototypePort){
+								IPrototypePort port = (IPrototypePort) teCheck;
+								int facing = port.getSide().getIndex();
+								ports[facing].add(Pair.of(port.getType(), pos.add(-startX, -startY, -startZ)));
+							}
+						}
+					}
+				}
+			}
+
+			PrototypePortTypes[] portArray = new PrototypePortTypes[6];
+			BlockPos[] posArray = new BlockPos[6];
+
+			for(int i = 0; i < 6; i++){
+				if(ports[i].size() > 1){
+					for(Pair<PrototypePortTypes, BlockPos> port : ports[i]){
+						errors.add(new TemplateError(2, "Duplicate port: " + EnumFacing.getFront(i), port.getRight()));
+					}
+				}else if(ports[i].size() == 1){
+					portArray[i] = ports[i].get(0).getLeft();
+					posArray[i] = ports[i].get(0).getRight();
+				}
+			}
+
+			if(!errors.isEmpty()){
+				for(TemplateError err : errors){
+					err.trigger(world);
+					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", err.err + " at " + err.pos, err.sev == 1 ? Color.YELLOW : Color.RED, false), player);
+				}
+				return;
+			}
+
+			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
+			ArrayList<PrototypeInfo> infoList = data.prototypes;
+			WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+
+			int newChunk = ModDimensions.nextFreePrototypeChunk(portArray, posArray);
+			if(newChunk != -1){
+				ChunkPos chunkPos = infoList.get(newChunk).chunk;
+				if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.x, chunkPos.z), world, new BlockPos(startX, startY, startZ), newChunk, ModConfig.allowPrototype.getInt() == 1)){
+					infoList.set(newChunk, null);
+					data.markDirty();
+					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View server logs for info.", Color.RED, false), player);
+					return;
+				}
+				copshowium.shrink(3);
+				output = new ItemStack(ModBlocks.prototype, 1);
+				output.setTagCompound(new NBTTagCompound());
+				output.getTagCompound().setInteger("index", newChunk);
+				output.getTagCompound().setString("name", message);
+				markDirty();
+				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype created." , Color.WHITE, false), player);
+			}else{
+				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
+			}
 		}
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return INFINITE_EXTENT_AABB;
 	}
 
 	@Override
@@ -542,6 +625,23 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 		@Override
 		public int getSlotLimit(int slot){
 			return slot == 0 ? 1 : 0;
+		}
+	}
+
+	private class TemplateError{
+
+		private final int sev;
+		private final String err;
+		private final BlockPos pos;
+
+		public TemplateError(int severity, String error, BlockPos pos){
+			sev = severity;
+			err = error;
+			this.pos = pos;
+		}
+
+		public void trigger(World w){
+			w.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, false);
 		}
 	}
 }
