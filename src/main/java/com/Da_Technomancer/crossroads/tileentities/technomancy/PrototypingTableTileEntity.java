@@ -174,7 +174,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 						if(blackList.contains(dimWorld.getBlockState(pos).getBlock().getRegistryName().toString())){
 							errors.add(new TemplateError(0, "Illegal Block", pos));
 						}else{
-							TileEntity teCheck = world.getTileEntity(pos);
+							TileEntity teCheck = dimWorld.getTileEntity(pos);
 							if(teCheck instanceof IPrototypePort){
 								IPrototypePort port = (IPrototypePort) teCheck;
 								int facing = port.getSide().getIndex();
@@ -285,7 +285,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 							if(teCheck instanceof IPrototypePort){
 								IPrototypePort port = (IPrototypePort) teCheck;
 								int facing = port.getSide().getIndex();
-								ports[facing].add(Pair.of(port.getType(), pos.add(-startX, -startY, -startZ)));
+								ports[facing].add(Pair.of(port.getType(), pos.add(-startX, 16 - startY, -startZ)));
 								descArray[port.getSide().getIndex()] = port.getDesc();
 							}
 						}
@@ -310,7 +310,8 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 			if(!errors.isEmpty()){
 				for(TemplateError err : errors){
 					err.trigger(world);
-					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", err.err + " at " + err.pos, err.sev == 1 ? Color.YELLOW : Color.RED, false), player);
+					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", err.err + " at ", err.sev == 1 ? Color.YELLOW : Color.RED, false), player);
+					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "{x: " + err.pos.getX() + ", Y: " + err.pos.getY() + ", Z: " + err.pos.getZ() + "}", err.sev == 1 ? Color.YELLOW : Color.RED, false), player);
 				}
 				return;
 			}

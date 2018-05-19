@@ -1,15 +1,13 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
-import java.lang.ref.WeakReference;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.MiscOp;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
 
 /**
  * 
@@ -47,20 +45,6 @@ public class PrototypeInfo{
 			this.portPos[i] = portPos[i];
 		}
 		this.chunk = chunk;
-	}
-	
-	/**
-	 * Convenience method.
-	 * @return The total number of ports used.
-	 */
-	public int getTotalPorts(){
-		int count = 0;
-		for(int i = 0; i < 6; i++){
-			if(ports[i] != null){
-				count++;
-			}
-		}
-		return count;
 	}
 	
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){

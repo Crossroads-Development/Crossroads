@@ -1,20 +1,20 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
-import com.Da_Technomancer.crossroads.EventHandlerCommon;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
+import com.Da_Technomancer.crossroads.EventHandlerCommon;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
-
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -25,10 +25,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, ITickable{
+import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+
+public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, IIntReceiver, ITickable{
 
 	private int index = -1;
 	public String name = "";
@@ -37,6 +42,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 	private PrototypePortTypes[] ports = new PrototypePortTypes[6];
 	private ChunkPos chunk = null;
 	private boolean selfDestruct = false;
+	private int orient = 0;
 
 	public void setIndex(int index){
 		this.index = index;
@@ -47,6 +53,17 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		return index;
 	}
 
+	public void rotate(){
+		orient++;
+		orient %= 4;
+		world.markBlockRangeForRenderUpdate(pos, pos);
+		for(EnumFacing dir : EnumFacing.VALUES){
+			ModBlocks.prototype.neighborChanged(null, world, pos, ModBlocks.prototype, pos.offset(dir));
+		}
+		ModPackets.network.sendToAllAround(new SendIntToClient(0, orient, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		markDirty();
+	}
+
 	@Override
 	public void update(){
 		if(world.isRemote){
@@ -55,7 +72,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		if(chunk == null){
 			chunk = new ChunkPos(((index % 100) * 2) - 99, (index / 50) - 99);
 		}
-		
+
 		PrototypeWorldProvider.tickChunk(chunk);
 	}
 
@@ -77,7 +94,19 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public PrototypePortTypes[] getTypes(){
-		return ports;
+		if(orient == 0){
+			return ports;
+		}
+		PrototypePortTypes[] shifted = new PrototypePortTypes[6];
+		System.arraycopy(ports, 0, shifted, 0, 6);
+		for(int i = 0; i < orient; i++){
+			PrototypePortTypes p = shifted[2];
+			shifted[2] = shifted[4];
+			shifted[4] = shifted[3];
+			shifted[3] = shifted[5];
+			shifted[5] = p;
+		}
+		return shifted;
 	}
 
 	@Override
@@ -90,6 +119,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 				nbt.setString("ttip" + i, tooltips[i]);
 			}
 		}
+		nbt.setInteger("orient", orient);
 		return nbt;
 	}
 
@@ -101,6 +131,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
+		orient = nbt.getInteger("orient");
 		if(!world.isRemote){
 			for(int i = 0; i < 6; i++){
 				if(nbt.hasKey("ttip" + i)){
@@ -125,6 +156,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
 		if(index != -1){
+			nbt.setInteger("orient", orient);
 			PrototypePortTypes[] ports = PrototypeWorldSavedData.get(false).prototypes.get(index).ports;
 			for(int i = 0; i < 6; i++){
 				if(ports[i] != null){
@@ -135,6 +167,21 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		return nbt;
 	}
 
+	public EnumFacing adjustSide(EnumFacing dir, boolean reverse){
+		if(dir.getAxis() == EnumFacing.Axis.Y){
+			return dir;
+		}
+		EnumFacing adj = dir;
+		for(int i = 0; i < orient; i++){
+			if(reverse){
+				adj = adj.rotateYCCW();
+			}else{
+				adj = adj.rotateY();
+			}
+		}
+		return adj;
+	}
+	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		//No capabilities are found on the client side because that would require the prototype dimension to be loaded on the client side, which it almost certainly won't be.
@@ -144,9 +191,10 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 				worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			}
+			EnumFacing dir = adjustSide(side, true);
 			PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(index);
-			if(info != null && info.ports[side.getIndex()] != null && info.ports[side.getIndex()].getCapability() == cap && info.ports[side.getIndex()].exposeExternal()){
-				BlockPos relPos = info.portPos[side.getIndex()];
+			if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()].getCapability() == cap && info.ports[dir.getIndex()].exposeExternal()){
+				BlockPos relPos = info.portPos[dir.getIndex()];
 				TileEntity te = worldDim.getTileEntity(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ()));
 				if(!(te instanceof IPrototypePort)){
 					return false;
@@ -167,9 +215,10 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 				worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			}
+			EnumFacing dir = adjustSide(side, true);
 			PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(index);
-			if(info != null && info.ports[side.getIndex()] != null && info.ports[side.getIndex()].getCapability() == cap && info.ports[side.getIndex()].exposeExternal()){
-				BlockPos relPos = info.portPos[side.getIndex()];
+			if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()].getCapability() == cap && info.ports[dir.getIndex()].exposeExternal()){
+				BlockPos relPos = info.portPos[dir.getIndex()];
 				IPrototypePort port = (IPrototypePort) worldDim.getTileEntity(info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ()));
 				if(port != null && port.hasCapPrototype(cap)){
 					return port.getCapPrototype(cap);
@@ -181,17 +230,28 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 
 	@Override
 	public boolean hasCap(Capability<?> cap, EnumFacing side){
-		TileEntity te = world.getTileEntity(pos.offset(side));
-		return te != null && !(te instanceof IPrototypeOwner) && te.hasCapability(cap, side.getOpposite());
+		EnumFacing dir = adjustSide(side, false);
+		TileEntity te = world.getTileEntity(pos.offset(dir));
+		return te != null && !(te instanceof IPrototypeOwner) && te.hasCapability(cap, dir.getOpposite());
 	}
 
 	@Override
-	public <T> T getCap(Capability<T> cap, EnumFacing side){
-		return world.getTileEntity(pos.offset(side)).getCapability(cap, side.getOpposite());
+	public <T> T getCap(Capability<T> cap, EnumFacing side) throws NullPointerException{
+		EnumFacing dir = adjustSide(side, false);
+		return world.getTileEntity(pos.offset(dir)).getCapability(cap, dir.getOpposite());
 	}
 
 	@Override
 	public void neighborChanged(EnumFacing fromSide, Block blockIn){
-		world.getBlockState(pos.offset(fromSide)).neighborChanged(world, pos.offset(fromSide), blockIn, pos);
+		EnumFacing dir = adjustSide(fromSide, false);
+		world.getBlockState(pos.offset(dir)).neighborChanged(world, pos.offset(dir), blockIn, pos);
+	}
+
+	@Override
+	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+		if(identifier == 0){
+			orient = message;
+			world.markBlockRangeForRenderUpdate(pos, pos);
+		}
 	}
 }

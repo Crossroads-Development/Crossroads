@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.client.bakedModel.PrototypeBakedModel;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypeTileEntity;
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -30,6 +31,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -88,10 +90,25 @@ public class Prototype extends BlockContainer{
 	protected BlockStateContainer createBlockState(){
 		return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] {Properties.PORT_TYPE});
 	}
-	
+
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
 		worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+	}
+
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+			if(!worldIn.isRemote){
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(te instanceof PrototypeTileEntity){
+					((PrototypeTileEntity) te).rotate();
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -137,7 +154,7 @@ public class Prototype extends BlockContainer{
 			return super.removedByPlayer(state, worldIn, pos, player, canHarvest);
 		}
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
@@ -145,7 +162,13 @@ public class Prototype extends BlockContainer{
 		if(te instanceof PrototypeTileEntity){
 			ItemStack drop = new ItemStack(Item.getItemFromBlock(this), 1, 0);
 			NBTTagCompound nbt = new NBTTagCompound();
-			te.writeToNBT(nbt);
+			nbt.setInteger("index", ((PrototypeTileEntity) te).getIndex());
+			nbt.setString("name", ((PrototypeTileEntity) te).name);
+			for(int i = 0; i < 6; i++){
+				if(((PrototypeTileEntity) te).tooltips[i] != null){
+					nbt.setString("ttip" + i, ((PrototypeTileEntity) te).tooltips[i]);
+				}
+			}
 			drop.setTagCompound(nbt);
 			drops.add(drop);
 		}
@@ -157,7 +180,7 @@ public class Prototype extends BlockContainer{
 		//Otherwise it returns an invalid prototype/duplicate.
 		return ItemStack.EMPTY;
 	}
-	
+
 	@Override
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos){
 		return ModConfig.allowPrototype.getInt() != -1 && ModConfig.allowPrototype.getInt() != 2 && super.canPlaceBlockAt(worldIn, pos);
@@ -180,7 +203,7 @@ public class Prototype extends BlockContainer{
 					te.onLoad();
 					te.markDirty();
 					ModPackets.network.sendToAllAround(new SendNBTToClient(te.getUpdateTag(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					
+
 					for(EnumFacing side : EnumFacing.HORIZONTALS){
 						onNeighborChange(world, pos, pos.offset(side));//Updates the redstone-in ports with initial values. 
 					}
@@ -221,7 +244,7 @@ public class Prototype extends BlockContainer{
 		}
 		PrototypeTileEntity prTe = (PrototypeTileEntity) te;
 		BlockPos dirPos = fromPos.subtract(pos);
-		EnumFacing dir = EnumFacing.getFacingFromVector(dirPos.getX(), dirPos.getY(), dirPos.getZ());
+		EnumFacing dir = prTe.adjustSide(EnumFacing.getFacingFromVector(dirPos.getX(), dirPos.getY(), dirPos.getZ()), true);
 		if(prTe.getIndex() == -1){
 			return;
 		}
