@@ -121,6 +121,7 @@ public class ModBlocks{
 	public static AtmosCharger atmosCharger;
 	public static ReactiveSpot reactiveSpot;
 	public static CopshowiumAxle copshowiumAxle;
+	public static ClockworkStabilizer clockworkStabilizer;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -263,6 +264,7 @@ public class ModBlocks{
 		atmosCharger = new AtmosCharger();
 		reactiveSpot = new ReactiveSpot();
 		copshowiumAxle = new CopshowiumAxle();
+		clockworkStabilizer = new ClockworkStabilizer();
 	}
 
 	@SideOnly(Side.CLIENT)

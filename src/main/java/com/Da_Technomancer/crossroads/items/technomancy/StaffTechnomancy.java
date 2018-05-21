@@ -59,10 +59,10 @@ public class StaffTechnomancy extends MagicUsingItem{
 					cageNbt.setInteger("stored_" + EnumMagicElements.STABILITY.name(), cageNbt.getInteger("stored_" + EnumMagicElements.STABILITY.name()) - stability);
 					cageNbt.setInteger("stored_" + EnumMagicElements.VOID.name(), cageNbt.getInteger("stored_" + EnumMagicElements.VOID.name()) - voi);
 					MagicUnit mag = new MagicUnit(energy, potential, stability, voi);
-					Vec3d end = null;
+					Vec3d end = player.getPositionEyes(0).addVector(0, 0.2D, 0);
 					for(double d = 0; d < 32; d += 0.2D){
 						Vec3d tar = player.getPositionEyes(0).addVector(0, 0.2D, 0).add(player.getLookVec().scale(d));
-						List<Entity> ents = player.world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(tar.subtract(0.1, 0.1, 0.1), tar.addVector(0.1, 0.1, 0.1)), EntitySelectors.IS_ALIVE);
+						List<Entity> ents = player.world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(tar.x - 0.1D, tar.y - 0.1D, tar.z - 0.1D, tar.x + 0.1D, tar.y + 0.1D, tar.z + 0.1D), EntitySelectors.IS_ALIVE);
 						if(!ents.isEmpty()){
 							end = tar;
 							break;

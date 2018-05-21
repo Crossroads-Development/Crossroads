@@ -127,7 +127,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 
 		if(temp >= 1000D){
 			temp -= 10D;
-			if(!inventory.isEmpty() && Math.random() < (temp >= 1490 ? 0.05 : 0.01)){
+			if(!inventory.isEmpty() && Math.random() < (temp >= 1490 ? 0.1 : 0.05)){
 				FluidStack created = getRecipe(inventory).getLeft();
 				if(created == null){
 					inventory = ItemStack.EMPTY;

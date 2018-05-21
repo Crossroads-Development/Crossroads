@@ -312,7 +312,8 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.detailedCrafter, 1), "*&*", "&#&", "*&*", '*', "nuggetIron", '&', "nuggetTin", '#', Blocks.CRAFTING_TABLE));
 		//Copshowium Axle
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumAxle, 1), "*", "|", "*", '*', "stone", '|', "ingotCopshowium"));
-
+		//Clockwork Stabilizer
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.clockworkStabilizer, 1), " # ", "#*#", " # ", '*', ModBlocks.largeQuartzStabilizer, '#', "gearCopshowium"));
 
 		//Ores
 		//Tin

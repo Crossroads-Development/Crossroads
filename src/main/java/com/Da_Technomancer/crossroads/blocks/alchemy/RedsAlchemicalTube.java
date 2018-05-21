@@ -244,6 +244,7 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World source, BlockPos pos){

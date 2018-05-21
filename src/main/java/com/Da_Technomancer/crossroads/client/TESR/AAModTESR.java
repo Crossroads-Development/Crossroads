@@ -46,6 +46,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(HeatingCrucibleTileEntity.class, new HeatingCrucibleRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(DynamoTileEntity.class, new DynamoRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(PrototypingTableTileEntity.class, new PrototypingTableRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(ClockworkStabilizerTileEntity.class, new BeamRenderer());
 	}
 
 	public static void reg(Block block){

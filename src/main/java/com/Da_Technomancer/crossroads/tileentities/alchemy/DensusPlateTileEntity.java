@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import java.util.List;
-
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +9,8 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+
+import java.util.List;
 
 public class DensusPlateTileEntity extends TileEntity implements ITickable{
 
@@ -32,7 +31,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickable{
 			facing = state.getValue(Properties.FACING);
 			anti = state.getValue(Properties.CONTAINER_TYPE);
 		}
-		List<Entity> ents = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos, pos.add(1, 1, 1).offset(facing, 64)), EntitySelectors.IS_ALIVE);
+		List<Entity> ents = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() + facing.getFrontOffsetX() * 0.5D, pos.getY() + facing.getFrontOffsetY() * 0.5D, pos.getZ() + facing.getFrontOffsetZ() * 0.5D, pos.getX() + 64 * facing.getFrontOffsetX() + (facing.getFrontOffsetX() == 0 ? 1 : 0), pos.getY() + 64 * facing.getFrontOffsetY() + (facing.getFrontOffsetY() == 0 ? 1 : 0), pos.getZ() + 64 * facing.getFrontOffsetZ() + (facing.getFrontOffsetZ() == 0 ? 1 : 0)), EntitySelectors.IS_ALIVE);
 		for(Entity ent : ents){
 			if(ent.isSneaking()){
 				continue;
@@ -45,6 +44,9 @@ public class DensusPlateTileEntity extends TileEntity implements ITickable{
 				case Y:
 					ent.addVelocity(0, 0.6D * (ent.posY < pos.getY() ? 1D : -1D) * (anti ? -1D : 1D), 0);
 					ent.velocityChanged = true;
+					if(anti && facing == EnumFacing.UP || !anti && facing == EnumFacing.DOWN){
+						ent.fallDistance = 0;
+					}
 					break;
 				case Z:
 					ent.addVelocity(0, 0, 0.6D * (ent.posZ < pos.getZ() ? 1D : -1D) * (anti ? -1D : 1D));

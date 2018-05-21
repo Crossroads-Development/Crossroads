@@ -18,6 +18,7 @@ public class Speedometer extends Item{
 		setRegistryName(name);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
+		setCreativeTab(ModItems.TAB_CROSSROADS);
 	}
 
 	@Override

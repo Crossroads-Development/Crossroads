@@ -26,11 +26,11 @@ public class RubyGoggleEffect implements IGoggleEffect{
 	public void armorTick(World world, EntityPlayer player, ArrayList<String> chat, RayTraceResult ray){
 		if(world.getTotalWorldTime() % 5 == 0){
 			Entity entHit = null;
-			Vec3d end = null;
+			Vec3d end = player.getPositionEyes(0).addVector(0, 0.2D, 0);
 
 			for(double d = 0; d < 16; d += 0.2D){
 				Vec3d tar = player.getPositionEyes(0).addVector(0, 0.2D, 0).add(player.getLookVec().scale(d));
-				List<Entity> ents = world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(tar.subtract(0.1, 0.1, 0.1), tar.addVector(0.1, 0.1, 0.1)), EntitySelectors.IS_ALIVE);
+				List<Entity> ents = world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(tar.x - 0.1D, tar.y - 0.1D, tar.z - 0.1D, tar.x + 0.1D, tar.y + 0.1D, tar.z + 0.1D), EntitySelectors.IS_ALIVE);
 				if(!ents.isEmpty()){
 					entHit = ents.get((int) (Math.random() * ents.size()));
 					end = tar;

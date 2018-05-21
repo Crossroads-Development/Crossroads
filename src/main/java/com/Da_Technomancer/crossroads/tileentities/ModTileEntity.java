@@ -102,6 +102,7 @@ public class ModTileEntity{
 		register(ChargingStandTileEntity.class, "charging_stand");
 		register(AtmosChargerTileEntity.class, "atmos_charger");
 		register(ReactiveSpotTileEntity.class, "reactive_spot");
+		register(ClockworkStabilizerTileEntity.class, "clock_stab");
 	}
 
 	/**

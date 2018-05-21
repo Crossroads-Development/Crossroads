@@ -45,7 +45,7 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 		Entity controller = getControllingPassenger();
 
 		if(world.isRemote){
-			if(controller != null){
+			if(controller != null && controller == Minecraft.getMinecraft().player){
 				if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindForward)){
 					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) + (float) Math.PI / 20F);
 					NBTTagCompound nbt = new NBTTagCompound();
