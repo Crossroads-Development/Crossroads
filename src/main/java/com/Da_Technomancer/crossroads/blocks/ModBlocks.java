@@ -28,7 +28,6 @@ public class ModBlocks{
 	public static Grindstone grindstone;
 	public static SteamBoiler steamBoiler;
 	public static BlockSalt blockSalt;
-	public static Brazier brazier;
 	public static FluidVoid fluidVoid;
 	public static RotaryPump rotaryPump;
 	public static SteamTurbine steamTurbine;
@@ -175,7 +174,6 @@ public class ModBlocks{
 		rotaryPump = new RotaryPump();
 		steamTurbine = new SteamTurbine();
 		blockSalt = new BlockSalt();
-		brazier = new Brazier();
 		fluidVoid = new FluidVoid();
 		heatExchanger = new HeatExchanger(false);
 		insulHeatExchanger = new HeatExchanger(true);

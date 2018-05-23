@@ -1,6 +1,0 @@
-{
-	"variants": {
-		"light=true": {"model": "crossroads:brazier"},
-		"light=false": {"model": "crossroads:brazier"}
-	}
-}

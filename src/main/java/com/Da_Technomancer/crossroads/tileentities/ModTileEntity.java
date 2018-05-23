@@ -21,7 +21,6 @@ public class ModTileEntity{
 		registerOld(FluidTubeTileEntity.class, "fluidTube");
 		registerOld(SteamBoilerTileEntity.class, "steamBoiler");
 		registerOld(RotaryPumpTileEntity.class, "rotaryPump");
-		registerOld(BrazierTileEntity.class, "brazier");
 		registerOld(SteamTurbineTileEntity.class, "steamTurbine");
 		registerOld(FluidVoidTileEntity.class, "fluidVoid");
 		registerOld(HeatExchangerTileEntity.class, "heatExchanger");

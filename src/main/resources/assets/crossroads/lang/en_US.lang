@@ -47,7 +47,6 @@ item.debug_gear_writer.name=Debug Gear Writer
 mysterious_journal=Mysterious Journal
 tile.block_salt.name=Block of Salt
 tile.steam_turbine.name=Steam Turbine
-tile.brazier.name=Brazier
 tile.fluid_void.name=Fluid Void
 tile.axle.name=Axle
 tile.heat_exchanger.name=Heat Exchanger

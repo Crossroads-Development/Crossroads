@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.integration.JEI.*;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -19,7 +18,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -50,14 +48,6 @@ public final class RecipeHolder{
 	 * Stores the heating crucible recipes. BE CAREFUL, the contained FluidStack is mutable. The ICraftingStack is the ingredient, FluidStack is output, and String is the unmelted texture
 	 */
 	public static final ArrayList<Triple<RecipePredicate<ItemStack>, FluidStack, String>> heatingCrucibleRecipes = new ArrayList<Triple<RecipePredicate<ItemStack>, FluidStack, String>>();
-
-	/**
-	 * A list of all recipes, Item Array are the ingredients, and itemstack is
-	 * output. A list for poisonous potato recipes and mashed potato recipes.
-	 * 
-	 * Under no condition is anyone to add support for the Bobo recipes in JEI (or any other recipe helper). 
-	 */
-	protected static final ArrayList<Pair<Predicate<ItemStack>[], ItemStack>> brazierBoboRecipes = new ArrayList<Pair<Predicate<ItemStack>[], ItemStack>>();
 
 	/**
 	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
@@ -160,44 +150,5 @@ public final class RecipeHolder{
 			}
 		}
 		JEIWrappers.put(ReagInfoCategory.ID, currentRecipes);
-	}
-
-	@Nonnull
-	public static ItemStack recipeMatch(ArrayList<EntityItem> itemEnt){
-		if(itemEnt == null){
-			return ItemStack.EMPTY;
-		}
-
-		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-
-		for(EntityItem it : itemEnt){
-			if(it.getItem().isEmpty() || it.getItem().getCount() != 1){
-				return ItemStack.EMPTY;
-			}
-			items.add(it.getItem());
-		}
-
-		if(items.size() != 3){
-			return ItemStack.EMPTY;
-		}
-
-		for(Pair<Predicate<ItemStack>[], ItemStack> craft : brazierBoboRecipes){
-			ArrayList<ItemStack> itemCop = new ArrayList<ItemStack>(items);
-
-			for(Predicate<ItemStack> cStack : craft.getLeft()){
-				for(ItemStack stack : items){
-					if(itemCop.contains(stack) && cStack.test(stack)){
-						itemCop.remove(stack);
-						break;
-					}
-				}
-
-				if(itemCop.size() == 0){
-					return craft.getRight();
-				}
-			}
-		}
-
-		return ItemStack.EMPTY;
 	}
 }

@@ -247,18 +247,10 @@ public class RedstoneFluidTube extends BlockContainer implements IAdvConduitMode
 		if(worldIn.isBlockPowered(pos)){
 			if(!state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof RedstoneFluidTubeTileEntity){
-					((RedstoneFluidTubeTileEntity) te).setLocked(false);
-				}
 			}
 		}else{
 			if(state.getValue(Properties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof RedstoneFluidTubeTileEntity){
-					((RedstoneFluidTubeTileEntity) te).setLocked(true);
-				}
 			}
 		}
 	}

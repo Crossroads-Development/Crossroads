@@ -94,7 +94,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 
 		@Override
 		public int getSlotLimit(int slot){
-			return slot == 0 ? 1 : 0;
+			return slot == 0 ? 4 : 0;
 		}
 	}
 

@@ -36,20 +36,9 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 	private Integer[] connectMode = null;
 	private final boolean[] hasMatch = new boolean[6];
 
-	private boolean locked = true;
-
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return (oldState.getBlock() != newState.getBlock());
-	}
-
-	public void setLocked(boolean lockIn){
-		init();
-		locked = lockIn;
-		markDirty();
-		for(int i = 0; i < 6; i++){
-			ModPackets.network.sendToAllAround(new SendIntToClient(i, locked || !hasMatch[i] ? 0 : connectMode[i], pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		}
 	}
 
 	public void markSideChanged(int index){
@@ -60,6 +49,9 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 
 	public Integer[] getConnectMode(boolean forRender){
 		init();
+		if(forRender && !world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+			return new Integer[] {0, 0, 0, 0, 0, 0};
+		}
 		if(forRender && !world.isRemote){
 			Integer[] out = new Integer[6];
 			for(int i = 0; i < 6; i++){
@@ -89,7 +81,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 	public void update(){
 		init();
 
-		if(locked || world.isRemote){
+		if(world.isRemote){
 			return;
 		}
 
@@ -235,7 +227,6 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 			connectMode[i] = Math.max(0, nbt.hasKey("mode_" + i) ? nbt.getInteger("mode_" + i) : 1);
 			hasMatch[i] = nbt.getBoolean("match_" + i);
 		}
-		locked = nbt.getBoolean("lock");
 	}
 
 	@Override
@@ -250,7 +241,6 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 				nbt.setBoolean("match_" + i, hasMatch[i]);
 			}
 		}
-		nbt.setBoolean("lock", locked);
 		return nbt;
 	}
 
@@ -270,7 +260,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing side){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && !locked && (side == null || connectMode[side.getIndex()] != 0)){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) && (side == null || connectMode[side.getIndex()] != 0)){
 			return side == null || connectMode[side.getIndex()] == 1 ? (T) mainHandler : connectMode[side.getIndex()] == 2 ? (T) outHandler : (T) inHandler;
 		}
 
@@ -279,7 +269,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && !locked && (side == null || connectMode[side.getIndex()] != 0)){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) && (side == null || connectMode[side.getIndex()] != 0)){
 			return true;
 		}
 		return super.hasCapability(capability, side);

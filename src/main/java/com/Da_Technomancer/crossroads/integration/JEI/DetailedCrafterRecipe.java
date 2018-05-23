@@ -1,29 +1,34 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.crafting.CustomToolRecipe;
 import com.google.common.collect.ImmutableList;
-
+import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.gui.elements.DrawableResource;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DetailedCrafterRecipe implements IRecipeWrapper{
 
 	private final IRecipe recipe;
 	private final int type;
+	private Object gear;//Has to be kept as an Object to prevent crashes without JEI
+	private Object flask;
+	private Object leaf;
 
 	/**
 	 * @param recipe
@@ -38,6 +43,22 @@ public class DetailedCrafterRecipe implements IRecipeWrapper{
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY){
 		if(recipe instanceof ShapelessOreRecipe){
 			minecraft.fontRenderer.drawString("Shapeless", 60, 5, 4210752);
+			GlStateManager.color(1, 1, 1, 1);
+		}
+
+		if(gear == null){
+			ResourceLocation location = new ResourceLocation(Main.MODID, "textures/gui/container/detailed_crafter.png");
+			gear = new DrawableResource(location, 176, 0, 16, 16, 0, 0, 0, 0, 256, 256);
+			flask = new DrawableResource(location, 176, 16, 16, 16, 0, 0, 0, 0, 256, 256);
+			leaf = new DrawableResource(location, 176, 32, 16, 16, 0, 0, 0, 0, 256, 256);
+		}
+
+		if(type == 0){
+			((IDrawable) gear).draw(minecraft, 95, 44);
+		}else if(type == 1){
+			((IDrawable) flask).draw(minecraft, 79, 44);
+		}else if(type == 2){
+			((IDrawable) leaf).draw(minecraft, 111, 44);
 		}
 	}
 
@@ -50,7 +71,7 @@ public class DetailedCrafterRecipe implements IRecipeWrapper{
 	public boolean handleClick(Minecraft minecraft, int mouseX, int mouseY, int mouseButton){
 		return false;
 	}
-	
+
 	@Override
 	public void getIngredients(IIngredients ingredients){
 		if(recipe instanceof ShapedOreRecipe){
@@ -74,10 +95,6 @@ public class DetailedCrafterRecipe implements IRecipeWrapper{
 			throw new IllegalArgumentException(Main.MODNAME + ": INVALID RECIPE TYPE passed to JEI for Detailed Crafter!");
 		}
 		ingredients.setOutputs(ItemStack.class, ImmutableList.of(recipe.getRecipeOutput()));
-	}
-	
-	protected int getType(){
-		return type;
 	}
 
 	@SuppressWarnings("unchecked")
