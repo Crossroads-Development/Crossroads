@@ -4,12 +4,10 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.AdditionAxisTileEntity;
-
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,7 +37,7 @@ public class AdditionAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.ORIENT, (placer == null) ? false : placer.getHorizontalFacing().getAxis() == EnumFacing.Axis.Z);
+		return getDefaultState().withProperty(Properties.ORIENT, (placer != null) && placer.getHorizontalFacing().getAxis() == Axis.Z);
 	}
 
 	@Override
@@ -68,7 +66,7 @@ public class AdditionAxis extends BlockContainer{
 	
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.ORIENT});
+		return new BlockStateContainer(this, Properties.ORIENT);
 	}
 
 	@Override
@@ -83,7 +81,7 @@ public class AdditionAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new AdditionAxisTileEntity(meta == 1 ? Axis.Z : Axis.X);
+		return new AdditionAxisTileEntity();
 
 	}
 	

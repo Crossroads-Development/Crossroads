@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleGoggles extends ItemArmor{
-	
+
 	public ModuleGoggles(){
 		super(ModItems.TECHNOMANCY, 1, EntityEquipmentSlot.HEAD);
 		setMaxStackSize(1);
@@ -39,7 +39,7 @@ public class ModuleGoggles extends ItemArmor{
 	 * Value chosen at random.
 	 */
 	private static final int CHAT_ID = 718749;
-	
+
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
 		if(!world.isRemote && stack.hasTagCompound()){
@@ -62,7 +62,7 @@ public class ModuleGoggles extends ItemArmor{
 			}
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
@@ -70,10 +70,10 @@ public class ModuleGoggles extends ItemArmor{
 		if(stack.hasTagCompound()){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(stack.getTagCompound().hasKey(lens.name())){
-					if(lens.getKey() == null){
-						tooltip.add('-' + lens.name());
-					}else{
+					if(lens.shouldShowState()){
 						tooltip.add('-' + lens.name() + "-" + (stack.getTagCompound().getBoolean(lens.name()) ? "ENABLED" : "DISABLED"));
+					}else{
+						tooltip.add('-' + lens.name());
 					}
 				}
 			}
@@ -81,7 +81,7 @@ public class ModuleGoggles extends ItemArmor{
 			tooltip.add("-NONE");
 		}
 	}
-	
+
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
 		StringBuilder path = new StringBuilder(Main.MODID + ":textures/models/armor/goggles/goggle");

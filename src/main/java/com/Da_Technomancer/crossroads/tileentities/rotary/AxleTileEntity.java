@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxle;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import javax.annotation.Nullable;
 
-public class AxleTileEntity extends TileEntity implements ITickable, ISpinReceiver{
+public class AxleTileEntity extends TileEntity implements ITickable, ISpinReceiver, IAxle{
 
 	private double[] motionData = new double[4];
 	private float angle;

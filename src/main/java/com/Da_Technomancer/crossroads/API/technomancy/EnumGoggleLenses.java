@@ -18,22 +18,24 @@ import java.util.function.Predicate;
 public enum EnumGoggleLenses{
 	
 	//Don't reorder these unless you want to rename all the goggle texture files.
-	RUBY(new OreDictCraftingStack("gemRuby"), "_ruby", new RubyGoggleEffect(), Keys.controlEnergy),
-	EMERALD(new OreDictCraftingStack("gemEmerald"), "_emerald", new EmeraldGoggleEffect(), Keys.controlPotential),
-	DIAMOND(new OreDictCraftingStack("gemDiamond"), "_diamond", new DiamondGoggleEffect(), Keys.controlStability),
-	QUARTZ(new ItemRecipePredicate(ModItems.pureQuartz, 0), "_quartz", new QuartzGoggleEffect(), null),
-	VOID(new ItemRecipePredicate(ModItems.voidCrystal, 0), "", new VoidGoggleEffect(), Keys.controlVoid);
+	RUBY(new OreDictCraftingStack("gemRuby"), "_ruby", new RubyGoggleEffect(), Keys.controlEnergy, true),
+	EMERALD(new OreDictCraftingStack("gemEmerald"), "_emerald", new EmeraldGoggleEffect(), Keys.controlPotential, true),
+	DIAMOND(new OreDictCraftingStack("gemDiamond"), "_diamond", new DiamondGoggleEffect(), Keys.controlStability, false),
+	QUARTZ(new ItemRecipePredicate(ModItems.pureQuartz, 0), "_quartz", new QuartzGoggleEffect(), null, false),
+	VOID(new ItemRecipePredicate(ModItems.voidCrystal, 0), "", new VoidGoggleEffect(), Keys.controlVoid, true);
 	
 	private final Predicate<ItemStack> item;
 	private final String texturePath;
 	private final IGoggleEffect effect;
 	private final KeyBinding key;
-	
-	EnumGoggleLenses(Predicate<ItemStack> item, String texturePath, IGoggleEffect effect, @Nullable KeyBinding toggleKey){
+	private final boolean showState;
+
+	EnumGoggleLenses(Predicate<ItemStack> item, String texturePath, IGoggleEffect effect, @Nullable KeyBinding toggleKey, boolean showState){
 		this.item = item;
 		this.texturePath = texturePath;
 		this.effect = effect;
 		this.key = toggleKey;
+		this.showState = showState;
 	}
 
 	public boolean matchesRecipe(ItemStack stack){
@@ -46,6 +48,10 @@ public enum EnumGoggleLenses{
 
 	public KeyBinding getKey(){
 		return key;
+	}
+
+	public boolean shouldShowState(){
+		return showState;
 	}
 	
 	/**

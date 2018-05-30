@@ -1,28 +1,19 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.google.common.collect.Lists;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -32,6 +23,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+
 public class DetailedCrafterContainer extends Container{
 
 	private InventoryCrafting inInv = new InventoryCrafting(this, 3, 3);
@@ -39,11 +33,14 @@ public class DetailedCrafterContainer extends Container{
 	private InventoryPlayer playerInv;
 	private final World world;
 	private final BlockPos pos;
+	private final boolean fake;
 
-	public DetailedCrafterContainer(InventoryPlayer playerInv, BlockPos pos){
+
+	public DetailedCrafterContainer(InventoryPlayer playerInv, BlockPos pos, boolean fake){
 		this.world = playerInv.player.world;
 		this.pos = pos;
 		this.playerInv = playerInv;
+		this.fake = fake;
 
 		// input 0-8
 		for(int x = 0; x < 3; x++){
@@ -70,7 +67,7 @@ public class DetailedCrafterContainer extends Container{
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn){
-		return world.getBlockState(pos).getBlock() == ModBlocks.detailedCrafter && playerIn.getDistanceSq((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
+		return fake || world.getBlockState(pos).getBlock() == ModBlocks.detailedCrafter && playerIn.getDistanceSq((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
 	}
 
 	private static final IRecipe UNLOCK_TECHNOMANCY = new ShapelessOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.COPSHOWIUM), 1), "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze");
@@ -147,14 +144,17 @@ public class DetailedCrafterContainer extends Container{
 	public void onContainerClosed(EntityPlayer playerIn){
 		super.onContainerClosed(playerIn);
 
-		if(!world.isRemote){
-			for(int i = 0; i < 9; ++i){
-				ItemStack itemstack = inInv.removeStackFromSlot(i);
 
-				if(!itemstack.isEmpty()){
-					playerIn.dropItem(itemstack, false);
-				}
-			}
+
+		if(!world.isRemote){
+			clearContainer(playerIn, world, inInv);
+//			for(int i = 0; i < 9; ++i){
+//				ItemStack itemstack = inInv.removeStackFromSlot(i);
+//
+//				if(!itemstack.isEmpty()){
+//					playerIn.dropItem(itemstack, false);
+//				}
+//			}
 		}
 	}
 

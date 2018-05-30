@@ -27,6 +27,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int REDSTONE_REGISTRY_GUI = 9;
 	public static final int SAMPLING_BENCH_GUI = 10;
 	public static final int ALCHEMY_CHART_GUI = 11;
+	public static final int FAKE_CRAFTER_GUI = 12;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -42,7 +43,7 @@ public class GuiHandler implements IGuiHandler{
 			case REDSTONE_KEYBOARD_GUI:
 				return new RedstoneKeyboardContainer();
 			case CRAFTER_GUI:
-				return new DetailedCrafterContainer(player.inventory, new BlockPos(x, y, z));
+				return new DetailedCrafterContainer(player.inventory, new BlockPos(x, y, z), false);
 			case PROTOTYPING_GUI:
 				return new PrototypingTableContainer(player.inventory, ((PrototypingTableTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case PROTOTYPE_PORT_GUI:
@@ -53,6 +54,8 @@ public class GuiHandler implements IGuiHandler{
 				return new SamplingBenchContainer(player.inventory, ((SamplingBenchTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case ALCHEMY_CHART_GUI:
 				return new AlchemyChartContainer(player, world);
+			case FAKE_CRAFTER_GUI:
+				return new DetailedCrafterContainer(player.inventory, new BlockPos(x, y, z), true);
 		}
 
 		return null;
@@ -72,7 +75,7 @@ public class GuiHandler implements IGuiHandler{
 			case REDSTONE_KEYBOARD_GUI:
 				return new RedstoneKeyboardGuiContainer(((RedstoneKeyboardTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case CRAFTER_GUI:
-				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z));
+				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z), false);
 			case PROTOTYPING_GUI:
 				return new PrototypingTableGuiContainer(player.inventory, ((PrototypingTableTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case PROTOTYPE_PORT_GUI:
@@ -83,6 +86,8 @@ public class GuiHandler implements IGuiHandler{
 				return new SamplingBenchGuiContainer(player.inventory, ((SamplingBenchTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case ALCHEMY_CHART_GUI:
 				return new AlchemyChartGuiContainer(player, world);
+			case FAKE_CRAFTER_GUI:
+				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z), true);
 		}
 
 		return null;

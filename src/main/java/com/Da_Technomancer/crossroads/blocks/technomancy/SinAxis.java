@@ -84,7 +84,7 @@ public class SinAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new SinAxisTileEntity(EnumFacing.getFront(meta));
+		return new SinAxisTileEntity();
 
 	}
 

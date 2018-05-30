@@ -4,24 +4,16 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
-
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -47,7 +39,7 @@ public class MultiplicationAxis extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING, Properties.REDSTONE_BOOL});
+		return new BlockStateContainer(this, Properties.FACING, Properties.REDSTONE_BOOL);
 	}
 	
 	@Override
@@ -67,29 +59,15 @@ public class MultiplicationAxis extends BlockContainer{
 				if(te instanceof MultiplicationAxisTileEntity){
 					((MultiplicationAxisTileEntity) te).disconnect();
 				}
-				worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
+				if(playerIn.isSneaking()){
+					worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, !state.getValue(Properties.REDSTONE_BOOL)));
+				}else{
+					worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
+				}
 			}
 			return true;
 		}
 		return false;
-	}
-	
-	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		if(worldIn.isBlockPowered(pos)){
-			if(!state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
-			}
-		}else{
-			if(state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
-			}
-		}
-	}
-	
-	@Override
-	public boolean getWeakChanges(IBlockAccess world, BlockPos pos){
-		return true;
 	}
 
 	@Override
@@ -105,7 +83,7 @@ public class MultiplicationAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new MultiplicationAxisTileEntity(EnumFacing.getFront(meta));
+		return new MultiplicationAxisTileEntity();
 
 	}
 	
@@ -132,11 +110,6 @@ public class MultiplicationAxis extends BlockContainer{
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
 		return state.withRotation(mirrorIn.toRotation(state.getValue(Properties.FACING)));
-	}
-	
-	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
-		neighborChanged(state, worldIn, pos, null, null);
 	}
 	
 	@Override

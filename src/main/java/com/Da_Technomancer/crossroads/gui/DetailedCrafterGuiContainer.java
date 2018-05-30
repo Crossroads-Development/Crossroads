@@ -14,10 +14,10 @@ import net.minecraft.util.math.BlockPos;
 public class DetailedCrafterGuiContainer extends GuiContainer{
 
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/detailed_crafter.png");
-	
-	public DetailedCrafterGuiContainer(InventoryPlayer playerInv, BlockPos pos){
-		super(new DetailedCrafterContainer(playerInv, pos));
-		
+
+	public DetailedCrafterGuiContainer(InventoryPlayer playerInv, BlockPos pos, boolean fake){
+		super(new DetailedCrafterContainer(playerInv, pos, fake));
+
 		xSize = 176;
 		ySize = 166;
 	}
@@ -44,8 +44,8 @@ public class DetailedCrafterGuiContainer extends GuiContainer{
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		fontRenderer.drawString(I18n.format("container.detailed_crafting", new Object[0]), 28, 6, 4210752);
-        fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(I18n.format("container.detailed_crafting"), 28, 6, 4210752);
+        fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
         
 	}
 }

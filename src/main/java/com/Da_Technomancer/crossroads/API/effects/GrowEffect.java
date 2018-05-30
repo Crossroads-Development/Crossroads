@@ -60,7 +60,7 @@ public class GrowEffect implements IEffect{
 			List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
 			if(ents != null){
 				for(EntityLivingBase ent : ents){
-					ent.attackEntityFrom(POTENTIALVOID, (float) (mult / 2D));
+					ent.attackEntityFrom(POTENTIALVOID, (float) mult * 3F / 4F);
 				}
 			}
 		}

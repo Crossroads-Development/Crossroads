@@ -32,7 +32,7 @@ public class RiftEffect implements IEffect{
 
 		if(worldIn.getTileEntity(pos) instanceof TileEntitySkull && ((TileEntitySkull) worldIn.getTileEntity(pos)).getSkullType() == 0){
 			int meta = worldIn.getBlockState(pos).getBlock().getMetaFromState(worldIn.getBlockState(pos));
-			//worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 			worldIn.setBlockState(pos, Blocks.SKULL.getStateFromMeta(meta), 3);
 			((TileEntitySkull) worldIn.getTileEntity(pos)).setType(1);
 			return;

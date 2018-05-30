@@ -185,8 +185,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 			if(mag != null && mag.getVoid() != 0 && world.getBlockState(pos).getValue(Properties.TEXTURE_7) != 0){
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.TEXTURE_7, 0));
 				(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, world);
-				double holder = Math.max(beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()), beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()));
-				lastRedstone = holder;
+				lastRedstone = Math.max(beamer.getLastSent() == null ? 0 : ((double) beamer.getLastSent().getPower()), beamerUp.getLastSent() == null ? 0 : ((double) beamerUp.getLastSent().getPower()));
 				markDirty();
 				return;
 			}

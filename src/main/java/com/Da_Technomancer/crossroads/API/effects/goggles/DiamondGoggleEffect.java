@@ -10,6 +10,6 @@ public class DiamondGoggleEffect implements IGoggleEffect{
 
 	@Override
 	public void armorTick(World world, EntityPlayer player, ArrayList<String> chat, RayTraceResult ray){
-		//TODO
+		//Effect in SendGoggleConfigureToServer
 	}
 }

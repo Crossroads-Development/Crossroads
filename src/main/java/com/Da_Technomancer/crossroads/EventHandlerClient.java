@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -182,7 +183,7 @@ public final class EventHandlerClient{
 				GlStateManager.rotate(beam.angleX + 90F, 1, 0, 0);
 				final double small = -(beam.width / 16D);
 				final double big = (beam.width / 16D);
-				final int length = beam.length;
+				final double length = beam.length;
 
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
@@ -478,10 +479,11 @@ public final class EventHandlerClient{
 	public void toggleGoggles(InputEvent.KeyInputEvent e){
 		EntityPlayer play = Minecraft.getMinecraft().player;
 		ItemStack helmet = play.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		if(play.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).isEmpty() && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound()){
+		if(play.getHeldItemMainhand().isEmpty() && helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound()){
 			NBTTagCompound nbt = helmet.getTagCompound();
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(lens.getKey() != null && lens.getKey().isPressed() && nbt.hasKey(lens.name())){
+				KeyBinding key = lens.getKey();
+				if(key != null && key.isPressed() && key.isKeyDown() && nbt.hasKey(lens.name())){
 					ModPackets.network.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.name())));
 					break;
 				}

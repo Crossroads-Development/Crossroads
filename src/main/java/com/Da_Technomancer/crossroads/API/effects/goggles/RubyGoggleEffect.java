@@ -26,7 +26,8 @@ public class RubyGoggleEffect implements IGoggleEffect{
 	public void armorTick(World world, EntityPlayer player, ArrayList<String> chat, RayTraceResult ray){
 		if(world.getTotalWorldTime() % 5 == 0){
 			Entity entHit = null;
-			Vec3d end = player.getPositionEyes(0).addVector(0, 0.2D, 0);
+			Vec3d start = new Vec3d(player.posX - Math.cos(Math.toRadians(player.getRotationYawHead())) * 0.18D, player.posY + player.getEyeHeight() + 0.03D, player.posZ - Math.sin(Math.toRadians(player.getRotationYawHead())) * 0.18D);
+			Vec3d end = start;
 
 			for(double d = 0; d < 16; d += 0.2D){
 				Vec3d tar = player.getPositionEyes(0).addVector(0, 0.2D, 0).add(player.getLookVec().scale(d));
@@ -50,7 +51,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 			}
 
 			NBTTagCompound beamNBT = new NBTTagCompound();
-			new LooseBeamRenderable(player.posX, player.posY + player.getEyeHeight() + 0.2D, player.posZ, (int) Math.sqrt(end.squareDistanceTo(player.getPositionEyes(0))), player.rotationPitch, player.rotationYawHead, (byte) 1, Color.RED.getRGB()).saveToNBT(beamNBT);
+			new LooseBeamRenderable(start.x, start.y, start.z, (int) Math.sqrt(end.squareDistanceTo(start)), player.rotationPitch, player.rotationYawHead, (byte) 1, Color.RED.getRGB()).saveToNBT(beamNBT);
 			ModPackets.network.sendToAllAround(new SendLooseBeamToClient(beamNBT), new NetworkRegistry.TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512));
 		}
 	}

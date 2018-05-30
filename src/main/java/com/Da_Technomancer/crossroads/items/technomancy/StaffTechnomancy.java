@@ -17,6 +17,7 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -32,7 +33,7 @@ public class StaffTechnomancy extends MagicUsingItem{
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}
-	
+
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
 		super.onUsingTick(stack, player, count);
@@ -45,7 +46,7 @@ public class StaffTechnomancy extends MagicUsingItem{
 				player.resetActiveHand();
 				return;
 			}
-			
+
 			NBTTagCompound cageNbt = cage.getTagCompound();
 			NBTTagCompound nbt = stack.getTagCompound();
 			int energy = nbt.getInteger(EnumMagicElements.ENERGY.name());
@@ -59,19 +60,33 @@ public class StaffTechnomancy extends MagicUsingItem{
 					cageNbt.setInteger("stored_" + EnumMagicElements.STABILITY.name(), cageNbt.getInteger("stored_" + EnumMagicElements.STABILITY.name()) - stability);
 					cageNbt.setInteger("stored_" + EnumMagicElements.VOID.name(), cageNbt.getInteger("stored_" + EnumMagicElements.VOID.name()) - voi);
 					MagicUnit mag = new MagicUnit(energy, potential, stability, voi);
+
+					double heldOffset = .22D * (player.getActiveHand() == EnumHand.MAIN_HAND ? 1D : -1D);
+					Vec3d start = new Vec3d(player.posX - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.posY + 2.1D, player.posZ - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))));
 					Vec3d end = player.getPositionEyes(0).addVector(0, 0.2D, 0);
+
 					for(double d = 0; d < 32; d += 0.2D){
-						Vec3d tar = player.getPositionEyes(0).addVector(0, 0.2D, 0).add(player.getLookVec().scale(d));
-						List<Entity> ents = player.world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(tar.x - 0.1D, tar.y - 0.1D, tar.z - 0.1D, tar.x + 0.1D, tar.y + 0.1D, tar.z + 0.1D), EntitySelectors.IS_ALIVE);
+						end = player.getPositionEyes(0).addVector(0, 0.2D, 0).add(player.getLookVec().scale(d));
+
+						List<Entity> ents = player.world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(end.x - 0.1D, end.y - 0.1D, end.z - 0.1D, end.x + 0.1D, end.y + 0.1D, end.z + 0.1D), EntitySelectors.IS_ALIVE);
 						if(!ents.isEmpty()){
-							end = tar;
+							RayTraceResult res = ents.get(0).getEntityBoundingBox().calculateIntercept(start, end);
+							if(res != null && res.hitVec != null){
+								end = res.hitVec;
+							}
 							break;
 						}
-						IBlockState state = player.world.getBlockState(new BlockPos(tar));
-						if(!state.getBlock().isAir(state, player.world, new BlockPos(tar))){
+
+						BlockPos endPos = new BlockPos(end);
+						IBlockState state = player.world.getBlockState(endPos);
+						AxisAlignedBB bb = state.getBoundingBox(player.world, endPos).offset(endPos);
+						if(state.getBlock().canCollideCheck(state, true) && state.getBlock().isCollidable() && bb.contains(end)){
+							RayTraceResult res = bb.calculateIntercept(start, end);
+							if(res != null && res.hitVec != null){
+								end = res.hitVec;
+							}
 							break;
 						}
-						end = tar;
 					}
 
 
@@ -80,8 +95,7 @@ public class StaffTechnomancy extends MagicUsingItem{
 						effect.doEffect(player.world, new BlockPos(end), Math.min(64, mag.getPower()));
 					}
 					NBTTagCompound beamNBT = new NBTTagCompound();
-					double heldOffset = .22D * (player.getActiveHand() == EnumHand.MAIN_HAND ? 1D : -1D);
-					new LooseBeamRenderable(player.posX - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.posY + 2.1D, player.posZ - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))), (int) Math.sqrt(end.squareDistanceTo(player.getPositionVector())), player.rotationPitch, player.rotationYawHead, (byte) Math.sqrt(mag.getPower()), mag.getRGB().getRGB()).saveToNBT(beamNBT);
+					new LooseBeamRenderable(start.x, start.y, start.z, Math.sqrt(end.squareDistanceTo(start)), player.rotationPitch, player.rotationYawHead, (byte) Math.sqrt(mag.getPower()), mag.getRGB().getRGB()).saveToNBT(beamNBT);
 					ModPackets.network.sendToAllAround(new SendLooseBeamToClient(beamNBT), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512));
 				}
 			}
@@ -90,6 +104,6 @@ public class StaffTechnomancy extends MagicUsingItem{
 
 	@Override
 	public void preChanged(ItemStack stack, EntityPlayer player){
-		
+
 	}
 }

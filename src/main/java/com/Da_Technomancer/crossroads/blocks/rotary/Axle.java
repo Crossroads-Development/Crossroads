@@ -1,19 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.tileentities.rotary.AxleTileEntity;
-
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -35,6 +28,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class Axle extends BlockContainer{
 

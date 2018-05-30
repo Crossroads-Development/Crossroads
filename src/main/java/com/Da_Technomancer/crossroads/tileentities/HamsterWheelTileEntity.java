@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.rotary.IAxle;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
@@ -21,11 +22,11 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickable{
 		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 			IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
 			if(world.isRemote){
-				angle = (facing.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE && world.getBlockState(pos.offset(facing)).getBlock() == ModBlocks.axle ? -1F : 1F) * (float) axle.getAngle();
+				angle = (facing.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE && te instanceof IAxle ? -1F : 1F) * (float) axle.getAngle();
 				nextAngle = ((float) axle.getNextAngle());
 				return;
 			}
-			axle.addEnergy(facing.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE && world.getBlockState(pos.offset(facing)).getBlock() == ModBlocks.axle ? -2 : 2, true, true);
+			axle.addEnergy(facing.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE && te instanceof IAxle ? -2 : 2, true, true);
 		}else if(world.isRemote){
 			nextAngle = angle;//
 		}
