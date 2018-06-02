@@ -30,6 +30,8 @@ public class CrystallinePrismTileEntity extends BeamRenderTE{
 		EnumFacing dir = world.getBlockState(pos).getValue(Properties.FACING);
 		boolean[] out = new boolean[6];
 		out[dir.getOpposite().getIndex()] = true;
+		out[0] = true;
+		out[1] = true;
 		return out;
 	}
 

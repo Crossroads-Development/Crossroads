@@ -5,8 +5,8 @@
 		"south": "crossroads:blocks/prism_in",
 		"east": "crossroads:blocks/prism_diamond",
 		"west": "crossroads:blocks/prism_ruby",
-		"up": "crossroads:blocks/block_pure_quartz",
-		"down": "crossroads:blocks/block_pure_quartz",
+		"up": "crossroads:blocks/prism_in",
+		"down": "crossroads:blocks/prism_in",
 		"particle": "crossroads:blocks/block_pure_quartz"
 	}
 }

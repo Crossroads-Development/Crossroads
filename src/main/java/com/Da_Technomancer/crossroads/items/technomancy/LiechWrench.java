@@ -1,10 +1,8 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.google.common.collect.Multimap;
-
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -13,6 +11,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+
+import javax.annotation.Nullable;
 
 public class LiechWrench extends Item{
 
@@ -36,13 +36,17 @@ public class LiechWrench extends Item{
 	@Override
 	public int getHarvestLevel(ItemStack stack, String toolClass, @Nullable EntityPlayer player, @Nullable IBlockState blockState){
 		return 1;
-
 	}
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, IBlockState state){
-		for (String type : getToolClasses(stack)){
-			if (state.getBlock().isToolEffective(type, state)){
+		Material mat = state.getMaterial();
+		if(mat == Material.WOOD || mat == Material.PLANTS || mat == Material.VINE){
+			return 4F;
+		}
+
+		for(String type : getToolClasses(stack)){
+			if(state.getBlock().isToolEffective(type, state)){
 				return 4F;
 			}
 		}
