@@ -1,5 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
+import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
+import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
@@ -28,12 +33,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, IIntReceiver, ITickable{
+public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeOwner, IIntReceiver, ITickable{
 
 	private int index = -1;
 	public String name = "";
@@ -60,7 +67,8 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		for(EnumFacing dir : EnumFacing.VALUES){
 			ModBlocks.prototype.neighborChanged(null, world, pos, ModBlocks.prototype, pos.offset(dir));
 		}
-		ModPackets.network.sendToAllAround(new SendIntToClient(0, orient, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient(6, orient, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		refresh();
 		markDirty();
 	}
 
@@ -109,6 +117,8 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		return shifted;
 	}
 
+	private int[] memTrip = new int[6];
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -118,7 +128,12 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 			if(tooltips[i] != null){
 				nbt.setString("ttip" + i, tooltips[i]);
 			}
+			MagHandler h = getHandler(i, false);
+			if(h != null){
+				nbt.setInteger(i + "_memTrip", h.beam.getPacket());
+			}
 		}
+
 		nbt.setInteger("orient", orient);
 		return nbt;
 	}
@@ -137,6 +152,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 				if(nbt.hasKey("ttip" + i)){
 					tooltips[i] = nbt.getString("ttip" + i);
 				}
+				memTrip[i] = nbt.getInteger(i + "memTrip");
 			}
 			index = nbt.getInteger("index");
 			name = nbt.getString("name");
@@ -146,6 +162,9 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 			for(int i = 0; i < 6; i++){
 				if(nbt.hasKey("port" + i)){
 					ports[i] = PrototypePortTypes.valueOf(nbt.getString("port" + i));
+				}
+				if(nbt.hasKey(i + "beam")){
+					trip[i] = BeamManager.getTriple(nbt.getInteger(i + "beam"));
 				}
 			}
 			world.markBlockRangeForRenderUpdate(pos, pos);
@@ -159,6 +178,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 			nbt.setInteger("orient", orient);
 			PrototypePortTypes[] ports = PrototypeWorldSavedData.get(false).prototypes.get(index).ports;
 			for(int i = 0; i < 6; i++){
+				nbt.setInteger(i + "beam", memTrip[i]);
 				if(ports[i] != null){
 					nbt.setString("port" + i, ports[i].name());
 				}
@@ -181,7 +201,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		}
 		return adj;
 	}
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		//No capabilities are found on the client side because that would require the prototype dimension to be loaded on the client side, which it almost certainly won't be.
@@ -231,13 +251,20 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 	@Override
 	public boolean hasCap(Capability<?> cap, EnumFacing side){
 		EnumFacing dir = adjustSide(side, false);
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY){
+			return true;
+		}
 		TileEntity te = world.getTileEntity(pos.offset(dir));
 		return te != null && !(te instanceof IPrototypeOwner) && te.hasCapability(cap, dir.getOpposite());
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getCap(Capability<T> cap, EnumFacing side) throws NullPointerException{
 		EnumFacing dir = adjustSide(side, false);
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY){
+			return (T) getHandler(dir.getIndex(), true);
+		}
 		return world.getTileEntity(pos.offset(dir)).getCapability(cap, dir.getOpposite());
 	}
 
@@ -247,11 +274,73 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		world.getBlockState(pos.offset(dir)).neighborChanged(world, pos.offset(dir), blockIn, pos);
 	}
 
+	@SuppressWarnings("unchecked")
+	private Triple<Color, Integer, Integer>[] trip = new Triple[6];
+
 	@Override
 	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
-		if(identifier == 0){
+		if(identifier < 6 && identifier >= 0){
+			trip[identifier] = BeamManager.getTriple(message);
+		}
+		if(identifier == 6){
 			orient = message;
 			world.markBlockRangeForRenderUpdate(pos, pos);
+		}
+	}
+
+	@Override
+	public Triple<Color, Integer, Integer>[] getBeam(){
+		return trip;
+	}
+
+	@Nullable
+	@Override
+	public MagicUnit[] getLastFullSent(){
+		MagicUnit[] out = new MagicUnit[6];
+		for(int i = 0; i < 6; i++){
+			MagHandler h = getHandler(i, false);
+			if(h != null){
+				out[i] = h.beam.getLastFullSent();
+			}
+		}
+		return out;
+	}
+
+	@Override
+	public void refresh(){
+		for(int i = 0; i < 6; i++){
+			MagHandler h = getHandler(i, false);
+			if(h != null){
+				h.beam.emit(null, world);
+			}
+		}
+	}
+
+	/**
+	 * @param side 0 <= side < 6
+	 * @param create Whether to create a new MagHandler if none currently exist. This is nonnull if true, nullable if false
+	 * @return The relevant MagHandler. Go through this instead of magHandlers
+	 */
+	private MagHandler getHandler(int side, boolean create){
+		if(create && magHandlers[side] == null){
+			magHandlers[side] = new MagHandler(side);
+		}
+		return magHandlers[side];
+	}
+
+	private final MagHandler[] magHandlers = new MagHandler[6];
+
+	private class MagHandler implements IMagicHandler{
+
+		private final BeamManager beam;
+
+		private MagHandler(int side){
+			beam = new BeamManager(EnumFacing.getFront(side), pos);
+		}
+
+		@Override
+		public void setMagic(@Nullable MagicUnit mag){
+			beam.emit(mag, world);
 		}
 	}
 }

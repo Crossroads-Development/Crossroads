@@ -1,12 +1,14 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
+import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -134,6 +136,9 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	@Override
 	public boolean hasCapPrototype(Capability<?> cap){
 		if(active && type.getCapability() == cap){
+			if(type == PrototypePortTypes.MAGIC_IN){
+				return true;
+			}
 			TileEntity te = world.getTileEntity(pos.offset(side));
 			return te != null && te.hasCapability(cap, side.getOpposite());
 		}
@@ -141,8 +146,15 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getCapPrototype(Capability<T> cap){
 		if(active && type.getCapability() == cap){
+			if(type == PrototypePortTypes.MAGIC_IN){
+				if(magHandler == null){
+					magHandler = new MagHandler();
+				}
+				return (T) magHandler;
+			}
 			return world.getTileEntity(pos.offset(side)).getCapability(cap, side.getOpposite());
 		}
 		return null;
@@ -152,9 +164,21 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	public int getIndex(){
 		return index;
 	}
-	
+
 	@Override
 	public void setIndex(int index){
 		this.index = index;
+	}
+
+	private MagHandler magHandler = null;
+
+	private class MagHandler implements IMagicHandler{
+
+		private final BeamManager beam = new BeamManager(side, pos);
+
+		@Override
+		public void setMagic(@Nullable MagicUnit mag){
+			beam.emit(mag, world);
+		}
 	}
 }
