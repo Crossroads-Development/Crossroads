@@ -68,16 +68,12 @@ public class PrototypeItemSetRecipe extends IForgeRegistryEntry.Impl<IRecipe> im
 					if(!slot.isEmpty()){
 						if(slot.getItem() == toSet){
 							item = slot;
-							if(prot.isEmpty()){
-								continue;
-							}else{
+							if(!prot.isEmpty()){
 								break;
 							}
 						}else if(slot.getItem() == Item.getItemFromBlock(ModBlocks.prototype)){
 							prot = slot;
-							if(item.isEmpty()){
-								continue;
-							}else{
+							if(!item.isEmpty()){
 								break;
 							}
 						}else{

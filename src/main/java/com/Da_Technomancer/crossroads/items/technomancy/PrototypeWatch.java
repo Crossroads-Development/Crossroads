@@ -32,7 +32,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -116,6 +115,15 @@ public class PrototypeWatch extends MagicUsingItem{
 		player.stopActiveHand();
 	}
 
+	@Nullable
+	public static double[] getValues(ItemStack watch){
+		if(watch.isEmpty() || watch.getItem() != ModItems.watch || !watch.hasTagCompound()){
+			return null;
+		}
+		NBTTagCompound nbt = watch.getTagCompound();
+		return new double[] {nbt.getDouble("v_0"), nbt.getDouble("v_1"), nbt.getDouble("v_2")};
+	}
+
 	/**
 	 * Verifies watch. 
 	 * Stores owner to map/refreshes owner.
@@ -140,24 +148,25 @@ public class PrototypeWatch extends MagicUsingItem{
 			}else{
 				WatchPrototypeOwner owner = watchMap.get(index);
 				owner.lifetimeBuffer = true;
-				//TODO dial Still malfunctioning. Movement speed is a problem. See issue #60 on the GitHub.
-				double newAngle = stack.getTagCompound().getDouble("angle") + (owner.axle.getMotionData()[0] / 20D);
-				int metadata = (int) (8 + (Math.round(newAngle * 4D / Math.PI) % 8)) % 8;
+				double[] newVal = new double[3];
+				for(int i = 0; i < 3; i++){
+					newVal[i] = owner.axles[i].getMotionData()[0] * (i == 0 ? 1 : -1);
+				}
+
+				for(int i = 0; i < 3; i++){
+					stack.getTagCompound().setDouble("v_" + i, newVal[i]);
+				}
 
 				if(entityIn instanceof EntityLivingBase && ((EntityLivingBase) entityIn).getActiveItemStack().isItemEqualIgnoreDurability(stack)){
-					stack.getTagCompound().setDouble("angle", newAngle);
+					//The next 4 lines exist solely because vanilla's handling of item changes is terrible
 					EntityLivingBase entityLiving = ((EntityLivingBase) entityIn);
-					setDamage(stack, metadata);
 					EnumHand hand = entityLiving.getActiveHand();
 					entityLiving.resetActiveHand();
 					entityLiving.setActiveHand(hand);
-				}else{
-					stack.getTagCompound().setDouble("angle", newAngle);
-					setDamage(stack, metadata);
 				}
 			}
 
-			PrototypeWorldProvider.tickChunk(new ChunkPos(((index % 100) * 2) - 99, (index / 50) - 99));
+			PrototypeWorldProvider.tickChunk(((index % 100) * 2) - 99, (index / 50) - 99);
 
 			if(entityIn instanceof EntityPlayer && BeamManager.beamStage == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).hasTagCompound()){
 				NBTTagCompound cageNbt = ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getTagCompound();
@@ -232,7 +241,7 @@ public class PrototypeWatch extends MagicUsingItem{
 			this.user = user;
 		}
 
-		private final IAxleHandler axle = new AxleHandler();
+		private final IAxleHandler[] axles = new AxleHandler[] {new AxleHandler(), new AxleHandler(), new AxleHandler()};
 		private final IAdvancedRedstoneHandler redstone = new RedstoneHandler();
 		private final MagicHandler magic = new MagicHandler();
 
@@ -241,7 +250,7 @@ public class PrototypeWatch extends MagicUsingItem{
 			if(!active){
 				return false;
 			}
-			if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == EnumFacing.UP){
+			if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == EnumFacing.DOWN || side == EnumFacing.NORTH)){
 				return true;
 			}
 			if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && side == EnumFacing.SOUTH){
@@ -259,9 +268,20 @@ public class PrototypeWatch extends MagicUsingItem{
 			if(!active){
 				return null;
 			}
-			if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == EnumFacing.UP){
-				//Dial
-				return (T) axle;
+			if(cap == Capabilities.AXLE_HANDLER_CAPABILITY){
+				switch(side){
+					case UP:
+						//Dial 0
+						return (T) axles[0];
+					case DOWN:
+						//Dial 1
+						return (T) axles[1];
+					case NORTH:
+						//Dial 2
+						return (T) axles[2];
+					default:
+				}
+
 			}
 			if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && side == EnumFacing.SOUTH){
 				//Control

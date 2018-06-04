@@ -33,7 +33,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -172,7 +171,7 @@ public class PrototypePistol extends MagicUsingItem{
 				pistolMap.get(index).lifetimeBuffer = true;
 			}
 
-			PrototypeWorldProvider.tickChunk(new ChunkPos(((index % 100) * 2) - 99, (index / 50) - 99));
+			PrototypeWorldProvider.tickChunk(((index % 100) * 2) - 99, (index / 50) - 99);
 
 			if(entityIn instanceof EntityPlayer && BeamManager.beamStage == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).hasTagCompound()){
 				NBTTagCompound cageNbt = ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getTagCompound();
@@ -397,7 +396,7 @@ public class PrototypePistol extends MagicUsingItem{
 			public void markChanged(){
 				//markDirty();
 				//Storing the energy long term in this case is difficult. It could be done through nbt, but then there is a risk of gaining energy.
-				//Instead, this just loses all stored energy between loads. It should be a small amount in any case.
+				//Instead, this just loses all stored energy between loads. It should be a very small amount in any case.
 			}
 
 			@Override

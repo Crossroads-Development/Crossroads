@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.technomancy.MagicUsingItem;
+import com.Da_Technomancer.crossroads.items.technomancy.PrototypeWatch;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -351,6 +352,7 @@ public final class EventHandlerClient{
 
 	private static final ResourceLocation MAGIC_BAR_BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/magic_info_back.png");
 	private static final ResourceLocation MAGIC_BAR_FOREGROUND = new ResourceLocation(Main.MODID, "textures/gui/magic_info_front.png");
+	private static final ResourceLocation WATCH_BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/watch_info_back.png");
 	private static final ResourceLocation COLOR_SHEET = new ResourceLocation(Main.MODID, "textures/blocks/color_sheet.png");
 
 	@SubscribeEvent
@@ -435,6 +437,29 @@ public final class EventHandlerClient{
 				tes.draw();
 
 				Minecraft.getMinecraft().fontRenderer.drawString(mainStack.getDisplayName(), 16, 5, Color.DARK_GRAY.getRGB());
+
+				//Special Watch overlay
+				if(mainStack.getItem() == ModItems.watch){
+					GlStateManager.color(1, 1, 1);
+					Minecraft.getMinecraft().getTextureManager().bindTexture(WATCH_BACKGROUND);
+					buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+					buf.pos(117, 60, -1).tex(0, 1).endVertex();
+					buf.pos(234, 60, -1).tex(1, 1).endVertex();
+					buf.pos(234, 0, -1).tex(1, 0).endVertex();
+					buf.pos(117, 0, -1).tex(0, 0).endVertex();
+					tes.draw();
+
+					double[] values = PrototypeWatch.getValues(mainStack);
+
+					if(values != null){
+						for(int i = 0; i < 3; i++){
+							values[i] = MiscOp.betterRound(values[i], 3);
+							Minecraft.getMinecraft().fontRenderer.drawString("" + values[i], 146 - Minecraft.getMinecraft().fontRenderer.getStringWidth("" + values[i]) / 2, 16 + 10 * i, Color.DARK_GRAY.getRGB());
+						}
+					}
+				}
+
+
 				GlStateManager.disableAlpha();
 				GlStateManager.color(1, 1, 1);
 				GlStateManager.disableBlend();

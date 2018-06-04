@@ -1,11 +1,6 @@
 package com.Da_Technomancer.crossroads.dimensions;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.Da_Technomancer.crossroads.Main;
-
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.EnumCreatureType;
@@ -14,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
@@ -27,6 +21,10 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class PrototypeWorldProvider extends WorldProvider{
 
@@ -45,12 +43,9 @@ public class PrototypeWorldProvider extends WorldProvider{
 
 	/**
 	 * Ticks the TileEntities in the chunk at the specified chunk coordinated in the prototype dimension. They will not be ticked otherwise. Based off the vanilla TileEntity ticking method. 
-	 * @param chunk The ChunkPos to tick all the TileEntities in. 
-	 * Call on the virtual server side only. 
+	 * Call on the virtual server side only.
 	 */
-	public static void tickChunk(ChunkPos chunk){
-		int chunkX = chunk.x;
-		int chunkZ = chunk.z;
+	public static void tickChunk(int chunkX, int chunkZ){
 		WorldServer protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		if(protWorld == null){
 			DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);

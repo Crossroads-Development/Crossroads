@@ -81,7 +81,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 			chunk = new ChunkPos(((index % 100) * 2) - 99, (index / 50) - 99);
 		}
 
-		PrototypeWorldProvider.tickChunk(chunk);
+		PrototypeWorldProvider.tickChunk(chunk.x, chunk.z);
 	}
 
 	@Override
