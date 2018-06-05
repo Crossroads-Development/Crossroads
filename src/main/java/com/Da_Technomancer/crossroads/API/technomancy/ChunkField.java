@@ -13,8 +13,8 @@ public class ChunkField{
 	private static final Random RAND = new Random();
 
 	public short fluxForce = 0;
-	public byte flux;
-	public byte[][] nodes = new byte[16][16];
+	public byte flux;//Ranges from 0-127, stores actual flux-1
+	public byte[][] nodes = new byte[16][16];//Values range from 0-127, stores actual rate-1
 	public short[][] nodeForce = new short[16][16];
 	private byte cooldown;
 	public boolean isActive;
@@ -54,20 +54,20 @@ public class ChunkField{
 			int topRate = 0;
 			for(int x = 0; x < 16; x++){
 				for(int z = 0; z < 16; z++){
-					short change = nodeForce[x][z];
-					nodeForce[x][z] = 0;
-					int rate = (int) Math.max(1, Math.min(8 + change, 128));
+					int rate = (int) Math.max(1, Math.min(8 + nodeForce[x][z], 128));
 					rateChange += Math.abs(rate - 1 - nodes[x][z]);
+					nodeForce[x][z] = 0;
 					nodes[x][z] = (byte) (rate - 1);
-					topRate = Math.max(rate, topRate);
+					if(topRate < rate){
+						topRate = rate;
+					}
 				}
 			}
 
+			int randGrowth = RAND.nextInt(1 + (int) Math.ceil(Math.abs(flux - 7) / 8F));//randGrowth ranges from 0 to (actual flux - 8) / 8
+			flux = (byte) Math.min(127, (int) flux + rateChange / 16);//Increase flux by rateChange / 16
 
-			int randGrowth = RAND.nextInt(1 + (int) Math.ceil(Math.abs(flux - 7) / 8F));
-			flux = (byte) Math.min(127, (int) flux + rateChange / 16);
-
-			if((int) flux + (int) fluxForce + randGrowth + 1 < topRate){
+			if((int) flux + 1 < topRate){//If at any point in the chunk the flux is higher than rate, time is stopped
 				//If time is stopped, flux manipulators and random growth stop applying
 				flux = (byte) Math.min(127, (int) flux + 2);
 			}else{
@@ -76,7 +76,7 @@ public class ChunkField{
 
 			fluxForce = 0;
 
-			if(flux == 127){
+			if(flux == 127){//if actual flux hits 128, do a flux event
 				wipe();
 				for(int i = 0; i < 3; i++){
 					EnumMagicElements.TIME.getVoidEffect().doEffect(world, pos.getBlock(RAND.nextInt(16), RAND.nextInt(128), RAND.nextInt(16)), 128);

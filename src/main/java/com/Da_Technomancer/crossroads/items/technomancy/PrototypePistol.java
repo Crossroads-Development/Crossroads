@@ -95,7 +95,7 @@ public class PrototypePistol extends MagicUsingItem{
 				return new ActionResult<ItemStack>(EnumActionResult.FAIL, playerIn.getHeldItem(hand));
 			}else if(pistolMap.containsKey(index) && nbt.getInteger("ammo") != 0 && !playerIn.isSneaking()){
 				PistolPrototypeOwner owner = pistolMap.get(index);
-				if(owner.axle.getMotionData()[1] > 0){
+				if(owner.axle.getMotionData()[0] != 0){
 					EntityBullet bullet = new EntityBullet(playerIn.world, playerIn, getDamage(owner.axle.getMotionData()[0]));
 					bullet.setPosition(playerIn.posX, playerIn.posY + playerIn.getEyeHeight(), playerIn.posZ);
 					bullet.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0, getBulletSpeed(owner.axle.getMotionData()[0]) /*In blocks/tick*/, 0);
@@ -138,13 +138,13 @@ public class PrototypePistol extends MagicUsingItem{
 	}
 
 	private float getBulletSpeed(double gearSpeed){
-		return (float) gearSpeed * 0.5F;
+		return (float) Math.abs(gearSpeed) * 0.5F;
 	}
 
 	private int getDamage(double gearSpeed){
 		int maxDamage = ModConfig.getConfigInt(ModConfig.maximumPistolDamage, false);
 
-		return maxDamage < 0 ? (int) Math.round(gearSpeed * 4F) : Math.min(maxDamage, (int) Math.round(gearSpeed * 4F));
+		return maxDamage < 0 ? (int) Math.round(gearSpeed * 4F) : Math.min(maxDamage, (int) Math.round(Math.abs(gearSpeed) * 4F));
 	}
 
 	@Override
