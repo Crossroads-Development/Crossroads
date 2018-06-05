@@ -98,7 +98,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 
 		for(EnumFacing side : EnumFacing.values()){
 			TileEntity te = world.getTileEntity(pos.offset(side));
-			if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+			if(side != EnumFacing.DOWN && te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
 				te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
 			}
 		}
