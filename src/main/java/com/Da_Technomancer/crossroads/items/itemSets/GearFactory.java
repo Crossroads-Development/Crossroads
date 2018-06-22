@@ -42,8 +42,8 @@ public class GearFactory{
 					return tintIndex == 0 ? colorCode : -1;
 				}
 			};
-			itemColor.registerItemColorHandler(itemColoring, new Item[]{BASIC_GEARS.get(typ), LARGE_GEARS.get(typ)});
-			itemColor.registerItemColorHandler(itemColoring, new Block[]{TOGGLE_GEARS.get(typ)});
+			itemColor.registerItemColorHandler(itemColoring, BASIC_GEARS.get(typ), LARGE_GEARS.get(typ));
+			itemColor.registerItemColorHandler(itemColoring, TOGGLE_GEARS.get(typ));
 		}
 	}
 }

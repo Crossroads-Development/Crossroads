@@ -40,8 +40,6 @@ public class ModBlocks{
 	public static FluidCoolingChamber fluidCoolingChamber;
 	public static LargeGearMaster largeGearMaster;
 	public static LargeGearSlave largeGearSlave;
-	public static ItemChute itemChute;
-	public static ItemChutePort itemChutePort;
 	public static Radiator radiator;
 	public static RotaryDrill rotaryDrill;
 	public static FatCollector fatCollector;
@@ -182,8 +180,6 @@ public class ModBlocks{
 		heatingChamber = new HeatingChamber();
 		saltReactor = new SaltReactor();
 		fluidCoolingChamber = new FluidCoolingChamber();
-		itemChute = new ItemChute();
-		itemChutePort = new ItemChutePort();
 		radiator = new Radiator();
 		rotaryDrill = new RotaryDrill();
 		fatCollector = new FatCollector();

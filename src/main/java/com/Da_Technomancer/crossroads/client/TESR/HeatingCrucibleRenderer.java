@@ -18,7 +18,7 @@ public class HeatingCrucibleRenderer extends TileEntitySpecialRenderer<HeatingCr
 
 	@Override
 	public void render(HeatingCrucibleTileEntity te, double x, double y, double z, float partialTicks, int destroheightage, float alpha){
-		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false) || te.getActiveTexture() == null){
+		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false) || te.getActiveTexture().length() == 0){
 			return;
 		}
 		int fullness = te.getWorld().getBlockState(te.getPos()).getValue(Properties.FULLNESS);

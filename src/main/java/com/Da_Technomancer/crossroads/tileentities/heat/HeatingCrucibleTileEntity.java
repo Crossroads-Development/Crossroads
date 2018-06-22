@@ -31,6 +31,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
@@ -52,11 +53,13 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 	/**
 	 * The texture of the solid material, if any. Server side only. 
 	 */
-	private String solidText = null;
+	@Nonnull
+	private String solidText = "";
 	/**
 	 * The texture to be displayed, if any. 
 	 */
-	private String activeText = null;
+	@Nonnull
+	private String activeText = "";
 
 	public String getActiveTexture(){
 		return activeText;
@@ -113,7 +116,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 		}
 
 		if(fullness != 0 && world.getTotalWorldTime() % 2 == 0){
-			if(solidText != null && content == null && !solidText.equals(activeText)){
+			if(solidText.length() != 0 && content == null && !solidText.equals(activeText)){
 				activeText = solidText;
 				ModPackets.network.sendToAllAround(new SendStringToClient("text", activeText, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}else if(content != null && content.getFluid().getStill() != null){
@@ -158,7 +161,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 		if(nbt.hasKey("inv")){
 			inventory = new ItemStack(nbt.getCompoundTag("inv"));
 		}
-		if(solidText == null && !inventory.isEmpty()){
+		if(solidText.length() == 0 && !inventory.isEmpty()){
 			solidText = getRecipe(inventory).getRight();
 		}
 	}
@@ -172,10 +175,10 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 
 		nbt.setBoolean("init", init);
 		nbt.setDouble("temp", temp);
-		if(solidText != null){
+		if(solidText.length() != 0){
 			nbt.setString("sol", solidText);
 		}
-		if(activeText != null){
+		if(activeText.length() != 0){
 			nbt.setString("act", activeText);
 		}
 
@@ -189,7 +192,9 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
-		nbt.setString("act", activeText);
+		if(activeText.length() != 0){
+			nbt.setString("act", activeText);
+		}
 		return nbt;
 	}
 

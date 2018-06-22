@@ -49,34 +49,6 @@ public final class ModCrafting{
 	@SuppressWarnings("unchecked")
 	public static void init(){
 
-		toRegisterOreDict.add(Pair.of(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), new String[] {"wool"}));
-		toRegisterOreDict.add(Pair.of(Items.CHICKEN, new String[] {"meatRaw"}));
-		toRegisterOreDict.add(Pair.of(Items.PORKCHOP, new String[] {"meatRaw"}));
-		toRegisterOreDict.add(Pair.of(Items.BEEF, new String[] {"meatRaw"}));
-		toRegisterOreDict.add(Pair.of(Items.RABBIT, new String[] {"meatRaw"}));
-		toRegisterOreDict.add(Pair.of(Items.MUTTON, new String[] {"meatRaw"}));
-
-		for(Pair<Object, String[]> oreDictMapping : toRegisterOreDict){
-			Object left = oreDictMapping.getLeft();
-			if(left instanceof Block){
-				for(String key : oreDictMapping.getRight()){
-					OreDictionary.registerOre(key, (Block) oreDictMapping.getLeft());
-				}
-			}else if(left instanceof Item){
-				for(String key : oreDictMapping.getRight()){
-					OreDictionary.registerOre(key, (Item) oreDictMapping.getLeft());
-				}
-			}else if(left instanceof ItemStack){
-				for(String key : oreDictMapping.getRight()){
-					OreDictionary.registerOre(key, (ItemStack) oreDictMapping.getLeft());
-				}
-			}else{
-				throw Main.logger.throwing(new ClassCastException("INVALID object in toRegisterOreDict: " + left + "; Must be Block, Item, or ItemStack."));
-			}
-
-		}
-		toRegisterOreDict.clear();
-
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("oreCopper"), new ItemStack[] {new ItemStack(ModItems.dustCopper, 2), new ItemStack(Blocks.SAND)});
 		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Items.WHEAT, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
 		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Blocks.PUMPKIN, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
@@ -413,10 +385,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotIron", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper"));
 		// Fluid Cooling Chamber
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidCoolingChamber, 1), "###", "# #", "#%#", '#', "ingotIron", '%', "ingotCopper"));
-		// Item Chute
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.itemChute, 4), "#$#", "#$#", "#$#", '#', "ingotIron", '$', "stickIron"));
-		// Item Chute Port
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.itemChutePort, 1), ModBlocks.itemChute, Blocks.IRON_TRAPDOOR));
 		// Radiator
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.radiator, 1), "#$#", "#$#", "#$#", '#', ModBlocks.fluidTube, '$', "ingotIron"));
 		// Rotary Drill
@@ -455,8 +423,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.beamSplitter, 1), ModBlocks.beamSplitterBasic, "dustRedstone", "dustRedstone", "dustRedstone"));
 		//Color Chart
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
-		//Piston
-		toRegister.add(new ShapelessOreRecipe(null, Blocks.PISTON, "cobblestone", "ingotIron", "dustRedstone", "logWood"));
 		//Multi-Piston
 		toRegister.add(new ShapedOreRecipe(null, ModBlocks.multiPiston, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.PISTON));
 		//Sticky Multi-Piston
@@ -509,5 +475,35 @@ public final class ModCrafting{
 		stack.setTagInfo("display", nbttagcompound1);
 		stack.setStackDisplayName("Vacuum Hopper");
 		return stack;
+	}
+
+	public static void initOreDict(){
+		toRegisterOreDict.add(Pair.of(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), new String[] {"wool"}));
+		toRegisterOreDict.add(Pair.of(Items.CHICKEN, new String[] {"meatRaw"}));
+		toRegisterOreDict.add(Pair.of(Items.PORKCHOP, new String[] {"meatRaw"}));
+		toRegisterOreDict.add(Pair.of(Items.BEEF, new String[] {"meatRaw"}));
+		toRegisterOreDict.add(Pair.of(Items.RABBIT, new String[] {"meatRaw"}));
+		toRegisterOreDict.add(Pair.of(Items.MUTTON, new String[] {"meatRaw"}));
+
+		for(Pair<Object, String[]> oreDictMapping : toRegisterOreDict){
+			Object left = oreDictMapping.getLeft();
+			if(left instanceof Block){
+				for(String key : oreDictMapping.getRight()){
+					OreDictionary.registerOre(key, (Block) oreDictMapping.getLeft());
+				}
+			}else if(left instanceof Item){
+				for(String key : oreDictMapping.getRight()){
+					OreDictionary.registerOre(key, (Item) oreDictMapping.getLeft());
+				}
+			}else if(left instanceof ItemStack){
+				for(String key : oreDictMapping.getRight()){
+					OreDictionary.registerOre(key, (ItemStack) oreDictMapping.getLeft());
+				}
+			}else{
+				throw Main.logger.throwing(new ClassCastException("INVALID object in toRegisterOreDict: " + left + "; Must be Block, Item, or ItemStack."));
+			}
+
+		}
+		toRegisterOreDict.clear();
 	}
 }

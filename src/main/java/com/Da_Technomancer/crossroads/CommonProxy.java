@@ -87,6 +87,8 @@ public class CommonProxy{
 			registry.register(item);
 		}
 		ModItems.toRegister.clear();
+
+		ModCrafting.initOreDict();
 	}
 
 	@SubscribeEvent

@@ -31,7 +31,6 @@ public class ModTileEntity{
 		registerOld(FluidCoolingChamberTileEntity.class, "fluidCoolingChamber");
 		registerOld(LargeGearSlaveTileEntity.class, "largeGearSlave");
 		registerOld(LargeGearMasterTileEntity.class, "largeGearMaster");
-		registerOld(ItemChutePortTileEntity.class, "itemChutePort");
 		registerOld(RadiatorTileEntity.class, "radiator");
 		registerOld(RotaryDrillTileEntity.class, "rotaryDrill");
 		registerOld(FatCollectorTileEntity.class, "fatCollector");

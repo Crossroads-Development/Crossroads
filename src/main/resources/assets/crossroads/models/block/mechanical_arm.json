@@ -3,10 +3,10 @@
 	"textures": {
 		"north": "crossroads:blocks/iron_redstone",
 		"south": "blocks/iron_block",
-		"east": "crossroads:blocks/iron_block_shaft",
-		"west": "crossroads:blocks/iron_block_shaft",
+		"east": "essentials:blocks/iron_block_shaft",
+		"west": "essentials:blocks/iron_block_shaft",
 		"up": "crossroads:blocks/mechanical_arm_top",
-		"down": "crossroads:blocks/iron_block_shaft",
+		"down": "essentials:blocks/iron_block_shaft",
 		"particle": "crossroads:blocks/mechanical_arm_top"
 	}
 }
