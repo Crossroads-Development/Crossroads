@@ -1,26 +1,51 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.entity.EntityNitro;
 import com.Da_Technomancer.crossroads.items.ModItems;
-
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBehaviorDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
 public class Nitroglycerin extends Item{
+
+	private static final IBehaviorDispenseItem NITRO_DISPENSER_BEHAVIOR = new BehaviorDefaultDispenseItem(){
+
+		/**
+		 * Dispense the specified stack, play the dispense sound and spawn particles.
+		 */
+		@Override
+		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
+			EnumFacing dir = (EnumFacing) source.getBlockState().getValue(BlockDispenser.FACING);
+			World world = source.getWorld();
+			EntityNitro entitysnowball = new EntityNitro(world);
+			entitysnowball.setPosition(source.getX() + dir.getFrontOffsetX() + 0.5D, source.getY() + dir.getFrontOffsetY() + 0.5D, source.getZ() + dir.getFrontOffsetZ() + 0.5D);
+			entitysnowball.shoot(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ(), 1.5F, 1.0F);
+			world.spawnEntity(entitysnowball);
+			stack.shrink(1);
+			return stack;
+		}
+
+		/**
+		 * Play the dispense sound from the specified block.
+		 */
+		@Override
+		protected void playDispenseSound(IBlockSource source){
+			source.getWorld().playEvent(1000, source.getBlockPos(), 0);
+		}
+	};
 
 	public Nitroglycerin(){
 		String name = "nitroglycerin";
@@ -29,6 +54,7 @@ public class Nitroglycerin extends Item{
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, NITRO_DISPENSER_BEHAVIOR);
 	}
 
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn){

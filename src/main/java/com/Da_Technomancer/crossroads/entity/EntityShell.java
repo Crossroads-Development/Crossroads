@@ -20,6 +20,12 @@ public class EntityShell extends EntityThrowable{
 		super(worldIn);
 	}
 
+	public EntityShell(World worldIn, ReagentStack[] contents, double temp){
+		super(worldIn);
+		this.contents = contents;
+		this.temp = temp;
+	}
+
 	public EntityShell(World worldIn, EntityLivingBase throwerIn, ReagentStack[] contents, double temp){
 		super(worldIn, throwerIn);
 		this.contents = contents;
