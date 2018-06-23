@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.command.ResetPathCommand;
 import com.Da_Technomancer.crossroads.command.SpawnReagentCommand;
 import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -68,5 +69,8 @@ public final class Main{
 	public void serverEnded(FMLServerStoppingEvent e){
 		ForgeChunkManager.releaseTicket(EventHandlerCommon.loadingTicket);
 		EventHandlerCommon.loadingTicket = null;
+		for(int i : DimensionManager.getDimensions(ModDimensions.workspaceDimType)){
+			DimensionManager.unregisterDimension(i);
+		}
 	}
 }

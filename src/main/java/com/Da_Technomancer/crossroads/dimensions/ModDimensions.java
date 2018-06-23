@@ -44,9 +44,9 @@ public class ModDimensions{
 	}
 
 	public static void loadDims(){
-		for(int i : DimensionManager.getDimensions(workspaceDimType)){
-			DimensionManager.unregisterDimension(i);
-		}
+//		for(int i : DimensionManager.getDimensions(workspaceDimType)){
+//			DimensionManager.unregisterDimension(i);
+//		}
 		
 		PlayerDimensionMapSavedData data = PlayerDimensionMapSavedData.get(DimensionManager.getWorld(0), DimensionManager.getWorld(0).getMinecraftServer() == null ? null : DimensionManager.getWorld(0).getMinecraftServer().getPlayerProfileCache());
 		HashMap<GameProfileNonPicky, Integer> playerDim = null;
