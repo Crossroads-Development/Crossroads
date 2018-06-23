@@ -1,16 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import java.util.List;
-
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DensusPlateTileEntity;
-
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -35,6 +30,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
 
 public class DensusPlate extends BlockContainer{
 

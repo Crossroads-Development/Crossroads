@@ -179,8 +179,8 @@ public final class ModItems{
 		solidFusas = new BasicItem("solid_fusas");
 		solidEldrine = new BasicItem("solid_eldrine");
 		solidStasisol = new BasicItem("solid_stasisol");
-		solidDensus = new BasicItem("solid_densus");
-		solidAntiDensus = new BasicItem("solid_anti_densus");
+		solidDensus = new BasicItem("solid_densus", "gemDensus");
+		solidAntiDensus = new BasicItem("solid_anti_densus", "gemAntiDensus");
 		solidFortis = new BasicItem("solid_fortis");
 		solidVitriol = new BasicItem("solid_vitriol");
 		solidMuriatic = new BasicItem("solid_muriatic");

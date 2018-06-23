@@ -181,8 +181,8 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.coolingCoil, 4, 0), "* *", " * ", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.coolingCoil, 4, 1), "* *", " * ", '*', "gemAlcCryst"));
 		//Densus Plate
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.densusPlate, 6, 0), "***", '*', ModItems.solidDensus));
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.densusPlate, 6, 1), "***", '*', ModItems.solidAntiDensus));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.densusPlate, 6, 0), "***", '*', "gemDensus"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.densusPlate, 6, 1), "***", '*', "gemAntiDensus"));
 		//Dynamo
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.dynamo, 1, 0), "-@-", "===", '@', "gearCopper", '-', "stickIron", '=', "ingotIron"));
 		//Flow Limiter

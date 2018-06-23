@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.effects.DirtEffect;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
 import com.Da_Technomancer.crossroads.API.effects.SlimeEffect;
 
+import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.init.Blocks;
 
 public enum HeatInsulators{
@@ -13,7 +14,8 @@ public enum HeatInsulators{
 	SLIME(.2D, 500D, new SlimeEffect(), "slimeball"),
 	DIRT(.5D, 42D, new DirtEffect(), "dirt"),
 	ICE(.001D, 0D, new BlockEffect(Blocks.WATER.getDefaultState()), Blocks.PACKED_ICE),
-	OBSIDIAN(.015D, 2000D, new BlockEffect(Blocks.LAVA.getDefaultState()), "obsidian");
+	OBSIDIAN(.015D, 2_000D, new BlockEffect(Blocks.LAVA.getDefaultState()), "obsidian"),
+	DENSUS(0, 10_000D, new BlockEffect(Blocks.LAVA.getDefaultState()), "gemDensus");
 
 	private final double rate;
 	private final double limit;
