@@ -254,7 +254,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
 			if(!stack.isEmpty()){
-				IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(stack.getItem());
+				IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(stack);
 				if(reag != null){
 					if(dirtyReag){
 						correctReag();
@@ -289,7 +289,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 					ItemStack outStack = fakeInventory[slot].copy();
 					outStack.setCount(canExtract);
 					if(!simulate){
-						int reagIndex = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot].getItem()).getIndex();
+						int reagIndex = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]).getIndex();
 						double endTemp = handler.getTemp();
 						double reagAmount = AlchemyCore.REAGENTS[reagIndex].getReagentFromStack(outStack).getAmount();
 						if(contents[reagIndex].increaseAmount(-reagAmount) <= 0){

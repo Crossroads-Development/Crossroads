@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.List;
 
 public interface IReagent{
 
@@ -69,4 +70,6 @@ public interface IReagent{
 	public default boolean isLockedFlame(){
 		return false;
 	}
+
+	public List<ItemStack> getJEISolids();
 }

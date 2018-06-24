@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.ingredients.IIngredients;
@@ -8,7 +7,6 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
@@ -17,14 +15,14 @@ import java.util.List;
 public class ReagInfoRecipe implements IRecipeWrapper{
 
 	private final ReagIngr type;
-	private final Item solid;
+	private final List<ItemStack> solid;
 	private final double perSolid;
 
 	public ReagInfoRecipe(IReagent type){
 		this.type = new ReagIngr(type, 0);
-		solid = AlchemyCore.ITEM_TO_REAGENT.inverse().get(type);
-		if(solid != null){
-			perSolid = type.getReagentFromStack(new ItemStack(solid, 1)).getAmount();
+		solid = type.getJEISolids();
+		if(!solid.isEmpty()){
+			perSolid = type.getReagentFromStack(solid.get(0)).getAmount();
 		}else{
 			perSolid = 0;
 		}
@@ -62,8 +60,8 @@ public class ReagInfoRecipe implements IRecipeWrapper{
 		ingredients.setInput(ReagIngr.class, type);
 		ingredients.setOutput(ReagIngr.class, type);
 		if(solid != null){
-			ingredients.setInput(ItemStack.class, new ItemStack(solid, 1));
-			ingredients.setOutput(ItemStack.class, new ItemStack(solid, 1));
+			ingredients.setInput(ItemStack.class, solid);
+			ingredients.setOutput(ItemStack.class, solid);
 		}
 	}
 }

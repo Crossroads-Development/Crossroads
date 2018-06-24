@@ -2,12 +2,14 @@ package com.Da_Technomancer.crossroads.API;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
 
+import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -143,5 +145,9 @@ public final class MiscOp{
 			}
 		}
 		return false;
+	}
+
+	public static Predicate<ItemStack> oreDictPred(String oreDict){
+		return new OreDictCraftingStack(oreDict);
 	}
 }

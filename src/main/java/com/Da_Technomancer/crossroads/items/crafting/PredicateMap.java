@@ -1,11 +1,12 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map.Entry;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * For storing recipes with Predicate keys
@@ -16,7 +17,7 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class PredicateMap<T, V>{
 
-	HashSet<Pair<Predicate<T>, V>> entries = new HashSet<Pair<Predicate<T>, V>>();
+	private HashSet<Pair<Predicate<T>, V>> entries = new HashSet<Pair<Predicate<T>, V>>();
 
 	public int size(){
 		return entries.size();
@@ -48,7 +49,7 @@ public class PredicateMap<T, V>{
 
 	public V put(Predicate<T> key, V value){
 		V prevValue = null;
-		for(Entry<Predicate<T>, V> ent : entries){
+		for(Pair<Predicate<T>, V> ent : entries){
 			if(ent.getKey().equals(key)){
 				prevValue = ent.getValue();
 				entries.remove(ent);
@@ -61,7 +62,7 @@ public class PredicateMap<T, V>{
 
 	public V remove(Predicate<T> key){
 		V prevValue = null;
-		for(Entry<Predicate<T>, V> ent : entries){
+		for(Pair<Predicate<T>, V> ent : entries){
 			if(ent.getKey().equals(key)){
 				prevValue = ent.getValue();
 				entries.remove(ent);
@@ -77,5 +78,13 @@ public class PredicateMap<T, V>{
 
 	public Set<Pair<Predicate<T>, V>> entrySet(){
 		return entries;
+	}
+
+	public List<V> values(){
+		List<V> val = new ArrayList<>(entries.size());
+		for(Pair<Predicate<T>, V> ent : entries){
+			val.add(ent.getRight());
+		}
+		return val;
 	}
 }

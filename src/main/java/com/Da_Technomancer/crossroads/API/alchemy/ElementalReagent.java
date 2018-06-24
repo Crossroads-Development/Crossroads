@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import java.awt.Color;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-
+import com.google.common.collect.ImmutableList;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.awt.*;
+import java.util.List;
 
 public class ElementalReagent implements IElementReagent{
 	
@@ -44,7 +44,7 @@ public class ElementalReagent implements IElementReagent{
 		this.color = range.getTrueRGB();
 		AlchemyCore.ELEMENTAL_REAGS.add(this);
 		if(solidForm != null){
-			AlchemyCore.ITEM_TO_REAGENT.put(solidForm, this);
+			AlchemyCore.ITEM_TO_REAGENT.put((stack) -> stack.getItem() == solidForm, this);
 		}
 	}
 	
@@ -99,7 +99,12 @@ public class ElementalReagent implements IElementReagent{
 	public ItemStack getStackFromReagent(ReagentStack reag){
 		return reag != null && reag.getType() == this && reag.getAmount() >= 1 - AlchemyCore.MIN_QUANTITY ? new ItemStack(solidForm, (int) (reag.getAmount() + AlchemyCore.MIN_QUANTITY)) : ItemStack.EMPTY;
 	}
-	
+
+	@Override
+	public List<ItemStack> getJEISolids(){
+		return solidForm == null ? ImmutableList.of() : ImmutableList.of(new ItemStack(solidForm));
+	}
+
 	@Override
 	public MagicUnit getAlignment(){
 		return range;

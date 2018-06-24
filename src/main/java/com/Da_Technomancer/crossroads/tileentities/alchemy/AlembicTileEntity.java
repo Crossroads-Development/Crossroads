@@ -173,7 +173,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			}
 		}else{
 			//Move solids from hand into carrier
-			IReagent typeProduced = AlchemyCore.ITEM_TO_REAGENT.get(stack.getItem());
+			IReagent typeProduced = AlchemyCore.ITEM_TO_REAGENT.get(stack);
 			if(typeProduced != null){
 				double amountProduced = typeProduced.getReagentFromStack(stack).getAmount();
 				if(amountProduced <= CAPACITY - amount){
