@@ -1,18 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.magic;
 
-import java.util.List;
-
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
-
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -34,6 +30,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public class LensHolder extends BlockContainer{
 
@@ -81,17 +79,12 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.ORIENT, (placer == null) ? true : placer.getHorizontalFacing().getAxis() == Axis.X).withProperty(Properties.TEXTURE_7, 0);
-	}
-
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
+		return getDefaultState().withProperty(Properties.ORIENT, (placer == null) || placer.getHorizontalFacing().getAxis() == Axis.X).withProperty(Properties.TEXTURE_7, 0);
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.ORIENT, Properties.TEXTURE_7});
+		return new BlockStateContainer(this, Properties.ORIENT, Properties.TEXTURE_7);
 	}
 
 	@Override
@@ -106,10 +99,7 @@ public class LensHolder extends BlockContainer{
 
 			if(EssentialsConfig.isWrench(stack, false)){
 				worldIn.setBlockState(pos, state.withProperty(Properties.ORIENT, !state.getValue(Properties.ORIENT)));
-				return true;
-			}
-			
-			if(state.getValue(Properties.TEXTURE_7) != 0){
+			}else if(state.getValue(Properties.TEXTURE_7) != 0){
 				int i = state.getValue(Properties.TEXTURE_7);
 				ItemStack gotten = new ItemStack(i == 1 ? OreSetup.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1);
 				if(!playerIn.inventory.addItemStackToInventory(gotten)){

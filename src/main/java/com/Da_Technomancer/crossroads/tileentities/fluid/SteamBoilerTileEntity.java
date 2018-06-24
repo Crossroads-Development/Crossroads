@@ -31,7 +31,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable, IInf
 
 	private FluidStack steamContent;
 	private FluidStack waterContent;
-	private ItemStack inventory = ItemStack.EMPTY;
+	public ItemStack inventory = ItemStack.EMPTY;
 	private static final int CAPACITY = 10_000;
 	private static final int BATCH_SIZE = 100;
 

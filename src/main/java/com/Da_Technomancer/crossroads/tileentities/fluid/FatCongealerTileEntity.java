@@ -25,9 +25,9 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 public class FatCongealerTileEntity extends TileEntity implements ITickable{
 
 	private FluidStack content = null;
-	private final int CAPACITY = EnergyConverters.FAT_PER_VALUE * 40;
-	private final double VALUE_PER_ENERGY = .1D;
-	private final double SAT_UPPER_SPEED_BOUND = 2;
+	private static final int CAPACITY = EnergyConverters.FAT_PER_VALUE * 40;
+	private static final double VALUE_PER_ENERGY = .1D;
+	private static final double SAT_UPPER_SPEED_BOUND = 2;
 
 	@Override
 	public void update(){

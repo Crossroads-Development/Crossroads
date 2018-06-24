@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -49,7 +50,7 @@ public final class ModCrafting{
 	@SuppressWarnings("unchecked")
 	public static void init(){
 
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("oreCopper"), new ItemStack[] {new ItemStack(ModItems.dustCopper, 2), new ItemStack(Blocks.SAND)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("oreCopper"), new ItemStack[] {MiscOp.getOredictStack("dustCopper", 2), new ItemStack(Blocks.SAND)});
 		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Items.WHEAT, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
 		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Blocks.PUMPKIN, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
 		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Items.MELON, 0), new ItemStack[] {new ItemStack(Items.MELON_SEEDS, 3)});
@@ -60,7 +61,7 @@ public final class ModCrafting{
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("gravel"), new ItemStack[] {new ItemStack(Items.FLINT)});
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("blockRedstone"), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("cobblestone"), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("ingotCopper"), new ItemStack[] {new ItemStack(ModItems.dustCopper, 1)});
+		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("ingotCopper"), new ItemStack[] {MiscOp.getOredictStack("dustCopper", 1)});
 		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("stone"),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
 
 		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotIron"), new FluidStack(BlockMoltenIron.getMoltenIron(), 144), "minecraft:blocks/iron_block"));

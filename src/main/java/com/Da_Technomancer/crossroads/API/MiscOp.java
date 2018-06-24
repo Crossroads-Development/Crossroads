@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,12 +10,14 @@ import com.Da_Technomancer.crossroads.Main;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**This class is for holding operations that are used often.*/
 public final class MiscOp{
@@ -26,10 +29,6 @@ public final class MiscOp{
 	public static double findEfficiency(double speedIn, double lowerLimit, double upperLimit){
 		speedIn = Math.abs(speedIn);
 		return speedIn < lowerLimit ? 0 : (speedIn >= upperLimit ? 1 : (speedIn - lowerLimit) / (upperLimit - lowerLimit));
-	}
-
-	public static int posOrNeg(int in){
-		return Integer.compare(in, 0);
 	}
 
 	public static double posOrNeg(double in, double zeroCase){
@@ -128,5 +127,21 @@ public final class MiscOp{
 	 */
 	public static long getLongFromChunkPos(@Nonnull ChunkPos pos){
 		return (((long) pos.x << 32) | (pos.z & 0xffffffffL));
+	}
+
+	public static ItemStack getOredictStack(String oreDict, int count){
+		List<ItemStack> matches = OreDictionary.getOres(oreDict);
+		ItemStack out = matches.isEmpty() ? ItemStack.EMPTY : matches.get(0).copy();
+		out.setCount(count);
+		return out;
+	}
+
+	public static boolean hasOreDict(ItemStack stack, String oreDict){
+		for(int id : OreDictionary.getOreIDs(stack)){
+			if(id == OreDictionary.getOreID(oreDict)){
+				return true;
+			}
+		}
+		return false;
 	}
 }

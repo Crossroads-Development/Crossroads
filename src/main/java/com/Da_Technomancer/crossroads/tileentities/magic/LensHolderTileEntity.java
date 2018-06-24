@@ -1,24 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
-import java.awt.Color;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Triple;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.magic.*;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -32,9 +21,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Triple;
+
+import javax.annotation.Nullable;
+import java.awt.*;
 
 public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiver{
-	
+
 	private Triple<Color, Integer, Integer> trip;
 	private Triple<Color, Integer, Integer> tripUp;
 
