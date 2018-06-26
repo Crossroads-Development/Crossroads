@@ -7,8 +7,7 @@ import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
-import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
-import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopper;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopshowium;
 import com.Da_Technomancer.crossroads.fluids.ModFluids;
 import net.minecraft.nbt.NBTTagCompound;
@@ -81,13 +80,13 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 		@Override
 		public void setMagic(MagicUnit mag){
 			if(EnumMagicElements.getElement(mag) == EnumMagicElements.TIME && content != null){
-				if(content.getFluid() == BlockMoltenCopper.getMoltenCopper()){
+				if(content.getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccExpenLiquid, false))){
 					content = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) content.amount) * EnergyConverters.COPSHOWIUM_PER_COPPER));
 					markDirty();
 					if(content.amount > CAPACITY){
 						world.setBlockState(pos, ModFluids.moltenCopshowium.getDefaultState());
 					}
-				}else if(content.getFluid() == BlockDistilledWater.getDistilledWater()){
+				}else if(content.getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false))){
 					FieldWorldSavedData data = FieldWorldSavedData.get(world);
 					if(data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))){
 						if(data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos))).flux + 1 < 8 * (content.amount / 72)){

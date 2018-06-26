@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -55,8 +56,18 @@ public class MultiPistonExtend extends Block{
 	}
 
 	@Override
+	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance){
+		//The tops of sticky multi pistons remove fall damage. They aren't bouncy, due to the method that bouncing would be done in (onFallen) not allowing retrieval of blockstate information
+		if(entityIn.isSneaking() || !sticky || worldIn.getBlockState(pos).getValue(Properties.FACING) != EnumFacing.UP){
+			super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
+		}else{
+			entityIn.fall(fallDistance, 0.0F);
+		}
+	}
+
+	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING, Properties.HEAD});
+		return new BlockStateContainer(this, Properties.FACING, Properties.HEAD);
 	}
 
 	@Override

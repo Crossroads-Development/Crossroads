@@ -19,6 +19,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**This class is for holding operations that are used often.*/
@@ -68,7 +70,9 @@ public final class MiscOp{
 		if(!tag.hasKey(Main.MODID)){
 			tag.setTag(Main.MODID, new NBTTagCompound());
 		}
-		return tag.getCompoundTag(Main.MODID);
+		NBTTagCompound out = tag.getCompoundTag(Main.MODID);
+		out.setBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the client side is to get it on server side and send it via packet. Feel free to replace this with a better way.
+		return out;
 	}
 
 	/**

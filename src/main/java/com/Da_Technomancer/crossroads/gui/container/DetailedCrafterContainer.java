@@ -75,7 +75,7 @@ public class DetailedCrafterContainer extends Container{
 	
 	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn){
-		ItemStack out = ItemStack.EMPTY;
+		ItemStack out;
 		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscOp.getPlayerTag(playerInv.player);
 		if(!world.isRemote && !nbt.hasKey("path")){
 			nbt.setTag("path", new NBTTagCompound());

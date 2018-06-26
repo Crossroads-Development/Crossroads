@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"redstone_bool=true": { "model": "iron_block" },
+		"redstone_bool=false": { "model": "iron_block" }
+	}
+}

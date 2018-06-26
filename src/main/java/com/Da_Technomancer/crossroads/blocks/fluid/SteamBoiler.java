@@ -63,19 +63,19 @@ public class SteamBoiler extends BlockContainer{
 		if(!worldIn.isRemote){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof SteamBoilerTileEntity){
-				int saltContent = ((SteamBoilerTileEntity) te).inventory.getCount();
 
-				if(saltContent != 0){
-					((SteamBoilerTileEntity) te).inventory = ItemStack.EMPTY;
-					te.markDirty();
-					ItemStack gotten = MiscOp.getOredictStack("dustSalt", saltContent);
-					if(!playerIn.inventory.addItemStackToInventory(gotten)){
-						EntityItem dropped = playerIn.dropItem(gotten, false);
-						dropped.setNoPickupDelay();
-						dropped.setOwner(playerIn.getName());
+				if(playerIn == null || !FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null)){
+					int saltContent = ((SteamBoilerTileEntity) te).inventory.getCount();
+					if(saltContent != 0){
+						((SteamBoilerTileEntity) te).inventory = ItemStack.EMPTY;
+						te.markDirty();
+						ItemStack gotten = MiscOp.getOredictStack("dustSalt", saltContent);
+						if(!playerIn.inventory.addItemStackToInventory(gotten)){
+							EntityItem dropped = playerIn.dropItem(gotten, false);
+							dropped.setNoPickupDelay();
+							dropped.setOwner(playerIn.getName());
+						}
 					}
-				}else if(playerIn != null){
-					FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
 				}
 			}
 		}

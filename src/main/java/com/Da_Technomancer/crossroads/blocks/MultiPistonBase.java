@@ -1,15 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.WorldBuffer;
 import com.Da_Technomancer.crossroads.items.ModItems;
-
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.EnumPushReaction;
@@ -32,6 +27,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**Notable differences from a normal piston include:
  * 15 block head range, distance controlled by signal strength,
@@ -61,6 +60,17 @@ public class MultiPistonBase extends Block{
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer));
+	}
+
+
+	@Override
+	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance){
+		//The tops of sticky multi pistons remove fall damage. They aren't bouncy, due to the method that bouncing would be done in (onFallen) not allowing retrieval of blockstate information
+		if(entityIn.isSneaking() || !sticky || worldIn.getBlockState(pos).getValue(Properties.FACING) != EnumFacing.UP){
+			super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
+		}else{
+			entityIn.fall(fallDistance, 0.0F);
+		}
 	}
 
 	@Override

@@ -49,7 +49,7 @@ public class RiftEffect implements IEffect{
 			if(spawn != null){
 				try{
 					EntityLiving ent = spawn.entityClass.getConstructor(new Class[] {World.class}).newInstance(worldServ);
-					ent.setPosition(pos.getX(), pos.getY(), pos.getZ());
+					ent.setPosition(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
 					Event.Result r = ForgeEventFactory.canEntitySpawn(ent, worldServ, pos.getX(), pos.getY(), pos.getZ(), null);
 					if(r == Event.Result.ALLOW || r == Event.Result.DEFAULT){
 						worldServ.spawnEntity(ent);
@@ -71,7 +71,7 @@ public class RiftEffect implements IEffect{
 				if(spawn != null){
 					try{
 						EntityLiving ent = spawn.entityClass.getConstructor(new Class[] {World.class}).newInstance(worldServ);
-						ent.setPosition(pos.getX(), pos.getY(), pos.getZ());
+						ent.setPosition(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
 						Event.Result r = ForgeEventFactory.canEntitySpawn(ent, worldServ, pos.getX(), pos.getY(), pos.getZ(), null);
 						if(r == Event.Result.ALLOW || r == Event.Result.DEFAULT){
 							worldServ.spawnEntity(ent);

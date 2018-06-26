@@ -10,8 +10,9 @@ public class ChargeEffect implements IEffect{
 
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
-		worldIn.addWeatherEffect(new EntityLightningBolt(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
-		
+		if(mult >= 8){
+			worldIn.addWeatherEffect(new EntityLightningBolt(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
+		}
 		if(worldIn.getBlockState(pos).getMaterial() == Material.ROCK){
 			worldIn.setBlockState(pos, Blocks.REDSTONE_BLOCK.getDefaultState());
 		}

@@ -13,7 +13,13 @@ public enum GearTypes{
 	COPPER(9000D, new Color(255, 120, 60)),
 	TIN(7300D, new Color(240, 240, 240)),
 	BRONZE(8800D, new Color(255, 160, 60)),
-	COPSHOWIUM(0, new Color(255, 130, 0));
+	COPSHOWIUM(0, new Color(255, 130, 0)),
+	LEAD(11000D, new Color(116, 105, 158)),
+	SILVER(10000D, new Color(189, 243, 238)),
+	NICKEL(9000D, new Color(241, 242, 196)),
+	INVAR(8000D, new Color(223, 237, 216)),
+	PLATINUM(21000D, new Color(116, 245, 255)),
+	ELECTRUM(15000D, new Color(254, 255, 138));
 
 	private final double density;
 	private final Color color;

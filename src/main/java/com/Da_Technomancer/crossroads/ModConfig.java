@@ -44,6 +44,8 @@ public final class ModConfig{
 	public static Property atmosEffect;
 	public static Property documentCrafttweaker;
 	public static Property addBoboRecipes;
+	public static Property cccExpenLiquid;
+	public static Property cccFieldLiquid;
 
 	private static final ArrayList<Property> SYNCED_PROPERTIES = new ArrayList<Property>();
 	public static NBTTagCompound syncPropNBT;
@@ -93,6 +95,8 @@ public final class ModConfig{
 		atmosEffect = config.get(CAT_ALCHEMY, "Level of effects from overcharging the atmosphere (Default 3)", 3, "0: No negative effects. 1: Allow lightning strikes. 2: Allow creeper charging. 3: Allow lightning strikes & creeper charging.");
 		documentCrafttweaker = config.get(CAT_INTERNAL, "Show CraftTweaker integration documentation in the guide book? (Default false)", false, "The documentation will appear in the misc section of Technician's Manual, NOT the Mysterious Journal. Pack makers: Turn this off before releasing the pack!");
 		addBoboRecipes = config.get(CAT_MISC, "Add recipes for bobo items? (Default true)", true, "Disabling these recipes will NOT change the documentation at all. Responsibility for warning users of disabled recipes is left to pack makers.");
+		cccExpenLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber without fields (Default copper).", "copper", "An invalid liquid will disable the crafting");
+		cccFieldLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber with fields (Default distilledwater).", "distilledwater", "An invalid liquid will disable the crafting");
 	}
 
 	/**

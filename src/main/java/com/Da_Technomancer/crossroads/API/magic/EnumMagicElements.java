@@ -25,7 +25,7 @@ public enum EnumMagicElements{
 	TIME(new TimeEffect(), new TimeEffect.VoidTimeEffect(), new Color(255, 100, 0), 16),
 	ENCHANTMENT(new EnchantEffect(), new EnchantEffect.DisenchantEffect(), new Color(251, 255, 184), 16),
 	EQUALIBRIUM(new EqualibriumEffect(), new EqualibriumEffect.VoidEqualibriumEffect(), new Color(255, 132, 255), 36),
-	RIFT(new RiftEffect(), new RiftEffect.VoidRiftEffect(), new Color(255, 0, 255), 90),
+	RIFT(new RiftEffect(), new RiftEffect.VoidRiftEffect(), new Color(255, 0, 255), 96),
 	CHARGE(new ChargeEffect(), new ChargeEffect.VoidChargeEffect(), new Color(255, 255, 0), 128),
 	EXPANSION(new PlaceEffect(), new PlaceEffect.BreakEffect(), new Color(0, 255, 255), 72),
 	FUSION(new FusionEffect(), new FusionEffect.VoidFusionEffect(), new Color(132, 255, 255), 60),
