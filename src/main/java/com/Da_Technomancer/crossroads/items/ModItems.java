@@ -163,7 +163,7 @@ public final class ModItems{
 		philosopherStone = new PhilStone();
 		practitionerStone = new BasicItem("prac_stone");
 		alchCrystal = new BasicItem("alch_crystal", "gemAlcCryst");
-		wasteSalt = new BasicItem("waste_salt", "dustSalt");
+		wasteSalt = new BasicItem("waste_salt", "dustAlcSalt");
 		phial = new Phial();
 		liechWrench = new LiechWrench();
 		leydenJar = new LeydenJar();

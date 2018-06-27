@@ -10,7 +10,7 @@ public class CrystalFormationReaction implements IReaction{
 	public boolean performReaction(IReactionChamber chamber){
 		ReagentStack[] reags = chamber.getReagants();
 		
-		if(reags[19] != null && reags[19].getAmount() >= 4.99 && chamber.getContent() - reags[19].getAmount() >= 19.99){
+		if(reags[19] != null && reags[19].getAmount() >= 4.99D && chamber.getContent() - reags[19].getAmount() >= 19.99D){
 			
 			double practAmount = reags[19].getAmount();
 

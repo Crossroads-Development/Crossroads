@@ -74,6 +74,13 @@ public class SimpleReaction implements IReaction{
 			return false;
 		}
 
+		//Sanity check, makes sure that the reaction batch is large enough that none of the products will be immediately wiped for being too small a quantity
+		for(Pair<IReagent, Integer> reag : products){
+			if(reags[reag.getLeft().getIndex()] == null && maxReactions * (double) reag.getRight() <= AlchemyCore.MIN_QUANTITY){
+				return false;
+			}
+		}
+
 		for(Pair<IReagent, Integer> reag : reagents){
 			if(reags[reag.getLeft().getIndex()].increaseAmount(-maxReactions * (double) reag.getRight()) <= 0D){
 				reags[reag.getLeft().getIndex()] = null;
