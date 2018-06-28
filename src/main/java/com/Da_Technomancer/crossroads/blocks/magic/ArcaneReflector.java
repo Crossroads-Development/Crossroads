@@ -49,11 +49,11 @@ public class ArcaneReflector extends BlockContainer{
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
+				worldIn.setBlockState(pos, state.cycleProperty(Properties.FACING));
 				if(te instanceof ArcaneReflectorTileEntity){
 					((ArcaneReflectorTileEntity) te).resetFacing();
 					((ArcaneReflectorTileEntity) te).resetBeamer();
 				}
-				worldIn.setBlockState(pos, state.cycleProperty(Properties.FACING));
 			}
 			return true;
 		}

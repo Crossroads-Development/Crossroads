@@ -5,11 +5,9 @@ import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.magic.QuartzStabilizerTileEntity;
-
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -47,10 +45,10 @@ public class QuartzStabilizer extends BlockContainer{
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
+				worldIn.setBlockState(pos, state.cycleProperty(Properties.FACING));
 				if(te instanceof BeamRenderTE){
 					((BeamRenderTE) te).resetBeamer();
 				}
-				worldIn.setBlockState(pos, state.cycleProperty(Properties.FACING));
 			}
 			return true;
 		}
@@ -83,7 +81,7 @@ public class QuartzStabilizer extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
+		return new BlockStateContainer(this, Properties.FACING);
 	}
 
 	@Override

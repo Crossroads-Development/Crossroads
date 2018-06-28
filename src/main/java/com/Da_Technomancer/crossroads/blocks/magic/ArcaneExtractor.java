@@ -52,10 +52,10 @@ public class ArcaneExtractor extends BlockContainer{
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
+				worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
 				if(te instanceof BeamRenderTE){
 					((BeamRenderTE) te).resetBeamer();
 				}
-				worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
 			}
 			return true;
 		}

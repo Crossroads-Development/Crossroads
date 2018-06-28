@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.fluids.*;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.PredicateMap;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
