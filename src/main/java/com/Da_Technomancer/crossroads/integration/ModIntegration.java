@@ -16,6 +16,7 @@ public class ModIntegration{
 		if(Loader.isModLoaded("jei")){
 			ReagIngr.populate();
 		}
+
 	}
 
 	public static void init(){

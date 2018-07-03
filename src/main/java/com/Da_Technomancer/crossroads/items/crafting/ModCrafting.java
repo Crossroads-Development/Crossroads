@@ -353,8 +353,8 @@ public final class ModCrafting{
 		for(GearTypes type : GearTypes.values()){
 			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS.get(type), 9), " ? ", "?#?", " ? ", '#', "block" + type.toString(), '?', "ingot" + type.toString()));
 			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS.get(type), 1), " ? ", "?#?", " ? ", '#', "ingot" + type.toString(), '?', "nugget" + type.toString()));
-			toRegister.add(new ShapelessOreRecipe(null, GearFactory.TOGGLE_GEARS.get(type), "dustRedstone", "dustRedstone", "stickIron", GearFactory.BASIC_GEARS.get(type)));
-			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.LARGE_GEARS.get(type), 1), "###", "#$#", "###", '#', GearFactory.BASIC_GEARS.get(type), '$', "block" + type.toString()));
+			toRegister.add(new ShapelessOreRecipe(null, GearFactory.TOGGLE_GEARS.get(type), "dustRedstone", "dustRedstone", "stickIron", "gear" + type.toString()));
+			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.LARGE_GEARS.get(type), 1), "###", "#$#", "###", '#', "gear" + type.toString(), '$', "block" + type.toString()));
 		}
 		// Steam Boiler
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.steamBoiler, 1), "###", "# #", "&&&", '#', "ingotBronze", '&', "ingotCopper"));
