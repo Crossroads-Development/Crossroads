@@ -13,19 +13,19 @@ import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("serial")
 public class SendChatToClient extends Message<SendChatToClient>{
-	
+
 	public SendChatToClient(){
-		
+
 	}
-	
+
 	public String chat;
 	public int id;
-	
+
 	public SendChatToClient(String chat, int id){
 		this.chat = chat;
 		this.id = id;
 	}
-	
+
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.CLIENT){
@@ -50,11 +50,7 @@ public class SendChatToClient extends Message<SendChatToClient>{
 		}else{
 			try{
 				SafeCallable.printChatNoLog.invoke(chatGui, new TextComponentString(chat), id, Minecraft.getMinecraft().ingameGUI.getUpdateCounter(), false);
-			}catch(IllegalAccessException e){
-				Main.logger.catching(e);
-			}catch(IllegalArgumentException e){
-				Main.logger.catching(e);
-			}catch(InvocationTargetException e){
+			}catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e){
 				Main.logger.catching(e);
 			}
 		}

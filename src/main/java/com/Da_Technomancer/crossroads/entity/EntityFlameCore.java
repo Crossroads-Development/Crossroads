@@ -83,7 +83,6 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt){
-
 		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
 			ReagentStack reag = reags[i];
 			if(reag == null){

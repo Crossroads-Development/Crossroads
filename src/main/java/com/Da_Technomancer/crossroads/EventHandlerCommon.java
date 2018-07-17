@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
+import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
@@ -32,6 +33,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
@@ -42,6 +44,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -49,6 +52,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -351,6 +355,68 @@ public final class EventHandlerCommon{
 					player.world.createExplosion(null, player.posX, player.posY, player.posZ, 5F, true);
 				}
 			}
+		}
+	}
+
+
+	private static final Field explosionPower;
+	private static final Field explosionSmoking;
+
+	static{
+		Field holderPower = null;
+		Field holderSmoking = null;
+		try{
+			for(Field f : Explosion.class.getDeclaredFields()){
+				if("field_77280_f".equals(f.getName()) || "size".equals(f.getName())){
+					holderPower = f;
+					holderPower.setAccessible(true);
+				}else if("field_82755_b".equals(f.getName()) || "damagesTerrain".equals(f.getName())){
+					holderSmoking = f;
+					holderSmoking.setAccessible(true);
+				}
+			}
+			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with the forge method, so the above for loop is used instead.
+		}catch(Exception e){
+			Main.logger.catching(e);
+		}
+		explosionPower = holderPower;
+		explosionSmoking = holderSmoking;
+		if(explosionPower == null){
+			Main.logger.error("Reflection to get explosionPower failed. Disabling relevant feature(s).");
+		}
+		if(explosionSmoking == null){
+			Main.logger.error("Reflection to get explosionSmoking failed. Disabling relevant feature(s).");
+		}
+	}
+
+
+	@SubscribeEvent
+	public void modifyExplosion(ExplosionEvent.Start e){
+		boolean perpetuate = false;
+		for(Entity ent : e.getWorld().loadedEntityList){
+			if(ent instanceof EntityGhostMarker){
+				EntityGhostMarker mark = (EntityGhostMarker) ent;
+				if(mark.getType() == EntityGhostMarker.EnumMarkerType.EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).lengthSquared() <= mark.data.getInteger("range")){
+					e.setCanceled(true);
+					return;
+				}else if(mark.getType() == EntityGhostMarker.EnumMarkerType.VOID_EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).lengthSquared() <= mark.data.getInteger("range")){
+					perpetuate = true;
+				}
+			}
+		}
+
+		if(perpetuate && explosionPower != null && explosionSmoking != null){
+			EntityGhostMarker marker = new EntityGhostMarker(e.getWorld(), EntityGhostMarker.EnumMarkerType.DELAYED_EXPLOSION, 5);
+			marker.setPosition(e.getExplosion().getPosition().x, e.getExplosion().getPosition().y, e.getExplosion().getPosition().z);
+			NBTTagCompound data = new NBTTagCompound();
+			try{
+				data.setFloat("power", explosionPower.getFloat(e.getExplosion()));
+				data.setBoolean("smoking", explosionSmoking.getBoolean(e.getExplosion()));
+			}catch(IllegalAccessException ex){
+				Main.logger.error("Failed to perpetuate explosion. Dim: " + e.getWorld().provider.getDimension() + "; Pos: " + e.getExplosion().getPosition());
+			}
+			marker.data = data;
+			e.getWorld().spawnEntity(marker);
 		}
 	}
 }
