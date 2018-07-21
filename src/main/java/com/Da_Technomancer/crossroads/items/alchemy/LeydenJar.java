@@ -33,7 +33,7 @@ public class LeydenJar extends Item{
 	
 	public static int getCharge(ItemStack stack){
 		NBTTagCompound nbt = stack.getTagCompound();
-		if(nbt != null){
+		if(stack.getItem() == ModItems.leydenJar && nbt != null){
 			return nbt.getInteger("charge");
 		}else{
 			return 0;

@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.items;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -14,10 +12,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+
 public class Vacuum extends Item{
 
-	private final static int range = 5;
-	private final static double angle = Math.cos((Math.PI) / 4F);
+	private static final int RANGE = 5;
+	private static final double ANGLE = 1D / Math.sqrt(2D);//Math.cos(Math.PI / 4F);
 
 	public Vacuum(){
 		String name = "vacuum";
@@ -32,38 +32,20 @@ public class Vacuum extends Item{
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand){
-		ArrayList<Entity> entities = (ArrayList<Entity>) worldIn.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(playerIn.posX - range, playerIn.posY - range, playerIn.posZ - range, playerIn.posX + range, playerIn.posY + range, playerIn.posZ + range), EntitySelectors.IS_ALIVE);
+		ArrayList<Entity> entities = (ArrayList<Entity>) worldIn.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(playerIn.posX, playerIn.posY, playerIn.posZ, playerIn.posX, playerIn.posY, playerIn.posZ).grow(RANGE), EntitySelectors.IS_ALIVE);
 
-		entities = areValid(entities, playerIn);
+		//Removes entities from the list if they aren't in the conical region in the direction the player is looking
+		Vec3d look = playerIn.getLookVec().scale(RANGE);
+		Vec3d playPos = playerIn.getPositionVector();
+		entities.removeIf((Entity e) -> {Vec3d ePos = e.getPositionVector().subtract(playPos); return ePos.dotProduct(look) / (ePos.lengthVector() * look.lengthVector()) <= ANGLE || ePos.lengthVector() >= RANGE;});
 
 		for(Entity ent : entities){
-			Vec3d motVec = playerIn.getPositionVector().subtract(ent.getPositionVector()).normalize();
+			Vec3d motVec = playerIn.getPositionVector().subtract(ent.getPositionVector()).scale(0.25D);
 			ent.addVelocity(motVec.x, motVec.y, motVec.z);
 		}
 
 		playerIn.getHeldItem(hand).damageItem(1, playerIn);
 
 		return ActionResult.newResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
-	}
-
-	private static ArrayList<Entity> areValid(ArrayList<Entity> listIn, EntityPlayer player){
-		if(listIn == null){
-			return null;
-		}
-
-		ArrayList<Entity> listOut = new ArrayList<Entity>();
-
-		Vec3d look = player.getLookVec().scale(range);
-		Vec3d playPos = player.getPositionVector();
-
-		for(Entity ent : listIn){
-			Vec3d ePos = ent.getPositionVector().subtract(playPos);
-
-			if(ePos.dotProduct(look) / ePos.lengthVector() / look.lengthVector() > angle && ePos.lengthVector() < range){
-				listOut.add(ent);
-			}
-		}
-
-		return listOut;
 	}
 }

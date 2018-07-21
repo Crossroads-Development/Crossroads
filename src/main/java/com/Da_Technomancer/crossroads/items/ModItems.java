@@ -109,6 +109,7 @@ public final class ModItems{
 	public static BasicItem solidMuriatic;
 	public static BasicItem solidRegia;
 	public static FlyingMachine flyingMachine;
+	public static TeslaRay teslaRay;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -186,6 +187,7 @@ public final class ModItems{
 		solidMuriatic = new BasicItem("solid_muriatic");
 		solidRegia = new BasicItem("solid_regia");
 		flyingMachine = new FlyingMachine();
+		teslaRay = new TeslaRay();
 	}
 
 	@SideOnly(Side.CLIENT)

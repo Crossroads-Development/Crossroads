@@ -27,7 +27,11 @@ public class LooseArcRenderable{
 	public final float length;
 	
 	public final Vec3d[][] states;
-	
+
+	public LooseArcRenderable(Vec3d start, Vec3d end, int count, float diffusionRate, float length, int color){
+		this((float) start.x, (float) start.y, (float) start.z, (float) end.x, (float) end.y, (float) end.z, count, diffusionRate, length, color);
+	}
+
 	public LooseArcRenderable(float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, float length, int color){
 		this(xSt, ySt, zSt, xEn, yEn, zEn, xSt, ySt, zSt, xEn, yEn, zEn, count, diffusionRate, length, (byte) 10, color);
 	}

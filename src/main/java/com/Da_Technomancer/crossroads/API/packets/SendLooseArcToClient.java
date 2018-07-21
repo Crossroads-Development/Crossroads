@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
-
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,6 +18,12 @@ public class SendLooseArcToClient extends Message<SendLooseArcToClient>{
 	
 	public NBTTagCompound nbt;
 
+	public SendLooseArcToClient(LooseArcRenderable arc){
+		NBTTagCompound nbt = new NBTTagCompound();
+		arc.saveToNBT(nbt);
+		this.nbt = nbt;
+	}
+
 	/**
 	 * @param nbt Should represent a {@link LooseArcRenderable}
 	 */
@@ -28,7 +34,7 @@ public class SendLooseArcToClient extends Message<SendLooseArcToClient>{
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
+			Main.logger.error("MessageToClient received on wrong side:" + context.side);
 			return null;
 		}
 

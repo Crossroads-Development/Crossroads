@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.items.alchemy;
+package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.entity.EntityFlyingMachine;
 import com.Da_Technomancer.crossroads.items.ModItems;

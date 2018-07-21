@@ -236,6 +236,7 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "man_glass"), new SmartEntry("lore.man_glass.name", new ItemStack(ModItems.florenceFlask, 1), "lore.man_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/man_glass.png"), "lore.man_glass_pic")));
 			entries.put(new ResourceLocation(Main.MODID, "aut_glass"), new SmartEntry("lore.aut_glass.name", new ItemStack(ModBlocks.reactionChamber, 1), "lore.aut_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/aut_glass.png"), "lore.aut_glass_pic")));
 			entries.put(new ResourceLocation(Main.MODID, "electric"), new SmartEntry("lore.electric.name", new ItemStack(ModBlocks.teslaCoil, 1), "lore.electric"));
+			entries.put(new ResourceLocation(Main.MODID, "tesla_ray"), new SmartEntry("lore.tesla_ray.name", new ItemStack(ModItems.teslaRay, 1), "lore.tesla_ray"));
 			entries.put(new ResourceLocation(Main.MODID, "heat_limiter"), new SmartEntry("lore.heat_limiter.name", new ItemStack(ModBlocks.heatLimiter, 1), "lore.heat_limiter"));
 			entries.put(new ResourceLocation(Main.MODID, "acids"), new SmartEntry("lore.acids.name", new ItemStack(ModItems.solidVitriol, 1), "lore.acids"));
 			entries.put(new ResourceLocation(Main.MODID, "chlorine"), new SmartEntry("lore.chlorine.name", new ItemStack(Items.FERMENTED_SPIDER_EYE, 1), "lore.chlorine"));
@@ -451,6 +452,7 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "man_glass"), new SmartEntry("info.man_glass.name", new ItemStack(ModItems.florenceFlask, 1), "info.man_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/man_glass.png"), "info.man_glass_pic")));
 			entries.put(new ResourceLocation(Main.MODID, "aut_glass"), new SmartEntry("info.aut_glass.name", new ItemStack(ModBlocks.reactionChamber, 1), "info.aut_glass", Pair.of(new ResourceLocation(Main.MODID, "textures/book/aut_glass.png"), "info.aut_glass_pic")));
 			entries.put(new ResourceLocation(Main.MODID, "electric"), new SmartEntry("info.electric.name", new ItemStack(ModBlocks.teslaCoil, 1), "info.electric"));
+			entries.put(new ResourceLocation(Main.MODID, "tesla_ray"), new SmartEntry("info.tesla_ray.name", new ItemStack(ModItems.teslaRay, 1), "info.tesla_ray"));
 			entries.put(new ResourceLocation(Main.MODID, "heat_limiter"), new SmartEntry("info.heat_limiter.name", new ItemStack(ModBlocks.heatLimiter, 1), "info.heat_limiter"));
 			entries.put(new ResourceLocation(Main.MODID, "acids"), new SmartEntry("info.acids.name", new ItemStack(ModItems.solidVitriol, 1), "info.acids"));
 			entries.put(new ResourceLocation(Main.MODID, "chlorine"), new SmartEntry("info.chlorine.name", new ItemStack(Items.FERMENTED_SPIDER_EYE, 1), "info.chlorine"));

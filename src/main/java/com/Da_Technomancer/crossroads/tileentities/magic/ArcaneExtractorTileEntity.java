@@ -75,16 +75,22 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || stack.isEmpty() || !inv.isEmpty() || !(RecipeHolder.magExtractRecipes.containsKey(stack.getItem()))){
+			if(slot != 0 || stack.isEmpty() || inv.getCount() >= getSlotLimit(0) || !inv.isEmpty() && !inv.isItemEqual(stack) || !(RecipeHolder.magExtractRecipes.containsKey(stack.getItem()))){
 				return stack;
 			}
 
+			int moved = Math.min(getSlotLimit(0) - inv.getCount(), stack.getCount());
+
 			if(!simulate){
-				inv = new ItemStack(stack.getItem(), 1, stack.getMetadata());
+				if(inv.isEmpty()){
+					inv = new ItemStack(stack.getItem(), moved, stack.getMetadata());
+				}else{
+					inv.grow(moved);
+				}
 				markDirty();
 			}
 
-			return stack.getCount() == 1 ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - 1, stack.getMetadata());
+			return stack.getCount() == moved ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - moved, stack.getMetadata());
 		}
 
 		@Override
