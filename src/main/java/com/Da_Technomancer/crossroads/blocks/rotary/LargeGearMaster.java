@@ -1,14 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -26,6 +22,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LargeGearMaster extends BlockContainer{
 	
@@ -63,22 +62,22 @@ public class LargeGearMaster extends BlockContainer{
 	
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
+		return new BlockStateContainer(this, new IProperty[] {EssentialsProperties.FACING});
 	}
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.FACING).getIndex();
+		return state.getValue(EssentialsProperties.FACING).getIndex();
 	}
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		switch(state.getValue(Properties.FACING)){
+		switch(state.getValue(EssentialsProperties.FACING)){
 			case UP:
 				return UP;
 			case DOWN:
@@ -123,7 +122,7 @@ public class LargeGearMaster extends BlockContainer{
 	@Override
 	public boolean removedByPlayer(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, boolean canHarvest){
 		if(canHarvest && worldIn.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
-			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(Properties.FACING), true);
+			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(EssentialsProperties.FACING), true);
 		}
 		return super.removedByPlayer(state, worldIn, pos, player, canHarvest);
 	}
@@ -131,7 +130,7 @@ public class LargeGearMaster extends BlockContainer{
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		if(worldIn.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
-			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(Properties.FACING), false);
+			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.getValue(EssentialsProperties.FACING), false);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

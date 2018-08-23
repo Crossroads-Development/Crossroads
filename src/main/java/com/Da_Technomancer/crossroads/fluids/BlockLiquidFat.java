@@ -19,8 +19,8 @@ public class BlockLiquidFat extends BlockFluidClassic{
 	public BlockLiquidFat(){
 		super(LIQUID_FAT, Material.WATER);
 		LIQUID_FAT.setBlock(this);
-		setUnlocalizedName("blockLiquidFat");
-		setRegistryName("blockLiquidFat");
+		setUnlocalizedName("liquid_fat");
+		setRegistryName("liquid_fat");
 		ModBlocks.toRegister.add(this);
 	}
 
@@ -39,7 +39,7 @@ public class BlockLiquidFat extends BlockFluidClassic{
 	private static class FluidLiquidFat extends Fluid{
 
 		private FluidLiquidFat(){
-			super("liquidfat", new ResourceLocation(Main.MODID + ":blocks/liquidfat_still"), new ResourceLocation(Main.MODID + ":blocks/liquidfat_flow"));
+			super("liquid_fat", new ResourceLocation(Main.MODID + ":blocks/liquidfat_still"), new ResourceLocation(Main.MODID + ":blocks/liquidfat_flow"));
 			setDensity(2000);
 			setViscosity(2000);
 		}

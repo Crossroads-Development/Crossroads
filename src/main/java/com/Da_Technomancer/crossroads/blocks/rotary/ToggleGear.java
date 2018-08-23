@@ -2,13 +2,13 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.ToggleGearTileEntity;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -72,7 +72,7 @@ public class ToggleGear extends BlockContainer{
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		CommonProxy.masterKey++;
-		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, worldIn.isBlockPowered(pos));
+		return getDefaultState().withProperty(EssentialsProperties.REDSTONE_BOOL, worldIn.isBlockPowered(pos));
 	}
 
 	@Override
@@ -95,23 +95,23 @@ public class ToggleGear extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.REDSTONE_BOOL);
+		return new BlockStateContainer(this, EssentialsProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
+		return getDefaultState().withProperty(EssentialsProperties.REDSTONE_BOOL, meta == 1);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.REDSTONE_BOOL) ? 1 : 0;
+		return state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 1 : 0;
 	}
 
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return state.getValue(Properties.REDSTONE_BOOL) ? DOWN : UP;
+		return state.getValue(EssentialsProperties.REDSTONE_BOOL) ? DOWN : UP;
 	}
 
 	@Override
@@ -120,13 +120,13 @@ public class ToggleGear extends BlockContainer{
 			return;
 		}
 		if(worldIn.isBlockPowered(pos)){
-			if(!state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+			if(!state.getValue(EssentialsProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, true));
 				worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, .3F, .6F);
 				worldIn.updateComparatorOutputLevel(pos, this);
 			}
-		}else if(state.getValue(Properties.REDSTONE_BOOL)){
-			worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
+		}else if(state.getValue(EssentialsProperties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, false));
 			worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, .3F, .5F);
 			worldIn.updateComparatorOutputLevel(pos, this);
 		}

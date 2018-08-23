@@ -1,20 +1,5 @@
 {
 	"variants": {
-		"redstone=0": { "model": "crossroads:fluid_tank" },
-		"redstone=1": { "model": "crossroads:fluid_tank" },
-		"redstone=2": { "model": "crossroads:fluid_tank" },
-		"redstone=3": { "model": "crossroads:fluid_tank" },
-		"redstone=4": { "model": "crossroads:fluid_tank" },
-		"redstone=5": { "model": "crossroads:fluid_tank" },
-		"redstone=6": { "model": "crossroads:fluid_tank" },
-		"redstone=7": { "model": "crossroads:fluid_tank" },
-		"redstone=8": { "model": "crossroads:fluid_tank" },
-		"redstone=9": { "model": "crossroads:fluid_tank" },
-		"redstone=10": { "model": "crossroads:fluid_tank" },
-		"redstone=11": { "model": "crossroads:fluid_tank" },
-		"redstone=12": { "model": "crossroads:fluid_tank" },
-		"redstone=13": { "model": "crossroads:fluid_tank" },
-		"redstone=14": { "model": "crossroads:fluid_tank" },
-		"redstone=15": { "model": "crossroads:fluid_tank" }
+		"normal": { "model": "crossroads:fluid_tank" }
 	}
 }

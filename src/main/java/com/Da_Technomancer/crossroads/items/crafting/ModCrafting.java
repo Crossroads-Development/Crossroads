@@ -370,9 +370,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump));
 		// OmniMeter
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.omnimeter, 1), " * ", "*#*", " * ", '*', "ingotBronze", '#', Items.COMPASS));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.omnimeter, 1), ModItems.thermometer));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.omnimeter, 1), ModItems.speedometer));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.omnimeter, 1), ModItems.fluidGauge));
 		// Fluid Tank (second recipe is for clearing contents)
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidTank, 1), " $ ", "$#$", " $ ", '#', "ingotGold", '$', "ingotBronze"));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.fluidTank, 1), ModBlocks.fluidTank));
@@ -426,11 +423,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.beamSplitter, 1), ModBlocks.beamSplitterBasic, "dustRedstone", "dustRedstone", "dustRedstone"));
 		//Color Chart
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
-		//Multi-Piston
-		toRegister.add(new ShapedOreRecipe(null, ModBlocks.multiPiston, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.PISTON));
-		//Sticky Multi-Piston
-		toRegister.add(new ShapedOreRecipe(null, ModBlocks.multiPistonSticky, "***", "$#$", "$$$", '*', "ingotTin", '$', "ingotBronze", '#', Blocks.STICKY_PISTON));
-		toRegister.add(new ShapelessOreRecipe(null, ModBlocks.multiPistonSticky, ModBlocks.multiPiston, "slimeball"));
 		//Crystalline Master Axis
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.crystalMasterAxis, 1), "*&*", "*#*", "***", '*', ModItems.pureQuartz, '#', ModBlocks.masterAxis, '&', ModItems.lensArray));
 		//Void Crystal

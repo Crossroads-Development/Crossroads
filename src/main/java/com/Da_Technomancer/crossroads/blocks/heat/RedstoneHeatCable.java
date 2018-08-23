@@ -1,11 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
@@ -15,12 +9,13 @@ import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.bakedModel.ConduitBakedModel;
 import com.Da_Technomancer.crossroads.client.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -53,6 +48,10 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
@@ -163,7 +162,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new ExtendedBlockState(this, new IProperty[] {Properties.REDSTONE_BOOL, Properties.TEXTURE_4}, new IUnlistedProperty[] {Properties.CONNECT});
+		return new ExtendedBlockState(this, new IProperty[] {EssentialsProperties.REDSTONE_BOOL, Properties.TEXTURE_4}, new IUnlistedProperty[] {Properties.CONNECT});
 	}
 
 	@Override
@@ -171,7 +170,7 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		Boolean[] connect = {false, false, false, false, false, false};
 
-		if(state.getValue(Properties.REDSTONE_BOOL)){
+		if(state.getValue(EssentialsProperties.REDSTONE_BOOL)){
 			for(EnumFacing direction : EnumFacing.values()){
 				TileEntity sideTe = world.getTileEntity(pos.offset(direction));
 				connect[direction.getIndex()] = sideTe != null && ((sideTe instanceof IPrototypePort && ((IPrototypePort) sideTe).getType() == PrototypePortTypes.HEAT && ((IPrototypePort) sideTe).getSide() == direction.getOpposite()) || (sideTe instanceof IPrototypeOwner && ((IPrototypeOwner) sideTe).getTypes()[direction.getOpposite().getIndex()] == PrototypePortTypes.HEAT) || sideTe.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite()));
@@ -190,12 +189,12 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.REDSTONE_BOOL, (meta & 1) == 1).withProperty(Properties.TEXTURE_4, meta >> 1);
+		return getDefaultState().withProperty(EssentialsProperties.REDSTONE_BOOL, (meta & 1) == 1).withProperty(Properties.TEXTURE_4, meta >> 1);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.REDSTONE_BOOL) ? 1 : 0) + (state.getValue(Properties.TEXTURE_4) << 1);
+		return (state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 1 : 0) + (state.getValue(Properties.TEXTURE_4) << 1);
 	}
 
 	@Override
@@ -223,12 +222,12 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isBlockPowered(pos)){
-			if(!state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+			if(!state.getValue(EssentialsProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, true));
 				worldIn.updateComparatorOutputLevel(pos, this);
 			}
-		}else if(state.getValue(Properties.REDSTONE_BOOL)){
-			worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
+		}else if(state.getValue(EssentialsProperties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, false));
 			worldIn.updateComparatorOutputLevel(pos, this);
 		}
 	}

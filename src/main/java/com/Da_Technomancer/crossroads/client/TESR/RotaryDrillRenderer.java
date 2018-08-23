@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.client.TESR;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelDrill;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -25,7 +24,7 @@ public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTi
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
-		switch(drill.getWorld().getBlockState(drill.getPos()).getValue(Properties.FACING)){
+		switch(drill.getWorld().getBlockState(drill.getPos()).getValue(EssentialsProperties.FACING)){
 			case DOWN:{
 				GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
 				GlStateManager.translate(-.5F, -1.5F, .5F);

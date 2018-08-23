@@ -1,20 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,6 +24,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class LargeGearSlave extends BlockContainer{
 	
@@ -53,22 +50,22 @@ public class LargeGearSlave extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
+		return new BlockStateContainer(this, EssentialsProperties.FACING);
 	}
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.FACING).getIndex();
+		return state.getValue(EssentialsProperties.FACING).getIndex();
 	}
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		switch(state.getValue(Properties.FACING)){
+		switch(state.getValue(EssentialsProperties.FACING)){
 			case UP:
 				return UP;
 			case DOWN:
@@ -127,7 +124,7 @@ public class LargeGearSlave extends BlockContainer{
 	@Override
 	public boolean removedByPlayer(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, boolean canHarvest){
 		if(canHarvest && worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
-			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.getValue(Properties.FACING), true);
+			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.getValue(EssentialsProperties.FACING), true);
 		}
 		return super.removedByPlayer(state, worldIn, pos, player, canHarvest);
 	}
@@ -135,7 +132,7 @@ public class LargeGearSlave extends BlockContainer{
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		if(worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
-			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.getValue(Properties.FACING), false);
+			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.getValue(EssentialsProperties.FACING), false);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

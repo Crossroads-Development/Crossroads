@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,7 +42,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	protected void performTransfer(){
-		EnumFacing side = world.getBlockState(pos).getValue(Properties.FACING);
+		EnumFacing side = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		TileEntity te = world.getTileEntity(pos.offset(side));
 		if(amount <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
 			return;
@@ -92,7 +92,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		EnumFacing outSide = world.getBlockState(pos).getValue(Properties.FACING);
+		EnumFacing outSide = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
 		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
 		return output;
@@ -113,7 +113,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -122,7 +122,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis())){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);

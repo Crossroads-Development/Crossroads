@@ -1,19 +1,18 @@
 package com.Da_Technomancer.crossroads.client.TESR;
 
-import java.awt.Color;
-
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.HamsterWheelTileEntity;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.awt.*;
 
 public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheelTileEntity>{
 
@@ -28,7 +27,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		if(!world.isBlockLoaded(pos, false) || world.getBlockState(pos).getBlock() != ModBlocks.hamsterWheel){
 			return;
 		}
-		EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
+		EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();

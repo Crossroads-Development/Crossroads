@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -81,12 +82,12 @@ public class FlowLimiter extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.CRYSTAL) ? 1 : 0) + (state.getValue(Properties.FACING).getIndex() << 1);
+		return (state.getValue(Properties.CRYSTAL) ? 1 : 0) + (state.getValue(EssentialsProperties.FACING).getIndex() << 1);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(Properties.FACING, EnumFacing.getFront(meta >> 1));
+		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(EssentialsProperties.FACING, EnumFacing.getFront(meta >> 1));
 	}
 	
 	@Override
@@ -100,7 +101,7 @@ public class FlowLimiter extends BlockContainer{
 						((FlowLimiterTileEntity) te).cycleLimit((EntityPlayerMP) playerIn);
 					}
 				}else{
-					worldIn.setBlockState(pos, state.cycleProperty(Properties.FACING));
+					worldIn.setBlockState(pos, state.cycleProperty(EssentialsProperties.FACING));
 				}
 			}
 			return true;
@@ -115,7 +116,7 @@ public class FlowLimiter extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.CRYSTAL, Properties.FACING);
+		return new BlockStateContainer(this, Properties.CRYSTAL, EssentialsProperties.FACING);
 	}
 
 	@Override
@@ -125,13 +126,13 @@ public class FlowLimiter extends BlockContainer{
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		Axis axis = state.getValue(Properties.FACING).getAxis();
+		Axis axis = state.getValue(EssentialsProperties.FACING).getAxis();
 		return axis == Axis.X ? BB_X : axis == Axis.Y ? BB_Y : BB_Z;
 	}
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getStateFromMeta(meta).withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer));
+		return getStateFromMeta(meta).withProperty(EssentialsProperties.FACING, (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer));
 	}
 	
 	@Override

@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.client.bakedModel.IAdvConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RedstoneFluidTubeTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -239,30 +240,30 @@ public class RedstoneFluidTube extends BlockContainer implements IAdvConduitMode
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new ExtendedBlockState(this, new IProperty[] {Properties.REDSTONE_BOOL}, new IUnlistedProperty[] {Properties.CONNECT_MODE});
+		return new ExtendedBlockState(this, new IProperty[] {EssentialsProperties.REDSTONE_BOOL}, new IUnlistedProperty[] {Properties.CONNECT_MODE});
 	}
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isBlockPowered(pos)){
-			if(!state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+			if(!state.getValue(EssentialsProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, true));
 			}
 		}else{
-			if(state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
+			if(state.getValue(EssentialsProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, false));
 			}
 		}
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(Properties.REDSTONE_BOOL, meta == 1);
+		return this.getDefaultState().withProperty(EssentialsProperties.REDSTONE_BOOL, meta == 1);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.REDSTONE_BOOL) ? 1 : 0;
+		return state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 1 : 0;
 	}
 
 	@Override

@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -44,7 +43,7 @@ public class GatewayFrame extends BlockContainer{
 		if(facing == EnumFacing.UP){
 			facing = EnumFacing.DOWN;
 		}
-		return getDefaultState().withProperty(Properties.FACING, placer instanceof FakePlayer ? EnumFacing.NORTH : facing);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, placer instanceof FakePlayer ? EnumFacing.NORTH : facing);
 	}
 
 	@Override
@@ -56,18 +55,18 @@ public class GatewayFrame extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING});
+		return new BlockStateContainer(this, new IProperty[] {EssentialsProperties.FACING});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
 		EnumFacing facing = EnumFacing.getFront(meta);
-		return getDefaultState().withProperty(Properties.FACING, facing);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.FACING).getIndex();
+		return state.getValue(EssentialsProperties.FACING).getIndex();
 	}
 
 	@Override
@@ -83,12 +82,12 @@ public class GatewayFrame extends BlockContainer{
 
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
-		return state.withProperty(Properties.FACING, rot.rotate(state.getValue(Properties.FACING)));
+		return state.withProperty(EssentialsProperties.FACING, rot.rotate(state.getValue(EssentialsProperties.FACING)));
 	}
 
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
-		return state.withRotation(mirrorIn.toRotation(state.getValue(Properties.FACING)));
+		return state.withRotation(mirrorIn.toRotation(state.getValue(EssentialsProperties.FACING)));
 	}
 	
 	@Override

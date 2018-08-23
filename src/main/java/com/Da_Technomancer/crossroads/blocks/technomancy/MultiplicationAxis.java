@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -34,12 +34,12 @@ public class MultiplicationAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite()).withProperty(Properties.REDSTONE_BOOL, false);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite()).withProperty(EssentialsProperties.REDSTONE_BOOL, false);
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.FACING, Properties.REDSTONE_BOOL);
+		return new BlockStateContainer(this, EssentialsProperties.FACING, EssentialsProperties.REDSTONE_BOOL);
 	}
 	
 	@Override
@@ -60,9 +60,9 @@ public class MultiplicationAxis extends BlockContainer{
 					((MultiplicationAxisTileEntity) te).disconnect();
 				}
 				if(playerIn.isSneaking()){
-					worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, !state.getValue(Properties.REDSTONE_BOOL)));
+					worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, !state.getValue(EssentialsProperties.REDSTONE_BOOL)));
 				}else{
-					worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
+					worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.FACING, state.getValue(EssentialsProperties.FACING).rotateY()));
 				}
 			}
 			return true;
@@ -73,12 +73,12 @@ public class MultiplicationAxis extends BlockContainer{
 	@Override
 	public IBlockState getStateFromMeta(int meta){
 		EnumFacing facing = EnumFacing.getFront(meta & 7);
-		return getDefaultState().withProperty(Properties.FACING, facing).withProperty(Properties.REDSTONE_BOOL, (meta & 8) == 8);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, facing).withProperty(EssentialsProperties.REDSTONE_BOOL, (meta & 8) == 8);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.FACING).getIndex() + (state.getValue(Properties.REDSTONE_BOOL) ? 8 : 0);
+		return state.getValue(EssentialsProperties.FACING).getIndex() + (state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 8 : 0);
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class MultiplicationAxis extends BlockContainer{
 	
 	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
-		return side == EnumFacing.UP || side == EnumFacing.DOWN || side.getAxis() == world.getBlockState(pos).getValue(Properties.FACING).getAxis();
+		return side == EnumFacing.UP || side == EnumFacing.DOWN || side.getAxis() == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis();
 	}
 
 	@Override
@@ -104,12 +104,12 @@ public class MultiplicationAxis extends BlockContainer{
 
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
-		return state.withProperty(Properties.FACING, rot.rotate(state.getValue(Properties.FACING)));
+		return state.withProperty(EssentialsProperties.FACING, rot.rotate(state.getValue(EssentialsProperties.FACING)));
 	}
 
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
-		return state.withRotation(mirrorIn.toRotation(state.getValue(Properties.FACING)));
+		return state.withRotation(mirrorIn.toRotation(state.getValue(EssentialsProperties.FACING)));
 	}
 	
 	@Override

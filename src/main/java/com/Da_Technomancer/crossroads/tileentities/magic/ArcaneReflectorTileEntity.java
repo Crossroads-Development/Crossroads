@@ -1,9 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -29,7 +28,7 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] inputSides(){
 		if(facing == -1){
-			facing = world.getBlockState(pos).getValue(Properties.FACING).getIndex();
+			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex();
 		}
 		boolean[] out = {true, true, true, true, true, true};
 		out[facing] = false;
@@ -39,7 +38,7 @@ public class ArcaneReflectorTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] outputSides(){
 		if(facing == -1){
-			facing = world.getBlockState(pos).getValue(Properties.FACING).getIndex();
+			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex();
 		}
 		boolean[] out = {false, false, false, false, false, false};
 		out[facing] = true;

@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -95,16 +93,6 @@ public class FluidTank extends BlockContainer{
 	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
 		TileEntity te = worldIn.getTileEntity(pos);
 		return te instanceof FluidTankTileEntity ? ((FluidTankTileEntity) te).getRedstone() : 0;
-	}
-
-	@Override
-	public BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.REDSTONE);
-	}
-	
-	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.REDSTONE);
 	}
 	
 	@Override

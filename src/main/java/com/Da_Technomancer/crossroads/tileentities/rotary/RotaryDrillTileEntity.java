@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -45,7 +45,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 			invalidate();
 			return;
 		}
-		EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
+		EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		if(world.isRemote){
 			TileEntity attachedTE = world.getTileEntity(pos.offset(facing.getOpposite()));
 			if(attachedTE != null && attachedTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
@@ -99,13 +99,13 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		return (cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()) || super.hasCapability(cap, side);
+		return (cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getOpposite()) || super.hasCapability(cap, side);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(Properties.FACING).getOpposite()){
+		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getOpposite()){
 			return (T) axleHandler;
 		}
 		return super.getCapability(cap, side);

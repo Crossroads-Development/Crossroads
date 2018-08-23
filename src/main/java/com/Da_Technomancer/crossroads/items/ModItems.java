@@ -57,12 +57,6 @@ public final class ModItems{
 	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
 	public static BasicItem dustCopper;
-	@Deprecated
-	public static Thermometer thermometer;
-	@Deprecated
-	public static FluidGauge fluidGauge;
-	@Deprecated
-	public static Speedometer speedometer;
 	public static OmniMeter omnimeter;
 	public static Vacuum vacuum;
 	public static MagentaBread magentaBread;
@@ -134,9 +128,6 @@ public final class ModItems{
 		dustCopper = new BasicItem("dust_copper", "dustCopper");
 		dustSalt = new BasicItem("dust_salt", "dustSalt");
 		mashedPotato = new MashedPotato();
-		thermometer = new Thermometer();
-		fluidGauge = new FluidGauge();
-		speedometer = new Speedometer();
 		omnimeter = new OmniMeter();
 		vacuum = new Vacuum();
 		magentaBread = new MagentaBread();

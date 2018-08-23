@@ -1,12 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +13,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+
+import javax.annotation.Nullable;
 
 public class ArcaneExtractorTileEntity extends BeamRenderTE{
 
@@ -46,7 +45,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).getValue(Properties.FACING)){
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).getValue(EssentialsProperties.FACING)){
 			return (T) itemHandler;
 		}
 
@@ -55,7 +54,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).getValue(Properties.FACING)){
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).getValue(EssentialsProperties.FACING)){
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -109,9 +108,9 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 		if(!inv.isEmpty() && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
 			MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
 			inv.shrink(1);
-			beamer[world.getBlockState(pos).getValue(Properties.FACING).getIndex()].emit(mag, world);
+			beamer[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()].emit(mag, world);
 		}else{
-			beamer[world.getBlockState(pos).getValue(Properties.FACING).getIndex()].emit(null, world);
+			beamer[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()].emit(null, world);
 			if(!inv.isEmpty()){
 				inv = ItemStack.EMPTY;
 			}
@@ -126,7 +125,7 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] out = new boolean[6];
-		out[world.getBlockState(pos).getValue(Properties.FACING).getIndex()] = true;
+		out[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()] = true;
 		return out;
 	}
 }

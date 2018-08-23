@@ -1,13 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import java.util.Random;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
-
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockRedstoneDiode;
@@ -22,17 +19,15 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Random;
 
 public class Ratiator extends BlockContainer{
 
@@ -81,7 +76,7 @@ public class Ratiator extends BlockContainer{
 
 	@Override
 	public int getWeakPower(IBlockState state, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
-		if(side == state.getValue(Properties.FACING).getOpposite()){
+		if(side == state.getValue(EssentialsProperties.FACING).getOpposite()){
 			double d = ((RatiatorTileEntity) blockAccess.getTileEntity(pos)).getOutput();
 			if(d >= 15){
 				return 15;
@@ -103,7 +98,7 @@ public class Ratiator extends BlockContainer{
 		if(!worldIn.isBlockTickPending(pos, this)){
 			int i = -1;
 
-			if(BlockRedstoneDiode.isDiode(worldIn.getBlockState(pos.offset(state.getValue(Properties.FACING))))){
+			if(BlockRedstoneDiode.isDiode(worldIn.getBlockState(pos.offset(state.getValue(EssentialsProperties.FACING))))){
 				i = -3;
 			}
 			worldIn.updateBlockTick(pos, this, 2, i);
@@ -160,11 +155,11 @@ public class Ratiator extends BlockContainer{
 		}
 		RatiatorTileEntity te = ((RatiatorTileEntity) rawTE);
 		double lastOut = te.getOutput();
-		double sidePower = Math.max(getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).rotateY(), false), getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).rotateYCCW(), false));
-		te.setOutput(state.getValue(Properties.REDSTONE_BOOL) ? getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).getOpposite(), true) / (sidePower == 0 ? 1D : sidePower) : getPowerOnSide(worldIn, pos, state.getValue(Properties.FACING).getOpposite(), true) * sidePower);
+		double sidePower = Math.max(getPowerOnSide(worldIn, pos, state.getValue(EssentialsProperties.FACING).rotateY(), false), getPowerOnSide(worldIn, pos, state.getValue(EssentialsProperties.FACING).rotateYCCW(), false));
+		te.setOutput(state.getValue(EssentialsProperties.REDSTONE_BOOL) ? getPowerOnSide(worldIn, pos, state.getValue(EssentialsProperties.FACING).getOpposite(), true) / (sidePower == 0 ? 1D : sidePower) : getPowerOnSide(worldIn, pos, state.getValue(EssentialsProperties.FACING).getOpposite(), true) * sidePower);
 		if(lastOut != te.getOutput()){
-			worldIn.neighborChanged(pos.offset(state.getValue(Properties.FACING)), this, pos);
-			worldIn.notifyNeighborsOfStateExcept(pos.offset(state.getValue(Properties.FACING)), this, state.getValue(Properties.FACING).getOpposite());
+			worldIn.neighborChanged(pos.offset(state.getValue(EssentialsProperties.FACING)), this, pos);
+			worldIn.notifyNeighborsOfStateExcept(pos.offset(state.getValue(EssentialsProperties.FACING)), this, state.getValue(EssentialsProperties.FACING).getOpposite());
 		}
 	}
 
@@ -172,16 +167,16 @@ public class Ratiator extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), false)){
-				IBlockState newState = state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY());
+				IBlockState newState = state.withProperty(EssentialsProperties.FACING, state.getValue(EssentialsProperties.FACING).rotateY());
 				worldIn.setBlockState(pos, newState);
 				neighborChanged(newState, worldIn, pos, null, null);
 				return true;
 			}
 
-			boolean oldValue = state.getValue(Properties.REDSTONE_BOOL);
-			worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, !oldValue));
+			boolean oldValue = state.getValue(EssentialsProperties.REDSTONE_BOOL);
+			worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, !oldValue));
 			worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, oldValue ? .55F : .5F);
-			neighborChanged(state.withProperty(Properties.REDSTONE_BOOL, !state.getValue(Properties.REDSTONE_BOOL)), worldIn, pos, this, pos);
+			neighborChanged(state.withProperty(EssentialsProperties.REDSTONE_BOOL, !state.getValue(EssentialsProperties.REDSTONE_BOOL)), worldIn, pos, this, pos);
 		}
 		return true;
 	}
@@ -199,23 +194,23 @@ public class Ratiator extends BlockContainer{
 
 	@Override
 	public BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.FACING, Properties.REDSTONE_BOOL});
+		return new BlockStateContainer(this, new IProperty[] {EssentialsProperties.FACING, EssentialsProperties.REDSTONE_BOOL});
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.FACING).getIndex() + (state.getValue(Properties.REDSTONE_BOOL) ? 8 : 0);
+		return state.getValue(EssentialsProperties.FACING).getIndex() + (state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 8 : 0);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.FACING, EnumFacing.getFront(meta & 7)).withProperty(Properties.REDSTONE_BOOL, meta >= 8);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.getFront(meta & 7)).withProperty(EssentialsProperties.REDSTONE_BOOL, meta >= 8);
 	}
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing();
-		return getDefaultState().withProperty(Properties.FACING, enumfacing).withProperty(Properties.REDSTONE_BOOL, false);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, enumfacing).withProperty(EssentialsProperties.REDSTONE_BOOL, false);
 	}
 
 	@Override
@@ -226,8 +221,8 @@ public class Ratiator extends BlockContainer{
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
 		((RatiatorTileEntity) worldIn.getTileEntity(pos)).setOutput(0);
-		worldIn.neighborChanged(pos.offset(state.getValue(Properties.FACING)), this, pos);
-		worldIn.notifyNeighborsOfStateExcept(pos.offset(state.getValue(Properties.FACING)), this, state.getValue(Properties.FACING).getOpposite());
+		worldIn.neighborChanged(pos.offset(state.getValue(EssentialsProperties.FACING)), this, pos);
+		worldIn.notifyNeighborsOfStateExcept(pos.offset(state.getValue(EssentialsProperties.FACING)), this, state.getValue(EssentialsProperties.FACING).getOpposite());
 		super.breakBlock(worldIn, pos, state);
 	}
 

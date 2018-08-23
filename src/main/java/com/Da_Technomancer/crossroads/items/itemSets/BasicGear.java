@@ -71,7 +71,7 @@ public class BasicGear extends Item{
 				playerIn.getHeldItem(hand).shrink(1);
 			}
 
-			worldIn.setBlockState(pos.offset(side), ModBlocks.sidedGearHolder.getDefaultState(), 3);
+			worldIn.setBlockState(pos.offset(side), ModBlocks.sextupleGear.getDefaultState(), 3);
 			te = worldIn.getTileEntity(pos.offset(side));
 			((SidedGearHolderTileEntity) te).setMembers(type, side.getOpposite().getIndex(), true);
 			CommonProxy.masterKey++;

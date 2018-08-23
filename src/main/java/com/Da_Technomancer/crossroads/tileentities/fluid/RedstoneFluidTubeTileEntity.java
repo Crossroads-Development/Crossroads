@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,7 +50,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 
 	public Integer[] getConnectMode(boolean forRender){
 		init();
-		if(forRender && !world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(forRender && !world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
 			return new Integer[] {0, 0, 0, 0, 0, 0};
 		}
 		if(forRender && !world.isRemote){
@@ -85,7 +86,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 			return;
 		}
 
-		if(world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
 			for(EnumFacing dir : EnumFacing.values()){
 				int ind = dir.getIndex();
 				TileEntity te = world.getTileEntity(pos.offset(dir));
@@ -260,7 +261,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing side){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) && (side == null || connectMode[side.getIndex()] != 0)){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL) && (side == null || connectMode[side.getIndex()] != 0)){
 			return side == null || connectMode[side.getIndex()] == 1 ? (T) mainHandler : connectMode[side.getIndex()] == 2 ? (T) outHandler : (T) inHandler;
 		}
 
@@ -269,7 +270,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) && (side == null || connectMode[side.getIndex()] != 0)){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL) && (side == null || connectMode[side.getIndex()] != 0)){
 			return true;
 		}
 		return super.hasCapability(capability, side);

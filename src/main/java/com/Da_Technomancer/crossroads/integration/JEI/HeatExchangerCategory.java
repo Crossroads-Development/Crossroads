@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import java.util.List;
-
 import com.Da_Technomancer.crossroads.Main;
 import com.google.common.collect.ImmutableList;
-
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableAnimated;
@@ -18,6 +15,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.List;
 
 public class HeatExchangerCategory implements IRecipeCategory<HeatExchangerRecipe>{
 
@@ -69,12 +68,16 @@ public class HeatExchangerCategory implements IRecipeCategory<HeatExchangerRecip
 			recipeLayout.getFluidStacks().init(0, true, 22, 56, 17, 17, 1, false, null);
 			recipeLayout.getFluidStacks().set(0, ingredients.getInputs(FluidStack.class).get(0));
 		}
-		recipeLayout.getItemStacks().init(0, true, 21, 55);
-		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
+
 		if(ingredients.getOutputs(FluidStack.class).get(0) != null){
 			recipeLayout.getFluidStacks().init(1, false, 81, 56, 16, 16, 1000, true, null);
 			recipeLayout.getFluidStacks().set(1, ingredients.getOutputs(FluidStack.class).get(0));
 		}
+
+
+		recipeLayout.getItemStacks().init(0, true, 21, 55);
+		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
+
 		recipeLayout.getItemStacks().init(1, false, 80, 55);
 		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(ItemStack.class).get(0));
 	}

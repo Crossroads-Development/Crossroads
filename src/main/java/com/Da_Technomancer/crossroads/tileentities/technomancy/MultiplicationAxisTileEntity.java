@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxle;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -72,16 +72,16 @@ public class MultiplicationAxisTileEntity extends AbstractMathAxisTE implements 
 
 	@Override
 	protected double getOutSpeed(double speed1, double speed2){
-		return world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) ? speed2 == 0 ? 0 : speed1 / speed2 : speed1 * speed2;
+		return world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL) ? speed2 == 0 ? 0 : speed1 / speed2 : speed1 * speed2;
 	}
 
 	@Override
 	protected EnumFacing getInOne(){
 		if(facing == null){
-			if(!world.getBlockState(pos).getProperties().containsKey(Properties.FACING)){
+			if(!world.getBlockState(pos).getProperties().containsKey(EssentialsProperties.FACING)){
 				return EnumFacing.DOWN;
 			}
-			facing = world.getBlockState(pos).getValue(Properties.FACING);
+			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		}
 		return facing.getOpposite();
 	}
@@ -95,10 +95,10 @@ public class MultiplicationAxisTileEntity extends AbstractMathAxisTE implements 
 	@Override
 	protected EnumFacing getOut(){
 		if(facing == null){
-			if(!world.getBlockState(pos).getProperties().containsKey(Properties.FACING)){
+			if(!world.getBlockState(pos).getProperties().containsKey(EssentialsProperties.FACING)){
 				return EnumFacing.DOWN;
 			}
-			facing = world.getBlockState(pos).getValue(Properties.FACING);
+			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		}
 		return facing;
 	}
@@ -140,7 +140,7 @@ public class MultiplicationAxisTileEntity extends AbstractMathAxisTE implements 
 	@Override
 	public void update(){
 		if(world.isRemote){
-			boolean divide = world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL);
+			boolean divide = world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL);
 			angleOne += Math.toDegrees((divide ? (lastInTwo == 0 ? 0 : divide ? -lastInOne / lastInTwo : -lastInOne * lastInTwo) : lastInOne) / 20D);
 			angleTwo += Math.toDegrees(lastInTwo / 20D);
 			angleTwoPos += Math.toDegrees(Math.abs(lastInTwo) / 20D);

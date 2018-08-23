@@ -1,15 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import java.util.List;
-
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEntity;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -25,6 +21,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class CageCharger extends BlockContainer{
 
@@ -56,7 +54,7 @@ public class CageCharger extends BlockContainer{
 	
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.HEAD, false);
+		return getDefaultState().withProperty(EssentialsProperties.HEAD, false);
 	}
 
 	@Override
@@ -66,25 +64,25 @@ public class CageCharger extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.HEAD});
+		return new BlockStateContainer(this, EssentialsProperties.HEAD);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HEAD, meta == 1);
+		return getDefaultState().withProperty(EssentialsProperties.HEAD, meta == 1);
 	}
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			if(state.getValue(Properties.HEAD)){
+			if(state.getValue(EssentialsProperties.HEAD)){
 				playerIn.inventory.addItemStackToInventory(((CageChargerTileEntity) worldIn.getTileEntity(pos)).getCage());
 				((CageChargerTileEntity) worldIn.getTileEntity(pos)).setCage(ItemStack.EMPTY);
-				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.HEAD, false));
+				worldIn.setBlockState(pos, getDefaultState().withProperty(EssentialsProperties.HEAD, false));
 			}else if(!playerIn.getHeldItem(hand).isEmpty() && playerIn.getHeldItem(hand).getItem() == ModItems.beamCage){
 				((CageChargerTileEntity) worldIn.getTileEntity(pos)).setCage(playerIn.getHeldItem(hand));
 				playerIn.setHeldItem(hand, ItemStack.EMPTY);
-				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.HEAD, true));
+				worldIn.setBlockState(pos, getDefaultState().withProperty(EssentialsProperties.HEAD, true));
 			}
 		}
 		return true;
@@ -92,7 +90,7 @@ public class CageCharger extends BlockContainer{
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
-		if(state.getValue(Properties.HEAD)){
+		if(state.getValue(EssentialsProperties.HEAD)){
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((CageChargerTileEntity) world.getTileEntity(pos)).getCage());
 		}
 		super.breakBlock(world, pos, state);
@@ -100,7 +98,7 @@ public class CageCharger extends BlockContainer{
 	
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HEAD) ? 1 : 0;
+		return state.getValue(EssentialsProperties.HEAD) ? 1 : 0;
 	}
 	
 	@Override

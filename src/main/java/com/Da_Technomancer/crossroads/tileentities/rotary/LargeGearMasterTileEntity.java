@@ -2,13 +2,13 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -155,7 +155,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(Properties.FACING)){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(EssentialsProperties.FACING)){
 			return type != null;
 		}
 		return super.hasCapability(capability, facing);
@@ -164,7 +164,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(Properties.FACING)){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(EssentialsProperties.FACING)){
 			return (T) handlerMain;
 		}
 		return super.getCapability(capability, facing);
@@ -186,7 +186,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 				return;
 			}
 
-			EnumFacing sid = world.getBlockState(pos).getValue(Properties.FACING);
+			EnumFacing sid = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 
 			if(lastRadius != 0){
 				rotRatioIn *= -lastRadius / 1.5D;

@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -183,7 +184,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			}
 
 			if(amount != 0){
-				if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.getValue(Properties.REDSTONE_BOOL))){
+				if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.getValue(EssentialsProperties.REDSTONE_BOOL))){
 					correctReag();
 					markDirty();
 				}

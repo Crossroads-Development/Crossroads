@@ -18,8 +18,8 @@ public class BlockDistilledWater extends BlockFluidClassic{
 	public BlockDistilledWater(){
 		super(DISTILLED_WATER, Material.WATER);
 		DISTILLED_WATER.setBlock(this);
-		setUnlocalizedName("blockDistilledWater");
-		setRegistryName("blockdistilledwater");
+		setUnlocalizedName("distilled_water");
+		setRegistryName("distilled_water");
 		ModBlocks.toRegister.add(this);
 	}
 
@@ -32,13 +32,13 @@ public class BlockDistilledWater extends BlockFluidClassic{
 	 * For normal use.
 	 */
 	public static Fluid getDistilledWater(){
-		return FluidRegistry.getFluid("distilledwater");
+		return FluidRegistry.getFluid("distilled_water");
 	}
 
 	private static class FluidDistilledWater extends Fluid{
 
 		private FluidDistilledWater(){
-			super("distilledwater", new ResourceLocation(Main.MODID, "blocks/distilledwater_still"), new ResourceLocation(Main.MODID, "blocks/distilledwater_flow"));
+			super("distilled_water", new ResourceLocation(Main.MODID, "blocks/distilledwater_still"), new ResourceLocation(Main.MODID, "blocks/distilledwater_flow"));
 		}
 	}
 }

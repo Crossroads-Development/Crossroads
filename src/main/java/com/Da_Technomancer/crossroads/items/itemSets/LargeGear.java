@@ -1,21 +1,14 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-
+import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +21,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class LargeGear extends Item{
 
@@ -67,10 +64,10 @@ public class LargeGear extends Item{
 
 		for(BlockPos cPos : section(pos, side)){
 			if(pos.equals(cPos)){
-				worldIn.setBlockState(pos, ModBlocks.largeGearMaster.getDefaultState().withProperty(Properties.FACING, side.getOpposite()), 3);
+				worldIn.setBlockState(pos, ModBlocks.largeGearMaster.getDefaultState().withProperty(EssentialsProperties.FACING, side.getOpposite()), 3);
 				((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).initSetup(type);
 			}else{
-				worldIn.setBlockState(cPos, ModBlocks.largeGearSlave.getDefaultState().withProperty(Properties.FACING, side.getOpposite()), 3);
+				worldIn.setBlockState(cPos, ModBlocks.largeGearSlave.getDefaultState().withProperty(EssentialsProperties.FACING, side.getOpposite()), 3);
 				((LargeGearSlaveTileEntity) worldIn.getTileEntity(cPos)).setInitial(pos);
 			}
 		}

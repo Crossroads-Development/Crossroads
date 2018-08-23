@@ -2,11 +2,11 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
 import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -141,7 +141,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, ISpin
 		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.DOWN){
 			return true;
 		}
-		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
 			return true;
 		}
 		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
@@ -156,7 +156,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, ISpin
 		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.DOWN){
 			return (T) axleHandler;
 		}
-		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing == EnumFacing.DOWN && world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
 			return (T) cogHandler;
 		}
 		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
@@ -239,7 +239,7 @@ public class ToggleGearTileEntity extends TileEntity implements ITickable, ISpin
 			}
 
 
-			if(world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+			if(world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
 				for(int i = 2; i < 6; ++i){
 					EnumFacing facing = EnumFacing.getFront(i);
 					// Adjacent gears

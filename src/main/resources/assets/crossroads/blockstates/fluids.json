@@ -5,17 +5,17 @@
 			"model": "forge:fluid",
 			"custom": { "fluid": "steam" }
 		},
-		"distilledwater": {
+		"distilled_water": {
 			"model": "forge:fluid",
-			"custom": { "fluid": "distilledwater" }
+			"custom": { "fluid": "distilled_water" }
 		},
 		"copper": {
 			"model": "forge:fluid",
 			"custom": { "fluid": "copper" }
 		},
-		"liquidfat": {
+		"liquid_fat": {
 			"model": "forge:fluid",
-			"custom": { "fluid": "liquidfat" }
+			"custom": { "fluid": "liquid_fat" }
 		},
 		"copshowium": {
 			"model": "forge:fluid",

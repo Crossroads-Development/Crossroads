@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nullable;
@@ -17,10 +17,10 @@ public class LessThanAxisTileEntity extends AbstractMathAxisTE{
 	@Override
 	protected EnumFacing getInOne(){
 		if(facing == null){
-			if(!world.getBlockState(pos).getProperties().containsKey(Properties.FACING)){
+			if(!world.getBlockState(pos).getProperties().containsKey(EssentialsProperties.FACING)){
 				return EnumFacing.DOWN;
 			}
-			facing = world.getBlockState(pos).getValue(Properties.FACING);
+			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		}
 		return facing.rotateY();
 	}
@@ -29,10 +29,10 @@ public class LessThanAxisTileEntity extends AbstractMathAxisTE{
 	@Override
 	protected EnumFacing getInTwo(){
 		if(facing == null){
-			if(!world.getBlockState(pos).getProperties().containsKey(Properties.FACING)){
+			if(!world.getBlockState(pos).getProperties().containsKey(EssentialsProperties.FACING)){
 				return EnumFacing.DOWN;
 			}
-			facing = world.getBlockState(pos).getValue(Properties.FACING);
+			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		}
 		return facing.rotateYCCW();
 	}
@@ -40,10 +40,10 @@ public class LessThanAxisTileEntity extends AbstractMathAxisTE{
 	@Override
 	protected EnumFacing getOut(){
 		if(facing == null){
-			if(!world.getBlockState(pos).getProperties().containsKey(Properties.FACING)){
+			if(!world.getBlockState(pos).getProperties().containsKey(EssentialsProperties.FACING)){
 				return EnumFacing.DOWN;
 			}
-			facing = world.getBlockState(pos).getValue(Properties.FACING);
+			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		}
 		return facing;
 	}

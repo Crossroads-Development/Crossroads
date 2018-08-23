@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nullable;
@@ -21,7 +21,7 @@ public class ArcCosAxisTileEntity extends AbstractMathAxisTE{
 			if(world.getBlockState(pos).getBlock() != ModBlocks.arccosAxis){
 				return EnumFacing.DOWN;
 			}
-			facing = world.getBlockState(pos).getValue(Properties.FACING);
+			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		}
 		return facing.getOpposite();
 	}
@@ -38,7 +38,7 @@ public class ArcCosAxisTileEntity extends AbstractMathAxisTE{
 			if(world.getBlockState(pos).getBlock() != ModBlocks.arccosAxis){
 				return EnumFacing.DOWN;
 			}
-			facing = world.getBlockState(pos).getValue(Properties.FACING);
+			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		}
 		return facing;
 	}

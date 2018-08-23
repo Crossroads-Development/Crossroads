@@ -70,7 +70,7 @@ public class ItemRecipePredicate implements RecipePredicate<ItemStack>{
 	
 	@Override
 	public String toString(){
-		return "CraftingStack[Item: " + item + ", Meta: " + meta + "]";
+		return "CraftingStack[Item: " + item.getRegistryName() + ", Meta: " + meta + "]";
 	}
 	
 	@Override

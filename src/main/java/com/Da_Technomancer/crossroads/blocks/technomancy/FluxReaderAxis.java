@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -34,7 +34,7 @@ public class FluxReaderAxis extends BlockContainer{
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer);
-		return getDefaultState().withProperty(Properties.FACING, enumfacing);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, enumfacing);
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class FluxReaderAxis extends BlockContainer{
 				if(te instanceof FluxReaderAxisTileEntity){
 					((FluxReaderAxisTileEntity) te).disconnect();
 				}
-				worldIn.setBlockState(pos, state.withProperty(Properties.FACING, state.getValue(Properties.FACING).rotateY()));
+				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.FACING, state.getValue(EssentialsProperties.FACING).rotateY()));
 			}
 			return true;
 		}
@@ -68,18 +68,18 @@ public class FluxReaderAxis extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.FACING);
+		return new BlockStateContainer(this, EssentialsProperties.FACING);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
 		EnumFacing facing = EnumFacing.getFront(meta);
-		return this.getDefaultState().withProperty(Properties.FACING, facing);
+		return this.getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.FACING).getIndex();
+		return state.getValue(EssentialsProperties.FACING).getIndex();
 	}
 
 	@Override
@@ -95,12 +95,12 @@ public class FluxReaderAxis extends BlockContainer{
 
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
-		return state.withProperty(Properties.FACING, rot.rotate(state.getValue(Properties.FACING)));
+		return state.withProperty(EssentialsProperties.FACING, rot.rotate(state.getValue(EssentialsProperties.FACING)));
 	}
 
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
-		return state.withRotation(mirrorIn.toRotation(state.getValue(Properties.FACING)));
+		return state.withRotation(mirrorIn.toRotation(state.getValue(EssentialsProperties.FACING)));
 	}
 
 }

@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.GlasswareHolderTileEntity;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -85,7 +86,7 @@ public class GlasswareHolder extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.CRYSTAL) ? 1 : 0) + (state.getValue(Properties.ACTIVE) ? 2 : 0) + (state.getValue(Properties.REDSTONE_BOOL) ? 4 : 0) + (state.getValue(Properties.CONTAINER_TYPE) ? 8 : 0);
+		return (state.getValue(Properties.CRYSTAL) ? 1 : 0) + (state.getValue(Properties.ACTIVE) ? 2 : 0) + (state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 4 : 0) + (state.getValue(Properties.CONTAINER_TYPE) ? 8 : 0);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -105,25 +106,25 @@ public class GlasswareHolder extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(Properties.ACTIVE, (meta & 2) == 2).withProperty(Properties.REDSTONE_BOOL, (meta & 4) == 4).withProperty(Properties.CONTAINER_TYPE, (meta & 8) == 8);
+		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(Properties.ACTIVE, (meta & 2) == 2).withProperty(EssentialsProperties.REDSTONE_BOOL, (meta & 4) == 4).withProperty(Properties.CONTAINER_TYPE, (meta & 8) == 8);
 	}
 
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isBlockPowered(pos)){
-			if(!state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+			if(!state.getValue(EssentialsProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, true));
 				worldIn.updateComparatorOutputLevel(pos, this);
 			}
-		}else if(state.getValue(Properties.REDSTONE_BOOL)){
-			worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
+		}else if(state.getValue(EssentialsProperties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, false));
 			worldIn.updateComparatorOutputLevel(pos, this);
 		}
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.CRYSTAL, Properties.ACTIVE, Properties.REDSTONE_BOOL, Properties.CONTAINER_TYPE);
+		return new BlockStateContainer(this, Properties.CRYSTAL, Properties.ACTIVE, EssentialsProperties.REDSTONE_BOOL, Properties.CONTAINER_TYPE);
 	}
 
 	@Override

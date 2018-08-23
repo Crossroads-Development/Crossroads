@@ -3,13 +3,13 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,7 +52,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
-		if(world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP)){
+		if(world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP)){
 			BlockPos target = dialedCoord();
 			if(target != null){
 				chat.add("Dialed: " + target.getX() + ", " + target.getY() + ", " + target.getZ());
@@ -72,9 +72,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 		if(!world.isRemote){
 			if(BeamManager.beamStage == 1){
 				cacheValid = false;
-				if(world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
+				if(world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
 					if(owner != null && magicPassed && getAlignment() != null && world.provider.getDimension() != 1){
-						world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.UP));
+						world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP));
 
 						List<Entity> toTransport = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() - 1, pos.getY() - 3, pos.getZ() - 1, pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1), EntitySelectors.IS_ALIVE);
 						if(toTransport != null && !toTransport.isEmpty()){
@@ -100,7 +100,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 							}
 						}
 					}else{
-						world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(Properties.FACING, EnumFacing.DOWN));
+						world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.DOWN));
 					}
 				}
 				magicPassed = false;
@@ -128,11 +128,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 		cacheValid = true;
 		BlockPos midPos = pos.offset(EnumFacing.DOWN, 2);
 		IBlockState baseState = ModBlocks.gatewayFrame.getDefaultState();
-		if(world.getBlockState(midPos.offset(EnumFacing.EAST, 2)) == baseState.withProperty(Properties.FACING, EnumFacing.WEST) && world.getBlockState(midPos.offset(EnumFacing.WEST, 2)) == baseState.withProperty(Properties.FACING, EnumFacing.EAST)){
+		if(world.getBlockState(midPos.offset(EnumFacing.EAST, 2)) == baseState.withProperty(EssentialsProperties.FACING, EnumFacing.WEST) && world.getBlockState(midPos.offset(EnumFacing.WEST, 2)) == baseState.withProperty(EssentialsProperties.FACING, EnumFacing.EAST)){
 			cached = Axis.X;
 			return Axis.X;
 		}
-		if(world.getBlockState(midPos.offset(EnumFacing.NORTH, 2)) == baseState.withProperty(Properties.FACING, EnumFacing.SOUTH) && world.getBlockState(midPos.offset(EnumFacing.SOUTH, 2)) == baseState.withProperty(Properties.FACING, EnumFacing.NORTH)){
+		if(world.getBlockState(midPos.offset(EnumFacing.NORTH, 2)) == baseState.withProperty(EssentialsProperties.FACING, EnumFacing.SOUTH) && world.getBlockState(midPos.offset(EnumFacing.SOUTH, 2)) == baseState.withProperty(EssentialsProperties.FACING, EnumFacing.NORTH)){
 			cached = Axis.Z;
 			return Axis.Z;
 		}
@@ -166,7 +166,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
 			return true;
 		}
 
@@ -176,7 +176,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(Properties.FACING).getAxis() == Axis.Y){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
 			return (T) magicHandler;
 		}
 

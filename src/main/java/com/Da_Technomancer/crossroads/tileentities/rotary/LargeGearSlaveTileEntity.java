@@ -1,16 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,6 +15,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
+import javax.annotation.Nullable;
 
 public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver{
 
@@ -36,7 +35,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	@Override
 	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
 		//A BlockPos can be converted to and from a long, AKA 2 ints. The identifier is the first int, the message is the second.
-		long longPos = (identifier << 32) | (message & 0xFFFFFFFFL);
+		long longPos = ((long) identifier << 32L) | (message & 0xFFFFFFFFL);
 		masterPos = BlockPos.fromLong(longPos);
 	}
 
@@ -81,7 +80,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.COG_HANDLER_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(Properties.FACING) == facing){
+		if(capability == Capabilities.COG_HANDLER_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(EssentialsProperties.FACING) == facing){
 			return true;
 		}else{
 			return super.hasCapability(capability, facing);
@@ -91,7 +90,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.COG_HANDLER_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(Properties.FACING) == facing){
+		if(capability == Capabilities.COG_HANDLER_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(EssentialsProperties.FACING) == facing){
 			return (T) handler;
 		}else{
 			return super.getCapability(capability, facing);
@@ -107,7 +106,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 
 		@Override
 		public IAxleHandler getAxle(){
-			return world.getTileEntity(masterPos) != null ? world.getTileEntity(masterPos).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, world.getBlockState(pos).getValue(Properties.FACING)) : null;
+			return world.getTileEntity(masterPos) != null ? world.getTileEntity(masterPos).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, world.getBlockState(pos).getValue(EssentialsProperties.FACING)) : null;
 		}
 	}
 }

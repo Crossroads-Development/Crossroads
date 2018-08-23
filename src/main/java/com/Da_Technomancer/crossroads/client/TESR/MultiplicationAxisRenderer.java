@@ -1,18 +1,13 @@
 package com.Da_Technomancer.crossroads.client.TESR;
 
-import java.awt.Color;
-
-import org.lwjgl.opengl.GL11;
-
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelPyramid;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MultiplicationAxisTileEntity;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -22,6 +17,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<MultiplicationAxisTileEntity>{
 
@@ -45,7 +43,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 			return;
 		}
 		
-		EnumFacing facing = state.getValue(Properties.FACING);
+		EnumFacing facing = state.getValue(EssentialsProperties.FACING);
 		double speedTwo = -axis.lastInTwo;
 		float angleOne = (float) -axis.angleOne;
 		float angleTwo = (float) -axis.angleTwo;
@@ -59,7 +57,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(x, y, z);
 		GlStateManager.translate(.5D, .5D, .5D);
 		GlStateManager.rotate(-facing.getHorizontalAngle() - 90, 0, 1, 0);
-		if(state.getValue(Properties.REDSTONE_BOOL)){
+		if(state.getValue(EssentialsProperties.REDSTONE_BOOL)){
 			GlStateManager.rotate(180, 0, 1, 0);
 		}
 		GlStateManager.translate(-.5D, -.5D, -.5D);

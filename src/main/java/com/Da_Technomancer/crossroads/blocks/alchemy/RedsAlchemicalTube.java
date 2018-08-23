@@ -1,22 +1,15 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.bakedModel.AdvConduitBakedModel;
 import com.Da_Technomancer.crossroads.client.bakedModel.IAdvConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.RedsAlchemicalTubeTileEntity;
-
+import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -35,12 +28,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -53,6 +41,11 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitModel{
 
@@ -109,12 +102,12 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.LIGHT) ? 1 : 0) + (state.getValue(Properties.REDSTONE_BOOL) ? 2 : 0);
+		return (state.getValue(Properties.LIGHT) ? 1 : 0) + (state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 2 : 0);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.LIGHT, (meta & 1) == 1).withProperty(Properties.REDSTONE_BOOL, (meta & 2) == 2);
+		return getDefaultState().withProperty(Properties.LIGHT, (meta & 1) == 1).withProperty(EssentialsProperties.REDSTONE_BOOL, (meta & 2) == 2);
 	}
 
 	@Override
@@ -124,7 +117,7 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(state.getValue(Properties.REDSTONE_BOOL) && EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(state.getValue(EssentialsProperties.REDSTONE_BOOL) && EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				int face;
 				if(hitY < SIZE){
@@ -209,16 +202,16 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isBlockPowered(pos)){
-			if(!state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, true));
+			if(!state.getValue(EssentialsProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, true));
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof RedsAlchemicalTubeTileEntity){
 					((RedsAlchemicalTubeTileEntity) te).setLocked(false);
 				}
 			}
 		}else{
-			if(state.getValue(Properties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.REDSTONE_BOOL, false));
+			if(state.getValue(EssentialsProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, false));
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof RedsAlchemicalTubeTileEntity){
 					((RedsAlchemicalTubeTileEntity) te).setLocked(true);
@@ -230,7 +223,7 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 	@Override
 	protected BlockStateContainer createBlockState(){
 		//On this device, light is being re-used. True means crystal, false means glass. 
-		return new ExtendedBlockState(this, new IProperty[] {Properties.LIGHT, Properties.REDSTONE_BOOL}, new IUnlistedProperty[] {Properties.CONNECT_MODE});
+		return new ExtendedBlockState(this, new IProperty[] {Properties.LIGHT, EssentialsProperties.REDSTONE_BOOL}, new IUnlistedProperty[] {Properties.CONNECT_MODE});
 	}
 
 	@Override

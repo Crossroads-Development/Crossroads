@@ -19,8 +19,8 @@ public class BlockSteam extends BlockFluidClassic{
 	public BlockSteam(){
 		super(STEAM, Material.WATER);
 		STEAM.setBlock(this);
-		setUnlocalizedName("blockSteam");
-		setRegistryName("blockSteam");
+		setUnlocalizedName("steam");
+		setRegistryName("steam");
 		ModBlocks.toRegister.add(this);
 	}
 

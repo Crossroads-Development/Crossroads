@@ -12,7 +12,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-/** Integration for the (Void) Fusion Beam */
 @ZenClass("mods.crossroads.EnvHeatSource")
 public class EnvHeatSourceHandler{
 

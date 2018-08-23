@@ -96,7 +96,7 @@ public final class ModConfig{
 		documentCrafttweaker = config.get(CAT_INTERNAL, "Show CraftTweaker integration documentation in the guide book? (Default false)", false, "The documentation will appear in the misc section of Technician's Manual, NOT the Mysterious Journal. Pack makers: Turn this off before releasing the pack!");
 		addBoboRecipes = config.get(CAT_MISC, "Add recipes for bobo items? (Default true)", true, "Disabling these recipes will NOT change the documentation at all. Responsibility for warning users of disabled recipes is left to pack makers.");
 		cccExpenLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber without fields (Default copper).", "copper", "An invalid liquid will disable the crafting");
-		cccFieldLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber with fields (Default distilledwater).", "distilledwater", "An invalid liquid will disable the crafting");
+		cccFieldLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber with fields (Default distilled_water).", "distilled_water", "An invalid liquid will disable the crafting");
 	}
 
 	/**

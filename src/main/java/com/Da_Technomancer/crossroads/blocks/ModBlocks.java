@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class ModBlocks{
 
-	public static SidedGearHolder sidedGearHolder;
+	public static SextupleGear sextupleGear;
 	public static MasterAxis masterAxis;
 	public static FluidTube fluidTube;
 	public static HeatingCrucible heatingCrucible;
@@ -55,10 +55,6 @@ public class ModBlocks{
 	public static BasicBlock blockPureQuartz;
 	public static BeamSplitter beamSplitter;
 	public static ColorChart colorChart;
-	public static MultiPistonExtend multiPistonExtend;
-	public static MultiPistonExtend multiPistonExtendSticky;
-	public static MultiPistonBase multiPiston;
-	public static MultiPistonBase multiPistonSticky;
 	public static BeamSplitterBasic beamSplitterBasic;
 	public static CrystalMasterAxis crystalMasterAxis;
 	public static Axle axle;
@@ -163,7 +159,7 @@ public class ModBlocks{
 	public static void init(){
 		masterAxis = new MasterAxis();
 		grindstone = new Grindstone();
-		sidedGearHolder = new SidedGearHolder();
+		sextupleGear = new SextupleGear();
 		largeGearMaster = new LargeGearMaster();
 		largeGearSlave = new LargeGearSlave();
 		heatingCrucible = new HeatingCrucible();
@@ -195,10 +191,6 @@ public class ModBlocks{
 		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz");
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
-		multiPistonExtend = new MultiPistonExtend(false);
-		multiPistonExtendSticky = new MultiPistonExtend(true);
-		multiPiston = new MultiPistonBase(false);
-		multiPistonSticky = new MultiPistonBase(true);
 		beamSplitterBasic = new BeamSplitterBasic();
 		crystalMasterAxis = new CrystalMasterAxis();
 		axle = new Axle();

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.Ratiator;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -98,7 +99,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
+		EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == null || side.getAxis() == facing.getAxis())){
 			return true;
 		}
@@ -108,7 +109,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
+		EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY){
 			if(side == null || side == facing.getOpposite()){
 				return (T) heatHandlerIn;

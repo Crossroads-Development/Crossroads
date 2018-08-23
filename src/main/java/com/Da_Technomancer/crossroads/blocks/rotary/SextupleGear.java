@@ -35,7 +35,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SidedGearHolder extends BlockContainer{
+public class SextupleGear extends BlockContainer{
 
 	private static final ArrayList<AxisAlignedBB> BOUNDING_BOXES = new ArrayList<AxisAlignedBB>();
 
@@ -49,9 +49,9 @@ public class SidedGearHolder extends BlockContainer{
 		BOUNDING_BOXES.add(new AxisAlignedBB(.3125D, .3125D, .3125D, .6875D, .6875D, .6875D));//Center
 	}
 
-	public SidedGearHolder(){
+	public SextupleGear(){
 		super(Material.IRON);
-		String name = "sided_gear_holder";
+		String name = "sextuple_gear";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(1);

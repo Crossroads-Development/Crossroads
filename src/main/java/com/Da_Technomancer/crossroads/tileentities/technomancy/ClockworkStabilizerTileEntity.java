@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -49,7 +49,7 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 			storage.addMagic(stored.mult((double) LIMIT / (double) stored.getPower(), false));
 		}
 
-		EnumFacing dir = world.getBlockState(pos).getValue(Properties.FACING);
+		EnumFacing dir = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 
 		if(!storage.isEmpty()){
 			MagicUnit mag = storage.getOutput().mult(RATE, true);
@@ -65,14 +65,14 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] inputSides(){
 		boolean[] out = {true, true, true, true, true, true};
-		out[world.getBlockState(pos).getValue(Properties.FACING).getIndex()] = false;
+		out[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()] = false;
 		return out;
 	}
 
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] out = new boolean[6];
-		out[world.getBlockState(pos).getValue(Properties.FACING).getIndex()] = true;
+		out[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()] = true;
 		return out;
 	}
 } 

@@ -1,11 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.IAxle;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -17,7 +15,7 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		EnumFacing facing = world.getBlockState(pos).getValue(Properties.FACING);
+		EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		TileEntity te = world.getTileEntity(pos.offset(facing));
 		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 			IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());

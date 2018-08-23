@@ -1,15 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
-import java.util.ArrayList;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.OmniMeter;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,6 +13,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+
+import java.util.ArrayList;
 
 public class RatiatorTileEntity extends TileEntity implements IInfoTE{
 	
@@ -56,7 +53,7 @@ public class RatiatorTileEntity extends TileEntity implements IInfoTE{
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && world.getBlockState(pos).getBlock() == ModBlocks.ratiator && side == world.getBlockState(pos).getValue(Properties.FACING)){
+		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && world.getBlockState(pos).getBlock() == ModBlocks.ratiator && side == world.getBlockState(pos).getValue(EssentialsProperties.FACING)){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -65,7 +62,7 @@ public class RatiatorTileEntity extends TileEntity implements IInfoTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && world.getBlockState(pos).getBlock() == ModBlocks.ratiator && side == world.getBlockState(pos).getValue(Properties.FACING)){
+		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && world.getBlockState(pos).getBlock() == ModBlocks.ratiator && side == world.getBlockState(pos).getValue(EssentialsProperties.FACING)){
 			return (T) redstoneHandler;
 		}
 		return super.getCapability(cap, side);

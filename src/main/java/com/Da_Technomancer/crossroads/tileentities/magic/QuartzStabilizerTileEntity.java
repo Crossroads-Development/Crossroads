@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
-
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -57,7 +56,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE{
 			}
 		}
 
-		EnumFacing dir = world.getBlockState(pos).getValue(Properties.FACING);
+		EnumFacing dir = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 
 		if(!storage.isEmpty()){
 			double mult = Math.min(1, ((double) RATE[large ? 1 : 0]) / ((double) (storage.getOutput().getPower())));
@@ -74,14 +73,14 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] inputSides(){
 		boolean[] out = {true, true, true, true, true, true};
-		out[world.getBlockState(pos).getValue(Properties.FACING).getIndex()] = false;
+		out[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()] = false;
 		return out;
 	}
 
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] out = new boolean[6];
-		out[world.getBlockState(pos).getValue(Properties.FACING).getIndex()] = true;
+		out[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()] = true;
 		return out;
 	}
 } 

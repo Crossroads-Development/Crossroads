@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -61,7 +62,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 			init = true;
 		}
 
-		if(!world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(!world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
 			return;
 		}
 
@@ -134,7 +135,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY){
-			return world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL);
+			return world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL);
 		}
 		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
 			return true;
@@ -148,7 +149,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL)){
+		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
 			return (T) heatHandler;
 		}
 		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
@@ -161,7 +162,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 
 		@Override
 		public double getOutput(boolean read){
-			if(!read || !world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) || insulator == null){
+			if(!read || !world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL) || insulator == null){
 				return 0;
 			}
 			double holder = (temp + 273) / (insulator.getLimit() + 273);
