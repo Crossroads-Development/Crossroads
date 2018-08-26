@@ -32,7 +32,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -73,7 +72,7 @@ public final class EventHandlerCommon{
 	protected static Ticket loadingTicket;
 
 	/**
-	 * Only should be called on the virtual server side. 
+	 * Only should be called on the virtual server side.
 	 */
 	public static void updateLoadedPrototypeChunks(){
 		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(false);
@@ -136,7 +135,7 @@ public final class EventHandlerCommon{
 		if(!e.world.isRemote && e.world.getTotalWorldTime() % 5 == 0 && e.phase == TickEvent.Phase.END){
 			e.world.profiler.startSection(Main.MODNAME + "-Field Calculations");
 			FieldWorldSavedData data = FieldWorldSavedData.get(e.world);
-			HashSet<Long> toRemove = new HashSet<Long>();
+			HashSet<Long> toRemove = new HashSet<Long>(8);
 
 			for(Entry<Long, ChunkField> datum : data.fieldNodes.entrySet()){
 				Long key = datum.getKey();
@@ -252,46 +251,46 @@ public final class EventHandlerCommon{
 					chunk.onTick(false);
 
 					if (e.world.provider.canDoLightning(chunk) && e.world.rand.nextInt(350_000 - (int) (300_000 * chargeLevel)) == 0){
-						BlockPos blockpos = adjustPosToNearbyEntity(((WorldServer) (e.world)), new BlockPos(j + e.world.rand.nextInt(16), 0, k + e.world.rand.nextInt(16)));
-						DifficultyInstance difficultyinstance = e.world.getDifficultyForLocation(blockpos);
+						//Determine the position of the lightning strike
+						int tarX = j + e.world.rand.nextInt(16);
+						int tarZ = k + e.world.rand.nextInt(16);
+						int tarY = e.world.getPrecipitationHeight(new BlockPos(tarX, 0, tarZ)).getY();
+						BlockPos tarPos;
 
-						if (e.world.getGameRules().getBoolean("doMobSpawning") && e.world.rand.nextDouble() < (double)difficultyinstance.getAdditionalDifficulty() * 0.01D){
+						//Lightning bolts are attracted by nearby entities
+						//Uses a slightly different formula from vanilla for reasons of efficiency
+						ArrayList<EntityLivingBase> ents = new ArrayList<>();
+						chunk.getEntitiesOfTypeWithinAABB(EntityLivingBase.class, new AxisAlignedBB(tarX - 3, tarY - 3, tarZ - 3, tarX + 3, e.world.getHeight() + 3, tarZ + 3), ents, new Predicate<EntityLivingBase>(){
+							public boolean apply(@Nullable EntityLivingBase ent){
+								return ent != null && ent.isEntityAlive() && e.world.canSeeSky(ent.getPosition());
+							}
+						});
+
+
+						if(ents.isEmpty()){
+							if(tarY == -1){
+								tarY += 2;
+							}
+							tarPos = new BlockPos(tarX, tarY, tarZ);
+						}else{
+							tarPos = ents.get(e.world.rand.nextInt(ents.size())).getPosition();
+						}
+
+
+						if(e.world.getGameRules().getBoolean("doMobSpawning") && e.world.rand.nextDouble() < e.world.getDifficultyForLocation(tarPos).getAdditionalDifficulty() * 0.01D){
 							EntitySkeletonHorse entityskeletonhorse = new EntitySkeletonHorse(e.world);
 							entityskeletonhorse.setTrap(true);
 							entityskeletonhorse.setGrowingAge(0);
-							entityskeletonhorse.setPosition((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ());
+							entityskeletonhorse.setPosition(tarX, tarY, tarZ);
 							e.world.spawnEntity(entityskeletonhorse);
-							e.world.addWeatherEffect(new EntityLightningBolt(e.world, (double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), true));
+							e.world.addWeatherEffect(new EntityLightningBolt(e.world, tarX, tarY, tarZ, true));
 						}else{
-							e.world.addWeatherEffect(new EntityLightningBolt(e.world, (double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), false));
+							e.world.addWeatherEffect(new EntityLightningBolt(e.world, tarX, tarY, tarZ, false));
 						}
 					}
 				}
 			}
 			e.world.profiler.endSection();
-		}
-	}
-
-	/**
-	 * A re-implementation of a protected WorldServer method
-	 */
-	private static BlockPos adjustPosToNearbyEntity(WorldServer w, BlockPos pos){
-		BlockPos blockpos = w.getPrecipitationHeight(pos);
-		AxisAlignedBB axisalignedbb = (new AxisAlignedBB(blockpos, new BlockPos(blockpos.getX(), w.getHeight(), blockpos.getZ()))).grow(3.0D);
-		List<EntityLivingBase> list = w.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb, new Predicate<EntityLivingBase>(){
-			public boolean apply(@Nullable EntityLivingBase p_apply_1_){
-				return p_apply_1_ != null && p_apply_1_.isEntityAlive() && w.canSeeSky(p_apply_1_.getPosition());
-			}
-		});
-
-		if (!list.isEmpty()){
-			return ((EntityLivingBase)list.get(w.rand.nextInt(list.size()))).getPosition();
-		}else{
-			if (blockpos.getY() == -1){
-				blockpos = blockpos.up(2);
-			}
-
-			return blockpos;
 		}
 	}
 
