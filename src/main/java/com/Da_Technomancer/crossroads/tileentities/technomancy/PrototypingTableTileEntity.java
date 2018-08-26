@@ -75,7 +75,7 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 					BlockPos oldPos = startPos.add(x, y - 16, z);
 					try{
 						BlockPos newPos = copyTo.getPos().getBlock(x, y, z);
-						copyTo.getWorld().setBlockState(newPos, fromWorld.getBlockState(oldPos), 0);
+						copyTo.getWorld().setBlockState(newPos, fromWorld.getBlockState(oldPos), 16);
 						TileEntity oldTe = fromWorld.getTileEntity(oldPos);
 						if(oldTe != null){
 							NBTTagCompound nbt = new NBTTagCompound();
@@ -237,40 +237,33 @@ public class PrototypingTableTileEntity extends AbstractInventory implements ISt
 			List<Pair<PrototypePortTypes, BlockPos>>[] ports = new List[] {new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()};
 			ArrayList<TemplateError> errors = new ArrayList<>();
 
-			int startY = pos.getY() + 1;
-			int endY = pos.getY() + 17;
 			int startX = pos.getX();
+			int startY = pos.getY() + 1;
 			int startZ = pos.getZ();
-			int endX = pos.getX();
-			int endZ = pos.getZ();
 
 			switch(world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING)){
 				case NORTH:
-					endX -= 1;
-					startX -= 17;
-					startZ -= 17;
-					endZ -= 1;
+					startX -= 16;
+					startZ -= 16;
 					break;
 				case SOUTH:
 					startX += 1;
-					endX += 17;
 					startZ += 1;
-					endZ += 17;
 					break;
 				case EAST:
-					startX -= 17;
-					endX -= 1;
+					startX -= 16;
 					startZ += 1;
-					endZ += 17;
 					break;
 				case WEST:
 					startX += 1;
-					endX += 17;
-					startZ -= 17;
-					endZ -= 1;
+					startZ -= 16;
 					break;
 				default:
 			}
+
+			int endX = startX + 16;
+			int endY = startY + 16;
+			int endZ = startZ + 16;
 
 			String[] descArray = new String[6];
 
