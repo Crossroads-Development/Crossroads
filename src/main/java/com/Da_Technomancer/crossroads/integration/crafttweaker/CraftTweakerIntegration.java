@@ -4,6 +4,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +18,11 @@ public class CraftTweakerIntegration{
 		CraftTweakerAPI.registerClass(HeatingCrucibleHandler.class);
 		CraftTweakerAPI.registerClass(FusionBeamHandler.class);
 		CraftTweakerAPI.registerClass(EnvHeatSourceHandler.class);
+
+		if(Loader.isModLoaded("contenttweaker")){
+			CraftTweakerAPI.registerClass(AdvFusionBeamHandler.class);
+			CraftTweakerAPI.registerClass(AdvEnvHeatSourceHandler.class);
+		}
 	}
 
 	private static final ItemStack[] EMPTY = new ItemStack[0];

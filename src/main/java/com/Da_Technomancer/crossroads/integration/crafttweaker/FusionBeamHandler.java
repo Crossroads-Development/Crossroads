@@ -39,8 +39,8 @@ public class FusionBeamHandler{
 	public static void removeRecipe(IItemStack input, boolean voi){
 		CraftTweakerAPI.apply(new Remove(CraftTweakerMC.getBlock(input), CraftTweakerMC.getItemStack(input).getMetadata(), voi));
 	}
-	
-	private static class Add implements IAction{
+
+	protected static class Add implements IAction{
 
 		private final BlockRecipePredicate input;
 		private final int minPower;
@@ -48,10 +48,17 @@ public class FusionBeamHandler{
 		private final boolean voi;
 		
 		@SuppressWarnings("deprecation")
-		private Add(Block input, int inputMeta, int minPower, Block output, int outMeta, boolean voi){
+		protected Add(Block input, int inputMeta, int minPower, Block output, int outMeta, boolean voi){
 			this.input = new BlockRecipePredicate(inputMeta == OreDictionary.WILDCARD_VALUE ? input.getDefaultState() : input.getStateFromMeta(inputMeta), inputMeta == OreDictionary.WILDCARD_VALUE);
 			this.minPower = minPower;
 			this.output = output.getStateFromMeta(outMeta);
+			this.voi = voi;
+		}
+
+		protected Add(IBlockState input, boolean ignoreMeta, int minPower, IBlockState output, boolean voi){
+			this.input = new BlockRecipePredicate(input, ignoreMeta);
+			this.minPower = minPower;
+			this.output = output;
 			this.voi = voi;
 		}
 		
@@ -70,14 +77,19 @@ public class FusionBeamHandler{
 		}	
 	}
 	
-	private static class Remove implements IAction{
+	protected static class Remove implements IAction{
 
 		private final BlockRecipePredicate input;
 		private final boolean voi;
-		
+
 		@SuppressWarnings("deprecation")
-		private Remove(Block input, int inputMeta, boolean voi){
+		protected Remove(Block input, int inputMeta, boolean voi){
 			this.input = new BlockRecipePredicate(inputMeta == OreDictionary.WILDCARD_VALUE ? input.getDefaultState() : input.getStateFromMeta(inputMeta), inputMeta == OreDictionary.WILDCARD_VALUE);
+			this.voi = voi;
+		}
+
+		protected Remove(IBlockState input, boolean ignoreMeta, boolean voi){
+			this.input = new BlockRecipePredicate(input, ignoreMeta);
 			this.voi = voi;
 		}
 		

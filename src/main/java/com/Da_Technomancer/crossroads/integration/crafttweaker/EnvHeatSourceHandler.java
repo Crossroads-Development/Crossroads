@@ -12,7 +12,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-/** Integration for the (Void) Fusion Beam */
 @ZenClass("mods.crossroads.EnvHeatSource")
 public class EnvHeatSourceHandler{
 
@@ -31,21 +30,20 @@ public class EnvHeatSourceHandler{
 	/**
 	 * This method removes a mapping between a block and the heat production.
 	 * @param input The input blockstate
-	 * @param voi Whether this is for the void-fusion beam or the normal fusion beam
 	 */
 	@ZenMethod
 	public static void removeRecipe(IBlock input){
 		CraftTweakerAPI.apply(new Remove(CraftTweakerMC.getBlock(input)));
 	}
 
-	private static class Add implements IAction{
+	protected static class Add implements IAction{
 
 		private final Block input;
 		private final IBlockState created;
 		private final double change;
 		private final double limit;
 
-		private Add(Block input, Block created, double change, double limit){
+		protected Add(Block input, Block created, double change, double limit){
 			this.input = input;
 			this.created = created.getDefaultState();
 			this.change = change;
@@ -63,11 +61,11 @@ public class EnvHeatSourceHandler{
 		}
 	}
 
-	private static class Remove implements IAction{
+	protected static class Remove implements IAction{
 
 		private final Block input;
 
-		private Remove(Block input){
+		protected Remove(Block input){
 			this.input = input;
 		}
 
