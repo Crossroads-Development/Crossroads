@@ -228,7 +228,7 @@ public final class AlchemyCore{
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[25], 5)}, new Pair[] {Pair.of(REAGENTS[5], 1), Pair.of(REAGENTS[13], 5)}, REAGENTS[18], -40D, 560D, -10D, false));
 		//Ignus Infernum production
 		if(ModConfig.getConfigBool(ModConfig.allowHellfire, true)){
-			REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[0], 5), Pair.of(REAGENTS[3], 1), Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[36], 2)}, new Pair[] {Pair.of(REAGENTS[37], 1)}, REAGENTS[19], 2250D, Short.MAX_VALUE, -200D, false));
+			REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[0], 5), Pair.of(REAGENTS[8], 1), Pair.of(REAGENTS[21], 1), Pair.of(REAGENTS[36], 2)}, new Pair[] {Pair.of(REAGENTS[37], 1)}, REAGENTS[19], 2250D, Short.MAX_VALUE, -200D, false));
 		}
 		//Densus production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[1], 3), Pair.of(REAGENTS[28], 1)}, new Pair[] {Pair.of(REAGENTS[38], 3)}, null, -273D, 30D, -5D, true));

@@ -72,7 +72,7 @@ public final class EventHandlerCommon{
 	protected static Ticket loadingTicket;
 
 	/**
-	 * Only should be called on the virtual server side. 
+	 * Only should be called on the virtual server side.
 	 */
 	public static void updateLoadedPrototypeChunks(){
 		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(false);

@@ -107,7 +107,7 @@ public class ModDimensions{
 		if(data.prototypes.contains(null)){
 			// Recycles deleted prototypes if possible.
 			int available = data.prototypes.indexOf(null);
-			// Do to the grid, one row has capacity for 100 chunks
+			// Due to the grid, one row has capacity for 100 chunks
 			int x = ((available % 100) * 2) - 99;
 			int z = (available / 50) - 99;
 
@@ -125,9 +125,9 @@ public class ModDimensions{
 			int x = ((used % 100) * 2) - 99;
 			int z = (used / 50) - 99;
 
-			// This part may redundantly block already blocked chunks. This is a possible optimization point if it ends up mattering.
+			//TODO This part will redundantly block already blocked chunks. This is a possible optimization point if it ends up mattering.
 			WorldServer worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
-			
+
 			blockChunk(new ChunkPos(x - 1, z - 1), worldDim);
 			blockChunk(new ChunkPos(x - 1, z), worldDim);
 			blockChunk(new ChunkPos(x, z - 1), worldDim);
