@@ -20,6 +20,10 @@ public class MagicUnit{
 		this.potential = potential;
 		this.stability = stability;
 		this.voi = voi;
+
+		if(energy < 0 || potential < 0 || stability < 0 || voi < 0){
+			throw new IllegalArgumentException("Negative MagicUnit input! EN: " + energy + "; PO: " + potential + "; ST: " + stability + "; VO: " + voi);
+		}
 	}
 
 	public int getEnergy(){

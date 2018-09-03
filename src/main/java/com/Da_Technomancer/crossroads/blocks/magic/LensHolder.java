@@ -58,7 +58,7 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
-		return (int) ((LensHolderTileEntity) worldIn.getTileEntity(pos)).getRedstone() / 3;
+		return Math.min(15, (int) ((LensHolderTileEntity) worldIn.getTileEntity(pos)).getRedstone() / 3);
 	}
 
 	@Override
