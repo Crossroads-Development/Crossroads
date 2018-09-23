@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
+import com.Da_Technomancer.essentials.shared.ISlaveAxisHandler;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,6 +31,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		for(IAxleHandler axle : rotaryMembers){
 			//For 0-mass gears.
 			axle.getMotionData()[0] = 0;
+			axle.getMotionData()[2] = 0;
+			axle.getMotionData()[3] = 0;
 			axle.syncAngle();
 		}
 		CommonProxy.masterKey++;
@@ -222,7 +224,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 				}while(key == keyNew);
 				key = keyNew;
 
-				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 1, 0);
 			}
 
 			if(!memberCopy.containsAll(rotaryMembers)){

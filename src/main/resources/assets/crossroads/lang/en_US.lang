@@ -55,7 +55,7 @@ mysterious_journal=Mysterious Journal
 tile.block_salt.name=Block of Salt
 tile.steam_turbine.name=Steam Turbine
 tile.fluid_void.name=Fluid Void
-tile.axle.name=Axle
+item.axle_iron.name=Iron Axle
 tile.heat_exchanger.name=Heat Exchanger
 tile.insulated_heat_exchanger.name=Insulated Heat Exchanger
 item.mashed_potato.name=Mashed Potatoes
@@ -266,7 +266,7 @@ tile.atmos_charger.name=Atmospheric Attenuator
 item.flying_machine.name=Flying Machine
 entity.flying_machine.name=Flying Machine
 tile.reactive_spot.name=Reactive Spot (Internal)
-tile.copshowium_axle.name=Copshowium Axle
+item.axle_copshowium.name=Copshowium Axle
 tile.clock_stabilizer.name=Clockwork Stabilizer
 item.tesla_ray.name=Tesla Ray
 

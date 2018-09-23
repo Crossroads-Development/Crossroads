@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.client.TESR.models;
 
 import java.awt.Color;
 
+import com.Da_Technomancer.crossroads.Main;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -13,17 +14,24 @@ import net.minecraft.util.ResourceLocation;
 
 public class ModelGearOctagon{
 
+	private static final ModelGearOctagon INSTANCE = new ModelGearOctagon();
+	public static final ResourceLocation RESOURCE = new ResourceLocation(Main.MODID, "textures/model/gear_oct.png");
+
 	//These contain sqrt, so I don't want to calculate them every frame.
 	private final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));
 	private final float sHalfT = .5F / (1F + (float) Math.sqrt(2F));
-	
+
+	public static void render(Color c){
+		INSTANCE.render(RESOURCE, c);
+	}
+
 	/**
 	 * TODO Change it to render about the origin, without the offset. This will require going back and changing everything that uses this.
 	 */
 	public void render(ResourceLocation res, Color color){
 
-		float top = -.375F;
-		float bottom = -.5F;
+		float top = 0.0625F;//-.375F;
+		float bottom = -top;//-.5F; TODO remove
 		float lHalf = .4375F;
 
 		float lHalfT = .5F;
@@ -31,8 +39,8 @@ public class ModelGearOctagon{
 
 		float extend = .5625F;
 
-		float topP = -.380F;
-		float bottomP = -.495F;
+		float topP = 0.0575F;//-.380F;
+		float bottomP = -0.0575F;//-.495F;
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(res);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
@@ -432,6 +440,8 @@ public class ModelGearOctagon{
 		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		Tessellator.getInstance().draw();
+
+		GlStateManager.color(1F, 1F, 1F);
 
 		GlStateManager.popMatrix();
 	}

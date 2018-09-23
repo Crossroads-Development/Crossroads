@@ -1,13 +1,10 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,26 +22,25 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BasicGear extends Item{
+public class Axle extends Item{
 
 	private final GearTypes type;
-	public static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
 
-	public BasicGear(GearTypes typeIn){
-		String name = "gear_" + typeIn.toString().toLowerCase();
+	public Axle(GearTypes typeIn){
+		String name = "axle_" + typeIn.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_GEAR);
 		type = typeIn;
 		ModItems.toRegister.add(this);
-		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
-		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"gear" + typeIn.toString()}));
+		ModItems.itemAddQue(this);
+		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"stick" + typeIn.toString()}));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: " + MiscOp.betterRound(type.getDensity() / 8, 2) * .125);
+		tooltip.add("I: " + type.getDensity() / 32_000D);
 	}
 
 	@Override
@@ -53,25 +49,41 @@ public class BasicGear extends Item{
 			return EnumActionResult.SUCCESS;
 		}
 
-		TileEntity te = worldIn.getTileEntity(pos.offset(side));
-		if(te instanceof MechanismTileEntity && worldIn.isSideSolid(pos, side)){
+		//Attempt to add this axle to a pre-existing mechanism
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
-			if(mte.members[side.getOpposite().getIndex()] != null){
+			if(mte.members[6] == null){
+				mte.setMechanism(6, MechanismTileEntity.MECHANISMS.get(1), type, side.getAxis(), false);
+				if(!playerIn.capabilities.isCreativeMode){
+					playerIn.getHeldItem(hand).shrink(1);
+				}
 				return EnumActionResult.SUCCESS;
 			}
-			if(!playerIn.capabilities.isCreativeMode){
-				playerIn.getHeldItem(hand).shrink(1);
-			}
+		}
 
-			mte.setMechanism(side.getOpposite().getIndex(), MechanismTileEntity.MECHANISMS.get(0), type, null, false);
-		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && worldIn.isSideSolid(pos, side)){
+		//Check if offsetting by one would land us in another mechanism
+		te = worldIn.getTileEntity(pos.offset(side));
+		if(te instanceof MechanismTileEntity){
+			MechanismTileEntity mte = (MechanismTileEntity) te;
+			if(mte.members[6] == null){
+				mte.setMechanism(6, MechanismTileEntity.MECHANISMS.get(1), type, side.getAxis(), false);
+				if(!playerIn.capabilities.isCreativeMode){
+					playerIn.getHeldItem(hand).shrink(1);
+				}
+			}
+			return EnumActionResult.SUCCESS;
+		}
+
+		//Make a new mechanism block
+		if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side))){
 			if(!playerIn.capabilities.isCreativeMode){
 				playerIn.getHeldItem(hand).shrink(1);
 			}
 
 			worldIn.setBlockState(pos.offset(side), ModBlocks.sextupleGear.getDefaultState(), 3);
 			te = worldIn.getTileEntity(pos.offset(side));
-			((MechanismTileEntity) te).setMechanism(side.getOpposite().getIndex(), MechanismTileEntity.MECHANISMS.get(0), type, null, true);
+			((MechanismTileEntity) te).setMechanism(6, MechanismTileEntity.MECHANISMS.get(1), type, side.getAxis(), true);
 		}
 
 		return EnumActionResult.SUCCESS;

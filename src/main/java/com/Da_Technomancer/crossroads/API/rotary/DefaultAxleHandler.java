@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;

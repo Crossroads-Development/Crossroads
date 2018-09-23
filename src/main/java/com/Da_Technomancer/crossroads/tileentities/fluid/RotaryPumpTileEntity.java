@@ -1,14 +1,17 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -26,14 +29,23 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
-public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntReceiver{
+public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntReceiver, IInfoTE{
 
 	private static final double REQUIRED = 50;
 	private double progress = 0;
 	private int lastProgress = 0;
 
 	private final double[] motionData = new double[4];
+
+	@Override
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		chat.add("Speed: " + MiscOp.betterRound(motionData[0], 3));
+		chat.add("Energy: " + MiscOp.betterRound(motionData[1], 3));
+		chat.add("Power: " + MiscOp.betterRound(motionData[2], 3));
+		chat.add("I: " + axleHandler.getMoInertia() + ", Rotation Ratio: " + axleHandler.getRotationRatio());
+	}
 
 	@Override
 	public void update(){

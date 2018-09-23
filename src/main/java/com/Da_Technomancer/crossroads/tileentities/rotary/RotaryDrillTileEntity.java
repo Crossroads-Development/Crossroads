@@ -1,12 +1,15 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
@@ -18,11 +21,21 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class RotaryDrillTileEntity extends TileEntity implements ITickable{
+public class RotaryDrillTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private static final DamageSource DRILL = new DamageSource("drill").setDamageBypassesArmor();
+
+	@Override
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		chat.add("Speed: " + MiscOp.betterRound(motionData[0], 3));
+		chat.add("Energy: " + MiscOp.betterRound(motionData[1], 3));
+		chat.add("Power: " + MiscOp.betterRound(motionData[2], 3));
+		chat.add("I: " + axleHandler.getMoInertia() + ", Rotation Ratio: " + axleHandler.getRotationRatio());
+	}
 
 	private int ticksExisted = 0;
 	public static final double ENERGY_USE = .5D;
@@ -32,7 +45,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
-	
+
 	/**
 	 * This uses the angle of the attached gear instead of calculating it's own for a few reasons. It will always be attached when it should spin, and should always have the same angle as the attached gear (no point calculating).
 	 */
@@ -49,7 +62,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 		if(world.isRemote){
 			TileEntity attachedTE = world.getTileEntity(pos.offset(facing.getOpposite()));
 			if(attachedTE != null && attachedTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
-				angle = attachedTE instanceof AxleTileEntity && facing == EnumFacing.UP ? -(float) attachedTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getAngle() : (float) attachedTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getAngle();
+				angle = (float) attachedTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getAngle();
 			}
 			return;
 		}
@@ -64,10 +77,8 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable{
 					}
 				}else{
 					List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE);
-					if(ents != null){
-						for(EntityLivingBase ent : ents){
-							ent.attackEntityFrom(DRILL, (float) Math.abs(motionData[0] / SPEED_PER_HARDNESS));
-						}
+					for(EntityLivingBase ent : ents){
+						ent.attackEntityFrom(DRILL, (float) Math.abs(motionData[0] / SPEED_PER_HARDNESS));
 					}
 				}
 			}

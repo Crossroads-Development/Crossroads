@@ -1,13 +1,16 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -17,10 +20,24 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
-public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver{
+public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver, IInfoTE{
 
-	private BlockPos masterPos;
+	public BlockPos masterPos;//Defined relative to this block's position
+
+	@Override
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		IAxleHandler axle = handler.getAxle();
+		if(axle == null){
+			return;
+		}
+
+		chat.add("Speed: " + MiscOp.betterRound(axle.getMotionData()[0], 3));
+		chat.add("Energy: " + MiscOp.betterRound(axle.getMotionData()[1], 3));
+		chat.add("Power: " + MiscOp.betterRound(axle.getMotionData()[2], 3));
+		chat.add("I: " + axle.getMoInertia() + ", Rotation Ratio: " + axle.getRotationRatio());
+	}
 
 	public void setInitial(BlockPos masPos){
 		if(world.isRemote){
@@ -40,16 +57,16 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	}
 
 	public void passBreak(EnumFacing side, boolean drop){
-		if(masterPos != null && world.getTileEntity(masterPos) instanceof LargeGearMasterTileEntity){
-			((LargeGearMasterTileEntity) world.getTileEntity(masterPos)).breakGroup(side, drop);
+		if(masterPos != null){
+			TileEntity te = world.getTileEntity(pos.add(masterPos));
+			if(te instanceof LargeGearMasterTileEntity){
+				((LargeGearMasterTileEntity) te).breakGroup(side, drop);
+			}
 		}
 	}
 
 	private boolean isEdge(){
-		if(masterPos != null && masterPos.distanceSq(pos) == 1){
-			return true;
-		}
-		return false;
+		return masterPos != null && masterPos.distanceSq(BlockPos.ORIGIN) == 1;
 	}
 
 	@Override
@@ -106,7 +123,11 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 
 		@Override
 		public IAxleHandler getAxle(){
-			return world.getTileEntity(masterPos) != null ? world.getTileEntity(masterPos).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, world.getBlockState(pos).getValue(EssentialsProperties.FACING)) : null;
+			TileEntity te = world.getTileEntity(pos.add(masterPos));
+			if(te instanceof LargeGearMasterTileEntity){
+				return te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, world.getBlockState(pos).getValue(EssentialsProperties.FACING));
+			}
+			return null;
 		}
 	}
 }

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.*;
 import com.Da_Technomancer.crossroads.tileentities.heat.*;
 import com.Da_Technomancer.crossroads.tileentities.magic.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.*;
+import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -14,7 +15,7 @@ public class ModTileEntity{
 
 	public static void init(){
 		register(HeatCableTileEntity.class, "heat_cable");
-		register(SidedGearHolderTileEntity.class, "sextuple_gear");
+		register(MechanismTileEntity.class, "mechanism");
 		register(MasterAxisTileEntity.class, "master_axis");
 		register(GrindstoneTileEntity.class, "grindstone");
 		register(HeatingCrucibleTileEntity.class, "heating_crucible");
@@ -47,7 +48,6 @@ public class ModTileEntity{
 		register(BeamSplitterTileEntity.class, "beam_splitter");
 		register(BeamSplitterBasicTileEntity.class, "beam_splitter_basic");
 		register(CrystalMasterAxisTileEntity.class, "crystal_master_axis");
-		register(AxleTileEntity.class, "axle");
 		register(RatiatorTileEntity.class, "ratiator");
 		register(BeaconHarnessTileEntity.class, "beacon_harness");
 		register(FatFeederTileEntity.class, "fat_feeder");

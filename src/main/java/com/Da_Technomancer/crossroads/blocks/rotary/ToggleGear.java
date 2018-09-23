@@ -46,7 +46,7 @@ public class ToggleGear extends BlockContainer{
 		String name = "toggle_gear_" + type.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAG_GEAR);
+		setCreativeTab(ModItems.TAB_GEAR);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);

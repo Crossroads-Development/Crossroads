@@ -1,22 +1,24 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,8 +27,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
-public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiver, ITickable, IStringReceiver{
+public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiver, ITickable, IStringReceiver, IInfoTE{
 	
 	private GearTypes type;
 	private double[] motionData = new double[4];
@@ -37,6 +40,14 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 	 */
 	private float[] angleW = new float[2];
 
+	@Override
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		chat.add("Speed: " + MiscOp.betterRound(motionData[0], 3));
+		chat.add("Energy: " + MiscOp.betterRound(motionData[1], 3));
+		chat.add("Power: " + MiscOp.betterRound(motionData[2], 3));
+		chat.add("I: " + inertia + ", Rotation Ratio: " + handlerMain.getRotationRatio());
+	}
+
 	public void initSetup(GearTypes typ){
 		type = typ;
 
@@ -45,8 +56,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 
-		inertia = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D * 1.125D, 2);
-		//1.125 because r*r/2 so 1.5*1.5/2
+		inertia = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
 	}
 
 	public GearTypes getMember(){
@@ -88,17 +98,16 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 		super.readFromNBT(nbt);
 
 		// motionData
-		NBTTagCompound innerMot = nbt.getCompoundTag("motionData");
 		for(int j = 0; j < 4; j++){
-			motionData[j] = (innerMot.hasKey(j + "motion")) ? innerMot.getDouble(j + "motion") : 0;
+			motionData[j] = nbt.getDouble("[" + j + "]mot");
 		}
 		// member
 		type = nbt.hasKey("memb") ? GearTypes.valueOf(nbt.getString("memb")) : null;
-		inertia = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 4.5D * 1.125D, 2);
+		inertia = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);
 		//1.125 because r*r/2 so 1.5*1.5/2
 
 		angleW[0] = nbt.getFloat("angle");
-		angleW[1] = nbt.getFloat("clientW");
+		angleW[1] = nbt.getFloat("cl_w");
 	}
 
 	@Override
@@ -106,12 +115,10 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 		super.writeToNBT(nbt);
 
 		// motionData
-		NBTTagCompound motionTags = new NBTTagCompound();
 		for(int j = 0; j < 3; j++){
 			if(motionData[j] != 0)
-				motionTags.setDouble(j + "motion", motionData[j]);
+				nbt.setDouble("[" + j + "]mot", motionData[j]);
 		}
-		nbt.setTag("motionData", motionTags);
 
 		// member
 		if(type != null){
@@ -120,7 +127,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 
 		nbt.setBoolean("new", true);
 		nbt.setFloat("angle", angleW[0]);
-		nbt.setFloat("clientW", angleW[1]);
+		nbt.setFloat("cl_w", angleW[1]);
 		return nbt;
 	}
 
@@ -132,15 +139,16 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 		}
 		nbt.setBoolean("new", true);
 		nbt.setFloat("angle", angleW[0]);
-		nbt.setFloat("clientW", angleW[1]);
+		nbt.setFloat("cl_w", angleW[1]);
 		return nbt;
 	}
 
 	@Override
-	public void receiveSpin(int identifier, float clientW, float angle){
+	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
 		if(identifier == 0){
+			float angle = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
 			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
-			angleW[1] = clientW;
+			angleW[1] = Float.intBitsToFloat((int) (message >>> 32L));
 		}
 	}
 
@@ -189,11 +197,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 			EnumFacing sid = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 
 			if(lastRadius != 0){
-				rotRatioIn *= -lastRadius / 1.5D;
-			}else if(rotRatioIn == 0){
-				rotRatioIn = 1D;
-			}else if(sid.getAxisDirection() == AxisDirection.POSITIVE){
-				rotRatioIn *= -1D;
+				rotRatioIn *= lastRadius / 1.5D;
 			}
 
 			//If true, this has already been checked.
@@ -226,7 +230,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 				}
 
 				if(connectTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite())){
-					connectTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite()).propogate(masterIn, key, sid.getAxisDirection() == AxisDirection.POSITIVE ? -rotRatio : rotRatio, 0);
+					connectTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, sid.getOpposite()).propogate(masterIn, key, rotRatio, 0);
 				}
 			}
 
@@ -235,13 +239,13 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 					// Adjacent gears
 					TileEntity adjTE = world.getTileEntity(pos.offset(sideN, 2));
 					if(adjTE != null && adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sid)){
-						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sid).connect(masterIn, key, rotRatio, 1.5D);
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sid).connect(masterIn, key, -rotRatio, 1.5D);
 					}
 
 					// Diagonal gears
 					TileEntity diagTE = world.getTileEntity(pos.offset(sideN, 2).offset(sid));
 					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()) && DefaultAxleHandler.canConnectThrough(world, pos.offset(sideN, 2), sideN.getOpposite(), sid) && diagTE != null){
-						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()).connect(masterIn, key, rotRatio, 1.5D);
+						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(sid, sideN.getOpposite()) * rotRatio, 1.5D);
 					}
 				}
 			}
@@ -257,8 +261,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 			if(!world.isRemote){
 				angleW[1] = 0;
 				angleW[0] = Math.signum(rotRatio) == -1 ? 7.5F : 0F;
-				SendSpinToClient msg = new SendSpinToClient(0, angleW[1], angleW[0], pos);
-				ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 
@@ -323,8 +326,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ISpinReceiv
 		@Override
 		public void syncAngle(){
 			angleW[1] = (float) motionData[0];
-			SendSpinToClient msg = new SendSpinToClient(0, angleW[1], angleW[0], pos);
-			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 }

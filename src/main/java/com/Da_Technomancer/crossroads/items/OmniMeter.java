@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -40,81 +39,106 @@ public class OmniMeter extends Item{
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}
-	
+
+	private static final int CHAT_ID = 279478;//Value chosen at random
+
 	/**
-	 * Value chosen at random.
+	 * For calling on the server side only
+	 * @param chat The list to be populated with information
+	 * @param player The player
+	 * @param world The world
+	 * @param pos The position aimed at
+	 * @param facing The side clicked on
+	 * @param hitX The hitX
+	 * @param hitY The hitY
+	 * @param hitZ The hitZ
 	 */
-	private static final int CHAT_ID = 279478;
-
-	@Override
-	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
-		TileEntity te = worldIn.getTileEntity(pos);
-		
-		if(!worldIn.isRemote){
-			if(te != null){
-				ArrayList<String> chat = new ArrayList<String>();
-
-				if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
-					IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-					chat.add(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s."));
-					for(IFluidTankProperties tank : pipe.getTankProperties()){
-						chat.add("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : tank.getContents().getLocalizedName()) + ", Capacity: " + tank.getCapacity());
-					}
+	public static void measure(ArrayList<String> chat, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ){
+		TileEntity te = world.getTileEntity(pos);
+		if(te != null){
+			if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
+				IFluidHandler pipe = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+				chat.add(pipe.getTankProperties().length + " internal tank" + (pipe.getTankProperties().length == 1 ? "." : "s."));
+				for(IFluidTankProperties tank : pipe.getTankProperties()){
+					chat.add("Amount: " + (tank.getContents() == null ? 0 : tank.getContents().amount) + ", Type: " + (tank.getContents() == null ? "None" : tank.getContents().getLocalizedName()) + ", Capacity: " + tank.getCapacity());
 				}
+			}
 
-				if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
-					IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
-					chat.add("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", I: " + gear.getMoInertia());
-				}else if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
-					IAxleHandler gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing);
-					chat.add("Speed: " + MiscOp.betterRound(gear.getMotionData()[0], 3) + ", Energy: " + MiscOp.betterRound(gear.getMotionData()[1], 3) + ", Power: " + MiscOp.betterRound(gear.getMotionData()[2], 3) + ", I: " + gear.getMoInertia());
+
+
+//			if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
+//				IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
+//				chat.add("Speed: " + axle.getMotionData()[0]);
+//				chat.add("Energy: " + axle.getMotionData()[1]);
+//				chat.add("Power: " + axle.getMotionData()[2]);
+//				chat.add("I: " + axle.getMoInertia() + ", Rotation Ratio: " + axle.getRotationRatio());
+//			}else if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
+//				IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing);
+//				chat.add("Speed: " + axle.getMotionData()[0]);
+//				chat.add("Energy: " + axle.getMotionData()[1]);
+//				chat.add("Power: " + axle.getMotionData()[2]);
+//				chat.add("I: " + axle.getMoInertia() + ", Rotation Ratio: " + axle.getRotationRatio());
+//			}
+
+
+			if(te.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
+				chat.add("Total Energy: " + te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy());
+			}
+
+			if(te.hasCapability(CapabilityEnergy.ENERGY, null)){
+				IEnergyStorage batt = te.getCapability(CapabilityEnergy.ENERGY, null);
+				chat.add("Charge: " + batt.getEnergyStored() + "/" + batt.getMaxEnergyStored() + "FE");
+			}
+		}
+
+		if(te instanceof BeamRenderTEBase){
+			MagicUnit[] mag = ((BeamRenderTEBase) te).getLastFullSent();
+			if(mag != null){
+				NBTTagCompound nbt = MiscOp.getPlayerTag(player);
+				if(!nbt.hasKey("elements")){
+					nbt.setTag("elements", new NBTTagCompound());
 				}
-
-				if(te instanceof BeamRenderTEBase){
-					MagicUnit[] mag = ((BeamRenderTEBase) te).getLastFullSent();
-					if(mag != null){
-						for(int i = 0; i < mag.length; i++){
-							MagicUnit check = mag[i];
-							if(check != null){
-								NBTTagCompound nbt = MiscOp.getPlayerTag(playerIn);
-								if(!nbt.hasKey("elements")){
-									nbt.setTag("elements", new NBTTagCompound());
-								}
-								nbt = nbt.getCompoundTag("elements");
-
-								if(!nbt.hasKey(EnumMagicElements.getElement(check).name())){
-									nbt.setBoolean(EnumMagicElements.getElement(check).name(), true);
-									playerIn.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumMagicElements.getElement(check).toString()));
-									StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerIn, false);
-								}
-
-								chat.add(EnumFacing.getFront(i).toString() + ": " + check.toString());
-							}
+				nbt = nbt.getCompoundTag("elements");
+				for(int i = 0; i < mag.length; i++){
+					MagicUnit check = mag[i];
+					if(check != null){
+						if(!nbt.hasKey(EnumMagicElements.getElement(check).name())){
+							nbt.setBoolean(EnumMagicElements.getElement(check).name(), true);
+							//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
+							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumMagicElements.getElement(check).toString() + TextFormatting.RESET.toString()));
+							StoreNBTToClient.syncNBTToClient((EntityPlayerMP) player, false);
 						}
+						chat.add(EnumFacing.getFront(i).toString() + ": " + check.toString());
 					}
-				}
-
-				if(te.hasCapability(CapabilityEnergy.ENERGY, null)){
-					IEnergyStorage batt = te.getCapability(CapabilityEnergy.ENERGY, null);
-					chat.add("Charge: " + batt.getEnergyStored() + "/" + batt.getMaxEnergyStored() + "FE");
-				}
-				
-				if(te instanceof IInfoTE){
-					((IInfoTE) te).addInfo(chat, playerIn, facing);
-				}
-				if(!chat.isEmpty()){
-					StringBuilder out = new StringBuilder();
-					for(String line : chat){
-						if(out.length() != 0){
-							out.append("\n");
-						}
-						out.append(line);
-					}
-					ModPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (EntityPlayerMP) playerIn);
 				}
 			}
 		}
-		
-		return te instanceof IInfoTE ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
+
+		if(te instanceof IInfoTE){
+			((IInfoTE) te).addInfo(chat, player, facing, hitX, hitY, hitZ);
+		}
+	}
+
+	@Override
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+		if(!worldIn.isRemote){
+
+			ArrayList<String> chat = new ArrayList<>();
+
+			measure(chat, playerIn, worldIn, pos, facing, hitX, hitY, hitZ);
+
+			if(!chat.isEmpty()){
+				StringBuilder out = new StringBuilder();
+				for(String line : chat){
+					if(out.length() != 0){
+						out.append("\n");
+					}
+					out.append(line);
+				}
+				ModPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (EntityPlayerMP) playerIn);
+			}
+		}
+
+		return EnumActionResult.SUCCESS;
 	}
 }

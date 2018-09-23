@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.ISpinReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendSpinToClient;
-import com.Da_Technomancer.crossroads.API.rotary.IAxle;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,6 +14,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import javax.annotation.Nullable;
 
 public class MultiplicationAxisTileEntity extends AbstractMathAxisTE implements ISpinReceiver{
+
+	//TODO completely broken
 
 	private EnumFacing facing;
 
@@ -44,16 +45,10 @@ public class MultiplicationAxisTileEntity extends AbstractMathAxisTE implements 
 		EnumFacing side1 = getInOne();
 		TileEntity te1 = world.getTileEntity(pos.offset(side1));
 		double in1 = te1 != null && te1.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side1.getOpposite()) ? te1.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side1.getOpposite()).getMotionData()[0] : 0;
-		if(side1.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE && te1 instanceof IAxle){
-			in1 *= -1D;
-		}
 		double in2;
 		EnumFacing side2 = getInTwo();
 		TileEntity te2 = world.getTileEntity(pos.offset(side2));
 		in2 = te2 != null && te2.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side2.getOpposite()) ? te2.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side2.getOpposite()).getMotionData()[0] : 0;
-		if(side2.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE && te2 instanceof IAxle){
-			in2 *= -1D;
-		}
 
 		if(facing.getAxisDirection() == AxisDirection.NEGATIVE){
 			in1 *= -1D;

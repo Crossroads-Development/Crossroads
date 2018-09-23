@@ -1,5 +1,8 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
+
 import javax.annotation.Nonnull;
 
 /**

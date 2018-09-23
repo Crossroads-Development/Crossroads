@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class ModBlocks{
 
-	public static SextupleGear sextupleGear;
+	public static Mechanism sextupleGear;
 	public static MasterAxis masterAxis;
 	public static FluidTube fluidTube;
 	public static HeatingCrucible heatingCrucible;
@@ -57,7 +57,6 @@ public class ModBlocks{
 	public static ColorChart colorChart;
 	public static BeamSplitterBasic beamSplitterBasic;
 	public static CrystalMasterAxis crystalMasterAxis;
-	public static Axle axle;
 	public static Ratiator ratiator;
 	public static BeaconHarness beaconHarness;
 	public static FatFeeder fatFeeder;
@@ -113,7 +112,6 @@ public class ModBlocks{
 	public static ChargingStand chargingStand;
 	public static AtmosCharger atmosCharger;
 	public static ReactiveSpot reactiveSpot;
-	public static CopshowiumAxle copshowiumAxle;
 	public static ClockworkStabilizer clockworkStabilizer;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
@@ -159,7 +157,7 @@ public class ModBlocks{
 	public static void init(){
 		masterAxis = new MasterAxis();
 		grindstone = new Grindstone();
-		sextupleGear = new SextupleGear();
+		sextupleGear = new Mechanism();
 		largeGearMaster = new LargeGearMaster();
 		largeGearSlave = new LargeGearSlave();
 		heatingCrucible = new HeatingCrucible();
@@ -193,7 +191,6 @@ public class ModBlocks{
 		colorChart = new ColorChart();
 		beamSplitterBasic = new BeamSplitterBasic();
 		crystalMasterAxis = new CrystalMasterAxis();
-		axle = new Axle();
 		ratiator = new Ratiator();
 		beaconHarness = new BeaconHarness();
 		fatFeeder = new FatFeeder();
@@ -249,7 +246,6 @@ public class ModBlocks{
 		chargingStand = new ChargingStand();
 		atmosCharger = new AtmosCharger();
 		reactiveSpot = new ReactiveSpot();
-		copshowiumAxle = new CopshowiumAxle();
 		clockworkStabilizer = new ClockworkStabilizer();
 	}
 

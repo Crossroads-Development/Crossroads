@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.client.TESR;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelGearIcositetragon;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
@@ -29,6 +29,8 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
 		GlStateManager.disableLighting();
+
+		float dirMult = 1;
 		
 		GlStateManager.translate(x + .5D, y + .5D, z + .5D);
 		if(gear.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
@@ -36,9 +38,11 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 		}else if(gear.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
 			GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
 			handler = gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP);
+			dirMult = -1;
 		}else if(gear.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST)){
 			GlStateManager.rotate(90F, 0.0F, 0.0F, 1.0F);
 			handler = gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.EAST);
+			dirMult = -1;
 		}else if(gear.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST)){
 			GlStateManager.rotate(270F, 0.0F, 0.0F, 1.0F);
 			handler = gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.WEST);
@@ -48,9 +52,10 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 		}else{
 			GlStateManager.rotate(270F, 1.0F, 0.0F, 0.0F);
 			handler = gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.SOUTH);
+			dirMult = -1;
 		}
 		if(handler != null){
-			GlStateManager.rotate((float) handler.getAngle(), 0F, 1F, 0F);
+			GlStateManager.rotate((float) handler.getAngle() * dirMult, 0F, 1F, 0F);
 			GlStateManager.scale(3, 1, 3);
 			MODEL.render(TEXTURE, TEXTURE_RIM, gear.getMember().getColor());
 		}

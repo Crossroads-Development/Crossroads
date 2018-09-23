@@ -84,13 +84,16 @@ public final class MiscOp{
 			return null;
 		}
 
-		float dist = 0;
+		float dist = Integer.MAX_VALUE;
 		AxisAlignedBB closest = null;
 
 		for(AxisAlignedBB box : boxes){
+			if(box == null){
+				continue;
+			}
 			RayTraceResult raytraceresult = box.calculateIntercept(start, end);
-			if(raytraceresult != null && (dist > raytraceresult.hitVec.subtract(start).lengthVector() || dist == 0)){
-				dist = (float) raytraceresult.hitVec.subtract(start).lengthVector();
+			if(raytraceresult != null && dist > raytraceresult.hitVec.subtract(start).lengthSquared()){
+				dist = (float) raytraceresult.hitVec.subtract(start).lengthSquared();
 				closest = box;
 			}
 		}

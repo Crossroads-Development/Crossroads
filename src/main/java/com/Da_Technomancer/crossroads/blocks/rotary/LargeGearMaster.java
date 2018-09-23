@@ -8,7 +8,6 @@ import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,12 +27,12 @@ import java.util.List;
 
 public class LargeGearMaster extends BlockContainer{
 	
-	private static final AxisAlignedBB NORTH = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .5D);
-	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(0D, 0D, .5D, 1D, 1D, 1D);
-	private static final AxisAlignedBB EAST = new AxisAlignedBB(.5D, 0D, 0D, 1D, 1D, 1D);
-	private static final AxisAlignedBB WEST = new AxisAlignedBB(0D, 0D, 0D, .5D, 1D, 1D);
-	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .5D, 0D, 1D, 1D, 1D);
-	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .5D, 1D);
+	private static final AxisAlignedBB NORTH = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D);
+	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(0D, 0D, .125D, 1D, 1D, 1D);
+	private static final AxisAlignedBB EAST = new AxisAlignedBB(.125D, 0D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB WEST = new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D);
+	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .125D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
 	
 	public LargeGearMaster(){
 		super(Material.IRON);
@@ -62,7 +61,7 @@ public class LargeGearMaster extends BlockContainer{
 	
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {EssentialsProperties.FACING});
+		return new BlockStateContainer(this, EssentialsProperties.FACING);
 	}
 	
 	@Override

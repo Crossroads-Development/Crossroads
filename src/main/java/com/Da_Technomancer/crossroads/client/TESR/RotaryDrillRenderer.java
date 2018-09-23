@@ -8,6 +8,7 @@ import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTileEntity>{
@@ -24,7 +25,10 @@ public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTi
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
-		switch(drill.getWorld().getBlockState(drill.getPos()).getValue(EssentialsProperties.FACING)){
+
+		EnumFacing dir = drill.getWorld().getBlockState(drill.getPos()).getValue(EssentialsProperties.FACING);
+
+		switch(dir){
 			case DOWN:{
 				GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
 				GlStateManager.translate(-.5F, -1.5F, .5F);
@@ -57,7 +61,7 @@ public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTi
 		}
 		GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
 		GlStateManager.translate(0F, -2F, 0F);
-		GlStateManager.rotate(drill.getAngle(), 0F, 1F, 0F);
+		GlStateManager.rotate(drill.getAngle() * dir.getAxisDirection().getOffset(), 0F, 1F, 0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		model.render();
 		GlStateManager.popMatrix();

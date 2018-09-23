@@ -29,6 +29,7 @@ public class GearFactory{
 			LARGE_GEARS.put(typ, new LargeGear(typ));
 			TOGGLE_GEARS.put(typ, new ToggleGear(typ));
 		}
+
 	}
 
 	@SideOnly(Side.CLIENT)

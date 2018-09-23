@@ -35,7 +35,7 @@ public class ModelGearIcositetragon{
 	 */
 	public void render(ResourceLocation res, ResourceLocation rim, Color color){
 
-		double top = 0;
+		double top = -0.375F;
 		double bottom = -.5F;
 
 		float extend = 25F / 48F;

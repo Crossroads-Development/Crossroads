@@ -1,7 +1,8 @@
-package com.Da_Technomancer.crossroads.blocks;
+package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.HamsterWheelTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
@@ -31,7 +32,7 @@ public class HamsterWheel extends BlockContainer{
 
 	private static final AxisAlignedBB[] BB = new AxisAlignedBB[]{new AxisAlignedBB(0, 0, .5D, 1, 1, 1), new AxisAlignedBB(0, 0, 0, .5D, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 1, .5D), new AxisAlignedBB(.5D, 0, 0, 1, 1, 1)};
 
-	protected HamsterWheel(){
+	public HamsterWheel(){
 		super(Material.IRON);
 		String name = "hamster_wheel";
 		setUnlocalizedName(name);

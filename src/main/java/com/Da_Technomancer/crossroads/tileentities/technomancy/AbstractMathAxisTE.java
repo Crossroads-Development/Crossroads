@@ -2,9 +2,12 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
-import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
+import com.Da_Technomancer.essentials.shared.ISlaveAxisHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -20,6 +23,9 @@ import java.util.HashSet;
 import java.util.Random;
 
 public abstract class AbstractMathAxisTE extends TileEntity implements ITickable{
+
+	//TODO completely broken
+
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
@@ -55,9 +61,6 @@ public abstract class AbstractMathAxisTE extends TileEntity implements ITickable
 		EnumFacing side1 = getInOne();
 		TileEntity te1 = world.getTileEntity(pos.offset(side1));
 		double in1 = te1 != null && te1.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side1.getOpposite()) ? te1.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side1.getOpposite()).getMotionData()[0] : 0;
-		if(side1.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE && te1 instanceof IAxle){
-			in1 *= -1D;
-		}
 		double in2;
 		EnumFacing side2 = getInTwo();
 		if(side2 == null){
@@ -65,17 +68,11 @@ public abstract class AbstractMathAxisTE extends TileEntity implements ITickable
 		}else{
 			TileEntity te2 = world.getTileEntity(pos.offset(side2));
 			in2 = te2 != null && te2.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side2.getOpposite()) ? te2.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side2.getOpposite()).getMotionData()[0] : 0;
-			if(side2.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE && te2 instanceof IAxle){
-				in2 *= -1D;
-			}
 		}
 
 		double baseSpeed = getOutSpeed(in1, in2);
 
 		EnumFacing sideOut = getOut();
-		if(sideOut.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE && world.getTileEntity(pos.offset(sideOut)) instanceof IAxle){
-			baseSpeed *= -1D;
-		}
 
 		double sumIRot = 0;
 		sumEnergy = 0;
@@ -349,7 +346,7 @@ public abstract class AbstractMathAxisTE extends TileEntity implements ITickable
 
 		@Override
 		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
-			if(DefaultAxisHandler.contains(slaveHandler, handler)){
+			if(RotaryUtil.contains(slaveHandler, handler)){
 				world.destroyBlock(pos, true);
 				return;
 			}

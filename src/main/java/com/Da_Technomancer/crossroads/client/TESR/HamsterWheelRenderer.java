@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.client.TESR;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelAxle;
-import com.Da_Technomancer.crossroads.tileentities.HamsterWheelTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -39,7 +39,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		float angle = wheel.nextAngle - wheel.angle;
 		angle *= partialTicks;
 		angle += wheel.angle;
-		angle *= -1F;
+		angle *= -facing.getAxisDirection().getOffset();
 
 		//Feet
 		GlStateManager.pushMatrix();

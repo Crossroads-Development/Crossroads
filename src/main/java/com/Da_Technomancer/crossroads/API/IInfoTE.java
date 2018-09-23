@@ -15,7 +15,20 @@ public interface IInfoTE{
 	 * @param chat Add info to this list, 1 line per entry.
 	 * @param player The player using the info device.
 	 * @param side The viewed EnumFacing (only used by goggles).
+	 * @param hitX The hitX
+	 * @param hitY The hitY
+	 * @param hitZ The hitZ
 	 */
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side);
-	
+	public default void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+		addInfo(chat, player, side);
+	}
+
+	/**
+	 * @param chat Add info to this list, 1 line per entry.
+	 * @param player The player using the info device.
+	 * @param side The viewed EnumFacing (only used by goggles).
+	 */
+	public default void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+
+	}
 }

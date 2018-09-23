@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +23,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-public class GrindstoneTileEntity extends TileEntity implements ITickable{
+import javax.annotation.Nullable;
+
+public class GrindstoneTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private ItemStack[] inventory =  {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
 
@@ -28,6 +33,15 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 	public static final double REQUIRED = 100;
 
 	private final double[] motionData = new double[4];
+
+	@Override
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		chat.add("Progress: " + (int) (progress) + "/" + (int) REQUIRED);
+		chat.add("Speed: " + MiscOp.betterRound(motionData[0], 3));
+		chat.add("Energy: " + MiscOp.betterRound(motionData[1], 3));
+		chat.add("Power: " + MiscOp.betterRound(motionData[2], 3));
+		chat.add("I: " + axleHandler.getMoInertia() + ", Rotation Ratio: " + axleHandler.getRotationRatio());
+	}
 
 	private void runMachine(){
 		if(progress == REQUIRED){
@@ -342,28 +356,6 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable{
 		@Override
 		public double getRotationRatio(){
 			return rotRatio;
-		}
-
-		@Override
-		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
-			if(allowInvert && absolute){
-				motionData[1] += energy;
-			}else if(allowInvert){
-				motionData[1] += energy * Math.signum(motionData[1]);
-			}else if(absolute){
-				int sign = (int) Math.signum(motionData[1]);
-				motionData[1] += energy;
-				if(sign != 0 && Math.signum(motionData[1]) != sign){
-					motionData[1] = 0;
-				}
-			}else{
-				int sign = (int) Math.signum(motionData[1]);
-				motionData[1] += energy * ((double) sign);
-				if(Math.signum(motionData[1]) != sign){
-					motionData[1] = 0;
-				}
-			}
-			markDirty();
 		}
 
 		@Override

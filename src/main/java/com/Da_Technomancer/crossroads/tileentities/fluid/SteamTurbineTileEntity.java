@@ -4,11 +4,14 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +25,9 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SteamTurbineTileEntity extends TileEntity implements ITickable{
+import java.util.ArrayList;
+
+public class SteamTurbineTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private FluidStack steamContent;
 	private FluidStack waterContent;
@@ -30,7 +35,15 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable{
 	public static final int LIMIT = 5;
 
 	private final double[] motionData = new double[4];
-	
+
+	@Override
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+		chat.add("Speed: " + MiscOp.betterRound(motionData[0], 3));
+		chat.add("Energy: " + MiscOp.betterRound(motionData[1], 3));
+		chat.add("Power: " + MiscOp.betterRound(motionData[2], 3));
+		chat.add("I: " + axleHandler.getMoInertia() + ", Rotation Ratio: " + axleHandler.getRotationRatio());
+	}
+
 	@Override
 	public void update(){
 		if(world.isRemote){

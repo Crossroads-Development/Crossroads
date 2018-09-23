@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
+import com.Da_Technomancer.crossroads.items.itemSets.Axle;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
@@ -41,7 +42,7 @@ public final class ModItems{
 		}
 	};
 
-	public static final CreativeTabs TAG_GEAR = new CreativeTabs("gear"){
+	public static final CreativeTabs TAB_GEAR = new CreativeTabs("gear"){
 		@Override
 		public ItemStack getTabIconItem(){
 			return new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.BRONZE));
@@ -92,7 +93,6 @@ public final class ModItems{
 	public static Shell shell;
 	public static Nitroglycerin nitroglycerin;
 	public static BasicItem solidQuicksilver;
-//	public static CustomMaterial customMaterial;
 	public static BasicItem solidFusas;
 	public static BasicItem solidEldrine;
 	public static BasicItem solidStasisol;
@@ -104,6 +104,8 @@ public final class ModItems{
 	public static BasicItem solidRegia;
 	public static FlyingMachine flyingMachine;
 	public static TeslaRay teslaRay;
+	public static Axle axleIron;
+	public static Axle axleCopshowium;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -163,11 +165,6 @@ public final class ModItems{
 		shell = new Shell();
 		nitroglycerin = new Nitroglycerin();
 		solidQuicksilver = new BasicItem("solid_quicksilver");
-//		new CustomTool("pickaxe");
-//		new CustomTool("axe");
-//		new CustomTool("shovel");
-//		new CustomTool("sword");
-//		customMaterial = new CustomMaterial();
 		solidFusas = new BasicItem("solid_fusas");
 		solidEldrine = new BasicItem("solid_eldrine");
 		solidStasisol = new BasicItem("solid_stasisol");
@@ -179,6 +176,8 @@ public final class ModItems{
 		solidRegia = new BasicItem("solid_regia");
 		flyingMachine = new FlyingMachine();
 		teslaRay = new TeslaRay();
+		axleIron = new Axle(GearTypes.IRON);
+		axleCopshowium = new Axle(GearTypes.COPSHOWIUM);
 	}
 
 	@SideOnly(Side.CLIENT)

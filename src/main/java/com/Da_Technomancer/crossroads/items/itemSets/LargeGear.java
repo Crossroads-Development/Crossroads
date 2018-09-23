@@ -29,15 +29,14 @@ import java.util.List;
 public class LargeGear extends Item{
 
 	private final GearTypes type;
-	public static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
-
+	public static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base_large", "inventory");
 
 	public LargeGear(GearTypes typeIn){
 		String name = "large_gear_" + typeIn.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		type = typeIn;
-		setCreativeTab(ModItems.TAG_GEAR);
+		setCreativeTab(ModItems.TAB_GEAR);
 		ModItems.toRegister.add(this);
 		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
 	}
@@ -45,16 +44,24 @@ public class LargeGear extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: " + MiscOp.betterRound(4.5D * type.getDensity(), 2) * 1.125D);
+		tooltip.add("I: " + MiscOp.betterRound(9D * type.getDensity() / 8D, 2) * 1.125D);
 	}
 
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		pos = pos.offset(side);
 
-		for(BlockPos cPos : section(pos, side)){
-			if(!worldIn.getBlockState(cPos).getBlock().isReplaceable(worldIn, cPos)){
-				return EnumActionResult.SUCCESS;
+		BlockPos[] spaces = new BlockPos[9];
+
+		for(int i = -1; i < 2; i++){
+			for(int j = -1; j < 2; j++){
+				spaces[i * 3 + j + 4] = new BlockPos(side.getFrontOffsetX() == 0 ? i : 0, side.getFrontOffsetY() == 0 ? j : 0, side.getFrontOffsetX() == 0 ? side.getFrontOffsetY() == 0 ? 0 : j : i);
+			}
+		}
+
+		for(BlockPos cPos : spaces){
+			if(!worldIn.getBlockState(pos.add(cPos)).getBlock().isReplaceable(worldIn, pos.add(cPos))){
+				return EnumActionResult.FAIL;
 			}
 		}
 
@@ -62,28 +69,17 @@ public class LargeGear extends Item{
 			playerIn.getHeldItem(hand).shrink(1);
 		}
 
-		for(BlockPos cPos : section(pos, side)){
-			if(pos.equals(cPos)){
+		for(BlockPos cPos : spaces){
+			if(cPos.distanceSq(BlockPos.ORIGIN) == 0){
 				worldIn.setBlockState(pos, ModBlocks.largeGearMaster.getDefaultState().withProperty(EssentialsProperties.FACING, side.getOpposite()), 3);
 				((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).initSetup(type);
 			}else{
-				worldIn.setBlockState(cPos, ModBlocks.largeGearSlave.getDefaultState().withProperty(EssentialsProperties.FACING, side.getOpposite()), 3);
-				((LargeGearSlaveTileEntity) worldIn.getTileEntity(cPos)).setInitial(pos);
+				worldIn.setBlockState(pos.add(cPos), ModBlocks.largeGearSlave.getDefaultState().withProperty(EssentialsProperties.FACING, side.getOpposite()), 3);
+				((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos.add(cPos))).setInitial(BlockPos.ORIGIN.subtract(cPos));
 			}
 		}
 		++CommonProxy.masterKey;
 
 		return EnumActionResult.SUCCESS;
 	}
-
-	private static BlockPos[] section(BlockPos pos, EnumFacing side){
-		if(side == EnumFacing.UP || side == EnumFacing.DOWN){
-			return new BlockPos[] {pos.offset(EnumFacing.NORTH, -1).offset(EnumFacing.EAST, -1), pos.offset(EnumFacing.NORTH, -1), pos.offset(EnumFacing.NORTH, -1).offset(EnumFacing.EAST, 1), pos.offset(EnumFacing.EAST, -1), pos, pos.offset(EnumFacing.EAST, 1), pos.offset(EnumFacing.NORTH, 1).offset(EnumFacing.EAST, -1), pos.offset(EnumFacing.NORTH, 1), pos.offset(EnumFacing.NORTH, 1).offset(EnumFacing.EAST, 1)};
-		}
-		if(side == EnumFacing.EAST || side == EnumFacing.WEST){
-			return new BlockPos[] {pos.offset(EnumFacing.NORTH, -1).offset(EnumFacing.UP, -1), pos.offset(EnumFacing.NORTH, -1), pos.offset(EnumFacing.NORTH, -1).offset(EnumFacing.UP, 1), pos.offset(EnumFacing.UP, -1), pos, pos.offset(EnumFacing.UP, 1), pos.offset(EnumFacing.NORTH, 1).offset(EnumFacing.UP, -1), pos.offset(EnumFacing.NORTH, 1), pos.offset(EnumFacing.NORTH, 1).offset(EnumFacing.UP, 1)};
-		}
-		return new BlockPos[] {pos.offset(EnumFacing.UP, -1).offset(EnumFacing.EAST, -1), pos.offset(EnumFacing.UP, -1), pos.offset(EnumFacing.UP, -1).offset(EnumFacing.EAST, 1), pos.offset(EnumFacing.EAST, -1), pos, pos.offset(EnumFacing.EAST, 1), pos.offset(EnumFacing.UP, 1).offset(EnumFacing.EAST, -1), pos.offset(EnumFacing.UP, 1), pos.offset(EnumFacing.UP, 1).offset(EnumFacing.EAST, 1)};
-	}
-
 }

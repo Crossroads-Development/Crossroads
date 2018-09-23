@@ -295,7 +295,7 @@ public final class ModCrafting{
 		//Detailed Crafting Table (Cheap Technomancy Recipe)
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.detailedCrafter, 1), "*&*", "&#&", "*&*", '*', "nuggetIron", '&', "nuggetTin", '#', Blocks.CRAFTING_TABLE));
 		//Copshowium Axle
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumAxle, 1), "*", "|", "*", '*', "stone", '|', "ingotCopshowium"));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.axleCopshowium, 2), "*", "|", "*", '*', "ingotCopshowium", '|', "stickWood"));
 		//Clockwork Stabilizer
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.clockworkStabilizer, 1), " # ", "#*#", " # ", '*', ModBlocks.largeQuartzStabilizer, '#', "gearCopshowium"));
 
@@ -331,7 +331,7 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockCopshowium, 1), "***", "***", "***", '*', "ingotCopshowium"));
 
 		// Axle
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.axle, 1), "#", "?", "#", '#', Blocks.STONE, '?', "ingotIron"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.axleIron, 2), "#", "?", "#", '#', "ingotIron", '?', "stickWood"));
 		// Bronze
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.ingotBronze, 1), "###", "#?#", "###", '#', "nuggetCopper", '?', "nuggetTin"));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockBronze, 1), "###", "#?#", "###", '#', "ingotCopper", '?', "ingotTin"));
