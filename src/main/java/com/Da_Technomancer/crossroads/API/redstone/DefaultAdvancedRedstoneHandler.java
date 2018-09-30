@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API;
+package com.Da_Technomancer.crossroads.API.redstone;
 
 public class DefaultAdvancedRedstoneHandler implements IAdvancedRedstoneHandler{
 

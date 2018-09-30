@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -9,6 +8,7 @@ import com.Da_Technomancer.crossroads.client.bakedModel.IAdvConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RedstoneFluidTubeTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -140,7 +140,7 @@ public class RedstoneFluidTube extends BlockContainer implements IAdvConduitMode
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.addVector(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
-		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
+		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
 		return (out == null ? BB : out).offset(pos);
 	}
 
@@ -172,7 +172,7 @@ public class RedstoneFluidTube extends BlockContainer implements IAdvConduitMode
 
 		start = start.subtract(pos.getX(), pos.getY(), pos.getZ());
 		end = end.subtract(pos.getX(), pos.getY(), pos.getZ());
-		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
+		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
 		if(out == null){
 			return null;
 		}else{

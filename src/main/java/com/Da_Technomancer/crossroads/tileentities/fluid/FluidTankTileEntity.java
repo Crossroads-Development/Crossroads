@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

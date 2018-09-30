@@ -1,25 +1,23 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
+import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.essentials.shared.ISlaveAxisHandler;
-import com.Da_Technomancer.crossroads.blocks.Ratiator;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 
 public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 
@@ -50,10 +48,7 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 	}
 
 	private void runCalc(){
-		double baseSpeed = 0;
-		for(EnumFacing side : EnumFacing.values()){
-			baseSpeed = Math.max(Ratiator.getPowerOnSide(world, pos, side, false), baseSpeed);
-		}
+		double baseSpeed = RedstoneUtil.getPowerAtPos(world, pos);
 
 		double sumIRot = 0;
 		sumEnergy = 0;

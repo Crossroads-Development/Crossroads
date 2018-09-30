@@ -25,11 +25,7 @@ public final class EnergyConverters{
 	 * value (value = hunger restored + saturation restored.
 	 */
 	public static final int FAT_PER_VALUE = 100;
-	
-	/**
-	 * The RATE up equivalent to 1 speed (Fields). 
-	 */
-	public static final double RATE_PER_SPEED = 16;
+
 	/**
 	 * The number of mB of molten copshowium produced from 1mb of molten copper OR 1mb of distilled water.
 	 * Based on balance and convenience. 

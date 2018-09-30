@@ -16,13 +16,17 @@ public interface IMechanism{
 
 	/**
 	 * Called when the redstone signal received changes
+	 * @param prevValue The previous redstone value
+	 * @param newValue The new redstone value
 	 * @param mat The material of this mechanism
 	 * @param side The side this mechanism is on. If null, this is in the axle slot (center)
 	 * @param axis If side is null (axle slot), this is the orientation of this mechanism. If side is not null, this should be ignored, and may be null
 	 * @param motData The motion data of this mechanism, in order [0]=w, [1]=E, [2]=P, [3]=lastE
 	 * @param te The containing TileEntity
 	 */
-	public void onRedstoneChange(GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te);
+	public default void onRedstoneChange(double prevValue, double newValue, GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
+
+	}
 
 	/**
 	 * Gets the ratiator (or comparator) read output signal for this mechanism. Will only be called if this mechanism is in the axle slot.

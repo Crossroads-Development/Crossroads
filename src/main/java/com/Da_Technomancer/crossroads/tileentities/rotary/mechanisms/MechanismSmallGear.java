@@ -34,11 +34,6 @@ public class MechanismSmallGear implements IMechanism{
 	}
 
 	@Override
-	public void onRedstoneChange(GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
-
-	}
-
-	@Override
 	public double getInertia(GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
 		// assume each gear is 1/8 of a cubic meter and has a radius of 1/2 meter.
 		// mass is rounded to make things nicer for everyone

@@ -2,23 +2,39 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class MechanismAxle implements IMechanism{
+public class MechanismClutch implements IMechanism{
+	
+	private final boolean inverted;
+
+	public MechanismClutch(boolean inverted){
+		this.inverted = inverted;
+	}
 
 	private static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[3];
 	static{
@@ -28,13 +44,26 @@ public class MechanismAxle implements IMechanism{
 	}
 
 	@Override
+	public void onRedstoneChange(double prevValue, double newValue, GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
+		if((newValue == 0) ^ (prevValue == 0)){
+			te.getWorld().playSound(null, te.getPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
+			CommonProxy.masterKey++;
+		}
+	}
+
+	@Override
+	public double getRatiatorSignal(GearTypes mat, EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
+		return Math.abs(motData[0]) * 3D;
+	}
+
+	@Override
 	public double getInertia(GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
 		return mat.getDensity() / 32_000D;
 	}
 
 	@Override
 	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
-		return cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == null && capSide.getAxis() == axis;
+		return cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == null && capSide.getAxis() == axis && (te.redstoneIn != 0 ^ inverted || capSide.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE);
 	}
 
 	@Override
@@ -72,6 +101,10 @@ public class MechanismAxle implements IMechanism{
 		
 		
 		for(EnumFacing.AxisDirection direct : EnumFacing.AxisDirection.values()){
+			if(direct == EnumFacing.AxisDirection.POSITIVE && te.redstoneIn == 0 ^ inverted){
+				continue;
+			}
+
 			EnumFacing endDir = EnumFacing.getFacingFromAxis(direct, axis);
 			
 			if(te.members[endDir.getIndex()] != null){
@@ -103,13 +136,17 @@ public class MechanismAxle implements IMechanism{
 	@Nonnull
 	@Override
 	public ItemStack getDrop(GearTypes mat){
-		return new ItemStack(mat == GearTypes.COPSHOWIUM ? ModItems.axleCopshowium : ModItems.axleIron, 1);
+		return new ItemStack(mat == GearTypes.COPSHOWIUM ? inverted ? ModItems.clutchInvertedCopshowium : ModItems.clutchCopshowium : inverted ? ModItems.clutchInvertedIron : ModItems.clutchIron, 1);//TODO
 	}
 
 	@Override
 	public AxisAlignedBB getBoundingBox(@Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
 		return side != null || axis == null ? Block.NULL_AABB : BOUNDING_BOXES[axis.ordinal()];
 	}
+
+	private static final ResourceLocation RESOURCE_ENDS = new ResourceLocation(Main.MODID, "textures/model/axle_end.png");
+	private static final ResourceLocation RESOURCE_SIDE = new ResourceLocation(Main.MODID, "textures/model/clutch.png");
+	private static final ResourceLocation RESOURCE_SIDE_INV = new ResourceLocation(Main.MODID, "textures/model/clutch_inv.png");
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -122,6 +159,46 @@ public class MechanismAxle implements IMechanism{
 
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(axis == EnumFacing.Axis.Y ? 0 : 90F, axis == EnumFacing.Axis.Z ? 1 : 0, 0, axis == EnumFacing.Axis.X ? -1 : 0);
+		
+		//Clutch mechanism
+		BufferBuilder vb = Tessellator.getInstance().getBuffer();
+
+		Minecraft.getMinecraft().renderEngine.bindTexture(RESOURCE_ENDS);
+		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(-0.25F, 0, -0.25F).tex(0, 0).endVertex();
+		vb.pos(0.25F, 0, -0.25F).tex(1, 0).endVertex();
+		vb.pos(0.25F, 0, 0.25F).tex(1, 1).endVertex();
+		vb.pos(-0.25F, 0, 0.25F).tex(0, 1).endVertex();
+
+		vb.pos(-0.25F, 0.4998F, 0.25F).tex(0, 1).endVertex();
+		vb.pos(0.25F, 0.4998F, 0.25F).tex(1, 1).endVertex();
+		vb.pos(0.25F, 0.4998F, -0.25F).tex(1, 0).endVertex();
+		vb.pos(-0.25F, 0.4998F, -0.25F).tex(0, 0).endVertex();
+		Tessellator.getInstance().draw();
+
+		Minecraft.getMinecraft().renderEngine.bindTexture(inverted ? RESOURCE_SIDE_INV : RESOURCE_SIDE);
+		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(-0.25F, 0.4998F, -0.25F).tex(0, 1).endVertex();
+		vb.pos(0.25F, 0.4998F, -0.25F).tex(1, 1).endVertex();
+		vb.pos(0.25F, 0, -0.25F).tex(1, 0).endVertex();
+		vb.pos(-0.25F, 0, -0.25F).tex(0, 0).endVertex();
+
+		vb.pos(-0.25F, 0, 0.25F).tex(1, 0).endVertex();
+		vb.pos(0.25F, 0, 0.25F).tex(0, 0).endVertex();
+		vb.pos(0.25F, 0.4998F, 0.25F).tex(0, 1).endVertex();
+		vb.pos(-0.25F, 0.4998F, 0.25F).tex(1, 1).endVertex();
+
+		vb.pos(-0.25F, 0, 0.25F).tex(0, 0).endVertex();
+		vb.pos(-0.25F, 0.4998F, 0.25F).tex(0, 1).endVertex();
+		vb.pos(-0.25F, 0.4998F, -0.25F).tex(1, 1).endVertex();
+		vb.pos(-0.25F, 0, -0.25F).tex(1, 0).endVertex();
+
+		vb.pos(0.25F, 0.4998F, -0.25F).tex(0, 1).endVertex();
+		vb.pos(0.25F, 0.4998F, 0.25F).tex(1, 1).endVertex();
+		vb.pos(0.25F, 0, 0.25F).tex(1, 0).endVertex();
+		vb.pos(0.25F, 0, -0.25F).tex(0, 0).endVertex();
+		Tessellator.getInstance().draw();
+		
 		float angle = (float) (handler.getNextAngle() - handler.getAngle());
 		angle *= partialTicks;
 		angle += handler.getAngle();

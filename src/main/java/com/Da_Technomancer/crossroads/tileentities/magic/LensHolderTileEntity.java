@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.*;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;

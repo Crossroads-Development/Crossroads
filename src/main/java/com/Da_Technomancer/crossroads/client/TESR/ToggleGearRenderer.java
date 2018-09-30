@@ -55,7 +55,7 @@ public class ToggleGearRenderer extends TileEntitySpecialRenderer<ToggleGearTile
 		GlStateManager.translate(x + .5F, y + .375F, z + .5F);
 		GlStateManager.scale(1D, .75D, 1D);
 		GlStateManager.rotate((float) angle, 0F, 1F, 0F);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}

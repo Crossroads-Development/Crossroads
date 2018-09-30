@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.RatiatorTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
@@ -8,14 +8,11 @@ import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockRedstoneDiode;
-import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -110,43 +107,6 @@ public class Ratiator extends BlockContainer{
 		neighborChanged(state, worldIn, pos, null, null);
 	}
 
-	public static double getPowerOnSide(World worldIn, BlockPos pos, EnumFacing side, boolean allowAll){
-		IBlockState state = worldIn.getBlockState(pos.offset(side));
-		Block block = state.getBlock();
-		TileEntity te = worldIn.getTileEntity(pos.offset(side));
-
-		if(te != null && te.hasCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite())){
-			return te.getCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite()).getOutput(allowAll);
-		}
-
-		if(allowAll && state.hasComparatorInputOverride()){
-			return state.getComparatorInputOverride(worldIn, pos.offset(side));
-		}
-		if(block == Blocks.REDSTONE_WIRE){
-			return (double) state.getValue(BlockRedstoneWire.POWER);
-		}
-		if(allowAll && block == Blocks.REDSTONE_BLOCK){
-			return 15;
-		}
-		int possibleOut = allowAll ? worldIn.getRedstonePower(pos.offset(side), side) : (worldIn.getStrongPower(pos.offset(side), side));
-		if(possibleOut != 0){
-			return possibleOut;
-
-		}
-		if(allowAll && worldIn.isBlockNormalCube(pos.offset(side), true)){
-			state = worldIn.getBlockState(pos.offset(side, 2));
-			te = worldIn.getTileEntity(pos.offset(side, 2));
-			if(te != null && te.hasCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite())){
-				return te.getCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite()).getOutput(true);
-			}
-
-			if(state.hasComparatorInputOverride()){
-				return state.getComparatorInputOverride(worldIn, pos.offset(side));
-			}
-		}
-		return 0;
-	}
-
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
 		TileEntity rawTE = worldIn.getTileEntity(pos);
@@ -155,8 +115,8 @@ public class Ratiator extends BlockContainer{
 		}
 		RatiatorTileEntity te = ((RatiatorTileEntity) rawTE);
 		double lastOut = te.getOutput();
-		double sidePower = Math.max(getPowerOnSide(worldIn, pos, state.getValue(EssentialsProperties.FACING).rotateY(), false), getPowerOnSide(worldIn, pos, state.getValue(EssentialsProperties.FACING).rotateYCCW(), false));
-		te.setOutput(state.getValue(EssentialsProperties.REDSTONE_BOOL) ? getPowerOnSide(worldIn, pos, state.getValue(EssentialsProperties.FACING).getOpposite(), true) / (sidePower == 0 ? 1D : sidePower) : getPowerOnSide(worldIn, pos, state.getValue(EssentialsProperties.FACING).getOpposite(), true) * sidePower);
+		double sidePower = Math.max(RedstoneUtil.getPowerOnSide(worldIn, pos, state.getValue(EssentialsProperties.FACING).rotateY()), RedstoneUtil.getPowerOnSide(worldIn, pos, state.getValue(EssentialsProperties.FACING).rotateYCCW()));
+		te.setOutput(state.getValue(EssentialsProperties.REDSTONE_BOOL) ? RedstoneUtil.getMeasuredPower(worldIn, pos, state.getValue(EssentialsProperties.FACING).getOpposite()) / (sidePower == 0 ? 1D : sidePower) : RedstoneUtil.getMeasuredPower(worldIn, pos, state.getValue(EssentialsProperties.FACING).getOpposite()) * sidePower);
 		if(lastOut != te.getOutput()){
 			worldIn.neighborChanged(pos.offset(state.getValue(EssentialsProperties.FACING)), this, pos);
 			worldIn.notifyNeighborsOfStateExcept(pos.offset(state.getValue(EssentialsProperties.FACING)), this, state.getValue(EssentialsProperties.FACING).getOpposite());
@@ -194,7 +154,7 @@ public class Ratiator extends BlockContainer{
 
 	@Override
 	public BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {EssentialsProperties.FACING, EssentialsProperties.REDSTONE_BOOL});
+		return new BlockStateContainer(this, EssentialsProperties.FACING, EssentialsProperties.REDSTONE_BOOL);
 	}
 
 	@Override

@@ -70,7 +70,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.0625D, .21875D, .5D);
 		GlStateManager.scale(1D / 3D, .4374D, 1D / 3D);
 		GlStateManager.rotate(angleOne, 0, 1F, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//first transformer
@@ -78,7 +78,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.3125D, .59375D - (Math.min(8D, Math.abs(speedTwo)) * .0234375D), .25D);
 		GlStateManager.scale(1D, .3125D, 1D);
 		GlStateManager.rotate(angleOne, 0, 1F, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//second transformer
@@ -86,7 +86,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.6875D, .5D - (Math.signum(speedTwo) * .1328125D), .25D);
 		GlStateManager.scale(1D, .453125D, 1D);
 		GlStateManager.rotate(angleThree * (float) -Math.signum(speedTwo), 0, 1F, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//upper height control
@@ -94,7 +94,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.5D, .749D, .5D);
 		GlStateManager.scale(1D, .5D, 1D);
 		GlStateManager.rotate(-angleTwo, 0, 1F, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//sign height control
@@ -106,7 +106,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.scale(1D / 3D, 1D / 3D, .15D);
 		GlStateManager.rotate(90, 1, 0, 0);
 		GlStateManager.rotate(-angleTwo, 0, 1F, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//lower height control
@@ -114,7 +114,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.5D, .325D, .5D);
 		GlStateManager.rotate(angleTwo, 0, 1F, 0);
 		GlStateManager.scale(1D / 3D, .15D, 1D / 3D);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//ratchet 1 in
@@ -123,7 +123,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.rotate(angleTwo + 22.5F, 0, 1F, 0);
 		GlStateManager.scale(1D / 3D, .25D, 1D / 3D);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//ratchet 1
@@ -132,7 +132,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.rotate(-Math.abs(angleTwo) + 22.5F, 0, 1F, 0);
 		GlStateManager.scale(1, .125D, 1);
-		modelAx.render(textureAx, textureAx, Color.GRAY);
+		modelAx.draw(textureAx, textureAx, Color.GRAY);
 		GlStateManager.popMatrix();
 
 		//to ratchet 2
@@ -141,7 +141,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.rotate(90, 1, 0, 0);
 		GlStateManager.rotate(-angleTwo, 0, 1F, 0);
 		GlStateManager.scale(1D / 3D, .125D, 1D / 3D);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//ratchet 2
@@ -150,7 +150,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.rotate(-angleTwoPos + 22.5F, 0, 1F, 0);
 		GlStateManager.scale(1, .125D, 1);
-		modelAx.render(textureAx, textureAx, Color.GRAY);
+		modelAx.draw(textureAx, textureAx, Color.GRAY);
 		GlStateManager.popMatrix();
 
 		//horizontal spring height control
@@ -160,7 +160,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.rotate(90, 1, 0, 0);
 		GlStateManager.rotate(-angleTwoPos, 0, 1F, 0);
 		GlStateManager.scale(1D / 3D, .365D, 1D / 3D);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//lower spring height control
@@ -168,7 +168,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.translate(.1171875D, .35D, .625D);
 		GlStateManager.rotate(angleTwoPos + 22.5F, 0, 1F, 0);
 		GlStateManager.scale(1D / 3D, .2D, 1D / 3D);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//Pyramid
@@ -418,28 +418,28 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.3125D, .16D - (Math.min(8D, Math.abs(speedTwo)) * .01171875D), .25D);
 		GlStateManager.scale(1D, .1875D - (Math.min(8D, Math.abs(speedTwo)) * .0234375D), 1D);
-		modelAx.render(textureSpr, textureAx, Color.WHITE);
+		modelAx.draw(textureSpr, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//second transformer bottom
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.6875D, .16D - (Math.signum(speedTwo) * .1328125D / 2D), .25D);
 		GlStateManager.scale(1D, .1875D * (1 - (Math.signum(speedTwo) * .70833333333D)), 1D);
-		modelAx.render(textureSpr, textureAx, Color.WHITE);
+		modelAx.draw(textureSpr, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//first transformer top
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.3125D, .84D - (Math.min(8D, Math.abs(speedTwo)) * .01171875D), .25D);
 		GlStateManager.scale(1D, .1875D + (Math.min(8D, Math.abs(speedTwo)) * .0234375D), 1D);
-		modelAx.render(textureSpr, textureAx, Color.WHITE);
+		modelAx.draw(textureSpr, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//second transformer top
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(.6875D, .84D - (Math.signum(speedTwo) * .1328125D / 2D), .25D);
 		GlStateManager.scale(1D, .1875D * (1 + (Math.signum(speedTwo) * .70833333333D)), 1D);
-		modelAx.render(textureSpr, textureAx, Color.WHITE);
+		modelAx.draw(textureSpr, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//Belts

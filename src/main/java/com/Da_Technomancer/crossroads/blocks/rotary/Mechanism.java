@@ -1,14 +1,15 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -196,7 +197,7 @@ public class Mechanism extends BlockContainer{
 		if(useCenter && list.get(6) == null){
 			list.add(BREAK_ALL_BB);
 		}
-		AxisAlignedBB aimed = MiscOp.rayTraceMulti(list, start, end);
+		AxisAlignedBB aimed = BlockUtil.selectionRaytrace(list, start, end);
 
 		return aimed == null ? -1 : list.indexOf(aimed);
 	}
@@ -219,6 +220,8 @@ public class Mechanism extends BlockContainer{
 		if(te.members[0] == null && te.members[1] == null && te.members[2] == null && te.members[3] == null && te.members[4] == null && te.members[5] == null && te.members[6] == null){
 			worldIn.destroyBlock(pos, false);
 		}
+
+		te.updateRedstone();
 
 		CommonProxy.masterKey++;
 	}
@@ -252,6 +255,11 @@ public class Mechanism extends BlockContainer{
 			return mte.members[6] != null && mte.axleAxis == side.getAxis();
 		}
 		return false;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return BlockFaceShape.UNDEFINED;
 	}
 
 	@Override

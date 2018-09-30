@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.client.TESR;
 
+import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelAxle;
@@ -16,9 +17,7 @@ import java.awt.*;
 
 public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheelTileEntity>{
 
-	private final ResourceLocation textureAx = new ResourceLocation(Main.MODID, "textures/model/axle.png");
 	private final ResourceLocation textureHam = new ResourceLocation(Main.MODID, "textures/model/hamster.png");
-	private final ModelAxle modelAxle = new ModelAxle();
 
 	@Override
 	public void render(HamsterWheelTileEntity wheel, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
@@ -53,7 +52,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 				GlStateManager.translate(j == 0 ? 0 : .4D, i == 0 ? -.065D : .065D, 0);
 				GlStateManager.scale(.4D, .07D, .49D);
 				GlStateManager.rotate(i + j % 2 == 0 ? feetAngle : -feetAngle, 0, 1, 0);
-				modelAxle.render(textureHam, textureHam, Color.WHITE);
+				ModelAxle.render(textureHam, textureHam, Color.LIGHT_GRAY);
 				GlStateManager.popMatrix();
 			}
 		}
@@ -69,7 +68,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		GlStateManager.translate(0, -.4375D, 0);
 		GlStateManager.scale(1, .8D, 1);
 		GlStateManager.rotate(90, 1, 0, 0);
-		modelAxle.render(textureAx, textureAx, Color.WHITE);
+		ModelAxle.render(GearTypes.IRON.getColor());
 		GlStateManager.popMatrix();
 
 		float lHalf = .375F;
@@ -80,7 +79,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 			GlStateManager.translate(lHalf, -.25F, 0);
 			GlStateManager.scale(.41D, i % 2 == 0 ? .5D : .45D, 7.5D * lHalf);
 
-			modelAxle.render(textureAx, textureAx, Color.LIGHT_GRAY);
+			ModelAxle.render(Color.GRAY);
 			GlStateManager.popMatrix();
 		}
 

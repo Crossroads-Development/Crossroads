@@ -1,17 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.CableThemes;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
@@ -21,6 +20,7 @@ import com.Da_Technomancer.crossroads.client.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -55,6 +55,8 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class HeatCable extends BlockContainer implements IConduitModel{
 
+	public static final HashMap<String, CableThemes> OREDICT_TO_THEME = new HashMap<String, CableThemes>();
+
 	private final HeatInsulators insulator;
 	private static final double SIZE = .2D;
 	private static final AxisAlignedBB BB = new AxisAlignedBB(SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
@@ -86,11 +88,6 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 			}
 		};
 		ModelLoader.setCustomStateMapper(this, ignoreState);
-	}
-
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return BB;
 	}
 
 	@Override
@@ -136,7 +133,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 				return false;
 			}
 			for(int oreDict : OreDictionary.getOreIDs(held)){
-				CableThemes match = IHeatHandler.OREDICT_TO_THEME.get(OreDictionary.getOreName(oreDict));
+				CableThemes match = OREDICT_TO_THEME.get(OreDictionary.getOreName(oreDict));
 				if(match != null && state.getValue(Properties.TEXTURE_4) != match.ordinal()){
 					if(!worldIn.isRemote){
 						worldIn.setBlockState(pos, state.withProperty(Properties.TEXTURE_4, match.ordinal()));
@@ -247,7 +244,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.addVector(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
-		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
+		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
 		return (out == null ? BB : out).offset(pos);
 	}
 
@@ -278,7 +275,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 		start = start.subtract(pos.getX(), pos.getY(), pos.getZ());
 		end = end.subtract(pos.getX(), pos.getY(), pos.getZ());
-		AxisAlignedBB out = MiscOp.rayTraceMulti(list, start, end);
+		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
 		if(out == null){
 			return null;
 		}else{

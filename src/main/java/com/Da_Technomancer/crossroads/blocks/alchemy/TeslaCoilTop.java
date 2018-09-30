@@ -99,7 +99,6 @@ public class TeslaCoilTop extends Block{
 	}
 
 	@Override
-	@Nullable
 	public Item getItemDropped(IBlockState state, Random rand, int fortune){
 		return null;
 	}

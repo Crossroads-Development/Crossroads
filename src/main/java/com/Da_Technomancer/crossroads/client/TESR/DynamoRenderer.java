@@ -1,15 +1,12 @@
 package com.Da_Technomancer.crossroads.client.TESR;
 
-import java.awt.Color;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
@@ -17,8 +14,6 @@ import net.minecraft.util.ResourceLocation;
 
 public class DynamoRenderer extends TileEntitySpecialRenderer<DynamoTileEntity>{
 
-	private final ResourceLocation textureAx = new ResourceLocation(Main.MODID, "textures/model/axle.png");
-	private final ModelAxle modelAx = new ModelAxle();
 	private final ModelGearOctagon modelOct = new ModelGearOctagon();
 	private final ResourceLocation textureGear = new ResourceLocation(Main.MODID, "textures/model/gear_oct.png");
 
@@ -35,7 +30,7 @@ public class DynamoRenderer extends TileEntitySpecialRenderer<DynamoTileEntity>{
 		GlStateManager.rotate(270F - facing.getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.rotate(-(float) ((dynamo.nextAngle - dynamo.angle) * partialTicks + dynamo.angle), 0F, 1F, 0F);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		ModelAxle.render(GearTypes.IRON.getColor());
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0.5F, 0);

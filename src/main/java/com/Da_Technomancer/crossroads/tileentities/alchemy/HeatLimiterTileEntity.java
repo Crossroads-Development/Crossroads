@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.blocks.Ratiator;
+import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,10 +44,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 			heatHandlerIn.init();
 		}
 
-		double goalTemp = 0;
-		for(EnumFacing side : EnumFacing.VALUES){
-			goalTemp = Math.max(goalTemp, Ratiator.getPowerOnSide(world, pos, side, false));
-		}
+		double goalTemp = RedstoneUtil.getPowerAtPos(world, pos);
 		goalTemp -= 273D;
 		if(heatOut > goalTemp){
 			if(heatIn < goalTemp){

@@ -269,6 +269,10 @@ tile.reactive_spot.name=Reactive Spot (Internal)
 item.axle_copshowium.name=Copshowium Axle
 tile.clock_stabilizer.name=Clockwork Stabilizer
 item.tesla_ray.name=Tesla Ray
+item.clutch_iron.name=Iron Clutch
+item.clutch_copshowium.name=Copshowium Clutch
+item.clutch_inverted_iron.name=Inverted Iron Clutch
+item.clutch_inverted_copshowium.name=Inverted Copshowium Clutch
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

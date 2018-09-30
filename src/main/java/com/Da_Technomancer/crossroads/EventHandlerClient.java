@@ -163,7 +163,7 @@ public final class EventHandlerClient{
 
 		//Loose beams
 		if(!SafeCallable.beamsToRender.isEmpty()){
-			game.mcProfiler.startSection(Main.MODNAME + ": Loose beam render");
+			game.mcProfiler.startSection(Main.MODNAME + ": Loose beam draw");
 
 			GlStateManager.disableLighting();
 			GlStateManager.disableCull();
@@ -235,7 +235,7 @@ public final class EventHandlerClient{
 
 		//Lightning arcs
 		if(!SafeCallable.arcsToRender.isEmpty()){
-			game.mcProfiler.startSection(Main.MODNAME + ": Lightning arc render");
+			game.mcProfiler.startSection(Main.MODNAME + ": Lightning arc draw");
 
 			GlStateManager.enableBlend();
 			GlStateManager.disableLighting();

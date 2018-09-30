@@ -52,7 +52,7 @@ public class AdditionAxisRenderer extends TileEntitySpecialRenderer<AdditionAxis
 		GlStateManager.translate(0, -.15D, 0);
 		GlStateManager.scale(1, .7D, 1);
 		GlStateManager.rotate(-angleOne, 0, 1F, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//in 2
@@ -62,7 +62,7 @@ public class AdditionAxisRenderer extends TileEntitySpecialRenderer<AdditionAxis
 		GlStateManager.translate(0, .375D, 0);
 		GlStateManager.scale(1, .25D, 1);
 		GlStateManager.rotate(-angleTwo, 0, 1F, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//upper height control
@@ -70,7 +70,7 @@ public class AdditionAxisRenderer extends TileEntitySpecialRenderer<AdditionAxis
 		GlStateManager.translate(.5D, .875D, .5D);
 		GlStateManager.scale(1D, .125D, 1D);
 		GlStateManager.rotate(-angleThree, 0, 1F, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//chassis
@@ -81,7 +81,7 @@ public class AdditionAxisRenderer extends TileEntitySpecialRenderer<AdditionAxis
 		GlStateManager.translate(.5D, .7D, .5D);
 		GlStateManager.scale(3, .5D, 3);
 		GlStateManager.rotate(angleThree, 0, 1F, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		modelAx.draw(textureAx, textureAx, Color.WHITE);
 		GlStateManager.popMatrix();
 
 		//Gears

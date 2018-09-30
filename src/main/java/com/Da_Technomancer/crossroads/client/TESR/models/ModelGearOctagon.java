@@ -26,7 +26,7 @@ public class ModelGearOctagon{
 	}
 
 	/**
-	 * TODO Change it to render about the origin, without the offset. This will require going back and changing everything that uses this.
+	 * TODO Change it to draw about the origin, without the offset. This will require going back and changing everything that uses this.
 	 */
 	public void render(ResourceLocation res, Color color){
 

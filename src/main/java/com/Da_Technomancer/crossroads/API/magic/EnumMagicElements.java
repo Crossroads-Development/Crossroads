@@ -75,18 +75,8 @@ public enum EnumMagicElements{
 		if(test == null){
 			return false;
 		}
-		
-		if(test.getRed() < (mid.getRed() - range) || test.getRed() > (mid.getRed() + range)){
-			return false;
-		}
-		if(test.getGreen() < (mid.getGreen() - range) || test.getGreen() > (mid.getGreen() + range)){
-			return false;
-		}
-		if(test.getBlue() < (mid.getBlue() - range) || test.getBlue() > (mid.getBlue() + range)){
-			return false;
-		}
-		
-		return true;
+
+		return Math.abs(test.getRed() - mid.getRed()) < range && Math.abs(test.getGreen() - mid.getGreen()) < range && Math.abs(test.getBlue() - mid.getBlue()) < range;
 	}
 	
 	@Nullable

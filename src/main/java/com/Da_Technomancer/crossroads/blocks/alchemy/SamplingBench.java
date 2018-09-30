@@ -103,7 +103,7 @@ public class SamplingBench extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.CRYSTAL, Properties.ACTIVE, Properties.HORIZONTAL_FACING});
+		return new BlockStateContainer(this, Properties.CRYSTAL, Properties.ACTIVE, Properties.HORIZONTAL_FACING);
 	}
 
 	@Override

@@ -1,12 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IAdvancedRedstoneHandler;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
+import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.CommonProxy;
@@ -32,8 +33,10 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	public static final ArrayList<IMechanism> MECHANISMS = new ArrayList<>(4);//This is a list instead of an array to allow expansion by addons
 
 	static{
-		MECHANISMS.add(new MechanismSmallGear());//Index 0
-		MECHANISMS.add(new MechanismAxle());//Index 1
+		MECHANISMS.add(new MechanismSmallGear());//Index 0, small gear
+		MECHANISMS.add(new MechanismAxle());//Index 1, axle
+		MECHANISMS.add(new MechanismClutch(false));//Index 2, normal clutch
+		MECHANISMS.add(new MechanismClutch(true));//Index 3, inverted clutch
 	}
 
 
@@ -67,15 +70,17 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	private final double[][] motionData = new double[7][4];
 	private final double[] inertia = new double[7];
 	//Public for read-only
-	public final float[] angle = new float[7];
+	private final float[] angle = new float[7];
 	//Public for read-only
-	public final float[] clientW = new float[7];
+	private final float[] clientW = new float[7];
 	//Public for read-only
 	public final AxisAlignedBB[] boundingBoxes = new AxisAlignedBB[7];
 
 	private boolean updateMembers = false;
 	//Public for read-only, use setMechanism
 	public EnumFacing.Axis axleAxis;
+	//Public for read-only
+	public double redstoneIn = 0;
 
 	/**
 	 * Sets the mechanism in a slot
@@ -133,6 +138,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 			nbt.setInteger("axis", axleAxis.ordinal());
 		}
 
+		nbt.setDouble("reds", redstoneIn);
+
 		return nbt;
 	}
 
@@ -184,6 +191,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 				axleHandlers[i].updateStates(false);
 			}
 		}
+
+		redstoneIn = nbt.getDouble("reds");
 	}
 
 	@Override
@@ -222,6 +231,19 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 				axleHandlers[i].updateStates(true);
 			}
 			updateMembers = false;
+		}
+	}
+
+	public void updateRedstone(){
+		double reds = RedstoneUtil.getPowerAtPos(world, pos);
+		if(reds != redstoneIn){
+			markDirty();
+			for(int i = 0; i < 7; i++){
+				if(members[i] != null){
+					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : EnumFacing.getFront(i), axleAxis, motionData[i], this);
+				}
+			}
+			redstoneIn = reds;
 		}
 	}
 

@@ -5,10 +5,10 @@ import com.Da_Technomancer.crossroads.API.effects.mechArm.*;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
+import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.blocks.Ratiator;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -70,7 +70,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 				}
 
 				if(redstone == -1){
-					setRedstone(Ratiator.getPowerOnSide(world, pos, EnumFacing.NORTH, false));
+					setRedstone(RedstoneUtil.getPowerOnSide(world, pos, EnumFacing.NORTH));
 				}
 
 				if(ridable == null || ridable.isDead){

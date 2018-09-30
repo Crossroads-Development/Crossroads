@@ -44,7 +44,7 @@ public class MechanismRenderer extends TileEntitySpecialRenderer<MechanismTileEn
 //				angle *= partialTicks;
 //				angle += handler.getAngle();
 //				GlStateManager.rotate(angle, 0F, 1F, 0F);
-//				modelOct.render(res, color);
+//				modelOct.draw(res, color);
 //				GlStateManager.enableLighting();
 //				GlStateManager.popAttrib();
 //				GlStateManager.popMatrix();

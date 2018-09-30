@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.Axle;
+import com.Da_Technomancer.crossroads.items.itemSets.Clutch;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
@@ -106,6 +107,10 @@ public final class ModItems{
 	public static TeslaRay teslaRay;
 	public static Axle axleIron;
 	public static Axle axleCopshowium;
+	public static Clutch clutchIron;
+	public static Clutch clutchCopshowium;
+	public static Clutch clutchInvertedIron;
+	public static Clutch clutchInvertedCopshowium;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -178,6 +183,10 @@ public final class ModItems{
 		teslaRay = new TeslaRay();
 		axleIron = new Axle(GearTypes.IRON);
 		axleCopshowium = new Axle(GearTypes.COPSHOWIUM);
+		clutchIron = new Clutch(false, GearTypes.IRON);
+		clutchCopshowium = new Clutch(false, GearTypes.COPSHOWIUM);
+		clutchInvertedIron = new Clutch(true, GearTypes.IRON);
+		clutchInvertedCopshowium = new Clutch(true, GearTypes.COPSHOWIUM);
 	}
 
 	@SideOnly(Side.CLIENT)

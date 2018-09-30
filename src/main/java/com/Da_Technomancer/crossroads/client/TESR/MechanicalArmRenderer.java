@@ -15,8 +15,6 @@ import net.minecraft.util.ResourceLocation;
 
 public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalArmTileEntity>{
 
-	private final ResourceLocation textureAx = new ResourceLocation(Main.MODID, "textures/model/axle.png");
-	private final ModelAxle modelAx = new ModelAxle();
 	private final ResourceLocation textureGear = new ResourceLocation(Main.MODID, "textures/model/gear_oct.png");
 	private final ModelGearOctagon modelGear = new ModelGearOctagon();
 
@@ -48,7 +46,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		GlStateManager.rotate(22.5F - (float) Math.toDegrees(angle[2]), 0, 1, 0);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1, MechanicalArmTileEntity.LOWER_ARM_LENGTH - .125D, 1);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		ModelAxle.render(GearTypes.IRON.getColor());
 		GlStateManager.popMatrix();
 
 		//Lower Gear
@@ -60,7 +58,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 
 		//Support Lower Arm
 		GlStateManager.scale(1, MechanicalArmTileEntity.LOWER_ARM_LENGTH, 1);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		ModelAxle.render(GearTypes.IRON.getColor());
 		GlStateManager.popMatrix();
 
 		//Connecting Joint
@@ -72,7 +70,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, -.25D, 0);
 		GlStateManager.scale(1.5D, .1875D, 1.5D);
-		modelAx.render(textureAx, textureAx, Color.GRAY);
+		ModelAxle.render(GearTypes.IRON.getColor());
 		GlStateManager.popMatrix();
 
 		GlStateManager.rotate(-(float) Math.toDegrees(angle[2]) + 90F, 0, 1, 0);
@@ -89,7 +87,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, -.09375, 0);
 		GlStateManager.scale(1, .3125D, 1);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		ModelAxle.render(GearTypes.IRON.getColor());
 		GlStateManager.popMatrix();
 
 		//Upper Arm
@@ -97,23 +95,23 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.scale(.8D, MechanicalArmTileEntity.UPPER_ARM_LENGTH - .375D, .8D);
 		GlStateManager.translate(0, .5D, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		ModelAxle.render(GearTypes.IRON.getColor());
 		GlStateManager.popMatrix();
 
 		//Claw Base
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(-MechanicalArmTileEntity.UPPER_ARM_LENGTH + .375D, 0, 0);
 		GlStateManager.scale(1, .5D, 1);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		ModelAxle.render(GearTypes.IRON.getColor());
 		GlStateManager.popMatrix();
 
 		//Claw Prongs
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.translate(.1875D, MechanicalArmTileEntity.UPPER_ARM_LENGTH - .1875D, 0);
 		GlStateManager.scale(1, .25D, 1);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		ModelAxle.render(GearTypes.IRON.getColor());
 		GlStateManager.translate(-.375D, 0, 0);
-		modelAx.render(textureAx, textureAx, Color.WHITE);
+		ModelAxle.render(GearTypes.IRON.getColor());
 		GlStateManager.popMatrix();
 		GlStateManager.popMatrix();
 		GlStateManager.enableLighting();

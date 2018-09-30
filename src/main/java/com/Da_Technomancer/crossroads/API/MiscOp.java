@@ -1,20 +1,11 @@
 package com.Da_Technomancer.crossroads.API;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.Main;
-
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -22,6 +13,11 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**This class is for holding operations that are used often.*/
 public final class MiscOp{
@@ -73,32 +69,6 @@ public final class MiscOp{
 		NBTTagCompound out = tag.getCompoundTag(Main.MODID);
 		out.setBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the client side is to get it on server side and send it via packet. Feel free to replace this with a better way.
 		return out;
-	}
-
-	/**
-	 * For finding which box within a block is being moused over. Used for example by gear breaking.
-	 */
-	@Nullable
-	public static AxisAlignedBB rayTraceMulti(ArrayList<AxisAlignedBB> boxes, Vec3d start, Vec3d end){
-		if(boxes == null || boxes.size() == 0){
-			return null;
-		}
-
-		float dist = Integer.MAX_VALUE;
-		AxisAlignedBB closest = null;
-
-		for(AxisAlignedBB box : boxes){
-			if(box == null){
-				continue;
-			}
-			RayTraceResult raytraceresult = box.calculateIntercept(start, end);
-			if(raytraceresult != null && dist > raytraceresult.hitVec.subtract(start).lengthSquared()){
-				dist = (float) raytraceresult.hitVec.subtract(start).lengthSquared();
-				closest = box;
-			}
-		}
-
-		return closest;
 	}
 
 	/**

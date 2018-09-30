@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleArrayToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.blocks.Ratiator;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
@@ -13,7 +13,6 @@ import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -67,10 +66,7 @@ public class RedstoneRegistry extends BlockContainer{
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		double power = 0;
-		for(EnumFacing side : EnumFacing.values()){
-			power = Math.max(power, Ratiator.getPowerOnSide(worldIn, pos, side, false));
-		}
+		double power = RedstoneUtil.getPowerAtPos(worldIn, pos);
 		if(power > 0){
 			if(!state.getValue(EssentialsProperties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, true));
@@ -90,7 +86,7 @@ public class RedstoneRegistry extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {EssentialsProperties.REDSTONE_BOOL});
+		return new BlockStateContainer(this, EssentialsProperties.REDSTONE_BOOL);
 	}
 
 	@Override
