@@ -1,14 +1,11 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import java.util.ArrayList;
-
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
@@ -21,12 +18,14 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
+import java.util.ArrayList;
+
 public class PlaceEffect implements IEffect{
 
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
 		ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
-		if(items != null && items.size() != 0){
+		if(items.size() != 0){
 			FakePlayer placer = FakePlayerFactory.get((WorldServer) worldIn, new GameProfile(null, Main.MODID + "-place_effect-" + worldIn.provider.getDimension()));
 			for(EntityItem ent : items){
 				if(!ent.getItem().isEmpty() && ent.getItem().getItem() instanceof ItemBlock && ((ItemBlock) ent.getItem().getItem()).getBlock().canPlaceBlockAt(worldIn, ent.getPosition())){
@@ -48,8 +47,12 @@ public class PlaceEffect implements IEffect{
 
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, double mult){
-			if(worldIn.getBlockState(pos).getBlock() == Blocks.BARRIER){
-				return;
+			String[] bannedBlocks = ModConfig.getConfigStringList(ModConfig.destroyBlacklist, false);
+			String id = worldIn.getBlockState(pos).getBlock().getRegistryName().toString();
+			for(String s : bannedBlocks){
+				if(s.equals(id)){
+					return;
+				}
 			}
 			worldIn.destroyBlock(pos, true);
 		}
