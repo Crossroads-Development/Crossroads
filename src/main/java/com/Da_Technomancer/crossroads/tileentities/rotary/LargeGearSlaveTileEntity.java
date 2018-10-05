@@ -36,7 +36,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	@Override
 	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
 		//A BlockPos can be converted to and from a long, AKA 2 ints. The identifier is the first int, the message is the second.
-		long longPos = (identifier << 32) | (message & 0xFFFFFFFFL);
+		long longPos = ((long) identifier << 32L) | (message & 0xFFFFFFFFL);
 		masterPos = BlockPos.fromLong(longPos);
 	}
 

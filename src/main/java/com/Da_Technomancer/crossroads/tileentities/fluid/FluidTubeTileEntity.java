@@ -250,7 +250,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing side){
 		init();
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && connectMode != null && (side == null || connectMode[side.getIndex()] != 0)){
 			return side == null || connectMode[side.getIndex()] == 1 ? (T) mainHandler : connectMode[side.getIndex()] == 2 ? (T) outHandler : (T) inHandler;
 		}
 
@@ -260,7 +260,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side){
 		init();
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && connectMode != null && (side == null || connectMode[side.getIndex()] != 0)){
 			return true;
 		}
 		return super.hasCapability(capability, side);

@@ -260,7 +260,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing side){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) && (side == null || connectMode[side.getIndex()] != 0)){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) && connectMode != null && (side == null || connectMode[side.getIndex()] != 0)){
 			return side == null || connectMode[side.getIndex()] == 1 ? (T) mainHandler : connectMode[side.getIndex()] == 2 ? (T) outHandler : (T) inHandler;
 		}
 
@@ -269,7 +269,7 @@ public class RedstoneFluidTubeTileEntity extends TileEntity implements ITickable
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) && (side == null || connectMode[side.getIndex()] != 0)){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && world.getBlockState(pos).getValue(Properties.REDSTONE_BOOL) && connectMode != null && (side == null || connectMode[side.getIndex()] != 0)){
 			return true;
 		}
 		return super.hasCapability(capability, side);
