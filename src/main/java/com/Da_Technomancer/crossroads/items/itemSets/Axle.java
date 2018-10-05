@@ -1,10 +1,12 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,6 +27,7 @@ import java.util.List;
 public class Axle extends Item{
 
 	private final GearTypes type;
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":axle", "inventory");
 
 	public Axle(GearTypes typeIn){
 		String name = "axle_" + typeIn.toString().toLowerCase();
@@ -34,7 +37,8 @@ public class Axle extends Item{
 		type = typeIn;
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
-		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"stick" + typeIn.toString()}));
+		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
+		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"stick" + type.toString()}));
 	}
 
 	@Override

@@ -95,7 +95,6 @@ public class ModTileEntity{
 		register(GlasswareHolderTileEntity.class, "glassware_holder");
 		register(RedsAlchemicalTubeTileEntity.class, "reds_alchemical_tube");
 		register(AlembicTileEntity.class, "alembic");
-		//register(SamplingBenchTileEntity.class, "sampling_bench");
 		register(DensusPlateTileEntity.class, "densus_plate");
 		register(ChargingStandTileEntity.class, "charging_stand");
 		register(AtmosChargerTileEntity.class, "atmos_charger");

@@ -28,7 +28,7 @@ import java.util.List;
 public class BasicGear extends Item{
 
 	private final GearTypes type;
-	public static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
 
 	public BasicGear(GearTypes typeIn){
 		String name = "gear_" + typeIn.toString().toLowerCase();

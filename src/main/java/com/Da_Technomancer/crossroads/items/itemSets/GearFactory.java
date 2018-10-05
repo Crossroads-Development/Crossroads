@@ -1,18 +1,16 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import java.util.HashMap;
-
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.blocks.rotary.ToggleGear;
-
-import net.minecraft.block.Block;
+import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
 
 public class GearFactory{
 
@@ -37,14 +35,15 @@ public class GearFactory{
 		ItemColors itemColor = Minecraft.getMinecraft().getItemColors();
 		for(GearTypes typ : GearTypes.values()){
 			int colorCode = typ.getColor().getRGB();
-			IItemColor itemColoring = new IItemColor(){
-				@Override
-				public int colorMultiplier(ItemStack stack, int tintIndex){
-					return tintIndex == 0 ? colorCode : -1;
-				}
-			};
+			IItemColor itemColoring = (ItemStack stack, int tintIndex) -> tintIndex == 0 ? colorCode : -1;
 			itemColor.registerItemColorHandler(itemColoring, BASIC_GEARS.get(typ), LARGE_GEARS.get(typ));
 			itemColor.registerItemColorHandler(itemColoring, TOGGLE_GEARS.get(typ));
+
+			if(typ == GearTypes.IRON){
+				itemColor.registerItemColorHandler(itemColoring, ModItems.axleIron, ModItems.clutchIron, ModItems.clutchInvertedIron);
+			}else if(typ == GearTypes.COPSHOWIUM){
+				itemColor.registerItemColorHandler(itemColoring, ModItems.axleCopshowium, ModItems.clutchCopshowium, ModItems.clutchInvertedCopshowium);
+			}
 		}
 	}
 }

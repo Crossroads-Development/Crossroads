@@ -211,8 +211,6 @@ public final class ModCrafting{
 		//Redstone Alchemical Tube
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTube, 1, 0), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTube, 1, 0)));
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTube, 1, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTube, 1, 1)));
-//		//Sampling Bench
-//		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.samplingBench, 1, 0), "^/ ", "---", "| |", '^', ModBlocks.glasswareHolder, '-', "slabWood", '|', "plankWood", '/', "paper"));
 		//Tesla Coil
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoil, 2), "***", " | ", "|^|", '*', "ingotCopper", '|', "ingotIron", '^', "dustRedstone"));
 		//Vanadium
@@ -446,6 +444,13 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1), new ItemStack(ModBlocks.reactionChamber, 1, 0)));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 1), new ItemStack(ModBlocks.reagentTank, 1, 1)));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1, 1), new ItemStack(ModBlocks.reactionChamber, 1, 1)));
+		//Clutches and Inverted Clutches
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.clutchIron, 1), " *", "| ", '|', "stickIron", '*', "ingotTin"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.clutchCopshowium, 1), " *", "| ", '|', "stickCopshowium", '*', "ingotTin"));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.clutchInvertedIron, 1), Blocks.REDSTONE_TORCH, ModItems.clutchIron));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.clutchInvertedCopshowium, 1), Blocks.REDSTONE_TORCH, ModItems.clutchCopshowium));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.clutchIron, 1), ModItems.clutchInvertedIron));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.clutchCopshowium, 1), ModItems.clutchInvertedCopshowium));
 
 		//Vanadium smelting
 		GameRegistry.addSmelting(ModItems.vanadium, new ItemStack(ModItems.vanadiumVOxide, 1), .7F);

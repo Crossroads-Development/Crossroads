@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.gui.container.*;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.SamplingBenchTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
@@ -25,7 +24,6 @@ public class GuiHandler implements IGuiHandler{
 	public static final int PROTOTYPING_GUI = 7;
 	public static final int PROTOTYPE_PORT_GUI = 8;
 	public static final int REDSTONE_REGISTRY_GUI = 9;
-	public static final int SAMPLING_BENCH_GUI = 10;
 	public static final int ALCHEMY_CHART_GUI = 11;
 	public static final int FAKE_CRAFTER_GUI = 12;
 
@@ -50,8 +48,6 @@ public class GuiHandler implements IGuiHandler{
 				return new PrototypePortContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case REDSTONE_REGISTRY_GUI:
 				return new RedstoneKeyboardContainer();//Shares Container with the RedstoneKeyboard because their Container function is identical.
-			case SAMPLING_BENCH_GUI:
-				return new SamplingBenchContainer(player.inventory, ((SamplingBenchTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case ALCHEMY_CHART_GUI:
 				return new AlchemyChartContainer(player, world);
 			case FAKE_CRAFTER_GUI:
@@ -82,8 +78,6 @@ public class GuiHandler implements IGuiHandler{
 				return new PrototypePortGuiContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case REDSTONE_REGISTRY_GUI:
 				return new RedstoneRegistryGuiContainer(((RedstoneRegistryTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case SAMPLING_BENCH_GUI:
-				return new SamplingBenchGuiContainer(player.inventory, ((SamplingBenchTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case ALCHEMY_CHART_GUI:
 				return new AlchemyChartGuiContainer(player, world);
 			case FAKE_CRAFTER_GUI:

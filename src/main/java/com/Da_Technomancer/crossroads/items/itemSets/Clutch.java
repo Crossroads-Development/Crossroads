@@ -1,9 +1,11 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -23,7 +26,9 @@ import java.util.List;
 public class Clutch extends Item{
 
 	private final boolean inverted;
-	private final GearTypes type;
+	protected final GearTypes type;
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":clutch", "inventory");
+	private static final ModelResourceLocation LOCAT_INV = new ModelResourceLocation(Main.MODID + ":clutch_inv", "inventory");
 
 	public Clutch(boolean inverted, GearTypes typeIn){
 		this.inverted = inverted;
@@ -33,7 +38,7 @@ public class Clutch extends Item{
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_GEAR);
 		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		ModItems.toClientRegister.put(Pair.of(this, 0), inverted ? LOCAT_INV : LOCAT);
 	}
 
 	@Override
