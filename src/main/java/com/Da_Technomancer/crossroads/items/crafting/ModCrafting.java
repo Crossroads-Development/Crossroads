@@ -349,12 +349,17 @@ public final class ModCrafting{
 			toRegister.add(new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.HEAT_CABLES.get(insul), 4), "###", "???", "###", '#', insul.getItem(), '?', "ingotCopper"));
 			toRegister.add(new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.REDSTONE_HEAT_CABLES.get(insul), 1), "###", "#?#", "###", '#', "dustRedstone", '?', HeatCableFactory.HEAT_CABLES.get(insul)));
 		}
+		//Small Gear
 		//Toggle Gear
+		//Large Gear
 		for(GearTypes type : GearTypes.values()){
-			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS.get(type), 9), " ? ", "?#?", " ? ", '#', "block" + type.toString(), '?', "ingot" + type.toString()));
-			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS.get(type), 1), " ? ", "?#?", " ? ", '#', "ingot" + type.toString(), '?', "nugget" + type.toString()));
-			toRegister.add(new ShapelessOreRecipe(null, GearFactory.TOGGLE_GEARS.get(type), "dustRedstone", "dustRedstone", "stickIron", "gear" + type.toString()));
-			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.LARGE_GEARS.get(type), 1), "###", "#$#", "###", '#', "gear" + type.toString(), '$', "block" + type.toString()));
+			int index = type.ordinal();
+			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS[index], 9), " ? ", "?#?", " ? ", '#', "block" + type.toString(), '?', "ingot" + type.toString()));
+			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS[index], 1), " ? ", "?#?", " ? ", '#', "ingot" + type.toString(), '?', "nugget" + type.toString()));
+			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(GearFactory.TOGGLE_GEARS[index], 1), Blocks.LEVER, "gear" + type.toString()));
+			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(GearFactory.INV_TOGGLE_GEARS[index], 1), Blocks.REDSTONE_TORCH, GearFactory.TOGGLE_GEARS[index]));
+			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(GearFactory.TOGGLE_GEARS[index], 1), GearFactory.INV_TOGGLE_GEARS[index]));
+			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.LARGE_GEARS[index], 1), "###", "#$#", "###", '#', "gear" + type.toString(), '$', "block" + type.toString()));
 		}
 		// Steam Boiler
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.steamBoiler, 1), "###", "# #", "&&&", '#', "ingotBronze", '&', "ingotCopper"));

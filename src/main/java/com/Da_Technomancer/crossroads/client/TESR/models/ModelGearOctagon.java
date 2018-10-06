@@ -28,10 +28,10 @@ public class ModelGearOctagon{
 	/**
 	 * TODO Change it to draw about the origin, without the offset. This will require going back and changing everything that uses this.
 	 */
+	@Deprecated
 	public void render(ResourceLocation res, Color color){
 
 		float top = 0.0625F;//-.375F;
-		float bottom = -top;//-.5F; TODO remove
 		float lHalf = .4375F;
 
 		float lHalfT = .5F;
@@ -59,73 +59,73 @@ public class ModelGearOctagon{
 		Tessellator.getInstance().draw();
 
 		vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(lHalf, bottom, -sHalf).tex(.5F + lHalfT, .5F - (-sHalfT)).endVertex();
-		vb.pos(lHalf, bottom, sHalf).tex(.5F + lHalfT, .5F - (sHalfT)).endVertex();
-		vb.pos(sHalf, bottom, lHalf).tex(.5F + sHalfT, .5F - (lHalfT)).endVertex();
-		vb.pos(-sHalf, bottom, lHalf).tex(.5F + -sHalfT, .5F - (lHalfT)).endVertex();
-		vb.pos(-lHalf, bottom, sHalf).tex(.5F + -lHalfT, .5F - (sHalfT)).endVertex();
-		vb.pos(-lHalf, bottom, -sHalf).tex(.5F + -lHalfT, .5F - (-sHalfT)).endVertex();
-		vb.pos(-sHalf, bottom, -lHalf).tex(.5F + -sHalfT, .5F - (-lHalfT)).endVertex();
-		vb.pos(sHalf, bottom, -lHalf).tex(.5F + sHalfT, .5F - (-lHalfT)).endVertex();
+		vb.pos(lHalf, -top, -sHalf).tex(.5F + lHalfT, .5F - (-sHalfT)).endVertex();
+		vb.pos(lHalf, -top, sHalf).tex(.5F + lHalfT, .5F - (sHalfT)).endVertex();
+		vb.pos(sHalf, -top, lHalf).tex(.5F + sHalfT, .5F - (lHalfT)).endVertex();
+		vb.pos(-sHalf, -top, lHalf).tex(.5F + -sHalfT, .5F - (lHalfT)).endVertex();
+		vb.pos(-lHalf, -top, sHalf).tex(.5F + -lHalfT, .5F - (sHalfT)).endVertex();
+		vb.pos(-lHalf, -top, -sHalf).tex(.5F + -lHalfT, .5F - (-sHalfT)).endVertex();
+		vb.pos(-sHalf, -top, -lHalf).tex(.5F + -sHalfT, .5F - (-lHalfT)).endVertex();
+		vb.pos(sHalf, -top, -lHalf).tex(.5F + sHalfT, .5F - (-lHalfT)).endVertex();
 		Tessellator.getInstance().draw();
 
 		GlStateManager.color((color.getRed() - 130F) / 255F, (color.getGreen() - 130F) / 255F, (color.getBlue() - 130F) / 255F);
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(lHalf, bottom, sHalf).tex(1F, .5F + -sHalfT).endVertex();
-		vb.pos(lHalf, bottom, -sHalf).tex(1F, .5F + sHalfT).endVertex();
+		vb.pos(lHalf, -top, sHalf).tex(1F, .5F + -sHalfT).endVertex();
+		vb.pos(lHalf, -top, -sHalf).tex(1F, .5F + sHalfT).endVertex();
 		vb.pos(lHalf, top, -sHalf).tex(1F - tHeight, .5F + sHalfT).endVertex();
 		vb.pos(lHalf, top, sHalf).tex(1F - tHeight, .5F + -sHalfT).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-lHalf, top, sHalf).tex(tHeight, .5F + -sHalfT).endVertex();
 		vb.pos(-lHalf, top, -sHalf).tex(tHeight, .5F + sHalfT).endVertex();
-		vb.pos(-lHalf, bottom, -sHalf).tex(0, .5F + sHalfT).endVertex();
-		vb.pos(-lHalf, bottom, sHalf).tex(0, .5F + -sHalfT).endVertex();
-		Tessellator.getInstance().draw();
+		vb.pos(-lHalf, -top, -sHalf).tex(0, .5F + sHalfT).endVertex();
+		vb.pos(-lHalf, -top, sHalf).tex(0, .5F + -sHalfT).endVertex();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(sHalf, top, lHalf).tex(.5F + sHalfT, 0).endVertex();
 		vb.pos(-sHalf, top, lHalf).tex(.5F + -sHalfT, 0).endVertex();
-		vb.pos(-sHalf, bottom, lHalf).tex(.5F + -sHalfT, tHeight).endVertex();
-		vb.pos(sHalf, bottom, lHalf).tex(.5F + sHalfT, tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		vb.pos(-sHalf, -top, lHalf).tex(.5F + -sHalfT, tHeight).endVertex();
+		vb.pos(sHalf, -top, lHalf).tex(.5F + sHalfT, tHeight).endVertex();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(sHalf, bottom, -lHalf).tex(.5F + sHalfT, 1F - tHeight).endVertex();
-		vb.pos(-sHalf, bottom, -lHalf).tex(.5F + -sHalfT, 1F - tHeight).endVertex();
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(sHalf, -top, -lHalf).tex(.5F + sHalfT, 1F - tHeight).endVertex();
+		vb.pos(-sHalf, -top, -lHalf).tex(.5F + -sHalfT, 1F - tHeight).endVertex();
 		vb.pos(-sHalf, top, -lHalf).tex(.5F + -sHalfT, 1).endVertex();
 		vb.pos(sHalf, top, -lHalf).tex(.5F + sHalfT, 1).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(sHalf, top, -lHalf).tex(.5F + sHalfT, .5F - -lHalfT).endVertex();
 		vb.pos(lHalf, top, -sHalf).tex(.5F + lHalfT, .5F - -sHalfT).endVertex();
-		vb.pos(lHalf, bottom, -sHalf).tex(.5F + lHalfT, .5F - -sHalfT).endVertex();
-		vb.pos(sHalf, bottom, -lHalf).tex(.5F + sHalfT, .5F - -lHalfT).endVertex();
-		Tessellator.getInstance().draw();
+		vb.pos(lHalf, -top, -sHalf).tex(.5F + lHalfT, .5F - -sHalfT).endVertex();
+		vb.pos(sHalf, -top, -lHalf).tex(.5F + sHalfT, .5F - -lHalfT).endVertex();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-sHalf, bottom, -lHalf).tex(.5F + -sHalfT, .5F - -lHalfT).endVertex();
-		vb.pos(-lHalf, bottom, -sHalf).tex(.5F + -lHalfT, .5F - -sHalfT).endVertex();
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(-sHalf, -top, -lHalf).tex(.5F + -sHalfT, .5F - -lHalfT).endVertex();
+		vb.pos(-lHalf, -top, -sHalf).tex(.5F + -lHalfT, .5F - -sHalfT).endVertex();
 		vb.pos(-lHalf, top, -sHalf).tex(.5F + -lHalfT, .5F - -sHalfT).endVertex();
 		vb.pos(-sHalf, top, -lHalf).tex(.5F + -sHalfT, .5F - -lHalfT).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(sHalf, bottom, lHalf).tex(.5F + sHalfT, .5F - lHalfT).endVertex();
-		vb.pos(lHalf, bottom, sHalf).tex(.5F + lHalfT, .5F - sHalfT).endVertex();
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(sHalf, -top, lHalf).tex(.5F + sHalfT, .5F - lHalfT).endVertex();
+		vb.pos(lHalf, -top, sHalf).tex(.5F + lHalfT, .5F - sHalfT).endVertex();
 		vb.pos(lHalf, top, sHalf).tex(.5F + lHalfT, .5F - sHalfT).endVertex();
 		vb.pos(sHalf, top, lHalf).tex(.5F + sHalfT, .5F - lHalfT).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-sHalf, top, lHalf).tex(.5F + -sHalfT, .5F - lHalfT).endVertex();
 		vb.pos(-lHalf, top, sHalf).tex(.5F + -lHalfT, .5F - sHalfT).endVertex();
-		vb.pos(-lHalf, bottom, sHalf).tex(.5F + -lHalfT, .5F - sHalfT).endVertex();
-		vb.pos(-sHalf, bottom, lHalf).tex(.5F + -sHalfT, .5F - lHalfT).endVertex();
+		vb.pos(-lHalf, -top, sHalf).tex(.5F + -lHalfT, .5F - sHalfT).endVertex();
+		vb.pos(-sHalf, -top, lHalf).tex(.5F + -sHalfT, .5F - lHalfT).endVertex();
 		Tessellator.getInstance().draw();
 
 		//Prongs
@@ -137,147 +137,147 @@ public class ModelGearOctagon{
 		vb.pos(extend, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, bottomP, -tHeight).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(lHalf, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(lHalf, topP, tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(lHalf, topP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(extend, topP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(lHalf, bottomP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(extend, bottomP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 		//next prong
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-extend, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(-lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-lHalf, topP, tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-lHalf, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-extend, bottomP, -tHeight).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-extend, bottomP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-lHalf, bottomP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-extend, topP, tHeight).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(-lHalf, topP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 		//next prong
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, -extend).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(tHeight, bottomP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(tHeight, bottomP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-tHeight, topP, -extend).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(-tHeight, topP, -lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 		//next prong
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, extend).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-tHeight, bottomP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(tHeight, topP, extend).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(tHeight, topP, lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
@@ -294,147 +294,147 @@ public class ModelGearOctagon{
 		vb.pos(extend, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, bottomP, -tHeight).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(lHalf, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(lHalf, topP, tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(lHalf, topP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(extend, topP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(lHalf, bottomP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(extend, bottomP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 		//next prong
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-extend, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(-lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-lHalf, topP, tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-lHalf, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-extend, bottomP, -tHeight).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-extend, bottomP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-lHalf, bottomP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-extend, topP, tHeight).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(-lHalf, topP, tHeight).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 		//next prong
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, -extend).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(tHeight, bottomP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(tHeight, bottomP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-tHeight, topP, -extend).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(-tHeight, topP, -lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 		//next prong
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, extend).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-tHeight, bottomP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		vb.pos(-tHeight, bottomP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
+		//Tessellator.getInstance().draw();
 
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(tHeight, topP, extend).tex(1F, .5F + -tHeight).endVertex();
 		vb.pos(tHeight, topP, lHalf).tex(1F, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();

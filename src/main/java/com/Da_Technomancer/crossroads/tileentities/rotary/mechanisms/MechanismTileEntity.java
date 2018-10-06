@@ -37,6 +37,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		MECHANISMS.add(new MechanismAxle());//Index 1, axle
 		MECHANISMS.add(new MechanismClutch(false));//Index 2, normal clutch
 		MECHANISMS.add(new MechanismClutch(true));//Index 3, inverted clutch
+		MECHANISMS.add(new MechanismToggleGear(false));//Index 4, normal toggle gear
+		MECHANISMS.add(new MechanismToggleGear(true));//Index 5, inverted toggle gear
 	}
 
 
@@ -159,6 +161,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		if(members[6] != null && mats[6] != null && axleAxis != null){
 			nbt.setInteger("axis", axleAxis.ordinal());
 		}
+		nbt.setDouble("reds", redstoneIn);
 
 		return nbt;
 	}
@@ -213,6 +216,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		}else if(identifier == 14){
 			axleAxis = message == -1 ? null : EnumFacing.Axis.values()[(int) message];
 			axleHandlers[6].updateStates(false);
+		}else if(identifier == 15){
+			redstoneIn = Double.longBitsToDouble(message);
 		}
 	}
 
@@ -244,6 +249,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 				}
 			}
 			redstoneIn = reds;
+			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 15, Double.doubleToLongBits(redstoneIn), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 

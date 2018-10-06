@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 public class MechanismSmallGear implements IMechanism{
 
-	private static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[6];
+	protected static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[6];
 	static{
 		BOUNDING_BOXES[0] = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);//DOWN
 		BOUNDING_BOXES[1] = new AxisAlignedBB(0D, .875D, 0D, 1D, 1D, 1D);//UP
@@ -124,7 +124,7 @@ public class MechanismSmallGear implements IMechanism{
 	@Nonnull
 	@Override
 	public ItemStack getDrop(GearTypes mat){
-		return new ItemStack(GearFactory.BASIC_GEARS.get(mat), 1);
+		return new ItemStack(GearFactory.BASIC_GEARS[mat.ordinal()], 1);
 	}
 
 	@Override

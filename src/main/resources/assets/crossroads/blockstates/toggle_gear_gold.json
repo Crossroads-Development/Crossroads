@@ -1,6 +1,0 @@
-{
-	"variants": {
-		"redstone_bool=true": { "model": "gold_block" },
-		"redstone_bool=false": { "model": "gold_block" }
-	}
-}

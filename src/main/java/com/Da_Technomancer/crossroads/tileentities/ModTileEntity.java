@@ -37,7 +37,6 @@ public class ModTileEntity{
 		register(FatCollectorTileEntity.class, "fat_collector");
 		register(FatCongealerTileEntity.class, "fat_congealer");
 		register(RedstoneHeatCableTileEntity.class, "redstone_heat_cable");
-		register(ToggleGearTileEntity.class, "toggle_gear");
 		register(RedstoneFluidTubeTileEntity.class, "redstone_fluid_tube");
 		register(WaterCentrifugeTileEntity.class, "water_centrifuge");
 		register(ArcaneExtractorTileEntity.class, "arcane_extractor");

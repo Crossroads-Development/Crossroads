@@ -46,7 +46,7 @@ public final class ModItems{
 	public static final CreativeTabs TAB_GEAR = new CreativeTabs("gear"){
 		@Override
 		public ItemStack getTabIconItem(){
-			return new ItemStack(GearFactory.BASIC_GEARS.get(GearTypes.BRONZE));
+			return new ItemStack(GearFactory.BASIC_GEARS[GearTypes.BRONZE.ordinal()]);
 		}
 	};
 

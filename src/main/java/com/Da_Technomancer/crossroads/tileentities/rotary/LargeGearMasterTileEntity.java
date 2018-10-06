@@ -82,7 +82,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			}
 		}
 		if(drop){
-			world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(GearFactory.LARGE_GEARS.get(type), 1)));
+			world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(GearFactory.LARGE_GEARS[type.ordinal()], 1)));
 		}
 	}
 

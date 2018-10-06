@@ -245,6 +245,10 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 				gear.getMotionData()[1] = 0;
 				gear.getMotionData()[2] = 0;
 				gear.getMotionData()[3] = 0;
+				gear.markChanged();
+				if(gear.shouldManageAngle()){
+					gear.syncAngle();
+				}
 			}
 		}
 

@@ -54,7 +54,7 @@ public class LargeGearMaster extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
 		if(world.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
-			return new ItemStack(GearFactory.LARGE_GEARS.get(((LargeGearMasterTileEntity) world.getTileEntity(pos)).getMember()), 1);
+			return new ItemStack(GearFactory.LARGE_GEARS[((LargeGearMasterTileEntity) world.getTileEntity(pos)).getMember().ordinal()], 1);
 		}
 		return ItemStack.EMPTY;
 	}
@@ -113,7 +113,7 @@ public class LargeGearMaster extends BlockContainer{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		LargeGearMasterTileEntity te = (LargeGearMasterTileEntity) world.getTileEntity(pos);
 		if(te.getMember() != null){
-			drops.add(new ItemStack(GearFactory.LARGE_GEARS.get(te.getMember())));
+			drops.add(new ItemStack(GearFactory.LARGE_GEARS[te.getMember().ordinal()]));
 		}
 		return drops;
 	}
