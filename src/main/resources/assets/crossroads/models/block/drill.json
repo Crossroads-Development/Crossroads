@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "blocks/iron_block",
-		"main": "blocks/iron_block"
+		"main": "#metal",
+		"particle": "#metal"
 	},
 	"elements": [
 		{

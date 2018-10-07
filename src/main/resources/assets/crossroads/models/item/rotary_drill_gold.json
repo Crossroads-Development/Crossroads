@@ -1,7 +1,7 @@
 {
 	"parent": "crossroads:block/drill",
 	"textures": {
-		"metal": "blocks/iron_block"
+		"metal": "blocks/gold_block"
 	},
 	"display": {
 		"thirdperson": {

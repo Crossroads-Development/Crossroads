@@ -4,11 +4,11 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 
 public class ModelDrill extends ModelBase{
-	public ModelRenderer base;
-	public ModelRenderer upperBase;
-	public ModelRenderer lowerTip;
-	public ModelRenderer midTip;
-	public ModelRenderer topTip;
+	private ModelRenderer base;
+	private ModelRenderer upperBase;
+	private ModelRenderer lowerTip;
+	private ModelRenderer midTip;
+	private ModelRenderer topTip;
 
 	public ModelDrill(){
 		this.textureWidth = 64;

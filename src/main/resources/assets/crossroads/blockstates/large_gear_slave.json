@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:sided_gear_holder" },
-		"facing=south": { "model": "crossroads:sided_gear_holder" },
-		"facing=down": { "model": "crossroads:sided_gear_holder" },
-		"facing=up": { "model": "crossroads:sided_gear_holder" },
-		"facing=east": { "model": "crossroads:sided_gear_holder" },
-		"facing=west": { "model": "crossroads:sided_gear_holder" }
+		"facing=north": { "model": "crossroads:mechanism" },
+		"facing=south": { "model": "crossroads:mechanism" },
+		"facing=down": { "model": "crossroads:mechanism" },
+		"facing=up": { "model": "crossroads:mechanism" },
+		"facing=east": { "model": "crossroads:mechanism" },
+		"facing=west": { "model": "crossroads:mechanism" }
 	}
 }

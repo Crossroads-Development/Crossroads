@@ -1,7 +1,0 @@
-{
-	"variants": {
-		"axis=x": { "model": "minecraft:iron_block" },
-		"axis=y": { "model": "minecraft:iron_block" },
-		"axis=z": { "model": "minecraft:iron_block" }
-	}
-}

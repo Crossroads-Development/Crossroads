@@ -3,23 +3,23 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -27,7 +27,16 @@ import java.util.List;
 
 public class RotaryDrillTileEntity extends TileEntity implements ITickable, IInfoTE{
 
-	private static final DamageSource DRILL = new DamageSource("drill").setDamageBypassesArmor();
+	private static final DamageSource DRILL = new DamageSource("drill");
+
+	public RotaryDrillTileEntity(){
+		super();
+	}
+
+	public RotaryDrillTileEntity(boolean golden){
+		super();
+		this.golden = golden;
+	}
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
@@ -38,8 +47,13 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable, IInf
 	}
 
 	private int ticksExisted = 0;
+	private boolean golden;
 	public static final double ENERGY_USE = .5D;
 	private static final double SPEED_PER_HARDNESS = .1D;
+
+	public boolean isGolden(){
+		return golden;
+	}
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
@@ -54,7 +68,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable, IInf
 
 	@Override
 	public void update(){
-		if(world.getBlockState(pos).getBlock() != ModBlocks.rotaryDrill){
+		if(!(world.getBlockState(pos).getBlock() instanceof RotaryDrill)){
 			invalidate();
 			return;
 		}
@@ -78,7 +92,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable, IInf
 				}else{
 					List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.offset(facing)), EntitySelectors.IS_ALIVE);
 					for(EntityLivingBase ent : ents){
-						ent.attackEntityFrom(DRILL, (float) Math.abs(motionData[0] / SPEED_PER_HARDNESS));
+						ent.attackEntityFrom(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((WorldServer) world, new GameProfile(null, "drill_player_" + world.provider.getDimension()))) : DRILL, (float) Math.abs(motionData[0] / SPEED_PER_HARDNESS));
 					}
 				}
 			}
@@ -145,7 +159,7 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable, IInf
 
 		@Override
 		public double getMoInertia(){
-			return 50;
+			return golden ? 100 : 50;
 		}
 
 		@Override

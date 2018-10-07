@@ -392,6 +392,7 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.radiator, 1), "#$#", "#$#", "#$#", '#', ModBlocks.fluidTube, '$', "ingotIron"));
 		// Rotary Drill
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.rotaryDrill, 2), " * ", "*#*", '*', "ingotIron", '#', "blockIron"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.rotaryDrillGold, 1), " * ", "*#*", " * ", '*', "ingotGold", '#', ModBlocks.rotaryDrill));
 		// Fat Collector
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fatCollector, 1), "***", "# #", "*&*", '*', "ingotTin", '#', "netherrack", '&', "ingotCopper"));
 		// Fat Congealer

@@ -42,6 +42,7 @@ public class ModBlocks{
 	public static LargeGearSlave largeGearSlave;
 	public static Radiator radiator;
 	public static RotaryDrill rotaryDrill;
+	public static RotaryDrill rotaryDrillGold;
 	public static FatCollector fatCollector;
 	public static FatCongealer fatCongealer;
 	public static RedstoneFluidTube redstoneFluidTube;
@@ -106,7 +107,6 @@ public class ModBlocks{
 	public static GlasswareHolder glasswareHolder;
 	public static RedsAlchemicalTube redsAlchemicalTube;
 	public static Alembic alembic;
-	//public static SamplingBench samplingBench;
 	public static AlchemyChart alchemyChart;
 	public static DensusPlate densusPlate;
 	public static ChargingStand chargingStand;
@@ -175,7 +175,8 @@ public class ModBlocks{
 		saltReactor = new SaltReactor();
 		fluidCoolingChamber = new FluidCoolingChamber();
 		radiator = new Radiator();
-		rotaryDrill = new RotaryDrill();
+		rotaryDrill = new RotaryDrill(false);
+		rotaryDrillGold = new RotaryDrill(true);
 		fatCollector = new FatCollector();
 		fatCongealer = new FatCongealer();
 		redstoneFluidTube = new RedstoneFluidTube();

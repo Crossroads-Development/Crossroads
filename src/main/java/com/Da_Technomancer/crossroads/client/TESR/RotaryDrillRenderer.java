@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.client.TESR;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelDrill;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -13,13 +13,12 @@ import net.minecraft.util.ResourceLocation;
 
 public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTileEntity>{
 
-	private final ModelDrill model = new ModelDrill();
-	private final ResourceLocation texture = new ResourceLocation(Main.MODID, "textures/model/drill.png");
+	private static final ModelDrill model = new ModelDrill();
+	private static final ResourceLocation texture = new ResourceLocation(Main.MODID, "textures/model/drill.png");
 
 	@Override
 	public void render(RotaryDrillTileEntity drill, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-
-		if(drill.getWorld().getBlockState(drill.getPos()).getBlock() != ModBlocks.rotaryDrill || !drill.getWorld().isBlockLoaded(drill.getPos(), false)){
+		if(!(drill.getWorld().getBlockState(drill.getPos()).getBlock() instanceof RotaryDrill) || !drill.getWorld().isBlockLoaded(drill.getPos(), false)){
 			return;
 		}
 
@@ -63,7 +62,13 @@ public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTi
 		GlStateManager.translate(0F, -2F, 0F);
 		GlStateManager.rotate(drill.getAngle() * dir.getAxisDirection().getOffset(), 0F, 1F, 0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+		if(drill.isGolden()){
+			GlStateManager.color(1F, 1F, 0.15F);
+		}
 		model.render();
+		if(drill.isGolden()){
+			GlStateManager.color(1, 1, 1);
+		}
 		GlStateManager.popMatrix();
 
 	}

@@ -3,7 +3,7 @@
 	"defaults": {
 		"model": "crossroads:drill",
 		"textures": {
-			"metal": "blocks/iron_block"
+			"metal": "blocks/gold_block"
 		}
 	},
 	"variants": {

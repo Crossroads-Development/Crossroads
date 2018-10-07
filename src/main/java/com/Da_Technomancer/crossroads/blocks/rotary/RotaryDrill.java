@@ -34,10 +34,13 @@ public class RotaryDrill extends BlockContainer{
 	private static final AxisAlignedBB X = new AxisAlignedBB(0, .375, .375, 1, .625, .625);
 	private static final AxisAlignedBB Y = new AxisAlignedBB(.375, 0, .375, .625, 1, .625);
 	private static final AxisAlignedBB Z = new AxisAlignedBB(.375, .375, 0, .625, .625, 1);
-	
-	public RotaryDrill(){
+
+	private final boolean golden;
+
+	public RotaryDrill(boolean golden){
 		super(Material.IRON);
-		String name = "rotary_drill";
+		this.golden = golden;
+		String name = "rotary_drill" + (golden ? "_gold" : "");
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -49,13 +52,12 @@ public class RotaryDrill extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new RotaryDrillTileEntity();
+		return new RotaryDrillTileEntity(golden);
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer);
-		return getDefaultState().withProperty(EssentialsProperties.FACING, enumfacing);
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(EssentialsProperties.FACING, side.getOpposite());
 	}
 	
 	@Override
@@ -95,11 +97,6 @@ public class RotaryDrill extends BlockContainer{
 	}
 
 	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
-	}
-
-	@Override
 	protected BlockStateContainer createBlockState(){
 		return new BlockStateContainer(this, EssentialsProperties.FACING);
 	}
@@ -118,7 +115,7 @@ public class RotaryDrill extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: 50");
+		tooltip.add(golden ? "I: 100" : "I: 50");
 		tooltip.add("Consumes: " + RotaryDrillTileEntity.ENERGY_USE + "J/t");
 	}
 }
