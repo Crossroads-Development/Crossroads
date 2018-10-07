@@ -155,7 +155,7 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "wrench"), new SmartEntry("lore.wrench.name", new ItemStack(EssentialsItems.wrench, 1), "lore.wrench"));
 			entries.put(new ResourceLocation(Main.MODID, "ob_cutting"), new SmartEntry("lore.ob_cutting.name", new ItemStack(EssentialsItems.obsidianKit, 1), "lore.ob_cutting"));
 			entries.put(new ResourceLocation(Main.MODID, "decorative"), new SmartEntry("lore.decorative.name", new ItemStack(EssentialsBlocks.candleLilyPad, 1), "lore.decorative", "lore.decorative.bobo"));
-			entries.put(new ResourceLocation(Main.MODID, "fertile_soil"), new SmartEntry("lore.fertile_soil.name", new ItemStack(EssentialsBlocks.fertileSoil, 1), "lore.fertile_soil"));
+			entries.put(new ResourceLocation(Main.MODID, "fertile_soil"), new SmartEntry("lore.fertile_soil.name", new ItemStack(EssentialsBlocks.fertileSoilWheat, 1), "lore.fertile_soil"));
 			entries.put(new ResourceLocation(Main.MODID, "item_chute"), new SmartEntry("lore.item_chute.name", new ItemStack(EssentialsBlocks.itemChutePort, 1), "lore.item_chute.start", (Supplier) () -> EssentialsConfig.getConfigBool(EssentialsConfig.itemChuteRotary, true) ? "lore.item_chute.cr" : "lore.item_chute.default"));
 			entries.put(new ResourceLocation(Main.MODID, "multi_piston"), new SmartEntry("lore.multi_piston.name", new ItemStack(EssentialsBlocks.multiPiston, 1), "lore.multi_piston"));
 			createPages(pages, "lore.ratiator.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', ModItems.luminescentQuartz, '#', ModItems.pureQuartz, '^', "stone"), "lore.ratiator.post_recipe");
@@ -368,7 +368,7 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "wrench"), new SmartEntry("info.wrench.name", new ItemStack(EssentialsItems.wrench, 1), "info.wrench"));
 			entries.put(new ResourceLocation(Main.MODID, "ob_cutting"), new SmartEntry("info.ob_cutting.name", new ItemStack(EssentialsItems.obsidianKit, 1), "info.ob_cutting"));
 			entries.put(new ResourceLocation(Main.MODID, "decorative"), new SmartEntry("info.decorative.name", new ItemStack(EssentialsBlocks.candleLilyPad, 1), "info.decorative"));
-			entries.put(new ResourceLocation(Main.MODID, "fertile_soil"), new SmartEntry("info.fertile_soil.name", new ItemStack(EssentialsBlocks.fertileSoil, 1), "info.fertile_soil"));
+			entries.put(new ResourceLocation(Main.MODID, "fertile_soil"), new SmartEntry("info.fertile_soil.name", new ItemStack(EssentialsBlocks.fertileSoilWheat, 1), "info.fertile_soil"));
 			entries.put(new ResourceLocation(Main.MODID, "item_chute"), new SmartEntry("info.item_chute.name", new ItemStack(EssentialsBlocks.itemChutePort, 1), "info.item_chute.start", (Supplier) () -> EssentialsConfig.getConfigBool(EssentialsConfig.itemChuteRotary, true) ? "info.item_chute.cr" : "info.item_chute.default"));
 			entries.put(new ResourceLocation(Main.MODID, "multi_piston"), new SmartEntry("info.multi_piston.name", new ItemStack(EssentialsBlocks.multiPiston, 1), "info.multi_piston"));
 			createPages(pages, "info.ratiator", new ShapedOreRecipe(null, new ItemStack(ModBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', ModItems.luminescentQuartz, '#', ModItems.pureQuartz, '^', "stone"));
