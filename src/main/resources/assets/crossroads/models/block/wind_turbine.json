@@ -1,0 +1,13 @@
+{
+	"uv_lock": true,
+	"parent": "block/cube_all",
+	"textures": {
+		"up": "crossroads:blocks/wind_turbine_axle",
+		"down": "crossroads:blocks/wind_turbine_axle",
+		"east": "crossroads:blocks/wind_turbine",
+		"west": "crossroads:blocks/wind_turbine",
+		"north": "crossroads:blocks/wind_turbine",
+		"south": "crossroads:blocks/wind_turbine",
+		"particle": "crossroads:blocks/wind_turbine"
+	}
+}

@@ -99,6 +99,7 @@ public class ModTileEntity{
 		register(AtmosChargerTileEntity.class, "atmos_charger");
 		register(ReactiveSpotTileEntity.class, "reactive_spot");
 		register(ClockworkStabilizerTileEntity.class, "clock_stab");
+		register(WindTurbineTileEntity.class, "wind_turbine");
 	}
 
 	/**

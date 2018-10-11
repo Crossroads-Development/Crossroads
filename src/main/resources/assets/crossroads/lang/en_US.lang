@@ -286,6 +286,7 @@ item.clutch_iron.name=Iron Clutch
 item.clutch_copshowium.name=Copshowium Clutch
 item.clutch_inverted_iron.name=Inverted Iron Clutch
 item.clutch_inverted_copshowium.name=Inverted Copshowium Clutch
+tile.wind_turbine.name=Wind Turbine
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

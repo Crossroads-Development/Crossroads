@@ -277,28 +277,6 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		}
 
 		@Override
-		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
-			if(allowInvert && absolute){
-				motionData[1] += energy;
-			}else if(allowInvert){
-				motionData[1] += energy * Math.signum(motionData[1]);
-			}else if(absolute){
-				int sign = (int) Math.signum(motionData[1]);
-				motionData[1] += energy;
-				if(sign != 0 && Math.signum(motionData[1]) != sign){
-					motionData[1] = 0;
-				}
-			}else{
-				int sign = (int) Math.signum(motionData[1]);
-				motionData[1] += energy * ((double) sign);
-				if(Math.signum(motionData[1]) != sign){
-					motionData[1] = 0;
-				}
-			}
-			markDirty();
-		}
-
-		@Override
 		public double getRotationRatio(){
 			return rotRatio;
 		}

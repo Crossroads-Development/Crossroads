@@ -33,7 +33,10 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 		for(IAxleHandler axle : rotaryMembers){
 			//For 0-mass gears.
 			axle.getMotionData()[0] = 0;
+			axle.getMotionData()[2] = 0;
+			axle.getMotionData()[3] = 0;
 			axle.syncAngle();
+			axle.disconnect();
 		}
 		CommonProxy.masterKey++;
 	}
@@ -315,6 +318,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 				//For 0-mass gears.
 				axle.getMotionData()[0] = 0;
 				axle.syncAngle();
+				axle.disconnect();
 			}
 		}
 

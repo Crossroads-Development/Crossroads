@@ -82,7 +82,7 @@ public class OmniMeter extends Item{
 
 
 			if(te.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
-				chat.add("Total Energy: " + te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy());
+				chat.add("Total Energy: " + MiscOp.betterRound(te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy(), 3));
 			}
 
 			if(te.hasCapability(CapabilityEnergy.ENERGY, null)){

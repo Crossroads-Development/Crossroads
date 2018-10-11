@@ -1,14 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 
-public class HamsterWheelTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class HamsterWheelTileEntity extends TileEntity implements ITickable{
 
 	public float angle = 0;
 	public float nextAngle = 0;

@@ -55,7 +55,7 @@ public class MasterAxis extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {EssentialsProperties.FACING});
+		return new BlockStateContainer(this, EssentialsProperties.FACING);
 	}
 
 	@Override

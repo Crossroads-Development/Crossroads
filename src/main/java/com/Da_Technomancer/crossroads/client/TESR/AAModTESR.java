@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.client.TESR;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.rotary.WindTurbine;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
@@ -47,6 +48,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(PrototypingTableTileEntity.class, new PrototypingTableRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(ClockworkStabilizerTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(PrototypeTileEntity.class, new BeamRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(WindTurbineTileEntity.class, new WindTurbineRenderer());
 	}
 
 	private static void reg(Block block){
