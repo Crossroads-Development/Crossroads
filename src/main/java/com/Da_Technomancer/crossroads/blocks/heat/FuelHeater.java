@@ -34,7 +34,7 @@ public class FuelHeater extends BlockContainer{
 
 	public FuelHeater(){
 		super(Material.ROCK);
-		String name = "coal_heater";//Registered as coal_heater for legacy reasons
+		String name = "fuel_heater";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -62,7 +62,7 @@ public class FuelHeater extends BlockContainer{
 	
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {Properties.ACTIVE});
+		return new BlockStateContainer(this, Properties.ACTIVE);
 	}
 
 	@Override

@@ -1,17 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -26,6 +20,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class HeatingCrucible extends BlockContainer{
 
@@ -42,23 +39,22 @@ public class HeatingCrucible extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.FULLNESS, 0).withProperty(Properties.TEXTURE_4, 0);
+		return getDefaultState().withProperty(Properties.FULLNESS, 0);
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		//The TEXTURE_4 property will be removed from this block at some point. 
-		return new BlockStateContainer(this, Properties.FULLNESS, Properties.TEXTURE_4);
+		return new BlockStateContainer(this, Properties.FULLNESS);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.FULLNESS, meta & 3);
+		return getDefaultState().withProperty(Properties.FULLNESS, meta);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.FULLNESS) + (state.getValue(Properties.TEXTURE_4) * 4);
+		return state.getValue(Properties.FULLNESS);
 	}
 
 	@Override
@@ -73,10 +69,7 @@ public class HeatingCrucible extends BlockContainer{
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		ItemStack stack = world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0);
-		if(stack != null){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-		}
+		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0));
 		super.breakBlock(world, pos, blockstate);
 	}
 
