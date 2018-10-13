@@ -53,8 +53,8 @@ public final class ModItems{
 	public static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 100, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F).setRepairItem(new ItemStack(Items.POISONOUS_POTATO));
 	public static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[4], 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
 
-	public static DebugGearWriter debugGearWriter;
-	public static DebugHeatWriter debugHeatWriter;
+	public static CheatWandRotary debugGearWriter;
+	public static CheatWandHeat debugHeatWriter;
 	public static BasicItem dustSalt;
 	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
@@ -129,9 +129,9 @@ public final class ModItems{
 	}
 
 	public static void init(){
-		debugGearWriter = new DebugGearWriter();
+		debugGearWriter = new CheatWandRotary();
 		handCrank = new HandCrank();
-		debugHeatWriter = new DebugHeatWriter();
+		debugHeatWriter = new CheatWandHeat();
 		dustCopper = new BasicItem("dust_copper", "dustCopper");
 		dustSalt = new BasicItem("dust_salt", "dustSalt");
 		mashedPotato = new MashedPotato();

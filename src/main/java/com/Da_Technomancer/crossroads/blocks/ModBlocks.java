@@ -115,6 +115,7 @@ public class ModBlocks{
 	public static ClockworkStabilizer clockworkStabilizer;
 	public static WindTurbine windTurbine;
 	public static SolarHeater solarHeater;
+	public static HeatReservoir heatReservoir;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -252,6 +253,7 @@ public class ModBlocks{
 		clockworkStabilizer = new ClockworkStabilizer();
 		windTurbine = new WindTurbine();
 		solarHeater = new SolarHeater();
+		heatReservoir = new HeatReservoir();
 	}
 
 	@SideOnly(Side.CLIENT)

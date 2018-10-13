@@ -22,18 +22,14 @@ public class HandCrank extends Item{
 		ModItems.itemAddQue(this);
 	}
 
-	protected double getEfficiency(){
-		return 10;
-	}
-
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
 			if(playerIn.isSneaking()){
-				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(-getEfficiency(), true, true);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(-10, true, true);
 			}else{
-				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(getEfficiency(), true, true);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(10, true, true);
 			}
 			return EnumActionResult.SUCCESS;
 		}

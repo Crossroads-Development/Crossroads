@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/hand_crank"
+		"layer0": "crossroads:items/cheat_wand"
 	}
 }

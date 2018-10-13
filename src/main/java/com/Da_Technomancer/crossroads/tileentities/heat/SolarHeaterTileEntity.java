@@ -37,14 +37,14 @@ public class SolarHeaterTileEntity extends TileEntity implements ITickable, IInf
 			return;
 		}
 
-		//Every 30 seconds, check if we still have sky view and cache the result
-		if(!init || world.getTotalWorldTime() % 600 == 0){
-			running = world.canSeeSky(pos);
-		}
-
 		if(!init){
 			temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
+		}
+
+		//Every 30 seconds, check if we still have sky view and cache the result
+		if(world.getTotalWorldTime() % 600 == 0){
+			running = world.canSeeSky(pos);
 		}
 
 		//This machine can share heat with other Solar Heaters in the same line, but only other Solar Heaters. Otherwise, a heat cable is needed like normal
@@ -108,6 +108,7 @@ public class SolarHeaterTileEntity extends TileEntity implements ITickable, IInf
 			if(!init){
 				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				init = true;
+				running = world.canSeeSky(pos);
 			}
 		}
 
