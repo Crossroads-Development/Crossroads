@@ -54,6 +54,7 @@ public class ModBlocks{
 	public static ArcaneReflector arcaneReflector;
 	public static LensHolder lensHolder;
 	public static BasicBlock blockPureQuartz;
+	public static BasicBlock blockLuminescentQuartz;
 	public static BeamSplitter beamSplitter;
 	public static ColorChart colorChart;
 	public static BeamSplitterBasic beamSplitterBasic;
@@ -191,6 +192,7 @@ public class ModBlocks{
 		arcaneReflector = new ArcaneReflector();
 		lensHolder = new LensHolder();
 		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz");
+		blockLuminescentQuartz = (BasicBlock) new BasicBlock("block_luminescent_quartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz").setLightLevel(1F);
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
 		beamSplitterBasic = new BeamSplitterBasic();

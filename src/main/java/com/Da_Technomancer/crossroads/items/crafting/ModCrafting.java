@@ -406,6 +406,10 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.pureQuartz, 4), ModBlocks.blockPureQuartz));
 		//Pure Quartz Block
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.blockPureQuartz, 1), "**", "**", '*', ModItems.pureQuartz));
+		//Luminescent Quartz
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.luminescentQuartz, 4), ModBlocks.blockLuminescentQuartz));
+		//Luminescent Quartz Block
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.blockLuminescentQuartz, 1), "**", "**", '*', ModItems.luminescentQuartz));
 		//Lens array
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.lensArray, 2), "*&*", "@ $", "***", '*', ModItems.pureQuartz, '&', "gemEmerald", '@', "gemRuby", '$', "gemDiamond"));
 		//Arcane Extractor

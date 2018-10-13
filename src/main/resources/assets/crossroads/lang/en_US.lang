@@ -142,6 +142,7 @@ tile.crystalline_prism.name=Crystalline Prism
 tile.arcane_reflector.name=Arcane Reflector
 tile.lens_holder.name=Lens Holder
 tile.block_pure_quartz.name=Block of Pure Quartz
+tile.block_luminescent_quartz.name=Block of Luminescent Quartz
 tile.beam_splitter.name=Redstone Beam Splitter
 tile.beam_splitter_basic.name=Basic Beam Splitter
 item.invis_item.name=Invisible Item
