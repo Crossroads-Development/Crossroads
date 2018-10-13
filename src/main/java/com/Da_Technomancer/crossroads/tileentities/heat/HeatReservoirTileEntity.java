@@ -24,6 +24,13 @@ public class HeatReservoirTileEntity extends TileEntity implements IInfoTE{
 		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
+	public NBTTagCompound getDropNBT(){
+		NBTTagCompound nbt = new NBTTagCompound();
+		handler.init();
+		nbt.setDouble("temp", temp);
+		return nbt;
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
@@ -50,7 +57,7 @@ public class HeatReservoirTileEntity extends TileEntity implements IInfoTE{
 		return super.hasCapability(capability, facing);
 	}
 
-	private IHeatHandler handler = new HeatHandler();
+	private HeatHandler handler = new HeatHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -62,6 +69,7 @@ public class HeatReservoirTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	private class HeatHandler implements IHeatHandler{
+
 		private void init(){
 			if(!init){
 				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));

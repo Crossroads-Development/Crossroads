@@ -469,6 +469,7 @@ public final class ModCrafting{
 		GameRegistry.addSmelting(ModItems.vanadium, new ItemStack(ModItems.vanadiumVOxide, 1), .7F);
 		//Heat Reservoir
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatReservoir, 1), "#*#", "***", "#*#", '#', "ingotCopper", '*', "dustSalt"));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.heatReservoir, 1), ModBlocks.heatReservoir));
 	}
 
 	private static ItemStack getFilledHopper(){
