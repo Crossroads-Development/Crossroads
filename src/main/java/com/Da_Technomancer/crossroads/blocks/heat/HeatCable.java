@@ -70,7 +70,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	public HeatCable(HeatInsulators insulator){
 		super(Material.IRON);
 		this.insulator = insulator;
-		String name = "heat_cable_copper_" + insulator.toString().toLowerCase();
+		String name = "heat_cable_" + insulator.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setHardness(1);

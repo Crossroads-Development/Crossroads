@@ -460,7 +460,7 @@ public final class ModCrafting{
 		//Wind Turbine
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.windTurbine, 1), "#*#", "*|*", "#*#", '|', "stickIron", '*', Blocks.WOOL, '#', "plankWood"));
 		//Solar Heater
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.windTurbine, 1), "t t", "tct", "ttt", 't', "ingotTin", 'c', "ingotCopper"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.solarHeater, 1), "t t", "tct", "ttt", 't', "ingotTin", 'c', "ingotCopper"));
 		//Vanadium smelting
 		GameRegistry.addSmelting(ModItems.vanadium, new ItemStack(ModItems.vanadiumVOxide, 1), .7F);
 	}
