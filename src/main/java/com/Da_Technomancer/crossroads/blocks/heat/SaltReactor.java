@@ -44,10 +44,7 @@ public class SaltReactor extends BlockContainer{
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		ItemStack stack = world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0);
-		if(stack != null){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-		}
+		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0));
 		super.breakBlock(world, pos, blockstate);
 	}
 

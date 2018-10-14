@@ -1,24 +1,19 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -29,6 +24,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class FuelHeater extends BlockContainer{
 
@@ -50,8 +48,7 @@ public class FuelHeater extends BlockContainer{
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		FuelHeaterTileEntity te = (FuelHeaterTileEntity) world.getTileEntity(pos);
-		InventoryHelper.dropInventoryItems(world, pos, te);
+		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
 		super.breakBlock(world, pos, blockstate);
 	}
 
@@ -91,6 +88,6 @@ public class FuelHeater extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Adds: 1°C/t while burning fuel");
+		tooltip.add("Adds: 10°C/t while burning fuel");
 	}
 }

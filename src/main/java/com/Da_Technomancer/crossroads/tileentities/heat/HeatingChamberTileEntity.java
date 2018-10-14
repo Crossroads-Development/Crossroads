@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.gui.AbstractInventory;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,8 +26,9 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 	private int progress = 0;
 	private double temp;
 	private boolean init = false;
-	public final static int REQUIRED = 100;
-	private final static int MINTEMP = 200;
+	public static final int REQUIRED = 500;
+	public static final int[] TEMP_TIERS = {200, 300};
+	public static final int USAGE = 5;
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
@@ -45,11 +47,14 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 			init = true;
 		}
 
-		if(temp >= 2 + MINTEMP){
-			temp -= 2;
+
+		int tier = HeatUtil.getHeatTier(temp, TEMP_TIERS);
+		if(tier != -1){
+			temp -= USAGE * (tier + 1);
+
 			ItemStack output = getOutput();
 			if(!inventory[0].isEmpty() && !output.isEmpty()){
-				progress += 2;
+				progress += USAGE * (tier + 1);
 				if(progress >= REQUIRED){
 					progress = 0;
 
@@ -96,8 +101,8 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 		if(nbt.hasKey("inv")){
 			inventory[0] = new ItemStack(nbt.getCompoundTag("inv"));
 		}
-		if(nbt.hasKey("invO")){
-			inventory[1] = new ItemStack(nbt.getCompoundTag("invO"));
+		if(nbt.hasKey("inv_o")){
+			inventory[1] = new ItemStack(nbt.getCompoundTag("inv_o"));
 		}
 	}
 
@@ -117,7 +122,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 		if(!inventory[1].isEmpty()){
 			NBTTagCompound invTagO = new NBTTagCompound();
 			inventory[1].writeToNBT(invTagO);
-			nbt.setTag("invO", invTagO);
+			nbt.setTag("inv_o", invTagO);
 		}
 		return nbt;
 	}
@@ -251,8 +256,7 @@ public class HeatingChamberTileEntity extends AbstractInventory implements ITick
 
 	@Override
 	public ItemStack decrStackSize(int index, int count){
-		ItemStack out = index > 1 ? ItemStack.EMPTY : inventory[index].splitStack(count);
-		return out;
+		return index > 1 ? ItemStack.EMPTY : inventory[index].splitStack(count);
 	}
 
 	@Override

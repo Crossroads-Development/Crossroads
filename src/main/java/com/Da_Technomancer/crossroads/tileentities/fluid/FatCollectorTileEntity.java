@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -34,12 +35,9 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable, IIn
 	private FluidStack content = null;
 	private static final int CAPACITY = 2_000;
 	private ItemStack inv = ItemStack.EMPTY;
-	/**
-	 * Below the first double the machine does not operate, above the last
-	 * double all fat is wasted, between the 2nd and 3rd double is the peak
-	 * efficiency
-	 */
-	private static final double[] BRACKETS = new double[] {100D, 140D, 160D, 200D};
+
+	public static final int[] TIERS = {100, 120, 140, 160, 180};
+	public static final double[] EFFICIENCY = {0.8D, 1D, 1.2D, 1D, 0.8D};
 	private static final double USE_PER_VALUE = .8D;
 
 	@Override
@@ -54,33 +52,19 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable, IIn
 			heatHandler.init();
 		}
 
-		if(bracket() > 0 && !inv.isEmpty()){
-			int value = (int) (((ItemFood) inv.getItem()).getHealAmount(inv) + ((ItemFood) inv.getItem()).getSaturationModifier(inv));
-			double holder = ((double) value) * USE_PER_VALUE;
-			value *= EnergyConverters.FAT_PER_VALUE;
-			value *= (bracket() == 3 ? 0 : bracket() == 1 ? .8D : 1.2D);
-			if(value <= (CAPACITY - (content == null ? 0 : content.amount))){
-				temp -= holder;
+		int tier = HeatUtil.getHeatTier(temp, TIERS);
+
+		if(tier != -1 && !inv.isEmpty()){
+			int liqAm = (int) (((ItemFood) inv.getItem()).getHealAmount(inv) + ((ItemFood) inv.getItem()).getSaturationModifier(inv));
+			double heatUse = ((double) liqAm) * USE_PER_VALUE;
+			liqAm *= EnergyConverters.FAT_PER_VALUE;
+			liqAm *= EFFICIENCY[tier];
+			if(liqAm <= (CAPACITY - (content == null ? 0 : content.amount))){
+				temp -= heatUse;
 				inv.shrink(1);
-				if(value != 0){
-					content = new FluidStack(BlockLiquidFat.getLiquidFat(), value + (content == null ? 0 : content.amount));
-				}
+				content = new FluidStack(BlockLiquidFat.getLiquidFat(), liqAm + (content == null ? 0 : content.amount));
 			}
 		}
-	}
-
-	/* 0: no run, 1: low efficiency, 2: peak efficiency, 3 waste all products */
-	private byte bracket(){
-		if(temp < BRACKETS[0]){
-			return 0;
-		}
-		if(temp > BRACKETS[3]){
-			return 3;
-		}
-		if(temp < BRACKETS[1] || temp > BRACKETS[2]){
-			return 1;
-		}
-		return 2;
 	}
 
 	@Override

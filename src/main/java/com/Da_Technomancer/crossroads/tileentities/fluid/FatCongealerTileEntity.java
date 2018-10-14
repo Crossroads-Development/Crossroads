@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -42,7 +42,7 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable, IIn
 			if(value == 0 || content == null){
 				return;
 			}
-			int sat = (int) (((double) value) * MiscOp.findEfficiency(rot.getMotionData()[0], 0, SAT_UPPER_SPEED_BOUND));
+			int sat = (int) (((double) value) * RotaryUtil.findEfficiency(rot.getMotionData()[0], 0, SAT_UPPER_SPEED_BOUND));
 			sat = Math.min(20, sat);
 			value = Math.min(value, 20 + sat);
 			if(value * EnergyConverters.FAT_PER_VALUE > content.amount){

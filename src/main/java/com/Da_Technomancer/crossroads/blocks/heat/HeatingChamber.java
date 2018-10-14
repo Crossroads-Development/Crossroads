@@ -69,6 +69,8 @@ public class HeatingChamber extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Usage: -2°C/t when above 200°C");
+		for(int i = 0; i < HeatingChamberTileEntity.TEMP_TIERS.length; i++){
+			tooltip.add((i + 1) + "x speed: -" + HeatingChamberTileEntity.USAGE * (i + 1) + "°C/t when above " + HeatingChamberTileEntity.TEMP_TIERS[i] + "°C");
+		}
 	}
 }

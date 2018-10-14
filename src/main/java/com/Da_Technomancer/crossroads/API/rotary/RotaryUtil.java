@@ -34,4 +34,13 @@ public class RotaryUtil{
 	public static double getDirSign(EnumFacing oldGearFacing, EnumFacing newGearFacing){
 		return -oldGearFacing.getAxisDirection().getOffset() * newGearFacing.getAxisDirection().getOffset();
 	}
+
+	public static double findEfficiency(double speedIn, double lowerLimit, double upperLimit){
+		speedIn = Math.abs(speedIn);
+		return speedIn < lowerLimit ? 0 : (speedIn >= upperLimit ? 1 : (speedIn - lowerLimit) / (upperLimit - lowerLimit));
+	}
+
+	public static double posOrNeg(double in, double zeroCase){
+		return in == 0 ? zeroCase : (in < 0 ? -1 : 1);
+	}
 }

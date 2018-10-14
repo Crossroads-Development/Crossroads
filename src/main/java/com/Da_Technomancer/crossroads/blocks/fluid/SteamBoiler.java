@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -53,8 +54,7 @@ public class SteamBoiler extends BlockContainer{
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		ItemStack stack = world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0);
-		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0));
 		super.breakBlock(world, pos, blockstate);
 	}
 
@@ -85,9 +85,13 @@ public class SteamBoiler extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Produces: 100mB/t steam while running");
-		tooltip.add("Produces: 1 salt/t while running with normal water");
-		tooltip.add("Consumes: 100mB/t [distilled] water while running");
-		tooltip.add("Consumes: -5°C/t while above 100°C and contains any [distilled] water");
+		for(int i = 0; i < SteamBoilerTileEntity.TIERS.length; i++){
+			tooltip.add("Boils " + (i + 1) * SteamBoilerTileEntity.BATCH_SIZE + "mB/t of water using " + (int) (SteamBoilerTileEntity.BATCH_SIZE * (i + 1) * EnergyConverters.DEG_PER_BUCKET_STEAM / 1000) + "°C/t when above " + SteamBoilerTileEntity.TIERS[i] + "°C");
+		}
+
+//		tooltip.add("Produces: 100mB/t steam while running");
+//		tooltip.add("Produces: 1 salt/t while running with normal water");
+//		tooltip.add("Consumes: 100mB/t [distilled] water while running");
+//		tooltip.add("Consumes: -5°C/t while above 100°C and contains any [distilled] water");
 	}
 }

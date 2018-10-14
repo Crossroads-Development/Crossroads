@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -50,21 +49,21 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 			init = true;
 		}
 
-		TileEntity upTE = world.getTileEntity(pos.offset(EnumFacing.UP));
-		if(upTE != null && upTE.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			double reservePool = temp;
-			temp -= reservePool;
-
-			IHeatHandler handler = upTE.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN);
-			reservePool += handler.getTemp();
-			handler.addHeat(-(handler.getTemp()));
-			reservePool /= 2;
-			temp += reservePool;
-			handler.addHeat(reservePool);
-		}
+//		TileEntity upTE = world.getTileEntity(pos.offset(EnumFacing.UP));
+//		if(upTE != null && upTE.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+//			double reservePool = temp;
+//			temp -= reservePool;
+//
+//			IHeatHandler handler = upTE.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN);
+//			reservePool += handler.getTemp();
+//			handler.addHeat(-(handler.getTemp()));
+//			reservePool /= 2;
+//			temp += reservePool;
+//			handler.addHeat(reservePool);
+//		}
 
 		if(burnTime != 0){
-			temp += 1D;
+			temp += 10D;
 			if(--burnTime == 0){
 				world.setBlockState(pos, ModBlocks.fuelHeater.getDefaultState().withProperty(Properties.ACTIVE, false));
 			}
@@ -75,7 +74,7 @@ public class FuelHeaterTileEntity extends AbstractInventory implements ITickable
 			burnTime = TileEntityFurnace.getItemBurnTime(inventory);
 			Item item = inventory.getItem();
 			inventory.shrink(1);
-			if(inventory.isEmpty() && item != null && item.hasContainerItem(inventory)){
+			if(inventory.isEmpty() && item.hasContainerItem(inventory)){
 				inventory = item.getContainerItem(inventory);
 			}
 			world.setBlockState(pos, ModBlocks.fuelHeater.getDefaultState().withProperty(Properties.ACTIVE, true));

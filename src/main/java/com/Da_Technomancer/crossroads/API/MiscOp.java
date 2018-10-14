@@ -26,15 +26,6 @@ public final class MiscOp{
 		return Math.round(numIn * Math.pow(10, decPlac)) / Math.pow(10D, decPlac);
 	}
 
-	public static double findEfficiency(double speedIn, double lowerLimit, double upperLimit){
-		speedIn = Math.abs(speedIn);
-		return speedIn < lowerLimit ? 0 : (speedIn >= upperLimit ? 1 : (speedIn - lowerLimit) / (upperLimit - lowerLimit));
-	}
-
-	public static double posOrNeg(double in, double zeroCase){
-		return in == 0 ? zeroCase : (in < 0 ? -1 : 1);
-	}
-
 	/**
 	 * The same as Math.round except if the decimal
 	 * is exactly .5 then it rounds down.

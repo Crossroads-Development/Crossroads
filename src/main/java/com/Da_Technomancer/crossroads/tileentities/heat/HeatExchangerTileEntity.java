@@ -61,7 +61,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 		}
 
 		if(bufferTemp != 0){
-			double internalTransfer = Math.min(25D, Math.abs(bufferTemp)) * Math.signum(bufferTemp);
+			double internalTransfer = Math.min(10D, Math.abs(bufferTemp)) * Math.signum(bufferTemp);
 			temp += internalTransfer;
 			bufferTemp -= internalTransfer;
 			markDirty();
@@ -69,40 +69,38 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 
 
 		double prevTemp = temp;
-		transHeat();
+
+//		double reservePool = temp;
+//		temp -= reservePool;
+//		int members = 1;
+//
+//		for(EnumFacing side : EnumFacing.values()){
+//			TileEntity te = world.getTileEntity(pos.offset(side));
+//			if(side != EnumFacing.DOWN && te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+//				IHeatHandler handler1 = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
+//				reservePool += handler1.getTemp();
+//				handler1.addHeat(-handler1.getTemp());
+//				members++;
+//			}
+//		}
+//
+//		reservePool /= members;
+//
+//		for(EnumFacing side : EnumFacing.values()){
+//			TileEntity te = world.getTileEntity(pos.offset(side));
+//			if(side != EnumFacing.DOWN && te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
+//				te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
+//			}
+//		}
+//		temp += reservePool;
+
+
 		if(!insul){
-			runLoss(10D);
+			runLoss(5D);
 		}
 		if(temp != prevTemp){
 			markDirty();
 		}
-	}
-
-	private void transHeat(){
-
-		double reservePool = temp;
-		temp -= reservePool;
-		int members = 1;
-
-		for(EnumFacing side : EnumFacing.values()){
-			TileEntity te = world.getTileEntity(pos.offset(side));
-			if(side != EnumFacing.DOWN && te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				IHeatHandler handler = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
-				reservePool += handler.getTemp();
-				handler.addHeat(-handler.getTemp());
-				members++;
-			}
-		}
-
-		reservePool /= members;
-
-		for(EnumFacing side : EnumFacing.values()){
-			TileEntity te = world.getTileEntity(pos.offset(side));
-			if(side != EnumFacing.DOWN && te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite()).addHeat(reservePool);
-			}
-		}
-		temp += reservePool;
 	}
 
 	private void runLoss(double rate){
@@ -169,7 +167,6 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 		@Override
 		public void setTemp(double tempIn){
 			init = true;
-			;
 			temp = tempIn;
 		}
 

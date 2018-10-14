@@ -50,9 +50,9 @@ public class HeatExchanger extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Change: Up to 25°C/t while running");
+		tooltip.add("Change: Up to 10°C/t while running");
 		if(!insulat){
-			tooltip.add("Loss Rate: -10°C/t");
+			tooltip.add("Loss Rate: -5°C/t");
 		}
 	}
 }

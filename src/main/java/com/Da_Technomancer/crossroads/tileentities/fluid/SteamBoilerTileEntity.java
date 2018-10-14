@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
@@ -33,7 +34,8 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable, IInf
 	private FluidStack waterContent;
 	public ItemStack inventory = ItemStack.EMPTY;
 	private static final int CAPACITY = 10_000;
-	private static final int BATCH_SIZE = 100;
+	public static final int BATCH_SIZE = 100;
+	public static final int[] TIERS = {100, 200, 300, 400, 500};
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
@@ -52,27 +54,36 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable, IInf
 			init = true;
 		}
 
-		if(temp >= 100D && waterContent != null){
-			temp -= EnergyConverters.DEG_PER_BUCKET_STEAM * ((double) BATCH_SIZE) / 1000D;
+		int tier = HeatUtil.getHeatTier(temp, TIERS);
 
-			boolean salty = waterContent.getFluid() == FluidRegistry.WATER;
-			if(waterContent.amount >= BATCH_SIZE && CAPACITY - (steamContent == null ? 0 : steamContent.amount) >= 100 && (salty ? inventory.getCount() < 64 : true)){
-				waterContent.amount -= BATCH_SIZE;
+
+		if(tier != -1){
+			temp -= EnergyConverters.DEG_PER_BUCKET_STEAM * (tier + 1) * (double) BATCH_SIZE / 1000D;
+
+			if(waterContent != null && waterContent.amount >= BATCH_SIZE && steamContent == null || CAPACITY - steamContent.amount >= BATCH_SIZE && inventory.getCount() < 64){
+				boolean salty = waterContent.getFluid() == FluidRegistry.WATER;
+
+				int batches = Math.min(tier + 1, waterContent.amount / BATCH_SIZE);
+				batches = Math.min(batches, steamContent == null ? CAPACITY / BATCH_SIZE : (CAPACITY - steamContent.amount) / BATCH_SIZE);
+				if(salty){
+					batches = Math.min(batches, 64 - inventory.getCount());
+				}
+				waterContent.amount -= batches * BATCH_SIZE;
 				if(waterContent.amount == 0){
 					waterContent = null;
 				}
 
 				if(steamContent == null){
-					steamContent = new FluidStack(BlockSteam.getSteam(), 100);
+					steamContent = new FluidStack(BlockSteam.getSteam(), BATCH_SIZE * batches);
 				}else{
-					steamContent.amount += BATCH_SIZE;
+					steamContent.amount += BATCH_SIZE * batches;
 				}
 
 				if(salty){
 					if(inventory.isEmpty()){
-						inventory = new ItemStack(ModItems.dustSalt, BATCH_SIZE / 100);
+						inventory = new ItemStack(ModItems.dustSalt, batches);
 					}else{
-						inventory.grow(BATCH_SIZE / 100);
+						inventory.grow(batches);
 					}
 				}
 			}
