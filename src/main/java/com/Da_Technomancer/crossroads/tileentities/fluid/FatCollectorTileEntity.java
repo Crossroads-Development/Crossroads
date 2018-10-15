@@ -38,7 +38,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable, IIn
 
 	public static final int[] TIERS = {100, 120, 140, 160, 180};
 	public static final double[] EFFICIENCY = {0.8D, 1D, 1.2D, 1D, 0.8D};
-	private static final double USE_PER_VALUE = .8D;
+	private static final double USE_PER_VALUE = 2D;
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){

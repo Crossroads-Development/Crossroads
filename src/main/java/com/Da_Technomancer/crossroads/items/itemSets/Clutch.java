@@ -45,6 +45,7 @@ public class Clutch extends Item{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("I: " + type.getDensity() / 32_000D);
+		tooltip.add("Comparators read 3*speed");
 	}
 
 	@Override

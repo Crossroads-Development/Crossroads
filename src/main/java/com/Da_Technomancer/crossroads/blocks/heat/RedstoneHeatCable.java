@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.CableThemes;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
@@ -241,6 +242,9 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Loss Rate: -" + insulator.getRate() + "°C/t");
 		tooltip.add("Melting Point: " + insulator.getLimit() + "°C");
+		for(int i = 1; i <= 15; i++){
+			tooltip.add("Comparators read " + i + " at above " + HeatUtil.toCelcius((double) i * HeatUtil.toKelvin(insulator.getLimit()) / 15D) + "°C");
+		}
 	}
 
 	@Override
