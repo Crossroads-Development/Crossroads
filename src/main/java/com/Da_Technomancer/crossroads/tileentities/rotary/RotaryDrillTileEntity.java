@@ -48,8 +48,8 @@ public class RotaryDrillTileEntity extends TileEntity implements ITickable, IInf
 
 	private int ticksExisted = 0;
 	private boolean golden;
-	public static final double ENERGY_USE = .5D;
-	private static final double SPEED_PER_HARDNESS = .1D;
+	public static final double ENERGY_USE = 2D;
+	private static final double SPEED_PER_HARDNESS = .2D;
 
 	public boolean isGolden(){
 		return golden;

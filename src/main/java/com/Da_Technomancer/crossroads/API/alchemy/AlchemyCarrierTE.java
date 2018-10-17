@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import net.minecraft.entity.player.EntityPlayer;
@@ -277,7 +277,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 				double amountProduced = typeProduced.getReagentFromStack(stack).getAmount();
 				if(amountProduced <= transferCapacity() - amount){
 					amount += amountProduced;
-					heat += Math.max(0, Math.min(typeProduced.getMeltingPoint() + 273D, EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + 273D)) * amountProduced;
+					heat += Math.max(0, Math.min(typeProduced.getMeltingPoint() + 273D, HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + 273D)) * amountProduced;
 					out.shrink(1);
 					if(contents[typeProduced.getIndex()] == null){
 						contents[typeProduced.getIndex()] = new ReagentStack(typeProduced, amountProduced);

@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,7 +25,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
 		chat.add("Upper Temp: " + MiscOp.betterRound(tempUp, 3) + "°C");
 		chat.add("Lower Temp: " + MiscOp.betterRound(tempDown, 3) + "°C");
-		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 
 		private void init(){
 			if(!init){
-				tempUp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				tempUp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				tempDown = tempUp;
 				init = true;
 			}

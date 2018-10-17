@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.*;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -68,7 +69,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
 		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 		}
 
 		if(!init){
-			temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
 
@@ -335,7 +336,7 @@ public class HeatingCrucibleTileEntity extends TileEntity implements ITickable, 
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				init = true;
 			}
 		}

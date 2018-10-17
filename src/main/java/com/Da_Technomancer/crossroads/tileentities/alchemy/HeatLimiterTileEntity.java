@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.*;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -22,7 +23,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
 		chat.add("In-Temp: " + MiscOp.betterRound(heatHandlerIn.getTemp(), 3) + "°C");
 		chat.add("Out-Temp: " + MiscOp.betterRound(heatHandlerOut.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override
@@ -131,8 +132,8 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 		private void init(){
 			if(!init){
 				init = true;
-				heatIn = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-				heatOut = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				heatIn = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				heatOut = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				markDirty();
 			}
 		}

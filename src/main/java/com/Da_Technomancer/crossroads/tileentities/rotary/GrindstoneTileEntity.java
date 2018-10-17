@@ -1,16 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
-import java.util.ArrayList;
-import java.util.Map.Entry;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
-import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
@@ -24,13 +21,15 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Map.Entry;
 
 public class GrindstoneTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private ItemStack[] inventory =  {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
 
 	private double progress = 0;
-	public static final double REQUIRED = 100;
+	public static final double REQUIRED = 400;
 
 	private final double[] motionData = new double[4];
 
@@ -47,9 +46,8 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable, IInfo
 		if(progress == REQUIRED){
 			return;
 		}
-
-		double used = Math.min(Math.abs(motionData[1]), REQUIRED - progress);
-		progress += used;
+		double used = 10D * RotaryUtil.findEfficiency(motionData[0], 0.2D, 10D);
+		progress = Math.min(progress + used, REQUIRED);
 		axleHandler.addEnergy(-used, false, false);
 	}
 
@@ -155,7 +153,7 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable, IInfo
 	private final IItemHandler itemOutHandler = new ItemOutHandler();
 	private final IItemHandler itemInHandler = new ItemInHandler();
 	private final AllItemHandler itemAllHandler = new AllItemHandler();
-	private final IAxleHandler axleHandler = new AxleHandler();
+	private final AxleHandler axleHandler = new AxleHandler();
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
@@ -350,7 +348,7 @@ public class GrindstoneTileEntity extends TileEntity implements ITickable, IInfo
 
 		@Override
 		public double getMoInertia(){
-			return 1;
+			return 10;
 		}
 
 		@Override

@@ -1,11 +1,12 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.essentials.shared.ISlaveAxisHandler;
-import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -19,7 +20,7 @@ import java.util.Random;
 
 public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
-	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
+	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
 
 	private boolean locked = false;
 	private double sumEnergy = 0;
@@ -62,7 +63,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			return;
 		}
 
-		sumEnergy = runLoss(rotaryMembers, 1.001D);
+		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
 		if(sumEnergy < 1 && sumEnergy > -1){
 			sumEnergy = 0;
 		}
@@ -81,19 +82,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
 			gear.markChanged();
 		}
-	}
-
-	/**
-	 * base should always be equal or greater than one. 1 means no loss. 
-	 */
-	private static double runLoss(ArrayList<IAxleHandler> gears, double base){
-		double sumEnergy = 0;
-
-		for(IAxleHandler gear : gears){
-			sumEnergy += Math.signum(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(base, -Math.abs(gear.getMotionData()[0]));
-		}
-
-		return sumEnergy;
 	}
 
 	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();

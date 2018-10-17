@@ -40,7 +40,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable, IInf
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
 		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 		chat.add(inventory.getCount() + "/64 salt");
 	}
 
@@ -50,7 +50,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable, IInf
 			return;
 		}
 		if(!init){
-			temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
 
@@ -58,9 +58,9 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable, IInf
 
 
 		if(tier != -1){
-			temp -= EnergyConverters.DEG_PER_BUCKET_STEAM * (tier + 1) * (double) BATCH_SIZE / 1000D;
+			temp -= EnergyConverters.degPerSteamBucket(false) * (tier + 1) * (double) BATCH_SIZE / 1000D;
 
-			if(waterContent != null && waterContent.amount >= BATCH_SIZE && steamContent == null || CAPACITY - steamContent.amount >= BATCH_SIZE && inventory.getCount() < 64){
+			if(waterContent != null && waterContent.amount >= BATCH_SIZE && (steamContent == null || CAPACITY - steamContent.amount >= BATCH_SIZE) && inventory.getCount() < 64){
 				boolean salty = waterContent.getFluid() == FluidRegistry.WATER;
 
 				int batches = Math.min(tier + 1, waterContent.amount / BATCH_SIZE);
@@ -372,7 +372,7 @@ public class SteamBoilerTileEntity extends TileEntity implements ITickable, IInf
 
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				init = true;
 			}
 		}

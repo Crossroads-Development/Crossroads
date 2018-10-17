@@ -74,19 +74,20 @@ public class SteamBoiler extends BlockContainer{
 							EntityItem dropped = playerIn.dropItem(gotten, false);
 							dropped.setNoPickupDelay();
 							dropped.setOwner(playerIn.getName());
+							return true;
 						}
 					}
 				}
 			}
 		}
-		return true;
+		return worldIn.isRemote;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		for(int i = 0; i < SteamBoilerTileEntity.TIERS.length; i++){
-			tooltip.add("Boils " + (i + 1) * SteamBoilerTileEntity.BATCH_SIZE + "mB/t of water using " + (int) (SteamBoilerTileEntity.BATCH_SIZE * (i + 1) * EnergyConverters.DEG_PER_BUCKET_STEAM / 1000) + "°C/t when above " + SteamBoilerTileEntity.TIERS[i] + "°C");
+			tooltip.add("Boils " + (i + 1) * SteamBoilerTileEntity.BATCH_SIZE + "mB/t of water using " + (int) (SteamBoilerTileEntity.BATCH_SIZE * (i + 1) * EnergyConverters.degPerSteamBucket(true) / 1000) + "°C/t when above " + SteamBoilerTileEntity.TIERS[i] + "°C");
 		}
 
 //		tooltip.add("Produces: 100mB/t steam while running");

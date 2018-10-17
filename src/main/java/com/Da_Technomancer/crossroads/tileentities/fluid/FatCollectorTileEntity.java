@@ -43,7 +43,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
 		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class FatCollectorTileEntity extends TileEntity implements ITickable, IIn
 
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				init = true;
 			}
 		}

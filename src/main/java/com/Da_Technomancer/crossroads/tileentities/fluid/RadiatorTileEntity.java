@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
@@ -32,18 +33,18 @@ public class RadiatorTileEntity extends TileEntity implements ITickable, IInfoTE
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
 		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override
 	public void update(){
 		if(!init){
-			temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
 
-		if(steam != null && steam.amount >= 100 && (water == null || CAPACITY - water.amount >= 100)){
-			temp += .1D * EnergyConverters.DEG_PER_BUCKET_STEAM;
+		if(!world.isRemote && steam != null && steam.amount >= 100 && (water == null || CAPACITY - water.amount >= 100)){
+			temp += .1D * EnergyConverters.degPerSteamBucket(false);
 			water = new FluidStack(BlockDistilledWater.getDistilledWater(), 100 + (water == null ? 0 : water.amount));
 			steam.amount -= 100;
 			if(steam.amount <= 0){
@@ -131,7 +132,7 @@ public class RadiatorTileEntity extends TileEntity implements ITickable, IInfoTE
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				init = true;
 			}
 		}

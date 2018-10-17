@@ -1,8 +1,11 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
 import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.essentials.shared.ISlaveAxisHandler;
 import net.minecraft.util.EnumFacing;
+
+import java.util.List;
 
 public class RotaryUtil{
 
@@ -42,5 +45,28 @@ public class RotaryUtil{
 
 	public static double posOrNeg(double in, double zeroCase){
 		return in == 0 ? zeroCase : (in < 0 ? -1 : 1);
+	}
+
+	/**
+	 * Returns the total energy, adjusted for energy loss, of the passed IAxleHandlers
+	 * @param axles A list of IAxleHandlers to have their energies summed and adjusted
+	 * @return The total energy adjusted for energy loss
+	 */
+	public static double getTotalEnergy(List<IAxleHandler> axles){
+		double sumEnergy  = 0;
+		double sumInertia = 0;
+		double sumIW = 0;
+
+		for(IAxleHandler axle : axles){
+			if(axle == null){
+				continue;
+			}
+			sumEnergy += axle.getMotionData()[1] * Math.signum(axle.getRotationRatio());
+			sumInertia += axle.getMoInertia();
+			sumIW += axle.getMoInertia() * Math.abs(axle.getMotionData()[0]);
+		}
+
+		sumEnergy = Math.signum(sumEnergy) * Math.max(0, Math.abs(sumEnergy) - ModConfig.getConfigDouble(ModConfig.rotaryLoss, false) * Math.pow(sumIW / sumInertia, 2));
+		return sumEnergy;
 	}
 }

@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.block.state.IBlockState;
@@ -37,7 +37,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
 		chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
 		chat.add("Buffered heat: " + MiscOp.betterRound(bufferTemp, 3) + "°C");
-		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 		}
 
 		if(!init){
-			temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
 
@@ -104,7 +104,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 	}
 
 	private void runLoss(double rate){
-		double biomeTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 		temp += Math.min(rate, Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
@@ -153,7 +153,7 @@ public class HeatExchangerTileEntity extends TileEntity implements ITickable, II
 	private class HeatHandler implements IHeatHandler{
 		private void init(){
 			if(!init){
-				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				init = true;
 			}
 		}

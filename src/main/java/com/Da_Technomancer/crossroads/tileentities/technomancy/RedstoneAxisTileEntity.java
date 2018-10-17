@@ -51,12 +51,7 @@ public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 		double baseSpeed = RedstoneUtil.getPowerAtPos(world, pos);
 
 		double sumIRot = 0;
-		sumEnergy = 0;
-
-		for(IAxleHandler gear : rotaryMembers){
-			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
-			sumEnergy += Math.signum(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(1.001D, -Math.abs(gear.getMotionData()[0]));
-		}
+		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
 
 		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
 		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));

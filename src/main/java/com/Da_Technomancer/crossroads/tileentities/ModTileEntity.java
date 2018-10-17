@@ -1,8 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.heat.HeatReservoir;
-import com.Da_Technomancer.crossroads.blocks.heat.SolarHeater;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.*;
 import com.Da_Technomancer.crossroads.tileentities.fluid.*;
 import com.Da_Technomancer.crossroads.tileentities.heat.*;

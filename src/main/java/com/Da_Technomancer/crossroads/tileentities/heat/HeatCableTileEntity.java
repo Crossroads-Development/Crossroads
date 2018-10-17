@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.block.state.IBlockState;
@@ -32,7 +32,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable, IInfoT
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
 		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable, IInfoT
 			if(insulator == HeatInsulators.ICE){
 				temp = -10;
 			}else{
-				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			}
 			init = true;
 		}
@@ -127,7 +127,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable, IInfoT
 	}
 
 	private void runLoss(double rate){
-		double biomeTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 		temp += Math.min(rate, Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
@@ -158,7 +158,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable, IInfoT
 				if(insulator == HeatInsulators.ICE){
 					temp = -10;
 				}else{
-					temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+					temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				}
 			}
 		}

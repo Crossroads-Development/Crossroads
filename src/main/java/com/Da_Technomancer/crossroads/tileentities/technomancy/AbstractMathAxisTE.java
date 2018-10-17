@@ -71,19 +71,14 @@ public abstract class AbstractMathAxisTE extends TileEntity implements ITickable
 
 		double baseSpeed = getOutSpeed(in1, in2);
 
-		EnumFacing sideOut = getOut();
-
 		double sumIRot = 0;
-		sumEnergy = 0;
-
-		double cost = 0;
+		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
 
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
-			sumEnergy += Math.signum(gear.getRotationRatio()) * gear.getMotionData()[1] * Math.pow(1.001D, -Math.abs(gear.getMotionData()[0]));
 		}
 
-		cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
+		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
 
 		TileEntity downTE = world.getTileEntity(pos.offset(getBattery()));
 
@@ -95,7 +90,7 @@ public abstract class AbstractMathAxisTE extends TileEntity implements ITickable
 		availableEnergy -= cost;
 
 		for(IAxleHandler gear : rotaryMembers){
-			double newEnergy = 0;
+			double newEnergy;
 
 			// set w
 			gear.getMotionData()[0] = gear.getRotationRatio() * baseSpeed;

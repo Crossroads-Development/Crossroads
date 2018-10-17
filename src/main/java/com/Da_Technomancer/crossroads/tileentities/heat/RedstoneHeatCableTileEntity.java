@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.ModConfig;
@@ -40,7 +41,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
 		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 			if(insulator == HeatInsulators.ICE){
 				temp = -10;
 			}else{
-				temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			}
 			init = true;
 		}
@@ -129,7 +130,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 	}
 
 	private void runLoss(double rate){
-		double biomeTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 		temp += Math.min(rate, Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
@@ -181,7 +182,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 				if(insulator == HeatInsulators.ICE){
 					temp = -10;
 				}else{
-					temp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+					temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				}
 				markDirty();
 			}

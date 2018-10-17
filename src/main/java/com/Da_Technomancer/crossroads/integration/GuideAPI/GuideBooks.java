@@ -88,7 +88,7 @@ public final class GuideBooks{
 
 			entries.put(new ResourceLocation(Main.MODID, "energy"), new SmartEntry("lore.energy.name", new ItemStack(ModItems.omnimeter, 1), "lore.energy"));
 			entries.put(new ResourceLocation(Main.MODID, "heat"), new SmartEntry("lore.heat.name", new ItemStack(ModBlocks.fuelHeater, 1), "lore.heat.start", ((Supplier<Object>) () -> ModConfig.getConfigBool(ModConfig.heatEffects, true) ? "lore.heat.insulator" : "lore.heat.insulator_effect_disable"), "lore.heat.end", "lore.heat.bobo"));
-			entries.put(new ResourceLocation(Main.MODID, "steam"), new SmartEntry("lore.steam.name", new ItemStack(ModBlocks.fluidTube, 1), Pair.of("lore.steam", new Object[] {Math.round(EnergyConverters.DEG_PER_BUCKET_STEAM * 1.1D), EnergyConverters.DEG_PER_BUCKET_STEAM})));
+			entries.put(new ResourceLocation(Main.MODID, "steam"), new SmartEntry("lore.steam.name", new ItemStack(ModBlocks.fluidTube, 1), Pair.of("lore.steam", new Object[] {Math.round(EnergyConverters.degPerSteamBucket(true) * 1.1D), EnergyConverters.degPerSteamBucket(true)})));
 			entries.put(new ResourceLocation(Main.MODID, "rotary"), new SmartEntry("lore.rotary.name", new ItemStack(GearFactory.BASIC_GEARS[GearTypes.BRONZE.ordinal()], 1), "lore.rotary"));
 			createPages(pages, "lore.copper", new ResourceLocation(Main.MODID, "textures/book/copper_process.png"));
 			entries.put(new ResourceLocation(Main.MODID, "copper"), new EntryItemStack(pages, "Copper Processing", new ItemStack(OreSetup.ingotCopper, 1), true));
@@ -128,10 +128,10 @@ public final class GuideBooks{
 			createPages(pages, "lore.rotary_pump.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "#$#", "&$&", '#', "ingotBronze", '&', "blockGlass", '$', "stickIron"), "lore.rotary_pump.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "rotary_pump"), new EntryItemStack(pages, "Rotary Pump", new ItemStack(ModBlocks.rotaryPump, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.steam_turbine.pre_recipe", new ShapelessOreRecipe(null, new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump), new ShapelessOreRecipe(null, new ItemStack(ModBlocks.rotaryPump, 1), ModBlocks.steamTurbine), Pair.of("lore.steam_turbine.post_recipe", new Object[] {EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE}));
+			createPages(pages, "lore.steam_turbine.pre_recipe", new ShapelessOreRecipe(null, new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump), new ShapelessOreRecipe(null, new ItemStack(ModBlocks.rotaryPump, 1), ModBlocks.steamTurbine), Pair.of("lore.steam_turbine.post_recipe", new Object[] {EnergyConverters.degPerSteamBucket(true) / EnergyConverters.degPerJoule(true)}));
 			entries.put(new ResourceLocation(Main.MODID, "steam_turbine"), new EntryItemStack(pages, "Steam Turbine", new ItemStack(ModBlocks.steamTurbine, 1), true));
 			pages = new ArrayList<IPage>();
-			entries.put(new ResourceLocation(Main.MODID, "radiator"), new SmartEntry("lore.radiator.name", new ItemStack(ModBlocks.radiator, 1), Pair.of("lore.radiator", new Object[] {EnergyConverters.DEG_PER_BUCKET_STEAM}), new ShapedOreRecipe(null, new ItemStack(ModBlocks.radiator, 1), "#$#", "#$#", "#$#", '#', ModBlocks.fluidTube, '$', "ingotIron"), ((Supplier<Object>) () -> {return ModConfig.getConfigBool(ModConfig.weatherControl, true) ? "lore.radiator.bobo_rain_idol" : null;})));
+			entries.put(new ResourceLocation(Main.MODID, "radiator"), new SmartEntry("lore.radiator.name", new ItemStack(ModBlocks.radiator, 1), Pair.of("lore.radiator", new Object[] {EnergyConverters.degPerSteamBucket(true)}), new ShapedOreRecipe(null, new ItemStack(ModBlocks.radiator, 1), "#$#", "#$#", "#$#", '#', ModBlocks.fluidTube, '$', "ingotIron"), ((Supplier<Object>) () -> {return ModConfig.getConfigBool(ModConfig.weatherControl, true) ? "lore.radiator.bobo_rain_idol" : null;})));
 			createPages(pages, "lore.liquid_fat.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.fatCollector, 1), "***", "# #", "*&*", '*', "ingotBronze", '#', "netherrack", '&', "ingotCopper"), Pair.of("lore.liquid_fat.mid_recipe", new Object[] {EnergyConverters.FAT_PER_VALUE}), new ShapedOreRecipe(null, new ItemStack(ModBlocks.fatCongealer, 1), "*^*", "# #", "* *", '*', "ingotBronze", '#', "netherrack", '^', "stickIron"), "lore.liquid_fat.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "liquid_fat"), new EntryItemStack(pages, "Basics of Liquid Fat", new ItemStack(ModItems.edibleBlob, 1), true));
 			pages = new ArrayList<IPage>();
@@ -299,7 +299,7 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "ores"), new EntryItemStack(pages, "Ores", new ItemStack(OreSetup.ingotCopper, 1), true));
 			entries.put(new ResourceLocation(Main.MODID, "energy"), new SmartEntry("info.energy.name", new ItemStack(ModItems.omnimeter, 1), "info.energy"));
 			entries.put(new ResourceLocation(Main.MODID, "heat"), new SmartEntry("info.heat.name", new ItemStack(ModBlocks.fuelHeater, 1), "info.heat.start", ((Supplier<Object>) () -> ModConfig.getConfigBool(ModConfig.heatEffects, true) ? "info.heat.insulator" : "info.heat.insulator_effect_disable"), "info.heat.end"));
-			entries.put(new ResourceLocation(Main.MODID, "steam"), new SmartEntry("info.steam.name", new ItemStack(ModBlocks.fluidTube, 1), Pair.of("info.steam", new Object[] {Math.round(EnergyConverters.DEG_PER_BUCKET_STEAM * 1.1D), EnergyConverters.DEG_PER_BUCKET_STEAM})));
+			entries.put(new ResourceLocation(Main.MODID, "steam"), new SmartEntry("info.steam.name", new ItemStack(ModBlocks.fluidTube, 1), Pair.of("info.steam", new Object[] {Math.round(EnergyConverters.degPerSteamBucket(true) * 1.1D), EnergyConverters.degPerSteamBucket(true)})));
 			entries.put(new ResourceLocation(Main.MODID, "rotary"), new SmartEntry("info.rotary.name", new ItemStack(GearFactory.BASIC_GEARS[GearTypes.BRONZE.ordinal()], 1), "info.rotary"));
 			createPages(pages, "info.copper", new ResourceLocation(Main.MODID, "textures/book/copper_process.png"));
 			entries.put(new ResourceLocation(Main.MODID, "copper"), new EntryItemStack(pages, "Copper Processing", new ItemStack(OreSetup.ingotCopper, 1), true));
@@ -339,10 +339,10 @@ public final class GuideBooks{
 			createPages(pages,  "info.rotary_pump", new ShapedOreRecipe(null, new ItemStack(ModBlocks.rotaryPump, 1), "#$#", "#$#", "&$&", '#', "ingotBronze", '&', "blockGlass", '$', "stickIron"));
 			entries.put(new ResourceLocation(Main.MODID, "rotary_pump"), new EntryItemStack(pages, "Rotary Pump", new ItemStack(ModBlocks.rotaryPump, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, Pair.of("info.steam_turbine", new Object[] {EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE}), new ShapelessOreRecipe(null, new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump), new ShapelessOreRecipe(null, new ItemStack(ModBlocks.rotaryPump, 1), ModBlocks.steamTurbine));
+			createPages(pages, Pair.of("info.steam_turbine", new Object[] {EnergyConverters.degPerSteamBucket(true) / EnergyConverters.degPerJoule(true)}), new ShapelessOreRecipe(null, new ItemStack(ModBlocks.steamTurbine, 1), ModBlocks.rotaryPump), new ShapelessOreRecipe(null, new ItemStack(ModBlocks.rotaryPump, 1), ModBlocks.steamTurbine));
 			entries.put(new ResourceLocation(Main.MODID, "steam_turbine"), new EntryItemStack(pages, "Steam Turbine", new ItemStack(ModBlocks.steamTurbine, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, Pair.of("info.radiator", new Object[] {EnergyConverters.DEG_PER_BUCKET_STEAM}), new ShapedOreRecipe(null, new ItemStack(ModBlocks.radiator, 1), "#$#", "#$#", "#$#", '#', ModBlocks.fluidTube, '$', "ingotIron"));
+			createPages(pages, Pair.of("info.radiator", new Object[] {EnergyConverters.degPerSteamBucket(true)}), new ShapedOreRecipe(null, new ItemStack(ModBlocks.radiator, 1), "#$#", "#$#", "#$#", '#', ModBlocks.fluidTube, '$', "ingotIron"));
 			entries.put(new ResourceLocation(Main.MODID, "radiator"), new EntryItemStack(pages, "Radiator", new ItemStack(ModBlocks.radiator, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, Pair.of("info.liquid_fat", new Object[] {EnergyConverters.FAT_PER_VALUE}), new ShapedOreRecipe(null, new ItemStack(ModBlocks.fatCollector, 1), "***", "# #", "*&*", '*', "ingotTin", '#', "netherrack", '&', "ingotCopper"), new ShapedOreRecipe(null, new ItemStack(ModBlocks.fatCongealer, 1), "*^*", "# #", "* *", '*', "ingotTin", '#', "netherrack", '^', "stickIron"));

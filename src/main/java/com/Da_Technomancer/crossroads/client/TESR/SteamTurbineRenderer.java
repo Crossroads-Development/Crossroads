@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.client.TESR;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.client.TESR.models.ModelPump;
-import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

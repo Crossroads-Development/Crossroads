@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -108,7 +108,7 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 							contents[typ.getIndex()].increaseAmount(reagToFill);
 						}
 						amount += reagToFill;
-						double envTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						double envTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 						if(typ.getBoilingPoint() <= envTemp || typ.getMeltingPoint() > envTemp){
 							envTemp = (double) resource.getFluid().getTemperature();
 						}else{
@@ -204,7 +204,7 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 							contents[typ.getIndex()].increaseAmount(reagToFill);
 						}
 						amount += reagToFill;
-						double envTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						double envTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 						if(typ.getBoilingPoint() > envTemp){
 							envTemp = (double) resource.getFluid().getTemperature();
 						}else{

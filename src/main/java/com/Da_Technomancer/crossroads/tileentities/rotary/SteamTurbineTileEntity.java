@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.tileentities.fluid;
+package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import javax.annotation.Nullable;
 
@@ -76,7 +76,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		limit = Math.min(limit, (CAPACITY - (waterContent == null ? 0 : waterContent.amount)) / 100);
 		limit = Math.min(limit, LIMIT);
 		if(limit != 0){
-			axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE, true, true);
+			axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket(false) / EnergyConverters.degPerJoule(false), true, true);
 			steamContent.amount -= limit * 100;
 			if(steamContent.amount <= 0){
 				steamContent = null;

@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
@@ -63,7 +64,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			return;
 		}
 		if(!init){
-			cableTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
 
@@ -178,7 +179,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 				double amountProduced = typeProduced.getReagentFromStack(stack).getAmount();
 				if(amountProduced <= CAPACITY - amount){
 					amount += amountProduced;
-					heat += Math.max(0, Math.min(typeProduced.getMeltingPoint() + 273D, EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + 273D)) * amountProduced;
+					heat += Math.max(0, Math.min(typeProduced.getMeltingPoint() + 273D, HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + 273D)) * amountProduced;
 					out.shrink(1);
 					if(contents[typeProduced.getIndex()] == null){
 						contents[typeProduced.getIndex()] = new ReagentStack(typeProduced, amountProduced);
@@ -282,7 +283,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			}
 		}
 
-		double ambientTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		double ambientTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 
 
 		ReagentStack[] movedContents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
@@ -387,7 +388,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 		private void init(){
 			if(!init){
 				init = true;
-				cableTemp = EnergyConverters.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			}
 		}
 

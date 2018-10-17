@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.API.heat;
 
+import com.Da_Technomancer.crossroads.API.MiscOp;
+
 public class HeatUtil{
 
 	public static final double ABSOLUTE_ZERO = -273D;
@@ -26,5 +28,11 @@ public class HeatUtil{
 			}
 		}
 		return -1;
+	}
+
+	public static double convertBiomeTemp(double rawTemp){
+		//This formula was derived with the power of wikipedia and excel spreadsheets to compare biome temperatures to actual real world temperatures.
+		//Most people probably wouldn't care if I'd just pulled it out of my *rse, but I made an effort and I want someone to know this. Appreciate it. Please?
+		return MiscOp.betterRound(rawTemp * 17.5D - 2.5D, 3);
 	}
 }

@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.blocks.fluid;
+package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.fluid.SteamTurbineTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -75,6 +75,6 @@ public class SteamTurbine extends BlockContainer{
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("I: 8");
 		tooltip.add("Consumes: " + 100 * SteamTurbineTileEntity.LIMIT + "mB/t steam");
-		tooltip.add("Produces: " + ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * EnergyConverters.DEG_PER_BUCKET_STEAM / EnergyConverters.DEG_PER_JOULE + "J/t while running");
+		tooltip.add("Produces: " + ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * EnergyConverters.degPerSteamBucket(true) / EnergyConverters.degPerJoule(true) + "J/t while running");
 	}
 }

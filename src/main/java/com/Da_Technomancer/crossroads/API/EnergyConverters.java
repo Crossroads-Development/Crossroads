@@ -1,24 +1,8 @@
 package com.Da_Technomancer.crossroads.API;
 
+import com.Da_Technomancer.crossroads.ModConfig;
+
 public final class EnergyConverters{
-
-	public static double convertBiomeTemp(double rawTemp){
-		return MiscOp.betterRound(rawTemp * 17.5D - 2.5D, 3);
-	}
-
-	/**
-	 * The number of degrees that 1000mB of steam is worth. Based on game
-	 * balance.
-	 */
-	public static final double DEG_PER_BUCKET_STEAM = 50D;
-
-	/**
-	 * The number of degrees (thermal energy) that one joule (rotary energy) is
-	 * worth. Based on simplicity & game balance. Scientifically speaking, this
-	 * conversion is far too simple (Heat capacity, thermodynamics, units,
-	 * etc.)
-	 */
-	public static final double DEG_PER_JOULE = 1D;
 
 	/**
 	 * The number of mB of liquid fat that is equivalent to 1 food
@@ -28,12 +12,26 @@ public final class EnergyConverters{
 
 	/**
 	 * The number of mB of molten copshowium produced from 1mb of molten copper OR 1mb of distilled water.
-	 * Based on balance and convenience. 
+	 * Based on balance and convenience.
 	 */
 	public static final double COPSHOWIUM_PER_COPPER = 1.8D;
-	
+
 	/**
-	 * Conversion factor between degrees kelvin normal heat, and degrees kelvin * amount alchemy system. Based on game balance. 
+	 * Conversion factor between degrees kelvin normal heat, and degrees kelvin * amount alchemy system. Based on game balance.
 	 */
 	public static final double ALCHEMY_TEMP_CONVERSION = .001D;
+
+	/**
+	 * @return The number of degrees one bucket of steam is worth
+	 */
+	public static double degPerSteamBucket(boolean client){
+		return ModConfig.getConfigDouble(ModConfig.steamWorth, client);
+	}
+
+	/**
+	 * @return The numbers of degrees one Joule (Rotary energy) is worth
+	 */
+	public static double degPerJoule(boolean client){
+		return 1D / ModConfig.getConfigDouble(ModConfig.jouleWorth, client);
+	}
 }

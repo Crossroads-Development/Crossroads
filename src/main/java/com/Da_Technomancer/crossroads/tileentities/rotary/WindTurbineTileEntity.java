@@ -51,7 +51,7 @@ public class WindTurbineTileEntity extends TileEntity implements ITickable, IInf
 	 * 0: angle, 1: clientW
 	 */
 	private float[] angleW = new float[2];
-	public static final double POWER_PER_LEVEL = 5D;
+	public static final double POWER_PER_LEVEL = 10D;
 	private int level = 1;
 	private boolean running = false;
 
