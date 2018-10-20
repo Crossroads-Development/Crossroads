@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/grindstone",
+	"parent": "crossroads:block/millstone",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

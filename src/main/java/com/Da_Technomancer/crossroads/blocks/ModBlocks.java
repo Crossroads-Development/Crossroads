@@ -25,7 +25,7 @@ public class ModBlocks{
 	public static MasterAxis masterAxis;
 	public static FluidTube fluidTube;
 	public static HeatingCrucible heatingCrucible;
-	public static Grindstone grindstone;
+	public static Millstone grindstone;
 	public static SteamBoiler steamBoiler;
 	public static BlockSalt blockSalt;
 	public static FluidVoid fluidVoid;
@@ -160,7 +160,7 @@ public class ModBlocks{
 
 	public static void init(){
 		masterAxis = new MasterAxis();
-		grindstone = new Grindstone();
+		grindstone = new Millstone();
 		sextupleGear = new Mechanism();
 		largeGearMaster = new LargeGearMaster();
 		largeGearSlave = new LargeGearSlave();

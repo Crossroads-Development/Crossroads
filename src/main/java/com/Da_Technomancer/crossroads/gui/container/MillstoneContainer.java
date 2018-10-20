@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -14,12 +14,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class GrindstoneContainer extends Container{
+public class MillstoneContainer extends Container{
 
-	private GrindstoneTileEntity te;
+	private MillstoneTileEntity te;
 	private int progress;
 
-	public GrindstoneContainer(IInventory playerInv, GrindstoneTileEntity te){
+	public MillstoneContainer(IInventory playerInv, MillstoneTileEntity te){
 		this.te = te;
 		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		// input 0
@@ -101,11 +101,9 @@ public class GrindstoneContainer extends Container{
 		super.detectAndSendChanges();
 
 		int teProgress = te.getProgress();
-		for(int i = 0; i < listeners.size(); ++i){
-			IContainerListener icontainerlistener = (IContainerListener) listeners.get(i);
-
-			if(progress != teProgress){
-				icontainerlistener.sendWindowProperty(this, 0, teProgress);
+		if(progress != teProgress){
+			for(IContainerListener listener : listeners){
+				listener.sendWindowProperty(this, 0, teProgress);
 			}
 		}
 

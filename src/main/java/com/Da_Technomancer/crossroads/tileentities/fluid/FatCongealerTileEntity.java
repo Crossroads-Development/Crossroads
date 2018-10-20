@@ -27,7 +27,7 @@ public class FatCongealerTileEntity extends TileEntity implements ITickable, IIn
 
 	private FluidStack content = null;
 	private static final int CAPACITY = EnergyConverters.FAT_PER_VALUE * 40;
-	private static final double VALUE_PER_ENERGY = .1D;//TODO These numbers need to be rebalanced
+	private static final double VALUE_PER_ENERGY = 1D;//TODO These numbers need to be rebalanced
 	private static final double SAT_UPPER_SPEED_BOUND = 2;
 
 	@Override

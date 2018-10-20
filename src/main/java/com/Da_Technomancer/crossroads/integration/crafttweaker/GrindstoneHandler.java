@@ -17,8 +17,8 @@ import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-/** Integration for the Grindstone. */
-@ZenClass("mods.crossroads.Grindstone")
+/** Integration for the Millstone. */
+@ZenClass("mods.crossroads.Millstone")
 public class GrindstoneHandler{
 
 	/** Add a new recipe.
@@ -76,7 +76,7 @@ public class GrindstoneHandler{
 
 		@Override
 		public String describe(){
-			return "Adding Grindstone recipe for " + input;
+			return "Adding Millstone recipe for " + input;
 		}
 	}
 
@@ -121,7 +121,7 @@ public class GrindstoneHandler{
 
 		@Override
 		public String describe(){
-			return "Removing Grindstone recipe for " + input;
+			return "Removing Millstone recipe for " + input;
 		}
 	}
 }

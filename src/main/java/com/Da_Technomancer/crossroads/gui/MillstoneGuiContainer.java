@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.gui.container.GrindstoneContainer;
-import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
+import com.Da_Technomancer.crossroads.gui.container.MillstoneContainer;
+import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,14 +10,14 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
-public class GrindstoneGuiContainer extends GuiContainer{
+public class MillstoneGuiContainer extends GuiContainer{
 
 	private IInventory playerInv;
-	private GrindstoneTileEntity te;
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/grindstone_gui.png");
+	private MillstoneTileEntity te;
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/millstone_gui.png");
 
-	public GrindstoneGuiContainer(IInventory playerInv, GrindstoneTileEntity te){
-		super(new GrindstoneContainer(playerInv, te));
+	public MillstoneGuiContainer(IInventory playerInv, MillstoneTileEntity te){
+		super(new MillstoneContainer(playerInv, te));
 		this.playerInv = playerInv;
 		this.te = te;
 
@@ -42,13 +42,13 @@ public class GrindstoneGuiContainer extends GuiContainer{
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		String s = I18n.format("container.grindstone");
+		String s = I18n.format("container.millstone");
 		fontRenderer.drawString(s, 88 - fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		fontRenderer.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 72, 4210752);
 	}
 
 	private int getScaledProgress(){
-		return (int) Math.ceil(te.getProgress() * 17 / GrindstoneTileEntity.REQUIRED);
+		return (int) Math.ceil(te.getProgress() * 17 / MillstoneTileEntity.REQUIRED);
 	}
 
 }

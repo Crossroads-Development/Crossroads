@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-public class GrindstoneTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class MillstoneTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private ItemStack[] inventory =  {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
 

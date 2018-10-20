@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.rotary.GrindstoneTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -25,11 +25,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Grindstone extends BlockContainer{
+public class Millstone extends BlockContainer{
 
-	public Grindstone(){
+	public Millstone(){
 		super(Material.ROCK);
-		String name = "grindstone";
+		String name = "millstone";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -41,14 +41,14 @@ public class Grindstone extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			playerIn.openGui(Main.instance, GuiHandler.GRINDSTONE_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(Main.instance, GuiHandler.MILLSTONE_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new GrindstoneTileEntity();
+		return new MillstoneTileEntity();
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class Grindstone extends BlockContainer{
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		GrindstoneTileEntity te = (GrindstoneTileEntity) world.getTileEntity(pos);
+		MillstoneTileEntity te = (MillstoneTileEntity) world.getTileEntity(pos);
 		te.dropItems();
 		super.breakBlock(world, pos, blockstate);
 	}

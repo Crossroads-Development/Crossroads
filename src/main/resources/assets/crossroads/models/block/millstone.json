@@ -1,0 +1,8 @@
+{
+	"parent": "block/cube_bottom_top",
+	"textures": {
+		"side": "crossroads:blocks/millstone",
+		"top": "crossroads:blocks/millstone_top",
+		"bottom": "crossroads:blocks/millstone_bottom"
+	}
+}

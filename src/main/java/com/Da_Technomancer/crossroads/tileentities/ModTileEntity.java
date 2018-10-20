@@ -17,7 +17,7 @@ public class ModTileEntity{
 		register(HeatCableTileEntity.class, "heat_cable");
 		register(MechanismTileEntity.class, "mechanism");
 		register(MasterAxisTileEntity.class, "master_axis");
-		register(GrindstoneTileEntity.class, "grindstone");
+		register(MillstoneTileEntity.class, "grindstone");
 		register(HeatingCrucibleTileEntity.class, "heating_crucible");
 		register(FluidTubeTileEntity.class, "fluid_tube");
 		register(SteamBoilerTileEntity.class, "steam_boiler");
