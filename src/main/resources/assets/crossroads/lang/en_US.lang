@@ -75,10 +75,10 @@ item.omnimeter.name=OmniMeter
 tile.fluid_tank.name=Fluid Tank
 fluid.tile.water=Water
 fluid.tile.lava=Lava
-tile.fuel_heater.name=Fuel Heater
-tile.heating_chamber.name=Heating Chamber
-container.heating_chamber=Heating Chamber
-container.fuel_heater=Fuel Heater
+tile.heating_chamber.name=Smelter
+container.heating_chamber=Smelter
+tile.fuel_heater.name=Firebox
+container.fuel_heater=Firebox
 tile.salt_reactor.name=Salt Reactor
 tile.fluid_cooling_chamber.name=Fluid Cooling Chamber
 item.vacuum.name=Vacuum Cleaner
@@ -292,6 +292,7 @@ item.clutch_inverted_copshowium.name=Inverted Copshowium Clutch
 tile.wind_turbine.name=Wind Turbine
 tile.solar_heater.name=Solar Heater
 tile.heat_reservoir.name=Heat Reservoir
+tile.stirling_engine.name=Stirling Engine
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

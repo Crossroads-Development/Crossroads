@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipe>{
 
-	public static final String ID = Main.MODID + ".grindstone";
+	public static final String ID = Main.MODID + ".millstone";
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;

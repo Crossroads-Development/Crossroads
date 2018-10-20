@@ -27,7 +27,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	@Override
 	public void register(@Nonnull IModRegistry registry){
 
-		registry.addRecipeCatalyst(new ItemStack(ModBlocks.grindstone, 1), GrindstoneCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(ModBlocks.millstone, 1), GrindstoneCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.fluidCoolingChamber, 1), FluidCoolingCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.heatingCrucible, 1), HeatingCrucibleCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.heatExchanger, 1), HeatExchangerCategory.ID);

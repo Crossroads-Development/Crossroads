@@ -80,7 +80,7 @@ public class GrindstoneHandler{
 		}
 	}
 
-	/** Remove a grindstone recipe for the input item stack.
+	/** Remove a millstone recipe for the input item stack.
 	 *
 	 * @param input the input for the recipe */
 	@ZenMethod
@@ -93,7 +93,7 @@ public class GrindstoneHandler{
 		CraftTweakerAPI.apply(new Remove(new ItemRecipePredicate(in.getItem(), in.getMetadata())));
 	}
 
-	/** Remove a grindstone recipe for the ore dictionary entry of the input item stack.
+	/** Remove a millstone recipe for the ore dictionary entry of the input item stack.
 	 *
 	 * @param input the input for the recipe
 	 */
@@ -106,7 +106,7 @@ public class GrindstoneHandler{
 		CraftTweakerAPI.apply(new Remove(new OreDictCraftingStack(key)));
 	}
 
-	/** Operation to remove a grindstone recipe. */
+	/** Operation to remove a millstone recipe. */
 	private static class Remove implements IAction{
 		RecipePredicate<ItemStack> input;
 

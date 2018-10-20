@@ -66,7 +66,7 @@ public class Millstone extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: 10");
+		tooltip.add("I: 200");
 		tooltip.add("Consumes: Up to 10J/t while running");
 		tooltip.add("Reaches peak speed above 10 rad/s");
 	}

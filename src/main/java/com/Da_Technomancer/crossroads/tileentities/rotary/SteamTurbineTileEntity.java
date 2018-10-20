@@ -76,12 +76,14 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		limit = Math.min(limit, (CAPACITY - (waterContent == null ? 0 : waterContent.amount)) / 100);
 		limit = Math.min(limit, LIMIT);
 		if(limit != 0){
-			axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket(false) / EnergyConverters.degPerJoule(false), true, true);
 			steamContent.amount -= limit * 100;
 			if(steamContent.amount <= 0){
 				steamContent = null;
 			}
 			waterContent = new FluidStack(BlockDistilledWater.getDistilledWater(), (waterContent == null ? 0 : waterContent.amount) + (100 * limit));
+			if(axleHandler.hasMaster){
+				axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket(false) / EnergyConverters.degPerJoule(false), true, true);
+			}
 		}
 	}
 
@@ -121,7 +123,7 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 	private final IFluidHandler waterHandler = new WaterFluidHandler();
 	private final IFluidHandler steamHandler = new SteamFluidHandler();
 	private final IFluidHandler innerHandler = new InnerFluidHandler();
-	private final IAxleHandler axleHandler = new AxleHandler();
+	private final AxleHandler axleHandler = new AxleHandler();
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
@@ -157,6 +159,8 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 
 	private class AxleHandler implements IAxleHandler{
 
+		private boolean hasMaster;
+
 		@Override
 		public double[] getMotionData(){
 			return motionData;
@@ -174,38 +178,17 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 
 			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
 			updateKey = key;
+			hasMaster = true;
 		}
 
 		@Override
 		public double getMoInertia(){
-			return 8;
+			return 80;
 		}
 
 		@Override
 		public double getRotationRatio(){
 			return rotRatio;
-		}
-
-		@Override
-		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
-			if(allowInvert && absolute){
-				motionData[1] += energy;
-			}else if(allowInvert){
-				motionData[1] += energy * Math.signum(motionData[1]);
-			}else if(absolute){
-				int sign = (int) Math.signum(motionData[1]);
-				motionData[1] += energy;
-				if(sign != 0 && Math.signum(motionData[1]) != sign){
-					motionData[1] = 0;
-				}
-			}else{
-				int sign = (int) Math.signum(motionData[1]);
-				motionData[1] += energy * ((double) sign);
-				if(Math.signum(motionData[1]) != sign){
-					motionData[1] = 0;
-				}
-			}
-			markDirty();
 		}
 
 		@Override
@@ -216,6 +199,11 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		@Override
 		public boolean shouldManageAngle(){
 			return false;
+		}
+
+		@Override
+		public void disconnect(){
+			hasMaster = false;
 		}
 	}
 	

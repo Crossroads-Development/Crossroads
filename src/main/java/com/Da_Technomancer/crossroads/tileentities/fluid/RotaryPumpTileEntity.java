@@ -114,8 +114,8 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 		return nbt;
 	}
 
-	private final IFluidHandler pumpedHandler = new PumpedFluidHandler();
-	private final IAxleHandler axleHandler = new AxleHandler();
+	private final PumpedFluidHandler pumpedHandler = new PumpedFluidHandler();
+	private final AxleHandler axleHandler = new AxleHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -164,7 +164,7 @@ public class RotaryPumpTileEntity extends TileEntity implements ITickable, IIntR
 
 		@Override
 		public double getMoInertia(){
-			return 8;
+			return 80;
 		}
 
 		@Override

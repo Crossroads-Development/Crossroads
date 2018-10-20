@@ -72,7 +72,7 @@ public class RotaryPump extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: 8");
+		tooltip.add("I: 80");
 		tooltip.add("Consumes: Up to 50J/t while running");
 	}
 }

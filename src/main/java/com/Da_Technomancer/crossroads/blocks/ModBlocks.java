@@ -25,7 +25,7 @@ public class ModBlocks{
 	public static MasterAxis masterAxis;
 	public static FluidTube fluidTube;
 	public static HeatingCrucible heatingCrucible;
-	public static Millstone grindstone;
+	public static Millstone millstone;
 	public static SteamBoiler steamBoiler;
 	public static BlockSalt blockSalt;
 	public static FluidVoid fluidVoid;
@@ -117,6 +117,7 @@ public class ModBlocks{
 	public static WindTurbine windTurbine;
 	public static SolarHeater solarHeater;
 	public static HeatReservoir heatReservoir;
+	public static StirlingEngine stirlingEngine;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -160,7 +161,7 @@ public class ModBlocks{
 
 	public static void init(){
 		masterAxis = new MasterAxis();
-		grindstone = new Millstone();
+		millstone = new Millstone();
 		sextupleGear = new Mechanism();
 		largeGearMaster = new LargeGearMaster();
 		largeGearSlave = new LargeGearSlave();
@@ -256,6 +257,7 @@ public class ModBlocks{
 		windTurbine = new WindTurbine();
 		solarHeater = new SolarHeater();
 		heatReservoir = new HeatReservoir();
+		stirlingEngine = new StirlingEngine();
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -45,13 +45,13 @@ public class WindTurbineTileEntity extends TileEntity implements ITickable, IInf
 		return oldState.getBlock() != newState.getBlock();
 	}
 
+	public static final double POWER_PER_LEVEL = 10D;
 	private boolean newlyPlaced = false;
 	private double[] motionData = new double[4];
 	/**
 	 * 0: angle, 1: clientW
 	 */
 	private float[] angleW = new float[2];
-	public static final double POWER_PER_LEVEL = 10D;
 	private int level = 1;
 	private boolean running = false;
 

@@ -348,7 +348,7 @@ public class MillstoneTileEntity extends TileEntity implements ITickable, IInfoT
 
 		@Override
 		public double getMoInertia(){
-			return 10;
+			return 200;
 		}
 
 		@Override
