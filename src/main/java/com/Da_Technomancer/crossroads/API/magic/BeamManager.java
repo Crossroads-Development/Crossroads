@@ -105,16 +105,12 @@ public class BeamManager{
 	}
 
 	public int getPacket(){
-		return lastSent == null || lastSent.getRGB() == null ? 0 : ((dist - 1) << 24) + (lastSent.getRGB().getRGB() & 0xFFFFFF) + ((lastSent.getPower() >= 64 ? 0 : (int) Math.sqrt(lastSent.getPower()) - 1) << 28);
+		return lastSent == null || lastSent.getRGB() == null ? 0 : ((dist - 1) << 24) + (lastSent.getRGB().getRGB() & 0xFFFFFF) + (Math.min(7, (int) Math.round(Math.sqrt(lastSent.getPower())) - 1) << 28);
 	}
 
 	@Nullable
 	public static Triple<Color, Integer, Integer> getTriple(int packet){
 		return packet == 0 ? null : Triple.of(Color.decode(Integer.toString(packet & 0xFFFFFF)), ((packet >> 24) & 15) + 1, (packet >> 28) + 1);
-	}
-
-	public int getDist(){
-		return dist;
 	}
 
 	@Nullable

@@ -70,12 +70,12 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 				}
 
 				if(ModConfig.rotateBeam.getBoolean()){
-					GlStateManager.rotate(beam.getWorld().getTotalWorldTime() * 2, 0, 1, 0);
+					GlStateManager.rotate((partialTicks + (float) beam.getWorld().getTotalWorldTime()) * 2F, 0, 1, 0);
 				}
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
 
-				double halfWidth = trip[dir].getRight().doubleValue() / 16D;
+				double halfWidth = trip[dir].getRight().doubleValue() / (Math.sqrt(2D) * 16D);
 				int length = trip[dir].getMiddle();
 
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
