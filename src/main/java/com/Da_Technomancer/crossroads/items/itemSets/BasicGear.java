@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -44,7 +44,7 @@ public class BasicGear extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: " + MiscOp.betterRound(type.getDensity() / 8, 2) * .125);
+		tooltip.add("I: " + MiscUtil.betterRound(type.getDensity() / 8, 2) * .125);
 	}
 
 	@Override

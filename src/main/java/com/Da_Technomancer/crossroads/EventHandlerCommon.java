@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -140,12 +140,12 @@ public final class EventHandlerCommon{
 			for(Entry<Long, ChunkField> datum : data.fieldNodes.entrySet()){
 				Long key = datum.getKey();
 				try{
-					if(datum.getValue().tick(e.world, MiscOp.getChunkPosFromLong(key))){
+					if(datum.getValue().tick(e.world, MiscUtil.getChunkPosFromLong(key))){
 						toRemove.add(key);
 					}
 				}catch(Exception ex){
 					toRemove.add(key);
-					Main.logger.log(Level.ERROR, "Caught an exception while calculating fields in dim: " + e.world.provider.getDimension() + ", ChunkPos: " + MiscOp.getChunkPosFromLong(key).toString(), ex);
+					Main.logger.log(Level.ERROR, "Caught an exception while calculating fields in dim: " + e.world.provider.getDimension() + ", ChunkPos: " + MiscUtil.getChunkPosFromLong(key).toString(), ex);
 				}
 			}
 
@@ -176,11 +176,11 @@ public final class EventHandlerCommon{
 				int potential = 8;
 
 				BlockPos entityPos = ent.getPosition();
-				long entityChunk = MiscOp.getLongFromChunkPos(new ChunkPos(entityPos));
+				long entityChunk = MiscUtil.getLongFromChunkPos(new ChunkPos(entityPos));
 				if(fields.containsKey(entityChunk)){
 					ChunkField entFields = fields.get(entityChunk);
-					int chunkRelX = MiscOp.getChunkRelativeCoord(entityPos.getX());
-					int chunkRelZ = MiscOp.getChunkRelativeCoord(entityPos.getZ());
+					int chunkRelX = MiscUtil.getChunkRelativeCoord(entityPos.getX());
+					int chunkRelZ = MiscUtil.getChunkRelativeCoord(entityPos.getZ());
 					potential = 1 + entFields.nodes[chunkRelX][chunkRelZ];
 					if(entFields.nodes[chunkRelX][chunkRelZ] > entFields.flux){
 						potential = 0;
@@ -203,7 +203,7 @@ public final class EventHandlerCommon{
 								continue;
 							}
 
-							ChunkField watchFields = fieldsProt.get(MiscOp.getLongFromChunkPos(prototypes.get(index).chunk));
+							ChunkField watchFields = fieldsProt.get(MiscUtil.getLongFromChunkPos(prototypes.get(index).chunk));
 							if(watchFields != null){
 								potential *= 1 + watchFields.nodes[offsetX][offsetZ];
 								potential /= 8;

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -82,7 +82,7 @@ public class OmniMeter extends Item{
 
 
 			if(te.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
-				chat.add("Total Energy: " + MiscOp.betterRound(te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy(), 3));
+				chat.add("Total Energy: " + MiscUtil.betterRound(te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy(), 3));
 			}
 
 			if(te.hasCapability(CapabilityEnergy.ENERGY, null)){
@@ -94,7 +94,7 @@ public class OmniMeter extends Item{
 		if(te instanceof BeamRenderTEBase){
 			MagicUnit[] mag = ((BeamRenderTEBase) te).getLastFullSent();
 			if(mag != null){
-				NBTTagCompound nbt = MiscOp.getPlayerTag(player);
+				NBTTagCompound nbt = MiscUtil.getPlayerTag(player);
 				if(!nbt.hasKey("elements")){
 					nbt.setTag("elements", new NBTTagCompound());
 				}

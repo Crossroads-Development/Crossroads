@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
@@ -76,7 +76,7 @@ public class DetailedCrafterContainer extends Container{
 	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn){
 		ItemStack out;
-		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscOp.getPlayerTag(playerInv.player);
+		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscUtil.getPlayerTag(playerInv.player);
 		if(!world.isRemote && !nbt.hasKey("path")){
 			nbt.setTag("path", new NBTTagCompound());
 		}
@@ -279,10 +279,10 @@ public class DetailedCrafterContainer extends Container{
 		@Override
 		public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack){
 			onCrafting(stack);
-			if(!player.world.isRemote && !MiscOp.getPlayerTag(player).hasKey("path")){
-				MiscOp.getPlayerTag(player).setTag("path", new NBTTagCompound());
+			if(!player.world.isRemote && !MiscUtil.getPlayerTag(player).hasKey("path")){
+				MiscUtil.getPlayerTag(player).setTag("path", new NBTTagCompound());
 			}
-			NBTTagCompound nbt = player.world.isRemote ? StoreNBTToClient.clientPlayerTag.getCompoundTag("path") : MiscOp.getPlayerTag(player).getCompoundTag("path");
+			NBTTagCompound nbt = player.world.isRemote ? StoreNBTToClient.clientPlayerTag.getCompoundTag("path") : MiscUtil.getPlayerTag(player).getCompoundTag("path");
 			IRecipe recipe = null;
 			if(nbt.getBoolean("technomancy")){
 				recipe = findMatchingSpecialRecipe(craftMatrix, player.world, RecipeHolder.technomancyRecipes);

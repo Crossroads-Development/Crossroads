@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -54,7 +54,7 @@ public class PrototypeInfo{
 				nbt.setLong("pos" + i, portPos[i].toLong());
 			}
 		}
-		nbt.setLong("chunk", MiscOp.getLongFromChunkPos(chunk));
+		nbt.setLong("chunk", MiscUtil.getLongFromChunkPos(chunk));
 		return nbt;
 	}
 	
@@ -65,6 +65,6 @@ public class PrototypeInfo{
 			ports[i] = nbt.hasKey("port" + i) ? PrototypePortTypes.valueOf(nbt.getString("port" + i)) : null;
 			portPos[i] = nbt.hasKey("pos" + i) ? BlockPos.fromLong(nbt.getLong("pos" + i)) : null;
 		}
-		return new PrototypeInfo(ports, portPos, MiscOp.getChunkPosFromLong(nbt.getLong("chunk")));
+		return new PrototypeInfo(ports, portPos, MiscUtil.getChunkPosFromLong(nbt.getLong("chunk")));
 	}
 }

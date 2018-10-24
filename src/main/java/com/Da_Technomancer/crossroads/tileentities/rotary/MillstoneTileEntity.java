@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
@@ -36,9 +36,9 @@ public class MillstoneTileEntity extends TileEntity implements ITickable, IInfoT
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
 		chat.add("Progress: " + (int) (progress) + "/" + (int) REQUIRED);
-		chat.add("Speed: " + MiscOp.betterRound(motionData[0], 3));
-		chat.add("Energy: " + MiscOp.betterRound(motionData[1], 3));
-		chat.add("Power: " + MiscOp.betterRound(motionData[2], 3));
+		chat.add("Speed: " + MiscUtil.betterRound(motionData[0], 3));
+		chat.add("Energy: " + MiscUtil.betterRound(motionData[1], 3));
+		chat.add("Power: " + MiscUtil.betterRound(motionData[2], 3));
 		chat.add("I: " + axleHandler.getMoInertia() + ", Rotation Ratio: " + axleHandler.getRotationRatio());
 	}
 
@@ -134,8 +134,13 @@ public class MillstoneTileEntity extends TileEntity implements ITickable, IInfoT
 	}
 
 	private ItemStack[] getOutput(){
-		for(Entry<RecipePredicate<ItemStack>, ItemStack[]> recipe: RecipeHolder.grindRecipes.entrySet()){
+		for(Entry<RecipePredicate<ItemStack>, ItemStack[]> recipe: RecipeHolder.millRecipes.entrySet()){
 			if(recipe.getKey().test(inventory[0])){
+				for(ItemStack stack : recipe.getValue()){
+					if(stack != null && stack.isEmpty()){
+						return null;//An empty but nonnull stack means the output doesn't exist- for example a platinum ore grinding recipe if there is no platinum dust installed
+					}
+				}
 				return recipe.getValue();
 			}
 		}

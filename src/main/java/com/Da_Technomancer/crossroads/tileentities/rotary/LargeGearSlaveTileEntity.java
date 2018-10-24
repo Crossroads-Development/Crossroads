@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
@@ -33,9 +33,9 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 			return;
 		}
 
-		chat.add("Speed: " + MiscOp.betterRound(axle.getMotionData()[0], 3));
-		chat.add("Energy: " + MiscOp.betterRound(axle.getMotionData()[1], 3));
-		chat.add("Power: " + MiscOp.betterRound(axle.getMotionData()[2], 3));
+		chat.add("Speed: " + MiscUtil.betterRound(axle.getMotionData()[0], 3));
+		chat.add("Energy: " + MiscUtil.betterRound(axle.getMotionData()[1], 3));
+		chat.add("Power: " + MiscUtil.betterRound(axle.getMotionData()[2], 3));
 		chat.add("I: " + axle.getMoInertia() + ", Rotation Ratio: " + axle.getRotationRatio());
 	}
 

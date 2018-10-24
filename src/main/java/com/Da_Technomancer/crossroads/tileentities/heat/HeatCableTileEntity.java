@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
@@ -31,7 +31,7 @@ public class HeatCableTileEntity extends TileEntity implements ITickable, IInfoT
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
-		chat.add("Temp: " + MiscOp.betterRound(heatHandler.getTemp(), 3) + "°C");
+		chat.add("Temp: " + MiscUtil.betterRound(heatHandler.getTemp(), 3) + "°C");
 		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -50,26 +50,18 @@ public final class ModCrafting{
 	@SuppressWarnings("unchecked")
 	public static void init(){
 
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("oreCopper"), new ItemStack[] {MiscOp.getOredictStack("dustCopper", 2), new ItemStack(Blocks.SAND)});
-		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Items.WHEAT, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
-		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Blocks.PUMPKIN, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
-		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Items.MELON, 0), new ItemStack[] {new ItemStack(Items.MELON_SEEDS, 3)});
-		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Items.BONE, 0), new ItemStack[] {new ItemStack(Items.DYE, 5, EnumDyeColor.WHITE.getDyeDamage())});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("blockCoal"), new ItemStack[] {new ItemStack(Items.GUNPOWDER, 1)});
-		RecipeHolder.grindRecipes.put(new ItemRecipePredicate(Blocks.NETHER_WART_BLOCK, 0), new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("cropPotato"), new ItemStack[] {new ItemStack(ModItems.mashedPotato, 1)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("gravel"), new ItemStack[] {new ItemStack(Items.FLINT)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("blockRedstone"), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("cobblestone"), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("ingotCopper"), new ItemStack[] {MiscOp.getOredictStack("dustCopper", 1)});
-		RecipeHolder.grindRecipes.put(new OreDictCraftingStack("stone"),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
+		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Items.WHEAT, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
+		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Blocks.PUMPKIN, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
+		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Items.MELON, 0), new ItemStack[] {new ItemStack(Items.MELON_SEEDS, 3)});
+		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Items.BONE, 0), new ItemStack[] {new ItemStack(Items.DYE, 5, EnumDyeColor.WHITE.getDyeDamage())});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("blockCoal"), new ItemStack[] {new ItemStack(Items.GUNPOWDER, 1)});
+		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Blocks.NETHER_WART_BLOCK, 0), new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("cropPotato"), new ItemStack[] {new ItemStack(ModItems.mashedPotato, 1)});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("gravel"), new ItemStack[] {new ItemStack(Items.FLINT)});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("blockRedstone"), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("cobblestone"), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("stone"),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
 
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotIron"), new FluidStack(BlockMoltenIron.getMoltenIron(), 144), "minecraft:blocks/iron_block"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotGold"), new FluidStack(BlockMoltenGold.getMoltenGold(), 144), "minecraft:blocks/gold_block"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotTin"), new FluidStack(BlockMoltenTin.getMoltenTin(), 144), Main.MODID + ":blocks/block_tin"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingotCopper"), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/block_copper"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("dustCopper"), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/ore_native_copper"));
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("oreCopper"), new FluidStack(BlockMoltenCopper.getMoltenCopper(), 144), Main.MODID + ":blocks/ore_copper"));
 		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("cobblestone"), new FluidStack(FluidRegistry.LAVA, 200), "minecraft:blocks/cobblestone"));
 
 		// Heating, order of decreasing effectiveness
@@ -82,10 +74,13 @@ public final class ModCrafting{
 		RecipeHolder.envirHeatSource.put(Blocks.ICE, Pair.of(true, Triple.of(Blocks.WATER.getDefaultState(), -70D, -50D)));
 		RecipeHolder.envirHeatSource.put(Blocks.PACKED_ICE, Pair.of(true, Triple.of(Blocks.WATER.getDefaultState(), -140D, -100D)));
 
-		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenIron.getMoltenIron(), Pair.of(144, Triple.of(new ItemStack(Items.IRON_INGOT, 1), 1500D, 100D)));
-		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenGold.getMoltenGold(), Pair.of(144, Triple.of(new ItemStack(Items.GOLD_INGOT, 1), 1000D, 100D)));
-		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenTin.getMoltenTin(), Pair.of(144, Triple.of(new ItemStack(OreSetup.ingotTin, 1), 200D, 100D)));
-		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopper.getMoltenCopper(), Pair.of(144, Triple.of(new ItemStack(OreSetup.ingotCopper, 1), 1000D, 100D)));
+//		TODO remove
+//		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenIron.getMoltenIron(), Pair.of(144, Triple.of(new ItemStack(Items.IRON_INGOT, 1), 1500D, 100D)));
+//		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenGold.getMoltenGold(), Pair.of(144, Triple.of(new ItemStack(Items.GOLD_INGOT, 1), 1000D, 100D)));
+//		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenTin.getMoltenTin(), Pair.of(144, Triple.of(new ItemStack(OreSetup.ingotTin, 1), 200D, 100D)));
+//		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopper.getMoltenCopper(), Pair.of(144, Triple.of(new ItemStack(OreSetup.ingotCopper, 1), 1000D, 100D)));
+
+
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.LAVA, Pair.of(1000, Triple.of(new ItemStack(Blocks.OBSIDIAN, 1), 1000D, 500D)));
 		RecipeHolder.fluidCoolingRecipes.put(BlockDistilledWater.getDistilledWater(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE, 1), -20D, 2D)));
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE, 1), -10D, 1D)));
@@ -142,23 +137,7 @@ public final class ModCrafting{
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 12));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 16));
 
-//		//Custom tool
-//		//(sword)
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("sword", new byte[][] {{1, 0, 0}, {1, 0, 0}, {2, 0, 0}}));
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("sword", new byte[][] {{0, 1, 0}, {0, 1, 0}, {0, 2, 0}}));
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("sword", new byte[][] {{0, 0, 1}, {0, 0, 1}, {0, 0, 2}}));
-//		//(pickaxe)
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("pickaxe", new byte[][] {{1, 1, 1}, {0, 2, 0}, {0, 2, 0}}));
-//		//(shovel)
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("shovel", new byte[][] {{1, 0, 0}, {2, 0, 0}, {2, 0, 0}}));
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("shovel", new byte[][] {{0, 1, 0}, {0, 2, 0}, {0, 2, 0}}));
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("shovel", new byte[][] {{0, 0, 1}, {0, 0, 2}, {0, 0, 2}}));
-//		//(axe)
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{1, 1, 0}, {1, 2, 0}, {0, 2, 0}}));
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{0, 1, 1}, {0, 2, 1}, {0, 2, 0}}));
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{1, 1, 0}, {2, 1, 0}, {2, 0, 0}}));
-//		RecipeHolder.alchemyRecipes.add(new CustomToolRecipe("axe", new byte[][] {{0, 1, 1}, {0, 1, 2}, {0, 0, 2}}));
-		//Phial
+//		//Phial
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.phial, 2, 0), "*", "*", "*", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.phial, 2, 1), "*", "*", "*", '*', "gemAlcCryst"));
 		//Florence Flask
@@ -310,6 +289,7 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.ingotCopper, 9), "blockCopper"));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.ingotCopper, 1), "***", "***", "***", '*', "nuggetCopper"));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockCopper, 1), "***", "***", "***", '*', "ingotCopper"));
+		GameRegistry.addSmelting(new ItemStack(OreSetup.oreCopper, 1), new ItemStack(OreSetup.ingotCopper, 1), .7F);
 
 		//Bronze
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.nuggetBronze, 9), "ingotBronze"));
@@ -331,9 +311,9 @@ public final class ModCrafting{
 		// Axle
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.axleIron, 2), "#", "?", "#", '#', "ingotIron", '?', "stickWood"));
 		// Bronze
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.ingotBronze, 1), "###", "#?#", "###", '#', "nuggetCopper", '?', "nuggetTin"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockBronze, 1), "###", "#?#", "###", '#', "ingotCopper", '?', "ingotTin"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockBronze, 9), "###", "#?#", "###", '#', "blockCopper", '?', "blockTin"));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.nuggetBronze, 4), "nuggetCopper", "nuggetCopper", "nuggetCopper", "nuggetTin"));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.ingotBronze, 4), "ingotCopper", "ingotCopper", "ingotCopper", "ingotTin"));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.blockBronze, 4), "blockCopper", "blockCopper", "blockCopper", "blockTin"));
 		// Pipe
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidTube, 8), "###", "   ", "###", '#', "ingotBronze"));
 		// Hand Crank

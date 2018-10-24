@@ -3,35 +3,27 @@
 	"variants": {
 		"steam": {
 			"model": "forge:fluid",
-			"custom": { "fluid": "steam" }
+			"custom": {
+				"fluid": "steam"
+			}
 		},
 		"distilled_water": {
 			"model": "forge:fluid",
-			"custom": { "fluid": "distilled_water" }
-		},
-		"copper": {
-			"model": "forge:fluid",
-			"custom": { "fluid": "copper" }
+			"custom": {
+				"fluid": "distilled_water"
+			}
 		},
 		"liquid_fat": {
 			"model": "forge:fluid",
-			"custom": { "fluid": "liquid_fat" }
+			"custom": {
+				"fluid": "liquid_fat"
+			}
 		},
 		"copshowium": {
 			"model": "forge:fluid",
-			"custom": { "fluid": "copshowium" }
-		},
-		"iron": {
-			"model": "forge:fluid",
-			"custom": { "fluid": "iron" }
-		},
-		"gold": {
-			"model": "forge:fluid",
-			"custom": { "fluid": "gold" }
-		},
-		"tin": {
-			"model": "forge:fluid",
-			"custom": { "fluid": "tin" }
+			"custom": {
+				"fluid": "copshowium"
+			}
 		}
 	}
 }

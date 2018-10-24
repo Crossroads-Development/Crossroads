@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
@@ -42,9 +42,9 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
-		chat.add("Speed: " + MiscOp.betterRound(motionData[0], 3));
-		chat.add("Energy: " + MiscOp.betterRound(motionData[1], 3));
-		chat.add("Power: " + MiscOp.betterRound(motionData[2], 3));
+		chat.add("Speed: " + MiscUtil.betterRound(motionData[0], 3));
+		chat.add("Energy: " + MiscUtil.betterRound(motionData[1], 3));
+		chat.add("Power: " + MiscUtil.betterRound(motionData[2], 3));
 		chat.add("I: " + inertia + ", Rotation Ratio: " + handlerMain.getRotationRatio());
 	}
 
@@ -56,7 +56,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 
-		inertia = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
+		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
 	}
 
 	public GearTypes getMember(){
@@ -103,7 +103,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		}
 		// member
 		type = nbt.hasKey("memb") ? GearTypes.valueOf(nbt.getString("memb")) : null;
-		inertia = type == null ? 0 : MiscOp.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);
+		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);
 		//1.125 because r*r/2 so 1.5*1.5/2
 
 		angleW[0] = nbt.getFloat("angle");

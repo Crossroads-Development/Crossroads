@@ -32,10 +32,6 @@ public class ModWorldGen implements IWorldGenerator{
 
 				if(ModConfig.genTinOre.getBoolean())
 					runGenerator(new WorldGenMinable(OreSetup.oreTin.getDefaultState(), 4), world, random, chunkX, chunkZ, 5, 2, 30);
-
-				if(ModConfig.genNativeCopperOre.getBoolean())
-					runGenerator(new WorldGenMinable(OreSetup.oreNativeCopper.getDefaultState(), 6), world, random, chunkX, chunkZ, 8, 50, 70);
-
 				break;
 			case -1: // Nether
 				if(ModConfig.genRubyOre.getBoolean())
@@ -47,8 +43,6 @@ public class ModWorldGen implements IWorldGenerator{
 					// an average of about 1 ruby per chunk. Happy Mining!
 					runGenerator(new SingleBlockGen(OreSetup.oreRuby.getDefaultState(), BlockMatcher.forBlock(Blocks.QUARTZ_ORE)), world, random, chunkX, chunkZ, 1000, 8, 116);
 
-				break;
-			case 1: // End
 				break;
 		}
 	}

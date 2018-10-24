@@ -58,7 +58,6 @@ public final class ModItems{
 	public static BasicItem dustSalt;
 	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
-	public static BasicItem dustCopper;
 	public static OmniMeter omnimeter;
 	public static Vacuum vacuum;
 	public static MagentaBread magentaBread;
@@ -132,7 +131,6 @@ public final class ModItems{
 		debugGearWriter = new CheatWandRotary();
 		handCrank = new HandCrank();
 		debugHeatWriter = new CheatWandHeat();
-		dustCopper = new BasicItem("dust_copper", "dustCopper");
 		dustSalt = new BasicItem("dust_salt", "dustSalt");
 		mashedPotato = new MashedPotato();
 		omnimeter = new OmniMeter();

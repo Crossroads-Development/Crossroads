@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,8 +23,8 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
-		chat.add("Upper Temp: " + MiscOp.betterRound(tempUp, 3) + "°C");
-		chat.add("Lower Temp: " + MiscOp.betterRound(tempDown, 3) + "°C");
+		chat.add("Upper Temp: " + MiscUtil.betterRound(tempUp, 3) + "°C");
+		chat.add("Lower Temp: " + MiscUtil.betterRound(tempDown, 3) + "°C");
 		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 

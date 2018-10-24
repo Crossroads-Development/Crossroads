@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
@@ -51,7 +51,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 
 	private void runCalc(){
 		FieldWorldSavedData data = FieldWorldSavedData.get(world);
-		double baseSpeed = data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos))) ? (1 + data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos))).flux) : 0;
+		double baseSpeed = data.fieldNodes.containsKey(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))) ? (1 + data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).flux) : 0;
 
 		double sumIRot = 0;
 		sumEnergy = 0;

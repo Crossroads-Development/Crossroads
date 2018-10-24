@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
@@ -38,9 +38,9 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
-		chat.add("Speed: " + MiscOp.betterRound(motionData[0], 3));
-		chat.add("Energy: " + MiscOp.betterRound(motionData[1], 3));
-		chat.add("Power: " + MiscOp.betterRound(motionData[2], 3));
+		chat.add("Speed: " + MiscUtil.betterRound(motionData[0], 3));
+		chat.add("Energy: " + MiscUtil.betterRound(motionData[1], 3));
+		chat.add("Power: " + MiscUtil.betterRound(motionData[2], 3));
 		chat.add("I: " + axleHandler.getMoInertia() + ", Rotation Ratio: " + axleHandler.getRotationRatio());
 	}
 

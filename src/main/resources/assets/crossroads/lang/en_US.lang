@@ -9,7 +9,6 @@ tile.block_ruby.name=Block of Ruby
 tile.ore_copper.name=Copper Ore
 tile.ore_tin.name=Tin Ore
 tile.ore_ruby.name=Ruby Ore
-tile.ore_native_copper.name=Native Copper Ore
 item.nugget_bronze.name=Bronze Nugget
 item.ingot_bronze.name=Bronze Ingot
 tile.block_bronze.name=Block of Bronze
@@ -53,7 +52,6 @@ tile.heating_crucible.name=Heating Crucible
 tile.rotary_pump.name=Rotary Pump
 fluid.steam=Steam
 fluid.distilled_water=Distilled Water
-fluid.copper=Molten Copper
 tile.molten_copper.name=Molten Copper Source
 tile.distilled_water.name=Distilled Water Source
 tile.steam.name=Steam Source
@@ -230,9 +228,6 @@ tile.cooling_coil_cryst.name=Crystal Cooling Coil
 tile.chemical_vent.name=Chemical Vent
 tile.reaction_chamber_glass.name=Glass Reaction Vessel
 tile.reaction_chamber_cryst.name=Crystal Reaction Vessel
-fluid.tin=Molten Tin
-fluid.gold=Molten Gold
-fluid.iron=Molten Iron
 item.liech_wrench.name=Liechtensteinian Army Wrench
 item.leyden_jar.name=Leyden Jar
 tile.tesla_coil.name=Tesla Coil
@@ -293,6 +288,18 @@ tile.wind_turbine.name=Wind Turbine
 tile.solar_heater.name=Solar Heater
 tile.heat_reservoir.name=Heat Reservoir
 tile.stirling_engine.name=Stirling Engine
+
+item.dust_metal.name=%1$s Dust
+item.gravel_metal.name=%1$s Grit
+item.clump_metal.name=%1$s Clump
+fluid.molten_metal=Molten %1$s
+tile.molten_metal.name=Molten %1$s
+
+#TODO
+#fluid.copper=Molten Copper
+#fluid.tin=Molten Tin
+#fluid.gold=Molten Gold
+#fluid.iron=Molten Iron
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

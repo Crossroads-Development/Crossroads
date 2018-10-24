@@ -34,4 +34,9 @@ public final class EnergyConverters{
 	public static double degPerJoule(boolean client){
 		return 1D / ModConfig.getConfigDouble(ModConfig.jouleWorth, client);
 	}
+
+	/**
+	 * The number of mB of molten metal in one ingot
+	 */
+	public static final int INGOT_MB = 144;
 }

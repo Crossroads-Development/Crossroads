@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.ModFluids;
 
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
@@ -46,11 +47,11 @@ public class LumenEffect implements IAlchEffect{
 		}
 		for(Predicate<IBlockState> pred : AetherEffect.FLUD_GROUP){
 			if(pred.test(oldState)){
-				if(oldState != ModFluids.distilledWater.getDefaultState() && oldState.getBlock() != ModBlocks.reactiveSpot){
+				if(oldState != BlockDistilledWater.getDistilledWater().getBlock().getDefaultState() && oldState.getBlock() != ModBlocks.reactiveSpot){
 					world.setBlockState(pos, ModBlocks.reactiveSpot.getDefaultState());
 					TileEntity te = world.getTileEntity(pos);
 					if(te instanceof ReactiveSpotTileEntity){
-						((ReactiveSpotTileEntity) te).setTarget(ModFluids.distilledWater.getDefaultState());
+						((ReactiveSpotTileEntity) te).setTarget(BlockDistilledWater.getDistilledWater().getBlock().getDefaultState());
 					}
 				}
 				return;
@@ -78,7 +79,7 @@ public class LumenEffect implements IAlchEffect{
 	public void doEffectAdv(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase, @Nullable ReagentStack[] contents){
 		IBlockState oldState = world.getBlockState(pos);
 		if(contents != null && contents[13] != null && oldState.getBlock().isAir(oldState, world, pos)){
-			world.setBlockState(pos, ModFluids.distilledWater.getDefaultState());
+			world.setBlockState(pos, BlockDistilledWater.getDistilledWater().getBlock().getDefaultState());
 			return;
 		}
 		doEffect(world, pos, amount, temp, phase);

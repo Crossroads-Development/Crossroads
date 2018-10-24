@@ -19,8 +19,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
 
-/**This class is for holding operations that are used often.*/
-public final class MiscOp{
+public final class MiscUtil{
 
 	public static double betterRound(double numIn, int decPlac){
 		return Math.round(numIn * Math.pow(10, decPlac)) / Math.pow(10D, decPlac);

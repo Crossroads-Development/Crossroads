@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects.goggles;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendFieldsToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
@@ -24,7 +24,7 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 		OmniMeter.measure(chat, player, player.world, ray.getBlockPos(), ray.sideHit, (float) ray.hitVec.x, (float) ray.hitVec.y, (float) ray.hitVec.z);
 
 		if(world.getTotalWorldTime() % 5 == 1){
-			long key = MiscOp.getLongFromChunkPos(new ChunkPos(player.getPosition()));
+			long key = MiscUtil.getLongFromChunkPos(new ChunkPos(player.getPosition()));
 			if(FieldWorldSavedData.get(world).fieldNodes.containsKey(key) && FieldWorldSavedData.get(world).fieldNodes.get(key).isActive){
 				ModPackets.network.sendTo(new SendFieldsToClient(FieldWorldSavedData.get(world).fieldNodes.get(key), key), (EntityPlayerMP) player);
 			}else{

@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.items.crafting.CustomToolRecipe;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.ingredients.IIngredients;
@@ -18,7 +17,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class DetailedCrafterRecipe implements IRecipeWrapper{
 	private Object leaf;
 
 	/**
-	 * @param recipe
+	 * @param recipe The recipe
 	 * @param type Technomancy: 0, Alchemy: 1, Witchcraft: NYI (2)
 	 */
 	public DetailedCrafterRecipe(IRecipe recipe, int type){
@@ -82,15 +80,6 @@ public class DetailedCrafterRecipe implements IRecipeWrapper{
 		}else if(recipe instanceof ShapelessOreRecipe){
 			NonNullList<Ingredient> input = recipe.getIngredients();
 			ingredients.setInputLists(ItemStack.class, ImmutableList.of(format(input.get(0)), format(input.size() < 2 ? null : input.get(1)), format(input.size() < 3 ? null : input.get(2)), format(input.size() < 4 ? null : input.get(3)), format(input.size() < 5 ? null : input.get(4)), format(input.size() < 6 ? null : input.get(5)), format(input.size() < 7 ? null : input.get(6)), format(input.size() < 8 ? null : input.get(7)), format(input.size() < 9 ? null : input.get(8))));
-		}else if(recipe instanceof CustomToolRecipe){
-			ArrayList<List<ItemStack>> inputList = new ArrayList<List<ItemStack>>();
-			
-			for(Ingredient ingr : recipe.getIngredients()){
-				inputList.add(format(ingr));
-			}
-			
-			ingredients.setInputLists(ItemStack.class, inputList);
-
 		}else{
 			throw new IllegalArgumentException(Main.MODNAME + ": INVALID RECIPE TYPE passed to JEI for Detailed Crafter!");
 		}

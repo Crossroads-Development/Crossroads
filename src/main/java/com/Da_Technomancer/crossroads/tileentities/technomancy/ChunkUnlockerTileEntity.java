@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.ChunkField;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
@@ -15,7 +15,7 @@ public class ChunkUnlockerTileEntity extends TileEntity implements ITickable{
 	public void update(){
 		if(!world.isRemote && world.getTotalWorldTime() % 2 == 0 && RedstoneUtil.getPowerOnSide(world, pos, EnumFacing.UP) != 0){
 			FieldWorldSavedData data = FieldWorldSavedData.get(world);
-			long key = MiscOp.getLongFromChunkPos(new ChunkPos(pos));
+			long key = MiscUtil.getLongFromChunkPos(new ChunkPos(pos));
 			if(data.fieldNodes.containsKey(key)){
 				data.fieldNodes.get(key).refreshed = true;
 			}else{

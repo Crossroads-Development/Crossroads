@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
@@ -44,7 +44,7 @@ public class ModuleGoggles extends ItemArmor{
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
 		if(!world.isRemote && stack.hasTagCompound()){
 			ArrayList<String> chat = new ArrayList<String>();
-			RayTraceResult ray = MiscOp.rayTrace(player, 8);
+			RayTraceResult ray = MiscUtil.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(stack.getTagCompound().getBoolean(lens.name())){
 					lens.doEffect(world, player, chat, ray);

@@ -21,8 +21,8 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
-		chat.add("In-Temp: " + MiscOp.betterRound(heatHandlerIn.getTemp(), 3) + "°C");
-		chat.add("Out-Temp: " + MiscOp.betterRound(heatHandlerOut.getTemp(), 3) + "°C");
+		chat.add("In-Temp: " + MiscUtil.betterRound(heatHandlerIn.getTemp(), 3) + "°C");
+		chat.add("Out-Temp: " + MiscUtil.betterRound(heatHandlerOut.getTemp(), 3) + "°C");
 		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 

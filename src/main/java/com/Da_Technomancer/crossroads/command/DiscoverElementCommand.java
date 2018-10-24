@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.command;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 
@@ -34,7 +34,7 @@ public class DiscoverElementCommand extends CommandBase{
 		}
 
 		if(args[0].toUpperCase().equals("ALL")){
-			NBTTagCompound nbt = MiscOp.getPlayerTag((EntityPlayer) sender);
+			NBTTagCompound nbt = MiscUtil.getPlayerTag((EntityPlayer) sender);
 			if(!nbt.hasKey("elements")){
 				nbt.setTag("elements", new NBTTagCompound());
 			}
@@ -59,7 +59,7 @@ public class DiscoverElementCommand extends CommandBase{
 			return;
 		}
 
-		NBTTagCompound nbt = MiscOp.getPlayerTag((EntityPlayer) sender);
+		NBTTagCompound nbt = MiscUtil.getPlayerTag((EntityPlayer) sender);
 		if(!nbt.hasKey("elements")){
 			nbt.setTag("elements", new NBTTagCompound());
 		}

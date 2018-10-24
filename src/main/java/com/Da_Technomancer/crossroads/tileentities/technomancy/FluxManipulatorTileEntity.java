@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -20,10 +20,10 @@ public class FluxManipulatorTileEntity extends TileEntity implements ITickable{
 			TileEntity upTE = world.getTileEntity(pos.offset(EnumFacing.UP));
 			if(upTE != null && upTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 				FieldWorldSavedData data = FieldWorldSavedData.get(world);
-				if(data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))){
+				if(data.fieldNodes.containsKey(MiscUtil.getLongFromChunkPos(new ChunkPos(pos)))){
 					netForce += upTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] / 5D;
 					if(world.getTotalWorldTime() % 5 == 0){
-						data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos))).fluxForce += Math.round(netForce);
+						data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).fluxForce += Math.round(netForce);
 						netForce = 0;
 					}
 				}else{

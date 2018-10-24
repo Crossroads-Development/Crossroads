@@ -94,7 +94,10 @@ public class CommonProxy{
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> e){
 		IForgeRegistry<IRecipe> registry = e.getRegistry();
+
 		ModCrafting.init();
+		OreSetup.initCrafting();
+
 		for(IRecipe recipe : ModCrafting.toRegister){
 			if(recipe.getRegistryName() == null){
 				ResourceLocation rawLoc = new ResourceLocation(Main.MODID, recipe.getRecipeOutput().getItem().getRegistryName().getResourcePath());

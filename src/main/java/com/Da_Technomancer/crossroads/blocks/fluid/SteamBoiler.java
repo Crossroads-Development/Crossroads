@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
@@ -69,7 +69,7 @@ public class SteamBoiler extends BlockContainer{
 					if(saltContent != 0){
 						((SteamBoilerTileEntity) te).inventory = ItemStack.EMPTY;
 						te.markDirty();
-						ItemStack gotten = MiscOp.getOredictStack("dustSalt", saltContent);
+						ItemStack gotten = MiscUtil.getOredictStack("dustSalt", saltContent);
 						if(!playerIn.inventory.addItemStackToInventory(gotten)){
 							EntityItem dropped = playerIn.dropItem(gotten, false);
 							dropped.setNoPickupDelay();

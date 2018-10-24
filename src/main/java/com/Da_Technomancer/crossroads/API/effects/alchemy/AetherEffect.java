@@ -27,7 +27,7 @@ public class AetherEffect implements IAlchEffect{
 
 	protected static final ArrayList<Predicate<IBlockState>> SOIL_GROUP = new ArrayList<Predicate<IBlockState>>();
 	protected static final ArrayList<Predicate<IBlockState>> ROCK_GROUP = new ArrayList<Predicate<IBlockState>>();
-	protected static final ArrayList<Predicate<IBlockState>> FLUD_GROUP = new ArrayList<Predicate<IBlockState>>();//Was going to be named FLUID_GROUP, but the other two fields had the samed name lengths and I couldn't resist
+	protected static final ArrayList<Predicate<IBlockState>> FLUD_GROUP = new ArrayList<Predicate<IBlockState>>();//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
 	protected static final ArrayList<Predicate<IBlockState>> CRYS_GROUP = new ArrayList<Predicate<IBlockState>>();
 
 	static{

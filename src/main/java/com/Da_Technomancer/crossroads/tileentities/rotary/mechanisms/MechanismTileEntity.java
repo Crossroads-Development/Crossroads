@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
@@ -56,9 +56,9 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 			return;
 		}
 
-		chat.add("Speed: " + MiscOp.betterRound(motionData[hit][0], 3));
-		chat.add("Energy: " + MiscOp.betterRound(motionData[hit][1], 3));
-		chat.add("Power: " + MiscOp.betterRound(motionData[hit][2], 3));
+		chat.add("Speed: " + MiscUtil.betterRound(motionData[hit][0], 3));
+		chat.add("Energy: " + MiscUtil.betterRound(motionData[hit][1], 3));
+		chat.add("Power: " + MiscUtil.betterRound(motionData[hit][2], 3));
 		chat.add("I: " + inertia[hit] + ", Rotation Ratio: " + axleHandlers[hit].rotRatio);
 	}
 

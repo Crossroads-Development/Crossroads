@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.command;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 
 import net.minecraft.command.CommandBase;
@@ -35,7 +35,7 @@ public class ResetPathCommand extends CommandBase{
 		EntityPlayerMP target = args.length == 1 ? server.getPlayerList().getPlayerByUsername(args[0]) : sender instanceof EntityPlayerMP ? ((EntityPlayerMP) sender) : null;
 		
 		if(target != null){
-			MiscOp.getPlayerTag(target).removeTag("path");
+			MiscUtil.getPlayerTag(target).removeTag("path");
 			StoreNBTToClient.syncNBTToClient(target, false);
 			target.sendMessage(new TextComponentString("Your path has been reset."));
 		}else{

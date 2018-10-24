@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.ModConfig;
@@ -27,13 +27,13 @@ public class StirlingEngineTileEntity extends TileEntity implements ITickable, I
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
-		chat.add("Speed: " + MiscOp.betterRound(motionData[0], 3));
-		chat.add("Energy: " + MiscOp.betterRound(motionData[1], 3));
-		chat.add("Power: " + MiscOp.betterRound(motionData[2], 3));
+		chat.add("Speed: " + MiscUtil.betterRound(motionData[0], 3));
+		chat.add("Energy: " + MiscUtil.betterRound(motionData[1], 3));
+		chat.add("Power: " + MiscUtil.betterRound(motionData[2], 3));
 		chat.add("I: " + axleHandler.getMoInertia() + ", Rotation Ratio: " + axleHandler.getRotationRatio());
 
-		chat.add("Side Temp: " + MiscOp.betterRound(sideHeatHandler.getTemp(), 3) + "°C");
-		chat.add("Bottom Temp: " + MiscOp.betterRound(bottomHeatHandler.getTemp(), 3) + "°C");
+		chat.add("Side Temp: " + MiscUtil.betterRound(sideHeatHandler.getTemp(), 3) + "°C");
+		chat.add("Bottom Temp: " + MiscUtil.betterRound(bottomHeatHandler.getTemp(), 3) + "°C");
 		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 

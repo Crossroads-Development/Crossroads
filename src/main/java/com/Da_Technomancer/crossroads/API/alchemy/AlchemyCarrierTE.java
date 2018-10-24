@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
@@ -46,7 +46,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
 		if(amount != 0){
-			chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
+			chat.add("Temp: " + MiscUtil.betterRound(handler.getTemp(), 3) + "°C");
 		}else{
 			chat.add("No reagents");
 		}

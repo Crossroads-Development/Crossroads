@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -73,7 +73,7 @@ public class MagicUnit{
 	}
 
 	public MagicUnit mult(double e, double p, double s, double v, boolean floor){
-		return floor ? new MagicUnit((int) Math.floor(e * (double) energy), (int) Math.floor(p * (double) potential), (int) Math.floor(s * (double) stability), (int) Math.floor(v * (double) voi)) : new MagicUnit(MiscOp.safeRound(e * (double) energy), MiscOp.safeRound(p * (double) potential), MiscOp.safeRound(s * (double) stability), MiscOp.safeRound(v * (double) voi));
+		return floor ? new MagicUnit((int) Math.floor(e * (double) energy), (int) Math.floor(p * (double) potential), (int) Math.floor(s * (double) stability), (int) Math.floor(v * (double) voi)) : new MagicUnit(MiscUtil.safeRound(e * (double) energy), MiscUtil.safeRound(p * (double) potential), MiscUtil.safeRound(s * (double) stability), MiscUtil.safeRound(v * (double) voi));
 	}
 
 	public NBTTagCompound setNBT(NBTTagCompound nbt, @Nullable String key){

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -88,12 +88,12 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 					}
 				}else if(content.getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false))){
 					FieldWorldSavedData data = FieldWorldSavedData.get(world);
-					if(data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))){
-						if(data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos))).flux + 1 < 8 * (content.amount / 72)){
+					if(data.fieldNodes.containsKey(MiscUtil.getLongFromChunkPos(new ChunkPos(pos)))){
+						if(data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).flux + 1 < 8 * (content.amount / 72)){
 							return;
 						}
 
-						data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos))).fluxForce -= 8 * (content.amount / 72);
+						data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).fluxForce -= 8 * (content.amount / 72);
 
 						content = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) content.amount) * EnergyConverters.COPSHOWIUM_PER_COPPER));
 						markDirty();

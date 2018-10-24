@@ -14,7 +14,7 @@ public final class ModConfig{
 	public static Property genCopperOre;
 	public static Property genTinOre;
 	public static Property genRubyOre;
-	public static Property genNativeCopperOre;
+	public static Property processableOres;
 	public static Property speedPrecision;
 	public static Property weatherControl;
 	public static Property rotateBeam;
@@ -24,14 +24,13 @@ public final class ModConfig{
 	public static Property allowAllServer;
 	public static Property technomancy;
 	public static Property alchemy;
-	public static Property witchcraft;
+	public static Property witchcraft;//NYI
 	public static Property voidChunk;
 	public static Property resetChunk;
 	public static Property magicChunk;
 	public static Property blastChunk;
 	public static Property fieldLinesPotential;
 	public static Property disableSlaves;
-	public static Property registerOres;
 	public static Property gearResetTime;
 	public static Property wipeInvalidMappings;
 	public static Property blockedPrototype;
@@ -80,9 +79,8 @@ public final class ModConfig{
 		genCopperOre = config.get(CAT_ORES, "Generate Copper Ore?", true);
 		genTinOre = config.get(CAT_ORES, "Generate Tin Ore?", true);
 		genRubyOre = config.get(CAT_ORES, "Generate Ruby Ore?", true);
-		genNativeCopperOre = config.get(CAT_ORES, "Generate Native Copper Ore?", true);
+		SYNCED_PROPERTIES.add(processableOres = config.get(CAT_ORES, "Metal ore types that Crossroads machines should be able to process", new String[] {"copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"}, "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\" \nThis config MUST match the server settings exactly (color doesn't matter) in multiplayer or THINGS WILL BREAK! It can not sync itself!"));
 		retrogen = config.get(CAT_ORES, "Retrogen Key", "", "Changing this value will cause retrogen. Leaving it blank disables retrogen. TURN THIS OFF WHEN YOU ARE DONE!");
-		registerOres = config.get(CAT_ORES, "Register OreDictionary for copper/tin/bronze? (Default true)", true, "Disabling this will make Crossroads copper/tin/bronze completely useless. The recipes will need copper/tin/bronze from other mods. Don't ask me why you'd want this.");
 		SYNCED_PROPERTIES.add(steamWorth = config.get(CAT_BALANCE, "The number of degrees one bucket of steam is worth", 50D, "Default: 50"));
 		SYNCED_PROPERTIES.add(jouleWorth = config.get(CAT_BALANCE, "The number of Joules generated from one degree worth of steam", 4D, "Default: 4"));
 		SYNCED_PROPERTIES.add(stirlingSpeedLimit = config.get(CAT_BALANCE, "The maximum speed a Stirling Engine can reach", 0.5D, "Default: 0.5"));

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
@@ -157,7 +157,7 @@ public class ReactionChamber extends BlockContainer{
 				}
 			}
 
-			tooltip.add("Temp: " + MiscOp.betterRound(stack.getTagCompound().getDouble("heat") / am - 273D, 3));
+			tooltip.add("Temp: " + MiscUtil.betterRound(stack.getTagCompound().getDouble("heat") / am - 273D, 3));
 		}
 		tooltip.add("Consumes: -10FE/t (Optional)");
 	}

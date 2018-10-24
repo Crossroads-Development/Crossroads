@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.essentials.packets.Message;
@@ -19,10 +19,10 @@ import net.minecraftforge.fml.relauncher.Side;
 public class StoreNBTToClient extends Message<StoreNBTToClient>{
 
 	/**
-	 * Syncs the NBTTagCompound from MiscOp.getPlayerTag(player), as well as the synced configs if config is true.
+	 * Syncs the NBTTagCompound from MiscUtil.getPlayerTag(player), as well as the synced configs if config is true.
 	 */
 	public static void syncNBTToClient(EntityPlayerMP player, boolean config){
-		ModPackets.network.sendTo(new StoreNBTToClient(MiscOp.getPlayerTag(player), false), player);
+		ModPackets.network.sendTo(new StoreNBTToClient(MiscUtil.getPlayerTag(player), false), player);
 		if(config){
 			ModPackets.network.sendTo(new StoreNBTToClient(ModConfig.nbtToSyncConfig(), true), player);
 		}

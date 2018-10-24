@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
@@ -82,7 +82,7 @@ public final class EventHandlerClient{
 		if(helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound()){
 			game.mcProfiler.startSection(Main.MODNAME + ": Field Render");
 			Chunk chunk = game.world.getChunkFromBlockCoords(game.player.getPosition());
-			ChunkField fields = FieldWorldSavedData.get(game.world).fieldNodes.get(MiscOp.getLongFromChunk(chunk));
+			ChunkField fields = FieldWorldSavedData.get(game.world).fieldNodes.get(MiscUtil.getLongFromChunk(chunk));
 			if(fields != null){
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
@@ -453,7 +453,7 @@ public final class EventHandlerClient{
 
 					if(values != null){
 						for(int i = 0; i < 3; i++){
-							values[i] = MiscOp.betterRound(values[i], 3);
+							values[i] = MiscUtil.betterRound(values[i], 3);
 							Minecraft.getMinecraft().fontRenderer.drawString("" + values[i], 146 - Minecraft.getMinecraft().fontRenderer.getStringWidth("" + values[i]) / 2, 16 + 10 * i, Color.DARK_GRAY.getRGB());
 						}
 					}

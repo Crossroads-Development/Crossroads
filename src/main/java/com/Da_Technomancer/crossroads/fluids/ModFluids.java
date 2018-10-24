@@ -1,7 +1,8 @@
 package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Main;
-
+import com.Da_Technomancer.crossroads.client.bakedModel.BakedModelLoader;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -9,31 +10,34 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelFluid;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Map;
+
 public final class ModFluids{
 
 	public static BlockDistilledWater distilledWater;
 	public static BlockSteam steam;
-	public static BlockMoltenCopper moltenCopper;
 	public static BlockLiquidFat liquidFat;
 	public static BlockMoltenCopshowium moltenCopshowium;
-	public static BlockMoltenGold moltenGold;
-	public static BlockMoltenIron moltenIron;
-	public static BlockMoltenTin moltenTin;
+//	public static BlockMoltenCopper moltenCopper;
+//	public static BlockMoltenGold moltenGold;
+//	public static BlockMoltenIron moltenIron;
+//	public static BlockMoltenTin moltenTin;
 
 	public static void init(){
 		FluidRegistry.registerFluid(BlockSteam.STEAM);
 		steam = new BlockSteam();
 		FluidRegistry.addBucketForFluid(BlockSteam.STEAM);
 
-		FluidRegistry.registerFluid(BlockMoltenCopper.MOLTEN_COPPER);
-		moltenCopper = new BlockMoltenCopper();
-		FluidRegistry.addBucketForFluid(BlockMoltenCopper.MOLTEN_COPPER);
+//		FluidRegistry.registerFluid(BlockMoltenCopper.MOLTEN_COPPER);
+//		moltenCopper = new BlockMoltenCopper();
+//		FluidRegistry.addBucketForFluid(BlockMoltenCopper.MOLTEN_COPPER);
 
 		FluidRegistry.registerFluid(BlockDistilledWater.DISTILLED_WATER);
 		distilledWater = new BlockDistilledWater();
@@ -46,30 +50,33 @@ public final class ModFluids{
 		FluidRegistry.registerFluid(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
 		moltenCopshowium = new BlockMoltenCopshowium();
 		FluidRegistry.addBucketForFluid(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
-		
-		FluidRegistry.registerFluid(BlockMoltenGold.MOLTEN_GOLD);
-		moltenGold = new BlockMoltenGold();
-		FluidRegistry.addBucketForFluid(BlockMoltenGold.MOLTEN_GOLD);
-		
-		FluidRegistry.registerFluid(BlockMoltenIron.MOLTEN_IRON);
-		moltenIron = new BlockMoltenIron();
-		FluidRegistry.addBucketForFluid(BlockMoltenIron.MOLTEN_IRON);
-		
-		FluidRegistry.registerFluid(BlockMoltenTin.MOLTEN_TIN);
-		moltenTin = new BlockMoltenTin();
-		FluidRegistry.addBucketForFluid(BlockMoltenTin.MOLTEN_TIN);
+
+//		FluidRegistry.registerFluid(BlockMoltenGold.MOLTEN_GOLD);
+//		moltenGold = new BlockMoltenGold();
+//		FluidRegistry.addBucketForFluid(BlockMoltenGold.MOLTEN_GOLD);
+
+//		FluidRegistry.registerFluid(BlockMoltenIron.MOLTEN_IRON);
+//		moltenIron = new BlockMoltenIron();
+//		FluidRegistry.addBucketForFluid(BlockMoltenIron.MOLTEN_IRON);
+
+//		FluidRegistry.registerFluid(BlockMoltenTin.MOLTEN_TIN);
+//		moltenTin = new BlockMoltenTin();
+//		FluidRegistry.addBucketForFluid(BlockMoltenTin.MOLTEN_TIN);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static void registerRenderers(){
-		registerFluidBlockRendering(BlockSteam.STEAM);
-		registerFluidBlockRendering(BlockMoltenCopper.MOLTEN_COPPER);
-		registerFluidBlockRendering(BlockDistilledWater.DISTILLED_WATER);
-		registerFluidBlockRendering(BlockLiquidFat.LIQUID_FAT);
-		registerFluidBlockRendering(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
-		registerFluidBlockRendering(BlockMoltenGold.MOLTEN_GOLD);
-		registerFluidBlockRendering(BlockMoltenIron.MOLTEN_IRON);
-		registerFluidBlockRendering(BlockMoltenTin.MOLTEN_TIN);
+		registerFluidBlockRendering(BlockSteam.STEAM, "steam");
+		registerFluidBlockRendering(BlockDistilledWater.DISTILLED_WATER, "distilled_water");
+		registerFluidBlockRendering(BlockLiquidFat.LIQUID_FAT, "liquid_fat");
+		registerFluidBlockRendering(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM, "copshowium");
+		for(Map.Entry<String, OreSetup.OreProfile> molten : OreSetup.metalStages.entrySet()){
+			BakedModelLoader.MODEL_MAP.put(registerFluidBlockRendering(molten.getValue().molten, "molten_metal_" + molten.getValue().molten.getName()), new ModelFluid(molten.getValue().molten));
+		}
+//		registerFluidBlockRendering(BlockMoltenCopper.MOLTEN_COPPER);
+//		registerFluidBlockRendering(BlockMoltenGold.MOLTEN_GOLD);
+//		registerFluidBlockRendering(BlockMoltenIron.MOLTEN_IRON);
+//		registerFluidBlockRendering(BlockMoltenTin.MOLTEN_TIN);
 	}
 
 	/*
@@ -78,10 +85,10 @@ public final class ModFluids{
 	 */
 	private static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition{
 
-		public final ModelResourceLocation location;
+		private final ModelResourceLocation location;
 
-		public FluidStateMapper(Fluid fluid){
-			location = new ModelResourceLocation(Main.MODID + ":fluids", fluid.getName());
+		public FluidStateMapper(String variant){
+			location = new ModelResourceLocation(Main.MODID + ":fluids", variant);
 		}
 
 		@Override
@@ -96,20 +103,17 @@ public final class ModFluids{
 	}
 
 	@SideOnly(Side.CLIENT)
-	private static void registerFluidBlockRendering(Fluid fluid){
-
-		FluidStateMapper mapper = new FluidStateMapper(fluid);
+	private static ModelResourceLocation registerFluidBlockRendering(Fluid fluid, String variant){
+		FluidStateMapper mapper = new FluidStateMapper(variant);
 		Block block = fluid.getBlock();
 		Item item = Item.getItemFromBlock(block);
 
 		// item-model
-		if(item != null){
-			ModelLoader.registerItemVariants(item);
-			ModelLoader.setCustomMeshDefinition(item, mapper);
-		}
+		ModelLoader.registerItemVariants(item);
+		ModelLoader.setCustomMeshDefinition(item, mapper);
+
 		// block-model
-		if(block != null){
-			ModelLoader.setCustomStateMapper(block, mapper);
-		}
+		ModelLoader.setCustomStateMapper(block, mapper);
+		return mapper.location;
 	}
 }

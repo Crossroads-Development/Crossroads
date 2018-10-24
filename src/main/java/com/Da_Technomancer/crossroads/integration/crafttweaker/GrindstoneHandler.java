@@ -71,7 +71,7 @@ public class GrindstoneHandler{
 
 		@Override
 		public void apply(){
-			RecipeHolder.grindRecipes.put(input, outputs);
+			RecipeHolder.millRecipes.put(input, outputs);
 		}
 
 		@Override
@@ -116,7 +116,7 @@ public class GrindstoneHandler{
 
 		@Override
 		public void apply(){
-			Main.logger.info("input: " + input + ": " + RecipeHolder.grindRecipes.remove(input));
+			Main.logger.info("input: " + input + ": " + RecipeHolder.millRecipes.remove(input));
 		}
 
 		@Override

@@ -29,7 +29,7 @@ public final class RecipeHolder{
 	 * CraftingStack is input, the array is the outputs. HAVE NO MORE THAN 3 ITEMSTACKS IN THE ARRAY.
 	 * 
 	 */
-	public static final HashMap<RecipePredicate<ItemStack>, ItemStack[]> grindRecipes = new HashMap<RecipePredicate<ItemStack>, ItemStack[]>();
+	public static final HashMap<RecipePredicate<ItemStack>, ItemStack[]> millRecipes = new HashMap<RecipePredicate<ItemStack>, ItemStack[]>();
 
 	/**
 	 * Block is input, blockstate is the created block, Double1 is heat created, Double2 is the limit, boolean is whether to show this recipe in JEI. 
@@ -86,7 +86,18 @@ public final class RecipeHolder{
 	 */
 	public static void rebind(){
 		ArrayList<IRecipeWrapper> currentRecipes = new ArrayList<IRecipeWrapper>();
-		for(Entry<RecipePredicate<ItemStack>, ItemStack[]> rec : grindRecipes.entrySet()){
+
+		recipe:
+		for(Entry<RecipePredicate<ItemStack>, ItemStack[]> rec : millRecipes.entrySet()){
+			if(rec == null || rec.getKey().getMatchingList().isEmpty()){
+				continue;
+			}
+
+			for(ItemStack s : rec.getValue()){
+				if(s != null && s.isEmpty()){
+					continue recipe;
+				}
+			}
 			currentRecipes.add(new GrindstoneRecipe(rec));
 		}
 		JEIWrappers.put(GrindstoneCategory.ID, currentRecipes);

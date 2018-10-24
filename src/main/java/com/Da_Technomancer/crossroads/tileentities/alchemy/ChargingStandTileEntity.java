@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -47,7 +47,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
 		if(occupied && amount > 0){
-			chat.add("Temp: " + MiscOp.betterRound((heat / amount) - 273D, 3) + "°C");
+			chat.add("Temp: " + MiscUtil.betterRound((heat / amount) - 273D, 3) + "°C");
 		}
 		if(amount == 0){
 			chat.add("No reagents");

@@ -31,8 +31,7 @@ public class GearFactory{
 		ItemColors itemColor = Minecraft.getMinecraft().getItemColors();
 		for(GearTypes typ : GearTypes.values()){
 			int index = typ.ordinal();
-			int colorCode = typ.getColor().getRGB();
-			IItemColor itemColoring = (ItemStack stack, int tintIndex) -> tintIndex == 0 ? colorCode : -1;
+			IItemColor itemColoring = (ItemStack stack, int tintIndex) -> tintIndex == 0 ? typ.getColor().getRGB() : -1;
 			itemColor.registerItemColorHandler(itemColoring, BASIC_GEARS[index], LARGE_GEARS[index], TOGGLE_GEARS[index], INV_TOGGLE_GEARS[index]);
 
 			if(typ == GearTypes.IRON){

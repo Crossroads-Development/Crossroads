@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
@@ -37,7 +37,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	 */
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
-			chat.add("Temp: " + MiscOp.betterRound(cableTemp, 3) + "°C");
+			chat.add("Temp: " + MiscUtil.betterRound(cableTemp, 3) + "°C");
 			if(amount == 0){
 				chat.add("No reagents");
 			}

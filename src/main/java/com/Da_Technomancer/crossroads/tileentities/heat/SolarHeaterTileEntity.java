@@ -28,7 +28,7 @@ public class SolarHeaterTileEntity extends TileEntity implements ITickable, IInf
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
-		chat.add("Temp: " + MiscOp.betterRound(handler.getTemp(), 3) + "°C");
+		chat.add("Temp: " + MiscUtil.betterRound(handler.getTemp(), 3) + "°C");
 		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 

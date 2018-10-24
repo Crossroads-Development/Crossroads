@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.client.bakedModel;
 
+import com.Da_Technomancer.crossroads.Main;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 
 public class BakedModelLoader implements ICustomModelLoader{
 
-	protected static final HashMap<ResourceLocation, IModel> MODEL_MAP = new HashMap<>();
+	public static final HashMap<ResourceLocation, IModel> MODEL_MAP = new HashMap<>();
 
 	static{
 		MODEL_MAP.put(ConduitBakedModel.BAKED_MODEL, new ConduitModel());
@@ -25,7 +26,12 @@ public class BakedModelLoader implements ICustomModelLoader{
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation){
-		return MODEL_MAP.containsKey(modelLocation);
+		if(MODEL_MAP.containsKey(modelLocation)){
+			return true;
+		}
+
+		//The molten metals for ore processing are special-cased to re-route to a dynamic forge fluid model
+		return modelLocation.getResourceDomain().equals(Main.MODID) && modelLocation.getResourcePath().startsWith("fluids#molten_metal_");
 	}
 
 	@Override

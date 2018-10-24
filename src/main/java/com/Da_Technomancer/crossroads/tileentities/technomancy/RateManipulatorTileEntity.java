@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.ChunkField;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,11 +22,11 @@ public class RateManipulatorTileEntity extends TileEntity implements ITickable{
 				TileEntity upTE = world.getTileEntity(pos.offset(EnumFacing.UP));
 				if(upTE != null && upTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
 					FieldWorldSavedData data = FieldWorldSavedData.get(world);
-					if(data.fieldNodes.containsKey(MiscOp.getLongFromChunkPos(new ChunkPos(pos)))){
-						ChunkField nodes = data.fieldNodes.get(MiscOp.getLongFromChunkPos(new ChunkPos(pos)));
+					if(data.fieldNodes.containsKey(MiscUtil.getLongFromChunkPos(new ChunkPos(pos)))){
+						ChunkField nodes = data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos)));
 						int force = (int) Math.round(upTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0]);
-						for(int i = Math.max(0, MiscOp.getChunkRelativeCoord(pos.getX()) - range); i <= Math.min(15, MiscOp.getChunkRelativeCoord(pos.getX()) + range); i++){
-							for(int j = Math.max(0, MiscOp.getChunkRelativeCoord(pos.getZ()) - range); j <= Math.min(15, MiscOp.getChunkRelativeCoord(pos.getZ()) + range); j++){
+						for(int i = Math.max(0, MiscUtil.getChunkRelativeCoord(pos.getX()) - range); i <= Math.min(15, MiscUtil.getChunkRelativeCoord(pos.getX()) + range); i++){
+							for(int j = Math.max(0, MiscUtil.getChunkRelativeCoord(pos.getZ()) - range); j <= Math.min(15, MiscUtil.getChunkRelativeCoord(pos.getZ()) + range); j++){
 								nodes.nodeForce[i][j] += force;
 							}
 						}

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import com.Da_Technomancer.crossroads.API.MiscOp;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
@@ -44,7 +44,7 @@ public class LargeGear extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: " + MiscOp.betterRound(9D * type.getDensity() / 8D, 2) * 1.125D);
+		tooltip.add("I: " + MiscUtil.betterRound(9D * type.getDensity() / 8D, 2) * 1.125D);
 	}
 
 	@Override
