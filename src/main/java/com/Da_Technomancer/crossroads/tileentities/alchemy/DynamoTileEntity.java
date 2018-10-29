@@ -42,7 +42,7 @@ public class DynamoTileEntity extends TileEntity implements ITickable{
 	@Override
 	public void update(){
 		if(world.isRemote){
-			EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
+			EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 			TileEntity neighbor = world.getTileEntity(pos.offset(facing));
 			if(neighbor != null && neighbor.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
 				IAxleHandler handler = neighbor.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
@@ -67,7 +67,7 @@ public class DynamoTileEntity extends TileEntity implements ITickable{
 			markDirty();
 		}
 
-		EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
+		EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 		TileEntity neighbor = world.getTileEntity(pos.offset(facing.getOpposite()));
 		if(neighbor != null && neighbor.hasCapability(CapabilityEnergy.ENERGY, facing)){
 			IEnergyStorage handler = neighbor.getCapability(CapabilityEnergy.ENERGY, facing);
@@ -106,10 +106,10 @@ public class DynamoTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && side != null && side == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING)){
+		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && side != null && side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING)){
 			return true;
 		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING).getOpposite())){
+		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getOpposite())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -118,10 +118,10 @@ public class DynamoTileEntity extends TileEntity implements ITickable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && side != null && side == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING)){
+		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && side != null && side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING)){
 			return (T) gear;
 		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING).getOpposite())){
+		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getOpposite())){
 			return (T) energyHandler;
 		}
 		return super.getCapability(cap, side);
@@ -158,7 +158,7 @@ public class DynamoTileEntity extends TileEntity implements ITickable{
 			}
 
 			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
-			if(world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING).getAxisDirection() == AxisDirection.NEGATIVE){
+			if(world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getAxisDirection() == AxisDirection.NEGATIVE){
 				rotRatio *= -1D;
 			}
 			updateKey = key;

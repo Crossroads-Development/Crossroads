@@ -4,14 +4,17 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 
 public class HeatUtil{
 
+	/**
+	 * Absolute zero in degrees C
+	 */
 	public static final double ABSOLUTE_ZERO = -273D;
 
 	public static double toKelvin(double celcius){
-		return celcius + ABSOLUTE_ZERO;
+		return celcius - ABSOLUTE_ZERO;
 	}
 
 	public static double toCelcius(double kelvin){
-		return kelvin - ABSOLUTE_ZERO;
+		return kelvin + ABSOLUTE_ZERO;
 	}
 
 	/**

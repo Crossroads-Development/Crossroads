@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.rotary.StirlingEngine;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.*;
 import com.Da_Technomancer.crossroads.tileentities.fluid.*;
 import com.Da_Technomancer.crossroads.tileentities.heat.*;
@@ -104,6 +103,7 @@ public class ModTileEntity{
 		register(SolarHeaterTileEntity.class, "solar_heater");
 		register(HeatReservoirTileEntity.class, "heat_reservoir");
 		register(StirlingEngineTileEntity.class, "stirling_engine");
+		register(StampMillTileEntity.class, "stamp_mill");
 	}
 
 	/**

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
 import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.API.magic.BeamRenderTEBase;
+import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;

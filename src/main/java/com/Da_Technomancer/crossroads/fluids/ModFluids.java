@@ -25,19 +25,11 @@ public final class ModFluids{
 	public static BlockSteam steam;
 	public static BlockLiquidFat liquidFat;
 	public static BlockMoltenCopshowium moltenCopshowium;
-//	public static BlockMoltenCopper moltenCopper;
-//	public static BlockMoltenGold moltenGold;
-//	public static BlockMoltenIron moltenIron;
-//	public static BlockMoltenTin moltenTin;
 
 	public static void init(){
 		FluidRegistry.registerFluid(BlockSteam.STEAM);
 		steam = new BlockSteam();
 		FluidRegistry.addBucketForFluid(BlockSteam.STEAM);
-
-//		FluidRegistry.registerFluid(BlockMoltenCopper.MOLTEN_COPPER);
-//		moltenCopper = new BlockMoltenCopper();
-//		FluidRegistry.addBucketForFluid(BlockMoltenCopper.MOLTEN_COPPER);
 
 		FluidRegistry.registerFluid(BlockDistilledWater.DISTILLED_WATER);
 		distilledWater = new BlockDistilledWater();
@@ -50,18 +42,6 @@ public final class ModFluids{
 		FluidRegistry.registerFluid(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
 		moltenCopshowium = new BlockMoltenCopshowium();
 		FluidRegistry.addBucketForFluid(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
-
-//		FluidRegistry.registerFluid(BlockMoltenGold.MOLTEN_GOLD);
-//		moltenGold = new BlockMoltenGold();
-//		FluidRegistry.addBucketForFluid(BlockMoltenGold.MOLTEN_GOLD);
-
-//		FluidRegistry.registerFluid(BlockMoltenIron.MOLTEN_IRON);
-//		moltenIron = new BlockMoltenIron();
-//		FluidRegistry.addBucketForFluid(BlockMoltenIron.MOLTEN_IRON);
-
-//		FluidRegistry.registerFluid(BlockMoltenTin.MOLTEN_TIN);
-//		moltenTin = new BlockMoltenTin();
-//		FluidRegistry.addBucketForFluid(BlockMoltenTin.MOLTEN_TIN);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -73,15 +53,11 @@ public final class ModFluids{
 		for(Map.Entry<String, OreSetup.OreProfile> molten : OreSetup.metalStages.entrySet()){
 			BakedModelLoader.MODEL_MAP.put(registerFluidBlockRendering(molten.getValue().molten, "molten_metal_" + molten.getValue().molten.getName()), new ModelFluid(molten.getValue().molten));
 		}
-//		registerFluidBlockRendering(BlockMoltenCopper.MOLTEN_COPPER);
-//		registerFluidBlockRendering(BlockMoltenGold.MOLTEN_GOLD);
-//		registerFluidBlockRendering(BlockMoltenIron.MOLTEN_IRON);
-//		registerFluidBlockRendering(BlockMoltenTin.MOLTEN_TIN);
 	}
 
-	/*
-	 * The code below is based on EnderIO code, though is not an exact
-	 * copy. This is permitted by the EnderIO license.
+	/**
+	 * The code below is based on EnderIO code, though is not an exact copy.
+	 * This is permitted by the EnderIO license at the time of writing this.
 	 */
 	private static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition{
 

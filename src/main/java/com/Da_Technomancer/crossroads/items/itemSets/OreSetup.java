@@ -230,6 +230,7 @@ public final class OreSetup{
 			RecipeHolder.millRecipes.put(new OreDictCraftingStack("ingot" + type.getKey()), new ItemStack[] {new ItemStack(dust, 1)});
 			RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingot" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB), Main.MODID + ":blocks/wip"));//TODO TEXTURE
 			RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("dust" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB), Main.MODID + ":blocks/wip"));//TODO TEXTURE
+			RecipeHolder.stampMillRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new ItemStack(gravel, 3));
 
 			OreProfile profile = new OreProfile(dust, gravel, clump, fluid, fluidBlock, type.getValue());
 			metalStages.put(type.getKey(), profile);

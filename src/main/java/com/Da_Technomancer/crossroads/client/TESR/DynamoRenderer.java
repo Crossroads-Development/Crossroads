@@ -23,7 +23,7 @@ public class DynamoRenderer extends TileEntitySpecialRenderer<DynamoTileEntity>{
 			return;
 		}
 
-		EnumFacing facing = dynamo.getWorld().getBlockState(dynamo.getPos()).getValue(Properties.HORIZONTAL_FACING);
+		EnumFacing facing = dynamo.getWorld().getBlockState(dynamo.getPos()).getValue(Properties.HORIZ_FACING);
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5F, y + .5F, z + .5F);

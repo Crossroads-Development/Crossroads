@@ -102,12 +102,12 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.LIGHT) ? 1 : 0) + (state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 2 : 0);
+		return (state.getValue(Properties.CRYSTAL) ? 1 : 0) + (state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 2 : 0);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.LIGHT, (meta & 1) == 1).withProperty(EssentialsProperties.REDSTONE_BOOL, (meta & 2) == 2);
+		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(EssentialsProperties.REDSTONE_BOOL, (meta & 2) == 2);
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 
 	@Override
 	public int damageDropped(IBlockState state){
-		return state.getValue(Properties.LIGHT) ? 1 : 0;
+		return state.getValue(Properties.CRYSTAL) ? 1 : 0;
 	}
 
 	private static final ResourceLocation GLASS_CAP = new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_cap");
@@ -174,7 +174,7 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 
 	@Override
 	public ResourceLocation getTexture(IBlockState state, int mode){
-		return state.getValue(Properties.LIGHT) ? mode == 0 ? CRYST_CAP : mode == 1 ? CRYST_OUT : CRYST_IN : mode == 0 ? GLASS_CAP : mode == 1 ? GLASS_OUT : GLASS_IN;
+		return state.getValue(Properties.CRYSTAL) ? mode == 0 ? CRYST_CAP : mode == 1 ? CRYST_OUT : CRYST_IN : mode == 0 ? GLASS_CAP : mode == 1 ? GLASS_OUT : GLASS_IN;
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 	@Override
 	protected BlockStateContainer createBlockState(){
 		//On this device, light is being re-used. True means crystal, false means glass. 
-		return new ExtendedBlockState(this, new IProperty[] {Properties.LIGHT, EssentialsProperties.REDSTONE_BOOL}, new IUnlistedProperty[] {Properties.CONNECT_MODE});
+		return new ExtendedBlockState(this, new IProperty[] {Properties.CRYSTAL, EssentialsProperties.REDSTONE_BOOL}, new IUnlistedProperty[] {Properties.CONNECT_MODE});
 	}
 
 	@Override

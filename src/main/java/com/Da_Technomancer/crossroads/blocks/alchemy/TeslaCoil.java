@@ -36,7 +36,7 @@ public class TeslaCoil extends BlockContainer{
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().withProperty(Properties.LIGHT, false).withProperty(Properties.ACTIVE, false));
+		setDefaultState(getDefaultState().withProperty(Properties.CRYSTAL, false).withProperty(Properties.ACTIVE, false));
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class TeslaCoil extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, placer == null ? EnumFacing.EAST : placer.getHorizontalFacing().getOpposite()).withProperty(Properties.ACTIVE, false);
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, placer == null ? EnumFacing.EAST : placer.getHorizontalFacing().getOpposite()).withProperty(Properties.ACTIVE, false);
 	}
 
 	@Override
@@ -105,10 +105,10 @@ public class TeslaCoil extends BlockContainer{
 		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				if(playerIn.isSneaking()){
-					worldIn.setBlockState(pos, state.cycleProperty(Properties.LIGHT));
-					playerIn.sendMessage(new TextComponentString("Attack Mode: " + (state.getValue(Properties.LIGHT) ? "DISABLED" : "ENABLED")));
+					worldIn.setBlockState(pos, state.cycleProperty(Properties.CRYSTAL));
+					playerIn.sendMessage(new TextComponentString("Attack Mode: " + (state.getValue(Properties.CRYSTAL) ? "DISABLED" : "ENABLED")));
 				}else{
-					worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZONTAL_FACING));
+					worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_FACING));
 				}
 			}
 			return true;
@@ -154,17 +154,17 @@ public class TeslaCoil extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZONTAL_FACING, Properties.ACTIVE, Properties.LIGHT);
+		return new BlockStateContainer(this, Properties.HORIZ_FACING, Properties.ACTIVE, Properties.CRYSTAL);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, EnumFacing.getHorizontal(meta & 3)).withProperty(Properties.ACTIVE, (meta & 4) != 0).withProperty(Properties.LIGHT, (meta & 8) != 0);
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getHorizontal(meta & 3)).withProperty(Properties.ACTIVE, (meta & 4) != 0).withProperty(Properties.CRYSTAL, (meta & 8) != 0);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZONTAL_FACING).getHorizontalIndex() + (state.getValue(Properties.ACTIVE) ? 4 : 0) + (state.getValue(Properties.LIGHT) ? 8 : 0);
+		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex() + (state.getValue(Properties.ACTIVE) ? 4 : 0) + (state.getValue(Properties.CRYSTAL) ? 8 : 0);
 	}
 
 	@Override

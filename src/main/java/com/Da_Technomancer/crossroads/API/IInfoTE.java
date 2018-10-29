@@ -24,10 +24,13 @@ public interface IInfoTE{
 	}
 
 	/**
+	 * @deprecated Override and call the other addInfo method instead
+	 *
 	 * @param chat Add info to this list, 1 line per entry.
 	 * @param player The player using the info device.
 	 * @param side The viewed EnumFacing (only used by goggles).
 	 */
+	@Deprecated
 	public default void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
 
 	}

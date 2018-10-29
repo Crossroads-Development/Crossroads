@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
-import com.Da_Technomancer.crossroads.API.magic.BeamRenderTE;
+import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 
 public class BeamSplitterBasicTileEntity extends BeamRenderTE{

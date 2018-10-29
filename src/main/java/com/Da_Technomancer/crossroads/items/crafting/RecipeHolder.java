@@ -20,6 +20,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
@@ -27,9 +28,13 @@ public final class RecipeHolder{
 
 	/**
 	 * CraftingStack is input, the array is the outputs. HAVE NO MORE THAN 3 ITEMSTACKS IN THE ARRAY.
-	 * 
 	 */
-	public static final HashMap<RecipePredicate<ItemStack>, ItemStack[]> millRecipes = new HashMap<RecipePredicate<ItemStack>, ItemStack[]>();
+	public static final PredicateMap<ItemStack, ItemStack[]> millRecipes = new PredicateMap<>();
+
+	/**
+	 * CraftingStack is input, the ItemStack is the output
+	 */
+	public static final PredicateMap<ItemStack, ItemStack> stampMillRecipes = new PredicateMap<>(ItemStack.EMPTY);
 
 	/**
 	 * Block is input, blockstate is the created block, Double1 is heat created, Double2 is the limit, boolean is whether to show this recipe in JEI. 
@@ -88,8 +93,8 @@ public final class RecipeHolder{
 		ArrayList<IRecipeWrapper> currentRecipes = new ArrayList<IRecipeWrapper>();
 
 		recipe:
-		for(Entry<RecipePredicate<ItemStack>, ItemStack[]> rec : millRecipes.entrySet()){
-			if(rec == null || rec.getKey().getMatchingList().isEmpty()){
+		for(Entry<Predicate<ItemStack>, ItemStack[]> rec : millRecipes.entrySet()){
+			if(!(rec.getKey() instanceof RecipePredicate) || ((RecipePredicate) (rec.getKey())).getMatchingList().isEmpty()){
 				continue;
 			}
 
@@ -98,7 +103,7 @@ public final class RecipeHolder{
 					continue recipe;
 				}
 			}
-			currentRecipes.add(new GrindstoneRecipe(rec));
+			currentRecipes.add(new GrindstoneRecipe(((RecipePredicate<ItemStack>) rec.getKey()).getMatchingList(), rec.getValue()));
 		}
 		JEIWrappers.put(GrindstoneCategory.ID, currentRecipes);
 
@@ -138,11 +143,11 @@ public final class RecipeHolder{
 		JEIWrappers.put(ArcaneExtractorCategory.ID, currentRecipes);
 
 		currentRecipes = new ArrayList<IRecipeWrapper>();
-		for(Pair<Predicate<IBlockState>, BeamTransmute> rec : fusionBeamRecipes.entrySet()){
-			currentRecipes.add(new FusionBeamRecipe(rec.getKey(), rec.getRight().state, rec.getRight().minPower, false));
+		for(Map.Entry<Predicate<IBlockState>, BeamTransmute> rec : fusionBeamRecipes.entrySet()){
+			currentRecipes.add(new FusionBeamRecipe(rec.getKey(), rec.getValue().state, rec.getValue().minPower, false));
 		}
-		for(Pair<Predicate<IBlockState>, BeamTransmute> rec : vFusionBeamRecipes.entrySet()){
-			currentRecipes.add(new FusionBeamRecipe(rec.getKey(), rec.getRight().state, rec.getRight().minPower, true));
+		for(Map.Entry<Predicate<IBlockState>, BeamTransmute> rec : vFusionBeamRecipes.entrySet()){
+			currentRecipes.add(new FusionBeamRecipe(rec.getKey(), rec.getValue().state, rec.getValue().minPower, true));
 		}
 		JEIWrappers.put(FusionBeamCategory.ID, currentRecipes);
 

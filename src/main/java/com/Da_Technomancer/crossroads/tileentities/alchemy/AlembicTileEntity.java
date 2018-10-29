@@ -310,7 +310,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 		}
 
 
-		EnumFacing dir = world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
+		EnumFacing dir = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 		TileEntity te = world.getTileEntity(pos.offset(dir));
 		if(te instanceof GlasswareHolderTileEntity){
 			GlasswareHolderTileEntity gh = (GlasswareHolderTileEntity) te;

@@ -34,7 +34,7 @@ public class PrototypingTableRenderer extends TileEntitySpecialRenderer<Prototyp
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
 		GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-		GlStateManager.rotate(te.getWorld().getBlockState(te.getPos()).getValue(Properties.HORIZONTAL_FACING).getHorizontalAngle(), 0, 1, 0);
+		GlStateManager.rotate(te.getWorld().getBlockState(te.getPos()).getValue(Properties.HORIZ_FACING).getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.translate(0.5D, 0.5D, 0.5D);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);

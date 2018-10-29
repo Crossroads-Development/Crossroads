@@ -203,10 +203,10 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 		if(!te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null) || te.getInsulator() == null){
 			return 0;
 		}
-		double holder = (te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() + 273) / (te.getInsulator().getLimit() + 273);
-		holder *= 15D;
+		double holder = HeatUtil.toKelvin(te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp()) / HeatUtil.toKelvin(te.getInsulator().getLimit());
+		holder *= 16D;
 
-		return (int) holder;
+		return Math.min(15, (int) holder);
 	}
 
 	@Override
@@ -242,8 +242,15 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Loss Rate: -" + insulator.getRate() + "°C/t");
 		tooltip.add("Melting Point: " + insulator.getLimit() + "°C");
-		for(int i = 1; i <= 15; i++){
-			tooltip.add("Comparators read " + i + " at above " + HeatUtil.toCelcius((double) i * HeatUtil.toKelvin(insulator.getLimit()) / 15D) + "°C");
+		tooltip.add("");
+
+		tooltip.add("Comparators read: ");
+		for(int i = 0; i < 5; i++){
+			StringBuilder line = new StringBuilder(50);
+			for(int j = 3*i + 1; j <= 3*i + 3; j++){
+				line.append("  ").append(j).append(" above ").append(Integer.toString((int) Math.round(HeatUtil.toCelcius(j * HeatUtil.toKelvin(insulator.getLimit()) / 16D)))).append("°C ");
+			}
+			tooltip.add(line.toString());
 		}
 	}
 

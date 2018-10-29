@@ -11,9 +11,7 @@ public class Properties{
 	public static final UnlistedPropertyBooleanSixArray CONNECT = new UnlistedPropertyBooleanSixArray("connect");
 	public static final UnlistedPropertyIntegerSixArray CONNECT_MODE = new UnlistedPropertyIntegerSixArray("connect_mode");
 	public static final UnlistedPropertyIntegerSixArray PORT_TYPE = new UnlistedPropertyIntegerSixArray("port_type");
-	public static final PropertyBool LIGHT = PropertyBool.create("light");
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
-
 	public static final PropertyInteger FULLNESS = PropertyInteger.create("fullness", 0, 3);
 	/**
 	 * @deprecated Use HORIZ_AXIS instead
@@ -30,6 +28,6 @@ public class Properties{
 	/**0 = none, 1 = ruby, 2 = emerald, 3 = diamond, 4 = pure quartz, 5 = luminescent quartz, 6 = void crystal */
 	public static final PropertyInteger TEXTURE_7 = PropertyInteger.create("text_seven", 0, 6);
 	public static final PropertyBool CRYSTAL = PropertyBool.create("crystal");
-	public static final PropertyDirection HORIZONTAL_FACING = PropertyDirection.create("horiz_facing", (EnumFacing side) -> side != null && side.getAxis() != EnumFacing.Axis.Y);
+	public static final PropertyDirection HORIZ_FACING = PropertyDirection.create("horiz_facing", (EnumFacing side) -> side != null && side.getAxis() != EnumFacing.Axis.Y);
 	public static final PropertyBool CONTAINER_TYPE = PropertyBool.create("container_type");
 }

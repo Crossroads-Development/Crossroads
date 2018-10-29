@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.gui;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.gui.container.CoalHeaterContainer;
 import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
@@ -49,7 +48,7 @@ public class CoalHeaterGuiContainer extends GuiContainer{
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		String s = this.te.getDisplayName().getUnformattedText();
+		String s = te.getDisplayName().getUnformattedText();
 		fontRenderer.drawString(s, 136 - fontRenderer.getStringWidth(s) / 2, 42, 4210752);
 		fontRenderer.drawString(this.playerInv.getDisplayName().getUnformattedText(), 8, 42, 4210752);
 	}

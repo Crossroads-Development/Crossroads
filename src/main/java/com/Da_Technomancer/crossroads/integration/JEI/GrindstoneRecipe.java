@@ -1,25 +1,22 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map.Entry;
-
-import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.google.common.collect.ImmutableList;
-
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class GrindstoneRecipe implements IRecipeWrapper{
 
 	private List<ItemStack> inputs;
 	private List<ItemStack> outputs;
 
-	public GrindstoneRecipe(Entry<RecipePredicate<ItemStack>, ItemStack[]> in){
-		outputs = Arrays.asList(in.getValue());
-		inputs = in.getKey().getMatchingList();
+	public GrindstoneRecipe(List<ItemStack> input, ItemStack[] output){
+		inputs = input;
+		outputs = Arrays.asList(output);
 	}
 	
 	@Override

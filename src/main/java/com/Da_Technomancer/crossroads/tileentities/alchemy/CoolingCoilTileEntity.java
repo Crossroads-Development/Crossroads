@@ -93,7 +93,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getAxis())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -102,7 +102,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getAxis())){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);
@@ -111,7 +111,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		EnumFacing outSide = world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
+		EnumFacing outSide = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
 		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
 		return output;

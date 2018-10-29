@@ -64,19 +64,19 @@ public class Dynamo extends BlockContainer{
 	
 	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
-		return side == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
+		return side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 	}
 	
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, placer == null ? EnumFacing.EAST : placer.getHorizontalFacing());
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, placer == null ? EnumFacing.EAST : placer.getHorizontalFacing());
 	}
 	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZONTAL_FACING));
+				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_FACING));
 			}
 			return true;
 		}
@@ -92,16 +92,16 @@ public class Dynamo extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZONTAL_FACING);
+		return new BlockStateContainer(this, Properties.HORIZ_FACING);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, EnumFacing.getHorizontal(meta));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getHorizontal(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZONTAL_FACING).getHorizontalIndex();
+		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex();
 	}
 }

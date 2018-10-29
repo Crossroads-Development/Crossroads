@@ -1,9 +1,10 @@
-package com.Da_Technomancer.crossroads.API.magic;
+package com.Da_Technomancer.crossroads.API.templates;
 
 import java.awt.Color;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.magic.*;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;

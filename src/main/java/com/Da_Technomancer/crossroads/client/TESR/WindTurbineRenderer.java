@@ -29,7 +29,7 @@ public class WindTurbineRenderer extends TileEntitySpecialRenderer<WindTurbineTi
 			return;
 		}
 
-		EnumFacing facing = state.getValue(Properties.HORIZONTAL_FACING);
+		EnumFacing facing = state.getValue(Properties.HORIZ_FACING);
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5F, y + .5F, z + .5F);

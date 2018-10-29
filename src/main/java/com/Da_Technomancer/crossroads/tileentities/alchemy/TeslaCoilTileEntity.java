@@ -85,7 +85,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 				return;
 			}
 
-			if(state.getValue(Properties.LIGHT)){
+			if(state.getValue(Properties.CRYSTAL)){
 				List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - RANGE, pos.getY() - RANGE, pos.getZ() - RANGE, pos.getX() + RANGE, pos.getY() + RANGE, pos.getZ() + RANGE), EntitySelectors.IS_ALIVE);
 
 				if(!ents.isEmpty()){
@@ -126,7 +126,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 		}
 
 		if(!redstone && stored > 0){
-			EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING);
+			EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 			TileEntity te = world.getTileEntity(pos.offset(facing));
 			if(te != null && te.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())){
 				IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
@@ -193,7 +193,7 @@ public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickabl
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == CapabilityEnergy.ENERGY && (side == null || side.getAxis() != Axis.Y)){
-			return (T) (side == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING) ? handlerOut : handlerIn);
+			return (T) (side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING) ? handlerOut : handlerIn);
 		}
 		return super.getCapability(cap, side);
 	}

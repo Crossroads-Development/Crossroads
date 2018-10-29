@@ -83,7 +83,7 @@ public class WindTurbineTileEntity extends TileEntity implements ITickable, IInf
 					return;
 				}
 
-				EnumFacing dir = state.getValue(Properties.HORIZONTAL_FACING);
+				EnumFacing dir = state.getValue(Properties.HORIZ_FACING);
 				BlockPos offsetPos = pos.offset(dir.getOpposite());
 				if(world.canSeeSky(offsetPos)){
 					running = true;
@@ -177,7 +177,7 @@ public class WindTurbineTileEntity extends TileEntity implements ITickable, IInf
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING)){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(Properties.HORIZ_FACING)){
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -186,7 +186,7 @@ public class WindTurbineTileEntity extends TileEntity implements ITickable, IInf
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(Properties.HORIZONTAL_FACING)){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == world.getBlockState(pos).getValue(Properties.HORIZ_FACING)){
 			return (T) handler;
 		}
 		return super.getCapability(capability, facing);

@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import com.Da_Technomancer.crossroads.API.*;
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
@@ -167,10 +169,7 @@ public class RedstoneHeatCableTileEntity extends TileEntity implements ITickable
 			if(!read || !world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL) || insulator == null){
 				return 0;
 			}
-			double holder = (temp + 273) / (insulator.getLimit() + 273);
-			holder *= 15D;
-
-			return holder;
+			return 16D * HeatUtil.toKelvin(temp) / HeatUtil.toKelvin(insulator.getLimit());
 		}
 	}
 

@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
@@ -26,6 +27,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int REDSTONE_REGISTRY_GUI = 9;
 	public static final int ALCHEMY_CHART_GUI = 11;
 	public static final int FAKE_CRAFTER_GUI = 12;
+	public static final int STAMP_MILL_GUI = 13;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -38,6 +40,7 @@ public class GuiHandler implements IGuiHandler{
 				return new HeatingChamberContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case COLOR_CHART_GUI:
 				return new ColorChartContainer(player, world, new BlockPos(x, y, z));
+			case REDSTONE_REGISTRY_GUI://Shares Container with the Redstone Keyboard because its Container function is identical.
 			case REDSTONE_KEYBOARD_GUI:
 				return new RedstoneKeyboardContainer();
 			case CRAFTER_GUI:
@@ -46,12 +49,12 @@ public class GuiHandler implements IGuiHandler{
 				return new PrototypingTableContainer(player.inventory, ((PrototypingTableTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case PROTOTYPE_PORT_GUI:
 				return new PrototypePortContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case REDSTONE_REGISTRY_GUI:
-				return new RedstoneKeyboardContainer();//Shares Container with the RedstoneKeyboard because their Container function is identical.
 			case ALCHEMY_CHART_GUI:
 				return new AlchemyChartContainer(player, world);
 			case FAKE_CRAFTER_GUI:
 				return new DetailedCrafterContainer(player.inventory, new BlockPos(x, y, z), true);
+			case STAMP_MILL_GUI:
+				return new StampMillContainer(player.inventory, (StampMillTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;
@@ -82,6 +85,8 @@ public class GuiHandler implements IGuiHandler{
 				return new AlchemyChartGuiContainer(player, world);
 			case FAKE_CRAFTER_GUI:
 				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z), true);
+			case STAMP_MILL_GUI:
+				return new StampMillGuiContainer(player.inventory, ((StampMillTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 
 		return null;

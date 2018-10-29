@@ -87,19 +87,19 @@ public class HeatedTube extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.CRYSTAL) ? 1 : 0) + (state.getValue(Properties.HORIZONTAL_FACING).getHorizontalIndex() << 1);
+		return (state.getValue(Properties.CRYSTAL) ? 1 : 0) + (state.getValue(Properties.HORIZ_FACING).getHorizontalIndex() << 1);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(Properties.HORIZONTAL_FACING, EnumFacing.getHorizontal(meta >> 1));
+		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(Properties.HORIZ_FACING, EnumFacing.getHorizontal(meta >> 1));
 	}
 	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZONTAL_FACING));
+				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_FACING));
 			}
 			return true;
 		}
@@ -113,7 +113,7 @@ public class HeatedTube extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.CRYSTAL, Properties.HORIZONTAL_FACING);
+		return new BlockStateContainer(this, Properties.CRYSTAL, Properties.HORIZ_FACING);
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class HeatedTube extends BlockContainer{
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean pleaseDontBeRelevantToAnythingOrIWillBeSad){
 		addCollisionBoxToList(pos, mask, list, BB_VERT);
 		
-		if(state.getValue(Properties.HORIZONTAL_FACING).getAxis() == EnumFacing.Axis.X){
+		if(state.getValue(Properties.HORIZ_FACING).getAxis() == EnumFacing.Axis.X){
 			addCollisionBoxToList(pos, mask, list, BB_X);
 		}else{
 			addCollisionBoxToList(pos, mask, list, BB_Z);
@@ -136,7 +136,7 @@ public class HeatedTube extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World source, BlockPos pos){
 		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		if(state.getValue(Properties.HORIZONTAL_FACING).getAxis() == EnumFacing.Axis.X){
+		if(state.getValue(Properties.HORIZ_FACING).getAxis() == EnumFacing.Axis.X){
 			list.add(BB_X);
 		}else{
 			list.add(BB_Z);
@@ -155,7 +155,7 @@ public class HeatedTube extends BlockContainer{
 	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
 		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
 		list.add(BB_VERT);
-		if(state.getValue(Properties.HORIZONTAL_FACING).getAxis() == EnumFacing.Axis.X){
+		if(state.getValue(Properties.HORIZ_FACING).getAxis() == EnumFacing.Axis.X){
 			list.add(BB_X);
 		}else{
 			list.add(BB_Z);
@@ -174,7 +174,7 @@ public class HeatedTube extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getStateFromMeta(meta).withProperty(Properties.HORIZONTAL_FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
+		return getStateFromMeta(meta).withProperty(Properties.HORIZ_FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
 	}
 	
 	@Override

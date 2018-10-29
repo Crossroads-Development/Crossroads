@@ -1,10 +1,12 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -17,7 +19,19 @@ import java.util.function.Predicate;
  */
 public class PredicateMap<T, V>{
 
-	private HashSet<Pair<Predicate<T>, V>> entries = new HashSet<Pair<Predicate<T>, V>>();
+	private final HashMap<Predicate<T>, V> entries = new HashMap<>();
+	private final V nullCase;
+
+	public PredicateMap(){
+		nullCase = null;
+	}
+
+	/**
+	 * @param nullCase What this object's methods should return in place of null. Used for things like ItemStacks which rarely permit null values
+	 */
+	public PredicateMap(V nullCase){
+		this.nullCase = nullCase;
+	}
 
 	public int size(){
 		return entries.size();
@@ -27,64 +41,39 @@ public class PredicateMap<T, V>{
 		return entries.isEmpty();
 	}
 
-	public boolean containsKey(Predicate<T> key){
-		for(Pair<Predicate<T>, V> ent : entries){
-			if(ent.getKey().equals(key)){
-				return true;
-			}
-		}
-
-		return false;
+	public boolean containsKey(@Nonnull Predicate<T> key){
+		return entries.containsKey(key);
 	}
 
 	public V get(T target){
-		for(Pair<Predicate<T>, V> ent : entries){
+		for(Map.Entry<Predicate<T>, V> ent : entries.entrySet()){
 			if(ent.getKey().test(target)){
 				return ent.getValue();
 			}
 		}
 
-		return null;
+		return nullCase;
 	}
 
-	public V put(Predicate<T> key, V value){
-		V prevValue = null;
-		for(Pair<Predicate<T>, V> ent : entries){
-			if(ent.getKey().equals(key)){
-				prevValue = ent.getValue();
-				entries.remove(ent);
-				break;
-			}
-		}
-		entries.add(Pair.of(key, value));
-		return prevValue;
+	public V put(@Nonnull Predicate<T> key, V value){
+		V removed = entries.put(key, value);
+		return removed == null ? nullCase : removed;
 	}
 
-	public V remove(Predicate<T> key){
-		V prevValue = null;
-		for(Pair<Predicate<T>, V> ent : entries){
-			if(ent.getKey().equals(key)){
-				prevValue = ent.getValue();
-				entries.remove(ent);
-				break;
-			}
-		}
-		return prevValue;
+	public V remove(@Nonnull Predicate<T> key){
+		V removed = entries.remove(key);
+		return removed == null ? nullCase : removed;
 	}
 
 	public void clear(){
 		entries.clear();
 	}
 
-	public Set<Pair<Predicate<T>, V>> entrySet(){
-		return entries;
+	public Set<Map.Entry<Predicate<T>, V>> entrySet(){
+		return entries.entrySet();
 	}
 
-	public List<V> values(){
-		List<V> val = new ArrayList<>(entries.size());
-		for(Pair<Predicate<T>, V> ent : entries){
-			val.add(ent.getRight());
-		}
-		return val;
+	public Collection<V> values(){
+		return entries.values();
 	}
 }

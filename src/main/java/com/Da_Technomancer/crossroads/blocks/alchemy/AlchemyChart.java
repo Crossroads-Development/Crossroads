@@ -49,12 +49,12 @@ public class AlchemyChart extends Block{
 	
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		switch(state.getValue(Properties.HORIZONTAL_FACING)){
+		switch(state.getValue(Properties.HORIZ_FACING)){
 			case EAST:
 				return BBEAST;
 			case SOUTH:
@@ -78,17 +78,17 @@ public class AlchemyChart extends Block{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZONTAL_FACING);
+		return new BlockStateContainer(this, Properties.HORIZ_FACING);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, EnumFacing.getFront(meta == 0 || meta == 1 ? 2 : meta));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getFront(meta == 0 || meta == 1 ? 2 : meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZONTAL_FACING).getIndex();
+		return state.getValue(Properties.HORIZ_FACING).getIndex();
 	}
 	
 	@Override

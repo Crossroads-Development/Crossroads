@@ -48,7 +48,7 @@ public class MillstoneGuiContainer extends GuiContainer{
 	}
 
 	private int getScaledProgress(){
-		return (int) Math.ceil(te.getProgress() * 17 / MillstoneTileEntity.REQUIRED);
+		return (int) Math.ceil(te.getField(0) * 17 / MillstoneTileEntity.REQUIRED);
 	}
 
 }

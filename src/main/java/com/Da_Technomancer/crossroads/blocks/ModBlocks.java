@@ -118,6 +118,7 @@ public class ModBlocks{
 	public static SolarHeater solarHeater;
 	public static HeatReservoir heatReservoir;
 	public static StirlingEngine stirlingEngine;
+	public static StampMill stampMill;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -258,6 +259,7 @@ public class ModBlocks{
 		solarHeater = new SolarHeater();
 		heatReservoir = new HeatReservoir();
 		stirlingEngine = new StirlingEngine();
+		stampMill = new StampMill();
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -48,7 +48,7 @@ public class WindTurbine extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.withProperty(Properties.HORIZONTAL_FACING, state.getValue(Properties.HORIZONTAL_FACING).rotateY()));
+				worldIn.setBlockState(pos, state.withProperty(Properties.HORIZ_FACING, state.getValue(Properties.HORIZ_FACING).rotateY()));
 			}
 			return true;
 		}
@@ -62,22 +62,22 @@ public class WindTurbine extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
-		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, placer.getHorizontalFacing().getOpposite());
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZONTAL_FACING);
+		return new BlockStateContainer(this, Properties.HORIZ_FACING);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZONTAL_FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZONTAL_FACING).getIndex();
+		return state.getValue(Properties.HORIZ_FACING).getIndex();
 	}
 
 	@Override
