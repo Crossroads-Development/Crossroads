@@ -1,12 +1,11 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.API.gui.*;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToServer;
+import com.Da_Technomancer.crossroads.API.templates.*;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.gui.container.PrototypingTableContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
@@ -14,13 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 
-public class PrototypingTableGuiContainer extends GuiContainer implements ILogUser{
+public class PrototypingTableGuiContainer extends MachineGUI implements OutputLogGuiObject.ILogUser{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID, "textures/gui/container/prototype_table_gui.png");
-
-	private PrototypingTableTileEntity te;
-	private IInventory playerInv;
-
 	private TextBarGuiObject textBar;
 	private ButtonGuiObject button;
 	private ToggleButtonGuiObject disp;
@@ -28,18 +23,9 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 
 	public PrototypingTableGuiContainer(IInventory playerInv, PrototypingTableTileEntity te){
 		super(new PrototypingTableContainer(playerInv, te));
-		this.te = te;
-		this.playerInv = playerInv;
 
 		xSize = 176;
 		ySize = 214;
-	}
-
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks){
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		renderHoveredToolTip(mouseX, mouseY);
 	}
 	
 	@Override
@@ -49,7 +35,7 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 		button = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 76, 70, "Prototype");
 		log = new OutputLogGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 5, 160, 3, 60);
 		disp = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 80, 76, 30, "Show");
-		disp.setDepressed(te.visible);
+		disp.setDepressed(((PrototypingTableTileEntity) te).visible);
 	}
 
 	@Override
@@ -69,7 +55,7 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		fontRenderer.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 120, 4210752);
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		textBar.drawFore(mouseX, mouseY, fontRenderer);
 		log.drawFore(mouseX, mouseY, fontRenderer);
@@ -95,7 +81,7 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 				log.addText("Insufficient Copshowium.", null);
 			}
 		}else if(disp.mouseClicked(x, y, button)){
-			te.visible = !te.visible;
+			((PrototypingTableTileEntity) te).visible = !((PrototypingTableTileEntity) te).visible;
 		}
 	}
 
@@ -106,6 +92,7 @@ public class PrototypingTableGuiContainer extends GuiContainer implements ILogUs
 		}
 	}
 
+	@Override
 	public OutputLogGuiObject getLog(String name){
 		return name.equals("prototypeCreate") ? log : null;
 	}

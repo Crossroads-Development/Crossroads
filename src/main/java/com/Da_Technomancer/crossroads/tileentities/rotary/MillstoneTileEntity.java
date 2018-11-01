@@ -189,4 +189,9 @@ public class MillstoneTileEntity extends InventoryTE{
 		super.readFromNBT(nbt);
 		progress = nbt.getDouble("prog");
 	}
+
+	@Override
+	public String getName(){
+		return "container.millstone";
+	}
 }

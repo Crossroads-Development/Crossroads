@@ -26,8 +26,8 @@ public class ModTileEntity{
 		register(FluidVoidTileEntity.class, "fluid_void");
 		register(HeatExchangerTileEntity.class, "heat_exchanger");
 		register(FluidTankTileEntity.class, "fluid_tank");
-		register(FuelHeaterTileEntity.class, "coal_heater");
-		register(HeatingChamberTileEntity.class, "heating_chamber");
+		register(FireboxTileEntity.class, "coal_heater");
+		register(SmelterTileEntity.class, "heating_chamber");
 		register(SaltReactorTileEntity.class, "salt_reactor");
 		register(FluidCoolingChamberTileEntity.class, "fluid_cooling_chamber");
 		register(LargeGearSlaveTileEntity.class, "large_gear_slave");

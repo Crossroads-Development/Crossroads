@@ -74,9 +74,9 @@ tile.fluid_tank.name=Fluid Tank
 fluid.tile.water=Water
 fluid.tile.lava=Lava
 tile.heating_chamber.name=Smelter
-container.heating_chamber=Smelter
+container.smelter=Smelter
 tile.fuel_heater.name=Firebox
-container.fuel_heater=Firebox
+container.firebox=Firebox
 tile.salt_reactor.name=Salt Reactor
 tile.fluid_cooling_chamber.name=Fluid Cooling Chamber
 item.vacuum.name=Vacuum Cleaner
@@ -258,8 +258,6 @@ item.custom_tool_sword.name=Alchemical Sword
 item.custom_tool_pickaxe.name=Alchemical Pickaxe
 item.custom_tool_shovel.name=Alchemical Shovel
 item.custom_tool_axe.name=Alchemical Axe
-container.sampling_bench=Sampling Bench
-tile.sampling_bench.name=Sampling Bench
 tile.alchemy_chart.name=Alchemy Chart
 tile.densus_plate.name=Density Plate
 tile.anti_densus_plate.name=Anti-Density Plate
@@ -288,18 +286,13 @@ tile.wind_turbine.name=Wind Turbine
 tile.solar_heater.name=Solar Heater
 tile.heat_reservoir.name=Heat Reservoir
 tile.stirling_engine.name=Stirling Engine
+container.steam_boiler=Steam Boiler
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=%1$s Grit
 item.clump_metal.name=%1$s Clump
 fluid.molten_metal=Molten %1$s
 tile.molten_metal.name=Molten %1$s
-
-#TODO
-#fluid.copper=Molten Copper
-#fluid.tin=Molten Tin
-#fluid.gold=Molten Gold
-#fluid.iron=Molten Iron
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ

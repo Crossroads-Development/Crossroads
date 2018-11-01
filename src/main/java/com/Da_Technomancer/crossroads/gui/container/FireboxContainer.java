@@ -1,13 +1,12 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
-import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
 import net.minecraft.inventory.IInventory;
-import org.apache.commons.lang3.tuple.Pair;
 
-public class CoalHeaterContainer extends MachineContainer{
+public class FireboxContainer extends MachineContainer{
 
-	public CoalHeaterContainer(IInventory playerInv, FuelHeaterTileEntity te){
+	public FireboxContainer(IInventory playerInv, FireboxTileEntity te){
 		super(playerInv, te);
 	}
 
@@ -18,7 +17,7 @@ public class CoalHeaterContainer extends MachineContainer{
 	}
 
 	@Override
-	public Pair<Integer, Integer> getInvStart(){
-		return Pair.of(8, 54);
+	public int[] getInvStart(){
+		return new int[] {8, 54};
 	}
 }

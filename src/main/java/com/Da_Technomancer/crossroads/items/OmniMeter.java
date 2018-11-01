@@ -64,23 +64,6 @@ public class OmniMeter extends Item{
 				}
 			}
 
-
-
-//			if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
-//				IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
-//				chat.add("Speed: " + axle.getMotionData()[0]);
-//				chat.add("Energy: " + axle.getMotionData()[1]);
-//				chat.add("Power: " + axle.getMotionData()[2]);
-//				chat.add("I: " + axle.getMoInertia() + ", Rotation Ratio: " + axle.getRotationRatio());
-//			}else if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
-//				IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing);
-//				chat.add("Speed: " + axle.getMotionData()[0]);
-//				chat.add("Energy: " + axle.getMotionData()[1]);
-//				chat.add("Power: " + axle.getMotionData()[2]);
-//				chat.add("I: " + axle.getMoInertia() + ", Rotation Ratio: " + axle.getRotationRatio());
-//			}
-
-
 			if(te.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null)){
 				chat.add("Total Energy: " + MiscUtil.betterRound(te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, null).getTotalEnergy(), 3));
 			}

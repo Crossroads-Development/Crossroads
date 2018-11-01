@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.gui;
+package com.Da_Technomancer.crossroads.API.templates;
 
 import java.awt.Color;
 import java.util.function.Predicate;

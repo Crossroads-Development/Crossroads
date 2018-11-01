@@ -148,13 +148,6 @@ public class DetailedCrafterContainer extends Container{
 
 		if(!world.isRemote){
 			clearContainer(playerIn, world, inInv);
-//			for(int i = 0; i < 9; ++i){
-//				ItemStack itemstack = inInv.removeStackFromSlot(i);
-//
-//				if(!itemstack.isEmpty()){
-//					playerIn.dropItem(itemstack, false);
-//				}
-//			}
 		}
 	}
 

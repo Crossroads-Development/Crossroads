@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -28,9 +28,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class HeatingChamber extends BlockContainer{
+public class Smelter extends BlockContainer{
 
-	public HeatingChamber(){
+	public Smelter(){
 		super(Material.IRON);
 		String name = "heating_chamber";
 		setUnlocalizedName(name);
@@ -45,7 +45,7 @@ public class HeatingChamber extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			playerIn.openGui(Main.instance, GuiHandler.HEATING_CHAMBER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(Main.instance, GuiHandler.SMELTER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}
@@ -63,14 +63,14 @@ public class HeatingChamber extends BlockContainer{
 	}
 
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new HeatingChamberTileEntity();
+		return new SmelterTileEntity();
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		for(int i = 0; i < HeatingChamberTileEntity.TEMP_TIERS.length; i++){
-			tooltip.add((i + 1) + "x speed: -" + HeatingChamberTileEntity.USAGE * (i + 1) + "°C/t when above " + HeatingChamberTileEntity.TEMP_TIERS[i] + "°C");
+		for(int i = 0; i < SmelterTileEntity.TEMP_TIERS.length; i++){
+			tooltip.add((i + 1) + "x speed: -" + SmelterTileEntity.USAGE * (i + 1) + "°C/t when above " + SmelterTileEntity.TEMP_TIERS[i] + "°C");
 		}
 	}
 }

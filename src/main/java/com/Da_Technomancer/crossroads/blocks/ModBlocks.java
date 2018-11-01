@@ -34,8 +34,8 @@ public class ModBlocks{
 	public static HeatExchanger heatExchanger;
 	public static HeatExchanger insulHeatExchanger;
 	public static FluidTank fluidTank;
-	public static FuelHeater fuelHeater;
-	public static HeatingChamber heatingChamber;
+	public static Firebox fuelHeater;
+	public static Smelter heatingChamber;
 	public static SaltReactor saltReactor;
 	public static FluidCoolingChamber fluidCoolingChamber;
 	public static LargeGearMaster largeGearMaster;
@@ -176,8 +176,8 @@ public class ModBlocks{
 		heatExchanger = new HeatExchanger(false);
 		insulHeatExchanger = new HeatExchanger(true);
 		fluidTank = new FluidTank();
-		fuelHeater = new FuelHeater();
-		heatingChamber = new HeatingChamber();
+		fuelHeater = new Firebox();
+		heatingChamber = new Smelter();
 		saltReactor = new SaltReactor();
 		fluidCoolingChamber = new FluidCoolingChamber();
 		radiator = new Radiator();

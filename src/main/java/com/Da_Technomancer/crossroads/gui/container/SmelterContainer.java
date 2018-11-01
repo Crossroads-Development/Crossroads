@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
-import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
 import net.minecraft.inventory.IInventory;
 
-public class HeatingChamberContainer extends MachineContainer{
+public class SmelterContainer extends MachineContainer{
 
-	public HeatingChamberContainer(IInventory playerInv, HeatingChamberTileEntity te){
+	public SmelterContainer(IInventory playerInv, SmelterTileEntity te){
 		super(playerInv, te);
 	}
 

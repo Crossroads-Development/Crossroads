@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.API.gui.TextBarGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.Main;

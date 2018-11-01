@@ -2,8 +2,9 @@ package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.gui.container.*;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.heat.HeatingChamberTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
@@ -17,14 +18,16 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 public class GuiHandler implements IGuiHandler{
 
 	public static final int MILLSTONE_GUI = 0;
-	public static final int COAL_HEATER_GUI = 1;
-	public static final int HEATING_CHAMBER_GUI = 2;
+	public static final int FIREBOX_GUI = 1;
+	public static final int SMELTER_GUI = 2;
+	public static final int STEAM_BOILER_GUI = 3;
 	public static final int COLOR_CHART_GUI = 4;
 	public static final int REDSTONE_KEYBOARD_GUI = 5;
 	public static final int CRAFTER_GUI = 6;
 	public static final int PROTOTYPING_GUI = 7;
 	public static final int PROTOTYPE_PORT_GUI = 8;
 	public static final int REDSTONE_REGISTRY_GUI = 9;
+	//10
 	public static final int ALCHEMY_CHART_GUI = 11;
 	public static final int FAKE_CRAFTER_GUI = 12;
 	public static final int STAMP_MILL_GUI = 13;
@@ -34,10 +37,12 @@ public class GuiHandler implements IGuiHandler{
 		switch(ID){
 			case MILLSTONE_GUI:
 				return new MillstoneContainer(player.inventory, ((MillstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case COAL_HEATER_GUI:
-				return new CoalHeaterContainer(player.inventory, ((FuelHeaterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case HEATING_CHAMBER_GUI:
-				return new HeatingChamberContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case FIREBOX_GUI:
+				return new FireboxContainer(player.inventory, ((FireboxTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case SMELTER_GUI:
+				return new SmelterContainer(player.inventory, ((SmelterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case STEAM_BOILER_GUI:
+				return new SteamBoilerContainer(player.inventory, (SteamBoilerTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
 			case COLOR_CHART_GUI:
 				return new ColorChartContainer(player, world, new BlockPos(x, y, z));
 			case REDSTONE_REGISTRY_GUI://Shares Container with the Redstone Keyboard because its Container function is identical.
@@ -65,10 +70,12 @@ public class GuiHandler implements IGuiHandler{
 		switch(ID){
 			case MILLSTONE_GUI:
 				return new MillstoneGuiContainer(player.inventory, ((MillstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case COAL_HEATER_GUI:
-				return new CoalHeaterGuiContainer(player.inventory, ((FuelHeaterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case HEATING_CHAMBER_GUI:
-				return new HeatingChamberGuiContainer(player.inventory, ((HeatingChamberTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case FIREBOX_GUI:
+				return new FireboxGuiContainer(player.inventory, ((FireboxTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case SMELTER_GUI:
+				return new SmelterGuiContainer(player.inventory, ((SmelterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case STEAM_BOILER_GUI:
+				return new SteamBoilerGuiContainer(player.inventory, (SteamBoilerTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
 			case COLOR_CHART_GUI:
 				return new ColorChartGuiContainer(player, world, new BlockPos(x, y, z));
 			case REDSTONE_KEYBOARD_GUI:

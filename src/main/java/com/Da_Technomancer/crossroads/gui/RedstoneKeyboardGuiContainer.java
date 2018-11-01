@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.gui;
 
 import java.io.IOException;
 
-import com.Da_Technomancer.crossroads.API.gui.ButtonGuiObject;
-import com.Da_Technomancer.crossroads.API.gui.TextBarGuiObject;
-import com.Da_Technomancer.crossroads.API.gui.ToggleButtonGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.ButtonGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToServer;
 import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;

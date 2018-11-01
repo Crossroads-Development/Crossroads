@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.gui;
+package com.Da_Technomancer.crossroads.API.templates;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -99,5 +99,15 @@ public class OutputLogGuiObject implements IGuiObject{
 	 */
 	public void clearLog(){
 		text.clear();
+	}
+
+	/**
+	 * Not everything using OutputLogGuiObject needs to implement this interface, this is only for allowing logs to be manipulated by packets. This should be applied to the GuiContainer.
+	 */
+	public static interface ILogUser{
+
+		@Nullable
+		public OutputLogGuiObject getLog(String name);
+
 	}
 }

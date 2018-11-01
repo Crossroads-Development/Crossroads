@@ -10,7 +10,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class HeatingChamberTileEntity extends InventoryTE{
+public class SmelterTileEntity extends InventoryTE{
 
 	public static final int REQUIRED = 500;
 	public static final int[] TEMP_TIERS = {200, 300};
@@ -28,7 +28,7 @@ public class HeatingChamberTileEntity extends InventoryTE{
 		return false;
 	}
 
-	public HeatingChamberTileEntity(){
+	public SmelterTileEntity(){
 		super(2);// 0 = Input, 1 = Output
 	}
 
@@ -110,7 +110,7 @@ public class HeatingChamberTileEntity extends InventoryTE{
 
 	@Override
 	public String getName(){
-		return "container.heating_chamber";
+		return "container.smelter";
 	}
 
 	@Override

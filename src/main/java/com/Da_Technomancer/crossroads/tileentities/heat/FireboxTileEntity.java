@@ -12,11 +12,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class FuelHeaterTileEntity extends InventoryTE{
+public class FireboxTileEntity extends InventoryTE{
 
 	private int burnTime;
 
-	public FuelHeaterTileEntity(){
+	public FireboxTileEntity(){
 		super(1);
 	}
 
@@ -117,6 +117,6 @@ public class FuelHeaterTileEntity extends InventoryTE{
 
 	@Override
 	public String getName(){
-		return "container.fuel_heater";
+		return "container.firebox";
 	}
 }

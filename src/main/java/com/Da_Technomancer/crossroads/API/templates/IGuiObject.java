@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.API.gui;
+package com.Da_Technomancer.crossroads.API.templates;
 
 import net.minecraft.client.gui.FontRenderer;
 
@@ -22,7 +22,7 @@ public interface IGuiObject{
 	/**
 	 * Draws the background layer.
 	 * 
-	 * @param partialTicks
+	 * @param partialTicks Number of partial ticks, from 0 to 1
 	 * @param mouseX X position of the mouse.
 	 * @param mouseY Y position of the mouse.
 	 * @param fontRenderer a FontRenderer object.

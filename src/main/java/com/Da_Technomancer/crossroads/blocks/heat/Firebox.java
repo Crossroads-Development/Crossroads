@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.heat.FuelHeaterTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -28,9 +28,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FuelHeater extends BlockContainer{
+public class Firebox extends BlockContainer{
 
-	public FuelHeater(){
+	public Firebox(){
 		super(Material.ROCK);
 		String name = "fuel_heater";
 		setUnlocalizedName(name);
@@ -43,7 +43,7 @@ public class FuelHeater extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new FuelHeaterTileEntity();
+		return new FireboxTileEntity();
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class FuelHeater extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			playerIn.openGui(Main.instance, GuiHandler.COAL_HEATER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(Main.instance, GuiHandler.FIREBOX_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}

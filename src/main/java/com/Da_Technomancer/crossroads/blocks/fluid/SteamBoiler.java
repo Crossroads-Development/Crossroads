@@ -1,8 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
 import net.minecraft.block.BlockContainer;
@@ -10,8 +11,8 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -20,10 +21,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -54,33 +53,16 @@ public class SteamBoiler extends BlockContainer{
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0));
+		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
 		super.breakBlock(world, pos, blockstate);
 	}
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(te instanceof SteamBoilerTileEntity){
-
-				if(playerIn == null || !FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null)){
-					int saltContent = ((SteamBoilerTileEntity) te).inventory.getCount();
-					if(saltContent != 0){
-						((SteamBoilerTileEntity) te).inventory = ItemStack.EMPTY;
-						te.markDirty();
-						ItemStack gotten = MiscUtil.getOredictStack("dustSalt", saltContent);
-						if(!playerIn.inventory.addItemStackToInventory(gotten)){
-							EntityItem dropped = playerIn.dropItem(gotten, false);
-							dropped.setNoPickupDelay();
-							dropped.setOwner(playerIn.getName());
-							return true;
-						}
-					}
-				}
-			}
+			playerIn.openGui(Main.instance, GuiHandler.STEAM_BOILER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
-		return worldIn.isRemote;
+		return true;
 	}
 
 	@Override
@@ -89,10 +71,5 @@ public class SteamBoiler extends BlockContainer{
 		for(int i = 0; i < SteamBoilerTileEntity.TIERS.length; i++){
 			tooltip.add("Boils " + (i + 1) * SteamBoilerTileEntity.BATCH_SIZE + "mB/t of water using " + (int) (SteamBoilerTileEntity.BATCH_SIZE * (i + 1) * EnergyConverters.degPerSteamBucket(true) / 1000) + "°C/t when above " + SteamBoilerTileEntity.TIERS[i] + "°C");
 		}
-
-//		tooltip.add("Produces: 100mB/t steam while running");
-//		tooltip.add("Produces: 1 salt/t while running with normal water");
-//		tooltip.add("Consumes: 100mB/t [distilled] water while running");
-//		tooltip.add("Consumes: -5°C/t while above 100°C and contains any [distilled] water");
 	}
 }

@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.gui.ButtonGuiObject;
-import com.Da_Technomancer.crossroads.API.gui.OutputLogGuiObject;
-import com.Da_Technomancer.crossroads.API.gui.TextBarGuiObject;
-import com.Da_Technomancer.crossroads.API.gui.ToggleButtonGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.ButtonGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.OutputLogGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleArrayToServer;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;

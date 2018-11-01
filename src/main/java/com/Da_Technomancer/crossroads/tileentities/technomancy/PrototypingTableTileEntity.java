@@ -397,7 +397,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && MiscUtil.hasOreDict(stack, "ingotCopshowium");
+		return index == 0 && MiscUtil.hasOreDict(stack, "ingotCopshowium") || (index == 1 || index == 3) && stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() == ModBlocks.prototype;
 	}
 
 	@Override
@@ -422,7 +422,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 
 	@Override
 	public String getName(){
-		return "container.prototype_table";
+		return "";
 	}
 
 	private static class TemplateError{

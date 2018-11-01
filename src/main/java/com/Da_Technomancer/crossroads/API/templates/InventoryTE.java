@@ -48,16 +48,12 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 	}
 
 	@Override
-	public String getName(){
-		return null;
-	}
-
-	@Override
 	public boolean hasCustomName(){
 		return false;
 	}
 
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName(){
 		return new TextComponentTranslation(getName());
 	}

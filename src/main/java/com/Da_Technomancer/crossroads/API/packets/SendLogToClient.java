@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.API.gui.ILogUser;
-import com.Da_Technomancer.crossroads.API.gui.OutputLogGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.OutputLogGuiObject;
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -50,8 +49,8 @@ public class SendLogToClient extends Message<SendLogToClient>{
 
 	public void processMessage(String logName, String text, Color col, boolean clear){
 		GuiScreen gui = Minecraft.getMinecraft().currentScreen;
-		if(gui instanceof ILogUser){
-			OutputLogGuiObject log = ((ILogUser) gui).getLog(logName);
+		if(gui instanceof OutputLogGuiObject.ILogUser){
+			OutputLogGuiObject log = ((OutputLogGuiObject.ILogUser) gui).getLog(logName);
 			if(log != null){
 				if(clear){
 					log.clearLog();

@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.API.gui.RadioButtonGuiObject;
-import com.Da_Technomancer.crossroads.API.gui.TextBarGuiObject;
-import com.Da_Technomancer.crossroads.API.gui.ToggleButtonGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.RadioButtonGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToServer;
