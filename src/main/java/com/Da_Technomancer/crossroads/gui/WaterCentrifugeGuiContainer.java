@@ -4,17 +4,17 @@ import com.Da_Technomancer.crossroads.API.templates.FluidGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.IGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.gui.container.SteamBoilerContainer;
-import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
+import com.Da_Technomancer.crossroads.gui.container.WaterCentrifugeContainer;
+import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
-public class SteamBoilerGuiContainer extends MachineGUI{
+public class WaterCentrifugeGuiContainer extends MachineGUI{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/container/steam_boiler_gui.png");
 
-	public SteamBoilerGuiContainer(IInventory playerInv, SteamBoilerTileEntity te){
-		super(new SteamBoilerContainer(playerInv, te));
+	public WaterCentrifugeGuiContainer(IInventory playerInv, WaterCentrifugeTileEntity te){
+		super(new WaterCentrifugeContainer(playerInv, te));
 	}
 
 	@Override

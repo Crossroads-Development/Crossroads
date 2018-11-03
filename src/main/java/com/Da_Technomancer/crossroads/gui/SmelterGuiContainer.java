@@ -23,12 +23,9 @@ public class SmelterGuiContainer extends MachineGUI{
 
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
-		drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
+		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
 
-		drawTexturedModalRect(i + 79, j + 34, 176, 0, getBurnLeftScaled(24), 17);
+		drawTexturedModalRect(i + 79, j + 34, 176, 0, te.getField(te.getFieldCount() - 1) * 24 / SmelterTileEntity.REQUIRED, 17);
 	}
 
-	private int getBurnLeftScaled(int pixels){
-		return te.getField(0) * pixels / SmelterTileEntity.REQUIRED;
-	}
 }

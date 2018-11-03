@@ -33,7 +33,7 @@ public class BlockLiquidFat extends BlockFluidClassic{
 	 * For normal use.
 	 */
 	public static Fluid getLiquidFat(){
-		return FluidRegistry.getFluid("liquidfat");
+		return FluidRegistry.getFluid("liquid_fat");
 	}
 
 	private static class FluidLiquidFat extends Fluid{

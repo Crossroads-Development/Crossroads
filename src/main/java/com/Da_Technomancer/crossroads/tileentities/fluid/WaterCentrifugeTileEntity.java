@@ -2,59 +2,58 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.essentials.shared.IAxisHandler;
-import com.Da_Technomancer.essentials.shared.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
+public class WaterCentrifugeTileEntity extends InventoryTE{
 
-	private ItemStack inv = ItemStack.EMPTY;
-	private FluidStack water;
-	private FluidStack dWater;
-	private final int CAPACITY = 10_000;
 	private static final double TIP_POINT = .5D;
 	private boolean neg;
 
-	private final double[] motionData = new double[4];
+	public WaterCentrifugeTileEntity(){
+		super(1);
+		fluidProps[0] = new TankProperty(0, 10_000, true, false, (Fluid f) -> f == FluidRegistry.WATER);
+		fluidProps[1] = new TankProperty(1, 10_000, false, true, null);
+	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return (oldState.getBlock() != newState.getBlock());
+	public int fluidTanks(){
+		return 2;
 	}
-	
+
+	@Override
+	public boolean useRotary(){
+		return true;
+	}
+
 	@Override
 	public void update(){
+		super.update();
 		if(world.isRemote){
 			return;
 		}
 
-		if(Math.abs(motionData[0]) >= TIP_POINT && (Math.signum(motionData[0]) == -1) == neg){
+		if(Math.abs(motData[0]) >= TIP_POINT && (Math.signum(motData[0]) == -1) == neg){
 			neg = !neg;
-			if(water != null && water.amount >= 100){
-				if((water.amount -= 100) == 0){
-					water = null;
+			if(fluids[0] != null && fluids[0].amount >= 100){
+				if((fluids[0].amount -= 100) == 0){
+					fluids[0] = null;
 				}
-				dWater = new FluidStack(BlockDistilledWater.getDistilledWater(), Math.min(CAPACITY, 100 + (dWater == null ? 0 : dWater.amount)));
-				inv = new ItemStack(ModItems.dustSalt, Math.min(64, 1 + inv.getCount()));
+				fluids[1] = new FluidStack(BlockDistilledWater.getDistilledWater(), Math.min(fluidProps[1].getCapacity(), 100 + (fluids[1] == null ? 0 : fluids[1].amount)));
+				inventory[0] = new ItemStack(ModItems.dustSalt, Math.min(64, 1 + inventory[0].getCount()));
+				markDirty();
 			}
 		}
 	}
@@ -62,18 +61,7 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-
 		nbt.setBoolean("neg", neg);
-
-		if(water != null){
-			nbt.setTag("water", water.writeToNBT(new NBTTagCompound()));
-		}
-		if(dWater != null){
-			nbt.setTag("dWater", dWater.writeToNBT(new NBTTagCompound()));
-		}
-		if(!inv.isEmpty()){
-			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
-		}
 
 		return nbt;
 	}
@@ -81,32 +69,13 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-
 		neg = nbt.getBoolean("neg");
-		water = nbt.hasKey("water") ? FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("water")) : null;
-		dWater = nbt.hasKey("dWater") ? FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("dWater")) : null;
-		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
 	}
 
-	private final IFluidHandler waterHandler = new WaterHandler();
-	private final IFluidHandler dWaterHandler = new dWaterHandler();
-	private final IFluidHandler masterHandler = new MasterHandler();
-	private final IItemHandler saltHandler = new SaltHandler();
-	private final IAxleHandler axleHandler = new AxleHandler();
-
-	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing facing){
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.DOWN && facing != EnumFacing.UP){
-			return true;
-		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
-			return true;
-		}
-		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.UP){
-			return true;
-		}
-		return super.hasCapability(cap, facing);
-	}
+	private final IFluidHandler waterHandler = new FluidHandler(0);
+	private final IFluidHandler dWaterHandler = new FluidHandler(1);
+	private final IFluidHandler masterHandler = new FluidHandler(-1);
+	private final IItemHandler saltHandler = new ItemHandler(null);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -114,13 +83,13 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == null){
 			return (T) masterHandler;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (facing.getAxis() == Axis.X) != world.getBlockState(pos).getValue(Properties.ORIENT)){
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() != world.getBlockState(pos).getValue(Properties.HORIZ_AXIS)){
 			return (T) waterHandler;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (facing.getAxis() == Axis.X) == world.getBlockState(pos).getValue(Properties.ORIENT)){
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_AXIS)){
 			return (T) dWaterHandler;
 		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) saltHandler;
 		}
 		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.UP){
@@ -130,234 +99,23 @@ public class WaterCentrifugeTileEntity extends TileEntity implements ITickable{
 		return super.getCapability(cap, facing);
 	}
 
-	private class AxleHandler implements IAxleHandler{
-
-		@Override
-		public double[] getMotionData(){
-			return motionData;
-		}
-
-		private double rotRatio;
-		private byte updateKey;
-
-		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
-			//If true, this has already been checked.
-			if(key == updateKey || masterIn.addToList(this)){
-				return;
-			}
-
-			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
-			updateKey = key;
-		}
-
-		@Override
-		public double getMoInertia(){
-			return 115;
-		}
-
-		@Override
-		public double getRotationRatio(){
-			return rotRatio;
-		}
-
-		@Override
-		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
-			if(allowInvert && absolute){
-				motionData[1] += energy;
-			}else if(allowInvert){
-				motionData[1] += energy * Math.signum(motionData[1]);
-			}else if(absolute){
-				int sign = (int) Math.signum(motionData[1]);
-				motionData[1] += energy;
-				if(sign != 0 && Math.signum(motionData[1]) != sign){
-					motionData[1] = 0;
-				}
-			}else{
-				int sign = (int) Math.signum(motionData[1]);
-				motionData[1] += energy * ((double) sign);
-				if(Math.signum(motionData[1]) != sign){
-					motionData[1] = 0;
-				}
-			}
-			markDirty();
-		}
-
-		@Override
-		public void markChanged(){
-			markDirty();
-		}
-
-		@Override
-		public boolean shouldManageAngle(){
-			return false;
-		}
+	@Override
+	public double getMoInertia(){
+		return 115;
 	}
 
-	private class WaterHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(water, CAPACITY, true, false)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource == null || resource.getFluid() != FluidRegistry.WATER || resource.amount <= 0){
-				return 0;
-			}
-
-			int cap = Math.min(resource.amount, water == null ? CAPACITY : CAPACITY - water.amount);
-
-			if(doFill){
-				water = new FluidStack(FluidRegistry.WATER, cap + (water == null ? 0 : water.amount));
-			}
-
-			return cap;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			return null;
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			return null;
-		}
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+		return index == 0;
 	}
 
-	private class dWaterHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(dWater, CAPACITY, false, true)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			return 0;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource == null || dWater == null || resource.getFluid() != BlockDistilledWater.getDistilledWater() || resource.amount <= 0){
-				return null;
-			}
-
-			int cap = Math.min(resource.amount, dWater.amount);
-
-			if(doDrain && (dWater.amount -= cap) <= 0){
-				dWater = null;
-			}
-
-			return new FluidStack(BlockDistilledWater.getDistilledWater(), cap);
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(dWater == null || maxDrain <= 0){
-				return null;
-			}
-
-			int cap = Math.min(maxDrain, dWater.amount);
-
-			if(doDrain && (dWater.amount -= cap) <= 0){
-				dWater = null;
-			}
-
-			return new FluidStack(BlockDistilledWater.getDistilledWater(), cap);
-		}
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack){
+		return false;
 	}
 
-	private class MasterHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(water, CAPACITY, true, false), new FluidTankProperties(dWater, CAPACITY, false, true)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource == null || resource.getFluid() != FluidRegistry.WATER || resource.amount <= 0){
-				return 0;
-			}
-
-			int cap = Math.min(resource.amount, water == null ? CAPACITY : CAPACITY - water.amount);
-
-			if(doFill){
-				water = new FluidStack(FluidRegistry.WATER, cap + (water == null ? 0 : water.amount));
-			}
-
-			return cap;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource == null || dWater == null || resource.getFluid() != BlockDistilledWater.getDistilledWater() || resource.amount <= 0){
-				return null;
-			}
-
-			int cap = Math.min(resource.amount, dWater.amount);
-
-			if(doDrain && (dWater.amount -= cap) <= 0){
-				dWater = null;
-			}
-
-			return new FluidStack(BlockDistilledWater.getDistilledWater(), cap);
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(dWater == null || maxDrain <= 0){
-				return null;
-			}
-
-			int cap = Math.min(maxDrain, dWater.amount);
-
-			if(doDrain && (dWater.amount -= cap) <= 0){
-				dWater = null;
-			}
-
-			return new FluidStack(BlockDistilledWater.getDistilledWater(), cap);
-		}
-	}
-
-	private class SaltHandler implements IItemHandler{
-
-		@Override
-		public int getSlots(){
-			return 1;
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inv : ItemStack.EMPTY;
-		}
-
-		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			return stack;
-		}
-
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			if(slot != 0 || amount <= 0 || inv.isEmpty()){
-				return ItemStack.EMPTY;
-			}
-
-			int cap = Math.min(amount, inv.getCount());
-
-			if(!simulate){
-				inv.shrink(cap);
-			}
-
-			return new ItemStack(ModItems.dustSalt, cap);
-		}
-
-		@Override
-		public int getSlotLimit(int slot){
-			return slot == 0 ? 64 : 0;
-		}
+	@Override
+	public String getName(){
+		return "container.water_centrifuge";
 	}
 }

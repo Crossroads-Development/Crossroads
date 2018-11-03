@@ -28,14 +28,11 @@ public class FireboxGuiContainer extends MachineGUI{
 		int j = (height - ySize) / 2;
 		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
 
-		int k = getBurnLeftScaled();
+		int burnTime = te.getField(te.getFieldCount() - 1);
+		int k = burnTime == 0 ? 0 : 1 + (burnTime * 13 / 1600);
 		if(k != 0){
-			drawTexturedModalRect(i + 81, j + 6 + 13 - k, 176, 13 - k, 14, k);
+			drawTexturedModalRect(i + 81, j + 19 - k, 176, 13 - k, 14, k);
 		}
 	}
-	
-	private int getBurnLeftScaled(){
-		int burnTime = te.getField(0);
-		return burnTime == 0 ? 0 : 1 + (te.getField(0) * 13 / 1600);
-	}
+
 }

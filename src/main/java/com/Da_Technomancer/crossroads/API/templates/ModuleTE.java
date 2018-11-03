@@ -33,7 +33,7 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE{
 	protected double temp;
 	protected final FluidStack[] fluids = new FluidStack[fluidTanks()];
 	/**
-	 * Machines overriding the fluidTanks() method should set each tank capacity in the constructor
+	 * Machines overriding the fluidTanks() method should set each tank capacity in the constructor. DO NOT LEAVE THEM AS NULL
 	 */
 	protected final IFluidTankProperties[] fluidProps = new IFluidTankProperties[fluidTanks()];
 
@@ -304,6 +304,16 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE{
 		protected final boolean canFill;
 		protected final boolean canDrain;
 		protected final Predicate<Fluid> canAccept;
+
+		/**
+		 * @param tank The index of the fluidstack this relates to in the fluids array
+		 * @param capacity The capacity of this tank
+		 * @param canFill Whether this tank can be filled by pipes
+		 * @param canDrain Whether this tank can be drained by pipes
+		 */
+		public TankProperty(int tank, int capacity, boolean canFill, boolean canDrain){
+			this(tank, capacity, canFill, canDrain, null);
+		}
 
 		/**
 		 * @param tank The index of the fluidstack this relates to in the fluids array

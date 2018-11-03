@@ -1,8 +1,10 @@
 package com.Da_Technomancer.crossroads.gui;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.gui.container.*;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
@@ -27,10 +29,13 @@ public class GuiHandler implements IGuiHandler{
 	public static final int PROTOTYPING_GUI = 7;
 	public static final int PROTOTYPE_PORT_GUI = 8;
 	public static final int REDSTONE_REGISTRY_GUI = 9;
-	//10
+	public static final int WATER_CENTRIFUGE_GUI = 10;
 	public static final int ALCHEMY_CHART_GUI = 11;
 	public static final int FAKE_CRAFTER_GUI = 12;
 	public static final int STAMP_MILL_GUI = 13;
+	public static final int FAT_COLLECTOR_GUI = 14;
+	public static final int SALT_REACTOR_GUI = 15;
+	public static final int RADIATOR_GUI = 16;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -48,6 +53,8 @@ public class GuiHandler implements IGuiHandler{
 			case REDSTONE_REGISTRY_GUI://Shares Container with the Redstone Keyboard because its Container function is identical.
 			case REDSTONE_KEYBOARD_GUI:
 				return new RedstoneKeyboardContainer();
+			case WATER_CENTRIFUGE_GUI:
+				return new WaterCentrifugeContainer(player.inventory, (WaterCentrifugeTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
 			case CRAFTER_GUI:
 				return new DetailedCrafterContainer(player.inventory, new BlockPos(x, y, z), false);
 			case PROTOTYPING_GUI:
@@ -60,6 +67,12 @@ public class GuiHandler implements IGuiHandler{
 				return new DetailedCrafterContainer(player.inventory, new BlockPos(x, y, z), true);
 			case STAMP_MILL_GUI:
 				return new StampMillContainer(player.inventory, (StampMillTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
+			case FAT_COLLECTOR_GUI:
+				return new FatCollectorContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case SALT_REACTOR_GUI:
+				return new SaltReactorContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case RADIATOR_GUI:
+				return new RadiatorContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;
@@ -80,6 +93,8 @@ public class GuiHandler implements IGuiHandler{
 				return new ColorChartGuiContainer(player, world, new BlockPos(x, y, z));
 			case REDSTONE_KEYBOARD_GUI:
 				return new RedstoneKeyboardGuiContainer(((RedstoneKeyboardTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case WATER_CENTRIFUGE_GUI:
+				return new WaterCentrifugeGuiContainer(player.inventory, (WaterCentrifugeTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
 			case CRAFTER_GUI:
 				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z), false);
 			case PROTOTYPING_GUI:
@@ -94,6 +109,12 @@ public class GuiHandler implements IGuiHandler{
 				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z), true);
 			case STAMP_MILL_GUI:
 				return new StampMillGuiContainer(player.inventory, ((StampMillTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case FAT_COLLECTOR_GUI:
+				return new FatCollectorGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case SALT_REACTOR_GUI:
+				return new SaltReactorGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case RADIATOR_GUI:
+				return new RadiatorGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;

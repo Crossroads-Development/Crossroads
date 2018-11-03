@@ -4,9 +4,9 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import net.minecraft.inventory.IInventory;
 
-public class SteamBoilerContainer extends MachineContainer{
+public class WaterCentrifugeContainer extends MachineContainer{
 
-	public SteamBoilerContainer(IInventory playerInv, InventoryTE te){
+	public WaterCentrifugeContainer(IInventory playerInv, InventoryTE te){
 		super(playerInv, te);
 	}
 

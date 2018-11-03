@@ -2,107 +2,52 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-import java.util.ArrayList;
+public class RadiatorTileEntity extends InventoryTE{
 
-public class RadiatorTileEntity extends TileEntity implements ITickable, IInfoTE{
-
-	private FluidStack steam = null;
-	private FluidStack water = null;
-	private double temp;
-	private static final int CAPACITY = 10_000;
-	private boolean init = false;
+	public RadiatorTileEntity(){
+		super(0);
+		fluidProps[0] = new TankProperty(0, 10_000, true, false, (Fluid f) -> f == BlockSteam.getSteam());
+		fluidProps[1] = new TankProperty(1, 10_000, false, true);
+	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
-		chat.add("Temp: " + MiscUtil.betterRound(heatHandler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+	public int fluidTanks(){
+		return 2;
+	}
+
+	@Override
+	public boolean useHeat(){
+		return true;
 	}
 
 	@Override
 	public void update(){
-		if(!init){
-			temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-			init = true;
-		}
+		super.update();
 
-		if(!world.isRemote && steam != null && steam.amount >= 100 && (water == null || CAPACITY - water.amount >= 100)){
+		if(!world.isRemote && fluids[0] != null && fluids[0].amount >= 100 && (fluids[1] == null || fluidProps[1].getCapacity() - fluids[1].amount >= 100)){
 			temp += .1D * EnergyConverters.degPerSteamBucket(false);
-			water = new FluidStack(BlockDistilledWater.getDistilledWater(), 100 + (water == null ? 0 : water.amount));
-			steam.amount -= 100;
-			if(steam.amount <= 0){
-				steam = null;
+			fluids[1] = new FluidStack(BlockDistilledWater.getDistilledWater(), 100 + (fluids[1] == null ? 0 : fluids[1].amount));
+			fluids[0].amount -= 100;
+			if(fluids[0].amount <= 0){
+				fluids[0] = null;
 			}
 			markDirty();
 		}
-
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
-		super.readFromNBT(nbt);
-
-		init = nbt.getBoolean("init");
-		temp = nbt.getDouble("temp");
-
-		if(nbt.hasKey("steam")){
-			steam = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("steam"));
-		}
-		if(nbt.hasKey("water")){
-			water = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("water"));
-		}
-
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-		super.writeToNBT(nbt);
-		nbt.setBoolean("init", init);
-		nbt.setDouble("temp", temp);
-
-		if(steam != null){
-			nbt.setTag("steam", steam.writeToNBT(new NBTTagCompound()));
-		}
-		if(water != null){
-			nbt.setTag("water", water.writeToNBT(new NBTTagCompound()));
-		}
-
-		return nbt;
-	}
-
-	private final HeatHandler heatHandler = new HeatHandler();
-	private final SteamHandler steamHandler = new SteamHandler();
-	private final WaterHandler waterHandler = new WaterHandler();
-	private final InnerHandler innerHandler = new InnerHandler();
-
-	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && side != EnumFacing.UP && side != EnumFacing.DOWN){
-			return true;
-		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (side == null || side == EnumFacing.UP || side == EnumFacing.DOWN)){
-			return true;
-		}
-
-		return super.hasCapability(cap, side);
-	}
+	private final FluidHandler steamHandler = new FluidHandler(0);
+	private final FluidHandler waterHandler = new FluidHandler(1);
+	private final FluidHandler innerHandler = new FluidHandler(-1);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -129,154 +74,18 @@ public class RadiatorTileEntity extends TileEntity implements ITickable, IInfoTE
 		return super.getCapability(cap, side);
 	}
 
-	private class HeatHandler implements IHeatHandler{
-		private void init(){
-			if(!init){
-				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-				init = true;
-			}
-		}
-
-		@Override
-		public double getTemp(){
-			init();
-			return temp;
-		}
-
-		@Override
-		public void setTemp(double tempIn){
-			init = true;
-			temp = tempIn;
-		}
-
-		@Override
-		public void addHeat(double heat){
-			init();
-			temp += heat;
-		}
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+		return false;
 	}
 
-	private class InnerHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new FluidTankProperties[] {new FluidTankProperties(steam, CAPACITY, true, false), new FluidTankProperties(water, CAPACITY, false, true)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource == null || resource.getFluid() != BlockSteam.getSteam() || resource.amount == 0){
-				return 0;
-			}
-			int filled = Math.min(resource.amount, CAPACITY - (steam == null ? 0 : steam.amount));
-
-			if(doFill){
-				steam = new FluidStack(BlockSteam.getSteam(), filled + (steam == null ? 0 : steam.amount));
-			}
-
-			return filled;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource == null || water == null || resource.amount == 0 || resource.getFluid() != BlockDistilledWater.getDistilledWater()){
-				return null;
-			}
-			int drained = Math.min(water.amount, resource.amount);
-
-			if(doDrain && (water.amount -= drained) <= 0){
-				water = null;
-			}
-
-			return new FluidStack(BlockDistilledWater.getDistilledWater(), drained);
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(water == null || maxDrain == 0){
-				return null;
-			}
-			int drained = Math.min(water.amount, maxDrain);
-
-			if(doDrain && (water.amount -= drained) <= 0){
-				water = null;
-			}
-
-			return new FluidStack(BlockDistilledWater.getDistilledWater(), drained);
-		}
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack){
+		return false;
 	}
 
-	private class SteamHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new FluidTankProperties[] {new FluidTankProperties(steam, CAPACITY, true, false)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource == null || resource.getFluid() != BlockSteam.getSteam() || resource.amount == 0){
-				return 0;
-			}
-			int filled = Math.min(resource.amount, CAPACITY - (steam == null ? 0 : steam.amount));
-
-			if(doFill){
-				steam = new FluidStack(BlockSteam.getSteam(), filled + (steam == null ? 0 : steam.amount));
-			}
-
-			return filled;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			return null;
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			return null;
-		}
-
-	}
-
-	private class WaterHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new FluidTankProperties[] {new FluidTankProperties(water, CAPACITY, false, true)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			return 0;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource == null || water == null || resource.amount == 0 || resource.getFluid() != BlockDistilledWater.getDistilledWater()){
-				return null;
-			}
-			int drained = Math.min(water.amount, resource.amount);
-
-			if(doDrain && (water.amount -= drained) <= 0){
-				water = null;
-			}
-
-			return new FluidStack(BlockDistilledWater.getDistilledWater(), drained);
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(water == null || maxDrain == 0){
-				return null;
-			}
-			int drained = Math.min(water.amount, maxDrain);
-
-			if(doDrain && (water.amount -= drained) <= 0){
-				water = null;
-			}
-
-			return new FluidStack(BlockDistilledWater.getDistilledWater(), drained);
-		}
+	@Override
+	public String getName(){
+		return "container.radiator";
 	}
 }

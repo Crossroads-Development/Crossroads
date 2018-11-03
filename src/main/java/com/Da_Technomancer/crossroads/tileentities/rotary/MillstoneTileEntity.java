@@ -157,19 +157,24 @@ public class MillstoneTileEntity extends InventoryTE{
 
 	@Override
 	public int getField(int id){
-		return id == 0 ? (int) progress : 0;
+		if(id == getFieldCount() - 1){
+			return (int) progress;
+		}
+		return super.getField(id);
 	}
 
 	@Override
 	public void setField(int id, int value){
-		if(id == 0){
+		if(id == getFieldCount() - 1){
 			progress = value;
+		}else{
+			super.setField(id, value);
 		}
 	}
 
 	@Override
 	public int getFieldCount(){
-		return 1;
+		return 1 + super.getFieldCount();
 	}
 
 	@Override

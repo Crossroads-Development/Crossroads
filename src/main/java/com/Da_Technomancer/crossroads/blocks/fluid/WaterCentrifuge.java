@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
@@ -13,6 +15,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -24,7 +27,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -50,13 +52,14 @@ public class WaterCentrifuge extends BlockContainer{
 	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.withProperty(Properties.ORIENT, !state.getValue(Properties.ORIENT)));
+		if(!worldIn.isRemote){
+			if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), false)){
+				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_AXIS));
+			}else{
+				playerIn.openGui(Main.instance, GuiHandler.WATER_CENTRIFUGE_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 			}
-			return true;
 		}
-		return false;
+		return true;
 	}
 
 	@Override
@@ -66,29 +69,27 @@ public class WaterCentrifuge extends BlockContainer{
 	
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.ORIENT) ? 1 : 0;
+		return state.getValue(Properties.HORIZ_AXIS) == Axis.X ? 1 : 0;
 	}
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.ORIENT, meta == 1);
+		return getDefaultState().withProperty(Properties.HORIZ_AXIS, meta == 1 ? Axis.X : Axis.Z);
 	}
 	
 	@Override
 	public BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.ORIENT);
+		return new BlockStateContainer(this, Properties.HORIZ_AXIS);
 	}
 	
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.ORIENT, placer == null || placer.getHorizontalFacing().getAxis() == Axis.X);
+		return getDefaultState().withProperty(Properties.HORIZ_AXIS, placer == null ? Axis.X : placer.getHorizontalFacing().getAxis());
 	}
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		if(world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0) != null){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0));
-		}
+		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
 		super.breakBlock(world, pos, blockstate);
 	}
 	

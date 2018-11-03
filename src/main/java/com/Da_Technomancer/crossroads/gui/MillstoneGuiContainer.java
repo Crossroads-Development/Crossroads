@@ -5,9 +5,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.gui.container.MillstoneContainer;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
@@ -24,11 +22,6 @@ public class MillstoneGuiContainer extends MachineGUI{
 		GlStateManager.color(1, 1, 1);
 		mc.getTextureManager().bindTexture(BACKGROUND);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		drawTexturedModalRect(guiLeft + 66, guiTop + 35, 176, 0, 44, getScaledProgress());
+		drawTexturedModalRect(guiLeft + 66, guiTop + 35, 176, 0, 44, (int) Math.ceil(te.getField(te.getFieldCount() - 1) * 17 / MillstoneTileEntity.REQUIRED));
 	}
-
-	private int getScaledProgress(){
-		return (int) Math.ceil(te.getField(0) * 17 / MillstoneTileEntity.REQUIRED);
-	}
-
 }

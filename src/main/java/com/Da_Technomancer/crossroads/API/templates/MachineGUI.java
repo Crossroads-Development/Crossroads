@@ -49,9 +49,18 @@ public abstract class MachineGUI extends GuiContainer{
 			gui.drawFore(mouseX, mouseY, fontRenderer);
 		}
 
-		String s = te.getDisplayName().getUnformattedText();
-		fontRenderer.drawString(s, 8, 6, 4210752);
+		fontRenderer.drawString(te.getDisplayName().getUnformattedText(), 8, 6, 0x404040);
 		fontRenderer.drawString(playerInv.getDisplayName().getUnformattedText(), ((MachineContainer) inventorySlots).getInvStart()[0], ((MachineContainer) inventorySlots).getInvStart()[1] - 12, 4210752);
+
+
+		if(te.useHeat()){
+			String s = te.getField(2 * te.fluidTanks()) + "°C";
+			fontRenderer.drawString(s, xSize - 8 - fontRenderer.getStringWidth(s), 6, 0x404040);
+		}
+		if(te.useRotary()){
+			String s = te.getField(2 * te.fluidTanks() + (te.useHeat() ? 1 : 0)) / 1_000D + " rad/s";
+			fontRenderer.drawString(s, xSize - 8 - fontRenderer.getStringWidth(s), te.useHeat() ? 16 : 6, 0x404040);
+		}
 	}
 
 	@Override

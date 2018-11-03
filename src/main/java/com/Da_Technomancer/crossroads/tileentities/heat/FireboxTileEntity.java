@@ -91,23 +91,25 @@ public class FireboxTileEntity extends InventoryTE{
 
 	@Override
 	public int getField(int id){
-		if(id == 0){
+		if(id == getFieldCount() - 1){
 			return burnTime;
 		}else{
-			return 0;
+			return super.getField(id);
 		}
 	}
 
 	@Override
 	public void setField(int id, int value){
-		if(id == 0){
+		super.setField(id, value);
+
+		if(id == getFieldCount() - 1){
 			burnTime = value;
 		}
 	}
 
 	@Override
 	public int getFieldCount(){
-		return 1;
+		return super.getFieldCount() + 1;
 	}
 
 	@Override

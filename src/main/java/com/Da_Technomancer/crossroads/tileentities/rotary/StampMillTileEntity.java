@@ -150,26 +150,29 @@ public class StampMillTileEntity extends InventoryTE{
 
 	@Override
 	public int getField(int id){
-		if(id == 0){
+		if(id == getFieldCount() - 2){
 			return timer;
-		}else if(id == 1){
+		}else if(id == getFieldCount() - 1){
 			return (int) Math.round(progress);
+		}else{
+			return super.getField(id);
 		}
-		return 0;
 	}
 
 	@Override
 	public void setField(int id, int value){
-		if(id == 0){
+		super.setField(id, value);
+
+		if(id == getFieldCount() - 2){
 			timer = value;
-		}else if(id == 1){
+		}else if(id == getFieldCount() - 1){
 			progress = value;
 		}
 	}
 
 	@Override
 	public int getFieldCount(){
-		return 2;
+		return super.getFieldCount() + 2;
 	}
 
 	@Override

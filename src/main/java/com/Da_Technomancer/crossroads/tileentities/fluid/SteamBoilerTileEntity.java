@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.templates.FluidGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
@@ -125,26 +124,6 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
 		return false;//Automation is not allowed to interact with the salt slot
-	}
-
-	@Override
-	public int getField(int id){
-		if(id == 0 || id == 1){
-			return FluidGuiObject.fluidToPacket(fluids[id]);
-		}
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value){
-		if(id == 0 || id == 1){
-			fluids[id] = FluidGuiObject.packetToFluid(value);//Only called on client side, no reason to markDirty()
-		}
-	}
-
-	@Override
-	public int getFieldCount(){
-		return 2;
 	}
 
 	@Override

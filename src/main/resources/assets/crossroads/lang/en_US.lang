@@ -287,6 +287,10 @@ tile.solar_heater.name=Solar Heater
 tile.heat_reservoir.name=Heat Reservoir
 tile.stirling_engine.name=Stirling Engine
 container.steam_boiler=Steam Boiler
+container.water_centrifuge=Water Centrifuge
+container.fat_collector=Fat Collector
+container.salt_reactor=Salt Reactor
+container.radiator=Radiator
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=%1$s Grit

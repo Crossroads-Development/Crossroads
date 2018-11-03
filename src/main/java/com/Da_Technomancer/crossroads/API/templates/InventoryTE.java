@@ -15,6 +15,10 @@ import javax.annotation.Nullable;
 public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 
 	protected final ItemStack[] inventory;
+	/**
+	 * Only used on the client side
+	 */
+	protected final short[][] clientFluids = new short[fluidTanks()][2];
 
 	public InventoryTE(int invSize){
 		super();
@@ -153,6 +157,56 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 			out[i] = i;
 		}
 		return out;
+	}
+
+	@Override
+	public int getField(int id){
+		if(id < 2 * fluidTanks()){
+			if(world.isRemote){
+				return clientFluids[id / 2][id % 2];
+			}
+			return FluidGuiObject.fluidToPacket(fluids[id / 2])[id % 2];
+		}else{
+			id -= 2 * fluidTanks();
+			if(useHeat()){
+				if(id == 0){
+					return (int) temp;
+				}
+				id--;
+			}
+			if(useRotary() && id == 0){
+				return (int) (motData[0] * 1_000);
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value){
+		if(id < 2 * fluidTanks()){
+			clientFluids[id / 2][id % 2] = (short) value;
+		}else{
+			id -= 2 * fluidTanks();
+			if(useHeat()){
+				if(id == 0){
+					temp = value;
+					return;
+				}
+				id -= 1;
+			}
+			if(useRotary() && id == 0){
+				motData[0] = value / 1_000D;
+			}
+		}
+	}
+
+	/**
+	 * InventoryTE reserves the first fluidTanks() * 2 fields for fluids, an additional field for temperature if useHeat(), and an additional field for speed if useRotary()
+	 * @return The number of fields to keep synced
+	 */
+	@Override
+	public int getFieldCount(){
+		return 2 * fluidTanks() + (useHeat() ? 1 : 0) + (useRotary() ? 1 : 0);
 	}
 
 	protected class ItemHandler implements IItemHandlerModifiable{

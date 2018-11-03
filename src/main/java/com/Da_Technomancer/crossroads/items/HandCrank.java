@@ -27,9 +27,9 @@ public class HandCrank extends Item{
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
 			if(playerIn.isSneaking()){
-				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(-10, true, true);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(-50, true, true);
 			}else{
-				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(10, true, true);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).addEnergy(50, true, true);
 			}
 			return EnumActionResult.SUCCESS;
 		}

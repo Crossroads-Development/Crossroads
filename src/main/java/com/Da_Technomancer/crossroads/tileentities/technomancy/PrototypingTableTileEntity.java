@@ -401,21 +401,6 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 	}
 
 	@Override
-	public int getField(int id){
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value){
-
-	}
-
-	@Override
-	public int getFieldCount(){
-		return 0;
-	}
-
-	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
 		return index == 2 && stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() == ModBlocks.prototype;
 	}

@@ -2,27 +2,26 @@ package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.templates.FluidGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.IGuiObject;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.gui.container.SteamBoilerContainer;
-import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
+import com.Da_Technomancer.crossroads.gui.container.FatCollectorContainer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
-public class SteamBoilerGuiContainer extends MachineGUI{
+public class FatCollectorGuiContainer extends MachineGUI{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/container/steam_boiler_gui.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/container/fat_collector_gui.png");
 
-	public SteamBoilerGuiContainer(IInventory playerInv, SteamBoilerTileEntity te){
-		super(new SteamBoilerContainer(playerInv, te));
+	public FatCollectorGuiContainer(IInventory playerInv, InventoryTE te){
+		super(new FatCollectorContainer(playerInv, te));
 	}
 
 	@Override
 	public void initGui(){
 		super.initGui();
-		guiObjects = new IGuiObject[2];
-		guiObjects[0] = new FluidGuiObject(this, 0, 1,10_000, (width - xSize) / 2, (height - ySize) / 2, 10, 70);
-		guiObjects[1] = new FluidGuiObject(this, 2, 3,10_000, (width - xSize) / 2, (height - ySize) / 2, 70, 70);
+		guiObjects = new IGuiObject[1];
+		guiObjects[0] = new FluidGuiObject(this, 0,1, 2_000, (width - xSize) / 2, (height - ySize) / 2, 70, 70);
 	}
 
 
