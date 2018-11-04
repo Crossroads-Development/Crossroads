@@ -107,8 +107,12 @@ public class FluidGuiObject implements IGuiObject{
 			sprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
 		}
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
+		int col = fluid.getFluid().getColor(fluid);
 		int height = (int) (MAX_HEIGHT * (float) fluid.amount / (float) capacity);
+		GlStateManager.color((float) ((col >>> 16) & 0xFF) / 255F, ((float) ((col >>> 8) & 0xFF)) / 255F, ((float) (col & 0xFF)) / 255F, ((float) ((col >>> 24) & 0xFF)) / 255F);
 		gui.drawTexturedModalRect(x + windowX, y + windowY - height, sprite, 16, height);
+		GlStateManager.color(1, 1, 1);
 		return true;
 	}
 

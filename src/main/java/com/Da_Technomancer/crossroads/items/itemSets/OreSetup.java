@@ -134,7 +134,7 @@ public final class OreSetup{
 		HashMap<String, Color> metals = new HashMap<>(rawInput.length);
 
 		for(String raw : rawInput){
-			//An enormous amount of input sanitization is involved here because the average config tweaker is slightly better at following instructions than the average walrus. And not one of those clever performing walruses in aquariums, but a stupid walrus
+			//An enormous amount of input sanitization is involved here because the average config tweaker is slightly better at following instructions than the average walrus. And not one of those clever performing walruses (walri?) in aquariums, but a stupid walrus
 			//Unless of course you're reading this because you're having trouble editing the config option, in which was you are way smarter than a clever walrus, thoroughly above average, and a genius, and the insults above definitely don't apply to you
 
 			//Check for stupid whitespace
