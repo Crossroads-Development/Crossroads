@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.API.alchemy.ITransparentReaction;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.integration.JEI.*;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -37,12 +36,6 @@ public final class RecipeHolder{
 	public static final PredicateMap<ItemStack, ItemStack> stampMillRecipes = new PredicateMap<>(ItemStack.EMPTY);
 
 	/**
-	 * Block is input, blockstate is the created block, Double1 is heat created, Double2 is the limit, boolean is whether to show this recipe in JEI. 
-	 * 
-	 */
-	public static final HashMap<Block, Pair<Boolean, Triple<IBlockState, Double, Double>>> envirHeatSource = new HashMap<Block, Pair<Boolean, Triple<IBlockState, Double, Double>>>();
-
-	/**
 	 * Fluid is input, Integer is the amount required, ItemStack is output,
 	 * Double1 is maximum temperature, and Double2 is heat added on craft.
 	 * 
@@ -50,9 +43,14 @@ public final class RecipeHolder{
 	public static final HashMap<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> fluidCoolingRecipes = new HashMap<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>>();
 
 	/**
-	 * Stores the heating crucible recipes. BE CAREFUL, the contained FluidStack is mutable. The ICraftingStack is the ingredient, FluidStack is output, and String is the unmelted texture
+	 * Stores the heating crucible recipes. BE CAREFUL, the contained FluidStack is mutable. The ItemStack is the ingredient, FluidStack is output
 	 */
-	public static final ArrayList<Triple<RecipePredicate<ItemStack>, FluidStack, String>> heatingCrucibleRecipes = new ArrayList<Triple<RecipePredicate<ItemStack>, FluidStack, String>>();
+	public static final PredicateMap<ItemStack, FluidStack> crucibleRecipes = new PredicateMap<>();
+
+	/**
+	 * ItemStack is input, Integer is the number of ticks the item lasts
+	 */
+	public static final PredicateMap<ItemStack, Integer> coolingRecipes = new PredicateMap<>(0);
 
 	/**
 	 * Item is input, magic unit is the magic extracted. For the Arcane Extractor
@@ -114,14 +112,6 @@ public final class RecipeHolder{
 		JEIWrappers.put(FluidCoolingCategory.ID, currentRecipes);
 
 		currentRecipes = new ArrayList<IRecipeWrapper>();
-		for(Entry<Block, Pair<Boolean, Triple<IBlockState, Double, Double>>> rec : envirHeatSource.entrySet()){
-			if(rec.getValue().getLeft()){
-				currentRecipes.add(new HeatExchangerRecipe(rec));
-			}
-		}
-		JEIWrappers.put(HeatExchangerCategory.ID, currentRecipes);
-
-		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(IRecipe rec : technomancyRecipes){
 			currentRecipes.add(new DetailedCrafterRecipe(rec, 0));
 		}
@@ -131,8 +121,10 @@ public final class RecipeHolder{
 		JEIWrappers.put(DetailedCrafterCategory.ID, currentRecipes);
 
 		currentRecipes = new ArrayList<IRecipeWrapper>();
-		for(Triple<RecipePredicate<ItemStack>, FluidStack, String> rec : heatingCrucibleRecipes){
-			currentRecipes.add(new HeatingCrucibleRecipe(rec.getLeft(), rec.getMiddle()));
+		for(Entry<Predicate<ItemStack>, FluidStack> rec : crucibleRecipes.entrySet()){
+			if(rec != null && rec.getKey() instanceof RecipePredicate){
+				currentRecipes.add(new HeatingCrucibleRecipe((RecipePredicate<ItemStack>) rec.getKey(), rec.getValue()));
+			}
 		}
 		JEIWrappers.put(HeatingCrucibleCategory.ID, currentRecipes);
 

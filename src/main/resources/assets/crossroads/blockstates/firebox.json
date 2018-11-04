@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"active=true": {"model": "crossroads:firebox_on"},
+		"active=false": {"model": "crossroads:firebox_off"}
+	}
+}

@@ -31,11 +31,10 @@ public class ModBlocks{
 	public static FluidVoid fluidVoid;
 	public static RotaryPump rotaryPump;
 	public static SteamTurbine steamTurbine;
-	public static HeatExchanger heatExchanger;
-	public static HeatExchanger insulHeatExchanger;
+	public static HeatSink heatSink;
 	public static FluidTank fluidTank;
-	public static Firebox fuelHeater;
-	public static Smelter heatingChamber;
+	public static Firebox firebox;
+	public static Smelter smelter;
 	public static SaltReactor saltReactor;
 	public static FluidCoolingChamber fluidCoolingChamber;
 	public static LargeGearMaster largeGearMaster;
@@ -119,6 +118,7 @@ public class ModBlocks{
 	public static HeatReservoir heatReservoir;
 	public static StirlingEngine stirlingEngine;
 	public static StampMill stampMill;
+	public static Icebox icebox;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -173,11 +173,10 @@ public class ModBlocks{
 		steamTurbine = new SteamTurbine();
 		blockSalt = new BlockSalt();
 		fluidVoid = new FluidVoid();
-		heatExchanger = new HeatExchanger(false);
-		insulHeatExchanger = new HeatExchanger(true);
+		heatSink = new HeatSink();
 		fluidTank = new FluidTank();
-		fuelHeater = new Firebox();
-		heatingChamber = new Smelter();
+		firebox = new Firebox();
+		smelter = new Smelter();
 		saltReactor = new SaltReactor();
 		fluidCoolingChamber = new FluidCoolingChamber();
 		radiator = new Radiator();
@@ -248,7 +247,6 @@ public class ModBlocks{
 		glasswareHolder = new GlasswareHolder();
 		redsAlchemicalTube = new RedsAlchemicalTube();
 		alembic = new Alembic();
-		//samplingBench = new SamplingBench();
 		alchemyChart = new AlchemyChart();
 		densusPlate = new DensusPlate();
 		chargingStand = new ChargingStand();
@@ -260,6 +258,7 @@ public class ModBlocks{
 		heatReservoir = new HeatReservoir();
 		stirlingEngine = new StirlingEngine();
 		stampMill = new StampMill();
+		icebox = new Icebox();
 	}
 
 	@SideOnly(Side.CLIENT)

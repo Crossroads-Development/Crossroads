@@ -106,8 +106,13 @@ public final class MiscUtil{
 	}
 
 	public static boolean hasOreDict(ItemStack stack, String oreDict){
+		if(stack.isEmpty()){
+			return false;
+		}
+
+		int goalID = OreDictionary.getOreID(oreDict);
 		for(int id : OreDictionary.getOreIDs(stack)){
-			if(id == OreDictionary.getOreID(oreDict)){
+			if(id == goalID){
 				return true;
 			}
 		}

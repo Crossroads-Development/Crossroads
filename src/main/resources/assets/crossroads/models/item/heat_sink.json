@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/heat_exchanger",
+	"parent": "crossroads:block/heat_sink",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

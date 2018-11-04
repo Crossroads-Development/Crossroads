@@ -1,12 +1,9 @@
 package com.Da_Technomancer.crossroads.integration.crafttweaker;
 
-import org.apache.commons.lang3.tuple.Triple;
-
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
-import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-
+import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.api.item.IItemStack;
@@ -18,31 +15,31 @@ import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-/** Integration for the Heating Crucible. All recipes active at 1000°C. */
-@ZenClass("mods.crossroads.HeatingCrucible")
+/**
+ * Integration for the Industrial Crucible. All recipes activate at 1200°C.
+ */
+@ZenClass("mods.crossroads.IndustrialCrucible")
 public class HeatingCrucibleHandler{
 
 	/**
 	 * Adds a recipe from an ItemStack to a FluidStack to be crafted in a Heating Crucible. If a recipe with the same input already exists, this does not remove the other recipe. Call removeRecipe first in that case. 
 	 * @param input The ItemStack input. Stacksize is ignored. 
-	 * @param out The FluidStack created. 
-	 * @param texture The texture to be displayed in the crucible while in solid form. In format modid:blocks/texture_name, ex: minecraft:blocks/cobblestone, crossroads:blocks/ore_native_copper. 
+	 * @param out The FluidStack created.
 	 */
 	@ZenMethod
-	public static void addRecipe(IItemStack input, ILiquidStack out, String texture){
+	public static void addRecipe(IItemStack input, ILiquidStack out){
 		ItemStack in = CraftTweakerMC.getItemStack(input);
-		CraftTweakerAPI.apply(new Add(new ItemRecipePredicate(in.getItem(), in.getMetadata()), CraftTweakerMC.getLiquidStack(out), texture));
+		CraftTweakerAPI.apply(new Add(new ItemRecipePredicate(in.getItem(), in.getMetadata()), CraftTweakerMC.getLiquidStack(out)));
 	}
 	
 	/**
 	 * Adds a recipe from an OreDict to a FluidStack to be crafted in a Heating Crucible. If a recipe with the same input already exists, this does not remove the other recipe. Call removeRecipe first in that case. 
 	 * @param input The OreDict input. Stacksize is ignored. 
 	 * @param out The FluidStack created. 
-	 * @param texture The texture to be displayed in the crucible while in solid form. In format modid:blocks/texture_name, ex: minecraft:blocks/cobblestone, crossroads:blocks/ore_native_copper. 
 	 */
 	@ZenMethod
-	public static void addRecipe(IOreDictEntry input, ILiquidStack out, String texture){
-		CraftTweakerAPI.apply(new Add(new OreDictCraftingStack(input.getName()), CraftTweakerMC.getLiquidStack(out), texture));
+	public static void addRecipe(IOreDictEntry input, ILiquidStack out){
+		CraftTweakerAPI.apply(new Add(new OreDictCraftingStack(input.getName()), CraftTweakerMC.getLiquidStack(out)));
 	}
 	
 	/**
@@ -68,22 +65,20 @@ public class HeatingCrucibleHandler{
 
 		private final RecipePredicate<ItemStack> in;
 		private final FluidStack out;
-		private final String text;
 		
-		private Add(RecipePredicate<ItemStack> input, FluidStack out, String text){
+		private Add(RecipePredicate<ItemStack> input, FluidStack out){
 			this.in = input;
 			this.out = out;
-			this.text = text;
 		}
 		
 		@Override
 		public void apply(){
-			RecipeHolder.heatingCrucibleRecipes.add(Triple.of(in, out, text));
+			RecipeHolder.crucibleRecipes.put(in, out);
 		}
 
 		@Override
 		public String describe(){
-			return "Adding Heating Crucible recipe for " + in.toString();
+			return "Adding Crucible recipe for " + in.toString();
 		}	
 	}
 	
@@ -97,17 +92,12 @@ public class HeatingCrucibleHandler{
 		
 		@Override
 		public void apply(){
-			for(int i = 0; i < RecipeHolder.heatingCrucibleRecipes.size(); i++){
-				if(RecipeHolder.heatingCrucibleRecipes.get(i).getLeft().equals(input)){
-					RecipeHolder.heatingCrucibleRecipes.remove(i);
-					return;
-				}
-			}
+			RecipeHolder.crucibleRecipes.remove(input);
 		}
 
 		@Override
 		public String describe(){
-			return "Removing Heating Crucible recipe for " + input.toString();
+			return "Removing Crucible recipe for " + input.toString();
 		}
 	}
 }

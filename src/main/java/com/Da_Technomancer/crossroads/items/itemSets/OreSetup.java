@@ -228,8 +228,10 @@ public final class OreSetup{
 			//TODO recipe, once the machine is added
 			RecipeHolder.millRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new ItemStack[] {new ItemStack(dust, 2), new ItemStack(Blocks.SAND, 1)});
 			RecipeHolder.millRecipes.put(new OreDictCraftingStack("ingot" + type.getKey()), new ItemStack[] {new ItemStack(dust, 1)});
-			RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("ingot" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB), Main.MODID + ":blocks/wip"));//TODO TEXTURE
-			RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("dust" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB), Main.MODID + ":blocks/wip"));//TODO TEXTURE
+			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("ingot" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB));
+			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("nugget" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB / 9));
+			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("dust" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB));
+			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new FluidStack(fluid, 2 * EnergyConverters.INGOT_MB));
 			RecipeHolder.stampMillRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new ItemStack(gravel, 3));
 
 			OreProfile profile = new OreProfile(dust, gravel, clump, fluid, fluidBlock, type.getValue());

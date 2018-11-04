@@ -1,15 +1,18 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.heat.FluidCoolingChamberTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.IceboxTileEntity;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -26,31 +29,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FluidCoolingChamber extends BlockContainer{
+public class Icebox extends BlockContainer{
 
-	public FluidCoolingChamber(){
-		super(Material.IRON);
-		String name = "fluid_cooling_chamber";
+	public Icebox(){
+		super(Material.ROCK);
+		String name = "icebox";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
-		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new FluidCoolingChamberTileEntity();
-	}
-
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(!worldIn.isRemote){
-			playerIn.openGui(Main.instance, GuiHandler.FLUID_COOLER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
-		}
-		return true;
+		return new IceboxTileEntity();
 	}
 
 	@Override
@@ -63,11 +57,39 @@ public class FluidCoolingChamber extends BlockContainer{
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
+	
+	@Override
+	protected BlockStateContainer createBlockState(){
+		return new BlockStateContainer(this, Properties.ACTIVE);
+	}
 
+	@Override
+	public IBlockState getStateFromMeta(int meta){
+		return getDefaultState().withProperty(Properties.ACTIVE, meta == 1);
+	}
 
+	@Override
+	public int getMetaFromState(IBlockState state){
+		return state.getValue(Properties.ACTIVE) ? 1 : 0;
+	}
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		if(!worldIn.isRemote){
+			playerIn.openGui(Main.instance, GuiHandler.ICEBOX_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		}
+		return true;
+	}
+	
+	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getDefaultState().withProperty(Properties.ACTIVE, false);
+	}
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Cools fluids to solid form, creating heat in the process");
+		tooltip.add("Adds: -10°C/t while using cold items as fuel");
+		tooltip.add("Minimum temp: -15°C");
 	}
 }

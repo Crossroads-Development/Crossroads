@@ -4,20 +4,20 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class FireboxTileEntity extends InventoryTE{
+public class IceboxTileEntity extends InventoryTE{
 
 	private int burnTime;
 	private int maxBurnTime = 0;
 
-	public FireboxTileEntity(){
+	public IceboxTileEntity(){
 		super(1);
 	}
 
@@ -33,23 +33,23 @@ public class FireboxTileEntity extends InventoryTE{
 			return;
 		}
 
-		if(burnTime != 0){
-			temp += 10D;
+		if(burnTime != 0 && temp > -15){
+			temp = Math.max(-15, temp - 10);
 			if(--burnTime == 0){
-				world.setBlockState(pos, ModBlocks.firebox.getDefaultState().withProperty(Properties.ACTIVE, false), 18);
+				world.setBlockState(pos, ModBlocks.icebox.getDefaultState().withProperty(Properties.ACTIVE, false), 18);
 			}
 			markDirty();
 		}
 
-		if(burnTime == 0 && TileEntityFurnace.isItemFuel(inventory[0])){
-			burnTime = TileEntityFurnace.getItemBurnTime(inventory[0]);
+		if(burnTime == 0 && RecipeHolder.coolingRecipes.get(inventory[0]) > 0){
+			burnTime = RecipeHolder.coolingRecipes.get(inventory[0]);
 			maxBurnTime = burnTime;
 			Item item = inventory[0].getItem();
 			inventory[0].shrink(1);
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
 				inventory[0] = item.getContainerItem(inventory[0]);
 			}
-			world.setBlockState(pos, ModBlocks.firebox.getDefaultState().withProperty(Properties.ACTIVE, true), 18);
+			world.setBlockState(pos, ModBlocks.icebox.getDefaultState().withProperty(Properties.ACTIVE, true), 18);
 			markDirty();
 		}
 	}
@@ -85,7 +85,7 @@ public class FireboxTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && TileEntityFurnace.isItemFuel(stack);
+		return index == 0 && RecipeHolder.coolingRecipes.get(stack) > 0;
 	}
 
 	@Override
@@ -118,6 +118,6 @@ public class FireboxTileEntity extends InventoryTE{
 
 	@Override
 	public String getName(){
-		return "container.firebox";
+		return "container.icebox";
 	}
 }

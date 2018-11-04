@@ -1,68 +1,67 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
-public class FluidCoolingChamberTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class FluidCoolingChamberTileEntity extends InventoryTE{
 
-	private FluidStack content = null;
-	private static final int CAPACITY = 16000;
-	private boolean init = false;
-	private double temp;
-	private ItemStack inventory = ItemStack.EMPTY;
-	private int ticksExisted = 0;
+	public static final int HEATING_RATE = 20;
+	private double storedHeat = 0;
+
+	public FluidCoolingChamberTileEntity(){
+		super(1);
+		fluidProps[0] = new TankProperty(0, 4_000, true, false, RecipeHolder.fluidCoolingRecipes::containsKey);
+	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
-		chat.add("Temp: " + MiscUtil.betterRound(heatHandler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+	protected int fluidTanks(){
+		return 1;
+	}
+
+	@Override
+	protected boolean useHeat(){
+		return true;
 	}
 
 	@Override
 	public void update(){
+		super.update();
+
 		if(world.isRemote){
 			return;
 		}
 
-		if(!init){
-			temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-			init = true;
+		double moved = Math.min(storedHeat, HEATING_RATE);
+		if(moved > 0){
+			storedHeat -= moved;
+			temp += moved;
+			markDirty();
 		}
 
-		if(++ticksExisted % 10 == 0 && content != null && RecipeHolder.fluidCoolingRecipes.containsKey(content.getFluid()) && content.amount >= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()){
-			Triple<ItemStack, Double, Double> trip = RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getRight();
-			if((inventory.isEmpty() || (ItemStack.areItemsEqual(trip.getLeft(), inventory) && 16 - inventory.getCount() >= trip.getLeft().getCount())) && temp < trip.getMiddle()){
-				temp += trip.getRight();
-				if((content.amount -= RecipeHolder.fluidCoolingRecipes.get(content.getFluid()).getLeft()) <= 0){
-					content = null;
+		Pair<Integer, Triple<ItemStack, Double, Double>> craft = fluids[0] == null ? null : RecipeHolder.fluidCoolingRecipes.get(fluids[0].getFluid());
+
+		if(craft != null && fluids[0].amount >= craft.getLeft()){
+			if(temp + storedHeat < craft.getRight().getMiddle() && (inventory[0].isEmpty() || ItemStack.areItemsEqual(craft.getRight().getLeft(), inventory[0]) && inventory[0].getMaxStackSize() - inventory[0].getCount() >= craft.getRight().getLeft().getCount())){
+				storedHeat += craft.getRight().getRight();
+				if((fluids[0].amount -= craft.getLeft()) <= 0){
+					fluids[0] = null;
 				}
 				markDirty();
-				if(inventory.isEmpty()){
-					inventory = trip.getLeft().copy();
+				if(inventory[0].isEmpty()){
+					inventory[0] = craft.getRight().getLeft().copy();
 				}else{
-					inventory.grow(trip.getLeft().getCount());
+					inventory[0].grow(craft.getRight().getLeft().getCount());
 				}
 			}
 		}
@@ -71,39 +70,23 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		content = FluidStack.loadFluidStackFromNBT(nbt);
-		init = nbt.getBoolean("init");
-		temp = nbt.getDouble("temp");
-
-		if(nbt.hasKey("inv")){
-			inventory = new ItemStack(nbt.getCompoundTag("inv"));
-		}
+		storedHeat = nbt.getDouble("heat_stored");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		if(content != null){
-			content.writeToNBT(nbt);
-		}
-		nbt.setBoolean("init", init);
-		nbt.setDouble("temp", temp);
-
-		if(!inventory.isEmpty()){
-			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
-		}
-
+		nbt.setDouble("heat_stored", storedHeat);
 		return nbt;
 	}
 
-	private final IFluidHandler fluidHandler = new FluidHandler();
-	private final IHeatHandler heatHandler = new HeatHandler();
-	private final IItemHandler itemHandler = new ItemHandler();
+	private final FluidHandler fluidHandler = new FluidHandler(0);
+	private final ItemHandler itemHandler = new ItemHandler(null);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.UP && facing != EnumFacing.DOWN){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) fluidHandler;
 		}
 
@@ -119,124 +102,17 @@ public class FluidCoolingChamberTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.DOWN && facing != EnumFacing.UP){
-			return true;
-		}
-
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
-			return true;
-		}
-
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return true;
-		}
-
-		return super.hasCapability(capability, facing);
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+		return true;
 	}
 
-	private class ItemHandler implements IItemHandler{
-
-		@Override
-		public int getSlots(){
-			return 1;
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inventory : ItemStack.EMPTY;
-		}
-
-		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			return stack;
-		}
-
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			if(slot != 0 || inventory.isEmpty() || amount <= 0){
-				return ItemStack.EMPTY;
-			}
-
-			int count = Math.min(inventory.getCount(), amount);
-
-			ItemStack holder = inventory.copy();
-
-			if(!simulate){
-				inventory.splitStack(count);
-
-				markDirty();
-			}
-			return count == 0 ? ItemStack.EMPTY : new ItemStack(holder.getItem(), count, holder.getMetadata());
-		}
-
-		@Override
-		public int getSlotLimit(int slot){
-			return slot == 0 ? 64 : 0;
-		}
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack){
+		return false;
 	}
 
-	private class FluidHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new FluidTankProperties[] {new FluidTankProperties(content, CAPACITY, true, false)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource == null || (content != null && !resource.isFluidEqual(content))){
-				return 0;
-			}
-
-			int maxFill = Math.min(resource.amount, CAPACITY - (content == null ? 0 : content.amount));
-			if(doFill){
-				if(content == null){
-					content = new FluidStack(resource.getFluid(), maxFill);
-				}else{
-					content.amount += maxFill;
-				}
-			}
-
-			return maxFill;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			return null;
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			return null;
-		}
-	}
-
-	private class HeatHandler implements IHeatHandler{
-		private void init(){
-			if(!init){
-				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-				init = true;
-			}
-		}
-
-		@Override
-		public double getTemp(){
-			init();
-			return temp;
-		}
-
-		@Override
-		public void setTemp(double tempIn){
-			init = true;
-			temp = tempIn;
-		}
-
-		@Override
-		public void addHeat(double heat){
-			init();
-			temp += heat;
-
-		}
+	@Override
+	public String getName(){
+		return "container.fluid_cooler";
 	}
 }

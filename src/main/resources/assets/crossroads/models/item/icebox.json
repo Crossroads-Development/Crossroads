@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/fuel_heater_off",
+	"parent": "crossroads:block/icebox_off",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

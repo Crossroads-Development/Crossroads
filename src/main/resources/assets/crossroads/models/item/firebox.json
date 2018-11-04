@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/insulated_heat_exchanger",
+	"parent": "crossroads:block/firebox_off",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

@@ -36,6 +36,9 @@ public class GuiHandler implements IGuiHandler{
 	public static final int FAT_COLLECTOR_GUI = 14;
 	public static final int SALT_REACTOR_GUI = 15;
 	public static final int RADIATOR_GUI = 16;
+	public static final int CRUCIBLE_GUI = 17;
+	public static final int ICEBOX_GUI = 18;
+	public static final int FLUID_COOLER_GUI = 19;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -73,6 +76,12 @@ public class GuiHandler implements IGuiHandler{
 				return new SaltReactorContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case RADIATOR_GUI:
 				return new RadiatorContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case CRUCIBLE_GUI:
+				return new CrucibleContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case ICEBOX_GUI:
+				return new IceboxContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case FLUID_COOLER_GUI:
+				return new FluidCoolerContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;
@@ -115,6 +124,12 @@ public class GuiHandler implements IGuiHandler{
 				return new SaltReactorGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case RADIATOR_GUI:
 				return new RadiatorGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case CRUCIBLE_GUI:
+				return new CrucibleGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case ICEBOX_GUI:
+				return new IceboxGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case FLUID_COOLER_GUI:
+				return new FluidCoolerGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;

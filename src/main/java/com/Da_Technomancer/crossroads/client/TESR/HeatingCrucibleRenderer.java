@@ -18,7 +18,7 @@ public class HeatingCrucibleRenderer extends TileEntitySpecialRenderer<HeatingCr
 
 	@Override
 	public void render(HeatingCrucibleTileEntity te, double x, double y, double z, float partialTicks, int destroheightage, float alpha){
-		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false) || te.getActiveTexture().length() == 0){
+		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false) || te.getActiveTexture().isEmpty()){
 			return;
 		}
 		int fullness = te.getWorld().getBlockState(te.getPos()).getValue(Properties.FULLNESS);
@@ -41,34 +41,6 @@ public class HeatingCrucibleRenderer extends TileEntitySpecialRenderer<HeatingCr
 		float xzStart = 2F / 16F;
 		float xzEnd = 14F / 16F;
 		float height = (float) (2 + 4 * fullness) / 16F;
-
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(xzEnd, height, xzStart).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzStart, height, xzStart).tex(text.getInterpolatedU(xzStart * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzStart, height, xzStart).tex(text.getInterpolatedU(xzStart * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzEnd, height, xzStart).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		Tessellator.getInstance().draw();
-
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(xzStart, height, xzEnd).tex(text.getInterpolatedU(xzStart * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzEnd, height, xzEnd).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzEnd, height, xzEnd).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzStart, height, xzEnd).tex(text.getInterpolatedU(xzStart * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		Tessellator.getInstance().draw();
-
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(xzEnd, height, xzEnd).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzEnd, height, xzStart).tex(text.getInterpolatedU(xzStart * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzEnd, height, xzStart).tex(text.getInterpolatedU(xzStart * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzEnd, height, xzEnd).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		Tessellator.getInstance().draw();
-
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(xzStart, height, xzStart).tex(text.getInterpolatedU(xzStart * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzStart, height, xzEnd).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzStart, height, xzEnd).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		vb.pos(xzStart, height, xzStart).tex(text.getInterpolatedU(xzStart * 16), text.getInterpolatedV(16 - (height * 16))).endVertex();
-		Tessellator.getInstance().draw();
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(xzEnd, height, xzStart).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (xzStart * 16))).endVertex();

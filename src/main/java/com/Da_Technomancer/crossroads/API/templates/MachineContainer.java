@@ -9,11 +9,11 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -206,35 +206,59 @@ public abstract class MachineContainer extends Container{
 		}
 
 		@Override
+		public boolean isItemValid(ItemStack stack){
+			return FluidUtil.getFluidHandler(stack) != null;
+		}
+
+		@Override
 		public void onSlotChanged(){
 			if(!cont.te.getWorld().isRemote){
 				cont.detectAndSendChanges();
 
-				ItemStack stack = getStack();
+				ItemStack stack = getStack().copy();
 				if(!stack.isEmpty()){
+					stack.setCount(1);
 					IFluidHandler teHandler = cont.te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-					if(teHandler != null){
-						FluidStack fs = FluidUtil.getFluidContained(stack);
-						if(fs == null){
+					IFluidHandlerItem stackHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+
+					if(teHandler != null && stackHandler != null){
+						FluidStack stFs = stackHandler.drain(Integer.MAX_VALUE, false);
+						FluidStack teFs = teHandler.drain(Integer.MAX_VALUE, false);
+						ItemStack outputStack = inventory.getStackInSlot(1);
+						if(stFs == null && teFs != null){
 							//Try filling item
-							FluidActionResult result = FluidUtil.tryFillContainer(stack, teHandler, 100_000, null, false);
-							ItemStack outputStack = inventory.getStackInSlot(1);
-							if(result.success && (outputStack.isEmpty() || ItemStack.areItemsEqual(outputStack, result.result) && ItemStack.areItemStackTagsEqual(outputStack, result.result) && outputStack.getCount() < outputStack.getMaxStackSize())){
-								result = FluidUtil.tryFillContainer(stack, teHandler, 100_000, null, true);
-								result.result.grow(outputStack.getCount());
-								outputStack = result.result.isEmpty() ? outputStack : result.result;
+							int filled = stackHandler.fill(teFs, true);
+							ItemStack container = stackHandler.getContainer();//The container is only updated if we actually do the fill. This is dumb, but there's no way around it
+							if(filled > 0 && (outputStack.isEmpty() || ItemStack.areItemsEqual(outputStack, container) && ItemStack.areItemStackTagsEqual(outputStack, container) && outputStack.getCount() < outputStack.getMaxStackSize())){
+								teHandler.drain(filled, true);
+
+								if(outputStack.isEmpty()){
+									outputStack = container;
+								}else{
+									outputStack.grow(container.getCount());
+								}
+
 								inventory.setInventorySlotContents(1, outputStack);
 								inventory.decrStackSize(0, 1);
 								cont.detectAndSendChanges();
 							}
-						}else{
+						}else if(stFs != null){
 							//Try draining item
-							FluidActionResult result = FluidUtil.tryEmptyContainer(stack, teHandler, 100_000, null, false);
-							ItemStack outputStack = inventory.getStackInSlot(1);
-							if(result.success && (outputStack.isEmpty() || ItemStack.areItemsEqual(outputStack, result.result) && ItemStack.areItemStackTagsEqual(outputStack, result.result) && outputStack.getCount() < outputStack.getMaxStackSize())){
-								result = FluidUtil.tryEmptyContainer(stack, teHandler, 100_000, null, true);
-								result.result.grow(outputStack.getCount());
-								outputStack = result.result.isEmpty() ? outputStack : result.result;
+							int drained = teHandler.fill(stFs, false);
+							FluidStack drainedFs = stackHandler.drain(drained, true);
+							if(drained == 0 || drainedFs == null || drained != drainedFs.amount){
+								return;//Something has gone weird, and a checksum failed. May be caused by, for example, buckets with a minimum drain qty
+							}
+							ItemStack container = stackHandler.getContainer();//The container is only updated if we actually do the drain. This is dumb, but there's no way around it
+							if((outputStack.isEmpty() || ItemStack.areItemsEqual(outputStack, container) && ItemStack.areItemStackTagsEqual(outputStack, container) && outputStack.getCount() < outputStack.getMaxStackSize())){
+								teHandler.fill(drainedFs, true);
+
+								if(outputStack.isEmpty()){
+									outputStack = container;
+								}else{
+									outputStack.grow(container.getCount());
+								}
+
 								inventory.setInventorySlotContents(1, outputStack);
 								inventory.decrStackSize(0, 1);
 								cont.detectAndSendChanges();

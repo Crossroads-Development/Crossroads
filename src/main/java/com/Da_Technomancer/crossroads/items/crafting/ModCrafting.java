@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
@@ -8,7 +8,8 @@ import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.fluids.*;
+import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
+import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopshowium;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
@@ -62,29 +63,19 @@ public final class ModCrafting{
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("cobblestone"), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("stone"),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
 
-		RecipeHolder.heatingCrucibleRecipes.add(Triple.of(new OreDictCraftingStack("cobblestone"), new FluidStack(FluidRegistry.LAVA, 200), "minecraft:blocks/cobblestone"));
+		RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("cobblestone"), new FluidStack(FluidRegistry.LAVA, 200));
+		RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("obsidian"), new FluidStack(FluidRegistry.LAVA, 1_000));
 
-		// Heating, order of decreasing effectiveness
-		RecipeHolder.envirHeatSource.put(Blocks.LAVA, Pair.of(true, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D)));
-		RecipeHolder.envirHeatSource.put(Blocks.FLOWING_LAVA, Pair.of(false, Triple.of(Blocks.COBBLESTONE.getDefaultState(), 1000D, 3000D)));
-		RecipeHolder.envirHeatSource.put(Blocks.MAGMA, Pair.of(true, Triple.of(Blocks.NETHERRACK.getDefaultState(), 500D, 2000D)));
-		RecipeHolder.envirHeatSource.put(Blocks.FIRE, Pair.of(true, Triple.of(Blocks.AIR.getDefaultState(), 300D, 2000D)));
-		// Cooling, order of increasing effectiveness
-		RecipeHolder.envirHeatSource.put(Blocks.SNOW, Pair.of(true, Triple.of(Blocks.WATER.getDefaultState(), -50D, -20D)));
-		RecipeHolder.envirHeatSource.put(Blocks.ICE, Pair.of(true, Triple.of(Blocks.WATER.getDefaultState(), -70D, -50D)));
-		RecipeHolder.envirHeatSource.put(Blocks.PACKED_ICE, Pair.of(true, Triple.of(Blocks.WATER.getDefaultState(), -140D, -100D)));
-
-//		TODO remove
-//		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenIron.getMoltenIron(), Pair.of(144, Triple.of(new ItemStack(Items.IRON_INGOT, 1), 1500D, 100D)));
-//		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenGold.getMoltenGold(), Pair.of(144, Triple.of(new ItemStack(Items.GOLD_INGOT, 1), 1000D, 100D)));
-//		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenTin.getMoltenTin(), Pair.of(144, Triple.of(new ItemStack(OreSetup.ingotTin, 1), 200D, 100D)));
-//		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopper.getMoltenCopper(), Pair.of(144, Triple.of(new ItemStack(OreSetup.ingotCopper, 1), 1000D, 100D)));
+		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Items.SNOWBALL, 0), 100);
+		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Blocks.SNOW, 0), 400);
+		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Blocks.ICE, 0), 1600);
+		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Blocks.PACKED_ICE, 0), 1600);
 
 
-		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.LAVA, Pair.of(1000, Triple.of(new ItemStack(Blocks.OBSIDIAN, 1), 1000D, 500D)));
-		RecipeHolder.fluidCoolingRecipes.put(BlockDistilledWater.getDistilledWater(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE, 1), -20D, 2D)));
-		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE, 1), -10D, 1D)));
-		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopshowium.getMoltenCopshowium(), Pair.of(144, Triple.of(new ItemStack(OreSetup.ingotCopshowium, 1), 1000D, 100D)));
+		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.LAVA, Pair.of(1000, Triple.of(new ItemStack(Blocks.OBSIDIAN, 1), 1500D, 1500D)));
+		RecipeHolder.fluidCoolingRecipes.put(BlockDistilledWater.getDistilledWater(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE, 1), 0D, 5D)));
+		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE, 1), 0D, 5D)));
+		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopshowium.getMoltenCopshowium(), Pair.of(EnergyConverters.INGOT_MB, Triple.of(new ItemStack(OreSetup.ingotCopshowium, 1), 1000D, 100D)));
 
 		if(ModConfig.addBoboRecipes.getBoolean()){
 			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.HOPPER, 0), new OreDictCraftingStack("wool"), new ItemRecipePredicate(ModBlocks.fluidTube, 0)}, getFilledHopper()));
@@ -357,13 +348,13 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluidTank, 1), " $ ", "$#$", " $ ", '#', "ingotGold", '$', "ingotBronze"));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.fluidTank, 1), ModBlocks.fluidTank));
 		// Heat Exchanger
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatExchanger, 1), "#$#", "$$$", "###", '#', Blocks.IRON_BARS, '$', "ingotCopper"));
-		// Insulated Heat Exchanger
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.insulHeatExchanger, 1), "###", "#$#", "###", '#', "obsidian", '$', ModBlocks.heatExchanger));
-		// Coal Heater
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fuelHeater, 1), "#*#", "# #", "###", '#', "cobblestone", '*', "ingotCopper"));
-		// Heating Chamber
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatingChamber, 1), "#*#", "# #", "###", '#', "ingotIron", '*', "ingotCopper"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatSink, 1), "###", "#$#", "###", '#', Blocks.IRON_BARS, '$', "ingotCopper"));
+		// Firebox
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.firebox, 1), "#*#", "#@#", "###", '#', "cobblestone", '*', "ingotCopper", '@', Blocks.FURNACE));
+		// Icebox
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.icebox, 1), "#*#", "#@#", "###", '#', "cobblestone", '*', "ingotCopper", '@', "gemLapis"));
+		// Smelter
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.smelter, 1), "#*#", "# #", "###", '#', "ingotIron", '*', "ingotCopper"));
 		// Salt Reactor
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotIron", '$', ModBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper"));
 		// Fluid Cooling Chamber

@@ -32,7 +32,7 @@ public class Firebox extends BlockContainer{
 
 	public Firebox(){
 		super(Material.ROCK);
-		String name = "fuel_heater";
+		String name = "firebox";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);

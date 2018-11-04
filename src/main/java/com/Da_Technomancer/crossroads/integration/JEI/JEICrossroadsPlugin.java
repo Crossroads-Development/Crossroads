@@ -30,8 +30,6 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.millstone, 1), GrindstoneCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.fluidCoolingChamber, 1), FluidCoolingCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.heatingCrucible, 1), HeatingCrucibleCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(ModBlocks.heatExchanger, 1), HeatExchangerCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(ModBlocks.insulHeatExchanger, 1), HeatExchangerCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.detailedCrafter, 1), DetailedCrafterCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.arcaneExtractor, 1), ArcaneExtractorCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.arcaneReflector, 1), FusionBeamCategory.ID);
@@ -64,6 +62,6 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry){
 		IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
-		registry.addRecipeCategories(new GrindstoneCategory(guiHelper), new FluidCoolingCategory(guiHelper), new HeatingCrucibleCategory(guiHelper), new HeatExchangerCategory(guiHelper), new DetailedCrafterCategory(guiHelper), new ArcaneExtractorCategory(guiHelper), new FusionBeamCategory(guiHelper), new ReactionCategory(guiHelper), new ReagInfoCategory(guiHelper));
+		registry.addRecipeCategories(new GrindstoneCategory(guiHelper), new FluidCoolingCategory(guiHelper), new HeatingCrucibleCategory(guiHelper), new DetailedCrafterCategory(guiHelper), new ArcaneExtractorCategory(guiHelper), new FusionBeamCategory(guiHelper), new ReactionCategory(guiHelper), new ReagInfoCategory(guiHelper));
 	}
 }

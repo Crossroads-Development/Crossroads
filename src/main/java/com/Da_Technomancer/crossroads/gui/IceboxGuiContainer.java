@@ -1,19 +1,19 @@
 package com.Da_Technomancer.crossroads.gui;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.gui.container.FireboxContainer;
-import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
+import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
-public class FireboxGuiContainer extends MachineGUI{
+public class IceboxGuiContainer extends MachineGUI{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID + ":textures/gui/container/firebox_gui.png");
+	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID + ":textures/gui/container/icebox_gui.png");
 
-	public FireboxGuiContainer(IInventory playerInv, FireboxTileEntity te){
-		super(new FireboxContainer(playerInv, te));
+	public IceboxGuiContainer(IInventory playerInv, InventoryTE te){
+		super(new IceboxContainer(playerInv, te));
 
 		xSize = 176;
 		ySize = 136;

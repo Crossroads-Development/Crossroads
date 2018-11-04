@@ -18,16 +18,16 @@ public class ModTileEntity{
 		register(MechanismTileEntity.class, "mechanism");
 		register(MasterAxisTileEntity.class, "master_axis");
 		register(MillstoneTileEntity.class, "millstone");
-		register(HeatingCrucibleTileEntity.class, "heating_crucible");
+		register(HeatingCrucibleTileEntity.class, "crucible");
 		register(FluidTubeTileEntity.class, "fluid_tube");
 		register(SteamBoilerTileEntity.class, "steam_boiler");
 		register(RotaryPumpTileEntity.class, "rotary_pump");
 		register(SteamTurbineTileEntity.class, "steam_turbine");
 		register(FluidVoidTileEntity.class, "fluid_void");
-		register(HeatExchangerTileEntity.class, "heat_exchanger");
+		register(HeatSinkTileEntity.class, "heat_sink");
 		register(FluidTankTileEntity.class, "fluid_tank");
-		register(FireboxTileEntity.class, "coal_heater");
-		register(SmelterTileEntity.class, "heating_chamber");
+		register(FireboxTileEntity.class, "firebox");
+		register(SmelterTileEntity.class, "smelter");
 		register(SaltReactorTileEntity.class, "salt_reactor");
 		register(FluidCoolingChamberTileEntity.class, "fluid_cooling_chamber");
 		register(LargeGearSlaveTileEntity.class, "large_gear_slave");
@@ -51,7 +51,7 @@ public class ModTileEntity{
 		register(BeaconHarnessTileEntity.class, "beacon_harness");
 		register(FatFeederTileEntity.class, "fat_feeder");
 		register(ChunkUnlockerTileEntity.class, "chunk_unlocker");
-		register(RateManipulatorTileEntity.class, "rate_uanipulator");
+		register(RateManipulatorTileEntity.class, "rate_manipulator");
 		register(FluxManipulatorTileEntity.class, "flux_manipulator");
 		register(FluxReaderAxisTileEntity.class, "flux_reader_axis");
 		register(MultiplicationAxisTileEntity.class, "multiplication_axis");
@@ -104,6 +104,7 @@ public class ModTileEntity{
 		register(HeatReservoirTileEntity.class, "heat_reservoir");
 		register(StirlingEngineTileEntity.class, "stirling_engine");
 		register(StampMillTileEntity.class, "stamp_mill");
+		register(IceboxTileEntity.class, "icebox");
 	}
 
 	/**

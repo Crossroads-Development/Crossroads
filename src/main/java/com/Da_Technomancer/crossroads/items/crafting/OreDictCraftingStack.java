@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items.crafting;
 
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -15,17 +16,7 @@ public class OreDictCraftingStack implements RecipePredicate<ItemStack>{
 
 	@Override
 	public boolean test(ItemStack stack){
-		if(stack.isEmpty()){
-			return false;
-		}
-
-		for(int ID : OreDictionary.getOreIDs(stack)){
-			if(oreDict.equals(OreDictionary.getOreName(ID))){
-				return true;
-			}
-		}
-
-		return false;
+		return MiscUtil.hasOreDict(stack, oreDict);
 	}
 
 	@Override
