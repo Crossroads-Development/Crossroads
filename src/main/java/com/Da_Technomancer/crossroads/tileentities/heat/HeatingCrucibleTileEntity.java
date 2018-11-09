@@ -24,9 +24,9 @@ import javax.annotation.Nullable;
 
 public class HeatingCrucibleTileEntity extends InventoryTE implements IStringReceiver{
 
-	public static final int[] TEMP_TIERS = {1000, 1400, 2500};
+	public static final int[] TEMP_TIERS = {1000, 1500, 2500};
 	public static final int USAGE = 20;
-	public static final int REQUIRED = 1200;
+	public static final int REQUIRED = 1000;
 	private int progress = 0;
 
 	public HeatingCrucibleTileEntity(){

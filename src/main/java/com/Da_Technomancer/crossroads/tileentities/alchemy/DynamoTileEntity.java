@@ -31,11 +31,11 @@ public class DynamoTileEntity extends TileEntity implements ITickable{
 	private static int efficiency = -1;
 	
 	/**
-	 * For client side rendering. 0 on server side. 
+	 * For render side rendering. 0 on server side.
 	 */
 	public double angle = 0;
 	/**
-	 * For client side rendering. 0 on server side. 
+	 * For render side rendering. 0 on server side.
 	 */
 	public double nextAngle = 0;
 

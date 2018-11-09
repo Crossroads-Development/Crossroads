@@ -16,7 +16,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 
 	protected final ItemStack[] inventory;
 	/**
-	 * Only used on the client side
+	 * Only used on the render side
 	 */
 	protected final short[][] clientFluids = new short[fluidTanks()][2];
 

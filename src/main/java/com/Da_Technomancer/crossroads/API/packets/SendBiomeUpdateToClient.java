@@ -20,7 +20,7 @@ public class SendBiomeUpdateToClient extends Message<SendBiomeUpdateToClient>{
 	public byte newBiome;
 
 	/**
-	 * When a biome is changed on the server side, the change isn't sent to clients (visible in f3 menu) until the client dimension switches/rejoins. This packet forces the client to recognize a new biome.
+	 * When a biome is changed on the server side, the change isn't sent to clients (visible in f3 menu) until the render dimension switches/rejoins. This packet forces the render to recognize a new biome.
 	 * @param pos
 	 * @param newBiome
 	 */

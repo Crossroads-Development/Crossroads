@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.client.bakedModel.BakedModelLoader;
+import com.Da_Technomancer.crossroads.render.bakedModel.BakedModelLoader;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

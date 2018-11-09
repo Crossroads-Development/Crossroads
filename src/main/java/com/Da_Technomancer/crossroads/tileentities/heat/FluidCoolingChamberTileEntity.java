@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 public class FluidCoolingChamberTileEntity extends InventoryTE{
 
-	public static final int HEATING_RATE = 20;
+	public static final int HEATING_RATE = 40;
 	private double storedHeat = 0;
 
 	public FluidCoolingChamberTileEntity(){

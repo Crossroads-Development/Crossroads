@@ -1,12 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
-
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -27,6 +22,8 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Random;
 
 public class TeslaCoilTop extends Block{
 

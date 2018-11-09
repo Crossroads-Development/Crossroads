@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
-import com.Da_Technomancer.crossroads.client.TESR.models.ModelAxle;
+import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import net.minecraft.block.Block;

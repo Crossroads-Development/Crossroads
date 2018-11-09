@@ -5,23 +5,23 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class StampMillTileEntity extends InventoryTE{
 
-	private static final int TIME_LIMIT = 100;
+	public static final int TIME_LIMIT = 100;
 	public static final double REQUIRED = 800;
 	private static final double PROGRESS_PER_RADIAN = 20D;//Energy to consume per radian the internal gear turns
 	private double progress = 0;
@@ -30,15 +30,15 @@ public class StampMillTileEntity extends InventoryTE{
 	public StampMillTileEntity(){
 		super(2);
 	}
-	
-	@Override
-	protected boolean useHeat(){
-		return false;
-	}
 
 	@Override
 	protected boolean useRotary(){
 		return true;
+	}
+
+	@Override
+	protected AxleHandler createAxleHandler(){
+		return new ThroughAxleHandler();
 	}
 
 	@Override
@@ -57,45 +57,17 @@ public class StampMillTileEntity extends InventoryTE{
 				return;
 			}
 
-			if(!inventory[1].isEmpty()){
-				//Try to eject output
-				EnumFacing dir = state.getValue(Properties.HORIZ_FACING);
-				TileEntity offsetTE = world.getTileEntity(pos.offset(dir));
-				if(offsetTE != null && offsetTE.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite())){
-					IItemHandler outHandler = offsetTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite());
-					for(int i = 0; i < outHandler.getSlots(); i++){
-						ItemStack outStack = outHandler.insertItem(i, inventory[1], false);
-						if(outStack.getCount() < inventory[1].getCount()){
-							markDirty();
-							break;
-						}
-					}
-				}else{
-					EntityItem ent = new EntityItem(world, pos.offset(dir).getX() + .5D, pos.offset(dir).getY(), pos.offset(dir).getZ() + .5D, inventory[1]);
-					ent.motionX = 0;
-					ent.motionZ = 0;
-					world.spawnEntity(ent);
-					inventory[1] = ItemStack.EMPTY;
-					markDirty();
-				}
-			}else if(!inventory[0].isEmpty()){
-				double progChange = Math.min(Math.abs(motData[1]), Math.min(REQUIRED - progress, PROGRESS_PER_RADIAN * Math.abs(motData[0]) / 20D));
-				if((int) (3D * progress / REQUIRED) != (int) (3D * (progress + progChange) / REQUIRED)){
-					world.setBlockState(pos, state.withProperty(Properties.TEXTURE_4, (int) (3D * (progress + progChange) / REQUIRED)), 18);
-				}
-				motData[1] -= Math.signum(motData[1]) * progChange;
+			double progChange = Math.min(Math.abs(motData[1]), Math.min(REQUIRED - progress, PROGRESS_PER_RADIAN * Math.abs(motData[0]) / 20D));
+			motData[1] -= Math.signum(motData[1]) * progChange;
+			if(inventory[1].isEmpty() && !inventory[0].isEmpty()){
 				progress += progChange;
-
-
-
-				if(++timer >= TIME_LIMIT){
+				if(++timer >= TIME_LIMIT || progress >= REQUIRED){
 					timer = 0;
 					if(progress >= REQUIRED){
 						progress = 0;
-						//TODO sound effect
-						world.setBlockState(pos, state.withProperty(Properties.TEXTURE_4, 0), 18);
+						//TODO possibly add a sound effect
 						ItemStack produced = RecipeHolder.stampMillRecipes.get(inventory[0]);
-						produced = produced.isEmpty() ? inventory[0].splitStack(1) : produced;
+						produced = produced.isEmpty() ? inventory[0].splitStack(1) : produced.copy();
 						inventory[1] = produced;
 					}else{
 						inventory[1] = inventory[0].splitStack(1);
@@ -131,11 +103,47 @@ public class StampMillTileEntity extends InventoryTE{
 		}
 
 		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() == ModBlocks.stampMill && cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == state.getValue(Properties.HORIZ_FACING).rotateY()){
+		if(state.getBlock() == ModBlocks.stampMill && cap == Capabilities.AXLE_HANDLER_CAPABILITY && (side == null || side.getAxis() == state.getValue(Properties.HORIZ_AXIS))){
 			return (T) axleHandler;
 		}
 
 		return super.getCapability(cap, side);
+	}
+
+	private class ThroughAxleHandler extends AngleAxleHandler{
+
+		@Override
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+			//If true, this has already been checked.
+			if(key == updateKey || masterIn.addToList(this)){
+				return;
+			}
+
+			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
+			updateKey = key;
+			connected = true;
+
+			IBlockState state = world.getBlockState(pos);
+			if(state.getBlock() != ModBlocks.stampMill){
+				return;
+			}
+			EnumFacing.Axis ax = state.getValue(Properties.HORIZ_AXIS);
+			for(EnumFacing.AxisDirection dir : EnumFacing.AxisDirection.values()){
+				EnumFacing side = EnumFacing.getFacingFromAxis(dir, ax);
+				TileEntity te = world.getTileEntity(pos.offset(side));
+				if(te != null){
+					if(te.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, side.getOpposite())){
+						te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, side.getOpposite()).trigger(masterIn, key);
+					}
+					if(te.hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, side.getOpposite())){
+						masterIn.addAxisToList(te.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, side.getOpposite()), side.getOpposite());
+					}
+					if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
+						te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).propogate(masterIn, key, rotRatioIn, lastRadius);
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -183,5 +191,12 @@ public class StampMillTileEntity extends InventoryTE{
 	@Override
 	public double getMoInertia(){
 		return 200;
+	}
+
+	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(0, 0, 0, 1, 2, 1);
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return RENDER_BOX.offset(pos);
 	}
 }

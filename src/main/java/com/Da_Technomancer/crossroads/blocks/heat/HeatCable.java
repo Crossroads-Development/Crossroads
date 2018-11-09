@@ -15,8 +15,8 @@ import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.client.bakedModel.ConduitBakedModel;
-import com.Da_Technomancer.crossroads.client.bakedModel.IConduitModel;
+import com.Da_Technomancer.crossroads.render.bakedModel.ConduitBakedModel;
+import com.Da_Technomancer.crossroads.render.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 

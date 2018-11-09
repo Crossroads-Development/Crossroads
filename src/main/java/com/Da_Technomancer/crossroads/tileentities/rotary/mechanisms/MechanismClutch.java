@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.client.TESR.models.ModelAxle;
+import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import net.minecraft.block.Block;

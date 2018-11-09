@@ -294,6 +294,9 @@ container.crucible=Industrial Crucible
 container.icebox=Icebox
 tile.icebox.name=Icebox
 container.fluid_cooler=Fluid Cooler
+container.stamp_mill=Stamp Mill
+tile.stamp_mill.name=Stamp Mill
+tile.stamp_mill_top.name=Stamp Mill Top
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=%1$s Grit

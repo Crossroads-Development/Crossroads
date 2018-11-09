@@ -40,7 +40,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	public double[] angle = {0, MAXIMUM_LOWER_ANGLE, MINIMUM_UPPER_ANGLE};
 	/** A record of last tick's angles, for rendering movement animation & for release effect*/
 	public double[] angleRecord = new double[3];
-	/**Server side: A record of the last speeds sent to the client.*/
+	/**Server side: A record of the last speeds sent to the render.*/
 	private double[] lastSentAngle = new double[3];
 	private static final double PHYS_DATA = 0;
 	/**

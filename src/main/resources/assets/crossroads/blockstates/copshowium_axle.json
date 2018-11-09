@@ -1,7 +1,0 @@
-{
-	"variants": {
-		"axis=x": { "model": "crossroads:block_copshowium" },
-		"axis=y": { "model": "crossroads:block_copshowium" },
-		"axis=z": { "model": "crossroads:block_copshowium" }
-	}
-}

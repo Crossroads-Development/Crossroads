@@ -2,10 +2,9 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.rotary.DefaultAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.client.TESR.models.ModelGearOctagon;
+import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import net.minecraft.block.Block;
@@ -114,7 +113,7 @@ public class MechanismSmallGear implements IMechanism{
 
 				// Diagonal gears
 				TileEntity diagTE = te.getWorld().getTileEntity(te.getPos().offset(facing).offset(side));
-				if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()) && DefaultAxleHandler.canConnectThrough(te.getWorld(), te.getPos().offset(facing), facing.getOpposite(), side)){
+				if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(te.getWorld(), te.getPos().offset(facing), facing.getOpposite(), side)){
 					diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing.getOpposite()) * handler.rotRatio, .5D);
 				}
 			}

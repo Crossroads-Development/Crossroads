@@ -12,8 +12,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.client.bakedModel.AdvConduitBakedModel;
-import com.Da_Technomancer.crossroads.client.bakedModel.IAdvConduitModel;
+import com.Da_Technomancer.crossroads.render.bakedModel.AdvConduitBakedModel;
+import com.Da_Technomancer.crossroads.render.bakedModel.IAdvConduitModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEntity;
 

@@ -4,10 +4,14 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -19,15 +23,19 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE{
+public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE, ILongReceiver{
 
 	//Rotary
 	protected final double[] motData = new double[4];
+	// 0: angle, 1: clientW
+	// Initialized by the constructor of AngleAxleHandler, making its use conditional upon the use of AngleAxleHandler
+	protected float[] angleW = null;
 	//Heat
 	protected boolean initHeat = false;
 	protected double temp;
@@ -58,15 +66,23 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE{
 		return false;
 	}
 
+	protected AxleHandler createAxleHandler(){
+		return new AxleHandler();
+	}
+
+	protected HeatHandler createHeatHandler(){
+		return new HeatHandler();
+	}
+
 	public ModuleTE(){
 		super();
 		if(useHeat()){
-			heatHandler = new HeatHandler();
+			heatHandler = createHeatHandler();
 		}else{
 			heatHandler = null;
 		}
 		if(useRotary()){
-			axleHandler = new AxleHandler();
+			axleHandler = createAxleHandler();
 		}else{
 			axleHandler = null;
 		}
@@ -74,8 +90,14 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE{
 
 	@Override
 	public void update(){
-		if(!world.isRemote && useHeat() && !initHeat){
-			heatHandler.init();
+		if(world.isRemote){
+			if(useRotary() && angleW != null){
+				angleW[0] += angleW[1] * 9D / Math.PI;
+			}
+		}else{
+			if(useHeat() && !initHeat){
+				heatHandler.init();
+			}
 		}
 	}
 
@@ -112,6 +134,10 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE{
 		for(int i = 0; i < 4; i++){
 			nbt.setDouble("mot_" + i, motData[i]);
 		}
+		if(angleW != null){
+			nbt.setFloat("ang_w_0", angleW[0]);
+			nbt.setFloat("ang_w_1", angleW[1]);
+		}
 
 		nbt.setBoolean("init_heat", initHeat);
 		nbt.setDouble("temp", temp);
@@ -132,6 +158,10 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE{
 		for(int i = 0; i < 4; i++){
 			motData[i] = nbt.getDouble("mot_" + i);
 		}
+		if(angleW != null){
+			angleW[0] = nbt.getFloat("ang_w_0");
+			angleW[1] = nbt.getFloat("ang_w_1");
+		}
 
 		initHeat = nbt.getBoolean("init_heat");
 		temp = nbt.getDouble("temp");
@@ -140,6 +170,25 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE{
 			if(nbt.hasKey("fluid_" + i)){
 				fluids[i] = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_" + i));
 			}
+		}
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		if(angleW != null){
+			nbt.setFloat("angle", angleW[0]);
+			nbt.setFloat("cl_w", angleW[1]);
+		}
+		return nbt;
+	}
+
+	@Override
+	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+		if(identifier == 0 && angleW != null){
+			float angle = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
+			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
+			angleW[1] = Float.intBitsToFloat((int) (message >>> 32L));
 		}
 	}
 
@@ -395,9 +444,9 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE{
 
 	protected class AxleHandler implements IAxleHandler{
 
-		protected boolean connected;
-		protected double rotRatio;
-		protected byte updateKey;
+		public boolean connected;
+		public double rotRatio;
+		public byte updateKey;
 
 		@Override
 		public double[] getMotionData(){
@@ -439,6 +488,53 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE{
 		@Override
 		public void disconnect(){
 			connected = false;
+		}
+	}
+
+	protected class AngleAxleHandler extends AxleHandler{
+
+		public AngleAxleHandler(){
+			angleW = new float[2];
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return true;
+		}
+
+		@Override
+		public float getAngle(){
+			return angleW[0];
+		}
+
+		@Override
+		public void setAngle(float angleIn){
+			angleW[0] = angleIn;
+		}
+
+		@Override
+		public void markChanged(){
+			markDirty();
+		}
+
+		@Override
+		public float getClientW(){
+			return angleW[1];
+		}
+
+		@Override
+		public void syncAngle(){
+			angleW[1] = (float) motData[0];
+			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		}
+
+		@Override
+		public void resetAngle(){
+			if(!world.isRemote){
+				angleW[1] = 0;
+				angleW[0] = Math.signum(rotRatio) == -1 ? 22.5F : 0F;
+				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}
 		}
 	}
 }

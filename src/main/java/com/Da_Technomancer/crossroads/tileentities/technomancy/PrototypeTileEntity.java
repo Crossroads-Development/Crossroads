@@ -45,7 +45,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	private int index = -1;
 	public String name = "";
 	public String[] tooltips = new String[6];
-	//For client side use only.
+	//For render side use only.
 	private PrototypePortTypes[] ports = new PrototypePortTypes[6];
 	private ChunkPos chunk = null;
 	private boolean selfDestruct = false;
@@ -204,7 +204,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		//No capabilities are found on the client side because that would require the prototype dimension to be loaded on the client side, which it almost certainly won't be.
+		//No capabilities are found on the render side because that would require the prototype dimension to be loaded on the render side, which it almost certainly won't be.
 		if(side != null && index != -1 && !world.isRemote){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			if(worldDim == null){
@@ -228,7 +228,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		//No capabilities are found on the client side because that would require the prototype dimension to be loaded on the client side, which it almost certainly won't be.
+		//No capabilities are found on the render side because that would require the prototype dimension to be loaded on the render side, which it almost certainly won't be.
 		if(side != null && index != -1 && !world.isRemote){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			if(worldDim == null){

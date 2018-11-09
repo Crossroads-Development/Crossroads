@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
@@ -22,8 +22,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -381,28 +379,6 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		}
 
 		@Override
-		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
-			if(allowInvert && absolute){
-				motionData[side][1] += energy;
-			}else if(allowInvert){
-				motionData[side][1] += energy * Math.signum(motionData[side][1]);
-			}else if(absolute){
-				int sign = (int) Math.signum(motionData[side][1]);
-				motionData[side][1] += energy;
-				if(sign != 0 && Math.signum(motionData[side][1]) != sign){
-					motionData[side][1] = 0;
-				}
-			}else{
-				int sign = (int) Math.signum(motionData[side][1]);
-				motionData[side][1] += energy * ((double) sign);
-				if(Math.signum(motionData[side][1]) != sign){
-					motionData[side][1] = 0;
-				}
-			}
-			markDirty();
-		}
-
-		@Override
 		public double getRotationRatio(){
 			return rotRatio;
 		}
@@ -410,12 +386,6 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		@Override
 		public void markChanged(){
 			markDirty();
-		}
-
-		@SideOnly(Side.CLIENT)
-		@Override
-		public float getNextAngle(){
-			return angle[side] + (clientW[side] * 9F / (float) Math.PI);
 		}
 
 		@Override

@@ -117,17 +117,17 @@ public final class ModConfig{
 	}
 
 	/**
-	 * Returns the value of the Property, but if client side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
+	 * Returns the value of the Property, but if render side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
 	 * 
 	 * @param prop The property to get the value of.
-	 * @param client Whether this is on the virtual client. Pass this param. true if unknown.
+	 * @param client Whether this is on the virtual render. Pass this param. true if unknown.
 	 * @return The config value.
 	 */
 	public static boolean getConfigBool(Property prop, boolean client){
 		if(prop.getType() != Property.Type.BOOLEAN || prop.isList()){
 			throw new ClassCastException(Main.MODID + ": Incorrect config property type.");
 		}
-		//The NBT should never be null, but just to be safe, it is better to have the wrong client config than crash.
+		//The NBT should never be null, but just to be safe, it is better to have the wrong render config than crash.
 		if(!client || syncPropNBT == null){
 			return prop.getBoolean();
 		}
@@ -139,17 +139,17 @@ public final class ModConfig{
 	}
 
 	/**
-	 * Returns the value of the Property, but if client side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
+	 * Returns the value of the Property, but if render side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
 	 *
 	 * @param prop The property to get the value of.
-	 * @param client Whether this is on the virtual client. Pass this param. true if unknown.
+	 * @param client Whether this is on the virtual render. Pass this param. true if unknown.
 	 * @return The config value.
 	 */
 	public static double getConfigDouble(Property prop, boolean client){
 		if(prop.getType() != Property.Type.DOUBLE || prop.isList()){
 			throw new ClassCastException(Main.MODID + ": Incorrect config property type.");
 		}
-		//The NBT should never be null, but just to be safe, it is better to have the wrong client config than crash.
+		//The NBT should never be null, but just to be safe, it is better to have the wrong render config than crash.
 		if(!client || syncPropNBT == null){
 			return prop.getDouble();
 		}
@@ -161,17 +161,17 @@ public final class ModConfig{
 	}
 
 	/**
-	 * Returns the value of the Property, but if client side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
+	 * Returns the value of the Property, but if render side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
 	 * 
 	 * @param prop The property to get the value of.
-	 * @param client Whether this is on the virtual client. Pass this param. true if unknown.
+	 * @param client Whether this is on the virtual render. Pass this param. true if unknown.
 	 * @return The config value.
 	 */
 	public static int getConfigInt(Property prop, boolean client){
 		if(prop.getType() != Property.Type.INTEGER || prop.isList()){
 			throw new ClassCastException(Main.MODID + ": Incorrect config property type.");
 		}
-		//The NBT should never be null, but just to be safe, it is better to have the wrong client config than crash.
+		//The NBT should never be null, but just to be safe, it is better to have the wrong render config than crash.
 		if(!client || syncPropNBT == null){
 			return prop.getInt();
 		}
@@ -183,17 +183,17 @@ public final class ModConfig{
 	}
 
 	/**
-	 * Returns the value of the Property, but if client side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
+	 * Returns the value of the Property, but if render side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
 	 * 
 	 * @param prop The property to get the value of.
-	 * @param client Whether this is on the virtual client. Pass this param. true if unknown.
+	 * @param client Whether this is on the virtual render. Pass this param. true if unknown.
 	 * @return The config value.
 	 */
 	public static String getConfigString(Property prop, boolean client){
 		if(prop.getType() != Property.Type.STRING || prop.isList()){
 			throw new ClassCastException(Main.MODID + ": Incorrect config property type.");
 		}
-		//The NBT should never be null, but just to be safe, it is better to have the wrong client config than crash.
+		//The NBT should never be null, but just to be safe, it is better to have the wrong render config than crash.
 		if(!client || syncPropNBT == null){
 			return prop.getString();
 		}
@@ -205,17 +205,17 @@ public final class ModConfig{
 	}
 
 	/**
-	 * Returns the value of the Property, but if client side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
+	 * Returns the value of the Property, but if render side it will return the server side value if the Property is in the list SYNCED_PROPERTIES.
 	 * 
 	 * @param prop The property to get the value of.
-	 * @param client Whether this is on the virtual client. Pass this param. true if unknown.
+	 * @param client Whether this is on the virtual render. Pass this param. true if unknown.
 	 * @return The config value.
 	 */
 	public static String[] getConfigStringList(Property prop, boolean client){
 		if(prop.getType() != Property.Type.STRING || !prop.isList()){
 			throw new ClassCastException(Main.MODID + ": Incorrect config property type.");
 		}
-		//The NBT should never be null, but just to be safe, it is better to have the wrong client config than crash.
+		//The NBT should never be null, but just to be safe, it is better to have the wrong render config than crash.
 		if(!client || syncPropNBT == null){
 			return prop.getStringList();
 		}

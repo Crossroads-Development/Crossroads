@@ -248,7 +248,7 @@ public final class OreSetup{
 			ItemStack ingot = MiscUtil.getOredictStack("ingot" + ent.getKey(), 1);
 			if(!ingot.isEmpty()){
 				GameRegistry.addSmelting(new ItemStack(ent.getValue().dust, 1), ingot, .7F);
-				RecipeHolder.fluidCoolingRecipes.put(ent.getValue().molten, Pair.of(EnergyConverters.INGOT_MB, Triple.of(ingot, 1000D, 100D)));
+				RecipeHolder.fluidCoolingRecipes.put(ent.getValue().molten, Pair.of(EnergyConverters.INGOT_MB, Triple.of(ingot, 1500D, 100D)));
 			}
 		}
 	}

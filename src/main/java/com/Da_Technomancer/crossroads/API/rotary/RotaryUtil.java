@@ -3,7 +3,10 @@ package com.Da_Technomancer.crossroads.API.rotary;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.essentials.shared.ISlaveAxisHandler;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -68,5 +71,18 @@ public class RotaryUtil{
 
 		sumEnergy = Math.signum(sumEnergy) * Math.max(0, Math.abs(sumEnergy) - ModConfig.getConfigDouble(ModConfig.rotaryLoss, false) * Math.pow(sumIW / sumInertia, 2));
 		return sumEnergy;
+	}
+
+	/** I keep changing my mind about how to determine whether gears can connect diagonally through a block.
+	 * Implementers of IAxleHandler should use this to determine whether they can connect diagonally through a block.
+	 * @param world The World.
+	 * @param pos The BlockPos of the block space that is being connected through.
+	 * @param fromDir The direction from pos that the caller is located.
+	 * @param toDir The direction from pos that the end point of the connection is located.
+	 * @return Whether a connection is allowed. Does not verify that the start/endpoints are valid.
+	 */
+	public static boolean canConnectThrough(World world, BlockPos pos, EnumFacing fromDir, EnumFacing toDir){
+		IBlockState state = world.getBlockState(pos);
+		return !state.getBlock().isNormalCube(state, world, pos);
 	}
 }

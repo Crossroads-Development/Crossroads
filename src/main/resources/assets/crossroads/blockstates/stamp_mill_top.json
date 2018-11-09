@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"horiz_axis=z": { "model": "crossroads:stamp_mill_top"},
+		"horiz_axis=x": { "model": "crossroads:stamp_mill_top", "y": 90 }
+	}
+}

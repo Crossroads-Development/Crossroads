@@ -57,7 +57,7 @@ public final class MiscUtil{
 			tag.setTag(Main.MODID, new NBTTagCompound());
 		}
 		NBTTagCompound out = tag.getCompoundTag(Main.MODID);
-		out.setBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the client side is to get it on server side and send it via packet. Feel free to replace this with a better way.
+		out.setBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the render side is to get it on server side and send it via packet. Feel free to replace this with a better way.
 		return out;
 	}
 

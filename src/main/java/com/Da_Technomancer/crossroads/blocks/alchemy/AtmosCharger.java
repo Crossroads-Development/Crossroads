@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.client.bakedModel.AtmosChargerBakedModel;
+import com.Da_Technomancer.crossroads.render.bakedModel.AtmosChargerBakedModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AtmosChargerTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;

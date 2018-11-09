@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * This can be used to store an NBTTagCompound on a client. 
+ * This can be used to store an NBTTagCompound on a render.
  * The most recent one received overwrites the previous. This is used for GUIs mainly. 
  */
 @SuppressWarnings("serial")

@@ -69,5 +69,6 @@ public class FluidCoolingChamber extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Cools fluids to solid form, creating heat in the process");
+		tooltip.add("Releases heat at up to " + FluidCoolingChamberTileEntity.HEATING_RATE + "°C/t");
 	}
 }

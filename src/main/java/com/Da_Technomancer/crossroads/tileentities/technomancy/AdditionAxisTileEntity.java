@@ -30,7 +30,7 @@ public class AdditionAxisTileEntity extends AbstractMathAxisTE implements ISpinR
 		}
 	}
 
-	//On the server side these serve as a record of what was sent to the client, but on the client this is the received data for rendering. 
+	//On the server side these serve as a record of what was sent to the render, but on the render this is the received data for rendering.
 	public float lastInPos;
 	public float lastInNeg;
 	public double angleOne;
