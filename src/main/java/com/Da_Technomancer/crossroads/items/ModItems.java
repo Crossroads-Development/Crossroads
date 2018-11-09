@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.Axle;
@@ -46,7 +46,7 @@ public final class ModItems{
 	public static final CreativeTabs TAB_GEAR = new CreativeTabs("gear"){
 		@Override
 		public ItemStack getTabIconItem(){
-			return new ItemStack(GearFactory.BASIC_GEARS[GearTypes.BRONZE.ordinal()]);
+			return new ItemStack(GearFactory.BASIC_GEARS[EnumGearType.BRONZE.ordinal()]);
 		}
 	};
 
@@ -179,12 +179,12 @@ public final class ModItems{
 		solidRegia = new BasicItem("solid_regia");
 		flyingMachine = new FlyingMachine();
 		teslaRay = new TeslaRay();
-		axleIron = new Axle(GearTypes.IRON);
-		axleCopshowium = new Axle(GearTypes.COPSHOWIUM);
-		clutchIron = new Clutch(false, GearTypes.IRON);
-		clutchCopshowium = new Clutch(false, GearTypes.COPSHOWIUM);
-		clutchInvertedIron = new Clutch(true, GearTypes.IRON);
-		clutchInvertedCopshowium = new Clutch(true, GearTypes.COPSHOWIUM);
+		axleIron = new Axle(EnumGearType.IRON);
+		axleCopshowium = new Axle(EnumGearType.COPSHOWIUM);
+		clutchIron = new Clutch(false, EnumGearType.IRON);
+		clutchCopshowium = new Clutch(false, EnumGearType.COPSHOWIUM);
+		clutchInvertedIron = new Clutch(true, EnumGearType.IRON);
+		clutchInvertedCopshowium = new Clutch(true, EnumGearType.COPSHOWIUM);
 	}
 
 	@SideOnly(Side.CLIENT)

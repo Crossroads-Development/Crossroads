@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -323,7 +323,7 @@ public final class ModCrafting{
 		//Small Gear
 		//Toggle Gear
 		//Large Gear
-		for(GearTypes type : GearTypes.values()){
+		for(EnumGearType type : EnumGearType.values()){
 			int index = type.ordinal();
 			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS[index], 9), " ? ", "?#?", " ? ", '#', "block" + type.toString(), '?', "ingot" + type.toString()));
 			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS[index], 1), " ? ", "?#?", " ? ", '#', "ingot" + type.toString(), '?', "nugget" + type.toString()));

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
@@ -30,12 +30,12 @@ public class DynamoRenderer extends TileEntitySpecialRenderer<DynamoTileEntity>{
 		GlStateManager.rotate(270F - facing.getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.rotate(-(float) ((dynamo.nextAngle - dynamo.angle) * partialTicks + dynamo.angle), 0F, 1F, 0F);
-		ModelAxle.render(GearTypes.IRON.getColor());
+		ModelAxle.render(EnumGearType.IRON.getColor());
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0.5F, 0);
 		GlStateManager.scale(0.7D, 0.7D, 0.7D);
-		modelOct.render(textureGear, GearTypes.COPPER.getColor());
+		modelOct.render(textureGear, EnumGearType.COPPER.getColor());
 		GlStateManager.popMatrix();
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();

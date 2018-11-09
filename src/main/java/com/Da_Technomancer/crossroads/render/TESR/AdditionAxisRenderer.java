@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
@@ -32,7 +32,7 @@ public class AdditionAxisRenderer extends TileEntitySpecialRenderer<AdditionAxis
 		float angleOne = (float) -axis.angleOne;
 		float angleTwo = (float) -axis.angleTwo;
 		float angleThree = (float) -axis.angleThree;
-		Color col = GearTypes.COPSHOWIUM.getColor();
+		Color col = EnumGearType.COPSHOWIUM.getColor();
 
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();

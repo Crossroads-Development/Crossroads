@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.rotary;
 
 import java.awt.Color;
 
-public enum GearTypes{
+public enum EnumGearType{
 
 	// The densities for the materials used here are kg/cubic meter of
 	// the substance, for gears multiply by the number of cubic meters
@@ -24,7 +24,7 @@ public enum GearTypes{
 	private final double density;
 	private final Color color;
 
-	GearTypes(double matDensity, Color matColor){
+	EnumGearType(double matDensity, Color matColor){
 		density = matDensity;
 		color = matColor;
 	}

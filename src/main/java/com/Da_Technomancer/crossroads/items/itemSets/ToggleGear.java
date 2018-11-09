@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -26,12 +26,12 @@ import java.util.List;
 
 public class ToggleGear extends Item{
 
-	private final GearTypes type;
+	private final EnumGearType type;
 	private final boolean inverted;
 	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_toggle", "inventory");
 	private static final ModelResourceLocation LOCAT_INV = new ModelResourceLocation(Main.MODID + ":gear_toggle_inv", "inventory");
 
-	public ToggleGear(GearTypes typeIn, boolean inverted){
+	public ToggleGear(EnumGearType typeIn, boolean inverted){
 		String name = "gear_toggle_" + (inverted ? "inverted_" : "") + typeIn.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);

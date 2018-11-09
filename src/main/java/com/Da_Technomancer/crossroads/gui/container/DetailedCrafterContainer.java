@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
@@ -70,7 +70,7 @@ public class DetailedCrafterContainer extends Container{
 		return fake || world.getBlockState(pos).getBlock() == ModBlocks.detailedCrafter && playerIn.getDistanceSq((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
 	}
 
-	private static final IRecipe UNLOCK_TECHNOMANCY = new ShapelessOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS[GearTypes.COPSHOWIUM.ordinal()], 1), "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze");
+	private static final IRecipe UNLOCK_TECHNOMANCY = new ShapelessOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS[EnumGearType.COPSHOWIUM.ordinal()], 1), "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze");
 	private static final IRecipe UNLOCK_ALCHEMY = new ShapelessOreRecipe(null, new ItemStack(Items.POTIONITEM, 1), Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE);
 	
 	@Override

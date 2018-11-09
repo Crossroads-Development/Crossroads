@@ -43,13 +43,9 @@ public class CopshowiumCreationChamber extends BlockContainer{
 	}
 	
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
-		return false;
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		tooltip.add("Uses TIME beams to turn liquids into Copshowium");
 		tooltip.add("Unnecessarily complicated.");
 	}
 }

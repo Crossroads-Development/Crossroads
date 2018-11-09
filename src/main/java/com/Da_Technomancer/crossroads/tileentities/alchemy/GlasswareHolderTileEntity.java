@@ -46,7 +46,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		if(occupied && amount > 0){
 			chat.add("Temp: " + MiscUtil.betterRound(florence ? cableTemp : (heat / amount) - 273D, 3) + "°C");
 		}

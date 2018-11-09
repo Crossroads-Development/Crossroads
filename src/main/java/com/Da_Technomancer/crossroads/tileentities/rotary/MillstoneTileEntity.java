@@ -101,11 +101,6 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	protected boolean useHeat(){
-		return false;
-	}
-
-	@Override
 	protected boolean useRotary(){
 		return true;
 	}

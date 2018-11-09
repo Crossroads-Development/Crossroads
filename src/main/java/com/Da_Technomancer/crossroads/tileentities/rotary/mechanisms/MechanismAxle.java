@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
@@ -28,17 +28,17 @@ public class MechanismAxle implements IMechanism{
 	}
 
 	@Override
-	public double getInertia(GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	public double getInertia(EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
 		return mat.getDensity() / 32_000D;
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(Capability<?> cap, EnumFacing capSide, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
 		return cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == null && capSide.getAxis() == axis;
 	}
 
 	@Override
-	public void propogate(GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+	public void propogate(EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 		//This mechanism should always be in the axle slot
 		if(side != null){
 			return;
@@ -102,8 +102,8 @@ public class MechanismAxle implements IMechanism{
 
 	@Nonnull
 	@Override
-	public ItemStack getDrop(GearTypes mat){
-		return new ItemStack(mat == GearTypes.COPSHOWIUM ? ModItems.axleCopshowium : ModItems.axleIron, 1);
+	public ItemStack getDrop(EnumGearType mat){
+		return new ItemStack(mat == EnumGearType.COPSHOWIUM ? ModItems.axleCopshowium : ModItems.axleIron, 1);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class MechanismAxle implements IMechanism{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	public void doRender(MechanismTileEntity te, float partialTicks, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
 		if(axis == null){
 			return;
 		}

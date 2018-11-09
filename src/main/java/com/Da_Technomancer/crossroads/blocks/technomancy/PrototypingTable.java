@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
@@ -13,6 +14,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -60,9 +62,7 @@ public class PrototypingTable extends BlockContainer{
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof PrototypingTableTileEntity){
-			((PrototypingTableTileEntity) te).dropItems();
-		}
+		InventoryHelper.dropInventoryItems(world, pos, (InventoryTE) te);
 		super.breakBlock(world, pos, blockstate);
 	}
 	

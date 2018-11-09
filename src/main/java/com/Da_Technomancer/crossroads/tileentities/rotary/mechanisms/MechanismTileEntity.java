@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
@@ -65,7 +65,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	//Public for read-only
 	public final IMechanism[] members = new IMechanism[7];
 	//Public for read-only
-	public final GearTypes[] mats = new GearTypes[7];
+	public final EnumGearType[] mats = new EnumGearType[7];
 	// [0]=w, [1]=E, [2]=P, [3]=lastE
 	private final double[][] motionData = new double[7][4];
 	private final double[] inertia = new double[7];
@@ -90,7 +90,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	 * @param axis The new axle orientation, if index = 6. Should be null otherwise.
 	 * @param newTE Whether this TE is newly created this tick
 	 */
-	public void setMechanism(int index, @Nullable IMechanism mechanism, @Nullable GearTypes mat, @Nullable EnumFacing.Axis axis, boolean newTE){
+	public void setMechanism(int index, @Nullable IMechanism mechanism, @Nullable EnumGearType mat, @Nullable EnumFacing.Axis axis, boolean newTE){
 		members[index] = mechanism;
 		mats[index] = mat;
 		CommonProxy.masterKey++;
@@ -180,7 +180,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 					continue;//Sanity check in case a mechanism type gets removed in the future
 				}
 
-				mats[i] = GearTypes.values()[nbt.getInteger("[" + i + "]mat")];
+				mats[i] = EnumGearType.values()[nbt.getInteger("[" + i + "]mat")];
 
 				// motionData
 				clientW[i] = nbt.getFloat("[" + i + "]cl_w");
@@ -208,7 +208,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 				mats[identifier - 7] = null;
 			}else{
 				members[identifier - 7] = MECHANISMS.get((int) (message & 0xFFFFFFFFL));
-				mats[identifier - 7] = GearTypes.values()[(int) (message >>> 32L)];
+				mats[identifier - 7] = EnumGearType.values()[(int) (message >>> 32L)];
 			}
 			axleHandlers[identifier - 7].updateStates(false);
 		}else if(identifier == 14){

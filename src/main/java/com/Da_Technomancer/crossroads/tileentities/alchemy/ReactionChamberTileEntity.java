@@ -34,14 +34,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	private int energy = 0;
 	private static final int ENERGY_CAPACITY = 100;
 
-	/**
-	 * @param chat Add info to this list, 1 line per entry. 
-	 * @param device The device type calling this method. 
-	 * @param player The player using the info device.
-	 * @param side The viewed EnumFacing (only used by goggles).
-	 */
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add("Temp: " + MiscUtil.betterRound(cableTemp, 3) + "°C");
 
 		if(amount == 0){

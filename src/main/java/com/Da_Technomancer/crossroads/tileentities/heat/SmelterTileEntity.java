@@ -12,6 +12,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class SmelterTileEntity extends InventoryTE{
 
+	public SmelterTileEntity(){
+		super(2);// 0 = Input, 1 = Output
+	}
+
 	public static final int REQUIRED = 500;
 	public static final int[] TEMP_TIERS = {200, 300};
 	public static final int USAGE = 5;
@@ -21,15 +25,6 @@ public class SmelterTileEntity extends InventoryTE{
 	@Override
 	protected boolean useHeat(){
 		return true;
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return false;
-	}
-
-	public SmelterTileEntity(){
-		super(2);// 0 = Input, 1 = Output
 	}
 
 	@Override

@@ -413,7 +413,7 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 
 	protected class HeatHandler implements IHeatHandler{
 
-		protected void init(){
+		public void init(){
 			if(!initHeat){
 				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				initHeat = true;

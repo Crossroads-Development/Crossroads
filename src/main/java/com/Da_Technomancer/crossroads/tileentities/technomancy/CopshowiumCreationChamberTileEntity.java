@@ -7,53 +7,42 @@ import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopshowium;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nullable;
 
-public class CopshowiumCreationChamberTileEntity extends TileEntity{
+public class CopshowiumCreationChamberTileEntity extends ModuleTE{
 
-	private FluidStack content = null;
+	public CopshowiumCreationChamberTileEntity(){
+		fluidProps[0] = new TankProperty(0, CAPACITY, true, true, (Fluid f) -> f != null && (f.getName().equals(ModConfig.getConfigString(ModConfig.cccExpenLiquid, false)) || f.getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false))));//Input
+		fluidProps[1] = new TankProperty(1, CAPACITY, false, true);//Copshowium
+	}
+
+	@Override
+	protected int fluidTanks(){
+		return 2;
+	}
+
 	private static final int CAPACITY = 1_296;
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
-		super.readFromNBT(nbt);
-		content = FluidStack.loadFluidStackFromNBT(nbt);
-
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-		super.writeToNBT(nbt);
-
-		if(content != null){
-			content.writeToNBT(nbt);
-		}
-
-		return nbt;
-	}
-
-	private final IFluidHandler mainHandler = new MainHandler();
+	private final FluidHandler inputHandler = new FluidHandler(0);
+	private final FluidHandler outputHandler = new FluidHandler(1);
+	private final FluidHandler internalHandler = new FluidHandler(-1);
 	private final IMagicHandler magicHandler = new MagicHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return facing == null || facing.getAxis() == EnumFacing.Axis.Y ? (T) mainHandler : null;
+			return facing == null ? (T) internalHandler : facing == EnumFacing.UP ? (T) inputHandler : facing == EnumFacing.DOWN ? (T) outputHandler : null;
 		}
 
 		if(capability == Capabilities.MAGIC_HANDLER_CAPABILITY && (facing == null || facing.getAxis() != EnumFacing.Axis.Y)){
@@ -63,118 +52,36 @@ public class CopshowiumCreationChamberTileEntity extends TileEntity{
 		return super.getCapability(capability, facing);
 	}
 
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (facing == null || facing.getAxis() == EnumFacing.Axis.Y)){
-			return true;
-		}
-		if(capability == Capabilities.MAGIC_HANDLER_CAPABILITY && (facing == null || facing.getAxis() != EnumFacing.Axis.Y)){
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
-
 	private class MagicHandler implements IMagicHandler{
 
 		@Override
 		public void setMagic(MagicUnit mag){
-			if(EnumMagicElements.getElement(mag) == EnumMagicElements.TIME && content != null){
-				if(content.getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccExpenLiquid, false))){
-					content = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) content.amount) * EnergyConverters.COPSHOWIUM_PER_COPPER));
+			if(EnumMagicElements.getElement(mag) == EnumMagicElements.TIME && fluids[0] != null){
+				if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccExpenLiquid, false))){
+					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) fluids[0].amount) * EnergyConverters.COPSHOWIUM_PER_COPPER) + (fluids[1] == null ? 0 : fluids[1].amount));
+					fluids[0] = null;
 					markDirty();
-					if(content.amount > CAPACITY){
+					if(fluids[1].amount > CAPACITY){
 						world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());
 					}
-				}else if(content.getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false))){
+				}else if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false))){
 					FieldWorldSavedData data = FieldWorldSavedData.get(world);
 					if(data.fieldNodes.containsKey(MiscUtil.getLongFromChunkPos(new ChunkPos(pos)))){
-						if(data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).flux + 1 < 8 * (content.amount / 72)){
+						if(data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).flux + 1 < 8 * (fluids[0].amount / 72)){
 							return;
 						}
 
-						data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).fluxForce -= 8 * (content.amount / 72);
+						data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).fluxForce -= 8 * (fluids[0].amount / 72);
 
-						content = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) content.amount) * EnergyConverters.COPSHOWIUM_PER_COPPER));
+						fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) fluids[0].amount) * EnergyConverters.COPSHOWIUM_PER_COPPER) + (fluids[1] == null ? 0 : fluids[1].amount));
+						fluids[0] = null;
 						markDirty();
-						if(content.amount > CAPACITY){
+						if(fluids[1].amount > CAPACITY){
 							world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());
 						}
 					}
 				}
 			}
-		}
-	}
-
-	private class MainHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(content, CAPACITY, true, true)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(content != null && resource != null && (content.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium() || resource.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium()) && resource.getFluid() != content.getFluid()){
-				if(content.getFluid() == BlockMoltenCopshowium.getMoltenCopshowium()){
-					if(doFill){
-						content = null;
-						markDirty();
-					}
-				}else{
-					return resource.amount;
-				}
-			}
-
-			if(resource != null && (content == null || resource.isFluidEqual(content))){
-				int amount = Math.min(resource.amount, CAPACITY - (content == null ? 0 : content.amount));
-
-				if(doFill && amount != 0){
-					content = new FluidStack(resource.getFluid(), amount + (content == null ? 0 : content.amount), resource.tag);
-					markDirty();
-				}
-
-				return amount;
-			}
-
-			return 0;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource == null || content == null || resource.getFluid() != content.getFluid()){
-				return null;
-			}
-			int amount = Math.min(resource.amount, content.amount);
-
-			if(doDrain){
-				content.amount -= amount;
-				if(content.amount <= 0){
-					content = null;
-				}
-				markDirty();
-			}
-
-			return new FluidStack(resource.getFluid(), amount);
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(maxDrain <= 0 || content == null){
-				return null;
-			}
-			int amount = Math.min(maxDrain, content.amount);
-
-			Fluid fluid = content.getFluid();
-
-			if(doDrain){
-				content.amount -= amount;
-				if(content.amount <= 0){
-					content = null;
-				}
-				markDirty();
-			}
-
-			return new FluidStack(fluid, amount);
 		}
 	}
 }

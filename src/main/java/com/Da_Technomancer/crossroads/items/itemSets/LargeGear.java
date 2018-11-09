@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -28,10 +28,10 @@ import java.util.List;
 
 public class LargeGear extends Item{
 
-	private final GearTypes type;
+	private final EnumGearType type;
 	public static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base_large", "inventory");
 
-	public LargeGear(GearTypes typeIn){
+	public LargeGear(EnumGearType typeIn){
 		String name = "large_gear_" + typeIn.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);

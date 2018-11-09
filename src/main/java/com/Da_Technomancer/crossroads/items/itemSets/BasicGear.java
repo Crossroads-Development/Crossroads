@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -27,10 +27,10 @@ import java.util.List;
 
 public class BasicGear extends Item{
 
-	private final GearTypes type;
+	private final EnumGearType type;
 	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
 
-	public BasicGear(GearTypes typeIn){
+	public BasicGear(EnumGearType typeIn){
 		String name = "gear_" + typeIn.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);

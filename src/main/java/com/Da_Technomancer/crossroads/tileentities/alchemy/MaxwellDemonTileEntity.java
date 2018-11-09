@@ -22,7 +22,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	private boolean init = false;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add("Upper Temp: " + MiscUtil.betterRound(tempUp, 3) + "°C");
 		chat.add("Lower Temp: " + MiscUtil.betterRound(tempDown, 3) + "°C");
 		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");

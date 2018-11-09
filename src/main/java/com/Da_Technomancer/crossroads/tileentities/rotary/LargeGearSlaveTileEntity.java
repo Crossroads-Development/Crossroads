@@ -27,7 +27,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	public BlockPos masterPos;//Defined relative to this block's position
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		IAxleHandler axle = handler.getAxle();
 		if(axle == null){
 			return;

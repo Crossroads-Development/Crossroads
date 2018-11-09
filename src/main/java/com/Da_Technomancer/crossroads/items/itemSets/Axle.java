@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -26,10 +26,10 @@ import java.util.List;
 
 public class Axle extends Item{
 
-	private final GearTypes type;
+	private final EnumGearType type;
 	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":axle", "inventory");
 
-	public Axle(GearTypes typeIn){
+	public Axle(EnumGearType typeIn){
 		String name = "axle_" + typeIn.toString().toLowerCase();
 		setUnlocalizedName(name);
 		setRegistryName(name);

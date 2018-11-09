@@ -44,7 +44,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	 * @param side The viewed EnumFacing (only used by goggles).
 	 */
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		if(amount != 0){
 			chat.add("Temp: " + MiscUtil.betterRound(handler.getTemp(), 3) + "°C");
 		}else{

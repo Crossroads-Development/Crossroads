@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -13,82 +14,35 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.ArrayList;
 
-public class HeatReservoirTileEntity extends TileEntity implements IInfoTE{
-
-	private double temp;
-	private boolean init = false;
+public class HeatReservoirTileEntity extends ModuleTE{
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
-		chat.add("Temp: " + MiscUtil.betterRound(handler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+	protected boolean useHeat(){
+		return true;
+	}
+
+	@Override
+	protected HeatHandler createHeatHandler(){
+		return new MassiveHeatHandler();
 	}
 
 	public NBTTagCompound getDropNBT(){
 		NBTTagCompound nbt = new NBTTagCompound();
-		handler.init();
+		heatHandler.init();
 		nbt.setDouble("temp", temp);
 		return nbt;
 	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
-		super.readFromNBT(nbt);
-
-		init = nbt.getBoolean("init");
-		temp = nbt.getDouble("temp");
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-		super.writeToNBT(nbt);
-
-		nbt.setBoolean("init", init);
-		nbt.setDouble("temp", temp);
-		return nbt;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing){
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY){
-			return true;
-		}
-
-		return super.hasCapability(capability, facing);
-	}
-
-	private HeatHandler handler = new HeatHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY){
-			return (T) handler;
+			return (T) heatHandler;
 		}
 		return super.getCapability(capability, facing);
 	}
 
-	private class HeatHandler implements IHeatHandler{
-
-		private void init(){
-			if(!init){
-				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-				init = true;
-			}
-		}
-
-		@Override
-		public double getTemp(){
-			init();
-			return temp;
-		}
-
-		@Override
-		public void setTemp(double tempIn){
-			init = true;
-			temp = tempIn;
-			markDirty();
-		}
+	private class MassiveHeatHandler extends HeatHandler{
 
 		@Override
 		public void addHeat(double heat){

@@ -8,7 +8,6 @@ import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -63,7 +62,7 @@ public class MechanicalBeamSplitter extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {EssentialsProperties.FACING});
+		return new BlockStateContainer(this, EssentialsProperties.FACING);
 	}
 
 	@Override

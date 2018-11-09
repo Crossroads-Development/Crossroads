@@ -42,7 +42,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add("Element: " + (currentElement == null ? "NONE" : currentElement.toString() + ", Time: " + time));
 	}
 

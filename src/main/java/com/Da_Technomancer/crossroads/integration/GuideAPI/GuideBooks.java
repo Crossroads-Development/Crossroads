@@ -20,7 +20,7 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -89,7 +89,7 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "energy"), new SmartEntry("lore.energy.name", new ItemStack(ModItems.omnimeter, 1), "lore.energy"));
 			entries.put(new ResourceLocation(Main.MODID, "heat"), new SmartEntry("lore.heat.name", new ItemStack(ModBlocks.firebox, 1), "lore.heat.start", ((Supplier<Object>) () -> ModConfig.getConfigBool(ModConfig.heatEffects, true) ? "lore.heat.insulator" : "lore.heat.insulator_effect_disable"), "lore.heat.end", "lore.heat.bobo"));
 			entries.put(new ResourceLocation(Main.MODID, "steam"), new SmartEntry("lore.steam.name", new ItemStack(ModBlocks.fluidTube, 1), Pair.of("lore.steam", new Object[] {Math.round(EnergyConverters.degPerSteamBucket(true) * 1.1D), EnergyConverters.degPerSteamBucket(true)})));
-			entries.put(new ResourceLocation(Main.MODID, "rotary"), new SmartEntry("lore.rotary.name", new ItemStack(GearFactory.BASIC_GEARS[GearTypes.BRONZE.ordinal()], 1), "lore.rotary"));
+			entries.put(new ResourceLocation(Main.MODID, "rotary"), new SmartEntry("lore.rotary.name", new ItemStack(GearFactory.BASIC_GEARS[EnumGearType.BRONZE.ordinal()], 1), "lore.rotary"));
 			createPages(pages, "lore.copper", new ResourceLocation(Main.MODID, "textures/book/copper_process.png"));
 			entries.put(new ResourceLocation(Main.MODID, "copper"), new EntryItemStack(pages, "Copper Processing", new ItemStack(OreSetup.ingotCopper, 1), true));
 			pages = new ArrayList<IPage>();
@@ -117,11 +117,11 @@ public final class GuideBooks{
 			createPages(pages, "lore.drill.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.rotaryDrill, 2), " * ", "*#*", '*', "ingotIron", '#', "blockIron"), "lore.drill.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "drill"), new EntryItemStack(pages, "Rotary Drill", new ItemStack(ModBlocks.rotaryDrill, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.toggle_gear.pre_recipe", new ShapelessOreRecipe(null, new ItemStack(GearFactory.TOGGLE_GEARS[GearTypes.GOLD.ordinal()], 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.BASIC_GEARS[GearTypes.GOLD.ordinal()]), "lore.toggle_gear.post_recipe");
+			createPages(pages, "lore.toggle_gear.pre_recipe", new ShapelessOreRecipe(null, new ItemStack(GearFactory.TOGGLE_GEARS[EnumGearType.GOLD.ordinal()], 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.BASIC_GEARS[EnumGearType.GOLD.ordinal()]), "lore.toggle_gear.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "toggle_gear"), new EntryItemStack(pages, "Toggle Gear", new ItemStack(Items.REDSTONE, 1), true));
 			pages = new ArrayList<IPage>();
 
-			categories.add(new CategoryItemStack(entries, "Rotary Machines", new ItemStack(GearFactory.BASIC_GEARS[GearTypes.BRONZE.ordinal()], 1)));
+			categories.add(new CategoryItemStack(entries, "Rotary Machines", new ItemStack(GearFactory.BASIC_GEARS[EnumGearType.BRONZE.ordinal()], 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
 			// FLUIDS
@@ -300,7 +300,7 @@ public final class GuideBooks{
 			entries.put(new ResourceLocation(Main.MODID, "energy"), new SmartEntry("info.energy.name", new ItemStack(ModItems.omnimeter, 1), "info.energy"));
 			entries.put(new ResourceLocation(Main.MODID, "heat"), new SmartEntry("info.heat.name", new ItemStack(ModBlocks.firebox, 1), "info.heat.start", ((Supplier<Object>) () -> ModConfig.getConfigBool(ModConfig.heatEffects, true) ? "info.heat.insulator" : "info.heat.insulator_effect_disable"), "info.heat.end"));
 			entries.put(new ResourceLocation(Main.MODID, "steam"), new SmartEntry("info.steam.name", new ItemStack(ModBlocks.fluidTube, 1), Pair.of("info.steam", new Object[] {Math.round(EnergyConverters.degPerSteamBucket(true) * 1.1D), EnergyConverters.degPerSteamBucket(true)})));
-			entries.put(new ResourceLocation(Main.MODID, "rotary"), new SmartEntry("info.rotary.name", new ItemStack(GearFactory.BASIC_GEARS[GearTypes.BRONZE.ordinal()], 1), "info.rotary"));
+			entries.put(new ResourceLocation(Main.MODID, "rotary"), new SmartEntry("info.rotary.name", new ItemStack(GearFactory.BASIC_GEARS[EnumGearType.BRONZE.ordinal()], 1), "info.rotary"));
 			createPages(pages, "info.copper", new ResourceLocation(Main.MODID, "textures/book/copper_process.png"));
 			entries.put(new ResourceLocation(Main.MODID, "copper"), new EntryItemStack(pages, "Copper Processing", new ItemStack(OreSetup.ingotCopper, 1), true));
 			pages = new ArrayList<IPage>();
@@ -328,11 +328,11 @@ public final class GuideBooks{
 			createPages(pages, "info.drill.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.rotaryDrill, 2), " * ", "*#*", '*', "ingotIron", '#', "blockIron"), "info.drill.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "drill"), new EntryItemStack(pages, "Rotary Drill", new ItemStack(ModBlocks.rotaryDrill, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "info.toggle_gear.pre_recipe", new ShapelessOreRecipe(null, new ItemStack(GearFactory.TOGGLE_GEARS[GearTypes.GOLD.ordinal()], 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.BASIC_GEARS[GearTypes.GOLD.ordinal()]), "info.toggle_gear.post_recipe");
+			createPages(pages, "info.toggle_gear.pre_recipe", new ShapelessOreRecipe(null, new ItemStack(GearFactory.TOGGLE_GEARS[EnumGearType.GOLD.ordinal()], 1), "dustRedstone", "dustRedstone", "stickIron", GearFactory.BASIC_GEARS[EnumGearType.GOLD.ordinal()]), "info.toggle_gear.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "toggle_gear"), new EntryItemStack(pages, "Toggle Gear", new ItemStack(Items.REDSTONE, 1), true));
 			pages = new ArrayList<IPage>();
 
-			categories.add(new CategoryItemStack(entries, "Rotary Machines", new ItemStack(GearFactory.BASIC_GEARS[GearTypes.BRONZE.ordinal()], 1)));
+			categories.add(new CategoryItemStack(entries, "Rotary Machines", new ItemStack(GearFactory.BASIC_GEARS[EnumGearType.BRONZE.ordinal()], 1)));
 			entries = new LinkedHashMap<ResourceLocation, EntryAbstract>();
 
 			// FLUIDS

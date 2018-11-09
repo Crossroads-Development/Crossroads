@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add("In-Temp: " + MiscUtil.betterRound(heatHandlerIn.getTemp(), 3) + "°C");
 		chat.add("Out-Temp: " + MiscUtil.betterRound(heatHandlerOut.getTemp(), 3) + "°C");
 		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
@@ -82,8 +82,8 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("init", init);
-		nbt.setDouble("heatIn", heatIn);
-		nbt.setDouble("heatOut", heatOut);
+		nbt.setDouble("heat_in", heatIn);
+		nbt.setDouble("heat_out", heatOut);
 		return nbt;
 	}
 
@@ -91,8 +91,8 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		init = nbt.getBoolean("init");
-		heatIn = nbt.getDouble("heatIn");
-		heatOut = nbt.getDouble("heatOut");
+		heatIn = nbt.getDouble("heat_in");
+		heatOut = nbt.getDouble("heat_out");
 	}
 
 	@Override

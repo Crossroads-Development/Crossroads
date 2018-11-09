@@ -9,7 +9,6 @@ import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -45,6 +44,8 @@ public class DensusPlate extends BlockContainer{
 	private static final AxisAlignedBB BBDOWN = new AxisAlignedBB(0, 0.5D, 0, 1, 1, 1);
 
 	public DensusPlate(){
+		//TODO flatten for 1.13
+
 		super(Material.IRON);
 		String name = "densus_plate";
 		setUnlocalizedName(name);
@@ -115,7 +116,7 @@ public class DensusPlate extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] {EssentialsProperties.FACING, Properties.CONTAINER_TYPE});
+		return new BlockStateContainer(this, EssentialsProperties.FACING, Properties.CONTAINER_TYPE);
 	}
 
 	@Override

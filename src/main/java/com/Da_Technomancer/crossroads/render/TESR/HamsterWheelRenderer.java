@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
@@ -17,7 +17,7 @@ import java.awt.*;
 
 public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheelTileEntity>{
 
-	private final ResourceLocation textureHam = new ResourceLocation(Main.MODID, "textures/model/hamster.png");
+	private static final ResourceLocation textureHam = new ResourceLocation(Main.MODID, "textures/model/hamster.png");
 
 	@Override
 	public void render(HamsterWheelTileEntity wheel, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
@@ -26,7 +26,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		if(!world.isBlockLoaded(pos, false) || world.getBlockState(pos).getBlock() != ModBlocks.hamsterWheel){
 			return;
 		}
-		EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
+		EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
@@ -68,7 +68,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		GlStateManager.translate(0, -.4375D, 0);
 		GlStateManager.scale(1, .8D, 1);
 		GlStateManager.rotate(90, 1, 0, 0);
-		ModelAxle.render(GearTypes.IRON.getColor());
+		ModelAxle.render(EnumGearType.IRON.getColor());
 		GlStateManager.popMatrix();
 
 		float lHalf = .375F;

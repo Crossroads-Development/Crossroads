@@ -45,7 +45,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		if(occupied && amount > 0){
 			chat.add("Temp: " + MiscUtil.betterRound((heat / amount) - 273D, 3) + "°C");
 		}

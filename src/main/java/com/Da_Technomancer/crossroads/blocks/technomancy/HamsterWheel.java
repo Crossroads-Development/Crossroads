@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -52,7 +52,7 @@ public class HamsterWheel extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.FACING, state.getValue(EssentialsProperties.FACING).rotateY()));
+				worldIn.setBlockState(pos, state.withProperty(Properties.HORIZ_FACING, state.getValue(Properties.HORIZ_FACING).rotateY()));
 			}
 			return true;
 		}
@@ -61,7 +61,7 @@ public class HamsterWheel extends BlockContainer{
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return BB[Math.max(state.getValue(EssentialsProperties.FACING).getHorizontalIndex(), 0)];
+		return BB[Math.max(state.getValue(Properties.HORIZ_FACING).getHorizontalIndex(), 0)];
 	}
 
 	@Override
@@ -71,32 +71,27 @@ public class HamsterWheel extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, placer.getHorizontalFacing());
-	}
-
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, placer.getHorizontalFacing());
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.FACING);
+		return new BlockStateContainer(this, Properties.HORIZ_FACING);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(EssentialsProperties.FACING).getIndex();
+		return state.getValue(Properties.HORIZ_FACING).getIndex();
 	}
 
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> list, @Nullable Entity entityIn, boolean p_185477_7_){
-		addCollisionBoxToList(pos, entityBox, list, BB[Math.max(state.getValue(EssentialsProperties.FACING).getHorizontalIndex(), 0)]);
+		addCollisionBoxToList(pos, entityBox, list, BB[Math.max(state.getValue(Properties.HORIZ_FACING).getHorizontalIndex(), 0)]);
 	}
 
 	@Override
@@ -111,7 +106,7 @@ public class HamsterWheel extends BlockContainer{
 
 	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
-		return side == world.getBlockState(pos).getValue(EssentialsProperties.FACING);
+		return side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 	}
 	
 	@Override

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -26,11 +26,11 @@ import java.util.List;
 public class Clutch extends Item{
 
 	private final boolean inverted;
-	protected final GearTypes type;
+	protected final EnumGearType type;
 	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":clutch", "inventory");
 	private static final ModelResourceLocation LOCAT_INV = new ModelResourceLocation(Main.MODID + ":clutch_inv", "inventory");
 
-	public Clutch(boolean inverted, GearTypes typeIn){
+	public Clutch(boolean inverted, EnumGearType typeIn){
 		this.inverted = inverted;
 		type = typeIn;
 		String name = "clutch_" + (inverted ? "inverted_" : "") + typeIn.toString().toLowerCase();

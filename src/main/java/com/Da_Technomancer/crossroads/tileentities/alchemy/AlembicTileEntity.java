@@ -45,7 +45,7 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add("Temp: " + MiscUtil.betterRound(cableTemp, 3) + "°C");
 
 		if(amount == 0){

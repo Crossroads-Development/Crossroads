@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.templates.FluidGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
 import com.Da_Technomancer.crossroads.items.ModItems;

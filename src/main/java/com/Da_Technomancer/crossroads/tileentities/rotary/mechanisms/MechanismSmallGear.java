@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
@@ -33,19 +33,19 @@ public class MechanismSmallGear implements IMechanism{
 	}
 
 	@Override
-	public double getInertia(GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	public double getInertia(EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
 		// assume each gear is 1/8 of a cubic meter and has a radius of 1/2 meter.
 		// mass is rounded to make things nicer for everyone
 		return 0.125D * MiscUtil.betterRound(mat.getDensity() / 8, 1);// .125 because r*r/2 so .5*.5/2
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(Capability<?> cap, EnumFacing capSide, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
 		return (cap == Capabilities.COG_HANDLER_CAPABILITY || cap == Capabilities.AXLE_HANDLER_CAPABILITY) && side == capSide;
 	}
 
 	@Override
-	public void propogate(GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+	public void propogate(EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 		//This mechanism should never be in the axle slot
 		if(side == null){
 			return;
@@ -122,7 +122,7 @@ public class MechanismSmallGear implements IMechanism{
 
 	@Nonnull
 	@Override
-	public ItemStack getDrop(GearTypes mat){
+	public ItemStack getDrop(EnumGearType mat){
 		return new ItemStack(GearFactory.BASIC_GEARS[mat.ordinal()], 1);
 	}
 
@@ -133,7 +133,7 @@ public class MechanismSmallGear implements IMechanism{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, GearTypes mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	public void doRender(MechanismTileEntity te, float partialTicks, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
 		if(side == null){
 			return;
 		}

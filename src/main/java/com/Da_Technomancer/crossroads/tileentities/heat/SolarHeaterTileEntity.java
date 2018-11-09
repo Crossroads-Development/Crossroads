@@ -1,46 +1,27 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import com.Da_Technomancer.crossroads.API.*;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-import java.util.ArrayList;
+public class SolarHeaterTileEntity extends ModuleTE{
 
-public class SolarHeaterTileEntity extends TileEntity implements ITickable, IInfoTE{
+	@Override
+	protected boolean useHeat(){
+		return true;
+	}
 
-	private double temp;
-	private boolean init = false;
 	private boolean running = false;
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
-
-	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
-		chat.add("Temp: " + MiscUtil.betterRound(handler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
-	}
-
-	@Override
 	public void update(){
+		super.update();
 		if(world.isRemote){
 			return;
-		}
-
-		if(!init){
-			temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-			init = true;
 		}
 
 		//Every 30 seconds, check if we still have sky view and cache the result
@@ -68,67 +49,22 @@ public class SolarHeaterTileEntity extends TileEntity implements ITickable, IInf
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-
-		init = nbt.getBoolean("init");
-		temp = nbt.getDouble("temp");
 		running = nbt.getBoolean("running");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-
-		nbt.setBoolean("init", init);
-		nbt.setDouble("temp", temp);
 		nbt.setBoolean("running", running);
 		return nbt;
 	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing){
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == null || facing.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_AXIS))){
-			return true;
-		}
-
-		return super.hasCapability(capability, facing);
-	}
-
-	private IHeatHandler handler = new HeatHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == null || facing.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_AXIS))){
-			return (T) handler;
+			return (T) heatHandler;
 		}
 		return super.getCapability(capability, facing);
-	}
-
-	private class HeatHandler implements IHeatHandler{
-		private void init(){
-			if(!init){
-				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-				init = true;
-				running = world.canSeeSky(pos);
-			}
-		}
-
-		@Override
-		public double getTemp(){
-			init();
-			return temp;
-		}
-
-		@Override
-		public void setTemp(double tempIn){
-			init = true;
-			temp = tempIn;
-		}
-
-		@Override
-		public void addHeat(double heat){
-			init();
-			temp += heat;
-		}
 	}
 }

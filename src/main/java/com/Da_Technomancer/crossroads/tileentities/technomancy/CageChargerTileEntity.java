@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!cage.isEmpty()){
 			if(cage.getTagCompound() == null){
 				cage.setTagCompound(new NBTTagCompound());

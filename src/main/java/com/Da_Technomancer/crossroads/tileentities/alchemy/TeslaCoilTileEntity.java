@@ -37,7 +37,7 @@ import java.util.List;
 public class TeslaCoilTileEntity extends TileEntity implements IInfoTE, ITickable{
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
 		for(int i = 0; i < 3; i++){
 			if(linked[i] != null){
 				chat.add("Linked Position: X=" + (pos.getX() + linked[i].getX()) + " Y=" + (pos.getY() + linked[i].getY()) + " Z=" + (pos.getZ() + linked[i].getZ()));

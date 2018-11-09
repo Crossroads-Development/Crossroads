@@ -1,51 +1,52 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.essentials.shared.IAxisHandler;
-import com.Da_Technomancer.essentials.shared.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 
-public class SteamTurbineTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class SteamTurbineTileEntity extends ModuleTE{
 
-	private FluidStack steamContent;
-	private FluidStack waterContent;
-	private static final int CAPACITY = 10_000;
-	public static final int LIMIT = 5;
-
-	private final double[] motionData = new double[4];
-
-	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
-		chat.add("Speed: " + MiscUtil.betterRound(motionData[0], 3));
-		chat.add("Energy: " + MiscUtil.betterRound(motionData[1], 3));
-		chat.add("Power: " + MiscUtil.betterRound(motionData[2], 3));
-		chat.add("I: " + axleHandler.getMoInertia() + ", Rotation Ratio: " + axleHandler.getRotationRatio());
+	public SteamTurbineTileEntity(){
+		super();
+		fluidProps[0] = new TankProperty(0, CAPACITY, false, true);
+		fluidProps[1] = new TankProperty(1, CAPACITY, true, false, (Fluid f) -> f == BlockSteam.getSteam());
 	}
 
 	@Override
+	protected int fluidTanks(){
+		return 2;
+	}
+
+	@Override
+	protected boolean useRotary(){
+		return true;
+	}
+
+	@Override
+	protected double getMoInertia(){
+		return 80;
+	}
+
+	private static final int CAPACITY = 10_000;
+	public static final int LIMIT = 5;
+
+	@Override
 	public void update(){
+		super.update();
+		
 		if(world.isRemote){
 			IAxleHandler gear = null;
 			TileEntity te = world.getTileEntity(pos.offset(EnumFacing.UP));
@@ -56,8 +57,20 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 			return;
 		}
 
-		if(steamContent != null){
-			runMachine();
+		if(fluids[1] != null){
+			int limit = fluids[1].amount / 100;
+			limit = Math.min(limit, (CAPACITY - (fluids[0] == null ? 0 : fluids[0].amount)) / 100);
+			limit = Math.min(limit, LIMIT);
+			if(limit != 0){
+				fluids[1].amount -= limit * 100;
+				if(fluids[1].amount <= 0){
+					fluids[1] = null;
+				}
+				fluids[0] = new FluidStack(BlockDistilledWater.getDistilledWater(), (fluids[0] == null ? 0 : fluids[0].amount) + (100 * limit));
+				if(axleHandler.connected){
+					axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket(false) / EnergyConverters.degPerJoule(false), true, true);
+				}
+			}
 		}
 	}
 	
@@ -71,70 +84,9 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		return completion;
 	}
 
-	private void runMachine(){
-		int limit = steamContent.amount / 100;
-		limit = Math.min(limit, (CAPACITY - (waterContent == null ? 0 : waterContent.amount)) / 100);
-		limit = Math.min(limit, LIMIT);
-		if(limit != 0){
-			steamContent.amount -= limit * 100;
-			if(steamContent.amount <= 0){
-				steamContent = null;
-			}
-			waterContent = new FluidStack(BlockDistilledWater.getDistilledWater(), (waterContent == null ? 0 : waterContent.amount) + (100 * limit));
-			if(axleHandler.hasMaster){
-				axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket(false) / EnergyConverters.degPerJoule(false), true, true);
-			}
-		}
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
-		super.readFromNBT(nbt);
-
-		steamContent = FluidStack.loadFluidStackFromNBT(nbt);
-		waterContent = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("water"));
-		
-		for(int i = 0; i < 4; i++){
-			motionData[i] = nbt.getDouble("motion" + i);
-		}
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-		super.writeToNBT(nbt);
-
-		if(steamContent != null){
-			steamContent.writeToNBT(nbt);
-		}
-
-		NBTTagCompound waterHolder = new NBTTagCompound();
-		if(waterContent != null){
-			waterContent.writeToNBT(waterHolder);
-		}
-		nbt.setTag("water", waterHolder);
-		
-		for(int i = 0; i < 4; i++){
-			nbt.setDouble("motion" + i, motionData[i]);
-		}
-		
-		return nbt;
-	}
-
-	private final IFluidHandler waterHandler = new WaterFluidHandler();
-	private final IFluidHandler steamHandler = new SteamFluidHandler();
-	private final IFluidHandler innerHandler = new InnerFluidHandler();
-	private final AxleHandler axleHandler = new AxleHandler();
-	
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.UP){
-			return true;
-		}
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.UP){
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
+	private final FluidHandler waterHandler = new FluidHandler(0);
+	private final FluidHandler steamHandler = new FluidHandler(1);
+	private final FluidHandler innerHandler = new FluidHandler(-1);
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -155,188 +107,5 @@ public class SteamTurbineTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		return super.getCapability(capability, facing);
-	}
-
-	private class AxleHandler implements IAxleHandler{
-
-		private boolean hasMaster;
-
-		@Override
-		public double[] getMotionData(){
-			return motionData;
-		}
-
-		private double rotRatio;
-		private byte updateKey;
-
-		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
-			//If true, this has already been checked.
-			if(key == updateKey || masterIn.addToList(this)){
-				return;
-			}
-
-			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
-			updateKey = key;
-			hasMaster = true;
-		}
-
-		@Override
-		public double getMoInertia(){
-			return 80;
-		}
-
-		@Override
-		public double getRotationRatio(){
-			return rotRatio;
-		}
-
-		@Override
-		public void markChanged(){
-			markDirty();
-		}
-
-		@Override
-		public boolean shouldManageAngle(){
-			return false;
-		}
-
-		@Override
-		public void disconnect(){
-			hasMaster = false;
-		}
-	}
-	
-	private class WaterFluidHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(waterContent, CAPACITY, false, true)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			return 0;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource != null && resource.getFluid() == BlockDistilledWater.getDistilledWater() && waterContent != null){
-				int change = Math.min(waterContent.amount, resource.amount);
-
-				if(doDrain){
-					waterContent.amount -= change;
-					if(waterContent.amount == 0){
-						waterContent = null;
-					}
-				}
-
-				return new FluidStack(BlockDistilledWater.getDistilledWater(), change);
-			}else{
-				return null;
-			}
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(waterContent == null || maxDrain == 0){
-				return null;
-			}
-
-			int change = Math.min(waterContent.amount, maxDrain);
-
-			if(doDrain){
-				waterContent.amount -= change;
-				if(waterContent.amount == 0){
-					waterContent = null;
-				}
-			}
-			return new FluidStack(BlockDistilledWater.getDistilledWater(), change);
-		}
-	}
-
-	private class SteamFluidHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(steamContent, CAPACITY, true, false)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource == null || resource.getFluid() != BlockSteam.getSteam()){
-				return 0;
-			}
-			int change = Math.min(CAPACITY - (steamContent == null ? 0 : steamContent.amount), resource.amount);
-			if(doFill){
-				steamContent = new FluidStack(BlockSteam.getSteam(), change + (steamContent == null ? 0 : steamContent.amount));
-			}
-			return change;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			return null;
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			return null;
-		}
-	}
-
-	private class InnerFluidHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(waterContent, CAPACITY, false, true), new FluidTankProperties(steamContent, CAPACITY, true, false)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource == null || resource.getFluid() != BlockSteam.getSteam()){
-				return 0;
-			}
-			int change = Math.min(CAPACITY - (steamContent == null ? 0 : steamContent.amount), resource.amount);
-			if(doFill){
-				steamContent = new FluidStack(BlockSteam.getSteam(), change + (steamContent == null ? 0 : steamContent.amount));
-			}
-			return change;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource != null && resource.getFluid() == BlockDistilledWater.getDistilledWater() && waterContent != null){
-				int change = Math.min(waterContent.amount, resource.amount);
-
-				if(doDrain){
-					waterContent.amount -= change;
-					if(waterContent.amount == 0){
-						waterContent = null;
-					}
-				}
-
-				return new FluidStack(BlockDistilledWater.getDistilledWater(), change);
-			}else{
-				return null;
-			}
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(waterContent == null || maxDrain == 0){
-				return null;
-			}
-
-			int change = Math.min(waterContent.amount, maxDrain);
-
-			if(doDrain){
-				waterContent.amount -= change;
-				if(waterContent.amount == 0){
-					waterContent = null;
-				}
-			}
-			return new FluidStack(BlockDistilledWater.getDistilledWater(), change);
-		}
 	}
 }

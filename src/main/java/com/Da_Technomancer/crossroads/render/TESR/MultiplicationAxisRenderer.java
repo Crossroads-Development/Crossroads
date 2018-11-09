@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
@@ -49,7 +49,7 @@ public class MultiplicationAxisRenderer extends TileEntitySpecialRenderer<Multip
 		float angleTwo = (float) -axis.angleTwo;
 		float angleThree = (float) axis.angleThree;
 		float angleTwoPos = (float) axis.angleTwoPos;
-		Color col = GearTypes.COPSHOWIUM.getColor();
+		Color col = EnumGearType.COPSHOWIUM.getColor();
 
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();

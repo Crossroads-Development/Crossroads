@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -11,9 +9,9 @@ import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-public class FluidVoidTileEntity extends TileEntity{
+import javax.annotation.Nullable;
 
-	IFluidHandler mainHandler = new MainHandler();
+public class FluidVoidTileEntity extends TileEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -33,7 +31,10 @@ public class FluidVoidTileEntity extends TileEntity{
 		return super.hasCapability(capability, facing);
 	}
 
-	private class MainHandler implements IFluidHandler{
+	private static final VoidHandler mainHandler = new VoidHandler();
+
+	private static class VoidHandler implements IFluidHandler{
+
 
 		@Override
 		public IFluidTankProperties[] getTankProperties(){

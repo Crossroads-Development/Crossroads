@@ -77,7 +77,7 @@ public class RatiatorTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add("Out: " + output);
 	}
 }

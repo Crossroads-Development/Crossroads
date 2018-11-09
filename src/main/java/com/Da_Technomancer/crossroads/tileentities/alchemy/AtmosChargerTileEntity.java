@@ -35,7 +35,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	private int renderTimer;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side){
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add(MiscUtil.betterRound(voltusAmount, 2) + "/" + VOLTUS_CAPACITY + " Voltus");
 		int charge = AtmosChargeSavedData.getCharge(world);
 		chat.add(charge + "/" + AtmosChargeSavedData.CAPACITY + "FE in atmosphere (" + MiscUtil.betterRound(100D * charge / AtmosChargeSavedData.CAPACITY, 1) + "%)");

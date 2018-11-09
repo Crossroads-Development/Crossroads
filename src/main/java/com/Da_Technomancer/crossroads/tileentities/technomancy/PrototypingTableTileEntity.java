@@ -15,10 +15,8 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -45,33 +43,8 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 	
 	public boolean visible = false;
 
-	@Override
-	protected boolean useHeat(){
-		return false;
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return false;
-	}
-
 	public PrototypingTableTileEntity(){
 		super(4);//0: Copshowium; 1: Template; 2: Output; 3: Prototype recycling slot
-	}
-	
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
-
-	public void dropItems(){
-		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory[0]);
-		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory[1]);
-		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory[2]);
-		inventory[0] = ItemStack.EMPTY;
-		inventory[1] = ItemStack.EMPTY;
-		inventory[2] = ItemStack.EMPTY;
-		markDirty();
 	}
 
 	/**

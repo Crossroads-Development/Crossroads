@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
@@ -43,7 +43,7 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.rotate(-prog, 0, 1, 0);
-		ModelAxle.render(GearTypes.IRON.getColor());
+		ModelAxle.render(EnumGearType.IRON.getColor());
 
 		//Teeth
 		for(int i = 0; i < 3; i++){
@@ -53,7 +53,7 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 			GlStateManager.rotate(90, 0, 0, 1);
 			GlStateManager.scale(0.4F, 0.5F, 0.4F);
 
-			ModelAxle.render(GearTypes.IRON.getColor());
+			ModelAxle.render(EnumGearType.IRON.getColor());
 			GlStateManager.popMatrix();
 		}
 
