@@ -196,8 +196,8 @@ public final class GuideBooks{
 			createPages(pages, "lore.crystal_master_axis.pre_recipe", new ShapedOreRecipe(null, ModBlocks.crystalMasterAxis, "*&*", "*#*", "***", '*', ModItems.pureQuartz, '#', ModBlocks.masterAxis, '&', ModItems.lensArray), "lore.crystal_master_axis.post_recipe");
 			entries.put(new ResourceLocation(Main.MODID, "crystal_master_axis"), new EntryItemStack(pages, "Crystalline Master Axis", new ItemStack(ModBlocks.crystalMasterAxis, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "lore.void.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModItems.voidCrystal, 1), "*#*", "###", "*#*", '*', Items.DRAGON_BREATH, '#', ModItems.pureQuartz), "lore.void.post_recipe");
-			entries.put(new ResourceLocation(Main.MODID, "void"), new EntryItemStack(pages, "Void", new ItemStack(ModItems.voidCrystal, 1), true));
+			createPages(pages, "lore.void.pre_recipe", new ShapedOreRecipe(null, new ItemStack(OreSetup.voidCrystal, 1), "*#*", "###", "*#*", '*', Items.DRAGON_BREATH, '#', ModItems.pureQuartz), "lore.void.post_recipe");
+			entries.put(new ResourceLocation(Main.MODID, "void"), new EntryItemStack(pages, "Void", new ItemStack(OreSetup.voidCrystal, 1), true));
 			pages = new ArrayList<IPage>();
 			entries.put(new ResourceLocation(Main.MODID, "beacon_harness"), new SmartEntry("lore.beacon_harness.name", new ItemStack(ModBlocks.beaconHarness, 1), "lore.beacon_harness.pre_recipe", new ShapedOreRecipe(null, new ItemStack(ModBlocks.beaconHarness, 1), "*&*", "&^&", "*&*", '*', ModItems.pureQuartz, '&', ModItems.lensArray, '^', ModItems.luminescentQuartz), "lore.beacon_harness.post_recipe", "lore.beacon_harness.bobo"));
 
@@ -410,8 +410,8 @@ public final class GuideBooks{
 			createPages(pages, "info.crystal_master_axis", new ShapedOreRecipe(null, ModBlocks.crystalMasterAxis, "*&*", "*#*", "***", '*', ModItems.pureQuartz, '#', ModBlocks.masterAxis, '&', ModItems.lensArray));
 			entries.put(new ResourceLocation(Main.MODID, "crystal_master_axis"), new EntryItemStack(pages, "Crystalline Master Axis", new ItemStack(ModBlocks.crystalMasterAxis, 1), true));
 			pages = new ArrayList<IPage>();
-			createPages(pages, "info.void", new ShapedOreRecipe(null, new ItemStack(ModItems.voidCrystal, 1), "*#*", "###", "*#*", '*', Items.DRAGON_BREATH, '#', ModItems.pureQuartz));
-			entries.put(new ResourceLocation(Main.MODID, "void"), new EntryItemStack(pages, "Void", new ItemStack(ModItems.voidCrystal, 1), true));
+			createPages(pages, "info.void", new ShapedOreRecipe(null, new ItemStack(OreSetup.voidCrystal, 1), "*#*", "###", "*#*", '*', Items.DRAGON_BREATH, '#', ModItems.pureQuartz));
+			entries.put(new ResourceLocation(Main.MODID, "void"), new EntryItemStack(pages, "Void", new ItemStack(OreSetup.voidCrystal, 1), true));
 			pages = new ArrayList<IPage>();
 			createPages(pages, "info.beacon_harness", new ShapedOreRecipe(null, new ItemStack(ModBlocks.beaconHarness, 1), "*&*", "&^&", "*&*", '*', ModItems.pureQuartz, '&', ModItems.lensArray, '^', ModItems.luminescentQuartz));
 			entries.put(new ResourceLocation(Main.MODID, "beacon_harness"), new EntryItemStack(pages, "Beacon Harness", new ItemStack(ModBlocks.beaconHarness, 1), true));

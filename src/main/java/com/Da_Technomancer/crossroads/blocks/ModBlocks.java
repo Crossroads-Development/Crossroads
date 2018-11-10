@@ -120,6 +120,7 @@ public class ModBlocks{
 	public static Icebox icebox;
 	public static StampMill stampMill;
 	public static StampMillTop stampMillTop;
+	public static OreCleanser oreCleanser;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -261,6 +262,7 @@ public class ModBlocks{
 		icebox = new Icebox();
 		stampMill = new StampMill();
 		stampMillTop = new StampMillTop();
+		oreCleanser = new OreCleanser();
 	}
 
 	@SideOnly(Side.CLIENT)

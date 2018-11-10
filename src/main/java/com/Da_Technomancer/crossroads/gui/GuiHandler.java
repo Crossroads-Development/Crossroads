@@ -40,6 +40,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int ICEBOX_GUI = 18;
 	public static final int FLUID_COOLER_GUI = 19;
 	public static final int COPSHOWIUM_CHAMBER_GUI = 20;
+	public static final int ORE_CLEANSER_GUI = 21;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -85,6 +86,8 @@ public class GuiHandler implements IGuiHandler{
 				return new FluidCoolerContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case COPSHOWIUM_CHAMBER_GUI:
 				return new CopshowiumCreationChamberContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case ORE_CLEANSER_GUI:
+				return new OreCleanserContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;
@@ -135,6 +138,8 @@ public class GuiHandler implements IGuiHandler{
 				return new FluidCoolerGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case COPSHOWIUM_CHAMBER_GUI:
 				return new CopshowiumCreationChamberGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case ORE_CLEANSER_GUI:
+				return new OreCleanserGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;

@@ -88,7 +88,7 @@ public final class ModCrafting{
 			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.BLAZE_POWDER, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.PORKCHOP, 0)}, new ItemStack(ModItems.pigZombieChestplate, 1)));
 			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.MILK_BUCKET, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.BEEF, 0)}, new ItemStack(ModItems.cowLeggings, 1)));
 			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.BLAZE_ROD, 0), new ItemRecipePredicate(Items.DRAGON_BREATH, 0), new ItemRecipePredicate(Items.GOLDEN_APPLE, -1)}, new ItemStack(ModItems.chaosRod, 1)));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(ModBlocks.fluidTube, 0), new ItemRecipePredicate(ModItems.voidCrystal, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
+			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(ModBlocks.fluidTube, 0), new ItemRecipePredicate(OreSetup.voidCrystal, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
 			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new EdibleBlobRecipePredicate(4, 2), new OreDictCraftingStack("stickIron"), new OreDictCraftingStack("nuggetCopshowium")}, new ItemStack(ModBlocks.hamsterWheel, 1)));
 			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {(Object s) -> EssentialsConfig.isWrench((ItemStack) s, false), new ItemRecipePredicate(ModItems.handCrank, 0), new ItemRecipePredicate(ModItems.staffTechnomancy, 0)}, new ItemStack(ModItems.liechWrench, 1)));
 			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 4), new OreDictCraftingStack("ingotCopper")}, new ItemStack(ModBlocks.maxwellDemon, 1)));
@@ -404,8 +404,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
 		//Crystalline Master Axis
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.crystalMasterAxis, 1), "*&*", "*#*", "***", '*', ModItems.pureQuartz, '#', ModBlocks.masterAxis, '&', ModItems.lensArray));
-		//Void Crystal
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.voidCrystal, 1), "*#*", "###", "*#*", '*', Items.DRAGON_BREATH, '#', ModItems.pureQuartz));
 		//Ratiator
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', ModItems.luminescentQuartz, '#', ModItems.pureQuartz, '^', "stone"));
 		//Beacon Harness

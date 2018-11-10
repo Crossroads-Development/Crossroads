@@ -1,10 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.magic.*;
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
+import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -15,7 +18,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -61,8 +63,8 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 			return null;
 		}
 		Triple<Color, Integer, Integer>[] out = new Triple[6];
-		out[EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z).getIndex()] = tripUp;
-		out[EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z).getIndex()] = trip;
+		out[EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.HORIZ_AXIS)).getIndex()] = tripUp;
+		out[EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.HORIZ_AXIS)).getIndex()] = trip;
 		return out;
 	}
 
@@ -126,7 +128,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (world.getBlockState(pos).getValue(Properties.ORIENT) ? side.getAxis() == Axis.X : side.getAxis() == Axis.Z))){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || world.getBlockState(pos).getValue(Properties.HORIZ_AXIS) == side.getAxis())){
 			return true;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
@@ -140,7 +142,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || (world.getBlockState(pos).getValue(Properties.ORIENT) ? side.getAxis() == Axis.X : side.getAxis() == Axis.Z))){
+		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || world.getBlockState(pos).getValue(Properties.HORIZ_AXIS) == side.getAxis())){
 			return side == null || side.getAxisDirection() == AxisDirection.POSITIVE ? (T) magicHandler : (T) magicHandlerNeg;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
@@ -172,8 +174,8 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 		@Override
 		public void setMagic(MagicUnit mag){
 			if(beamer == null || beamerUp == null){
-				beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos);
-				beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.ORIENT) ? Axis.X : Axis.Z), pos);
+				beamer = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.HORIZ_AXIS)), pos);
+				beamerUp = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, world.getBlockState(pos).getValue(Properties.HORIZ_AXIS)), pos);
 			}
 
 			if(mag != null && mag.getVoid() != 0 && world.getBlockState(pos).getValue(Properties.TEXTURE_7) != 0){
@@ -199,7 +201,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 					break;
 				case 4:
 					if(EnumMagicElements.getElement(mag) == EnumMagicElements.LIGHT){
-						world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 5));
+						world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.TEXTURE_7, 5));
 					}
 					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, world);
 					break;
@@ -207,7 +209,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag, world);
 					break;
 				case 6:
-					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null || EnumMagicElements.getElement(mag) != EnumMagicElements.RIFT ? null : new MagicUnit(0, 0, 0, mag.getPower()), world);
+					(dir == AxisDirection.POSITIVE ? beamerUp : beamer).emit(mag == null ? null : new MagicUnit(0, 0, 0, mag.getPower()), world);
 					break;
 			}
 
@@ -254,7 +256,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 			}
 
 			if(!simulate){
-				world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == Items.DIAMOND ? 3 : 1));
+				world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.TEXTURE_7, stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == Items.DIAMOND ? 3 : 1));
 				markDirty();
 			}
 
@@ -268,7 +270,7 @@ public class LensHolderTileEntity extends BeamRenderTEBase implements IIntReceiv
 			}
 			ItemStack holder = getLens();
 			if(!simulate){
-				world.setBlockState(pos, ModBlocks.lensHolder.getDefaultState().withProperty(Properties.ORIENT, world.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
+				world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.TEXTURE_7, 0));
 				markDirty();
 			}
 			return holder;

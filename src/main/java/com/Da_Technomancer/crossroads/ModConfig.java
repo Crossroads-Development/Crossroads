@@ -14,6 +14,7 @@ public final class ModConfig{
 	public static Property genCopperOre;
 	public static Property genTinOre;
 	public static Property genRubyOre;
+	public static Property genVoidOre;
 	public static Property processableOres;
 	public static Property speedPrecision;
 	public static Property weatherControl;
@@ -79,6 +80,7 @@ public final class ModConfig{
 		genCopperOre = config.get(CAT_ORES, "Generate Copper Ore?", true);
 		genTinOre = config.get(CAT_ORES, "Generate Tin Ore?", true);
 		genRubyOre = config.get(CAT_ORES, "Generate Ruby Ore?", true);
+		genVoidOre = config.get(CAT_ORES, "Generate Void Crystal Ore?", true);
 		SYNCED_PROPERTIES.add(processableOres = config.get(CAT_ORES, "Metal ore types that Crossroads machines should be able to process", new String[] {"copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"}, "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\" \nThis config MUST match the server settings exactly (color doesn't matter) in multiplayer or THINGS WILL BREAK! It can not sync itself!"));
 		retrogen = config.get(CAT_ORES, "Retrogen Key", "", "Changing this value will cause retrogen. Leaving it blank disables retrogen. TURN THIS OFF WHEN YOU ARE DONE!");
 		SYNCED_PROPERTIES.add(steamWorth = config.get(CAT_BALANCE, "The number of degrees one bucket of steam is worth", 50D, "Default: 50"));

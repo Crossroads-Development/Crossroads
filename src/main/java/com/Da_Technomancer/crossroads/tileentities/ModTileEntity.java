@@ -105,6 +105,7 @@ public class ModTileEntity{
 		register(StirlingEngineTileEntity.class, "stirling_engine");
 		register(StampMillTileEntity.class, "stamp_mill");
 		register(IceboxTileEntity.class, "icebox");
+		register(OreCleanserTileEntity.class, "ore_cleanser");
 	}
 
 	/**

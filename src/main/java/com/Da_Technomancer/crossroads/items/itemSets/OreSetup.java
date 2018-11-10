@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.BasicItem;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
@@ -62,6 +63,9 @@ public final class OreSetup{
 	public static BasicItem ingotCopshowium;
 	public static BasicItem nuggetCopshowium;
 	public static BasicBlock blockCopshowium;
+
+	public static BasicItem voidCrystal;
+	public static BasicBlock oreVoid;
 
 	public static final HashMap<String, OreProfile> metalStages = new HashMap<>();
 
@@ -127,6 +131,21 @@ public final class OreSetup{
 		};
 		nuggetCopshowium = new BasicItem("nugget_copshowium", "nuggetCopshowium");
 
+		voidCrystal = new BasicItem("void_crystal");
+		oreVoid = new BasicBlock("ore_void", Material.ROCK, 3, "pickaxe", 3){
+			@Override
+			public int quantityDroppedWithBonus(int fortune, Random random){
+				if(fortune > 0){
+					return Math.max(random.nextInt(fortune + 2) - 1, 0) + 1;
+				}
+				return 1;
+			}
+
+			@Override
+			public Item getItemDropped(IBlockState state, Random rand, int fortune){
+				return voidCrystal;
+			}
+		};
 
 
 		String[] rawInput = ModConfig.getConfigStringList(ModConfig.processableOres, true);
@@ -233,6 +252,7 @@ public final class OreSetup{
 			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("dust" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB));
 			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new FluidStack(fluid, 2 * EnergyConverters.INGOT_MB));
 			RecipeHolder.stampMillRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new ItemStack(gravel, 3));
+			RecipeHolder.oreCleanserRecipes.put(new ItemRecipePredicate(gravel, 0), new ItemStack(clump, 1));
 
 			OreProfile profile = new OreProfile(dust, gravel, clump, fluid, fluidBlock, type.getValue());
 			metalStages.put(type.getKey(), profile);

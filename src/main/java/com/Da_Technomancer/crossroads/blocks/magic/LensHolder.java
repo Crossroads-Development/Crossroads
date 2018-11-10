@@ -79,17 +79,17 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.ORIENT, (placer == null) || placer.getHorizontalFacing().getAxis() == Axis.X).withProperty(Properties.TEXTURE_7, 0);
+		return getDefaultState().withProperty(Properties.HORIZ_AXIS, (placer == null) ? Axis.X : placer.getHorizontalFacing().getAxis()).withProperty(Properties.TEXTURE_7, 0);
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.ORIENT, Properties.TEXTURE_7);
+		return new BlockStateContainer(this, Properties.HORIZ_AXIS, Properties.TEXTURE_7);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.ORIENT, (meta & 1) == 1).withProperty(Properties.TEXTURE_7, (meta & 14) >> 1);
+		return getDefaultState().withProperty(Properties.HORIZ_AXIS, (meta & 1) == 1 ? Axis.X : Axis.Z).withProperty(Properties.TEXTURE_7, (meta & 14) >> 1);
 	}
 
 	@Override
@@ -98,19 +98,19 @@ public class LensHolder extends BlockContainer{
 			ItemStack stack = playerIn.getHeldItem(hand);
 
 			if(EssentialsConfig.isWrench(stack, false)){
-				worldIn.setBlockState(pos, state.withProperty(Properties.ORIENT, !state.getValue(Properties.ORIENT)));
+				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_AXIS));
 			}else if(state.getValue(Properties.TEXTURE_7) != 0){
 				int i = state.getValue(Properties.TEXTURE_7);
-				ItemStack gotten = new ItemStack(i == 1 ? OreSetup.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1);
+				ItemStack gotten = new ItemStack(i == 1 ? OreSetup.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : OreSetup.voidCrystal, 1);
 				if(!playerIn.inventory.addItemStackToInventory(gotten)){
 					EntityItem dropped = playerIn.dropItem(gotten, false);
 					dropped.setNoPickupDelay();
 					dropped.setOwner(playerIn.getName());
 				}
-				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, 0));
+				worldIn.setBlockState(pos, state.withProperty(Properties.TEXTURE_7, 0));
 			}else if(!stack.isEmpty() && state.getValue(Properties.TEXTURE_7) == 0){
-				int i = stack.getItem() == ModItems.voidCrystal ? 6 : stack.getItem() == Items.DIAMOND ? 3 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == OreSetup.gemRuby ? 1 : 0;
-				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ORIENT, worldIn.getBlockState(pos).getValue(Properties.ORIENT)).withProperty(Properties.TEXTURE_7, i));
+				int i = stack.getItem() == OreSetup.voidCrystal ? 6 : stack.getItem() == Items.DIAMOND ? 3 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == OreSetup.gemRuby ? 1 : 0;
+				worldIn.setBlockState(pos, state.withProperty(Properties.TEXTURE_7, i));
 				if(i != 0){
 					stack.shrink(1);
 				}
@@ -123,7 +123,7 @@ public class LensHolder extends BlockContainer{
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
 		if(state.getValue(Properties.TEXTURE_7) != 0){
 			int i = state.getValue(Properties.TEXTURE_7);
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(i == 1 ? OreSetup.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : ModItems.voidCrystal, 1));
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(i == 1 ? OreSetup.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : OreSetup.voidCrystal, 1));
 		}
 		
 		TileEntity te = world.getTileEntity(pos);
@@ -136,7 +136,7 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.ORIENT) ? 1 : 0) + (state.getValue(Properties.TEXTURE_7) << 1);
+		return (state.getValue(Properties.HORIZ_AXIS) == Axis.X ? 1 : 0) + (state.getValue(Properties.TEXTURE_7) << 1);
 	}
 
 	@Override
@@ -149,11 +149,11 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return state.getValue(Properties.ORIENT) ? BBA : BB;
+		return state.getValue(Properties.HORIZ_AXIS) == Axis.X ? BBA : BB;
 	}
 
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean stuff){
-		addCollisionBoxToList(pos, mask, list, state.getValue(Properties.ORIENT) ? BBA : BB);
+		addCollisionBoxToList(pos, mask, list, state.getValue(Properties.HORIZ_AXIS) == Axis.X ? BBA : BB);
 	}
 }

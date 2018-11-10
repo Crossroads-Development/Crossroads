@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.world;
 
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
+import net.minecraft.block.state.pattern.BlockMatcher;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -35,7 +37,12 @@ public class ModWorldGen implements IWorldGenerator{
 					// The reason the spawn attempts is so high for rubies is that it can only generate in quartz ore.
 					// The average number of quartz ore per chunk divided by the number of blockspaces in the given height range (heights nether quartz spawns at) is about 1/350, so 1000 tries will give an average of about 1 ruby per chunk.
 					// Happy Mining!
-					runGenerator(new RubyGen(), world, random, chunkX, chunkZ, 1000, 8, 116);
+					runGenerator(new GemGen(OreSetup.oreRuby.getDefaultState(), BlockMatcher.forBlock(Blocks.QUARTZ_ORE)), world, random, chunkX, chunkZ, 1000, 8, 116);
+				}
+				break;
+			case 1://End
+				if(ModConfig.genVoidOre.getBoolean() && (chunkX > 40 || chunkX < -40 || chunkZ > 40 || chunkZ < -40)){
+					runGenerator(new GemGen(OreSetup.oreVoid.getDefaultState(), BlockMatcher.forBlock(Blocks.END_STONE)), world, random, chunkX, chunkZ, 10, 5, 80);
 				}
 				break;
 		}

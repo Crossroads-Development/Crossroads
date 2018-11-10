@@ -36,6 +36,11 @@ public final class RecipeHolder{
 	public static final PredicateMap<ItemStack, ItemStack> stampMillRecipes = new PredicateMap<>(ItemStack.EMPTY);
 
 	/**
+	 * CraftingStack is input, the ItemStack is the output
+	 */
+	public static final PredicateMap<ItemStack, ItemStack> oreCleanserRecipes = new PredicateMap<>(ItemStack.EMPTY);
+
+	/**
 	 * Fluid is input, Integer is the amount required, ItemStack is output,
 	 * Double1 is maximum temperature, and Double2 is heat added on craft.
 	 * 

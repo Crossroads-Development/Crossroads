@@ -298,6 +298,9 @@ container.stamp_mill=Stamp Mill
 tile.stamp_mill.name=Stamp Mill
 tile.stamp_mill_top.name=Stamp Mill Top
 container.copshowium_maker=Copshowium Creation Chamber
+tile.ore_cleanser.name=Ore Cleanser
+container.ore_cleanser=Ore Cleanser
+tile.ore_void.name=Crystallized Void Ore
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=%1$s Grit

@@ -85,7 +85,7 @@ public class StaffTechnomancy extends MagicUsingItem{
 
 						BlockPos newEndPos = new BlockPos(end[0], end[1], end[2]);
 						//Speed things up a bit by not rechecking blocks
-						if(newEndPos.equals(endPos)){
+						if(newEndPos.equals(endPos) || player.world.isOutsideBuildHeight(newEndPos)){
 							continue;
 						}
 						endPos = newEndPos;
@@ -104,7 +104,7 @@ public class StaffTechnomancy extends MagicUsingItem{
 
 
 					IEffect effect = EnumMagicElements.getElement(mag).getMixEffect(mag.getRGB());
-					if(effect != null){
+					if(effect != null && endPos != null && !player.world.isOutsideBuildHeight(endPos)){
 						effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()));
 					}
 					NBTTagCompound beamNBT = new NBTTagCompound();

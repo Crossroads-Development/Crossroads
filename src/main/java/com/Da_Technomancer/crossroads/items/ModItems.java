@@ -4,10 +4,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
-import com.Da_Technomancer.crossroads.items.itemSets.Axle;
-import com.Da_Technomancer.crossroads.items.itemSets.Clutch;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -72,7 +69,6 @@ public final class ModItems{
 	public static CowLeggings cowLeggings;
 	public static ChickenBoots chickenBoots;
 	public static ChaosRod chaosRod;
-	public static BasicItem voidCrystal;
 	public static ModuleGoggles moduleGoggles;
 	public static StaffTechnomancy staffTechnomancy;
 	public static BeamCage beamCage;
@@ -147,7 +143,6 @@ public final class ModItems{
 		cowLeggings = new CowLeggings();
 		chickenBoots = new ChickenBoots();
 		chaosRod = new ChaosRod();
-		voidCrystal = new BasicItem("void_crystal");
 		moduleGoggles = new ModuleGoggles();
 		staffTechnomancy = new StaffTechnomancy();
 		beamCage = new BeamCage();

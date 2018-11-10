@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.Keys;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,7 @@ public enum EnumGoggleLenses{
 	EMERALD(new OreDictCraftingStack("gemEmerald"), "_emerald", new EmeraldGoggleEffect(), Keys.controlPotential, true),
 	DIAMOND(new OreDictCraftingStack("gemDiamond"), "_diamond", new DiamondGoggleEffect(), Keys.controlStability, false),
 	QUARTZ(new ItemRecipePredicate(ModItems.pureQuartz, 0), "_quartz", new QuartzGoggleEffect(), null, false),
-	VOID(new ItemRecipePredicate(ModItems.voidCrystal, 0), "", new VoidGoggleEffect(), Keys.controlVoid, true);
+	VOID(new ItemRecipePredicate(OreSetup.voidCrystal, 0), "", new VoidGoggleEffect(), Keys.controlVoid, true);
 	
 	private final Predicate<ItemStack> item;
 	private final String texturePath;
