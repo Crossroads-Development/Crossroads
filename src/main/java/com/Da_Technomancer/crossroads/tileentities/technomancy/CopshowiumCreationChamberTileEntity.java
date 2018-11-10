@@ -7,9 +7,10 @@ import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopshowium;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -19,9 +20,10 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nullable;
 
-public class CopshowiumCreationChamberTileEntity extends ModuleTE{
+public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 
 	public CopshowiumCreationChamberTileEntity(){
+		super(0);
 		fluidProps[0] = new TankProperty(0, CAPACITY, true, true, (Fluid f) -> f != null && (f.getName().equals(ModConfig.getConfigString(ModConfig.cccExpenLiquid, false)) || f.getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false))));//Input
 		fluidProps[1] = new TankProperty(1, CAPACITY, false, true);//Copshowium
 	}
@@ -31,7 +33,7 @@ public class CopshowiumCreationChamberTileEntity extends ModuleTE{
 		return 2;
 	}
 
-	private static final int CAPACITY = 1_296;
+	public static final int CAPACITY = 1_296;
 
 	private final FluidHandler inputHandler = new FluidHandler(0);
 	private final FluidHandler outputHandler = new FluidHandler(1);
@@ -50,6 +52,21 @@ public class CopshowiumCreationChamberTileEntity extends ModuleTE{
 		}
 
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+		return false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack){
+		return false;
+	}
+
+	@Override
+	public String getName(){
+		return "container.copshowium_maker";
 	}
 
 	private class MagicHandler implements IMagicHandler{
