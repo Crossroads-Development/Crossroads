@@ -1,6 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/ore_gravel"
+		"layer0": "crossroads:items/ore_gravel",
+		"layer1": "crossroads:items/ore_gravel_mask"
 	}
 }

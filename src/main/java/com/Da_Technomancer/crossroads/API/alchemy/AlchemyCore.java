@@ -78,7 +78,7 @@ public final class AlchemyCore{
 		REAGENTS[14] = new StaticReagent("Gold", 1100D, 3000D, 14, (EnumMatterPhase phase) -> Color.YELLOW, MiscUtil.oreDictPred("nuggetGold"), () -> MiscUtil.getOredictStack("nuggetGold", 1), 2, 0, null);
 		REAGENTS[15] = new StaticReagent("Salt of Muriatic Acid", -110D, 90D, 15, (EnumMatterPhase phase) -> CLEAR_COLOR, (stack) -> stack.getItem() == ModItems.solidMuriatic, () -> new ItemStack(ModItems.solidMuriatic), 10, 0, ACID_EFFECT);// Hydrogen Chloride, salt that forms hydrochloric acid, AKA muriatic acid, in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve.
 		REAGENTS[16] = new StaticReagent("Alchemical Salt", 900D, 1400D, 16, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, MiscUtil.oreDictPred("dustAlcSalt"), () -> MiscUtil.getOredictStack("dustAlcSalt", 1), 10, 0, SALT_EFFECT);//Any salt byproduct that is too boring to bother adding separately.
-		//
+		REAGENTS[17] = new StaticReagent("Slag", 2000D, 3000D, 17, (EnumMatterPhase phase) -> Color.DARK_GRAY, MiscUtil.oreDictPred("materialSlag"), () -> MiscUtil.getOredictStack("materialSlag", 1), 10, 0, null);
 		REAGENTS[18] = new StaticReagent("Philosopher Stone", Short.MAX_VALUE - 1, Short.MAX_VALUE, 18, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (stack) -> stack.getItem() == ModItems.philosopherStone, () -> new ItemStack(ModItems.philosopherStone), 5, 2, null);
 		REAGENTS[19] = new StaticReagent("Practitioner Stone", Short.MAX_VALUE - 1, Short.MAX_VALUE, 19, (EnumMatterPhase phase) -> FAINT_RED_COLOR, (stack) -> stack.getItem() == ModItems.practitionerStone, () -> new ItemStack(ModItems.practitionerStone), 5, 2, null);
 		REAGENTS[20] = new StaticReagent("Bedrock", Short.MAX_VALUE - 1, Short.MAX_VALUE, 20, (EnumMatterPhase phase) -> Color.GRAY, (stack) -> stack.getItem() == Item.getItemFromBlock(Blocks.BEDROCK), () -> new ItemStack(Blocks.BEDROCK), 50, 0, null);
@@ -146,15 +146,19 @@ public final class AlchemyCore{
 			}
 		});
 
-		//Phelostogen production
+		//Phelostogen production (from Gunpowder)
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[26], 2)}, new Pair[] {Pair.of(REAGENTS[0], 1), Pair.of(REAGENTS[3], 1)}, REAGENTS[18], -300D, 200D, 0D, false));
+		//Phelostogen production (from Slag)
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[17], 2)}, new Pair[] {Pair.of(REAGENTS[0], 1), Pair.of(REAGENTS[3], 1)}, REAGENTS[18], -300D, 200D, 0D, false));
 		//Aether production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[12], 1)}, new Pair[] {Pair.of(REAGENTS[1], 1), Pair.of(REAGENTS[13], 1), Pair.of(REAGENTS[8], 1)}, REAGENTS[18], -360D, Double.MAX_VALUE, 0D, false));
 		//Adamant production
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[20], 5)}, new Pair[] {Pair.of(REAGENTS[2], 2), Pair.of(REAGENTS[16], 3)}, REAGENTS[18], 0D, 100D, 0D, false));
 
 		//Gunpowder washing
-		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[26], 2)}, new Pair[] {Pair.of(REAGENTS[3], 1)}, REAGENTS[4], -300D, 200D, 0D, false));
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[26], 2)}, new Pair[] {Pair.of(REAGENTS[3], 1)}, REAGENTS[4], -300D, 100D, 0D, false));
+		//Slag washing
+		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[17], 2)}, new Pair[] {Pair.of(REAGENTS[3], 1)}, REAGENTS[4], -300D, 100D, 0D, false));
 		//Cinnabar decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new Pair[] {Pair.of(REAGENTS[12], 1)}, new Pair[] {Pair.of(REAGENTS[13], 1), Pair.of(REAGENTS[8], 1)}, null, 360D, Double.MAX_VALUE, 60D, false));
 		//Hydrochloric Acid production

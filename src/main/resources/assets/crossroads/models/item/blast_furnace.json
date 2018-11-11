@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/ore_void",
+	"parent": "crossroads:block/blast_furnace",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

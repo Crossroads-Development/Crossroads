@@ -121,6 +121,7 @@ public class ModBlocks{
 	public static StampMill stampMill;
 	public static StampMillTop stampMillTop;
 	public static OreCleanser oreCleanser;
+	public static BlastFurnace blastFurnace;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -194,8 +195,8 @@ public class ModBlocks{
 		crystallinePrism = new CrystallinePrism();
 		arcaneReflector = new ArcaneReflector();
 		lensHolder = new LensHolder();
-		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz");
-		blockLuminescentQuartz = (BasicBlock) new BasicBlock("block_luminescent_quartz", Material.ROCK, 1, "pickaxe", 4, null, "blockQuartz").setLightLevel(1F);
+		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 4, "blockQuartz");
+		blockLuminescentQuartz = (BasicBlock) new BasicBlock("block_luminescent_quartz", Material.ROCK, 4, "blockQuartz").setLightLevel(1F);
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
 		beamSplitterBasic = new BeamSplitterBasic();
@@ -263,6 +264,7 @@ public class ModBlocks{
 		stampMill = new StampMill();
 		stampMillTop = new StampMillTop();
 		oreCleanser = new OreCleanser();
+		blastFurnace = new BlastFurnace();
 	}
 
 	@SideOnly(Side.CLIENT)

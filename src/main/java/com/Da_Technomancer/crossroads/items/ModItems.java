@@ -106,6 +106,7 @@ public final class ModItems{
 	public static Clutch clutchCopshowium;
 	public static Clutch clutchInvertedIron;
 	public static Clutch clutchInvertedCopshowium;
+	public static Slag slag;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -180,6 +181,7 @@ public final class ModItems{
 		clutchCopshowium = new Clutch(false, EnumGearType.COPSHOWIUM);
 		clutchInvertedIron = new Clutch(true, EnumGearType.IRON);
 		clutchInvertedCopshowium = new Clutch(true, EnumGearType.COPSHOWIUM);
+		slag = new Slag();
 	}
 
 	@SideOnly(Side.CLIENT)

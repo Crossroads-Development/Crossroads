@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.blocks.rotary.BlastFurnace;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.*;
 import com.Da_Technomancer.crossroads.tileentities.fluid.*;
 import com.Da_Technomancer.crossroads.tileentities.heat.*;
@@ -106,11 +107,12 @@ public class ModTileEntity{
 		register(StampMillTileEntity.class, "stamp_mill");
 		register(IceboxTileEntity.class, "icebox");
 		register(OreCleanserTileEntity.class, "ore_cleanser");
+		register(BlastFurnaceTileEntity.class, "blast_furnace");
 	}
 
 	/**
 	 * @param clazz The class of the TileEntity being registered. 
-	 * @param ID Should be lower-case.
+	 * @param ID Must be lower-case.
 	 */
 	private static void register(Class<? extends TileEntity> clazz, String ID){
 		GameRegistry.registerTileEntity(clazz, Main.MODID + ':' + ID);

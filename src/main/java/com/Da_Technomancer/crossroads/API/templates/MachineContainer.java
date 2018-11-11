@@ -147,7 +147,7 @@ public abstract class MachineContainer extends Container{
 
 		@Override
 		public boolean isItemValid(ItemStack stack){
-			return inventory.isItemValidForSlot(0, stack);
+			return inventory.isItemValidForSlot(getSlotIndex(), stack);
 		}
 	}
 

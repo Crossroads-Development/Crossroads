@@ -12,7 +12,6 @@ import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -72,27 +71,27 @@ public final class OreSetup{
 	public static void init(){
 		//Register CR metal ores, blocks, ingots, nuggets manually
 		ingotTin = new BasicItem("ingot_tin", "ingotTin");
-		blockTin = new BasicBlock("block_tin", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockTin"){
+		blockTin = new BasicBlock("block_tin", Material.IRON, 5, "blockTin"){
 			@Override
 			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
 				return true;
 			}
 		};
 		nuggetTin = new BasicItem("nugget_tin", "nuggetTin");
-		oreTin = new BasicBlock("ore_tin", Material.ROCK, 2, "pickaxe", 3, null, "oreTin");
+		oreTin = new BasicBlock("ore_tin", Material.ROCK, 3, "oreTin");
 
 		ingotCopper = new BasicItem("ingot_copper", "ingotCopper");
-		blockCopper = new BasicBlock("block_copper", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockCopper"){
+		blockCopper = new BasicBlock("block_copper", Material.IRON, 5, "blockCopper"){
 			@Override
 			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
 				return true;
 			}
 		};
 		nuggetCopper = new BasicItem("nugget_copper", "nuggetCopper");
-		oreCopper = new BasicBlock("ore_copper", Material.ROCK, 2, "pickaxe", 3, null, "oreCopper");
+		oreCopper = new BasicBlock("ore_copper", Material.ROCK, 3, "oreCopper");
 
 		ingotBronze = new BasicItem("ingot_bronze", "ingotBronze");
-		blockBronze = new BasicBlock("block_bronze", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockBronze"){
+		blockBronze = new BasicBlock("block_bronze", Material.IRON, 5, "blockBronze"){
 			@Override
 			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
 				return true;
@@ -101,13 +100,13 @@ public final class OreSetup{
 		nuggetBronze = new BasicItem("nugget_bronze", "nuggetBronze");
 
 		gemRuby = new BasicItem("gem_ruby", "gemRuby");
-		blockRuby = new BasicBlock("block_ruby", Material.ROCK, 3, "pickaxe", 5, null, "blockRuby"){
+		blockRuby = new BasicBlock("block_ruby", Material.ROCK, 5, "blockRuby"){
 			@Override
 			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
 				return true;
 			}
 		};
-		oreRuby = new BasicBlock("ore_ruby", Material.ROCK, 3, "pickaxe", 3, null, "oreRuby"){
+		oreRuby = new BasicBlock("ore_ruby", Material.ROCK, 3, "oreRuby"){
 			@Override
 			public int quantityDroppedWithBonus(int fortune, Random random){
 				if(fortune > 0){
@@ -123,7 +122,7 @@ public final class OreSetup{
 		};
 
 		ingotCopshowium = new BasicItem("ingot_copshowium", "ingotCopshowium");
-		blockCopshowium = new BasicBlock("block_copshowium", Material.IRON, 2, "pickaxe", 5, SoundType.METAL, "blockCopshowium"){
+		blockCopshowium = new BasicBlock("block_copshowium", Material.IRON, 5, "blockCopshowium"){
 			@Override
 			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
 				return true;
@@ -132,7 +131,7 @@ public final class OreSetup{
 		nuggetCopshowium = new BasicItem("nugget_copshowium", "nuggetCopshowium");
 
 		voidCrystal = new BasicItem("void_crystal");
-		oreVoid = new BasicBlock("ore_void", Material.ROCK, 3, "pickaxe", 3){
+		oreVoid = new BasicBlock("ore_void", Material.ROCK, 3){
 			@Override
 			public int quantityDroppedWithBonus(int fortune, Random random){
 				if(fortune > 0){
@@ -253,6 +252,8 @@ public final class OreSetup{
 			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new FluidStack(fluid, 2 * EnergyConverters.INGOT_MB));
 			RecipeHolder.stampMillRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new ItemStack(gravel, 3));
 			RecipeHolder.oreCleanserRecipes.put(new ItemRecipePredicate(gravel, 0), new ItemStack(clump, 1));
+			RecipeHolder.blastFurnaceRecipes.put(new ItemRecipePredicate(gravel, 0), Pair.of(new FluidStack(fluid, EnergyConverters.INGOT_MB), 2));
+			RecipeHolder.blastFurnaceRecipes.put(new ItemRecipePredicate(clump, 0), Pair.of(new FluidStack(fluid, EnergyConverters.INGOT_MB), 1));
 
 			OreProfile profile = new OreProfile(dust, gravel, clump, fluid, fluidBlock, type.getValue());
 			metalStages.put(type.getKey(), profile);
