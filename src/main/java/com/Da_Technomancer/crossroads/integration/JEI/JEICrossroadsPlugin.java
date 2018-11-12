@@ -1,25 +1,18 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import java.util.ArrayList;
-import java.util.Map.Entry;
-
-import javax.annotation.Nonnull;
-
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.IJeiRuntime;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.ISubtypeRegistry;
-import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.item.ItemStack;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Map.Entry;
 
 @JEIPlugin
 public class JEICrossroadsPlugin implements IModPlugin{
@@ -27,7 +20,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	@Override
 	public void register(@Nonnull IModRegistry registry){
 
-		registry.addRecipeCatalyst(new ItemStack(ModBlocks.millstone, 1), GrindstoneCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(ModBlocks.millstone, 1), MillstoneCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.fluidCoolingChamber, 1), FluidCoolingCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.heatingCrucible, 1), HeatingCrucibleCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.detailedCrafter, 1), DetailedCrafterCategory.ID);
@@ -35,7 +28,10 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.arcaneReflector, 1), FusionBeamCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.reactionChamber, 1), ReactionCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.glasswareHolder, 1), ReactionCategory.ID);
-		
+		registry.addRecipeCatalyst(new ItemStack(ModBlocks.stampMill, 1), StampMillCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(ModBlocks.oreCleanser, 1), OreCleanserCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(ModBlocks.blastFurnace, 1), BlastFurnaceCategory.ID);
+
 		for(Entry<String, ArrayList<IRecipeWrapper>> recipeGroup : RecipeHolder.JEIWrappers.entrySet()){
 			registry.addRecipes(recipeGroup.getValue(), recipeGroup.getKey());
 		}
@@ -62,6 +58,6 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry){
 		IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
-		registry.addRecipeCategories(new GrindstoneCategory(guiHelper), new FluidCoolingCategory(guiHelper), new HeatingCrucibleCategory(guiHelper), new DetailedCrafterCategory(guiHelper), new ArcaneExtractorCategory(guiHelper), new FusionBeamCategory(guiHelper), new ReactionCategory(guiHelper), new ReagInfoCategory(guiHelper));
+		registry.addRecipeCategories(new MillstoneCategory(guiHelper), new FluidCoolingCategory(guiHelper), new HeatingCrucibleCategory(guiHelper), new DetailedCrafterCategory(guiHelper), new ArcaneExtractorCategory(guiHelper), new FusionBeamCategory(guiHelper), new ReactionCategory(guiHelper), new ReagInfoCategory(guiHelper), new StampMillCategory(guiHelper), new OreCleanserCategory(guiHelper), new BlastFurnaceCategory(guiHelper));
 	}
 }

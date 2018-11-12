@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipe>{
+public class MillstoneCategory implements IRecipeCategory<MillstoneRecipe>{
 
 	public static final String ID = Main.MODID + ".millstone";
 	private final IDrawable back;
@@ -25,7 +25,7 @@ public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipe>{
 	private final IDrawableAnimated arrow;
 	private final IDrawableStatic arrowStatic;
 
-	protected GrindstoneCategory(IGuiHelper guiHelper){
+	protected MillstoneCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation(Main.MODID, "textures/gui/container/millstone_gui.png"), 66, 35, 44, 17);
@@ -62,7 +62,7 @@ public class GrindstoneCategory implements IRecipeCategory<GrindstoneRecipe>{
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, GrindstoneRecipe recipeWrapper, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout recipeLayout, MillstoneRecipe recipeWrapper, IIngredients ingredients){
 		if(ingredients.getInputs(ItemStack.class).get(0).isEmpty()){
 			// Might happen if CraftTweaker added an invalid recipe
 			return;

@@ -9,12 +9,12 @@ import net.minecraft.item.ItemStack;
 import java.util.Arrays;
 import java.util.List;
 
-public class GrindstoneRecipe implements IRecipeWrapper{
+public class MillstoneRecipe implements IRecipeWrapper{
 
 	private List<ItemStack> inputs;
 	private List<ItemStack> outputs;
 
-	public GrindstoneRecipe(List<ItemStack> input, ItemStack[] output){
+	public MillstoneRecipe(List<ItemStack> input, ItemStack[] output){
 		inputs = input;
 		outputs = Arrays.asList(output);
 	}

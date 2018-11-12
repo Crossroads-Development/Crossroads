@@ -100,8 +100,7 @@ public final class RecipeHolder{
 	public static void rebind(){
 		ArrayList<IRecipeWrapper> currentRecipes = new ArrayList<IRecipeWrapper>();
 
-		recipe:
-		for(Entry<Predicate<ItemStack>, ItemStack[]> rec : millRecipes.entrySet()){
+		recipe: for(Entry<Predicate<ItemStack>, ItemStack[]> rec : millRecipes.entrySet()){
 			if(!(rec.getKey() instanceof RecipePredicate) || ((RecipePredicate) (rec.getKey())).getMatchingList().isEmpty()){
 				continue;
 			}
@@ -111,9 +110,9 @@ public final class RecipeHolder{
 					continue recipe;
 				}
 			}
-			currentRecipes.add(new GrindstoneRecipe(((RecipePredicate<ItemStack>) rec.getKey()).getMatchingList(), rec.getValue()));
+			currentRecipes.add(new MillstoneRecipe(((RecipePredicate<ItemStack>) rec.getKey()).getMatchingList(), rec.getValue()));
 		}
-		JEIWrappers.put(GrindstoneCategory.ID, currentRecipes);
+		JEIWrappers.put(MillstoneCategory.ID, currentRecipes);
 
 		currentRecipes = new ArrayList<IRecipeWrapper>();
 		for(Entry<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> rec : fluidCoolingRecipes.entrySet()){
@@ -168,5 +167,30 @@ public final class RecipeHolder{
 			}
 		}
 		JEIWrappers.put(ReagInfoCategory.ID, currentRecipes);
+
+
+		for(Entry<Predicate<ItemStack>, ItemStack> rec : stampMillRecipes.entrySet()){
+			if(!(rec.getKey() instanceof RecipePredicate) || ((RecipePredicate) (rec.getKey())).getMatchingList().isEmpty()){
+				continue;
+			}
+			currentRecipes.add(new StampMillRecipe(((RecipePredicate<ItemStack>) rec.getKey()).getMatchingList(), rec.getValue()));
+		}
+		JEIWrappers.put(StampMillCategory.ID, currentRecipes);
+
+		for(Entry<Predicate<ItemStack>, ItemStack> rec : oreCleanserRecipes.entrySet()){
+			if(!(rec.getKey() instanceof RecipePredicate) || ((RecipePredicate) (rec.getKey())).getMatchingList().isEmpty()){
+				continue;
+			}
+			currentRecipes.add(new OreCleanserRecipe(((RecipePredicate<ItemStack>) rec.getKey()).getMatchingList(), rec.getValue()));
+		}
+		JEIWrappers.put(OreCleanserCategory.ID, currentRecipes);
+
+		for(Entry<Predicate<ItemStack>, Pair<FluidStack, Integer>> rec : blastFurnaceRecipes.entrySet()){
+			if(!(rec.getKey() instanceof RecipePredicate) || ((RecipePredicate) (rec.getKey())).getMatchingList().isEmpty()){
+				continue;
+			}
+			currentRecipes.add(new BlastFurnaceRecipe(((RecipePredicate<ItemStack>) rec.getKey()).getMatchingList(), rec.getValue().getLeft(), rec.getValue().getRight()));
+		}
+		JEIWrappers.put(BlastFurnaceCategory.ID, currentRecipes);
 	}
 }
