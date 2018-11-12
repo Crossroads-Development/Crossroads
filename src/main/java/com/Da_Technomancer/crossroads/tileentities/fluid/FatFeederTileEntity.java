@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
-import com.Da_Technomancer.essentials.shared.IAxleHandler;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
@@ -19,19 +19,19 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FatFeederTileEntity extends ModuleTE{
+public class FatFeederTileEntity extends InventoryTE{
 
 	public FatFeederTileEntity(){
-		super();
-		fluidProps[0] = new TankProperty(0, 4_000, true, false, (Fluid f) -> f == BlockLiquidFat.getLiquidFat());
+		super(0);
+		fluidProps[0] = new TankProperty(0, 10_000, true, true, (Fluid f) -> f == BlockLiquidFat.getLiquidFat());
 	}
+
+	private static final int BREED_AMOUNT = 200;
 
 	@Override
 	protected int fluidTanks(){
 		return 1;
 	}
-
-	private static final double ENERGY_PER_VALUE = 1;
 
 	@Override
 	public void update(){
@@ -39,21 +39,17 @@ public class FatFeederTileEntity extends ModuleTE{
 			return;
 		}
 
-		IAxleHandler upAxle = world.getTileEntity(pos.offset(EnumFacing.UP)) != null ? world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN) : null;
-		IAxleHandler downAxle = world.getTileEntity(pos.offset(EnumFacing.DOWN)) != null ? world.getTileEntity(pos.offset(EnumFacing.DOWN)).getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) : null;
-
-		if(upAxle != null && downAxle != null && fluids[0] != null){
-			int range = (int) (downAxle.getMotionData()[0] == 0 ? 0 : Math.abs(upAxle.getMotionData()[0] / downAxle.getMotionData()[0]));
+		if(fluids[0] != null){
+			float range = (float) Math.abs(fluids[0].amount - fluidProps[0].getCapacity() / 2) / (float) (fluidProps[0].getCapacity() / 2);
+			range = (1F - range) * 12 + 4;
 			List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.subtract(new Vec3i(range, range, range)), pos.add(new Vec3i(range, range, range))), EntitySelectors.IS_ALIVE);
 			for(EntityPlayer play : players){
 				FoodStats food = play.getFoodStats();
-				int added = Math.min(fluids[0].amount / EnergyConverters.FAT_PER_VALUE, (int) Math.min(Math.abs(upAxle.getMotionData()[1]) / ENERGY_PER_VALUE, 40 - (food.getFoodLevel() + food.getSaturationLevel())));
-				if(added <= 0){
+				int added = Math.min(fluids[0].amount / EnergyConverters.FAT_PER_VALUE, 40 - (food.getFoodLevel() + (int) food.getSaturationLevel()));
+				if(added < 4){
 					continue;
 				}
 				fluids[0].amount -= added * EnergyConverters.FAT_PER_VALUE;
-				upAxle.addEnergy(-added * ENERGY_PER_VALUE, false, false);
-				downAxle.addEnergy(added * ENERGY_PER_VALUE, false, false);
 				int hungerAdded = Math.min(20 - food.getFoodLevel(), added);
 				//The way saturation is coded is weird (defined relative to hunger), and the best way to do this is through nbt.
 				NBTTagCompound nbt = new NBTTagCompound();
@@ -61,13 +57,29 @@ public class FatFeederTileEntity extends ModuleTE{
 				nbt.setInteger("foodLevel", hungerAdded + food.getFoodLevel());
 				nbt.setFloat("foodSaturationLevel", Math.min(20F - food.getSaturationLevel(), added - hungerAdded) + food.getSaturationLevel());
 				food.readNBT(nbt);
+				markDirty();
 				if(fluids[0].amount <= 0){
 					fluids[0] = null;
-					markDirty();
 					return;
 				}
 			}
-			markDirty();
+
+			List<EntityAnimal> animals = world.getEntitiesWithinAABB(EntityAnimal.class, new AxisAlignedBB(pos.subtract(new Vec3i(range, range, range)), pos.add(new Vec3i(range, range, range))), EntitySelectors.IS_ALIVE);
+
+			if(animals.size() >= 32){
+				return;
+			}
+
+			for(EntityAnimal anim : animals){
+				if(fluids[0].amount >= BREED_AMOUNT && anim.getGrowingAge() == 0 && !anim.isInLove()){
+					anim.setInLove(null);
+					fluids[0].amount -= BREED_AMOUNT;
+					if(fluids[0].amount <= 0){
+						fluids[0] = null;
+						return;
+					}
+				}
+			}
 		}
 	}
 
@@ -76,10 +88,25 @@ public class FatFeederTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.DOWN && facing != EnumFacing.UP){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) mainHandler;
 		}
 
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+		return false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack){
+		return false;
+	}
+
+	@Override
+	public String getName(){
+		return "Fat Feeder";
 	}
 }

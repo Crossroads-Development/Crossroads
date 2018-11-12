@@ -42,6 +42,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int COPSHOWIUM_CHAMBER_GUI = 20;
 	public static final int ORE_CLEANSER_GUI = 21;
 	public static final int BLAST_FURNACE_GUI = 22;
+	public static final int FAT_FEEDER_GUI = 23;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -91,6 +92,8 @@ public class GuiHandler implements IGuiHandler{
 				return new OreCleanserContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case BLAST_FURNACE_GUI:
 				return new BlastFurnaceContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case FAT_FEEDER_GUI:
+				return new FatFeederContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;
@@ -145,6 +148,8 @@ public class GuiHandler implements IGuiHandler{
 				return new OreCleanserGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case BLAST_FURNACE_GUI:
 				return new BlastFurnaceGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case FAT_FEEDER_GUI:
+				return new FatFeederGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
@@ -17,11 +17,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nullable;
 
-public class FatCongealerTileEntity extends ModuleTE{
+public class FatCongealerTileEntity extends InventoryTE{
 
 	public FatCongealerTileEntity(){
-		super();
-		fluidProps[0] = new TankProperty(0, 4_000, true, false, (Fluid f) -> BlockLiquidFat.getLiquidFat() == f);
+		super(0);
+		fluidProps[0] = new TankProperty(0, 10_000, true, false, (Fluid f) -> BlockLiquidFat.getLiquidFat() == f);
 	}
 
 	@Override
@@ -78,5 +78,20 @@ public class FatCongealerTileEntity extends ModuleTE{
 		}
 
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+		return false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack){
+		return false;
+	}
+
+	@Override
+	public String getName(){
+		return "Fat Congealer";
 	}
 }
