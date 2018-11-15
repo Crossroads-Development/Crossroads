@@ -1,9 +1,10 @@
-package com.Da_Technomancer.crossroads.tileentities.beams;
+package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import java.awt.Color;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -36,7 +37,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE{
 	public void trigger(){
 		if(!running && !invalid(null, true, null)){
 			running = true;
-			ModPackets.network.sendToAllAround(new SendIntToClient(0, 0x1FFFFFF, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendIntToClient(0, BeamManager.toPacket(new BeamUnit(1, 1, 1, 0), 2), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 
@@ -92,11 +93,11 @@ public class BeaconHarnessTileEntity extends BeamRenderTE{
 
 	@Override
 	protected boolean[] inputSides(){
-		return new boolean[]{false, false, true, true, true, true};
+		return new boolean[] {false, false, true, true, true, true};
 	}
 
 	@Override
 	protected boolean[] outputSides(){
-		return new boolean[]{false, true, false, false, false, false};
+		return new boolean[] {false, true, false, false, false, false};
 	}
 }

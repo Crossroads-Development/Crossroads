@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.tileentities.beams.BeaconHarnessTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,7 +17,6 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 import java.util.Random;
 
-/** All blocks using BeamRenderer MUST return false to isOpaqueCube */
 public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarnessTileEntity>{
 
 	private static final Random rand = new Random();
@@ -60,31 +59,30 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 					GlStateManager.rotate(beam.getWorld().getTotalWorldTime() * 2, 0, 1, 0);
 				}
 
-				final double small = 0 - (trip.getRight().doubleValue() / 16D);
-				final double big = 0 + (trip.getRight().doubleValue() / 16D);
+				final double rad = trip.getRight().doubleValue() / 16D / Math.sqrt(2D);
 				final int length = trip.getMiddle();
 
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				//+Z
-				buf.pos(small, length, big).tex(1, 0).endVertex();
-				buf.pos(small, 0, big).tex(1, length).endVertex();
-				buf.pos(big, 0, big).tex(0, length).endVertex();
-				buf.pos(big, length, big).tex(0, 0).endVertex();
+				buf.pos(-rad, length, rad).tex(1, 0).endVertex();
+				buf.pos(-rad, 0, rad).tex(1, length).endVertex();
+				buf.pos(rad, 0, rad).tex(0, length).endVertex();
+				buf.pos(rad, length, rad).tex(0, 0).endVertex();
 				//-Z
-				buf.pos(big, length, small).tex(1, 0).endVertex();
-				buf.pos(big, 0, small).tex(1, length).endVertex();
-				buf.pos(small, 0, small).tex(0, length).endVertex();
-				buf.pos(small, length, small).tex(0, 0).endVertex();
+				buf.pos(rad, length, -rad).tex(1, 0).endVertex();
+				buf.pos(rad, 0, -rad).tex(1, length).endVertex();
+				buf.pos(-rad, 0, -rad).tex(0, length).endVertex();
+				buf.pos(-rad, length, -rad).tex(0, 0).endVertex();
 				//-X
-				buf.pos(small, length, small).tex(1, 0).endVertex();
-				buf.pos(small, 0, small).tex(1, length).endVertex();
-				buf.pos(small, 0, big).tex(0, length).endVertex();
-				buf.pos(small, length, big).tex(0, 0).endVertex();
+				buf.pos(-rad, length, -rad).tex(1, 0).endVertex();
+				buf.pos(-rad, 0, -rad).tex(1, length).endVertex();
+				buf.pos(-rad, 0, rad).tex(0, length).endVertex();
+				buf.pos(-rad, length, rad).tex(0, 0).endVertex();
 				//+X
-				buf.pos(big, length, big).tex(1, 0).endVertex();
-				buf.pos(big, 0, big).tex(1, length).endVertex();
-				buf.pos(big, 0, small).tex(0, length).endVertex();
-				buf.pos(big, length, small).tex(0, 0).endVertex();
+				buf.pos(rad, length, rad).tex(1, 0).endVertex();
+				buf.pos(rad, 0, rad).tex(1, length).endVertex();
+				buf.pos(rad, 0, -rad).tex(0, length).endVertex();
+				buf.pos(rad, length, -rad).tex(0, 0).endVertex();
 				tes.draw();
 				
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
@@ -98,16 +96,16 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 			return;
 		}
 		
-		float ticks = beam.getWorld().getTotalWorldTime() % 10;
+		float ticks = beam.getWorld().getTotalWorldTime() % 20 + partialTicks;
 		
-		if(ticks == 0 && !beam.renderSet){
+		if(ticks < 1F && !beam.renderSet){
 			beam.renderSet = true;
-			float diagMult = (float) Math.sqrt(8);
+			float diagMult = 2F;//* (float) Math.sqrt(2D);
 			for(int i = 0; i < 8; i++){
 				beam.renderOld[i] = beam.renderNew[i];
-				beam.renderNew[i] = (i % 2 == 0) ? rand.nextFloat() / 2F : rand.nextFloat() / diagMult;
+				beam.renderNew[i] = 2F + 6F * ((i % 2 == 0) ? rand.nextFloat() / 2F : rand.nextFloat() / diagMult);
 			}
-		}else if(ticks == 1){
+		}else if(ticks > 1F && ticks < 2F){
 			beam.renderSet = false;
 		}
 		
@@ -116,29 +114,32 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 		GlStateManager.translate(x, y, z);
 
 		Color col = BeamManager.getTriple(packet[1]).getLeft();
-		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F);
+		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, 0.25F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
+		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		GlStateManager.disableCull();
-		
-		float height = .4F + Math.abs(((.01F * beam.getWorld().getTotalWorldTime()) % .4F) - .2F);
-		float change = ticks / 10F;
-		
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+		float height = 0.2F * (float) Math.sin(0.05F * beam.getWorld().getTotalWorldTime());
+		float change = ticks / 20F;
+
 		buf.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
-		buf.pos(.5F - ((beam.renderOld[0] * (1F - change)) + beam.renderNew[0] * change), height, .5F).tex(0, 0).endVertex();
-		buf.pos(.5F - ((beam.renderOld[1] * (1F - change)) + beam.renderNew[1] * change), height, .5F - ((beam.renderOld[1] * (1F - change)) + beam.renderNew[1] * change)).tex(0, 0).endVertex();
-		buf.pos(.5F, height, .5F - ((beam.renderOld[2] * (1F - change)) + beam.renderNew[2] * change)).tex(0, 0).endVertex();
-		buf.pos(.5F + ((beam.renderOld[3] * (1F - change)) + beam.renderNew[3] * change), height, .5F - ((beam.renderOld[3] * (1F - change)) + beam.renderNew[3] * change)).tex(0, 0).endVertex();
-		buf.pos(.5F + ((beam.renderOld[4] * (1F - change)) + beam.renderNew[4] * change), height, .5F).tex(0, 0).endVertex();
-		buf.pos(.5F + ((beam.renderOld[5] * (1F - change)) + beam.renderNew[5] * change), height, .5F + ((beam.renderOld[5] * (1F - change)) + beam.renderNew[5] * change)).tex(0, 0).endVertex();
-		buf.pos(.5F, height, .5F + ((beam.renderOld[6] * (1F - change)) + beam.renderNew[6] * change)).tex(0, 0).endVertex();
-		buf.pos(.5F - ((beam.renderOld[7] * (1F - change)) + beam.renderNew[7] * change), height, .5F + ((beam.renderOld[7] * (1F - change)) + beam.renderNew[7] * change)).tex(0, 0).endVertex();
+		buf.pos(.5F - ((beam.renderOld[0] * (1F - change)) + beam.renderNew[0] * change), 0.5F + height, .5F).tex(0, 0).endVertex();
+		buf.pos(.5F - ((beam.renderOld[1] * (1F - change)) + beam.renderNew[1] * change), 0.5F + height, .5F - ((beam.renderOld[1] * (1F - change)) + beam.renderNew[1] * change)).tex(0, 0).endVertex();
+		buf.pos(.5F, 0.5F + height, .5F - ((beam.renderOld[2] * (1F - change)) + beam.renderNew[2] * change)).tex(0, 0).endVertex();
+		buf.pos(.5F + ((beam.renderOld[3] * (1F - change)) + beam.renderNew[3] * change), 0.5F + height, .5F - ((beam.renderOld[3] * (1F - change)) + beam.renderNew[3] * change)).tex(0, 0).endVertex();
+		buf.pos(.5F + ((beam.renderOld[4] * (1F - change)) + beam.renderNew[4] * change), 0.5F + height, .5F).tex(0, 0).endVertex();
+		buf.pos(.5F + ((beam.renderOld[5] * (1F - change)) + beam.renderNew[5] * change), 0.5F + height, .5F + ((beam.renderOld[5] * (1F - change)) + beam.renderNew[5] * change)).tex(0, 0).endVertex();
+		buf.pos(.5F, 0.5F + height, .5F + ((beam.renderOld[6] * (1F - change)) + beam.renderNew[6] * change)).tex(0, 0).endVertex();
+		buf.pos(.5F - ((beam.renderOld[7] * (1F - change)) + beam.renderNew[7] * change), 0.5F + height, .5F + ((beam.renderOld[7] * (1F - change)) + beam.renderNew[7] * change)).tex(0, 0).endVertex();
 		tes.draw();
-		
-		GlStateManager.enableCull();
+
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
+		GlStateManager.disableBlend();
 		GlStateManager.color(1, 1, 1);
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();

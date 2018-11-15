@@ -1,7 +1,7 @@
-package com.Da_Technomancer.crossroads.blocks.beams;
+package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
-import com.Da_Technomancer.crossroads.tileentities.beams.BeaconHarnessTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;

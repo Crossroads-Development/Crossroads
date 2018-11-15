@@ -4,7 +4,9 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -19,8 +21,17 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	private static final int[] RATES = new int[] {1, 2, 4, 8, 16, 32, 64};
 	private BeamUnitStorage storage = new BeamUnitStorage();
 
-	public QuartzStabilizerTileEntity(){
-		super();
+	private EnumFacing dir = null;
+
+	private EnumFacing getDir(){
+		if(dir == null){
+			IBlockState state = world.getBlockState(pos);
+			if(state.getBlock() != ModBlocks.quartzStabilizer){
+				return EnumFacing.NORTH;
+			}
+			dir = state.getValue(EssentialsProperties.FACING);
+		}
+		return dir;
 	}
 
 	public int adjustSetting(){
@@ -56,7 +67,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 			}
 		}
 
-		EnumFacing dir = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
+		EnumFacing dir = getDir();
 
 		if(!storage.isEmpty()){
 			//As it would turn out, the problem of meeting a quota for the sum of values drawn from a limited source while also approximately maintaining the source ratio is quite messy when all values must be integers
@@ -107,14 +118,14 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	@Override
 	protected boolean[] inputSides(){
 		boolean[] out = {true, true, true, true, true, true};
-		out[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()] = false;
+		out[getDir().getIndex()] = false;
 		return out;
 	}
 
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] out = new boolean[6];
-		out[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()] = true;
+		out[getDir().getIndex()] = true;
 		return out;
 	}
 

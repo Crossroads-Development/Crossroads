@@ -85,7 +85,7 @@ public class TimeEffect implements IEffect{
 				ChunkPos base = worldIn.getChunkFromBlockCoords(pos).getPos();
 				for(int i = 0; i < severity; i++){
 					BlockPos effectPos = base.getBlock(RAND.nextInt(16), RAND.nextInt(256), RAND.nextInt(16));
-					EnumBeamAlignments element = null;
+					EnumBeamAlignments element;
 					do{
 						element = EnumBeamAlignments.values()[RAND.nextInt(EnumBeamAlignments.values().length)];
 					}while(element == EnumBeamAlignments.TIME || element.getEffect() == null);

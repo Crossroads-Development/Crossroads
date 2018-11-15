@@ -3,15 +3,17 @@ package com.Da_Technomancer.crossroads.API.templates;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -40,8 +42,8 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	}
 
 	protected void overload(){
-		world.setBlockToAir(pos);
-		//TODO sound, smoke, etc.
+		world.destroyBlock(pos, true);
+		world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 5F, (float) Math.random());
 	}
 
 	/**
@@ -68,17 +70,6 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	public int[] getRenderedBeams(){
 		return beamPackets;
 	}
-//
-//	@Override
-//	public void refresh(){
-//		if(beamer != null){
-//			for(BeamManager beam : beamer){
-//				if(beam != null){
-//					beam.emit(null, world);
-//				}
-//			}
-//		}
-//	}
 
 	@Override
 	public void update(){

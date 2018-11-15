@@ -21,13 +21,12 @@ public class EnchantEffect implements IEffect{
 	
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
-		mult = Math.min(mult, 45);
 		ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
-		if(items != null && items.size() != 0){
+		if(items.size() != 0){
 			for(EntityItem ent : items){
-				List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(RAND, ent.getItem(), (int) mult, mult >= 32);
+				List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(RAND, ent.getItem(), (int) Math.min(mult, 45), mult >= 64);
 				
-				if(ench == null || ent.getItem().isItemEnchanted()){
+				if(ent.getItem().isItemEnchanted()){
 					continue;
 				}
 				
@@ -35,9 +34,13 @@ public class EnchantEffect implements IEffect{
 					ent.setItem(new ItemStack(Items.ENCHANTED_BOOK, 1));
 				}
 				
+				if(ent.getItem().getItem() == Items.ENCHANTED_BOOK && ench.size() > 1){
+					//Vanilla behavior when enchanting books is to put on 1 fewer enchantments
+					ench.remove(0);
+				}
+				
 				for(EnchantmentData datum : ench){
 					if(ent.getItem().getItem() == Items.ENCHANTED_BOOK){
-						//While vanilla behavior when enchanting books is to put on 1 fewer enchantments, for the EnchantEffect this does not occur. THIS IS NOT A BUG.
 						ItemEnchantedBook.addEnchantment(ent.getItem(), datum);
 					}else{
 						ent.getItem().addEnchantment(datum.enchantment, datum.enchantmentLevel);
@@ -52,7 +55,7 @@ public class EnchantEffect implements IEffect{
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, double mult){
 			ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
-			if(items != null && items.size() != 0){
+			if(items.size() != 0){
 				for(EntityItem ent : items){
 					if(ent.getItem().getTagCompound() != null && ent.getItem().getTagCompound().hasKey("ench")){
 						ent.getItem().getTagCompound().removeTag("ench");
