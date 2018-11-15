@@ -120,6 +120,8 @@ public class ModBlocks{
 	public static OreCleanser oreCleanser;
 	public static BlastFurnace blastFurnace;
 	public static BeamRedirector beamRedirector;
+	public static PermeableGlass permeableGlass;
+	public static PermeableQuartz permeableQuartz;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -261,6 +263,8 @@ public class ModBlocks{
 		oreCleanser = new OreCleanser();
 		blastFurnace = new BlastFurnace();
 		beamRedirector = new BeamRedirector();
+		permeableGlass = new PermeableGlass();
+		permeableQuartz = new PermeableQuartz();
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -456,6 +456,10 @@ public final class ModCrafting{
 		//TODO
 		//Stirling Engine
 		//TODO
+		//Permeable Glass
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.permeableGlass, 4), " G ", "G*G", " G ", 'G', "blockGlass", '*', ModItems.pureQuartz));
+		//Permeable Quartz
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.permeableQuartz, 4), " G ", "G*G", " G ", 'G', ModBlocks.blockPureQuartz, '*', "blockGlass"));
 	}
 
 	private static ItemStack getFilledHopper(){

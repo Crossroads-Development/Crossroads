@@ -304,6 +304,8 @@ tile.blast_furnace.name=Blast Furnace
 container.blast_furnace=Blast Furnace
 item.slag.name=Slag
 container.beam_extractor=Resonance Extractor
+tile.permeable_glass.name=Permeable Glass
+tile.permeable_quartz.name=Permeable Quartz
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=Raw %1$s Grit
