@@ -1,22 +1,14 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
-import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
+import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class QuartzStabilizerTileEntity extends BeamRenderTE{
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
-	
 	private boolean large;
 	private static final int[] LIMIT = new int[] {30, 150};
 	private static final int[] RATE = new int[] {6, 15};
@@ -27,7 +19,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE{
 	}
 
 	public QuartzStabilizerTileEntity(boolean large){
-		super();
+		this();
 		this.large = large;
 	}
 
@@ -35,7 +27,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE{
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("large", large);
-		storage.writeToNBT("stabMag", nbt);
+		storage.writeToNBT("stab_mag", nbt);
 		return nbt;
 	}
 
@@ -43,7 +35,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE{
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		large = nbt.getBoolean("large");
-		storage = MagicUnitStorage.readFromNBT("stabMag", nbt);
+		storage = MagicUnitStorage.readFromNBT("stab_mag", nbt);
 	}
 
 	@Override
@@ -62,11 +54,11 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE{
 			double mult = Math.min(1, ((double) RATE[large ? 1 : 0]) / ((double) (storage.getOutput().getPower())));
 			MagicUnit mag = storage.getOutput().mult(mult, true);
 			storage.subtractMagic(mag);
-			beamer[dir.getIndex()].emit(mag, world);
-
-		}else{
-			beamer[dir.getIndex()].emit(null, world);
-
+			if(beamer[dir.getIndex()].emit(mag, world)){
+				refreshBeam(dir.getIndex());
+			}
+		}else if(beamer[dir.getIndex()].emit(null, world)){
+			refreshBeam(dir.getIndex());
 		}
 	}
 

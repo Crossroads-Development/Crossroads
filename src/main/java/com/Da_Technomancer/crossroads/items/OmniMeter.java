@@ -75,7 +75,7 @@ public class OmniMeter extends Item{
 		}
 
 		if(te instanceof BeamRenderTEBase){
-			MagicUnit[] mag = ((BeamRenderTEBase) te).getLastFullSent();
+			MagicUnit[] mag = ((BeamRenderTEBase) te).getLastSent();
 			if(mag != null){
 				NBTTagCompound nbt = MiscUtil.getPlayerTag(player);
 				if(!nbt.hasKey("elements")){

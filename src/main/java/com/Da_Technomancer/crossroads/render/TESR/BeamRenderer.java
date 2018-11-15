@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import java.awt.Color;
 
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
@@ -24,21 +25,22 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 
 	@Override
 	public void render(BeamRenderTEBase beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false) || beam.getBeam() == null){
+		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false)){
 			return;
 		}
 
-		Triple<Color, Integer, Integer>[] trip = beam.getBeam();
+		int[] packets = beam.getRenderedBeams();
 		float brightX = OpenGlHelper.lastBrightnessX;
 		float brightY = OpenGlHelper.lastBrightnessY;
 		
 		for(int dir = 0; dir < 6; ++dir){
-
-			if(trip[dir] != null){
+			if(packets[dir] != 0){
+				Triple<Color, Integer, Integer> trip = BeamManager.getTriple(packets[dir]);
+				
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
 				GlStateManager.translate(x, y, z);
-				GlStateManager.color(trip[dir].getLeft().getRed() / 255F, trip[dir].getLeft().getGreen() / 255F, trip[dir].getLeft().getBlue() / 255F);
+				GlStateManager.color(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
@@ -75,8 +77,8 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
 
-				double halfWidth = trip[dir].getRight().doubleValue() / (Math.sqrt(2D) * 16D);
-				int length = trip[dir].getMiddle();
+				double halfWidth = trip.getRight().doubleValue() / (Math.sqrt(2D) * 16D);
+				int length = trip.getMiddle();
 
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				//+Z

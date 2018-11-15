@@ -1,14 +1,8 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import java.awt.Color;
-import java.util.Random;
-
-import org.apache.commons.lang3.tuple.Triple;
-import org.lwjgl.opengl.GL11;
-
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.tileentities.magic.BeaconHarnessTileEntity;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,6 +11,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import org.apache.commons.lang3.tuple.Triple;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
+import java.util.Random;
 
 /** All blocks using BeamRenderer MUST return false to isOpaqueCube */
 public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarnessTileEntity>{
@@ -25,11 +24,11 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 	
 	@Override
 	public void render(BeaconHarnessTileEntity beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false) || beam.getBeam() == null){
+		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false)){
 			return;
 		}
 
-		Triple<Color, Integer, Integer>[] trip = beam.getBeam();
+		int[] packet = beam.getRenderedBeams();
 		float brightX = OpenGlHelper.lastBrightnessX;
 		float brightY = OpenGlHelper.lastBrightnessY;
 		
@@ -37,12 +36,12 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 		BufferBuilder buf = tes.getBuffer();
 		
 		for(int dir = 0; dir < 2; ++dir){
-
-			if(trip[dir] != null){
+			Triple<Color, Integer, Integer> trip = BeamManager.getTriple(packet[dir]);
+			if(trip.getMiddle() != 0){
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
 				GlStateManager.translate(x, y, z);
-				GlStateManager.color(trip[dir].getLeft().getRed() / 255F, trip[dir].getLeft().getGreen() / 255F, trip[dir].getLeft().getBlue() / 255F);
+				GlStateManager.color(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
@@ -61,9 +60,9 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 					GlStateManager.rotate(beam.getWorld().getTotalWorldTime() * 2, 0, 1, 0);
 				}
 
-				final double small = 0 - (trip[dir].getRight().doubleValue() / 16D);
-				final double big = 0 + (trip[dir].getRight().doubleValue() / 16D);
-				final int length = trip[dir].getMiddle();
+				final double small = 0 - (trip.getRight().doubleValue() / 16D);
+				final double big = 0 + (trip.getRight().doubleValue() / 16D);
+				final int length = trip.getMiddle();
 
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				//+Z
@@ -95,7 +94,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 			}
 		}
 		
-		if(trip[1] == null){
+		if(packet[1] == 0){
 			return;
 		}
 		
@@ -115,7 +114,9 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
 		GlStateManager.translate(x, y, z);
-		GlStateManager.color(trip[1].getLeft().getRed() / 255F, trip[1].getLeft().getGreen() / 255F, trip[1].getLeft().getBlue() / 255F);
+
+		Color col = BeamManager.getTriple(packet[1]).getLeft();
+		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
 		GlStateManager.disableLighting();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);

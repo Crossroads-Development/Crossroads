@@ -1,46 +1,64 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
-import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class CrystallinePrismTileEntity extends BeamRenderTE{
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
+	private EnumFacing dir = null;
+
+	private EnumFacing getDir(){
+		if(dir == null){
+			IBlockState state = world.getBlockState(pos);
+			if(state.getBlock() != ModBlocks.crystallinePrism){
+				return EnumFacing.NORTH;
+			}
+			dir = state.getValue(Properties.HORIZ_FACING);
+		}
+		return dir;
 	}
-	
+
+	@Override
+	public void resetBeamer(){
+		super.resetBeamer();
+		dir = null;
+	}
+
 	@Override
 	protected void doEmit(MagicUnit out){
-		EnumFacing dir = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
-		beamer[dir.rotateYCCW().getIndex()].emit(out == null || out.getEnergy() == 0 ? null : out.mult(1, 0, 0, 0, false), world);
-		beamer[dir.getIndex()].emit(out == null || out.getPotential() == 0 ? null : out.mult(0, 1, 0, 0, false), world);
-		beamer[dir.rotateY().getIndex()].emit(out == null || out.getStability() == 0 ? null : out.mult(0, 0, 1, 0, false), world);
-
+		EnumFacing dir = getDir();
+		//Energy
+		if(beamer[dir.getIndex()].emit(out == null || out.getEnergy() == 0 ? null : out.mult(1, 0, 0, 0, false), world)){
+			refreshBeam(dir.getIndex());
+		}
+		dir = dir.rotateY();
+		//Potential
+		if(beamer[dir.getIndex()].emit(out == null || out.getPotential() == 0 ? null : out.mult(0, 1, 0, 0, false), world)){
+			refreshBeam(dir.getIndex());
+		}
+		dir = dir.rotateY();
+		//Stability
+		if(beamer[dir.getIndex()].emit(out == null || out.getStability() == 0 ? null : out.mult(0, 0, 1, 0, false), world)){
+			refreshBeam(dir.getIndex());
+		}
+		dir = dir.rotateY();
+		//Void
+		if(beamer[dir.getIndex()].emit(out == null || out.getVoid() == 0 ? null : out.mult(0, 0, 0, 1, false), world)){
+			refreshBeam(dir.getIndex());
+		}
 	}
 
 	@Override
 	protected boolean[] inputSides(){
-		EnumFacing dir = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
-		boolean[] out = new boolean[6];
-		out[dir.getOpposite().getIndex()] = true;
-		out[0] = true;
-		out[1] = true;
-		return out;
+		return new boolean[] {true, true, false, false, false, false};
 	}
 
 	@Override
 	protected boolean[] outputSides(){
-		EnumFacing dir = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
-		boolean[] out = new boolean[6];
-		out[dir.getIndex()] = true;
-		out[dir.rotateY().getIndex()] = true;
-		out[dir.rotateYCCW().getIndex()] = true;
-		return out;
+		return new boolean[] {false, false, true, true, true, true};
 	}
 } 

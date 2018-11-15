@@ -78,10 +78,9 @@ public enum EnumMagicElements{
 
 		return Math.abs(test.getRed() - mid.getRed()) < range && Math.abs(test.getGreen() - mid.getGreen()) < range && Math.abs(test.getBlue() - mid.getBlue()) < range;
 	}
-	
-	@Nullable
+
 	public static EnumMagicElements getElement(@Nullable MagicUnit magic){
-		return magic == null ? null : getElement(magic.getTrueRGB());
+		return magic == null ? EnumMagicElements.NO_MATCH : getElement(magic.getTrueRGB());
 	}
 	
 	public static EnumMagicElements getElement(Color col){

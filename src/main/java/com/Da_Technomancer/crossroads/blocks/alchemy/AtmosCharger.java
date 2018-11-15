@@ -72,7 +72,7 @@ public class AtmosCharger extends BlockContainer{
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycleProperty(Properties.ACTIVE));
-				playerIn.sendMessage(new TextComponentString("Attack Mode: " + (state.getValue(Properties.ACTIVE) ? "CHARGING MODE" : "DRAINING MODE")));
+				playerIn.sendMessage(new TextComponentString("Mode: " + (state.getValue(Properties.ACTIVE) ? "CHARGING MODE" : "DRAINING MODE")));
 			}
 			return true;
 		}

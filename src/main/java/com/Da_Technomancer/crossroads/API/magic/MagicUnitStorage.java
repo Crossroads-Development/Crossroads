@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.API.magic;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import net.minecraft.nbt.NBTTagCompound;
 
 public class MagicUnitStorage{
 
@@ -70,6 +70,19 @@ public class MagicUnitStorage{
 		if(!isEmpty()){
 			nbt.setIntArray(key, stored);
 		}
+	}
+
+	public static void writeToNBT(@Nonnull String key, NBTTagCompound nbt, MagicUnit mag){
+		if(mag != null){
+			nbt.setIntArray(key, new int[] {mag.getEnergy(), mag.getPotential(), mag.getStability(), mag.getVoid()});
+		}
+	}
+
+	public static MagicUnit readUnitFromNBT(@Nonnull String key, NBTTagCompound nbt){
+		if(nbt.hasKey(key)){
+			return new MagicUnit(nbt.getIntArray(key));
+		}
+		return null;
 	}
 
 	public static MagicUnitStorage readFromNBT(@Nonnull String key, NBTTagCompound nbt){

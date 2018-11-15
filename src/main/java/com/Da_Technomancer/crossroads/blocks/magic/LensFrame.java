@@ -1,12 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.magic;
 
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-import com.Da_Technomancer.crossroads.tileentities.magic.LensHolderTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.magic.LensFrameTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -15,7 +13,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -33,11 +30,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class LensHolder extends BlockContainer{
+public class LensFrame extends BlockContainer{
 
-	public LensHolder(){
+	public LensFrame(){
 		super(Material.ROCK);
-		String name = "lens_holder";
+		String name = "lens_frame";
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -48,7 +45,7 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new LensHolderTileEntity();
+		return new LensFrameTileEntity();
 	}
 
 	@Override
@@ -58,7 +55,7 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
-		return Math.min(15, (int) ((LensHolderTileEntity) worldIn.getTileEntity(pos)).getRedstone() / 3);
+		return Math.min(15, (int) ((LensFrameTileEntity) worldIn.getTileEntity(pos)).getRedstone() / 3);
 	}
 
 	@Override
@@ -79,17 +76,17 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.HORIZ_AXIS, (placer == null) ? Axis.X : placer.getHorizontalFacing().getAxis()).withProperty(Properties.TEXTURE_7, 0);
+		return getDefaultState().withProperty(EssentialsProperties.AXIS, (placer == null) ? Axis.X : blockFaceClickedOn.getAxis());
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZ_AXIS, Properties.TEXTURE_7);
+		return new BlockStateContainer(this, EssentialsProperties.AXIS);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_AXIS, (meta & 1) == 1 ? Axis.X : Axis.Z).withProperty(Properties.TEXTURE_7, (meta & 14) >> 1);
+		return getDefaultState().withProperty(EssentialsProperties.AXIS, EnumFacing.Axis.values()[meta]);
 	}
 
 	@Override
@@ -98,21 +95,28 @@ public class LensHolder extends BlockContainer{
 			ItemStack stack = playerIn.getHeldItem(hand);
 
 			if(EssentialsConfig.isWrench(stack, false)){
-				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_AXIS));
-			}else if(state.getValue(Properties.TEXTURE_7) != 0){
-				int i = state.getValue(Properties.TEXTURE_7);
-				ItemStack gotten = new ItemStack(i == 1 ? OreSetup.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : OreSetup.voidCrystal, 1);
-				if(!playerIn.inventory.addItemStackToInventory(gotten)){
-					EntityItem dropped = playerIn.dropItem(gotten, false);
-					dropped.setNoPickupDelay();
-					dropped.setOwner(playerIn.getName());
+				worldIn.setBlockState(pos, state.cycleProperty(EssentialsProperties.AXIS));
+				((LensFrameTileEntity) worldIn.getTileEntity(pos)).refresh();
+			}else{
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(!(te instanceof LensFrameTileEntity)){
+					return false;
 				}
-				worldIn.setBlockState(pos, state.withProperty(Properties.TEXTURE_7, 0));
-			}else if(!stack.isEmpty() && state.getValue(Properties.TEXTURE_7) == 0){
-				int i = stack.getItem() == OreSetup.voidCrystal ? 6 : stack.getItem() == Items.DIAMOND ? 3 : stack.getItem() == Items.EMERALD ? 2 : stack.getItem() == ModItems.pureQuartz ? 4 : stack.getItem() == OreSetup.gemRuby ? 1 : 0;
-				worldIn.setBlockState(pos, state.withProperty(Properties.TEXTURE_7, i));
-				if(i != 0){
-					stack.shrink(1);
+				LensFrameTileEntity lens = (LensFrameTileEntity) te;
+				ItemStack held = lens.getItem();
+				if(!held.isEmpty()){
+					if(!playerIn.inventory.addItemStackToInventory(held)){
+						EntityItem dropped = playerIn.dropItem(held, false);
+						dropped.setNoPickupDelay();
+						dropped.setOwner(playerIn.getName());
+					}
+					lens.setContents(0);
+				}else if(!stack.isEmpty()){
+					int id = lens.getIDFromItem(stack);
+					if(id != 0){
+						lens.setContents(id);
+						stack.shrink(1);
+					}
 				}
 			}
 		}
@@ -121,22 +125,16 @@ public class LensHolder extends BlockContainer{
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
-		if(state.getValue(Properties.TEXTURE_7) != 0){
-			int i = state.getValue(Properties.TEXTURE_7);
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(i == 1 ? OreSetup.gemRuby : i == 2 ? Items.EMERALD : i == 3 ? Items.DIAMOND : i == 4 ? ModItems.pureQuartz : i == 5 ? ModItems.luminescentQuartz : OreSetup.voidCrystal, 1));
-		}
-		
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof BeamRenderTEBase){
-			((BeamRenderTEBase) te).refresh();
+		if(te instanceof LensFrameTileEntity){
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getItem());
 		}
-		
 		super.breakBlock(world, pos, state);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.HORIZ_AXIS) == Axis.X ? 1 : 0) + (state.getValue(Properties.TEXTURE_7) << 1);
+		return state.getValue(EssentialsProperties.AXIS).ordinal();
 	}
 
 	@Override
@@ -144,16 +142,15 @@ public class LensHolder extends BlockContainer{
 		return false;
 	}
 
-	private static final AxisAlignedBB BB = new AxisAlignedBB(0, 0, .375D, 1, 1, .625D);
-	private static final AxisAlignedBB BBA = new AxisAlignedBB(.375D, 0, 0, .625D, 1, 1);
+	private static final AxisAlignedBB[] BB = new AxisAlignedBB[] {new AxisAlignedBB(.375D, 0, 0, .625D, 1, 1), new AxisAlignedBB(0, .375D, 0, 1, .625D, 1), new AxisAlignedBB(0, 0, .375D, 1, 1, .625D)};
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return state.getValue(Properties.HORIZ_AXIS) == Axis.X ? BBA : BB;
+		return BB[state.getValue(EssentialsProperties.AXIS).ordinal()];
 	}
 
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean stuff){
-		addCollisionBoxToList(pos, mask, list, state.getValue(Properties.HORIZ_AXIS) == Axis.X ? BBA : BB);
+		addCollisionBoxToList(pos, mask, list, getBoundingBox(state, worldIn, pos));
 	}
 }

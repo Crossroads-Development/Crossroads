@@ -51,12 +51,11 @@ public class ModBlocks{
 	public static QuartzStabilizer largeQuartzStabilizer;
 	public static CrystallinePrism crystallinePrism;
 	public static ArcaneReflector arcaneReflector;
-	public static LensHolder lensHolder;
+	public static LensFrame lensFrame;
 	public static BasicBlock blockPureQuartz;
 	public static BasicBlock blockLuminescentQuartz;
 	public static BeamSplitter beamSplitter;
 	public static ColorChart colorChart;
-	public static BeamSplitterBasic beamSplitterBasic;
 	public static CrystalMasterAxis crystalMasterAxis;
 	public static Ratiator ratiator;
 	public static BeaconHarness beaconHarness;
@@ -72,7 +71,6 @@ public class ModBlocks{
 	public static LessThanAxis lessThanAxis;
 	public static RedstoneAxis redstoneAxis;
 	public static SquareRootAxis squareRootAxis;
-	public static MechanicalBeamSplitter mechanicalBeamSplitter;
 	public static CageCharger cageCharger;
 	public static HamsterWheel hamsterWheel;
 	public static FluidSplitter fluidSplitter;
@@ -194,12 +192,11 @@ public class ModBlocks{
 		largeQuartzStabilizer = new QuartzStabilizer(true);
 		crystallinePrism = new CrystallinePrism();
 		arcaneReflector = new ArcaneReflector();
-		lensHolder = new LensHolder();
+		lensFrame = new LensFrame();
 		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 4, "blockQuartz");
 		blockLuminescentQuartz = (BasicBlock) new BasicBlock("block_luminescent_quartz", Material.ROCK, 4, "blockQuartz").setLightLevel(1F);
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
-		beamSplitterBasic = new BeamSplitterBasic();
 		crystalMasterAxis = new CrystalMasterAxis();
 		ratiator = new Ratiator();
 		beaconHarness = new BeaconHarness();
@@ -215,7 +212,6 @@ public class ModBlocks{
 		lessThanAxis = new LessThanAxis();
 		redstoneAxis = new RedstoneAxis();
 		squareRootAxis = new SquareRootAxis();
-		mechanicalBeamSplitter = new MechanicalBeamSplitter();
 		cageCharger = new CageCharger();
 		hamsterWheel = new HamsterWheel();
 		fluidSplitter = new FluidSplitter();

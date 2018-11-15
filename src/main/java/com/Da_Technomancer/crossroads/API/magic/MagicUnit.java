@@ -1,25 +1,22 @@
 package com.Da_Technomancer.crossroads.API.magic;
 
-import java.awt.Color;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 
-import net.minecraft.nbt.NBTTagCompound;
+import java.awt.*;
 
 public class MagicUnit{
 
-	private final int energy;
-	private final int potential;
-	private final int stability;
-	private final int voi;
+	private final int contents[] = new int[4];//0: Energy, 1: Potential, 2: stability, 3: Void
+
+	public MagicUnit(int[] magic){
+		this(magic[0], magic[1], magic[2], magic[3]);
+	}
 
 	public MagicUnit(int energy, int potential, int stability, int voi){
-		this.energy = energy;
-		this.potential = potential;
-		this.stability = stability;
-		this.voi = voi;
+		contents[0] = energy;
+		contents[1] = potential;
+		contents[2] = stability;
+		contents[3] = voi;
 
 		if(energy < 0 || potential < 0 || stability < 0 || voi < 0){
 			throw new IllegalArgumentException("Negative MagicUnit input! EN: " + energy + "; PO: " + potential + "; ST: " + stability + "; VO: " + voi);
@@ -27,33 +24,33 @@ public class MagicUnit{
 	}
 
 	public int getEnergy(){
-		return energy;
+		return contents[0];
 	}
 
 	public int getPotential(){
-		return potential;
+		return contents[1];
 	}
 
 	public int getStability(){
-		return stability;
+		return contents[2];
 	}
 
 	public int getVoid(){
-		return voi;
+		return contents[3];
 	}
 
 	public int getPower(){
-		return energy + potential + stability + voi;
+		return contents[0] + contents[1] + contents[2] + contents[3];
 	}
 
 	/** Returns the RGB value when ignoring void*/
 	public Color getTrueRGB(){
-		if(energy == 0 && potential == 0 && stability == 0){
+		if(contents[0] == 0 && contents[1] == 0 && contents[2] == 0){
 			return null;
 		}
-		double top = Math.max(energy, Math.max(potential, stability));
+		double top = Math.max(contents[0], Math.max(contents[1], contents[2]));
 
-		return new Color((int) Math.round(255D * ((double) energy) / top), (int) Math.round(255D * ((double) potential) / top), (int) Math.round(255D * ((double) stability) / top));
+		return new Color((int) Math.round(255D * ((double) contents[0]) / top), (int) Math.round(255D * ((double) contents[1]) / top), (int) Math.round(255D * ((double) contents[2]) / top));
 	}
 
 	/** Returns RGB with void.*/
@@ -62,7 +59,7 @@ public class MagicUnit{
 			return new Color(0, 0, 0);
 		}
 
-		double mult = ((double) (energy + potential + stability)) / (double) getPower();
+		double mult = ((double) (contents[0] + contents[1] + contents[2])) / (double) getPower();
 
 		Color col = getTrueRGB();
 		return new Color((int) Math.round(((double) col.getRed()) * mult), (int) Math.round(((double) col.getGreen()) * mult), (int) Math.round(((double) col.getBlue()) * mult));
@@ -73,44 +70,22 @@ public class MagicUnit{
 	}
 
 	public MagicUnit mult(double e, double p, double s, double v, boolean floor){
-		return floor ? new MagicUnit((int) Math.floor(e * (double) energy), (int) Math.floor(p * (double) potential), (int) Math.floor(s * (double) stability), (int) Math.floor(v * (double) voi)) : new MagicUnit(MiscUtil.safeRound(e * (double) energy), MiscUtil.safeRound(p * (double) potential), MiscUtil.safeRound(s * (double) stability), MiscUtil.safeRound(v * (double) voi));
-	}
-
-	public NBTTagCompound setNBT(NBTTagCompound nbt, @Nullable String key){
-		NBTTagCompound holder = key == null ? nbt : new NBTTagCompound();
-		holder.setInteger("en", energy);
-		holder.setInteger("po", potential);
-		holder.setInteger("st", stability);
-		holder.setInteger("vo", voi);
-
-		if(key != null){
-			nbt.setTag(key, holder);
-		}
-		return nbt;
-	}
-
-	@Nullable
-	public static MagicUnit loadNBT(NBTTagCompound nbt, @Nullable String key){
-		if(key == null ? !nbt.hasKey("en") : !nbt.hasKey(key)){
-			return null;
-		}
-		NBTTagCompound holder = key == null ? nbt : nbt.getCompoundTag(key);
-		return new MagicUnit(holder.getInteger("en"), holder.getInteger("po"), holder.getInteger("st"), holder.getInteger("vo"));
+		return floor ? new MagicUnit((int) Math.floor(e * (double) contents[0]), (int) Math.floor(p * (double) contents[1]), (int) Math.floor(s * (double) contents[2]), (int) Math.floor(v * (double) contents[3])) : new MagicUnit(MiscUtil.safeRound(e * (double) contents[0]), MiscUtil.safeRound(p * (double) contents[1]), MiscUtil.safeRound(s * (double) contents[2]), MiscUtil.safeRound(v * (double) contents[3]));
 	}
 
 	@Override
 	public String toString(){
 		Color col = getRGB();
-		return "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue() + ", Element: " + EnumMagicElements.getElement(this).toString() + ", Energy: " + energy + ", Potential: " + potential + ", Stability: " + stability + ", Void: " + voi;
+		return "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue() + ", Element: " + EnumMagicElements.getElement(this).toString() + ", Energy: " + contents[0] + ", Potential: " + contents[1] + ", Stability: " + contents[2] + ", Void: " + contents[3];
 	}
 
 	@Override
 	public boolean equals(Object other){
-		return other == this || (other instanceof MagicUnit && ((MagicUnit) other).getEnergy() == energy && ((MagicUnit) other).getStability() == stability && ((MagicUnit) other).getPotential() == potential && ((MagicUnit) other).getVoid() == voi);
+		return other == this || (other instanceof MagicUnit && ((MagicUnit) other).getEnergy() == contents[0] && ((MagicUnit) other).getStability() == contents[2] && ((MagicUnit) other).getPotential() == contents[1] && ((MagicUnit) other).getVoid() == contents[3]);
 	}
 	
 	@Override
 	public int hashCode(){
-		return (energy << 12) + ((potential & 0xE) << 8) + ((stability & 0xE) << 4) + (voi & 0xE);
+		return (contents[0] << 12) + ((contents[1] & 0xE) << 8) + ((contents[2] & 0xE) << 4) + (contents[3] & 0xE);
 	}
 }

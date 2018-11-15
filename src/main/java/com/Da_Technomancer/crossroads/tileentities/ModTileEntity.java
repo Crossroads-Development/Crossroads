@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.rotary.BlastFurnace;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.*;
 import com.Da_Technomancer.crossroads.tileentities.fluid.*;
 import com.Da_Technomancer.crossroads.tileentities.heat.*;
@@ -44,9 +43,8 @@ public class ModTileEntity{
 		register(QuartzStabilizerTileEntity.class, "quartz_stabilizer");
 		register(CrystallinePrismTileEntity.class, "crystal_prism");
 		register(ArcaneReflectorTileEntity.class, "arcane_reflector");
-		register(LensHolderTileEntity.class, "lens_holder");
+		register(LensFrameTileEntity.class, "lens_frame");
 		register(BeamSplitterTileEntity.class, "beam_splitter");
-		register(BeamSplitterBasicTileEntity.class, "beam_splitter_basic");
 		register(CrystalMasterAxisTileEntity.class, "crystal_master_axis");
 		register(RatiatorTileEntity.class, "ratiator");
 		register(BeaconHarnessTileEntity.class, "beacon_harness");
@@ -62,7 +60,6 @@ public class ModTileEntity{
 		register(LessThanAxisTileEntity.class, "less_than_axis");
 		register(RedstoneAxisTileEntity.class, "redstone_axis");
 		register(SquareRootAxisTileEntity.class, "square_root_axis");
-		register(MechanicalBeamSplitterTileEntity.class, "mechanical_beam_splitter");
 		register(CageChargerTileEntity.class, "cage_charger");
 		register(HamsterWheelTileEntity.class, "hamster_wheel");
 		register(FluidSplitterTileEntity.class, "fluid_splitter");

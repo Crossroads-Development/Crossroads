@@ -137,7 +137,7 @@ tile.small_quartz_stabilizer.name=Small Quartz Stabilizer
 tile.large_quartz_stabilizer.name=Large Quartz Stabilizer
 tile.crystalline_prism.name=Crystalline Prism
 tile.arcane_reflector.name=Arcane Reflector
-tile.lens_holder.name=Lens Holder
+tile.lens_frame.name=Lens Frame
 tile.block_pure_quartz.name=Block of Pure Quartz
 tile.block_luminescent_quartz.name=Block of Luminescent Quartz
 tile.beam_splitter.name=Redstone Beam Splitter
@@ -304,6 +304,7 @@ tile.ore_void.name=Crystallized Void Ore
 tile.blast_furnace.name=Blast Furnace
 container.blast_furnace=Blast Furnace
 item.slag.name=Slag
+container.arcane_extractor=Arcane Extractor
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=Raw %1$s Grit

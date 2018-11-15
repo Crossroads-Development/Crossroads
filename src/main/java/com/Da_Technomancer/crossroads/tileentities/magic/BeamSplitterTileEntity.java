@@ -41,8 +41,12 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 				out = null;
 			}
 		}
-		beamer[0].emit(outMult, world);
-		beamer[1].emit(out, world);
+		if(beamer[0].emit(outMult, world)){
+			refreshBeam(0);
+		}
+		if(beamer[1].emit(out, world)){
+			refreshBeam(1);
+		}
 	}
 
 	@Override

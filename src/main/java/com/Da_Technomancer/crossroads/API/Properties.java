@@ -20,13 +20,12 @@ public class Properties{
 	@Deprecated
 	public static final PropertyBool ORIENT = PropertyBool.create("orient");
 	public static final PropertyEnum<EnumFacing.Axis> HORIZ_AXIS = PropertyEnum.create("horiz_axis", EnumFacing.Axis.class, (EnumFacing.Axis axis) -> axis != null && axis.isHorizontal());
-
 	/**
 	 * 0: copper 1: iron 2: quartz 3: diamond
 	 */
 	public static final PropertyInteger TEXTURE_4 = PropertyInteger.create("text", 0, 3);
 	/**0 = none, 1 = ruby, 2 = emerald, 3 = diamond, 4 = pure quartz, 5 = luminescent quartz, 6 = void crystal */
-	public static final PropertyInteger TEXTURE_7 = PropertyInteger.create("text_seven", 0, 6);
+	public static final UnlistedPropertyInteger TEXTURE_7 = new UnlistedPropertyInteger("text_seven", 0, 6);
 	public static final PropertyBool CRYSTAL = PropertyBool.create("crystal");
 	public static final PropertyDirection HORIZ_FACING = PropertyDirection.create("horiz_facing", (EnumFacing side) -> side != null && side.getAxis() != EnumFacing.Axis.Y);
 	public static final PropertyBool CONTAINER_TYPE = PropertyBool.create("container_type");

@@ -1,9 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import java.util.List;
-
 import com.Da_Technomancer.crossroads.ModConfig;
-
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,17 +11,17 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class GrowEffect implements IEffect{
 
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
 		double range = Math.sqrt(mult);
 		List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
-		if(ents != null){
-			for(EntityLivingBase ent : ents){
-				ent.heal((float) (mult / 2D));
-			}
-		}		
+		for(EntityLivingBase ent : ents){
+			ent.heal((float) (mult / 2D));
+		}
 		
 		for(int i = 0; i < mult; i++){
 			//The state must be quarried every loop because some plants could break themselves upon growing
@@ -59,7 +56,6 @@ public class GrowEffect implements IEffect{
 			double range = Math.sqrt(mult);
 			List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
 			for(EntityLivingBase ent : ents){
-				System.out.println(ent);
 				ent.attackEntityFrom(POTENTIALVOID, (float) mult * 3F / 4F);
 			}
 		}

@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
@@ -12,6 +11,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
+import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -33,10 +33,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -117,8 +115,6 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		return shifted;
 	}
 
-	private int[] memTrip = new int[6];
-
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
@@ -130,7 +126,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 			}
 			MagHandler h = getHandler(i, false);
 			if(h != null){
-				nbt.setInteger(i + "_memTrip", h.beam.getPacket());
+				nbt.setInteger(i + "_beam", beamPackets[i]);
 			}
 		}
 
@@ -152,7 +148,6 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 				if(nbt.hasKey("ttip" + i)){
 					tooltips[i] = nbt.getString("ttip" + i);
 				}
-				memTrip[i] = nbt.getInteger(i + "memTrip");
 			}
 			index = nbt.getInteger("index");
 			name = nbt.getString("name");
@@ -163,11 +158,14 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 				if(nbt.hasKey("port" + i)){
 					ports[i] = PrototypePortTypes.valueOf(nbt.getString("port" + i));
 				}
-				if(nbt.hasKey(i + "beam")){
-					trip[i] = BeamManager.getTriple(nbt.getInteger(i + "beam"));
-				}
 			}
 			world.markBlockRangeForRenderUpdate(pos, pos);
+		}
+
+		for(int i = 0; i < 6; i++){
+			if(nbt.hasKey(i + "_beam")){
+				beamPackets[i] = nbt.getInteger(i + "_beam");
+			}
 		}
 	}
 
@@ -178,7 +176,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 			nbt.setInteger("orient", orient);
 			PrototypePortTypes[] ports = PrototypeWorldSavedData.get(false).prototypes.get(index).ports;
 			for(int i = 0; i < 6; i++){
-				nbt.setInteger(i + "beam", memTrip[i]);
+				nbt.setInteger(i + "_beam", beamPackets[i]);
 				if(ports[i] != null){
 					nbt.setString("port" + i, ports[i].name());
 				}
@@ -274,13 +272,12 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		world.getBlockState(pos.offset(dir)).neighborChanged(world, pos.offset(dir), blockIn, pos);
 	}
 
-	@SuppressWarnings("unchecked")
-	private Triple<Color, Integer, Integer>[] trip = new Triple[6];
+	private int[] beamPackets = new int[6];
 
 	@Override
 	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
 		if(identifier < 6 && identifier >= 0){
-			trip[identifier] = BeamManager.getTriple(message);
+			beamPackets[identifier] = message;
 		}
 		if(identifier == 6){
 			orient = message;
@@ -289,25 +286,24 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public Triple<Color, Integer, Integer>[] getBeam(){
-		return trip;
+	public int[] getRenderedBeams(){
+		return beamPackets;
 	}
 
 	@Nullable
 	@Override
-	public MagicUnit[] getLastFullSent(){
+	public MagicUnit[] getLastSent(){
 		MagicUnit[] out = new MagicUnit[6];
 		for(int i = 0; i < 6; i++){
 			MagHandler h = getHandler(i, false);
 			if(h != null){
-				out[i] = h.beam.getLastFullSent();
+				out[i] = h.prevMag;
 			}
 		}
 		return out;
 	}
 
-	@Override
-	public void refresh(){
+	private void refresh(){
 		for(int i = 0; i < 6; i++){
 			MagHandler h = getHandler(i, false);
 			if(h != null){
@@ -333,14 +329,23 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	private class MagHandler implements IMagicHandler{
 
 		private final BeamManager beam;
+		private MagicUnit prevMag = null;
+		private final int side;
 
 		private MagHandler(int side){
 			beam = new BeamManager(EnumFacing.getFront(side), pos);
+			this.side = side;
 		}
 
 		@Override
 		public void setMagic(@Nullable MagicUnit mag){
-			beam.emit(mag, world);
+			if(beam.emit(mag, world)){
+				beamPackets[side] = beam.genPacket();
+				ModPackets.network.sendToAllAround(new SendIntToClient(index, beam.genPacket(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				if(beam.getLastSent() != null){
+					prevMag = beam.getLastSent();
+				}
+			}
 		}
 	}
 }

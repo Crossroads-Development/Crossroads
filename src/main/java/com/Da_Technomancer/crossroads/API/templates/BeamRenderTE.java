@@ -1,53 +1,84 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import java.awt.Color;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.API.magic.*;
-import org.apache.commons.lang3.tuple.Triple;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.magic.BeamManager;
+import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+
+import javax.annotation.Nullable;
 
 public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable, IIntReceiver{
 
-	@SuppressWarnings("unchecked")
-	protected Triple<Color, Integer, Integer>[] trip = new Triple[6];
+	protected int[] beamPackets = new int[6];
 	protected BeamManager[] beamer;
+	protected MagicUnitStorage[] queued = {new MagicUnitStorage(), new MagicUnitStorage()};
+	protected long activeCycle;
+	protected MagicUnit[] prevMag = new MagicUnit[6];//Stores the last non-null magic sent for information readouts
+
+	/**
+	 * @return A size 6 boolean[] where each boolean corresponds to the index of an EnumFacing.
+	 */
+	protected abstract boolean[] inputSides();
+
+	/**
+	 * @return A size 6 boolean[] where each boolean corresponds to the index of an EnumFacing.
+	 */
+	protected abstract boolean[] outputSides();
+
+	protected int getLimit(){
+		return 64_000;
+	}
+
+	protected void overload(){
+		world.setBlockToAir(pos);
+		//TODO sound, smoke, etc.
+	}
 
 	/**
 	 * Sets the beamer variable to null, use whenever rotating the block. 
 	 */
 	public void resetBeamer(){
-		refresh();
+//		refresh();
 		beamer = null;
-	}
-	
-	@Override
-	public Triple<Color, Integer, Integer>[] getBeam(){
-		return trip;
-	}
-	
-	protected MagicUnitStorage[] queued = {new MagicUnitStorage(), new MagicUnitStorage()};
-	protected long activeCycle;
-
-	@Override
-	public void refresh(){
-		if(beamer != null){
-			for(BeamManager beam : beamer){
-				if(beam != null){
-					beam.emit(null, world);
-				}
-			}
+		beamPackets = new int[6];
+		for(int i = 0; i < 6; i++){
+			prevMag[i] = null;
+			refreshBeam(i);
 		}
 	}
+
+	protected void refreshBeam(int index){
+		ModPackets.network.sendToAllAround(new SendIntToClient(index, beamer == null || beamer[index] == null ? 0 : beamer[index].genPacket(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		if(beamer != null && beamer[index] != null && beamer[index].getLastSent() != null){
+			prevMag[index] = beamer[index].getLastSent();
+		}
+	}
+	
+	@Override
+	public int[] getRenderedBeams(){
+		return beamPackets;
+	}
+//
+//	@Override
+//	public void refresh(){
+//		if(beamer != null){
+//			for(BeamManager beam : beamer){
+//				if(beam != null){
+//					beam.emit(null, world);
+//				}
+//			}
+//		}
+//	}
 
 	@Override
 	public void update(){
@@ -68,6 +99,9 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 			MagicUnit out = shiftStorage();
 			activeCycle = BeamManager.cycleNumber;
+			if(out != null && out.getPower() > getLimit()){
+				overload();
+			}
 			doEmit(out);
 		}
 	}
@@ -91,18 +125,24 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	@Override
 	public void receiveInt(int identifier, int message, EntityPlayerMP player){
 		if(identifier < 6 && identifier >= 0){
-			trip[identifier] = BeamManager.getTriple(message);
+			beamPackets[identifier] = message;
 		}
 	}
 
-	protected int[] memTrip = new int[6];
+	/**
+	 * For informational displays.
+	 */
+	@Override
+	public MagicUnit[] getLastSent(){
+		return prevMag;
+	}
 
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
-			if(memTrip[i] != 0){
-				nbt.setInteger(i + "_beamToClient", memTrip[i]);
+			if(beamPackets[i] != 0){
+				nbt.setInteger(i + "_beam_packet", beamPackets[i]);
 			}
 		}
 		return nbt;
@@ -118,7 +158,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 		if(beamer != null){
 			for(int i = 0; i < 6; i++){
-				nbt.setInteger(i + "_memTrip", beamer[i] == null ? 0 : beamer[i].getPacket());
+				nbt.setInteger(i + "_beam_packet", beamPackets[i]);
 			}
 		}
 
@@ -133,46 +173,13 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		activeCycle = nbt.getLong("cyc");
 
 		for(int i = 0; i < 6; i++){
-			memTrip[i] = nbt.getInteger(i + "_memTrip");
-			if(nbt.hasKey(i + "_beamToClient")){
-				trip[i] = BeamManager.getTriple(nbt.getInteger(i + "_beamToClient"));
-			}
+			beamPackets[i] = nbt.getInteger(i + "_beam_packet");
 		}
 	}
 
-	/**
-	 * For informational displays. 
-	 */
 	@Override
-	@Nullable
-	public MagicUnit[] getLastFullSent(){
-		if(beamer == null){
-			return null;
-		}
-		MagicUnit[] out = new MagicUnit[6];
-		for(int i = 0; i < 6; i++){
-			if(beamer[i] != null){
-				out[i] = beamer[i].getLastFullSent();
-			}
-		}
-		return out;
-	}
-
-	/**
-	 * @return A size 6 boolean[] where each boolean corresponds to the index of an EnumFacing.
-	 */
-	protected abstract boolean[] inputSides();
-
-	/**
-	 * @return A size 6 boolean[] where each boolean corresponds to the index of an EnumFacing.
-	 */
-	protected abstract boolean[] outputSides();
-
-	public boolean hasCapability(Capability<?> cap, EnumFacing dir){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (dir == null || inputSides()[dir.getIndex()])){
-			return true;
-		}
-		return super.hasCapability(cap, dir);
+	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+		return getCapability(cap, side) != null || super.hasCapability(cap, side);
 	}
 
 	protected final MagicHandler handler = new MagicHandler();

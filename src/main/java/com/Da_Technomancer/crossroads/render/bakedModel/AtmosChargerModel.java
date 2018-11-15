@@ -27,8 +27,8 @@ public class AtmosChargerModel implements IModel{
 	}
 
 	@Override
-	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter){
-		return new AtmosChargerBakedModel(format, bakedTextureGetter);
+	public IBakedModel bake(IModelState state, VertexFormat vf, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter){
+		return new AtmosChargerBakedModel(vf, bakedTextureGetter);
 	}
 
 	@Override

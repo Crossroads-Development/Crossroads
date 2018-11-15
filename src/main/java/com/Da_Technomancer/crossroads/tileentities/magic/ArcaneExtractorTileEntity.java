@@ -1,29 +1,25 @@
 package com.Da_Technomancer.crossroads.tileentities.magic;
 
-import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class ArcaneExtractorTileEntity extends BeamRenderTE{
+public class ArcaneExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 	private ItemStack inv = ItemStack.EMPTY;
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
@@ -53,11 +49,107 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).getValue(EssentialsProperties.FACING)){
-			return true;
+	public int getSizeInventory(){
+		return 1;
+	}
+
+	@Override
+	public boolean isEmpty(){
+		return inv.isEmpty();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index){
+		return index == 0 ? inv : ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count){
+		if(index == 0){
+			markDirty();
+			return inv.splitStack(count);
 		}
-		return super.hasCapability(capability, facing);
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index){
+		if(index != 0){
+			return ItemStack.EMPTY;
+		}
+		markDirty();
+		ItemStack held = inv;
+		inv = ItemStack.EMPTY;
+		return held;
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack){
+		if(index == 0){
+			inv = stack;
+			markDirty();
+		}
+	}
+
+	@Override
+	public int getInventoryStackLimit(){
+		return 64;
+	}
+
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player){
+		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player){
+
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player){
+
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack){
+		return index == 0 && RecipeHolder.magExtractRecipes.containsKey(stack.getItem());
+	}
+
+	@Override
+	public int getField(int id){
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value){
+
+	}
+
+	@Override
+	public int getFieldCount(){
+		return 0;
+	}
+
+	@Override
+	public void clear(){
+		inv = ItemStack.EMPTY;
+		markDirty();
+	}
+
+	@Override
+	public String getName(){
+		return "container.arcane_extractor";
+	}
+
+	@Override
+	public ITextComponent getDisplayName(){
+		return new TextComponentTranslation(getName());
+	}
+
+	@Override
+	public boolean hasCustomName(){
+		return false;
 	}
 
 	private class ItemHandler implements IItemHandler{
@@ -105,15 +197,15 @@ public class ArcaneExtractorTileEntity extends BeamRenderTE{
 
 	@Override
 	protected void doEmit(MagicUnit toEmit){
+		EnumFacing dir = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		if(!inv.isEmpty() && RecipeHolder.magExtractRecipes.containsKey(inv.getItem())){
 			MagicUnit mag = RecipeHolder.magExtractRecipes.get(inv.getItem());
 			inv.shrink(1);
-			beamer[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()].emit(mag, world);
-		}else{
-			beamer[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()].emit(null, world);
-			if(!inv.isEmpty()){
-				inv = ItemStack.EMPTY;
+			if(beamer[dir.getIndex()].emit(mag, world)){
+				refreshBeam(dir.getIndex());
 			}
+		}else if(beamer[dir.getIndex()].emit(null, world)){
+			refreshBeam(dir.getIndex());
 		}
 	}
 

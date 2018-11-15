@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.blocks.magic.ArcaneExtractor;
 import com.Da_Technomancer.crossroads.gui.container.*;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
@@ -13,6 +14,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTile
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
@@ -43,6 +45,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int ORE_CLEANSER_GUI = 21;
 	public static final int BLAST_FURNACE_GUI = 22;
 	public static final int FAT_FEEDER_GUI = 23;
+	public static final int ARCANE_EXTRACTOR_GUI = 24;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -94,6 +97,8 @@ public class GuiHandler implements IGuiHandler{
 				return new BlastFurnaceContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case FAT_FEEDER_GUI:
 				return new FatFeederContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case ARCANE_EXTRACTOR_GUI:
+				return new ArcaneExtractorContainer(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;
@@ -150,6 +155,8 @@ public class GuiHandler implements IGuiHandler{
 				return new BlastFurnaceGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case FAT_FEEDER_GUI:
 				return new FatFeederGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+			case ARCANE_EXTRACTOR_GUI:
+				return new ArcaneExtractorGuiContainer(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;

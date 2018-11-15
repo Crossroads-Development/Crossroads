@@ -29,5 +29,4 @@ public class UnlistedPropertyIntegerSixArray implements IUnlistedProperty<Intege
 	public String valueToString(Integer[] value){
 		return value.toString();
 	}
-
 }

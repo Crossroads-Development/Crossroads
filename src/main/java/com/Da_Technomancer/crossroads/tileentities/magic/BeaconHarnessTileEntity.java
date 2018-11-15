@@ -43,7 +43,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE{
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
-		nbt.setBoolean("runC", running);
+		nbt.setBoolean("run", running);
 		return nbt;
 	}
 
@@ -73,7 +73,9 @@ public class BeaconHarnessTileEntity extends BeamRenderTE{
 				ModPackets.network.sendToAllAround(new SendIntToClient(0, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				cycles = -9;
 
-				beamer[1].emit(null, world);
+				if(beamer[1].emit(null, world)){
+					refreshBeam(1);
+				}
 				return;
 			}
 			if(cycles >= 0){
@@ -81,6 +83,9 @@ public class BeaconHarnessTileEntity extends BeamRenderTE{
 				out = out.mult(512D / ((double) out.getPower()), false);
 
 				beamer[1].emit(out, world);
+				refreshBeam(1);
+				prevMag[1] = out;
+				markDirty();
 			}
 		}
 	}
