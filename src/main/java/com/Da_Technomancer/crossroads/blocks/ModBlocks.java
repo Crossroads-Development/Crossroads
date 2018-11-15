@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.fluid.*;
 import com.Da_Technomancer.crossroads.blocks.heat.*;
-import com.Da_Technomancer.crossroads.blocks.magic.*;
+import com.Da_Technomancer.crossroads.blocks.beams.*;
 import com.Da_Technomancer.crossroads.blocks.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.technomancy.*;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -46,15 +46,14 @@ public class ModBlocks{
 	public static FatCongealer fatCongealer;
 	public static RedstoneFluidTube redstoneFluidTube;
 	public static WaterCentrifuge waterCentrifuge;
-	public static ArcaneExtractor arcaneExtractor;
-	public static QuartzStabilizer smallQuartzStabilizer;
-	public static QuartzStabilizer largeQuartzStabilizer;
+	public static BeamExtractor beamExtractor;
+	public static QuartzStabilizer quartzStabilizer;
 	public static CrystallinePrism crystallinePrism;
-	public static ArcaneReflector arcaneReflector;
+	public static BeamReflector beamReflector;
 	public static LensFrame lensFrame;
 	public static BasicBlock blockPureQuartz;
 	public static BasicBlock blockLuminescentQuartz;
-	public static BeamSplitter beamSplitter;
+	public static BeamSiphon beamSiphon;
 	public static ColorChart colorChart;
 	public static CrystalMasterAxis crystalMasterAxis;
 	public static Ratiator ratiator;
@@ -120,6 +119,7 @@ public class ModBlocks{
 	public static StampMillTop stampMillTop;
 	public static OreCleanser oreCleanser;
 	public static BlastFurnace blastFurnace;
+	public static BeamRedirector beamRedirector;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -187,15 +187,14 @@ public class ModBlocks{
 		fatCongealer = new FatCongealer();
 		redstoneFluidTube = new RedstoneFluidTube();
 		waterCentrifuge = new WaterCentrifuge();
-		arcaneExtractor = new ArcaneExtractor();
-		smallQuartzStabilizer = new QuartzStabilizer(false);
-		largeQuartzStabilizer = new QuartzStabilizer(true);
+		beamExtractor = new BeamExtractor();
+		quartzStabilizer = new QuartzStabilizer();
 		crystallinePrism = new CrystallinePrism();
-		arcaneReflector = new ArcaneReflector();
+		beamReflector = new BeamReflector();
 		lensFrame = new LensFrame();
 		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 4, "blockQuartz");
 		blockLuminescentQuartz = (BasicBlock) new BasicBlock("block_luminescent_quartz", Material.ROCK, 4, "blockQuartz").setLightLevel(1F);
-		beamSplitter = new BeamSplitter();
+		beamSiphon = new BeamSiphon();
 		colorChart = new ColorChart();
 		crystalMasterAxis = new CrystalMasterAxis();
 		ratiator = new Ratiator();
@@ -261,6 +260,7 @@ public class ModBlocks{
 		stampMillTop = new StampMillTop();
 		oreCleanser = new OreCleanser();
 		blastFurnace = new BlastFurnace();
+		beamRedirector = new BeamRedirector();
 	}
 
 	@SideOnly(Side.CLIENT)

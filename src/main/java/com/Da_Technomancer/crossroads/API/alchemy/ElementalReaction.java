@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import java.awt.Color;
 
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 
 public class ElementalReaction implements IReaction{
 
@@ -28,9 +28,9 @@ public class ElementalReaction implements IReaction{
 				}
 				double secondAmount = reags[product.getSecondaryBase().getIndex()].getAmount();
 				Color baseCol = product.getSecondaryBase().getAlignment().getTrueRGB();
-				unit = new MagicUnit((int) (baseCol.getRed() * secondAmount + 255 * (reags[0] == null ? 0 : reags[0].getAmount())), (int) (baseCol.getGreen() * secondAmount + 255 * (reags[1] == null ? 0 : reags[1].getAmount())), (int) (baseCol.getBlue() * secondAmount + 255 * (reags[2] == null ? 0 : reags[2].getAmount())), 0).getTrueRGB();
+				unit = new BeamUnit((int) (baseCol.getRed() * secondAmount + 255 * (reags[0] == null ? 0 : reags[0].getAmount())), (int) (baseCol.getGreen() * secondAmount + 255 * (reags[1] == null ? 0 : reags[1].getAmount())), (int) (baseCol.getBlue() * secondAmount + 255 * (reags[2] == null ? 0 : reags[2].getAmount())), 0).getTrueRGB();
 			}else{
-				unit = new MagicUnit((int) (255 * (reags[0] == null ? 0 : reags[0].getAmount())), (int) (255 * (reags[1] == null ? 0 : reags[1].getAmount())), (int) (255 * (reags[2] == null ? 0 : reags[2].getAmount())), 0).getTrueRGB();
+				unit = new BeamUnit((int) (255 * (reags[0] == null ? 0 : reags[0].getAmount())), (int) (255 * (reags[1] == null ? 0 : reags[1].getAmount())), (int) (255 * (reags[2] == null ? 0 : reags[2].getAmount())), 0).getTrueRGB();
 			}
 			
 			Color goal = product.getAlignment().getTrueRGB();

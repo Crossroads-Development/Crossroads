@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,7 +10,7 @@ import net.minecraft.util.EnumFacing;
 public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
 	private static final double RATE = 0.25D;
-	private MagicUnitStorage storage = new MagicUnitStorage();
+	private BeamUnitStorage storage = new BeamUnitStorage();
 
 	public ClockworkStabilizerTileEntity(){
 		super();
@@ -26,25 +26,25 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		storage = MagicUnitStorage.readFromNBT("stab_mag", nbt);
+		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
 	}
 
 	@Override
-	protected void doEmit(MagicUnit toEmit){
-		storage.addMagic(toEmit);
+	protected void doEmit(BeamUnit toEmit){
+		storage.addBeam(toEmit);
 
 		//Enforce LIMIT
 		if(storage.getOutput() != null && storage.getOutput().getPower() > getLimit()){
-			MagicUnit stored = storage.getOutput();
+			BeamUnit stored = storage.getOutput();
 			storage.clear();
-			storage.addMagic(stored.mult((double) getLimit() / (double) stored.getPower(), false));
+			storage.addBeam(stored.mult((double) getLimit() / (double) stored.getPower(), false));
 		}
 
 		EnumFacing dir = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 
 		if(!storage.isEmpty()){
-			MagicUnit mag = storage.getOutput().mult(RATE, true);
-			storage.subtractMagic(mag);
+			BeamUnit mag = storage.getOutput().mult(RATE, true);
+			storage.subtractBeam(mag);
 			if(beamer[dir.getIndex()].emit(mag.getPower() == 0 ? null : mag, world)){
 				refreshBeam(dir.getIndex());
 			}

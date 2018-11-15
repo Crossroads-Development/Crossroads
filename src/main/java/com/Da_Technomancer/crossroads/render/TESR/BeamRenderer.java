@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import java.awt.Color;
 
-import com.Da_Technomancer.crossroads.API.magic.BeamManager;
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 

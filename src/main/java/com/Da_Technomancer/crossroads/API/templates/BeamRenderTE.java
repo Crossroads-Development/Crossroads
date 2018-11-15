@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnitStorage;
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
@@ -21,9 +21,9 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 	protected int[] beamPackets = new int[6];
 	protected BeamManager[] beamer;
-	protected MagicUnitStorage[] queued = {new MagicUnitStorage(), new MagicUnitStorage()};
+	protected BeamUnitStorage[] queued = {new BeamUnitStorage(), new BeamUnitStorage()};
 	protected long activeCycle;
-	protected MagicUnit[] prevMag = new MagicUnit[6];//Stores the last non-null magic sent for information readouts
+	protected BeamUnit[] prevMag = new BeamUnit[6];//Stores the last non-null beams sent for information readouts
 
 	/**
 	 * @return A size 6 boolean[] where each boolean corresponds to the index of an EnumFacing.
@@ -97,7 +97,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 				}
 			}
 
-			MagicUnit out = shiftStorage();
+			BeamUnit out = shiftStorage();
 			activeCycle = BeamManager.cycleNumber;
 			if(out != null && out.getPower() > getLimit()){
 				overload();
@@ -107,20 +107,20 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	}
 
 	/**
-	 * Moves over the magic in queued from index 1 to 0.
-	 * @return The magic previously stored in queued[0].
+	 * Moves over the beams in queued from index 1 to 0.
+	 * @return The beams previously stored in queued[0].
 	 */
 	@Nullable
-	protected MagicUnit shiftStorage(){
-		MagicUnit out = queued[0].getOutput();
+	protected BeamUnit shiftStorage(){
+		BeamUnit out = queued[0].getOutput();
 		queued[0].clear();
-		queued[0].addMagic(queued[1]);
+		queued[0].addBeam(queued[1]);
 		queued[1].clear();
 		markDirty();
 		return out;
 	}
 
-	protected abstract void doEmit(@Nullable MagicUnit toEmit);
+	protected abstract void doEmit(@Nullable BeamUnit toEmit);
 
 	@Override
 	public void receiveInt(int identifier, int message, EntityPlayerMP player){
@@ -133,7 +133,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	 * For informational displays.
 	 */
 	@Override
-	public MagicUnit[] getLastSent(){
+	public BeamUnit[] getLastSent(){
 		return prevMag;
 	}
 
@@ -168,8 +168,8 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		queued[0] = MagicUnitStorage.readFromNBT("queue0", nbt);
-		queued[1] = MagicUnitStorage.readFromNBT("queue1", nbt);
+		queued[0] = BeamUnitStorage.readFromNBT("queue0", nbt);
+		queued[1] = BeamUnitStorage.readFromNBT("queue1", nbt);
 		activeCycle = nbt.getLong("cyc");
 
 		for(int i = 0; i < 6; i++){
@@ -182,7 +182,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		return getCapability(cap, side) != null || super.hasCapability(cap, side);
 	}
 
-	protected final MagicHandler handler = new MagicHandler();
+	protected final BeamHandler handler = new BeamHandler();
 
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> cap, EnumFacing dir){
@@ -192,12 +192,12 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		return super.getCapability(cap, dir);
 	}
 
-	protected class MagicHandler implements IMagicHandler{
+	protected class BeamHandler implements IBeamHandler{
 
 		@Override
-		public void setMagic(MagicUnit mag){
+		public void setMagic(BeamUnit mag){
 			if(mag != null){
-				queued[BeamManager.cycleNumber == activeCycle ? 0 : 1].addMagic(mag);
+				queued[BeamManager.cycleNumber == activeCycle ? 0 : 1].addBeam(mag);
 				markDirty();
 			}
 		}

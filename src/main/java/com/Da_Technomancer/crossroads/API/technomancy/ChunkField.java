@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -79,7 +79,7 @@ public class ChunkField{
 			if(flux == 127){//if actual flux hits 128, do a flux event
 				wipe();
 				for(int i = 0; i < 3; i++){
-					EnumMagicElements.TIME.getVoidEffect().doEffect(world, pos.getBlock(RAND.nextInt(16), RAND.nextInt(128), RAND.nextInt(16)), 128);
+					EnumBeamAlignments.TIME.getVoidEffect().doEffect(world, pos.getBlock(RAND.nextInt(16), RAND.nextInt(128), RAND.nextInt(16)), 128);
 				}
 			}
 		}else{

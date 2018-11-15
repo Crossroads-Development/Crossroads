@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:blocks/beam_reflector_out",
+		"south": "crossroads:blocks/beam_reflector_side",
+		"east": "crossroads:blocks/beam_reflector_side",
+		"west": "crossroads:blocks/beam_reflector_side",
+		"up": "crossroads:blocks/beam_reflector_side",
+		"down": "crossroads:blocks/beam_reflector_side",
+		"particle": "crossroads:blocks/beam_reflector_side"
+	}
+}

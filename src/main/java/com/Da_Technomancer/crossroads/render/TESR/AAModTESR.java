@@ -1,12 +1,10 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.magic.*;
+import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
@@ -28,12 +26,13 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(SteamTurbineTileEntity.class, new SteamTurbineRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(LargeGearMasterTileEntity.class, new LargeGearRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(RotaryDrillTileEntity.class, new RotaryDrillRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(ArcaneExtractorTileEntity.class, new BeamRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamExtractorTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(QuartzStabilizerTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(CrystallinePrismTileEntity.class, new BeamRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(ArcaneReflectorTileEntity.class, new BeamRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamReflectorTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(LensFrameTileEntity.class, new LensFrameRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(BeamSplitterTileEntity.class, new BeamRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamSiphonTileEntity.class, new BeamRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamRedirectorTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(BeaconHarnessTileEntity.class, new BeaconHarnessRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(MultiplicationAxisTileEntity.class, new MultiplicationAxisRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(AdditionAxisTileEntity.class, new AdditionAxisRenderer());

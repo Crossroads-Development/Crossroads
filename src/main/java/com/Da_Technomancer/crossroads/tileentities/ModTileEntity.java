@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.*;
 import com.Da_Technomancer.crossroads.tileentities.fluid.*;
 import com.Da_Technomancer.crossroads.tileentities.heat.*;
-import com.Da_Technomancer.crossroads.tileentities.magic.*;
+import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
@@ -39,12 +39,12 @@ public class ModTileEntity{
 		register(RedstoneHeatCableTileEntity.class, "redstone_heat_cable");
 		register(RedstoneFluidTubeTileEntity.class, "redstone_fluid_tube");
 		register(WaterCentrifugeTileEntity.class, "water_centrifuge");
-		register(ArcaneExtractorTileEntity.class, "arcane_extractor");
+		register(BeamExtractorTileEntity.class, "beam_extractor");
 		register(QuartzStabilizerTileEntity.class, "quartz_stabilizer");
 		register(CrystallinePrismTileEntity.class, "crystal_prism");
-		register(ArcaneReflectorTileEntity.class, "arcane_reflector");
+		register(BeamReflectorTileEntity.class, "beam_reflector");
 		register(LensFrameTileEntity.class, "lens_frame");
-		register(BeamSplitterTileEntity.class, "beam_splitter");
+		register(BeamSiphonTileEntity.class, "beam_siphon");
 		register(CrystalMasterAxisTileEntity.class, "crystal_master_axis");
 		register(RatiatorTileEntity.class, "ratiator");
 		register(BeaconHarnessTileEntity.class, "beacon_harness");
@@ -105,6 +105,7 @@ public class ModTileEntity{
 		register(IceboxTileEntity.class, "icebox");
 		register(OreCleanserTileEntity.class, "ore_cleanser");
 		register(BlastFurnaceTileEntity.class, "blast_furnace");
+		register(BeamRedirectorTileEntity.class, "beam_redirector");
 	}
 
 	/**

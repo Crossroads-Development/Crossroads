@@ -3,10 +3,10 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -37,7 +37,7 @@ import java.util.List;
 public class GatewayFrameTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 
-	private final IMagicHandler magicHandler = new MagicHandler();
+	private final IBeamHandler magicHandler = new BeamHandler();
 	private GameProfileNonPicky owner;
 
 	public void setOwner(GameProfileNonPicky owner){
@@ -234,11 +234,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 		}
 	}
 
-	private class MagicHandler implements IMagicHandler{
+	private class BeamHandler implements IBeamHandler{
 
 		@Override
-		public void setMagic(MagicUnit mag){
-			if(EnumMagicElements.getElement(mag) == EnumMagicElements.RIFT){
+		public void setMagic(BeamUnit mag){
+			if(EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.RIFT){
 				magicPassed = true;
 				markDirty();
 			}

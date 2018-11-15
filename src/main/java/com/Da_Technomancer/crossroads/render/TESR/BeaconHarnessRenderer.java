@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.API.magic.BeamManager;
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.tileentities.magic.BeaconHarnessTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.beams.BeaconHarnessTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

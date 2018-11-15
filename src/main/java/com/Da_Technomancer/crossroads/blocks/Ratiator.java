@@ -131,6 +131,10 @@ public class Ratiator extends BlockContainer{
 				IBlockState newState = state.withProperty(Properties.HORIZ_FACING, state.getValue(Properties.HORIZ_FACING).rotateY());
 				worldIn.setBlockState(pos, newState);
 				neighborChanged(newState, worldIn, pos, null, null);
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(te instanceof RatiatorTileEntity){
+					((RatiatorTileEntity) te).onRotate();
+				}
 				return true;
 			}
 

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
@@ -53,7 +53,7 @@ public class ColorChartGuiContainer extends GuiContainer{
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		if(Math.pow(xCENTER - mouseX + guiLeft, 2) + Math.pow(yCENTER - mouseY + guiTop, 2) <= RADIUS * RADIUS){
 			Color col = getColor(mouseX - guiLeft, mouseY - guiTop);
-			EnumMagicElements elem = EnumMagicElements.getElement(col);
+			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
 			NBTTagCompound elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
 			drawHoveringText(ImmutableList.of(elementTag.hasKey(elem.name()) ? elem.name() : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, fontRenderer);
 		}
@@ -83,7 +83,7 @@ public class ColorChartGuiContainer extends GuiContainer{
 				int xPos = spotLength * i + xCENTER - RADIUS;
 				int yPos = spotLength * j + yCENTER - RADIUS;
 				if(Math.pow(RADIUS - (spotLength * i), 2) + Math.pow(RADIUS - (spotLength * j), 2) <= RADIUS * RADIUS){
-					EnumMagicElements elem = EnumMagicElements.getElement(getColor(xPos, yPos));
+					EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(getColor(xPos, yPos));
 					NBTTagCompound elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
 					if(elementTag.hasKey(elem.name()) && (search.isEmpty() || elem.name().startsWith(search))){
 						drawModalRectWithCustomSizedTexture(xPos, yPos, xPos, yPos, spotLength, spotLength, 300, 300);

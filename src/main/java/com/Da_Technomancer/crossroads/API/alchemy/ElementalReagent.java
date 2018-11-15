@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,7 +18,7 @@ public class ElementalReagent implements IElementReagent{
 	private final boolean destroyContainer;
 	private final byte level;
 	private final String name;
-	private final MagicUnit range;
+	private final BeamUnit range;
 	private final Color color;
 	private final IAlchEffect effect;
 	private final int melt;
@@ -26,11 +26,11 @@ public class ElementalReagent implements IElementReagent{
 	private final Item solidForm;
 	private final IElementReagent secondaryBase;
 	
-	public ElementalReagent(String name, int index, byte level, int melt, int boil, IAlchEffect effect, boolean destroyContainer, MagicUnit range, @Nullable Item solidForm){
+	public ElementalReagent(String name, int index, byte level, int melt, int boil, IAlchEffect effect, boolean destroyContainer, BeamUnit range, @Nullable Item solidForm){
 		this(name, index, level, melt, boil, effect, destroyContainer, range, solidForm, null);
 	}
 	
-	public ElementalReagent(String name, int index, byte level, int melt, int boil, IAlchEffect effect, boolean destroyContainer, MagicUnit range, @Nullable Item solidForm, @Nullable IElementReagent secondaryBase){
+	public ElementalReagent(String name, int index, byte level, int melt, int boil, IAlchEffect effect, boolean destroyContainer, BeamUnit range, @Nullable Item solidForm, @Nullable IElementReagent secondaryBase){
 		this.name = name;
 		this.index = index;
 		this.destroyContainer = destroyContainer;
@@ -106,7 +106,7 @@ public class ElementalReagent implements IElementReagent{
 	}
 
 	@Override
-	public MagicUnit getAlignment(){
+	public BeamUnit getAlignment(){
 		return range;
 	}
 

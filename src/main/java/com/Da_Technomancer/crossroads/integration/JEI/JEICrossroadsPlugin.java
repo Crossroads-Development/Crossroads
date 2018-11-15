@@ -24,8 +24,8 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.fluidCoolingChamber, 1), FluidCoolingCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.heatingCrucible, 1), HeatingCrucibleCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.detailedCrafter, 1), DetailedCrafterCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(ModBlocks.arcaneExtractor, 1), ArcaneExtractorCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(ModBlocks.arcaneReflector, 1), FusionBeamCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(ModBlocks.beamExtractor, 1), BeamExtractorCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(ModBlocks.beamReflector, 1), FusionBeamCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.reactionChamber, 1), ReactionCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.glasswareHolder, 1), ReactionCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.stampMill, 1), StampMillCategory.ID);
@@ -58,6 +58,6 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry){
 		IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
-		registry.addRecipeCategories(new MillstoneCategory(guiHelper), new FluidCoolingCategory(guiHelper), new HeatingCrucibleCategory(guiHelper), new DetailedCrafterCategory(guiHelper), new ArcaneExtractorCategory(guiHelper), new FusionBeamCategory(guiHelper), new ReactionCategory(guiHelper), new ReagInfoCategory(guiHelper), new StampMillCategory(guiHelper), new OreCleanserCategory(guiHelper), new BlastFurnaceCategory(guiHelper));
+		registry.addRecipeCategories(new MillstoneCategory(guiHelper), new FluidCoolingCategory(guiHelper), new HeatingCrucibleCategory(guiHelper), new DetailedCrafterCategory(guiHelper), new BeamExtractorCategory(guiHelper), new FusionBeamCategory(guiHelper), new ReactionCategory(guiHelper), new ReagInfoCategory(guiHelper), new StampMillCategory(guiHelper), new OreCleanserCategory(guiHelper), new BlastFurnaceCategory(guiHelper));
 	}
 }

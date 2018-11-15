@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.ModConfig;
@@ -38,7 +38,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 	private final FluidHandler inputHandler = new FluidHandler(0);
 	private final FluidHandler outputHandler = new FluidHandler(1);
 	private final FluidHandler internalHandler = new FluidHandler(-1);
-	private final IMagicHandler magicHandler = new MagicHandler();
+	private final IBeamHandler magicHandler = new BeamHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -69,11 +69,11 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 		return "container.copshowium_maker";
 	}
 
-	private class MagicHandler implements IMagicHandler{
+	private class BeamHandler implements IBeamHandler{
 
 		@Override
-		public void setMagic(MagicUnit mag){
-			if(EnumMagicElements.getElement(mag) == EnumMagicElements.TIME && fluids[0] != null){
+		public void setMagic(BeamUnit mag){
+			if(EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.TIME && fluids[0] != null){
 				if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccExpenLiquid, false))){
 					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) fluids[0].amount) * EnergyConverters.COPSHOWIUM_PER_COPPER) + (fluids[1] == null ? 0 : fluids[1].amount));
 					fluids[0] = null;

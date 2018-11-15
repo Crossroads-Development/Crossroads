@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.integration.crafttweaker;
 
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import crafttweaker.CraftTweakerAPI;
@@ -12,11 +12,11 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /** Integration for the Arcane Extractor */
-@ZenClass("mods.crossroads.ArcaneExtractor")
+@ZenClass("mods.crossroads.BeamExtractor")
 public class ArcaneExtractorHandler{
 
 	/**
-	 * This method adds a mapping between an item (metadata is ignored) and the created magic in an Arcane Extractor. If a mapping already exists for that item, the previous one is replaced. 
+	 * This method adds a mapping between an item (metadata is ignored) and the created beams in an Arcane Extractor. If a mapping already exists for that item, the previous one is replaced.
 	 * There is no OreDict support for the Arcane Extractor. 
 	 * @param input The input itemstack (metadata is ignored)
 	 * @param energy Created energy
@@ -26,11 +26,11 @@ public class ArcaneExtractorHandler{
 	 */
 	@ZenMethod
 	public static void addRecipe(IItemStack input, int energy, int potential, int stability, int voi){
-		CraftTweakerAPI.apply(new Add(CraftTweakerMC.getItemStack(input).getItem(), new MagicUnit(energy, potential, stability, voi)));
+		CraftTweakerAPI.apply(new Add(CraftTweakerMC.getItemStack(input).getItem(), new BeamUnit(energy, potential, stability, voi)));
 	}
 	
 	/**
-	 * This method removes a mapping between an item (metadata is ignored) and the created magic in an Arcane Extractor. 
+	 * This method removes a mapping between an item (metadata is ignored) and the created beams in an Arcane Extractor.
 	 * @param input The input itemstack (metadata is ignored)
 	 */
 	@ZenMethod
@@ -41,16 +41,16 @@ public class ArcaneExtractorHandler{
 	private static class Add implements IAction{
 
 		private final Item input;
-		private final MagicUnit created;
+		private final BeamUnit created;
 		
-		private Add(Item input, MagicUnit created){
+		private Add(Item input, BeamUnit created){
 			this.input = input;
 			this.created = created;
 		}
 		
 		@Override
 		public void apply(){
-			RecipeHolder.magExtractRecipes.put(input, created);
+			RecipeHolder.beamExtractRecipes.put(input, created);
 		}
 
 		@Override
@@ -69,7 +69,7 @@ public class ArcaneExtractorHandler{
 		
 		@Override
 		public void apply(){
-			RecipeHolder.magExtractRecipes.remove(input);
+			RecipeHolder.beamExtractRecipes.remove(input);
 		}
 
 		@Override

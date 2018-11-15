@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:beam_redirector", "x": 90 },
+		"facing=south": { "model": "crossroads:beam_redirector", "x": 270 },
+		"facing=east": { "model": "crossroads:beam_redirector", "x": 90, "y": 90 },
+		"facing=west": { "model": "crossroads:beam_redirector", "x": 90, "y": 270 },
+		"facing=up": { "model": "crossroads:beam_redirector" },
+		"facing=down": { "model": "crossroads:beam_redirector", "x": 180 }
+	}
+}

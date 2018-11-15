@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.command;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 
 import net.minecraft.command.CommandBase;
@@ -40,8 +40,8 @@ public class DiscoverElementCommand extends CommandBase{
 			}
 			nbt = nbt.getCompoundTag("elements");
 
-			for(EnumMagicElements element : EnumMagicElements.values()){
-				if(!nbt.hasKey(element.name()) && element != EnumMagicElements.NO_MATCH){
+			for(EnumBeamAlignments element : EnumBeamAlignments.values()){
+				if(!nbt.hasKey(element.name()) && element != EnumBeamAlignments.NO_MATCH){
 					nbt.setBoolean(element.name(), true);
 					sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.toString()));
 				}
@@ -50,10 +50,10 @@ public class DiscoverElementCommand extends CommandBase{
 			return;
 		}
 
-		EnumMagicElements element;
+		EnumBeamAlignments element;
 
 		try{
-			element = EnumMagicElements.valueOf(args[0].toUpperCase());
+			element = EnumBeamAlignments.valueOf(args[0].toUpperCase());
 		}catch(IllegalArgumentException | NullPointerException e){
 			sender.sendMessage(new TextComponentString("That element does not exist!"));
 			return;

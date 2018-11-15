@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,11 +27,11 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 				cage.setTagCompound(new NBTTagCompound());
 			}
 			NBTTagCompound nbt = cage.getTagCompound();
-			chat.add("Stored: [Energy: " + nbt.getInteger("stored_" + EnumMagicElements.ENERGY.name()) + ", Potential: " + nbt.getInteger("stored_" + EnumMagicElements.POTENTIAL.name()) + ", Stability: " + nbt.getInteger("stored_" + EnumMagicElements.STABILITY.name()) + ", Void: " + nbt.getInteger("stored_" + EnumMagicElements.VOID.name()) + "]");
+			chat.add("Stored: [Energy: " + nbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name()) + ", Potential: " + nbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name()) + ", Stability: " + nbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name()) + ", Void: " + nbt.getInteger("stored_" + EnumBeamAlignments.VOID.name()) + "]");
 		}
 	}
 	
-	private final IMagicHandler magicHandler = new MagicHandler();
+	private final IBeamHandler magicHandler = new BeamHandler();
 	private ItemStack cage = ItemStack.EMPTY;
 
 	@Override
@@ -82,34 +82,34 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 		cage = new ItemStack(nbt.getCompoundTag("inv"));
 	}
 	
-	private class MagicHandler implements IMagicHandler{
+	private class BeamHandler implements IBeamHandler{
 		
 		@Override
-		public void setMagic(MagicUnit mag){
+		public void setMagic(BeamUnit mag){
 			if(mag != null && cage != null){
 				if(cage.getTagCompound() == null){
 					cage.setTagCompound(new NBTTagCompound());
 				}
 				NBTTagCompound nbt = cage.getTagCompound();
-				int energy = nbt.getInteger("stored_" + EnumMagicElements.ENERGY.name());
+				int energy = nbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name());
 				energy += mag.getEnergy();
 				energy = Math.min(1024, energy);
-				nbt.setInteger("stored_" + EnumMagicElements.ENERGY.name(), energy);
+				nbt.setInteger("stored_" + EnumBeamAlignments.ENERGY.name(), energy);
 				
-				int potential = nbt.getInteger("stored_" + EnumMagicElements.POTENTIAL.name());
+				int potential = nbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name());
 				potential += mag.getPotential();
 				potential = Math.min(1024, potential);
-				nbt.setInteger("stored_" + EnumMagicElements.POTENTIAL.name(), potential);
+				nbt.setInteger("stored_" + EnumBeamAlignments.POTENTIAL.name(), potential);
 				
-				int stability = nbt.getInteger("stored_" + EnumMagicElements.STABILITY.name());
+				int stability = nbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name());
 				stability += mag.getStability();
 				stability = Math.min(1024, stability);
-				nbt.setInteger("stored_" + EnumMagicElements.STABILITY.name(), stability);
+				nbt.setInteger("stored_" + EnumBeamAlignments.STABILITY.name(), stability);
 				
-				int voi = nbt.getInteger("stored_" + EnumMagicElements.VOID.name());
+				int voi = nbt.getInteger("stored_" + EnumBeamAlignments.VOID.name());
 				voi += mag.getVoid();
 				voi = Math.min(1024, voi);
-				nbt.setInteger("stored_" + EnumMagicElements.VOID.name(), voi);
+				nbt.setInteger("stored_" + EnumBeamAlignments.VOID.name(), voi);
 			}
 		}
 	}

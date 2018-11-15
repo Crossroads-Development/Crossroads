@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.technomancy.MagicUsingItem;
+import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.technomancy.PrototypeWatch;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -402,7 +402,7 @@ public final class EventHandlerClient{
 				GlStateManager.popMatrix();
 			}
 			ItemStack mainStack = player.getHeldItem(EnumHand.MAIN_HAND);
-			if(mainStack.getItem() instanceof MagicUsingItem){
+			if(mainStack.getItem() instanceof BeamUsingItem){
 				NBTTagCompound nbt = mainStack.hasTagCompound() ? mainStack.getTagCompound() : new NBTTagCompound();
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();

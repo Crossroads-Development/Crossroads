@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.*;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.fluids.*;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -56,14 +56,14 @@ public final class AlchemyCore{
 		SaltAlchemyEffect SALT_EFFECT = new SaltAlchemyEffect();
 
 		// Reagents
-		REAGENTS[0] = new BaseElementReagent("Phelostigen", -275D, -274D, 0, (EnumMatterPhase phase) -> PHELOSTIGEN_COLOR, null, 1, 2, new PhelostogenEffect((Double amount) -> (int) Math.min(8, Math.round(amount / 2D))), new MagicUnit(1, 0, 0, 0)){
+		REAGENTS[0] = new BaseElementReagent("Phelostigen", -275D, -274D, 0, (EnumMatterPhase phase) -> PHELOSTIGEN_COLOR, null, 1, 2, new PhelostogenEffect((Double amount) -> (int) Math.min(8, Math.round(amount / 2D))), new BeamUnit(1, 0, 0, 0)){
 			@Override
 			public boolean isLockedFlame(){
 				return true;
 			}
 		};
-		REAGENTS[1] = new BaseElementReagent("Aether", -275D, -274D, 1, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, 1, new AetherEffect(), new MagicUnit(0, 1, 0, 0));
-		REAGENTS[2] = new BaseElementReagent("Adamant", Short.MAX_VALUE - 1, Short.MAX_VALUE, 2, (EnumMatterPhase phase) -> Color.GRAY, ModItems.adamant, 2, 0, null, new MagicUnit(0, 0, 1, 0));
+		REAGENTS[1] = new BaseElementReagent("Aether", -275D, -274D, 1, (EnumMatterPhase phase) -> CLEAR_COLOR, null, 1, 1, new AetherEffect(), new BeamUnit(0, 1, 0, 0));
+		REAGENTS[2] = new BaseElementReagent("Adamant", Short.MAX_VALUE - 1, Short.MAX_VALUE, 2, (EnumMatterPhase phase) -> Color.GRAY, ModItems.adamant, 2, 0, null, new BeamUnit(0, 0, 1, 0));
 		REAGENTS[3] = new StaticReagent("Sulfur", 115D, 445D, 3, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_YELLOW_COLOR : phase == EnumMatterPhase.LIQUID ? Color.RED : Color.YELLOW, MiscUtil.oreDictPred("dustSulfur"), () -> MiscUtil.getOredictStack("dustSulfur", 1), 10, 0, null);
 		REAGENTS[4] = new StaticReagent("Water", 0D, 100D, 4, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_WHITE_COLOR : TRANSLUCENT_BLUE_COLOR, (stack) -> stack.getItem() == Item.getItemFromBlock(Blocks.PACKED_ICE), () -> new ItemStack(Blocks.PACKED_ICE), 50, 0, null);
 		REAGENTS[5] = new StaticReagent("Salt of Aqua Fortis", -40D, 80D, 5, (EnumMatterPhase phase) -> Color.YELLOW, (stack) -> stack.getItem() == ModItems.solidFortis, () -> new ItemStack(ModItems.solidFortis), 10, 0, ACID_EFFECT);// Salt that forms nitric acid, AKA aqua fortis, in water.
@@ -94,11 +94,11 @@ public final class AlchemyCore{
 		REAGENTS[30] = new StaticReagent("Nether Quartz", 2000D, 3000D, 30, (EnumMatterPhase phase) -> Color.WHITE, (stack) -> stack.getItem() == Items.QUARTZ, () -> new ItemStack(Items.QUARTZ), 10, 0, null);
 
 		//Dynamic reagents
-		REAGENTS[32] = new ElementalReagent("Lumen", 32, (byte) 1, -275, -274, new LumenEffect(), false, new MagicUnit(32, 32, 32, 0), null);
-		REAGENTS[33] = new ElementalReagent("Eldrine", 33, (byte) 1, -100, 350, new EldrineEffect(), true, new MagicUnit(32, 0, 32, 0), ModItems.solidEldrine);
-		REAGENTS[34] = new ElementalReagent("Stasisol", 34, (byte) 1, 800, 1800, new StasisolEffect(), false, new MagicUnit(32, 16, 32, 0), ModItems.solidStasisol);
-		REAGENTS[35] = new ElementalReagent("Fusas", 35, (byte) 2, Short.MAX_VALUE - 1, Short.MAX_VALUE, null, false, new MagicUnit(16, 32, 32, 0), ModItems.solidFusas, (IElementReagent) REAGENTS[34]);
-		REAGENTS[36] = new ElementalReagent("Voltus", 36, (byte) 2, -275, -274, new VoltusEffect(), true, new MagicUnit(32, 32, 8, 0), null, (IElementReagent) REAGENTS[32]);
+		REAGENTS[32] = new ElementalReagent("Lumen", 32, (byte) 1, -275, -274, new LumenEffect(), false, new BeamUnit(32, 32, 32, 0), null);
+		REAGENTS[33] = new ElementalReagent("Eldrine", 33, (byte) 1, -100, 350, new EldrineEffect(), true, new BeamUnit(32, 0, 32, 0), ModItems.solidEldrine);
+		REAGENTS[34] = new ElementalReagent("Stasisol", 34, (byte) 1, 800, 1800, new StasisolEffect(), false, new BeamUnit(32, 16, 32, 0), ModItems.solidStasisol);
+		REAGENTS[35] = new ElementalReagent("Fusas", 35, (byte) 2, Short.MAX_VALUE - 1, Short.MAX_VALUE, null, false, new BeamUnit(16, 32, 32, 0), ModItems.solidFusas, (IElementReagent) REAGENTS[34]);
+		REAGENTS[36] = new ElementalReagent("Voltus", 36, (byte) 2, -275, -274, new VoltusEffect(), true, new BeamUnit(32, 32, 8, 0), null, (IElementReagent) REAGENTS[32]);
 		REAGENTS[37] = new StaticReagent("Ignis Infernum", -275D, -274D, 37, (EnumMatterPhase phase) -> Color.RED, null, null, 10, 2, new PhelostogenEffect((Double amount) -> (int) Math.min(64, amount * 2D))){
 			@Override
 			public boolean isLockedFlame(){

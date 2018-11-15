@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.ModConfig;
@@ -88,7 +88,7 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world) && nbt.getCompoundTag("elements").hasKey(EnumMagicElements.TIME.name()) && ModConfig.getConfigBool(ModConfig.technomancy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy"))){
+		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world) && nbt.getCompoundTag("elements").hasKey(EnumBeamAlignments.TIME.name()) && ModConfig.getConfigBool(ModConfig.technomancy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy"))){
 			for(int i = 0; i < 9; i++){
 				inInv.decrStackSize(i, 1);
 			}
@@ -121,8 +121,8 @@ public class DetailedCrafterContainer extends Container{
 
 	private static boolean passesAlchemyCriteria(NBTTagCompound elementTag){
 		//In order to unlock alchemy, the player needs to have discovered all elements other than void and time. (Discovering void and/or time doesn't hurt)
-		for(EnumMagicElements element : EnumMagicElements.values()){
-			if(element != EnumMagicElements.TIME && element != EnumMagicElements.VOID && element != EnumMagicElements.NO_MATCH && !elementTag.getBoolean(element.name())){
+		for(EnumBeamAlignments element : EnumBeamAlignments.values()){
+			if(element != EnumBeamAlignments.TIME && element != EnumBeamAlignments.VOID && element != EnumBeamAlignments.NO_MATCH && !elementTag.getBoolean(element.name())){
 				return false;
 			}
 		}

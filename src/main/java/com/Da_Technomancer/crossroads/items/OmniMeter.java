@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.items;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
@@ -75,7 +75,7 @@ public class OmniMeter extends Item{
 		}
 
 		if(te instanceof BeamRenderTEBase){
-			MagicUnit[] mag = ((BeamRenderTEBase) te).getLastSent();
+			BeamUnit[] mag = ((BeamRenderTEBase) te).getLastSent();
 			if(mag != null){
 				NBTTagCompound nbt = MiscUtil.getPlayerTag(player);
 				if(!nbt.hasKey("elements")){
@@ -83,12 +83,12 @@ public class OmniMeter extends Item{
 				}
 				nbt = nbt.getCompoundTag("elements");
 				for(int i = 0; i < mag.length; i++){
-					MagicUnit check = mag[i];
+					BeamUnit check = mag[i];
 					if(check != null){
-						if(!nbt.hasKey(EnumMagicElements.getElement(check).name())){
-							nbt.setBoolean(EnumMagicElements.getElement(check).name(), true);
+						if(!nbt.hasKey(EnumBeamAlignments.getAlignment(check).name())){
+							nbt.setBoolean(EnumBeamAlignments.getAlignment(check).name(), true);
 							//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
-							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumMagicElements.getElement(check).toString() + TextFormatting.RESET.toString()));
+							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumBeamAlignments.getAlignment(check).toString() + TextFormatting.RESET.toString()));
 							StoreNBTToClient.syncNBTToClient((EntityPlayerMP) player, false);
 						}
 						chat.add(EnumFacing.getFront(i).toString() + ": " + check.toString());

@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -34,9 +34,9 @@ public class BeamCage extends Item{
 		if(nbt == null){
 			nbt = new NBTTagCompound();
 		}
-		tooltip.add("Energy stored: " + nbt.getInteger("stored_" + EnumMagicElements.ENERGY.name()));
-		tooltip.add("Potential stored: " + nbt.getInteger("stored_" + EnumMagicElements.POTENTIAL.name()));
-		tooltip.add("Stability stored: " + nbt.getInteger("stored_" + EnumMagicElements.STABILITY.name()));
-		tooltip.add("Void stored: " + nbt.getInteger("stored_" + EnumMagicElements.VOID.name()));
+		tooltip.add("Energy stored: " + nbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name()));
+		tooltip.add("Potential stored: " + nbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name()));
+		tooltip.add("Stability stored: " + nbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name()));
+		tooltip.add("Void stored: " + nbt.getInteger("stored_" + EnumBeamAlignments.VOID.name()));
 	}
 }

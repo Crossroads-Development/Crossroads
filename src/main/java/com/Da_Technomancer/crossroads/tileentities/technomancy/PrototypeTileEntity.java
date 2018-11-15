@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
@@ -292,8 +292,8 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 
 	@Nullable
 	@Override
-	public MagicUnit[] getLastSent(){
-		MagicUnit[] out = new MagicUnit[6];
+	public BeamUnit[] getLastSent(){
+		BeamUnit[] out = new BeamUnit[6];
 		for(int i = 0; i < 6; i++){
 			MagHandler h = getHandler(i, false);
 			if(h != null){
@@ -326,10 +326,10 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 
 	private final MagHandler[] magHandlers = new MagHandler[6];
 
-	private class MagHandler implements IMagicHandler{
+	private class MagHandler implements IBeamHandler{
 
 		private final BeamManager beam;
-		private MagicUnit prevMag = null;
+		private BeamUnit prevMag = null;
 		private final int side;
 
 		private MagHandler(int side){
@@ -338,7 +338,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		}
 
 		@Override
-		public void setMagic(@Nullable MagicUnit mag){
+		public void setMagic(@Nullable BeamUnit mag){
 			if(beam.emit(mag, world)){
 				beamPackets[side] = beam.genPacket();
 				ModPackets.network.sendToAllAround(new SendIntToClient(index, beam.genPacket(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));

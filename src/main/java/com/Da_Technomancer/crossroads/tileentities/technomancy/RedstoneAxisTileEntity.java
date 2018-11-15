@@ -21,7 +21,7 @@ import java.util.Random;
 
 public class RedstoneAxisTileEntity extends TileEntity implements ITickable{
 
-	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<IAxleHandler>();
+	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
 
 	private boolean locked = false;
 	private double sumEnergy = 0;

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.crafting;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
@@ -44,11 +44,11 @@ import java.util.function.Predicate;
 
 public final class ModCrafting{
 
-	public static final ArrayList<IRecipe> toRegister = new ArrayList<IRecipe>();
+	public static final ArrayList<IRecipe> toRegister = new ArrayList<>();
 	/**
 	 * The Object should either be a Block, Item, or ItemStack. The String[] contains keys to register it under. 
 	 */
-	public static final ArrayList<Pair<Object, String[]>> toRegisterOreDict = new ArrayList<Pair<Object, String[]>>();
+	public static final ArrayList<Pair<Object, String[]>> toRegisterOreDict = new ArrayList<>();
 
 	@SuppressWarnings("unchecked")
 	public static void init(){
@@ -103,13 +103,13 @@ public final class ModCrafting{
 			}}, new ItemStack(ModItems.nitroglycerin, 8)));
 		}
 
-		RecipeHolder.magExtractRecipes.put(Items.REDSTONE, new MagicUnit(24, 36, 0, 0));
-		RecipeHolder.magExtractRecipes.put(ModItems.dustSalt, new MagicUnit(0, 24, 36, 0));
-		RecipeHolder.magExtractRecipes.put(Items.COAL, new MagicUnit(36, 24, 0, 0));
-		RecipeHolder.magExtractRecipes.put(Items.GLOWSTONE_DUST, new MagicUnit(1, 1, 1, 0));
-		RecipeHolder.magExtractRecipes.put(ModItems.sulfur, new MagicUnit(60, 0, 0, 0));
-		RecipeHolder.magExtractRecipes.put(ModItems.solidQuicksilver, new MagicUnit(0, 60, 0, 0));
-		RecipeHolder.magExtractRecipes.put(ModItems.wasteSalt, new MagicUnit(0, 0, 60, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.REDSTONE, new BeamUnit(24, 36, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(ModItems.dustSalt, new BeamUnit(0, 24, 36, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.COAL, new BeamUnit(36, 24, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.GLOWSTONE_DUST, new BeamUnit(1, 1, 1, 0));
+		RecipeHolder.beamExtractRecipes.put(ModItems.sulfur, new BeamUnit(60, 0, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(ModItems.solidQuicksilver, new BeamUnit(0, 60, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(ModItems.wasteSalt, new BeamUnit(0, 0, 60, 0));
 
 		//Fusion beam
 		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.SNOW.getDefaultState(), false), new BeamTransmute(Blocks.ICE.getDefaultState(), 1));
@@ -206,7 +206,7 @@ public final class ModCrafting{
 		//Gateway Frame
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.gatewayFrame, 3), "***", "^^^", "%^%", '*', Blocks.STONE, '^', "ingotCopshowium", '%', "obsidian"));
 		//Beam Cage
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.beamCage, 1), "*&*", '*', ModBlocks.largeQuartzStabilizer, '&', "ingotCopshowium"));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.beamCage, 1), "*&*", '*', ModBlocks.quartzStabilizer, '&', "ingotCopshowium"));
 		//Cage Charger
 		RecipeHolder.technomancyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.cageCharger, 1), "ingotBronze", "ingotBronze", "ingotCopshowium", ModItems.pureQuartz));
 		//Beam Staff
@@ -265,7 +265,7 @@ public final class ModCrafting{
 		//Copshowium Axle
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.axleCopshowium, 2), "*", "|", "*", '*', "ingotCopshowium", '|', "stickWood"));
 		//Clockwork Stabilizer
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.clockworkStabilizer, 1), " # ", "#*#", " # ", '*', ModBlocks.largeQuartzStabilizer, '#', "gearCopshowium"));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.clockworkStabilizer, 1), " # ", "#*#", " # ", '*', ModBlocks.quartzStabilizer, '#', "gearCopshowium"));
 
 		//Ores
 		//Tin
@@ -330,7 +330,7 @@ public final class ModCrafting{
 			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(GearFactory.TOGGLE_GEARS[index], 1), Blocks.LEVER, "gear" + type.toString()));
 			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(GearFactory.INV_TOGGLE_GEARS[index], 1), Blocks.REDSTONE_TORCH, GearFactory.TOGGLE_GEARS[index]));
 			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(GearFactory.TOGGLE_GEARS[index], 1), GearFactory.INV_TOGGLE_GEARS[index]));
-			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.LARGE_GEARS[index], 1), "###", "#$#", "###", '#', "gear" + type.toString(), '$', "block" + type.toString()));
+			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.LARGE_GEARS[index], 2), "###", "#$#", "###", '#', "gear" + type.toString(), '$', "block" + type.toString()));
 		}
 		// Steam Boiler
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.steamBoiler, 1), "###", "# #", "&&&", '#', "ingotBronze", '&', "ingotCopper"));
@@ -384,20 +384,19 @@ public final class ModCrafting{
 		//Lens array
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.lensArray, 2), "*&*", "@ $", "***", '*', ModItems.pureQuartz, '&', "gemEmerald", '@', "gemRuby", '$', "gemDiamond"));
 		//Arcane Extractor
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.arcaneExtractor, 1), "***", "*# ", "***", '*', "obsidian", '#', ModItems.lensArray));
-		//Small Quartz Stabilizer
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.smallQuartzStabilizer, 1), " * ", "*&*", "***", '*', ModItems.pureQuartz, '&', ModItems.lensArray));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.smallQuartzStabilizer, 1), " & ", "***", '&', ModItems.luminescentQuartz, '*', ModItems.pureQuartz));
-		//Large Quartz Stabilizer
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.largeQuartzStabilizer, 1), "***", "*&*", "***", '*', ModItems.pureQuartz, '&', ModBlocks.smallQuartzStabilizer));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beamExtractor, 1), "***", "*# ", "***", '*', "obsidian", '#', ModItems.lensArray));
+		//Quartz Stabilizer
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.quartzStabilizer, 1), " & ", "*&*", "***", '&', ModItems.luminescentQuartz, '*', ModItems.pureQuartz));
 		//Crystalline Prism
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.crystallinePrism, 1), "*^*", "^&^", "*&*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModItems.lensArray));
 		//Arcane Reflector
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.arcaneReflector, 1), "*^*", '*', "stone", '^', ModItems.pureQuartz));
-		//Lens Holder
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beamReflector, 1), "*^*", '*', "stone", '^', ModItems.pureQuartz));
+		//Lens Frame
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.lensFrame, 1), "***", "*&*", "***", '*', "stone", '&', ModItems.pureQuartz));
-		//Redstone Beam Splitter
-		//TODO toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.beamSplitter, 1), ModBlocks., "dustRedstone", "dustRedstone", "dustRedstone"));
+		//Beam Redirector
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beamRedirector, 1), "*L*", "*R*", "*L*", '*', ModItems.pureQuartz, 'L', ModItems.luminescentQuartz, 'R', "dustRedstone"));
+		//Beam Siphon
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beamSiphon, 1), "*L*", "*A*", "*L*", '*', ModItems.pureQuartz, 'L', ModItems.luminescentQuartz, 'A', ModItems.lensArray));
 		//Color Chart
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
 		//Crystalline Master Axis

@@ -4,8 +4,8 @@ import com.Da_Technomancer.crossroads.API.alchemy.DefaultChemicalHandler;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.heat.DefaultHeatHandler;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.magic.DefaultMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
+import com.Da_Technomancer.crossroads.API.beams.DefaultBeamHandler;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.redstone.DefaultAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.rotary.*;
@@ -31,8 +31,8 @@ public class Capabilities{
 	@CapabilityInject(ICogHandler.class)
 	public static Capability<ICogHandler> COG_HANDLER_CAPABILITY = null;
 	
-	@CapabilityInject(IMagicHandler.class)
-	public static Capability<IMagicHandler> MAGIC_HANDLER_CAPABILITY = null;
+	@CapabilityInject(IBeamHandler.class)
+	public static Capability<IBeamHandler> MAGIC_HANDLER_CAPABILITY = null;
 	
 	@CapabilityInject(IAxisHandler.class)
 	public static Capability<IAxisHandler> AXIS_HANDLER_CAPABILITY = null;
@@ -50,7 +50,7 @@ public class Capabilities{
 		CapabilityManager.INSTANCE.register(IHeatHandler.class, new DefaultStorage<>(), DefaultHeatHandler::new);
 		CapabilityManager.INSTANCE.register(IAxleHandler.class, new DefaultStorage<>(), DefaultAxleHandler::new);
 		CapabilityManager.INSTANCE.register(ICogHandler.class, new DefaultStorage<>(), DefaultCogHandler::new);
-		CapabilityManager.INSTANCE.register(IMagicHandler.class, new DefaultStorage<>(), DefaultMagicHandler::new);
+		CapabilityManager.INSTANCE.register(IBeamHandler.class, new DefaultStorage<>(), DefaultBeamHandler::new);
 		CapabilityManager.INSTANCE.register(IAxisHandler.class, new DefaultStorage<>(), DefaultAxisHandler::new);
 		CapabilityManager.INSTANCE.register(ISlaveAxisHandler.class, new DefaultStorage<>(), DefaultSlaveAxisHandler::new);
 		CapabilityManager.INSTANCE.register(IAdvancedRedstoneHandler.class, new DefaultStorage<>(), DefaultAdvancedRedstoneHandler::new);

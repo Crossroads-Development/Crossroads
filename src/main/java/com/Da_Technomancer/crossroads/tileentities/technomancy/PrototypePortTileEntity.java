@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.IMagicHandler;
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
@@ -172,12 +172,12 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 
 	private MagHandler magHandler = null;
 
-	private class MagHandler implements IMagicHandler{
+	private class MagHandler implements IBeamHandler{
 
 		private final BeamManager beam = new BeamManager(side, pos);
 
 		@Override
-		public void setMagic(@Nullable MagicUnit mag){
+		public void setMagic(@Nullable BeamUnit mag){
 			beam.emit(mag, world);
 		}
 	}

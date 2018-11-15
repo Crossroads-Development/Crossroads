@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import com.Da_Technomancer.crossroads.API.magic.MagicUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -19,7 +19,7 @@ public abstract class BeamRenderTEBase extends TileEntity{
 	 * For informational displays.
 	 * May contain null elements
 	 */
-	public abstract MagicUnit[] getLastSent();
+	public abstract BeamUnit[] getLastSent();
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){

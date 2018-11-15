@@ -7,8 +7,8 @@ import org.apache.logging.log4j.Level;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.magic.BeamManager;
-import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.WorkspaceWorldProvider;
 
@@ -85,10 +85,10 @@ public class TimeEffect implements IEffect{
 				ChunkPos base = worldIn.getChunkFromBlockCoords(pos).getPos();
 				for(int i = 0; i < severity; i++){
 					BlockPos effectPos = base.getBlock(RAND.nextInt(16), RAND.nextInt(256), RAND.nextInt(16));
-					EnumMagicElements element = null;
+					EnumBeamAlignments element = null;
 					do{
-						element = EnumMagicElements.values()[RAND.nextInt(EnumMagicElements.values().length)];
-					}while(element == EnumMagicElements.TIME || element.getEffect() == null);
+						element = EnumBeamAlignments.values()[RAND.nextInt(EnumBeamAlignments.values().length)];
+					}while(element == EnumBeamAlignments.TIME || element.getEffect() == null);
 					element.getEffect().doEffect(worldIn, effectPos, severity);
 				}
 			}else if(ModConfig.blastChunk.getBoolean()){
