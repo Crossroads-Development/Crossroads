@@ -22,7 +22,7 @@ public class FluxReaderAxis extends BlockContainer{
 	public FluxReaderAxis(){
 		super(Material.IRON);
 		String name = "flux_reader_axis";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -73,7 +73,7 @@ public class FluxReaderAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
+		EnumFacing facing = EnumFacing.byIndex(meta);
 		return this.getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 
@@ -84,7 +84,7 @@ public class FluxReaderAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new FluxReaderAxisTileEntity(EnumFacing.getFront(meta));
+		return new FluxReaderAxisTileEntity(EnumFacing.byIndex(meta));
 
 	}
 

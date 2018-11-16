@@ -29,7 +29,7 @@ public class HeatSink extends BlockContainer{
 	public HeatSink(){
 		super(Material.IRON);
 		String name = "heat_sink";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

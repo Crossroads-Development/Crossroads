@@ -66,7 +66,7 @@ public final class MiscUtil{
 	 */
 	@Nullable
 	public static RayTraceResult rayTrace(Entity ent, double blockReachDistance){
-		Vec3d vec3d = ent.getPositionVector().addVector(0, ent.getEyeHeight(), 0);
+		Vec3d vec3d = ent.getPositionVector().add(0, ent.getEyeHeight(), 0);
 		Vec3d vec3d2 = vec3d.add(ent.getLook(1F).scale(blockReachDistance));
 		return ent.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
 	}

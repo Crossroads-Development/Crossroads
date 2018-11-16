@@ -22,7 +22,7 @@ public class ArcSinAxis extends BlockContainer{
 	public ArcSinAxis(){
 		super(Material.IRON);
 		String name = "arcsin_axis";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -67,7 +67,7 @@ public class ArcSinAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
+		EnumFacing facing = EnumFacing.byIndex(meta);
 		return this.getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 

@@ -30,7 +30,7 @@ public class CopshowiumCreationChamber extends BlockContainer{
 	public CopshowiumCreationChamber(){
 		super(Material.ROCK);
 		String name = "copshowium_creation_chamber";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

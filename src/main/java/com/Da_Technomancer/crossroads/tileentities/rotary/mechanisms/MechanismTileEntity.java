@@ -243,7 +243,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 			markDirty();
 			for(int i = 0; i < 7; i++){
 				if(members[i] != null){
-					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : EnumFacing.getFront(i), axleAxis, motionData[i], this);
+					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : EnumFacing.byIndex(i), axleAxis, motionData[i], this);
 				}
 			}
 			redstoneIn = reds;
@@ -338,7 +338,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		@Override
 		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 			if(members[side] != null){
-				members[side].propogate(mats[side], side == 6 ? null : EnumFacing.getFront(side), axleAxis, MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
+				members[side].propogate(mats[side], side == 6 ? null : EnumFacing.byIndex(side), axleAxis, MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
 			}
 		}
 
@@ -369,8 +369,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 				motionData[side][3] = 0;
 				boundingBoxes[side] = null;
 			}else{
-				inertia[side] = members[side].getInertia(mats[side], side == 6 ? null : EnumFacing.getFront(side), axleAxis);
-				boundingBoxes[side] = members[side].getBoundingBox(side == 6 ? null : EnumFacing.getFront(side), axleAxis);
+				inertia[side] = members[side].getInertia(mats[side], side == 6 ? null : EnumFacing.byIndex(side), axleAxis);
+				boundingBoxes[side] = members[side].getBoundingBox(side == 6 ? null : EnumFacing.byIndex(side), axleAxis);
 			}
 
 			if(sendPacket && !world.isRemote){

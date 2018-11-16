@@ -29,7 +29,7 @@ public class TeslaCoil extends BlockContainer{
 	public TeslaCoil(){
 		super(Material.IRON);
 		String name = "tesla_coil";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -159,7 +159,7 @@ public class TeslaCoil extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getHorizontal(meta & 3)).withProperty(Properties.ACTIVE, (meta & 4) != 0).withProperty(Properties.CRYSTAL, (meta & 8) != 0);
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta & 3)).withProperty(Properties.ACTIVE, (meta & 4) != 0).withProperty(Properties.CRYSTAL, (meta & 8) != 0);
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class TeslaCoil extends BlockContainer{
 	}
 
 	@Override
-	public EnumPushReaction getMobilityFlag(IBlockState state){
+	public EnumPushReaction getPushReaction(IBlockState state){
 		return EnumPushReaction.BLOCK;
 	}
 }

@@ -22,7 +22,7 @@ public class GreaterThanAxis extends BlockContainer{
 	public GreaterThanAxis(){
 		super(Material.IRON);
 		String name = "greater_than_axis";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -67,7 +67,7 @@ public class GreaterThanAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
+		EnumFacing facing = EnumFacing.byIndex(meta);
 		return getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 

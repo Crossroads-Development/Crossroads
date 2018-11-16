@@ -49,7 +49,7 @@ public class PrototypePort extends BlockContainer{
 	public PrototypePort(){
 		super(Material.IRON);
 		String name = "prototype_port";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -115,7 +115,7 @@ public class PrototypePort extends BlockContainer{
 	}
 
 	@Override
-	public EnumPushReaction getMobilityFlag(IBlockState state){
+	public EnumPushReaction getPushReaction(IBlockState state){
 		//Tile entities shouldn't be pushable anyway, but there are enough mods in existence that allow moving tile entities to warrant extra precautions. 
 		return EnumPushReaction.BLOCK;
 	}

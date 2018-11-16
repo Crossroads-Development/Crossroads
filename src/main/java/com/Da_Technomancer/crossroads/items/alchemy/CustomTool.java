@@ -34,7 +34,7 @@ public class CustomTool extends Item{
 	public CustomTool(String toolClass){
 		this.toolClass = toolClass;
 		String name = "custom_tool_" + toolClass;
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setMaxStackSize(1);
 		//setCreativeTab(ModItems.TAB_CROSSROADS);

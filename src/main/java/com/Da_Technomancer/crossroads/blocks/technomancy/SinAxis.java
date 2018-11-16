@@ -23,7 +23,7 @@ public class SinAxis extends BlockContainer{
 	public SinAxis(){
 		super(Material.IRON);
 		String name = "sin_axis";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -68,7 +68,7 @@ public class SinAxis extends BlockContainer{
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
+		EnumFacing facing = EnumFacing.byIndex(meta);
 		return this.getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 

@@ -33,7 +33,7 @@ public class Dynamo extends BlockContainer{
 	public Dynamo(){
 		super(Material.IRON);
 		String name = "dynamo";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -97,7 +97,7 @@ public class Dynamo extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getHorizontal(meta));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta));
 	}
 
 	@Override

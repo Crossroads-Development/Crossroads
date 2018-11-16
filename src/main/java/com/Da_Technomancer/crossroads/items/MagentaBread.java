@@ -14,7 +14,7 @@ public class MagentaBread extends ItemFood{
 	public MagentaBread(){
 		super(20, .5F, false);
 		String name = "magenta_bread";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

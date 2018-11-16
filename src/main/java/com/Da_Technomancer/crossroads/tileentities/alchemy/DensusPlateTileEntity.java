@@ -32,7 +32,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickable{
 			facing = state.getValue(EssentialsProperties.FACING);
 			anti = state.getValue(Properties.CONTAINER_TYPE);
 		}
-		List<Entity> ents = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() + facing.getFrontOffsetX() * 0.5D, pos.getY() + facing.getFrontOffsetY() * 0.5D, pos.getZ() + facing.getFrontOffsetZ() * 0.5D, pos.getX() + 64 * facing.getFrontOffsetX() + (facing.getFrontOffsetX() == 0 ? 1 : 0), pos.getY() + 64 * facing.getFrontOffsetY() + (facing.getFrontOffsetY() == 0 ? 1 : 0), pos.getZ() + 64 * facing.getFrontOffsetZ() + (facing.getFrontOffsetZ() == 0 ? 1 : 0)), EntitySelectors.IS_ALIVE);
+		List<Entity> ents = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() + facing.getXOffset() * 0.5D, pos.getY() + facing.getYOffset() * 0.5D, pos.getZ() + facing.getZOffset() * 0.5D, pos.getX() + 64 * facing.getXOffset() + (facing.getXOffset() == 0 ? 1 : 0), pos.getY() + 64 * facing.getYOffset() + (facing.getYOffset() == 0 ? 1 : 0), pos.getZ() + 64 * facing.getZOffset() + (facing.getZOffset() == 0 ? 1 : 0)), EntitySelectors.IS_ALIVE);
 		for(Entity ent : ents){
 			if(ent.isSneaking()){
 				continue;

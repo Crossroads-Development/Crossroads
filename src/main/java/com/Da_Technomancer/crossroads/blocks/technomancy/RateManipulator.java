@@ -24,7 +24,7 @@ public class RateManipulator extends BlockContainer{
 	public RateManipulator(){
 		super(Material.IRON);
 		String name = "rate_manipulator";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

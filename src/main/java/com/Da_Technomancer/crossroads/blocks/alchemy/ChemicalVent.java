@@ -26,7 +26,7 @@ public class ChemicalVent extends BlockContainer{
 	public ChemicalVent(){
 		super(Material.IRON);
 		String name = "chemical_vent";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
 		setCreativeTab(ModItems.TAB_CROSSROADS);

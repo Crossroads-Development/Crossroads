@@ -32,7 +32,7 @@ public class SteamBoiler extends BlockContainer{
 	public SteamBoiler(){
 		super(Material.IRON);
 		String name = "steam_boiler";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

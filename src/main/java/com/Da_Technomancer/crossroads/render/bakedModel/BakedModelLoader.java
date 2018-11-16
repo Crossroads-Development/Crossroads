@@ -31,7 +31,7 @@ public class BakedModelLoader implements ICustomModelLoader{
 		}
 
 		//The molten metals for ore processing are special-cased to re-route to a dynamic forge fluid model
-		return modelLocation.getResourceDomain().equals(Main.MODID) && modelLocation.getResourcePath().startsWith("fluids#molten_metal_");
+		return modelLocation.getNamespace().equals(Main.MODID) && modelLocation.getPath().startsWith("fluids#molten_metal_");
 	}
 
 	@Override

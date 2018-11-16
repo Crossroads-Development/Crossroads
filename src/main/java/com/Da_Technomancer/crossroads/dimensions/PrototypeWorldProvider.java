@@ -97,7 +97,7 @@ public class PrototypeWorldProvider extends WorldProvider{
 
 				if(protWorld.isBlockLoaded(ticking.getPos())){
 					// Forge: Bugfix: If we set the tile entity it immediately sets it in the chunk, so we could be desynced
-					Chunk chunkWorld = protWorld.getChunkFromChunkCoords(chunkX, chunkZ);
+					Chunk chunkWorld = protWorld.getChunk(chunkX, chunkZ);
 					if(chunkWorld.getTileEntity(ticking.getPos(), Chunk.EnumCreateEntityType.CHECK) == ticking){
 						chunkWorld.removeTileEntity(ticking.getPos());
 					}

@@ -31,7 +31,7 @@ public class Radiator extends BlockContainer{
 	public Radiator(){
 		super(Material.IRON);
 		String name = "radiator";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

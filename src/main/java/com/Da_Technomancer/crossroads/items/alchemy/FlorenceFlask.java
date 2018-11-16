@@ -18,7 +18,7 @@ public class FlorenceFlask extends AbstractGlassware{
 		String name = "florence_flask";
 		maxStackSize = 1;
 		hasSubtypes = true;
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
@@ -32,7 +32,7 @@ public class FlorenceFlask extends AbstractGlassware{
 	}
 	
 	@Override
-	public String getUnlocalizedName(ItemStack stack){
+	public String getTranslationKey(ItemStack stack){
 		return stack.getMetadata() == 1 ? "item.florence_cryst" : "item.florence_glass";
 	}
 }

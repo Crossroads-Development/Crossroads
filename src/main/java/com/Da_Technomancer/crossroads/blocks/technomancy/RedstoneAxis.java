@@ -23,7 +23,7 @@ public class RedstoneAxis extends BlockContainer{
 	public RedstoneAxis(){
 		super(Material.IRON);
 		String name = "redstone_axis";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -74,7 +74,7 @@ public class RedstoneAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
+		EnumFacing facing = EnumFacing.byIndex(meta);
 		return this.getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 
@@ -85,7 +85,7 @@ public class RedstoneAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new RedstoneAxisTileEntity(EnumFacing.getFront(meta));
+		return new RedstoneAxisTileEntity(EnumFacing.byIndex(meta));
 
 	}
 

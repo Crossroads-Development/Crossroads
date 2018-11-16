@@ -32,7 +32,7 @@ public class BasicGear extends Item{
 
 	public BasicGear(EnumGearType typeIn){
 		String name = "gear_" + typeIn.toString().toLowerCase();
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_GEAR);
 		type = typeIn;

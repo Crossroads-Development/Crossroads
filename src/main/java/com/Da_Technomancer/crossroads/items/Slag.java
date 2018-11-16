@@ -38,7 +38,7 @@ public class Slag extends Item{
 
 	public Slag(){
 		String name = "slag";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

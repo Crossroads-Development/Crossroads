@@ -101,7 +101,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 		}
 
 		for(int i = 0; i < 6; i++){
-			EnumFacing side = EnumFacing.getFront(i);
+			EnumFacing side = EnumFacing.byIndex(i);
 			TileEntity te;
 			
 			if(connectMode[i] != 0){

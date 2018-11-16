@@ -16,7 +16,7 @@ public class PigZombieChestsplate extends ItemArmor{
 		super(ModItems.BOBO, 1, EntityEquipmentSlot.CHEST);
 		setMaxStackSize(1);
 		String name = "pig_zombie_chestplate";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

@@ -20,7 +20,7 @@ public class BlockMoltenGold extends BlockFluidClassic{
 		super(MOLTEN_GOLD, Material.LAVA);
 		MOLTEN_GOLD.setBlock(this);
 		String name = "molten_gold";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		ModBlocks.toRegister.add(this);
 	}

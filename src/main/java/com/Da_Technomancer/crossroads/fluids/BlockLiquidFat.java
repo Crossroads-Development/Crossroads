@@ -19,7 +19,7 @@ public class BlockLiquidFat extends BlockFluidClassic{
 	public BlockLiquidFat(){
 		super(LIQUID_FAT, Material.WATER);
 		LIQUID_FAT.setBlock(this);
-		setUnlocalizedName("liquid_fat");
+		setTranslationKey("liquid_fat");
 		setRegistryName("liquid_fat");
 		ModBlocks.toRegister.add(this);
 	}

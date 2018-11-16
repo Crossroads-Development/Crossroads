@@ -333,7 +333,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		private final int side;
 
 		private MagHandler(int side){
-			beam = new BeamManager(EnumFacing.getFront(side), pos);
+			beam = new BeamManager(EnumFacing.byIndex(side), pos);
 			this.side = side;
 		}
 

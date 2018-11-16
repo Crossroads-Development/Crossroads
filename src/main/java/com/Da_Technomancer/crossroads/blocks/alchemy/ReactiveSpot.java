@@ -18,7 +18,7 @@ public class ReactiveSpot extends BlockContainer{
 	public ReactiveSpot(){
 		super(Material.SPONGE);
 		String name = "reactive_spot";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(0);
 		ModBlocks.toRegister.add(this);

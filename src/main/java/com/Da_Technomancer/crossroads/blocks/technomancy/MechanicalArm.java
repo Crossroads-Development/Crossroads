@@ -21,7 +21,7 @@ public class MechanicalArm extends BlockContainer{
 	public MechanicalArm(){
 		super(Material.IRON);
 		String name = "mechanical_arm";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

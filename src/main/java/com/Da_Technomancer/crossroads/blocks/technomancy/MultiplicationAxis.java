@@ -23,7 +23,7 @@ public class MultiplicationAxis extends BlockContainer{
 	public MultiplicationAxis(){
 		super(Material.IRON);
 		String name = "multiplication_axis";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -72,7 +72,7 @@ public class MultiplicationAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta & 7);
+		EnumFacing facing = EnumFacing.byIndex(meta & 7);
 		return getDefaultState().withProperty(EssentialsProperties.FACING, facing).withProperty(EssentialsProperties.REDSTONE_BOOL, (meta & 8) == 8);
 	}
 

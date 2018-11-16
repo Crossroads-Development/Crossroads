@@ -16,7 +16,7 @@ public class ChunkUnlocker extends BlockContainer{
 	public ChunkUnlocker(){
 		super(Material.IRON);
 		String name = "chunk_unlocker";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

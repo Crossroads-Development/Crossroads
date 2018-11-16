@@ -34,7 +34,7 @@ public class ChargingStand extends BlockContainer{
 	public ChargingStand(){
 		super(Material.IRON);
 		String name = "charging_stand";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -55,7 +55,7 @@ public class ChargingStand extends BlockContainer{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
 

@@ -31,7 +31,7 @@ public class Axle extends Item{
 
 	public Axle(EnumGearType typeIn){
 		String name = "axle_" + typeIn.toString().toLowerCase();
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_GEAR);
 		type = typeIn;

@@ -22,7 +22,7 @@ public class CrystalMasterAxis extends BlockContainer{
 	public CrystalMasterAxis(){
 		super(Material.ROCK);
 		String name = "master_axis_crystal";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -68,7 +68,7 @@ public class CrystalMasterAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
+		EnumFacing facing = EnumFacing.byIndex(meta);
 		return this.getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 
@@ -79,7 +79,7 @@ public class CrystalMasterAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new CrystalMasterAxisTileEntity(EnumFacing.getFront(meta));
+		return new CrystalMasterAxisTileEntity(EnumFacing.byIndex(meta));
 
 	}
 

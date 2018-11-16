@@ -23,7 +23,7 @@ public class BasicItem extends Item{
 	}
 
 	public BasicItem(String name, String oreDict, boolean tab){
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		if(tab){
 			setCreativeTab(ModItems.TAB_CROSSROADS);

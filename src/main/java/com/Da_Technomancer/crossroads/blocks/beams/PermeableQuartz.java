@@ -20,7 +20,7 @@ public class PermeableQuartz extends Block implements IBeamTransparent{
 		super(Material.ROCK);
 		String name = "permeable_quartz";
 		setRegistryName(name);
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setHardness(4F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModBlocks.toRegister.add(this);

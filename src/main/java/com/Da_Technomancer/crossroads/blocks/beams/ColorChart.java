@@ -31,7 +31,7 @@ public class ColorChart extends Block{
 	public ColorChart(){
 		super(Material.WOOD);
 		String name = "color_chart";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -83,7 +83,7 @@ public class ColorChart extends Block{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.getFront(meta == 0 || meta == 1 ? 2 : meta));
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta == 0 || meta == 1 ? 2 : meta));
 	}
 
 	@Override

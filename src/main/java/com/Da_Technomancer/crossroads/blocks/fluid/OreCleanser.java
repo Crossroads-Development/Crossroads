@@ -31,7 +31,7 @@ public class OreCleanser extends BlockContainer{
 	public OreCleanser(){
 		super(Material.IRON);
 		String name = "ore_cleanser";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

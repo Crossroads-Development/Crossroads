@@ -26,7 +26,7 @@ public class PermeableGlass extends Block implements IBeamTransparent{
 		super(Material.GLASS);
 		String name = "permeable_glass";
 		setRegistryName(name);
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setHardness(0.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
@@ -47,7 +47,7 @@ public class PermeableGlass extends Block implements IBeamTransparent{
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
 

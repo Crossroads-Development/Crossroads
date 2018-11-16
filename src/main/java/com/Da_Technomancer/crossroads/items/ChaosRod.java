@@ -24,7 +24,7 @@ public class ChaosRod extends Item{
 	
 	public ChaosRod(){
 		String name = "chaos_rod";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

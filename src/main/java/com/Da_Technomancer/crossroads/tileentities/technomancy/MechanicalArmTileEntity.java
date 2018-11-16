@@ -46,7 +46,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	/**
 	 * Math.min((redstone - 1) / 6, EFFECTS.length - 1) corresponds to action type, which are:
 	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Throw entity, 7: Pickup one from inventory.
-	 * EnumFacing.getFront((redstone - 1) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4, 7) vary based on EnumFacing. 
+	 * EnumFacing.byIndex((redstone - 1) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4, 7) vary based on EnumFacing.
 	 */
 	private int redstone = -1;
 	public EntityArmRidable ridable;
@@ -96,7 +96,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 					actionType = Math.min((redstone - 1) / 6, EFFECTS.length - 1);
 				}
 
-				EnumFacing side = EnumFacing.getFront((redstone - 1) % 6);
+				EnumFacing side = EnumFacing.byIndex((redstone - 1) % 6);
 
 				double lengthCross = Math.sqrt(Math.pow(LOWER_ARM_LENGTH, 2) + Math.pow(UPPER_ARM_LENGTH, 2) - (2D * LOWER_ARM_LENGTH * UPPER_ARM_LENGTH * Math.cos(angle[2])));
 				double thetaD = angle[1] + angle[2] + Math.asin(Math.sin(angle[2]) * LOWER_ARM_LENGTH / lengthCross);

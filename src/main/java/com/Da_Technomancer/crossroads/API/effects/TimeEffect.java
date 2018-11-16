@@ -76,13 +76,13 @@ public class TimeEffect implements IEffect{
 				try{
 					Chunk swapWith = ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator.generateChunk(pos.getX() >> 4, pos.getZ() >> 4);
 					swapWith.populate(worldIn.getChunkProvider(), ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator);
-					Chunk current = worldIn.getChunkFromBlockCoords(pos);
+					Chunk current = worldIn.getChunk(pos);
 					setChunk(current, swapWith);
 				}catch(Exception e){
 					Main.logger.log(Level.ERROR, "Something went wrong while reseting a chunk. Disable this in the config if necessary. Please report this as a bug.", e);
 				}
 			}else if(severity >= 5 && ModConfig.magicChunk.getBoolean()){
-				ChunkPos base = worldIn.getChunkFromBlockCoords(pos).getPos();
+				ChunkPos base = worldIn.getChunk(pos).getPos();
 				for(int i = 0; i < severity; i++){
 					BlockPos effectPos = base.getBlock(RAND.nextInt(16), RAND.nextInt(256), RAND.nextInt(16));
 					EnumBeamAlignments element;

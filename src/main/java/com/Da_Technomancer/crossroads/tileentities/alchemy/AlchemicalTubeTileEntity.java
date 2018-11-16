@@ -78,7 +78,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	protected void performTransfer(){
 		init();
 		for(int i = 0; i < 6; i++){
-			EnumFacing side = EnumFacing.getFront(i);
+			EnumFacing side = EnumFacing.byIndex(i);
 			TileEntity te;
 			
 			if(connectMode[i] != 0){

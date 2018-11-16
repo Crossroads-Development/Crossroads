@@ -20,7 +20,7 @@ public class BlockMoltenCopshowium extends BlockFluidClassic{
 		super(MOLTEN_COPSHOWIUM, Material.LAVA);
 		MOLTEN_COPSHOWIUM.setBlock(this);
 		String name = "molten_copshowium";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		ModBlocks.toRegister.add(this);
 	}

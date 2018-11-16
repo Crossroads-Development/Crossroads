@@ -37,7 +37,7 @@ public class AtmosCharger extends BlockContainer{
 	public AtmosCharger(){
 		super(Material.IRON);
 		String name = "atmos_charger";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);

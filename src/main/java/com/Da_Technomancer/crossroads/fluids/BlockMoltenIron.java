@@ -20,7 +20,7 @@ public class BlockMoltenIron extends BlockFluidClassic{
 		super(MOLTEN_IRON, Material.LAVA);
 		MOLTEN_IRON.setBlock(this);
 		String name = "molten_iron";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		ModBlocks.toRegister.add(this);
 	}

@@ -32,7 +32,7 @@ public class Millstone extends BlockContainer{
 	public Millstone(){
 		super(Material.ROCK);
 		String name = "millstone";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

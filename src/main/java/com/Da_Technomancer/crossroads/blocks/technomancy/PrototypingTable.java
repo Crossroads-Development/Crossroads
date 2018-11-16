@@ -27,7 +27,7 @@ public class PrototypingTable extends BlockContainer{
 	public PrototypingTable(){
 		super(Material.IRON);
 		String name = "prototyping_table";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -78,7 +78,7 @@ public class PrototypingTable extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getHorizontal(meta & 3));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta & 3));
 	}
 
 	@Override

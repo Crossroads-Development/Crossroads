@@ -22,7 +22,7 @@ public class StasisolEffect implements IAlchEffect{
 
 	@Override
 	public void doEffect(World world, BlockPos pos, double amount,double heat, EnumMatterPhase phase){
-		Chunk c = world.getChunkFromBlockCoords(pos);
+		Chunk c = world.getChunk(pos);
 		if(world.getBiome(pos) != Biomes.ICE_PLAINS){
 			c.getBiomeArray()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = (byte) Biome.getIdForBiome(Biomes.ICE_PLAINS);
 			ModPackets.network.sendToDimension(new SendBiomeUpdateToClient(pos, (byte) Biome.getIdForBiome(Biomes.ICE_PLAINS)), world.provider.getDimension());

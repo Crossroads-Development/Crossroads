@@ -24,7 +24,7 @@ public class LeydenJar extends Item{
 		String name = "leyden_jar";
 		maxStackSize = 1;
 		hasSubtypes = true;
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

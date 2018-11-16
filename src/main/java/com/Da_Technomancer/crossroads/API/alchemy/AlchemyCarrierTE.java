@@ -34,7 +34,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	protected boolean dirtyReag = false;
 
 	protected Vec3d getParticlePos(){
-		return new Vec3d(pos).addVector(0.5D, 0.5D, 0.5D);
+		return new Vec3d(pos).add(0.5D, 0.5D, 0.5D);
 	}
 
 	/**
@@ -311,7 +311,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
-				EnumFacing side = EnumFacing.getFront(i);
+				EnumFacing side = EnumFacing.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
 				if(amount <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
 					continue;

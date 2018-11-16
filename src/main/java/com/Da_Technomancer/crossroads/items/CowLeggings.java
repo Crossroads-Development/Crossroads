@@ -15,7 +15,7 @@ public class CowLeggings extends ItemArmor{
 		super(ModItems.BOBO, 2, EntityEquipmentSlot.LEGS);
 		setMaxStackSize(1);
 		String name = "cow_leggings";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

@@ -34,7 +34,7 @@ public class Clutch extends Item{
 		this.inverted = inverted;
 		type = typeIn;
 		String name = "clutch_" + (inverted ? "inverted_" : "") + typeIn.toString().toLowerCase();
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_GEAR);
 		ModItems.toRegister.add(this);

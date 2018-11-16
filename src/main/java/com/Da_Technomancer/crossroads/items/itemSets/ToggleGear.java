@@ -33,7 +33,7 @@ public class ToggleGear extends Item{
 
 	public ToggleGear(EnumGearType typeIn, boolean inverted){
 		String name = "gear_toggle_" + (inverted ? "inverted_" : "") + typeIn.toString().toLowerCase();
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_GEAR);
 		type = typeIn;

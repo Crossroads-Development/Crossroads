@@ -137,7 +137,7 @@ public class CrystalMasterAxisTileEntity extends TileEntity implements ITickable
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
 		time = nbt.getInteger("time");
 		currentElement = nbt.hasKey("elem") ? EnumBeamAlignments.valueOf(nbt.getString("elem")) : null;
 	}

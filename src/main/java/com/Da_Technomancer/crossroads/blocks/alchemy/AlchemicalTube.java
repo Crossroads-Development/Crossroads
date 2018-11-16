@@ -67,7 +67,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 	public AlchemicalTube(){
 		super(Material.GLASS);
 		String name = "alch_tube";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -75,7 +75,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 		ModBlocks.toRegister.add(this);
 		Item item = new ItemBlock(this){
 			@Override
-			public String getUnlocalizedName(ItemStack stack){
+			public String getTranslationKey(ItemStack stack){
 				return stack.getMetadata() == 1 ? "tile.alch_tube_cryst" : "tile.alch_tube_glass";
 			}
 			
@@ -102,7 +102,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 
@@ -248,7 +248,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
-		Vec3d end = start.addVector(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
+		Vec3d end = start.add(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
 		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
 		return (out == null ? BB : out).offset(pos);
 	}
@@ -286,7 +286,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 			return null;
 		}else{
 			RayTraceResult untransformed = out.calculateIntercept(start, end);
-			return new RayTraceResult(untransformed.hitVec.addVector((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
+			return new RayTraceResult(untransformed.hitVec.add((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
 		}
 	}
 

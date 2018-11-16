@@ -35,8 +35,8 @@ public class Shell extends AbstractGlassware{
 				EnumFacing dir = (EnumFacing) source.getBlockState().getValue(BlockDispenser.FACING);
 				World world = source.getWorld();
 				EntityShell entitysnowball = new EntityShell(world, contents.getLeft(), contents.getMiddle() / contents.getRight() - 273D);
-				entitysnowball.setPosition(source.getX() + dir.getFrontOffsetX() + 0.5D, source.getY() + dir.getFrontOffsetY() + 0.5D, source.getZ() + dir.getFrontOffsetZ() + 0.5D);
-				entitysnowball.shoot(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ(), 1.5F, 1.0F);
+				entitysnowball.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
+				entitysnowball.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
 				world.spawnEntity(entitysnowball);
 				stack.shrink(1);
 				return stack;
@@ -58,7 +58,7 @@ public class Shell extends AbstractGlassware{
 		String name = "shell";
 		maxStackSize = 1;
 		hasSubtypes = true;
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
@@ -73,7 +73,7 @@ public class Shell extends AbstractGlassware{
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack){
+	public String getTranslationKey(ItemStack stack){
 		return stack.getMetadata() == 1 ? "item.shell_cryst" : "item.shell_glass";
 	}
 

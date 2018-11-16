@@ -33,7 +33,7 @@ public class LargeGear extends Item{
 
 	public LargeGear(EnumGearType typeIn){
 		String name = "large_gear_" + typeIn.toString().toLowerCase();
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		type = typeIn;
 		setCreativeTab(ModItems.TAB_GEAR);
@@ -55,7 +55,7 @@ public class LargeGear extends Item{
 
 		for(int i = -1; i < 2; i++){
 			for(int j = -1; j < 2; j++){
-				spaces[i * 3 + j + 4] = new BlockPos(side.getFrontOffsetX() == 0 ? i : 0, side.getFrontOffsetY() == 0 ? j : 0, side.getFrontOffsetX() == 0 ? side.getFrontOffsetY() == 0 ? 0 : j : i);
+				spaces[i * 3 + j + 4] = new BlockPos(side.getXOffset() == 0 ? i : 0, side.getYOffset() == 0 ? j : 0, side.getXOffset() == 0 ? side.getYOffset() == 0 ? 0 : j : i);
 			}
 		}
 

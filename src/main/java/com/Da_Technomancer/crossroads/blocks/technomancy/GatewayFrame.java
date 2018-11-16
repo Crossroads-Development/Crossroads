@@ -27,7 +27,7 @@ public class GatewayFrame extends BlockContainer{
 	public GatewayFrame(){
 		super(Material.IRON);
 		String name = "gateway_frame";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -59,7 +59,7 @@ public class GatewayFrame extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
+		EnumFacing facing = EnumFacing.byIndex(meta);
 		return getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 

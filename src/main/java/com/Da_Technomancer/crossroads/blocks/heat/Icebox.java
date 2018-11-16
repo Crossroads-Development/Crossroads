@@ -34,7 +34,7 @@ public class Icebox extends BlockContainer{
 	public Icebox(){
 		super(Material.ROCK);
 		String name = "icebox";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

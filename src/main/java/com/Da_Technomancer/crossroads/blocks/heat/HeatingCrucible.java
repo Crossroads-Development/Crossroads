@@ -32,7 +32,7 @@ public class HeatingCrucible extends BlockContainer{
 	public HeatingCrucible(){
 		super(Material.ROCK);
 		String name = "heating_crucible";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

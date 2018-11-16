@@ -23,7 +23,7 @@ public class EldrineEffect implements IAlchEffect{
 	@Override
 	public void doEffect(World world, BlockPos pos, double amount,double heat, EnumMatterPhase phase){
 
-		Chunk c = world.getChunkFromBlockCoords(pos);
+		Chunk c = world.getChunk(pos);
 		if(world.getBiome(pos) != Biomes.HELL){
 			c.getBiomeArray()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = (byte) Biome.getIdForBiome(Biomes.HELL);
 			ModPackets.network.sendToDimension(new SendBiomeUpdateToClient(pos, (byte) Biome.getIdForBiome(Biomes.HELL)), world.provider.getDimension());

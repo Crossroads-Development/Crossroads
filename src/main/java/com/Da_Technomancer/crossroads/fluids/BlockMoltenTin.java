@@ -20,7 +20,7 @@ public class BlockMoltenTin extends BlockFluidClassic{
 		super(MOLTEN_TIN, Material.LAVA);
 		MOLTEN_TIN.setBlock(this);
 		String name = "molten_tin";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		ModBlocks.toRegister.add(this);
 	}

@@ -33,7 +33,7 @@ public class Smelter extends BlockContainer{
 	public Smelter(){
 		super(Material.IRON);
 		String name = "heating_chamber";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

@@ -24,7 +24,7 @@ public class StirlingEngine extends BlockContainer{
 	public StirlingEngine(){
 		super(Material.IRON);
 		String name = "stirling_engine";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

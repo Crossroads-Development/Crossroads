@@ -45,7 +45,7 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 	protected void performTransfer(){
 		for(int i = 0; i < 2; i++){
 			if(amount != 0){
-				EnumFacing side = EnumFacing.getFront(i);
+				EnumFacing side = EnumFacing.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side.getOpposite()));
 				if(te != null && te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side)){
 					if(te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side).insertReagents(contents, side, handler)){

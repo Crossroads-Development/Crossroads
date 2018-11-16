@@ -97,14 +97,14 @@ public class MechanismSmallGear implements IMechanism{
 
 		//Other internal gears
 		for(int i = 0; i < 6; i++){
-			if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.getFront(i), te.mats[i], EnumFacing.getFront(i), te.axleAxis, te)){
-				te.axleHandlers[i].propogate(masterIn, key, RotaryUtil.getDirSign(side, EnumFacing.getFront(i)) * handler.rotRatio, .5D);
+			if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.byIndex(i), te.mats[i], EnumFacing.byIndex(i), te.axleAxis, te)){
+				te.axleHandlers[i].propogate(masterIn, key, RotaryUtil.getDirSign(side, EnumFacing.byIndex(i)) * handler.rotRatio, .5D);
 			}
 		}
 
 		for(int i = 0; i < 6; ++i){
 			if(i != side.getIndex() && i != side.getOpposite().getIndex()){
-				EnumFacing facing = EnumFacing.getFront(i);
+				EnumFacing facing = EnumFacing.byIndex(i);
 				// Adjacent gears
 				TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
 				if(adjTE != null && adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){

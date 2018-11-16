@@ -36,7 +36,7 @@ public class WaterCentrifuge extends BlockContainer{
 	public WaterCentrifuge(){
 		super(Material.IRON);
 		String name = "water_centrifuge";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

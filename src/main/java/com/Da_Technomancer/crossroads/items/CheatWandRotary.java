@@ -22,7 +22,7 @@ public class CheatWandRotary extends Item{
 
 	public CheatWandRotary(){
 		String name = "cheat_wand_rotary";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

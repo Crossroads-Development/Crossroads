@@ -49,6 +49,6 @@ public class SendBiomeUpdateToClient extends Message<SendBiomeUpdateToClient>{
 	}
 
 	public void processMessage(WorldClient worldClient, BlockPos pos, byte newBiome){
-		worldClient.getChunkFromBlockCoords(pos).getBiomeArray()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = newBiome;
+		worldClient.getChunk(pos).getBiomeArray()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = newBiome;
 	}
 }

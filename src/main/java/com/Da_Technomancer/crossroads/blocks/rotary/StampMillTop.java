@@ -32,7 +32,7 @@ public class StampMillTop extends Block{
 	public StampMillTop(){
 		super(Material.WOOD);
 		String name = "stamp_mill_top";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(1);
 		setSoundType(SoundType.METAL);
@@ -92,7 +92,7 @@ public class StampMillTop extends Block{
 	}
 	
 	@Override
-	public EnumPushReaction getMobilityFlag(IBlockState state){
+	public EnumPushReaction getPushReaction(IBlockState state){
 		return EnumPushReaction.BLOCK;
 	}
 

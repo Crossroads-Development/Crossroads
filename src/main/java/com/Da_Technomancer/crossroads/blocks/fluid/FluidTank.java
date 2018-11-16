@@ -33,7 +33,7 @@ public class FluidTank extends BlockContainer{
 	public FluidTank(){
 		super(Material.IRON);
 		String name = "fluid_tank";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(ModItems.TAB_CROSSROADS);

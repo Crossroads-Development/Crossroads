@@ -26,7 +26,7 @@ public class AdditionAxis extends BlockContainer{
 	public AdditionAxis(){
 		super(Material.IRON);
 		String name = "addition_axis";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

@@ -54,7 +54,7 @@ public class PrototypeWatch extends BeamUsingItem{
 
 	public PrototypeWatch(){
 		String name = "prototype_watch";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

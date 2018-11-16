@@ -17,7 +17,7 @@ public class FluxManipulator extends BlockContainer{
 	public FluxManipulator(){
 		super(Material.IRON);
 		String name = "flux_manipulator";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

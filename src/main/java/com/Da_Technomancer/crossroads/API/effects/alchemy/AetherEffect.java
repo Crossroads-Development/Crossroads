@@ -52,7 +52,7 @@ public class AetherEffect implements IAlchEffect{
 	}
 
 	private static void doTransmute(World world, BlockPos pos){
-		Chunk c = world.getChunkFromBlockCoords(pos);
+		Chunk c = world.getChunk(pos);
 		if(world.getBiome(pos) != Biomes.PLAINS){
 			c.getBiomeArray()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = (byte) Biome.getIdForBiome(Biomes.PLAINS);
 			ModPackets.network.sendToDimension(new SendBiomeUpdateToClient(pos, (byte) Biome.getIdForBiome(Biomes.PLAINS)), world.provider.getDimension());

@@ -132,7 +132,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
 	}
 
 	private int lastKey = 0;

@@ -31,8 +31,8 @@ public class Nitroglycerin extends Item{
 			EnumFacing dir = (EnumFacing) source.getBlockState().getValue(BlockDispenser.FACING);
 			World world = source.getWorld();
 			EntityNitro entitysnowball = new EntityNitro(world);
-			entitysnowball.setPosition(source.getX() + dir.getFrontOffsetX() + 0.5D, source.getY() + dir.getFrontOffsetY() + 0.5D, source.getZ() + dir.getFrontOffsetZ() + 0.5D);
-			entitysnowball.shoot(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ(), 1.5F, 1.0F);
+			entitysnowball.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
+			entitysnowball.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
 			world.spawnEntity(entitysnowball);
 			stack.shrink(1);
 			return stack;
@@ -49,7 +49,7 @@ public class Nitroglycerin extends Item{
 
 	public Nitroglycerin(){
 		String name = "nitroglycerin";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

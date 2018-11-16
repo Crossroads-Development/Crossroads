@@ -46,7 +46,7 @@ public class HeatedTube extends BlockContainer{
 	public HeatedTube(){
 		super(Material.GLASS);
 		String name = "heated_tube";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -54,7 +54,7 @@ public class HeatedTube extends BlockContainer{
 		ModBlocks.toRegister.add(this);
 		Item item = new ItemBlock(this){
 			@Override
-			public String getUnlocalizedName(ItemStack stack){
+			public String getTranslationKey(ItemStack stack){
 				return stack.getMetadata() == 1 ? "tile." + name + "_cryst" : "tile." + name + "_glass";
 			}
 			
@@ -81,7 +81,7 @@ public class HeatedTube extends BlockContainer{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 
@@ -92,7 +92,7 @@ public class HeatedTube extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(Properties.HORIZ_FACING, EnumFacing.getHorizontal(meta >> 1));
+		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta >> 1));
 	}
 	
 	@Override
@@ -145,7 +145,7 @@ public class HeatedTube extends BlockContainer{
 		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
-		Vec3d end = start.addVector(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
+		Vec3d end = start.add(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
 		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
 		return (out == null ? BB_VERT : out).offset(pos);
 	}
@@ -168,7 +168,7 @@ public class HeatedTube extends BlockContainer{
 			return null;
 		}else{
 			RayTraceResult untransformed = out.calculateIntercept(start, end);
-			return new RayTraceResult(untransformed.hitVec.addVector((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
+			return new RayTraceResult(untransformed.hitVec.add((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
 		}
 	}
 

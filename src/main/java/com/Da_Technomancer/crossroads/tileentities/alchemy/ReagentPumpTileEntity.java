@@ -34,7 +34,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
-				EnumFacing side = EnumFacing.getFront(i);
+				EnumFacing side = EnumFacing.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
 				if(amount <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
 					continue;

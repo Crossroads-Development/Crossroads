@@ -20,7 +20,7 @@ public class MechanismRenderer extends TileEntitySpecialRenderer<MechanismTileEn
 
 		for(int i = 0; i < 7; i++){
 			if(te.members[i] != null){
-				te.members[i].doRender(te, partialTicks, te.mats[i], i == 6 ? null : EnumFacing.getFront(i), te.axleAxis);
+				te.members[i].doRender(te, partialTicks, te.mats[i], i == 6 ? null : EnumFacing.byIndex(i), te.axleAxis);
 			}
 		}
 

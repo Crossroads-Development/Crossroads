@@ -17,7 +17,7 @@ public class FlyingMachine extends Item{
 	public FlyingMachine(){
 		String name = "flying_machine";
 		maxStackSize = 1;
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

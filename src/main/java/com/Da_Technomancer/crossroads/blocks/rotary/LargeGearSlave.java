@@ -41,7 +41,7 @@ public class LargeGearSlave extends BlockContainer{
 	public LargeGearSlave(){
 		super(Material.IRON);
 		String name = "large_gear_slave";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -56,7 +56,7 @@ public class LargeGearSlave extends BlockContainer{
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta));
 	}
 
 	@Override

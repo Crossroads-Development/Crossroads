@@ -204,7 +204,7 @@ public final class OreSetup{
 				public String getItemStackDisplayName(ItemStack stack){
 					return String.format(super.getItemStackDisplayName(stack), getMatName(type.getKey()));
 				}
-			}.setRegistryName(Main.MODID, "dust_" + lowercaseMetal).setCreativeTab(ModItems.TAB_CROSSROADS).setUnlocalizedName("dust_metal");
+			}.setRegistryName(Main.MODID, "dust_" + lowercaseMetal).setCreativeTab(ModItems.TAB_CROSSROADS).setTranslationKey("dust_metal");
 			ModItems.toRegister.add(dust);
 			ModItems.toClientRegister.put(Pair.of(dust, 0), dustModel);
 			ModCrafting.toRegisterOreDict.add(Pair.of(dust, new String[] {"dust" + type.getKey()}));
@@ -213,7 +213,7 @@ public final class OreSetup{
 				public String getItemStackDisplayName(ItemStack stack){
 					return String.format(super.getItemStackDisplayName(stack), getMatName(type.getKey()));
 				}
-			}.setRegistryName(Main.MODID, "gravel_" + lowercaseMetal).setCreativeTab(ModItems.TAB_CROSSROADS).setUnlocalizedName("gravel_metal");
+			}.setRegistryName(Main.MODID, "gravel_" + lowercaseMetal).setCreativeTab(ModItems.TAB_CROSSROADS).setTranslationKey("gravel_metal");
 			ModItems.toRegister.add(gravel);
 			ModItems.toClientRegister.put(Pair.of(gravel, 0), gravelModel);
 			Item clump = new Item(){
@@ -221,7 +221,7 @@ public final class OreSetup{
 				public String getItemStackDisplayName(ItemStack stack){
 					return String.format(super.getItemStackDisplayName(stack), getMatName(type.getKey()));
 				}
-			}.setRegistryName(Main.MODID, "clump_" + lowercaseMetal).setCreativeTab(ModItems.TAB_CROSSROADS).setUnlocalizedName("clump_metal");
+			}.setRegistryName(Main.MODID, "clump_" + lowercaseMetal).setCreativeTab(ModItems.TAB_CROSSROADS).setTranslationKey("clump_metal");
 			ModItems.toRegister.add(clump);
 			ModItems.toClientRegister.put(Pair.of(clump, 0), clumpModel);
 
@@ -237,7 +237,7 @@ public final class OreSetup{
 				public String getLocalizedName(){
 					return String.format(super.getLocalizedName(), getMatName(type.getKey()));
 				}
-			}.setUnlocalizedName("molten_metal").setRegistryName(Main.MODID + ":molten_metal_" + lowercaseMetal);
+			}.setTranslationKey("molten_metal").setRegistryName(Main.MODID + ":molten_metal_" + lowercaseMetal);
 			fluid.setBlock(fluidBlock);
 			FluidRegistry.addBucketForFluid(fluid);
 			ModBlocks.toRegister.add(fluidBlock);

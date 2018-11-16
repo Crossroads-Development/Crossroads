@@ -37,7 +37,7 @@ public class ReactionChamber extends BlockContainer{
 	public ReactionChamber(){
 		super(Material.GLASS);
 		String name = "reaction_chamber";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -45,7 +45,7 @@ public class ReactionChamber extends BlockContainer{
 		ModBlocks.toRegister.add(this);
 		Item item = new ItemBlock(this){
 			@Override
-			public String getUnlocalizedName(ItemStack stack){
+			public String getTranslationKey(ItemStack stack){
 				return stack.getMetadata() == 1 ? "tile." + name + "_cryst" : "tile." + name + "_glass";
 			}
 			
@@ -92,7 +92,7 @@ public class ReactionChamber extends BlockContainer{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
 

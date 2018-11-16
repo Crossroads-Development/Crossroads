@@ -24,7 +24,7 @@ public class HeatLimiter extends BlockContainer{
 	public HeatLimiter(){
 		super(Material.IRON);
 		String name = "heat_limiter";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -50,7 +50,7 @@ public class HeatLimiter extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.getFront(meta & 7));
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta & 7));
 	}
 
 	@Override

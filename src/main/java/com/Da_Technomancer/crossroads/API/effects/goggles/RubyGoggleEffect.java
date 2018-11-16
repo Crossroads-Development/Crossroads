@@ -30,7 +30,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 			Vec3d end = start;
 
 			for(double d = 0; d < 16; d += 0.2D){
-				Vec3d tar = player.getPositionEyes(0).addVector(0, 0.2D, 0).add(player.getLookVec().scale(d));
+				Vec3d tar = player.getPositionEyes(0).add(0, 0.2D, 0).add(player.getLookVec().scale(d));
 				List<Entity> ents = world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(tar.x - 0.1D, tar.y - 0.1D, tar.z - 0.1D, tar.x + 0.1D, tar.y + 0.1D, tar.z + 0.1D), EntitySelectors.IS_ALIVE);
 				if(!ents.isEmpty()){
 					entHit = ents.get((int) (Math.random() * ents.size()));

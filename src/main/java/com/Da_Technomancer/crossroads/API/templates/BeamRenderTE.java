@@ -83,7 +83,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 				boolean[] outputs = outputSides();
 				for(int i = 0; i < 6; i++){
 					if(outputs[i]){
-						beamer[i] = new BeamManager(EnumFacing.getFront(i), pos);
+						beamer[i] = new BeamManager(EnumFacing.byIndex(i), pos);
 					}
 				}
 			}

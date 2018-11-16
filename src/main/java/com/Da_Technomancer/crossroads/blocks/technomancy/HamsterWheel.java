@@ -35,7 +35,7 @@ public class HamsterWheel extends BlockContainer{
 	public HamsterWheel(){
 		super(Material.IRON);
 		String name = "hamster_wheel";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setHardness(2);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -81,7 +81,7 @@ public class HamsterWheel extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byIndex(meta));
 	}
 
 	@Override

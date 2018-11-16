@@ -21,7 +21,7 @@ public class Vacuum extends Item{
 
 	public Vacuum(){
 		String name = "vacuum";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		maxStackSize = 1;
@@ -37,7 +37,7 @@ public class Vacuum extends Item{
 		//Removes entities from the list if they aren't in the conical region in the direction the player is looking
 		Vec3d look = playerIn.getLookVec().scale(RANGE);
 		Vec3d playPos = playerIn.getPositionVector();
-		entities.removeIf((Entity e) -> {Vec3d ePos = e.getPositionVector().subtract(playPos); return ePos.dotProduct(look) / (ePos.lengthVector() * look.lengthVector()) <= ANGLE || ePos.lengthVector() >= RANGE;});
+		entities.removeIf((Entity e) -> {Vec3d ePos = e.getPositionVector().subtract(playPos); return ePos.dotProduct(look) / (ePos.length() * look.length()) <= ANGLE || ePos.length() >= RANGE;});
 
 		for(Entity ent : entities){
 			Vec3d motVec = playerIn.getPositionVector().subtract(ent.getPositionVector()).scale(0.25D);

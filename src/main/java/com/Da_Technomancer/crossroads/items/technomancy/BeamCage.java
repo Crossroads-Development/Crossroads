@@ -19,7 +19,7 @@ public class BeamCage extends Item{
 
 	public BeamCage(){
 		String name = "beam_cage";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		maxStackSize = 1;
 		setCreativeTab(ModItems.TAB_CROSSROADS);

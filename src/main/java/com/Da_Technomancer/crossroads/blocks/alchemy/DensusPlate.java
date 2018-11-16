@@ -48,13 +48,13 @@ public class DensusPlate extends BlockContainer{
 
 		super(Material.IRON);
 		String name = "densus_plate";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
 		Item item = new ItemBlock(this){
 			@Override
-			public String getUnlocalizedName(ItemStack stack){
+			public String getTranslationKey(ItemStack stack){
 				return stack.getMetadata() == 1 ? "tile.anti_densus_plate" : "tile.densus_plate";
 			}
 			
@@ -121,7 +121,7 @@ public class DensusPlate extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.getFront(meta >> 1)).withProperty(Properties.CONTAINER_TYPE, (meta & 1) == 1);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta >> 1)).withProperty(Properties.CONTAINER_TYPE, (meta & 1) == 1);
 	}
 
 	@Override

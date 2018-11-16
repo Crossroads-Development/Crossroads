@@ -21,7 +21,7 @@ public abstract class BeamBlock extends BlockContainer{
 
 	public BeamBlock(String name, Material mat){
 		super(mat);
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -66,7 +66,7 @@ public abstract class BeamBlock extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.getFront(meta & 7));
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta & 7));
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class TeslaCoilTop extends Block{
 	public TeslaCoilTop(){
 		super(Material.IRON);
 		String name = "tesla_coil_top";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
 		setSoundType(SoundType.METAL);
@@ -118,7 +118,7 @@ public class TeslaCoilTop extends Block{
 	}
 	
 	@Override
-	public EnumPushReaction getMobilityFlag(IBlockState state){
+	public EnumPushReaction getPushReaction(IBlockState state){
 		return EnumPushReaction.BLOCK;
 	}
 }

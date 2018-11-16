@@ -35,7 +35,7 @@ public class GlasswareHolder extends BlockContainer{
 	public GlasswareHolder(){
 		super(Material.IRON);
 		String name = "glassware_holder";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -61,7 +61,7 @@ public class GlasswareHolder extends BlockContainer{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
 

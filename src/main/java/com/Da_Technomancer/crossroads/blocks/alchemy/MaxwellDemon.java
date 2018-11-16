@@ -25,7 +25,7 @@ public class MaxwellDemon extends BlockContainer{
 	public MaxwellDemon(){
 		super(Material.IRON);
 		String name = "maxwell_demon";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

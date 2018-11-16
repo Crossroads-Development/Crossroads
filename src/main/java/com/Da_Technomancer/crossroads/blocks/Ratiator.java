@@ -34,7 +34,7 @@ public class Ratiator extends BlockContainer{
 	protected Ratiator(){
 		super(Material.CIRCUITS);
 		String name = "ratiator";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(0);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -153,7 +153,7 @@ public class Ratiator extends BlockContainer{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
 
@@ -169,7 +169,7 @@ public class Ratiator extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getFront(meta & 7)).withProperty(EssentialsProperties.REDSTONE_BOOL, meta >= 8);
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byIndex(meta & 7)).withProperty(EssentialsProperties.REDSTONE_BOOL, meta >= 8);
 	}
 
 	@Override

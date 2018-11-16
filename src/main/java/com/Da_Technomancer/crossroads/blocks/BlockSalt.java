@@ -36,7 +36,7 @@ public class BlockSalt extends BlockFalling{
 		super(Material.SAND);
 		setHarvestLevel("shovel", 0);
 		String name = "block_salt";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(.5F);

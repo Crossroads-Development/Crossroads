@@ -23,7 +23,7 @@ public class FatFeeder extends BlockContainer{
 	public FatFeeder(){
 		super(Material.IRON);
 		String name = "fat_feeder";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setSoundType(SoundType.METAL);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);

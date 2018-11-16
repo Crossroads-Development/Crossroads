@@ -22,7 +22,7 @@ public class RainIdol extends Item{
 
 	protected RainIdol(){
 		String name = "rain_idol";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		maxStackSize = 1;

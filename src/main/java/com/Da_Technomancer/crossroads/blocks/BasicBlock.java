@@ -18,7 +18,7 @@ public class BasicBlock extends Block{
 	
 	public BasicBlock(String unlocName, Material mat, float hardness, String oreDict){
 		super(mat);
-		setUnlocalizedName(unlocName);
+		setTranslationKey(unlocName);
 		setRegistryName(unlocName);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(hardness);

@@ -36,7 +36,7 @@ public class FluidInjector extends BlockContainer{
 	public FluidInjector(){
 		super(Material.GLASS);
 		String name = "fluid_injector";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -44,7 +44,7 @@ public class FluidInjector extends BlockContainer{
 		ModBlocks.toRegister.add(this);
 		Item item = new ItemBlock(this){
 			@Override
-			public String getUnlocalizedName(ItemStack stack){
+			public String getTranslationKey(ItemStack stack){
 				return stack.getMetadata() == 1 ? "tile.fluid_injector_cryst" : "tile.fluid_injector_glass";
 			}
 			
@@ -71,7 +71,7 @@ public class FluidInjector extends BlockContainer{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
 

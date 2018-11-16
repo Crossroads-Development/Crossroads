@@ -36,7 +36,7 @@ public class StampMill extends BlockContainer{
 	public StampMill(){
 		super(Material.WOOD);
 		String name = "stamp_mill";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(1);

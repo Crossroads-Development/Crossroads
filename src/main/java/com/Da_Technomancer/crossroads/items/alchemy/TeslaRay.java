@@ -34,7 +34,7 @@ public class TeslaRay extends Item{
 
 	public TeslaRay(){
 		String name = "tesla_ray";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
@@ -116,7 +116,7 @@ public class TeslaRay extends Item{
 				Vec3d start = targets.get(i).getPositionVector();
 				if(i == 0){
 					double angleOffset = 30D * (playerIn.getPrimaryHand() == EnumHandSide.LEFT ? -1D : 1D);
-					start = start.addVector(-Math.sin(Math.toRadians(playerIn.rotationYaw + angleOffset)) * 0.4F, 0.8D, Math.cos(Math.toRadians(playerIn.rotationYaw + angleOffset)) * 0.4F);
+					start = start.add(-Math.sin(Math.toRadians(playerIn.rotationYaw + angleOffset)) * 0.4F, 0.8D, Math.cos(Math.toRadians(playerIn.rotationYaw + angleOffset)) * 0.4F);
 				}
 				Vec3d end = targets.get(i + 1).getPositionEyes(0);
 

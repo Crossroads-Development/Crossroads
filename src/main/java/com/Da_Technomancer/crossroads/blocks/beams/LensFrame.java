@@ -35,7 +35,7 @@ public class LensFrame extends BlockContainer{
 	public LensFrame(){
 		super(Material.ROCK);
 		String name = "lens_frame";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -65,7 +65,7 @@ public class LensFrame extends BlockContainer{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
 

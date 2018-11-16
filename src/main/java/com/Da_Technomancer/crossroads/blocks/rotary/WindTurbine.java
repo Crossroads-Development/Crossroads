@@ -31,7 +31,7 @@ public class WindTurbine extends BlockContainer{
 	public WindTurbine(){
 		super(Material.WOOD);
 		String name = "wind_turbine";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setHardness(2);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -72,7 +72,7 @@ public class WindTurbine extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byIndex(meta));
 	}
 
 	@Override

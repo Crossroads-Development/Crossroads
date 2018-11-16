@@ -56,7 +56,7 @@ public class Prototype extends BlockContainer{
 	public Prototype(){
 		super(Material.IRON);
 		String name = "prototype";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
@@ -131,7 +131,7 @@ public class Prototype extends BlockContainer{
 			tooltip.add("Name: " + stack.getTagCompound().getString("name"));
 			for(int i = 0; i < 6; i++){
 				if(stack.getTagCompound().hasKey("ttip" + i)){
-					tooltip.add(EnumFacing.getFront(i).name().charAt(0) + EnumFacing.getFront(i).toString().substring(1) + ": " + stack.getTagCompound().getString("ttip" + i));
+					tooltip.add(EnumFacing.byIndex(i).name().charAt(0) + EnumFacing.byIndex(i).toString().substring(1) + ": " + stack.getTagCompound().getString("ttip" + i));
 				}
 			}
 			if(advanced == ITooltipFlag.TooltipFlags.ADVANCED){

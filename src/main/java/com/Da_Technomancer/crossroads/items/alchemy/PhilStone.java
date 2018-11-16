@@ -12,7 +12,7 @@ public class PhilStone extends Item{
 
 	public PhilStone(){
 		String name = "phil_stone";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

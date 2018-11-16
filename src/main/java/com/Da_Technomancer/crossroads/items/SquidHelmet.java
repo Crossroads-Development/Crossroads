@@ -14,7 +14,7 @@ public class SquidHelmet extends ItemArmor{
 		super(ModItems.BOBO, 1, EntityEquipmentSlot.HEAD);
 		setMaxStackSize(1);
 		String name = "squid_helmet";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

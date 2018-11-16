@@ -30,7 +30,7 @@ public class SteamTurbine extends BlockContainer{
 	public SteamTurbine(){
 		super(Material.IRON);
 		String name = "steam_turbine";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -51,7 +51,7 @@ public class SteamTurbine extends BlockContainer{
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
 

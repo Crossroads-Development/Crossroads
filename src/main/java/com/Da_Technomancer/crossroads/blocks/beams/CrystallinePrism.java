@@ -53,7 +53,7 @@ public class CrystallinePrism extends BeamBlock{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getHorizontal(meta));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta));
 	}
 
 	@Override

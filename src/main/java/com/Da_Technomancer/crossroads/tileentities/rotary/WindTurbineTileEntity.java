@@ -74,7 +74,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 					outer:
 					for(int i = -2; i <= 2; i++){
 						for(int j = -2; j <= 2; j++){
-							BlockPos checkPos = offsetPos.add(dir.getFrontOffsetZ() * i, j, dir.getFrontOffsetX() * i);
+							BlockPos checkPos = offsetPos.add(dir.getZOffset() * i, j, dir.getXOffset() * i);
 							IBlockState checkState = world.getBlockState(checkPos);
 							if(!checkState.getBlock().isAir(checkState, world, checkPos)){
 								running = false;

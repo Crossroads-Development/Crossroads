@@ -24,7 +24,7 @@ public class FluidVoid extends BlockContainer{
 	public FluidVoid(){
 		super(Material.SPONGE);
 		String name = "fluid_void";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(.6F);

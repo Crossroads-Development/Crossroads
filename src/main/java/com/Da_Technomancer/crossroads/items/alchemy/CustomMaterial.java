@@ -23,7 +23,7 @@ public class CustomMaterial extends Item{
 		String name = "custom_material";
 		maxStackSize = 1;
 		hasSubtypes = true;
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);

@@ -62,7 +62,7 @@ public class PrototypePortGuiContainer extends GuiContainer{
 	@Override
 	public void onGuiClosed(){
 		super.onGuiClosed();
-		te.setSide(EnumFacing.getFront(side.getPressed()));
+		te.setSide(EnumFacing.byIndex(side.getPressed()));
 		int typeIndex = types.getPressed();
 		PrototypePortTypes type = typeIndex == 0 ? (in_out.getPressed() == 0 ? PrototypePortTypes.REDSTONE_IN : PrototypePortTypes.REDSTONE_OUT) : typeIndex == 1 ? PrototypePortTypes.ROTARY : typeIndex == 2 ? (in_out.getPressed() == 0 ? PrototypePortTypes.MAGIC_IN : PrototypePortTypes.MAGIC_OUT) : PrototypePortTypes.HEAT;
 		te.setType(type);

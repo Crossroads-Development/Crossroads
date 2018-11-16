@@ -28,21 +28,21 @@ public final class ModItems{
 
 	public static final CreativeTabs TAB_CROSSROADS = new CreativeTabs(Main.MODID){
 		@Override
-		public ItemStack getTabIconItem(){
+		public ItemStack createIcon(){
 			return new ItemStack(omnimeter, 1);
 		}
 	};
 
 	public static final CreativeTabs TAB_HEAT_CABLE = new CreativeTabs("heatCable"){
 		@Override
-		public ItemStack getTabIconItem(){
+		public ItemStack createIcon(){
 			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 1);
 		}
 	};
 
 	public static final CreativeTabs TAB_GEAR = new CreativeTabs("gear"){
 		@Override
-		public ItemStack getTabIconItem(){
+		public ItemStack createIcon(){
 			return new ItemStack(GearFactory.BASIC_GEARS[EnumGearType.BRONZE.ordinal()]);
 		}
 	};

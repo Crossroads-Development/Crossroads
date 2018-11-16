@@ -327,10 +327,10 @@ public class AlembicTileEntity extends TileEntity implements IReactionChamber, I
 			}
 			Color c = reag.getType().getColor(reag.getPhase(ambientTemp));
 			if(reag.getPhase(ambientTemp).flowsDown()){
-				((WorldServer) world).spawnParticle(ModParticles.COLOR_LIQUID, false, pos.getX() + 0.5D + dir.getFrontOffsetX(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getFrontOffsetZ(), 0, 0, (Math.random() * 0.05D) - 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+				((WorldServer) world).spawnParticle(ModParticles.COLOR_LIQUID, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * 0.05D) - 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 
 			}else{
-				((WorldServer) world).spawnParticle(ModParticles.COLOR_GAS, false, pos.getX() + 0.5D + dir.getFrontOffsetX(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getFrontOffsetZ(), 0, 0, (Math.random() * -0.05D) + 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+				((WorldServer) world).spawnParticle(ModParticles.COLOR_GAS, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * -0.05D) + 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 			}
 		}
 		return true;

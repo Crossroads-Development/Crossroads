@@ -21,7 +21,7 @@ public class FluidSplitter extends BlockContainer{
 	public FluidSplitter(){
 		super(Material.IRON);
 		String name = "fluid_splitter";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

@@ -175,7 +175,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			for(int i = 0; i < 6; i++){
 				if(ports[i].size() > 1){
 					for(Pair<PrototypePortTypes, BlockPos> port : ports[i]){
-						errors.add(new TemplateError(2, "Duplicate port: " + EnumFacing.getFront(i), port.getRight()));
+						errors.add(new TemplateError(2, "Duplicate port: " + EnumFacing.byIndex(i), port.getRight()));
 					}
 				}else if(ports[i].size() == 1){
 					portArray[i] = ports[i].get(0).getLeft();
@@ -199,7 +199,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			int newChunk = ModDimensions.nextFreePrototypeChunk(portArray, posArray);
 			if(newChunk != -1){
 				ChunkPos chunkPos = infoList.get(newChunk).chunk;
-				if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.x, chunkPos.z), dimWorld, info.chunk.getBlock(0, 16, 0), newChunk, false)){
+				if(setChunk(dimWorld.getChunk(chunkPos.x, chunkPos.z), dimWorld, info.chunk.getBlock(0, 16, 0), newChunk, false)){
 					infoList.set(newChunk, null);
 					data.markDirty();
 					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View logs for info.", Color.RED, false), player);
@@ -276,7 +276,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			for(int i = 0; i < 6; i++){
 				if(ports[i].size() > 1){
 					for(Pair<PrototypePortTypes, BlockPos> port : ports[i]){
-						errors.add(new TemplateError(2, "Duplicate port: " + EnumFacing.getFront(i), port.getRight()));
+						errors.add(new TemplateError(2, "Duplicate port: " + EnumFacing.byIndex(i), port.getRight()));
 					}
 				}else if(ports[i].size() == 1){
 					portArray[i] = ports[i].get(0).getLeft();
@@ -300,7 +300,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			int newChunk = ModDimensions.nextFreePrototypeChunk(portArray, posArray);
 			if(newChunk != -1){
 				ChunkPos chunkPos = infoList.get(newChunk).chunk;
-				if(setChunk(dimWorld.getChunkFromChunkCoords(chunkPos.x, chunkPos.z), world, new BlockPos(startX, startY, startZ), newChunk, ModConfig.allowPrototype.getInt() == 1)){
+				if(setChunk(dimWorld.getChunk(chunkPos.x, chunkPos.z), world, new BlockPos(startX, startY, startZ), newChunk, ModConfig.allowPrototype.getInt() == 1)){
 					infoList.set(newChunk, null);
 					data.markDirty();
 					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View server logs for info.", Color.RED, false), player);

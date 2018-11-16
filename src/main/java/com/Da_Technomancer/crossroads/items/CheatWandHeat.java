@@ -23,7 +23,7 @@ public class CheatWandHeat extends Item{
 
 	public CheatWandHeat(){
 		String name = "cheat_wand_heat";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

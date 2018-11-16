@@ -23,7 +23,7 @@ public class MasterAxis extends BlockContainer{
 	public MasterAxis(){
 		super(Material.IRON);
 		String name = "master_axis";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -60,7 +60,7 @@ public class MasterAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
+		EnumFacing facing = EnumFacing.byIndex(meta);
 		return getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 
@@ -71,7 +71,7 @@ public class MasterAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new MasterAxisTileEntity(EnumFacing.getFront(meta));
+		return new MasterAxisTileEntity(EnumFacing.byIndex(meta));
 
 	}
 	

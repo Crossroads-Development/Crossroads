@@ -33,7 +33,7 @@ public class OmniMeter extends Item{
 
 	public OmniMeter(){
 		String name = "omnimeter";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
@@ -91,7 +91,7 @@ public class OmniMeter extends Item{
 							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumBeamAlignments.getAlignment(check).toString() + TextFormatting.RESET.toString()));
 							StoreNBTToClient.syncNBTToClient((EntityPlayerMP) player, false);
 						}
-						chat.add(EnumFacing.getFront(i).toString() + ": " + check.toString());
+						chat.add(EnumFacing.byIndex(i).toString() + ": " + check.toString());
 					}
 				}
 			}

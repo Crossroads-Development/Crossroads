@@ -18,7 +18,7 @@ public class LiechWrench extends Item{
 
 	public LiechWrench(){
 		String name = "liech_wrench";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHarvestLevel("pickaxe", 1);

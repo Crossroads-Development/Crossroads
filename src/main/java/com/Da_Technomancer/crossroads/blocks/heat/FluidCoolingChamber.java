@@ -31,7 +31,7 @@ public class FluidCoolingChamber extends BlockContainer{
 	public FluidCoolingChamber(){
 		super(Material.IRON);
 		String name = "fluid_cooling_chamber";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

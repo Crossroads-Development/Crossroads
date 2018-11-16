@@ -48,7 +48,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		for(int i = 0; i < 2; i++){
-			EnumFacing dir = EnumFacing.getFront(i);
+			EnumFacing dir = EnumFacing.byIndex(i);
 
 			TileEntity te = world.getTileEntity(pos.offset(dir));
 			if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN)){

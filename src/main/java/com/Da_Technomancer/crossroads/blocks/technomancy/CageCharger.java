@@ -29,7 +29,7 @@ public class CageCharger extends BlockContainer{
 	public CageCharger(){
 		super(Material.IRON);
 		String name = "cage_charger";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

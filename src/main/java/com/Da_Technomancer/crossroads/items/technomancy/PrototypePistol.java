@@ -55,7 +55,7 @@ public class PrototypePistol extends BeamUsingItem{
 
 	public PrototypePistol(){
 		String name = "prototype_pistol";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

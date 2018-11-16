@@ -28,7 +28,7 @@ public class HeatReservoir extends BlockContainer{
 	public HeatReservoir(){
 		super(Material.IRON);
 		String name = "heat_reservoir";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

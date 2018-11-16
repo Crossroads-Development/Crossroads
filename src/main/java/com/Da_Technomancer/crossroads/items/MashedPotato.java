@@ -7,7 +7,7 @@ public class MashedPotato extends ItemFood{
 	public MashedPotato(){
 		super(5, .3F, true);
 		String name = "mashed_potato";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);

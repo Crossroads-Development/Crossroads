@@ -32,7 +32,7 @@ public class Alembic extends BlockContainer{
 	public Alembic(){
 		super(Material.IRON);
 		String name = "alembic";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -91,7 +91,7 @@ public class Alembic extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getHorizontal(meta));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta));
 	}
 
 	@Override

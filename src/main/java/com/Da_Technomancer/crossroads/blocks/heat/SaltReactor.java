@@ -31,7 +31,7 @@ public class SaltReactor extends BlockContainer{
 	public SaltReactor(){
 		super(Material.IRON);
 		String name = "salt_reactor";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

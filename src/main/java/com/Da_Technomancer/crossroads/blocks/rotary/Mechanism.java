@@ -42,7 +42,7 @@ public class Mechanism extends BlockContainer{
 	public Mechanism(){
 		super(Material.IRON);
 		String name = "mechanism";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(1);
 		setSoundType(SoundType.METAL);
@@ -85,7 +85,7 @@ public class Mechanism extends BlockContainer{
 		EntityPlayer play = Minecraft.getMinecraft().player;
 		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
-		Vec3d end = start.addVector(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
+		Vec3d end = start.add(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
 		int out = getAimedSide(mte, start, end, true);
 		return (out == -1 || out == 7 ? BREAK_ALL_BB : mte.boundingBoxes[out]).offset(pos);
 	}
@@ -105,7 +105,7 @@ public class Mechanism extends BlockContainer{
 			return null;
 		}else{
 			RayTraceResult untransformed = (out == 7 ? BREAK_ALL_BB : mte.boundingBoxes[out]).calculateIntercept(start, end);
-			return new RayTraceResult(untransformed.hitVec.addVector((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()), untransformed.sideHit, pos);
+			return new RayTraceResult(untransformed.hitVec.add((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()), untransformed.sideHit, pos);
 		}
 	}
 
@@ -134,7 +134,7 @@ public class Mechanism extends BlockContainer{
 			MechanismTileEntity gear = (MechanismTileEntity) te;
 			float reDist = player.isCreative() ? 5F : 4.5F;
 			Vec3d start = new Vec3d(player.prevPosX, player.prevPosY + (double) player.getEyeHeight(), player.prevPosZ).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
-			Vec3d end = start.addVector(player.getLook(0F).x * reDist, player.getLook(0F).y * reDist, player.getLook(0F).z * reDist);
+			Vec3d end = start.add(player.getLook(0F).x * reDist, player.getLook(0F).y * reDist, player.getLook(0F).z * reDist);
 
 			int out = getAimedSide(gear, start, end, true);
 

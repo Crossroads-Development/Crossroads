@@ -24,7 +24,7 @@ public class EdibleBlob extends ItemFood{
 	public EdibleBlob(){
 		super(0, 0, true);
 		String name = "edible_blob";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);

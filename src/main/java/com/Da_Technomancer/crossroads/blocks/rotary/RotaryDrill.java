@@ -41,7 +41,7 @@ public class RotaryDrill extends BlockContainer{
 		super(Material.IRON);
 		this.golden = golden;
 		String name = "rotary_drill" + (golden ? "_gold" : "");
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -103,7 +103,7 @@ public class RotaryDrill extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.getFront(meta);
+		EnumFacing facing = EnumFacing.byIndex(meta);
 		return getDefaultState().withProperty(EssentialsProperties.FACING, facing);
 	}
 

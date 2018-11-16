@@ -80,8 +80,8 @@ public final class EventHandlerClient{
 
 		//Fields
 		if(helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound()){
-			game.mcProfiler.startSection(Main.MODNAME + ": Field Render");
-			Chunk chunk = game.world.getChunkFromBlockCoords(game.player.getPosition());
+			game.profiler.startSection(Main.MODNAME + ": Field Render");
+			Chunk chunk = game.world.getChunk(game.player.getPosition());
 			ChunkField fields = FieldWorldSavedData.get(game.world).fieldNodes.get(MiscUtil.getLongFromChunk(chunk));
 			if(fields != null){
 				GlStateManager.pushMatrix();
@@ -158,12 +158,12 @@ public final class EventHandlerClient{
 				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();
 			}
-			game.mcProfiler.endSection();
+			game.profiler.endSection();
 		}
 
 		//Loose beams
 		if(!SafeCallable.beamsToRender.isEmpty()){
-			game.mcProfiler.startSection(Main.MODNAME + ": Loose beam draw");
+			game.profiler.startSection(Main.MODNAME + ": Loose beam draw");
 
 			GlStateManager.disableLighting();
 			GlStateManager.disableCull();
@@ -230,12 +230,12 @@ public final class EventHandlerClient{
 			GlStateManager.enableCull();
 			GlStateManager.enableLighting();
 
-			game.mcProfiler.endSection();
+			game.profiler.endSection();
 		}
 
 		//Lightning arcs
 		if(!SafeCallable.arcsToRender.isEmpty()){
-			game.mcProfiler.startSection(Main.MODNAME + ": Lightning arc draw");
+			game.profiler.startSection(Main.MODNAME + ": Lightning arc draw");
 
 			GlStateManager.enableBlend();
 			GlStateManager.disableLighting();
@@ -262,7 +262,7 @@ public final class EventHandlerClient{
 
 				Pair<Vec3d, Vec3d> sourceVec = arc.getCurrentEndpoints(e.getPartialTicks());
 
-				float distance = (float) sourceVec.getLeft().subtract(sourceVec.getRight()).lengthVector();//(float) Math.sqrt(Math.pow(arc.xEn - arc.xSt, 2D) + Math.pow(arc.yEn - arc.ySt, 2D) + Math.pow(arc.zEn - arc.zSt, 2D));
+				float distance = (float) sourceVec.getLeft().subtract(sourceVec.getRight()).length();//(float) Math.sqrt(Math.pow(arc.xEn - arc.xSt, 2D) + Math.pow(arc.yEn - arc.ySt, 2D) + Math.pow(arc.zEn - arc.zSt, 2D));
 
 				boolean invalidState = false;
 
@@ -285,7 +285,7 @@ public final class EventHandlerClient{
 
 
 						if(invalidState){
-							next = sourceVec.getLeft().add(stepVec.scale(node + 1)).addVector(RAND.nextFloat() - .5F, RAND.nextFloat() - .5F, RAND.nextFloat() - .5F);//next = new Vec3d(arc.xSt + (arc.xEn - arc.xSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.ySt + (arc.yEn - arc.ySt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.zSt + (arc.zEn - arc.zSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F);
+							next = sourceVec.getLeft().add(stepVec.scale(node + 1)).add(RAND.nextFloat() - .5F, RAND.nextFloat() - .5F, RAND.nextFloat() - .5F);//next = new Vec3d(arc.xSt + (arc.xEn - arc.xSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.ySt + (arc.yEn - arc.ySt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.zSt + (arc.zEn - arc.zSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F);
 							arc.states[i][node] = next;
 						}
 
@@ -346,7 +346,7 @@ public final class EventHandlerClient{
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
 
-			game.mcProfiler.endSection();
+			game.profiler.endSection();
 		}
 	}
 

@@ -29,7 +29,7 @@ public class RotaryPump extends BlockContainer{
 	public RotaryPump(){
 		super(Material.IRON);
 		String name = "rotary_pump";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -50,7 +50,7 @@ public class RotaryPump extends BlockContainer{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
 	

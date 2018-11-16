@@ -31,7 +31,7 @@ public class AlchemyChart extends Block{
 	public AlchemyChart(){
 		super(Material.WOOD);
 		String name = "alchemy_chart";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
@@ -83,7 +83,7 @@ public class AlchemyChart extends Block{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.getFront(meta == 0 || meta == 1 ? 2 : meta));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byIndex(meta == 0 || meta == 1 ? 2 : meta));
 	}
 
 	@Override

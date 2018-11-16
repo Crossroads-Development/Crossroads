@@ -30,7 +30,7 @@ public class SolarHeater extends BlockContainer{
 	public SolarHeater(){
 		super(Material.IRON);
 		String name = "solar_heater";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);

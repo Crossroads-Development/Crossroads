@@ -28,7 +28,7 @@ public class ModuleGoggles extends ItemArmor{
 		super(ModItems.TECHNOMANCY, 1, EntityEquipmentSlot.HEAD);
 		setMaxStackSize(1);
 		String name = "module_goggles";
-		setUnlocalizedName(name);
+		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		ModItems.toRegister.add(this);
