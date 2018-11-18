@@ -306,6 +306,8 @@ item.slag.name=Slag
 container.beam_extractor=Resonance Extractor
 tile.permeable_glass.name=Permeable Glass
 tile.permeable_quartz.name=Permeable Quartz
+tile.redstone_transmitter.name=Redstone Transmitter
+tile.redstone_receiver.name=Redstone Receiver
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=Raw %1$s Grit

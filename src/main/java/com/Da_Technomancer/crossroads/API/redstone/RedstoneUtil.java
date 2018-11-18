@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.API.redstone;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -62,7 +64,10 @@ public class RedstoneUtil{
 		if(state.hasComparatorInputOverride()){
 			return state.getComparatorInputOverride(worldIn, offsetPos);
 		}
-		int possibleOut = worldIn.getRedstonePower(offsetPos, side);
+		int possibleOut = worldIn.getRedstonePower(offsetPos, side.getOpposite());
+		if(state.getBlock() == Blocks.REDSTONE_WIRE){
+			possibleOut = Math.max(possibleOut, state.getValue(BlockRedstoneWire.POWER));
+		}
 		if(possibleOut != 0){
 			return possibleOut;
 

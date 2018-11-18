@@ -122,6 +122,8 @@ public class ModBlocks{
 	public static BeamRedirector beamRedirector;
 	public static PermeableGlass permeableGlass;
 	public static PermeableQuartz permeableQuartz;
+	public static RedstoneTransmitter redstoneTransmitter;
+	public static RedstoneReceiver redstoneReceiver;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
 	
@@ -265,6 +267,8 @@ public class ModBlocks{
 		beamRedirector = new BeamRedirector();
 		permeableGlass = new PermeableGlass();
 		permeableQuartz = new PermeableQuartz();
+		redstoneTransmitter = new RedstoneTransmitter();
+		redstoneReceiver = new RedstoneReceiver();
 	}
 
 	@SideOnly(Side.CLIENT)

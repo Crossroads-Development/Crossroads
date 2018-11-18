@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.*;
+import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.fluid.*;
 import com.Da_Technomancer.crossroads.tileentities.heat.*;
-import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
@@ -106,6 +106,8 @@ public class ModTileEntity{
 		register(OreCleanserTileEntity.class, "ore_cleanser");
 		register(BlastFurnaceTileEntity.class, "blast_furnace");
 		register(BeamRedirectorTileEntity.class, "beam_redirector");
+		register(RedstoneTransmitterTileEntity.class, "redstone_transmitter");
+		register(RedstoneReceiverTileEntity.class, "redstone_receiver");
 	}
 
 	/**

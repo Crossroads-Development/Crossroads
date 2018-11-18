@@ -39,7 +39,9 @@ repositories {
 dependencies {
 	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.5-60"
 	deobfCompile "mezz.jei:jei_1.12.2:4.9.1.168"
-	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.6.465"
+	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.11.500"
+	deobfCompile "com.teamacronymcoders.base:base:1.12.2-3.11.0-SNAPSHOT.171"
+	deobfCompile "com.teamacronymcoders:ContentTweaker:1.12.2-4.8.0-Snapshot.9"
 }
 
 processResources {
