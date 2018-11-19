@@ -459,13 +459,17 @@ public final class ModCrafting{
 		//Ore Cleanser
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.oreCleanser, 1), "TWT", "T T", "TCT", 'T', "ingotTin", 'W', ModBlocks.waterCentrifuge, 'C', ModBlocks.fluidCoolingChamber));
 		//Blast Furnace
-		//TODO
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.blastFurnace, 1), "I|I", "B B", "BFB", '|', "stickIron", 'B', Blocks.BRICK_BLOCK, 'F', ModBlocks.fluidTube, 'I', "ingotIron"));
 		//Stirling Engine
-		//TODO
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.stirlingEngine, 1), "T|T", "C|C", "ICI", 'I', "ingotIron", 'C', "ingotCopper", '|', "stickIron", 'T', "ingotTin"));
 		//Permeable Glass
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.permeableGlass, 4), " G ", "G*G", " G ", 'G', "blockGlass", '*', ModItems.pureQuartz));
 		//Permeable Quartz
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.permeableQuartz, 4), " G ", "G*G", " G ", 'G', ModBlocks.blockPureQuartz, '*', "blockGlass"));
+		//Redstone Transmitter
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneTransmitter, 1), "QRQ", "RTR", "QRQ", 'Q', ModItems.luminescentQuartz, 'R', "dustRedstone", 'T', Blocks.REDSTONE_TORCH));
+		//Redstone Receiver
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneReceiver, 1), "QRQ", "RTR", "QRQ", 'Q', ModItems.luminescentQuartz, 'R', "dustRedstone", 'T', "blockRedstone"));
 	}
 
 	private static ItemStack getFilledHopper(){

@@ -18,7 +18,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -47,12 +46,12 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 		if(world.isRemote){
 			if(controller != null && controller == Minecraft.getMinecraft().player){
 				if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindForward)){
-					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) + (float) Math.PI / 20F);
+					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) - (float) Math.PI / 20F);
 					NBTTagCompound nbt = new NBTTagCompound();
 					nbt.setFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
 					ModPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
 				}else if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindBack)){
-					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) - (float) Math.PI / 20F);
+					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) + (float) Math.PI / 20F);
 					NBTTagCompound nbt = new NBTTagCompound();
 					nbt.setFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
 					ModPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
@@ -73,12 +72,11 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 			dataManager.set(GRAV_PLATE_ANGLE, 0F);
 		}else{
 			float angle = dataManager.get(GRAV_PLATE_ANGLE);
-			Vec3d look = controller.getLookVec();
-			look = look.subtract(0, look.y, 0).normalize();
+			double look = Math.toRadians(-controller.getRotationYawHead() + 90F);
 			motionY -= Math.cos(angle) * ACCEL;
-			motionX += Math.sin(angle) * look.x * ACCEL;
-			motionZ += Math.sin(angle) * look.z * ACCEL;
-			rotationYaw = -(float) Math.atan2(look.z, look.x) * 180F / (float) Math.PI;
+			motionX += Math.sin(angle) * Math.sin(look) * ACCEL;
+			motionZ -= Math.sin(angle) * Math.cos(look) * ACCEL;
+			rotationYaw = -controller.getRotationYawHead() + 90F;
 			controller.velocityChanged = true;
 		}
 		markVelocityChanged();

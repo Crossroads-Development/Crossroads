@@ -1,8 +1,8 @@
 {
 	"parent": "block/cube_bottom_top",
 	"textures": {
-		"side": "crossroads:blocks/wip",
-		"top": "crossroads:blocks/wip",
-		"bottom": "crossroads:blocks/wip"
+		"side": "crossroads:blocks/blast_furnace_side",
+		"top": "crossroads:blocks/blast_furnace_top",
+		"bottom": "crossroads:blocks/blast_furnace_bottom"
 	}
 }

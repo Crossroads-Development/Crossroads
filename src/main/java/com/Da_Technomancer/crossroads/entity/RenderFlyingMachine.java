@@ -40,7 +40,7 @@ public class RenderFlyingMachine extends Render<EntityFlyingMachine>{
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0.5D, 0);
-		GlStateManager.rotate(-entity.getAngle() * 180F / (float) Math.PI, 1, 0, 0);
+		GlStateManager.rotate((float) -Math.toDegrees(entity.getAngle()), 1, 0, 0);
 
 
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -364,23 +364,23 @@ public class RenderFlyingMachine extends Render<EntityFlyingMachine>{
 		buf.pos(0.7D, 1.2D, 0.4D).tex(0.25D, 0.5D).endVertex();
 
 		buf.pos(-0.7D, 1.3D, 0.4D).tex(0, 0.5D).endVertex();
-		buf.pos(-0.7D, 1.2D, 0.4D).tex(0.25D, 0.5D).endVertex();
-		buf.pos(0.7D, 1.2D, 0.4D).tex(0.25D, 0.75D).endVertex();
+		buf.pos(-0.7D, 1.2D, 0.4D).tex(0.015625D, 0.5D).endVertex();
+		buf.pos(0.7D, 1.2D, 0.4D).tex(0.015625D, 0.75D).endVertex();
 		buf.pos(0.7D, 1.3D, 0.4D).tex(0, 0.75D).endVertex();
 
 		buf.pos(0.7D, 1.3D, -0.4D).tex(0, 0.75D).endVertex();
-		buf.pos(0.7D, 1.2D, -0.4D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(-0.7D, 1.2D, -0.4D).tex(0.25D, 0.5D).endVertex();
+		buf.pos(0.7D, 1.2D, -0.4D).tex(0.015625D, 0.75D).endVertex();
+		buf.pos(-0.7D, 1.2D, -0.4D).tex(0.015625D, 0.5D).endVertex();
 		buf.pos(-0.7D, 1.3D, -0.4D).tex(0, 0.5D).endVertex();
 
 		buf.pos(-0.7D, 1.3D, -0.4D).tex(0, 0.75D).endVertex();
-		buf.pos(-0.7D, 1.2D, -0.4D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(-0.7D, 1.2D, 0.4D).tex(0.25D, 0.5D).endVertex();
+		buf.pos(-0.7D, 1.2D, -0.4D).tex(0.015625D, 0.75D).endVertex();
+		buf.pos(-0.7D, 1.2D, 0.4D).tex(0.015625D, 0.5D).endVertex();
 		buf.pos(-0.7D, 1.3D, 0.4D).tex(0, 0.5D).endVertex();
 
 		buf.pos(0.7D, 1.3D, 0.4D).tex(0, 0.5D).endVertex();
-		buf.pos(0.7D, 1.2D, 0.4D).tex(0.25D, 0.5D).endVertex();
-		buf.pos(0.7D, 1.2D, -0.4D).tex(0.25D, 0.75D).endVertex();
+		buf.pos(0.7D, 1.2D, 0.4D).tex(0.015625D, 0.5D).endVertex();
+		buf.pos(0.7D, 1.2D, -0.4D).tex(0.015625D, 0.75D).endVertex();
 		buf.pos(0.7D, 1.3D, -0.4D).tex(0, 0.75D).endVertex();
 
 
