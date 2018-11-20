@@ -107,8 +107,13 @@ public class MechanismSmallGear implements IMechanism{
 				EnumFacing facing = EnumFacing.byIndex(i);
 				// Adjacent gears
 				TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
-				if(adjTE != null && adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){
-					adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D);
+				if(adjTE != null){
+					if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D);
+					}else if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+						//Check for large gears
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing.getOpposite()) * handler.rotRatio, .5D);
+					}
 				}
 
 				// Diagonal gears

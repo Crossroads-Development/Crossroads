@@ -42,6 +42,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	}
 
 	protected void overload(){
+		resetBeamer();
 		world.destroyBlock(pos, true);
 		world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 5F, (float) Math.random());
 	}
@@ -92,6 +93,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 			activeCycle = BeamManager.cycleNumber;
 			if(out != null && out.getPower() > getLimit()){
 				overload();
+				return;
 			}
 			doEmit(out);
 		}

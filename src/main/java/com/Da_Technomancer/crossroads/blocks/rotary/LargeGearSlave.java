@@ -107,7 +107,7 @@ public class LargeGearSlave extends BlockContainer{
 		if(te instanceof LargeGearSlaveTileEntity && ((LargeGearSlaveTileEntity) te).masterPos != null){
 			te = world.getTileEntity(pos.add(((LargeGearSlaveTileEntity) te).masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
-				return new ItemStack(GearFactory.LARGE_GEARS[((LargeGearMasterTileEntity) world.getTileEntity(pos)).getMember().ordinal()], 1);
+				return new ItemStack(GearFactory.LARGE_GEARS[((LargeGearMasterTileEntity) te).getMember().ordinal()], 1);
 			}
 		}
 		return ItemStack.EMPTY;

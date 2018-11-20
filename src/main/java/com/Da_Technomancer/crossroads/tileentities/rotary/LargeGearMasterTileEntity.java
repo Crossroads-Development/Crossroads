@@ -237,8 +237,14 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 					// Diagonal gears
 					TileEntity diagTE = world.getTileEntity(pos.offset(sideN, 2).offset(sid));
-					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()) && RotaryUtil.canConnectThrough(world, pos.offset(sideN, 2), sideN.getOpposite(), sid) && diagTE != null){
+					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()) && RotaryUtil.canConnectThrough(world, pos.offset(sideN, 2), sideN.getOpposite(), sid)){
 						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(sid, sideN.getOpposite()) * rotRatio, 1.5D);
+					}
+
+					//Behind gears
+					TileEntity behindTE = world.getTileEntity(pos.offset(sideN, 1).offset(sid));
+					if(behindTE != null && behindTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN)){
+						behindTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN).connect(masterIn, key, -RotaryUtil.getDirSign(sid, sideN) * rotRatio, 1.5D);
 					}
 				}
 			}

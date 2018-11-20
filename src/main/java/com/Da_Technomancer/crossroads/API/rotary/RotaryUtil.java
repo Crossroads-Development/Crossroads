@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
 import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.essentials.shared.ISlaveAxisHandler;
 import net.minecraft.block.state.IBlockState;
@@ -83,6 +84,6 @@ public class RotaryUtil{
 	 */
 	public static boolean canConnectThrough(World world, BlockPos pos, EnumFacing fromDir, EnumFacing toDir){
 		IBlockState state = world.getBlockState(pos);
-		return !state.getBlock().isNormalCube(state, world, pos);
+		return !state.getBlock().isNormalCube(state, world, pos) && state.getBlock() != ModBlocks.largeGearSlave && state.getBlock() != ModBlocks.largeGearMaster;
 	}
 }

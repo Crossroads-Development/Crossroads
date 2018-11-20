@@ -28,6 +28,10 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 		fluidProps[1] = new TankProperty(1, 10_000, false, true, null);
 	}
 
+	public boolean isNeg(){
+		return neg;
+	}
+
 	@Override
 	public int fluidTanks(){
 		return 2;

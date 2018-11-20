@@ -32,7 +32,7 @@ public class RedstoneKeyboardTileEntity extends TileEntity implements IDoubleRec
 		if(context.equals("output") || context.equals("newOutput")){
 			output = message;
 			if(!world.isRemote){
-				world.updateComparatorOutputLevel(pos, ModBlocks.redstoneKeyboard);
+				world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneKeyboard, false);
 			}
 		}
 	}

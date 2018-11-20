@@ -17,6 +17,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class RedstoneKeyboard extends BlockContainer{
@@ -45,15 +46,15 @@ public class RedstoneKeyboard extends BlockContainer{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new RedstoneKeyboardTileEntity();
 	}
-	
+
 	@Override
-	public boolean hasComparatorInputOverride(IBlockState state){
+	public boolean canProvidePower(IBlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
-		TileEntity te = worldIn.getTileEntity(pos);
+	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
+		TileEntity te = blockAccess.getTileEntity(pos);
 		return Math.min(15, (int) Math.round(((RedstoneKeyboardTileEntity) te).output));
 	}
 	

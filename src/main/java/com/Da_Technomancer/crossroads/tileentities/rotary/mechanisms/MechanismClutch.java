@@ -4,8 +4,8 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class MechanismClutch implements IMechanism{
+public class MechanismClutch extends MechanismAxle{
 	
 	private final boolean inverted;
 
@@ -38,9 +38,9 @@ public class MechanismClutch implements IMechanism{
 
 	private static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[3];
 	static{
-		BOUNDING_BOXES[0] = new AxisAlignedBB(0, .4375D, .4375D, 1, .5625D, .5625D);//X
-		BOUNDING_BOXES[1] = new AxisAlignedBB(.4375D, 0, .4375D, .5625D, 1, .5625D);//Y
-		BOUNDING_BOXES[2] = new AxisAlignedBB(.4375D, .4375D, 0, .5625D, .5625D, 1);//Z
+		BOUNDING_BOXES[0] = new AxisAlignedBB(0, 0.25D, 0.25D, 1, 0.75D, 0.75D);//X
+		BOUNDING_BOXES[1] = new AxisAlignedBB(0.25D, 0, 0.25D, 0.75D, 1, 0.75D);//Y
+		BOUNDING_BOXES[2] = new AxisAlignedBB(0.25D, 0.25D, 0, 0.75D, 0.75D, 1);//Z
 	}
 
 	@Override
@@ -54,11 +54,6 @@ public class MechanismClutch implements IMechanism{
 	@Override
 	public double getRatiatorSignal(EnumGearType mat, EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
 		return Math.abs(motData[0]) * 3D;
-	}
-
-	@Override
-	public double getInertia(EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
-		return mat.getDensity() / 32_000D;
 	}
 
 	@Override

@@ -1,14 +1,12 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,7 +25,7 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class MechanismToggleGear implements IMechanism{
+public class MechanismToggleGear extends MechanismSmallGear{
 
 	private final boolean inverted;
 
@@ -42,13 +39,6 @@ public class MechanismToggleGear implements IMechanism{
 			te.getWorld().playSound(null, te.getPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
 			CommonProxy.masterKey++;
 		}
-	}
-
-	@Override
-	public double getInertia(EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
-		// assume each gear is 1/8 of a cubic meter and has a radius of 1/2 meter.
-		// mass is rounded to make things nicer for everyone
-		return 0.125D * MiscUtil.betterRound(mat.getDensity() / 8, 1);// .125 because r*r/2 so .5*.5/2
 	}
 
 	@Override
@@ -123,8 +113,13 @@ public class MechanismToggleGear implements IMechanism{
 				EnumFacing facing = EnumFacing.byIndex(i);
 				// Adjacent gears
 				TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
-				if(adjTE != null && adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){
-					adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D);
+				if(adjTE != null){
+					if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D);
+					}else if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+						//Check for large gears
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing.getOpposite()) * handler.rotRatio, .5D);
+					}
 				}
 
 				// Diagonal gears
@@ -140,11 +135,6 @@ public class MechanismToggleGear implements IMechanism{
 	@Override
 	public ItemStack getDrop(EnumGearType mat){
 		return new ItemStack(GearFactory.TOGGLE_GEARS[mat.ordinal()], 1);
-	}
-
-	@Override
-	public AxisAlignedBB getBoundingBox(@Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
-		return side == null ? Block.NULL_AABB : MechanismSmallGear.BOUNDING_BOXES[side.getIndex()];
 	}
 
 	private final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));

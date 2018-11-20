@@ -24,7 +24,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return (oldState.getBlock() != newState.getBlock());
+		return oldState.getBlock() != newState.getBlock();
 	}
 	
 	public double[] getOutput(){
@@ -52,7 +52,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 			index += floor;
 			index %= output.length;
 		}
-		world.updateComparatorOutputLevel(pos, ModBlocks.redstoneRegistry);
+		world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneRegistry, false);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 		if(context.equals("output") || context.equals("newOutput")){
 			output = message == null ? new double[1] : message;
 			if(!world.isRemote){
-				world.updateComparatorOutputLevel(pos, ModBlocks.redstoneKeyboard);
+				world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneRegistry, false);
 			}
 		}
 	}

@@ -84,7 +84,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE{
 				out = out.mult(512D / ((double) out.getPower()), false);
 
 				beamer[1].emit(out, world);
-				refreshBeam(1);
+				refreshBeam(1);//Assume the beam changed as the color constantly cycles
 				prevMag[1] = out;
 				markDirty();
 			}

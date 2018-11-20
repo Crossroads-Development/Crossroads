@@ -100,6 +100,13 @@ public class RotaryDrillTileEntity extends ModuleTE{
 		golden = nbt.getBoolean("gold");
 	}
 
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setBoolean("gold", golden);
+		return nbt;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){

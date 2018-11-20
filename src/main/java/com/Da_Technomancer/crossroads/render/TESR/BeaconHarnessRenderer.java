@@ -103,7 +103,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 			float diagMult = 2F;//* (float) Math.sqrt(2D);
 			for(int i = 0; i < 8; i++){
 				beam.renderOld[i] = beam.renderNew[i];
-				beam.renderNew[i] = 2F + 6F * ((i % 2 == 0) ? rand.nextFloat() / 2F : rand.nextFloat() / diagMult);
+				beam.renderNew[i] = 0.25F * ((i % 2 == 0) ? rand.nextFloat() / 2F : rand.nextFloat() / diagMult);
 			}
 		}else if(ticks > 1F && ticks < 2F){
 			beam.renderSet = false;
@@ -114,13 +114,11 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 		GlStateManager.translate(x, y, z);
 
 		Color col = BeamManager.getTriple(packet[1]).getLeft();
-		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, 0.25F);
+		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
-		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
 		float height = 0.2F * (float) Math.sin(0.05F * beam.getWorld().getTotalWorldTime());
 		float change = ticks / 20F;
@@ -139,7 +137,6 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
-		GlStateManager.disableBlend();
 		GlStateManager.color(1, 1, 1);
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();

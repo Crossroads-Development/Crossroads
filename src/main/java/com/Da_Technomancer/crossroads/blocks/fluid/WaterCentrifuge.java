@@ -92,10 +92,25 @@ public class WaterCentrifuge extends BlockContainer{
 		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
 		super.breakBlock(world, pos, blockstate);
 	}
-	
+
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof WaterCentrifugeTileEntity && ((WaterCentrifugeTileEntity) te).isNeg()){
+			return 1;
+		}
+		return 0;
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		tooltip.add("Converts water into distilled water and salt. The spin direction needs to keep changing to operate");
 		tooltip.add("I: 115");
 		tooltip.add("Produces LoL players.");
 	}

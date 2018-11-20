@@ -67,7 +67,13 @@ public class StampMillTileEntity extends InventoryTE{
 						progress = 0;
 						//TODO possibly add a sound effect
 						ItemStack produced = RecipeHolder.stampMillRecipes.get(inventory[0]);
-						produced = produced.isEmpty() ? inventory[0].splitStack(1) : produced.copy();
+						if(produced.isEmpty()){
+							produced = inventory[0].copy();
+							produced.setCount(1);
+						}else{
+							produced = produced.copy();
+						}
+						inventory[0].shrink(1);
 						inventory[1] = produced;
 					}else{
 						inventory[1] = inventory[0].splitStack(1);
