@@ -11,7 +11,15 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 public class BasicFluidSplitterTileEntity extends ModuleTE{
 
-	private static final int CAPACITY = 10_000;
+	public static final int[] MODES = {1, 2, 3};
+	private int mode = 1;
+
+	public int increaseMode(){
+		mode++;
+		mode %= MODES.length;
+		markDirty();
+		return mode;
+	}
 
 	public BasicFluidSplitterTileEntity(){
 		super();
@@ -23,36 +31,53 @@ public class BasicFluidSplitterTileEntity extends ModuleTE{
 	protected int fluidTanks(){
 		return 2;
 	}
-	
+
+	private static final int CAPACITY = 2_000;
+
+	private final FluidHandler downHandler = new FluidHandler(0);
+	private final FluidHandler upHandler = new FluidHandler(1);
+	private final InHandler inHandler = new InHandler();
+	private final FluidHandler centerHandler = new FluidHandler(-1);
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return side == null || side.getAxis() != EnumFacing.Axis.Y ? (T) inHandler : side == EnumFacing.UP ? (T) upHandler : (T) downHandler;
+			if(side == null){
+				return (T) centerHandler;
+			}
+
+			return side.getAxis() != EnumFacing.Axis.Y ? (T) inHandler : side == EnumFacing.UP ? (T) upHandler : (T) downHandler;
 		}
-		
+
 		return super.getCapability(cap, side);
 	}
 
-	private final FluidHandler upHandler = new FluidHandler(0);
-	private final FluidHandler downHandler = new FluidHandler(1);
-	private final InHandler inHandler = new InHandler();
-	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setBoolean("went_up", lastWentUp);
+		nbt.setInteger("mode", mode);
+		nbt.setInteger("transfered", transfered);
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		lastWentUp = nbt.getBoolean("went_up");
+		mode = nbt.getInteger("mode");
+		transfered = nbt.getInteger("transfered");
 	}
-	
-	private boolean lastWentUp = false;
-	
+
+	protected int getPortion(){
+		return MODES[mode];
+	}
+
+	protected int getBase(){
+		return 4;
+	}
+
+	private int transfered = 0;
+
 	private class InHandler implements IFluidHandler{
 
 		private final TankProperty[] properties = new TankProperty[] {new TankProperty(0, CAPACITY, true, false), new TankProperty(1, CAPACITY, true, false)};
@@ -67,19 +92,21 @@ public class BasicFluidSplitterTileEntity extends ModuleTE{
 			if(resource == null){
 				return 0;
 			}
-			
-			int accepted = Math.max(0, Math.min(resource.amount, Math.min(fluids[0] != null && !fluids[0].isFluidEqual(resource) ? 0 : (2 * (CAPACITY - (fluids[0] == null ? 0 : fluids[0].amount))) + (lastWentUp ? -(resource.amount % 2) : resource.amount % 2), fluids[1] != null && !fluids[1].isFluidEqual(resource) ? 0 : (2 * (CAPACITY - (fluids[1] == null ? 0 : fluids[1].amount))) + (lastWentUp ? resource.amount % 2 : -(resource.amount % 2)))));
-			
-			int goUp = (accepted / 2) + (lastWentUp ? 0 : accepted % 2);
-			int goDown = accepted - goUp;
-			
+
+			int portion = getPortion();
+			int base = getBase();
+
+			int accepted = Math.max(0, Math.min(resource.amount, portion == 0 ? fluids[1] != null && !fluids[1].isFluidEqual(resource) ? 0 : CAPACITY - (fluids[1] == null ? 0 : fluids[1].amount) : portion == base ? fluids[0] != null && !fluids[0].isFluidEqual(resource) ? 0 : CAPACITY - (fluids[0] == null ? 0 : fluids[0].amount) : Math.min(fluids[0] != null && !fluids[0].isFluidEqual(resource) ? 0 : ((base * (CAPACITY - (fluids[0] == null ? 0 : fluids[0].amount))) / portion), fluids[1] != null && !fluids[1].isFluidEqual(resource) ? 0 : ((base * (CAPACITY - (fluids[1] == null ? 0 : fluids[1].amount))) / (base - portion)))));
+			int goDown = (portion * (accepted / base)) + (transfered >= portion ? 0 : Math.min(portion - transfered, accepted % base)) + Math.max(0, Math.min(portion, (accepted % base) + transfered - base));
+			int goUp = accepted - goDown;
+
 			if(doFill && accepted != 0){
 				fluids[0] = new FluidStack(resource.getFluid(), goDown + (fluids[0] == null ? 0 : fluids[0].amount), resource.tag);
 				fluids[1] = new FluidStack(resource.getFluid(), goUp + (fluids[1] == null ? 0 : fluids[1].amount), resource.tag);
-				lastWentUp = (accepted % 2 == 0) == lastWentUp;
-				
+				transfered += accepted % base;
+				transfered %= base;
 			}
-			
+
 			return accepted;
 		}
 

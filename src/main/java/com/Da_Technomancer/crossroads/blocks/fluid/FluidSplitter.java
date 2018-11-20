@@ -48,8 +48,9 @@ public class FluidSplitter extends BlockContainer{
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		int i = Math.max(worldIn.getRedstonePower(pos.down(), EnumFacing.DOWN), Math.max(worldIn.getRedstonePower(pos.up(), EnumFacing.UP), Math.max(worldIn.getRedstonePower(pos.east(), EnumFacing.EAST), Math.max(worldIn.getRedstonePower(pos.west(), EnumFacing.WEST), Math.max(worldIn.getRedstonePower(pos.north(), EnumFacing.NORTH), worldIn.getRedstonePower(pos.south(), EnumFacing.SOUTH))))));
 		i = Math.min(i, 15);
-		if(((FluidSplitterTileEntity) worldIn.getTileEntity(pos)).redstone != i){
-			((FluidSplitterTileEntity) worldIn.getTileEntity(pos)).redstone = i;
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof FluidSplitterTileEntity && ((FluidSplitterTileEntity) te).redstone != i){
+			((FluidSplitterTileEntity) te).redstone = i;
 		}
 	}
 }
