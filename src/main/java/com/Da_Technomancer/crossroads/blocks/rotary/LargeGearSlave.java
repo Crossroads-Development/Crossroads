@@ -30,12 +30,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Random;
 
 public class LargeGearSlave extends BlockContainer{
-	
+
 	private static final AxisAlignedBB NORTH = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D);
-	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(0D, 0D, .125D, 1D, 1D, 1D);
-	private static final AxisAlignedBB EAST = new AxisAlignedBB(.125D, 0D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(0D, 0D, 0.875D, 1D, 1D, 1D);
+	private static final AxisAlignedBB EAST = new AxisAlignedBB(0.875D, 0D, 0D, 1D, 1D, 1D);
 	private static final AxisAlignedBB WEST = new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D);
-	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .125D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, 0.875D, 0D, 1D, 1D, 1D);
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
 	
 	public LargeGearSlave(){
@@ -107,7 +107,7 @@ public class LargeGearSlave extends BlockContainer{
 		if(te instanceof LargeGearSlaveTileEntity && ((LargeGearSlaveTileEntity) te).masterPos != null){
 			te = world.getTileEntity(pos.add(((LargeGearSlaveTileEntity) te).masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
-				return new ItemStack(GearFactory.LARGE_GEARS[((LargeGearMasterTileEntity) te).getMember().ordinal()], 1);
+				return new ItemStack(GearFactory.gearTypes.get(((LargeGearMasterTileEntity) (te)).getMember()).getLargeGear(), 1);
 			}
 		}
 		return ItemStack.EMPTY;

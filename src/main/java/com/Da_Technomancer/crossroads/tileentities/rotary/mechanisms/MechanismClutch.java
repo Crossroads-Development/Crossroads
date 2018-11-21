@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import net.minecraft.block.Block;
@@ -44,7 +43,7 @@ public class MechanismClutch extends MechanismAxle{
 	}
 
 	@Override
-	public void onRedstoneChange(double prevValue, double newValue, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
+	public void onRedstoneChange(double prevValue, double newValue, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
 			te.getWorld().playSound(null, te.getPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
 			CommonProxy.masterKey++;
@@ -52,17 +51,17 @@ public class MechanismClutch extends MechanismAxle{
 	}
 
 	@Override
-	public double getRatiatorSignal(EnumGearType mat, EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
+	public double getRatiatorSignal(GearFactory.GearMaterial mat, EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
 		return Math.abs(motData[0]) * 3D;
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, EnumFacing capSide, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
 		return cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == null && capSide.getAxis() == axis && (te.redstoneIn != 0 ^ inverted || capSide.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE);
 	}
 
 	@Override
-	public void propogate(EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+	public void propogate(GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 		//This mechanism should always be in the axle slot
 		if(side != null){
 			return;
@@ -130,8 +129,8 @@ public class MechanismClutch extends MechanismAxle{
 
 	@Nonnull
 	@Override
-	public ItemStack getDrop(EnumGearType mat){
-		return new ItemStack(mat == EnumGearType.COPSHOWIUM ? inverted ? ModItems.clutchInvertedCopshowium : ModItems.clutchCopshowium : inverted ? ModItems.clutchInvertedIron : ModItems.clutchIron, 1);//TODO
+	public ItemStack getDrop(GearFactory.GearMaterial mat){
+		return new ItemStack(inverted ? GearFactory.gearTypes.get(mat).getInvClutch() : GearFactory.gearTypes.get(mat).getClutch(), 1);
 	}
 
 	@Override
@@ -145,7 +144,7 @@ public class MechanismClutch extends MechanismAxle{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
 		if(axis == null){
 			return;
 		}

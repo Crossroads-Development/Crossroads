@@ -38,6 +38,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 public final class OreSetup{
 
@@ -68,7 +69,7 @@ public final class OreSetup{
 
 	public static final HashMap<String, OreProfile> metalStages = new HashMap<>();
 
-	public static void init(){
+	protected static void init(){
 		//Register CR metal ores, blocks, ingots, nuggets manually
 		ingotTin = new BasicItem("ingot_tin", "ingotTin");
 		blockTin = new BasicBlock("block_tin", Material.IRON, 5, "blockTin"){
@@ -148,8 +149,10 @@ public final class OreSetup{
 
 
 		String[] rawInput = ModConfig.getConfigStringList(ModConfig.processableOres, true);
+
 		//It's a HashMap instead of an ArrayList just in case a user decides to (incorrectly) list a metal twice
 		HashMap<String, Color> metals = new HashMap<>(rawInput.length);
+		Pattern pattern = Pattern.compile("\\w++ \\p{XDigit}{6}+");
 
 		for(String raw : rawInput){
 			//An enormous amount of input sanitization is involved here because the average config tweaker is slightly better at following instructions than the average walrus. And not one of those clever performing walruses (walri?) in aquariums, but a stupid walrus
@@ -157,30 +160,21 @@ public final class OreSetup{
 
 			//Check for stupid whitespace
 			raw = raw.trim();
-			//Check for empty entries
-			if(raw.isEmpty()){
+			//Check the basic structure
+			if(!pattern.matcher(raw).matches()){
 				continue;
 			}
-			int spaceIndex = raw.indexOf(' ');
+			int spaceIndex = raw.length() - 7;
 			String metal = "" + Character.toUpperCase(raw.charAt(0));
 			Color col;
 			//Make sure they aren't trying to register a one character metal
-			if(raw.length() != 1){
-				//First character is capitalized for OreDict
-				metal += spaceIndex != -1 ? raw.substring(1, spaceIndex) : raw.substring(1);
-			}
+			//First character is capitalized for OreDict
+			metal += raw.substring(1, spaceIndex);
 
-			//Make sure they actually added a color after the space of correct length
-			if(spaceIndex != -1 && raw.length() - spaceIndex == 7){
-				String colorString = '#' + raw.substring(spaceIndex + 1);
-				//Make sure people who actually specified a color did it properly
-				try{
-					col = Color.decode(colorString);
-				}catch(NumberFormatException e){
-					//Pick a random color because the user messed up, and if the user ends up with hot-pink lead that's their problem
-					col = Color.getHSBColor((float) Math.random(), 1F, 1F);
-				}
-			}else{
+			String colorString = '#' + raw.substring(spaceIndex + 1);
+			try{
+				col = Color.decode(colorString);
+			}catch(NumberFormatException e){
 				//Pick a random color because the user messed up, and if the user ends up with hot-pink lead that's their problem
 				col = Color.getHSBColor((float) Math.random(), 1F, 1F);
 			}
@@ -193,7 +187,7 @@ public final class OreSetup{
 		ModelResourceLocation dustModel = new ModelResourceLocation(Main.MODID + ":ore_dust", "inventory");
 		ModelResourceLocation gravelModel = new ModelResourceLocation(Main.MODID + ":ore_gravel", "inventory");
 		ModelResourceLocation clumpModel = new ModelResourceLocation(Main.MODID + ":ore_clump", "inventory");
-		
+
 		for(Map.Entry<String, Color> type : metals.entrySet()){
 			String lowercaseMetal = type.getKey().toLowerCase();
 
@@ -243,7 +237,6 @@ public final class OreSetup{
 			ModBlocks.toRegister.add(fluidBlock);
 
 
-			//TODO recipe, once the machine is added
 			RecipeHolder.millRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new ItemStack[] {new ItemStack(dust, 2), new ItemStack(Blocks.SAND, 1)});
 			RecipeHolder.millRecipes.put(new OreDictCraftingStack("ingot" + type.getKey()), new ItemStack[] {new ItemStack(dust, 1)});
 			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("ingot" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB));
@@ -260,7 +253,7 @@ public final class OreSetup{
 		}
 	}
 
-	public static void initCrafting(){
+	protected static void initCrafting(){
 		for(Map.Entry<String, OreProfile> ent : metalStages.entrySet()){
 			if(FMLCommonHandler.instance().getSide() == Side.CLIENT){
 				registerColor(ent.getValue());
@@ -273,7 +266,7 @@ public final class OreSetup{
 			}
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	private static void registerColor(OreProfile profile){
 		IItemColor itemColoring = (ItemStack stack, int tintIndex) -> tintIndex == 0 ? profile.col.getRGB() : -1;

@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -28,12 +27,12 @@ import java.util.List;
 
 public class LargeGear extends Item{
 
-	private final EnumGearType type;
+	private final GearFactory.GearMaterial type;
 	public static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base_large", "inventory");
 
-	public LargeGear(EnumGearType typeIn){
+	public LargeGear(GearFactory.GearMaterial typeIn){
 		String name = "large_gear_" + typeIn.toString().toLowerCase();
-		setTranslationKey(name);
+		setTranslationKey("gear_large_metal");
 		setRegistryName(name);
 		type = typeIn;
 		setCreativeTab(ModItems.TAB_GEAR);
@@ -45,6 +44,11 @@ public class LargeGear extends Item{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("I: " + MiscUtil.betterRound(9D * type.getDensity() / 8D, 2) * 1.125D);
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack){
+		return String.format(super.getItemStackDisplayName(stack), type.getName());
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
@@ -34,7 +33,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	}
 
 	@Override
-	public void onRedstoneChange(double prevValue, double newValue, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
+	public void onRedstoneChange(double prevValue, double newValue, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
 			te.getWorld().playSound(null, te.getPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
 			CommonProxy.masterKey++;
@@ -42,12 +41,12 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, EnumFacing capSide, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
 		return ((cap == Capabilities.COG_HANDLER_CAPABILITY && (te.redstoneIn != 0 ^ inverted)) || cap == Capabilities.AXLE_HANDLER_CAPABILITY) && side == capSide;
 	}
 
 	@Override
-	public void propogate(EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+	public void propogate(GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 		//This mechanism should never be in the axle slot
 		if(side == null){
 			return;
@@ -133,8 +132,8 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 	@Nonnull
 	@Override
-	public ItemStack getDrop(EnumGearType mat){
-		return new ItemStack(GearFactory.TOGGLE_GEARS[mat.ordinal()], 1);
+	public ItemStack getDrop(GearFactory.GearMaterial mat){
+		return new ItemStack(inverted ? GearFactory.gearTypes.get(mat).getInvToggleGear() : GearFactory.gearTypes.get(mat).getToggleGear(), 1);
 	}
 
 	private final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));
@@ -142,7 +141,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
 		if(side == null){
 			return;
 		}

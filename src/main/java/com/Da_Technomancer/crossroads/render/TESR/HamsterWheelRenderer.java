@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import net.minecraft.client.renderer.GlStateManager;
@@ -68,7 +68,7 @@ public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheel
 		GlStateManager.translate(0, -.4375D, 0);
 		GlStateManager.scale(1, .8D, 1);
 		GlStateManager.rotate(90, 1, 0, 0);
-		ModelAxle.render(EnumGearType.IRON.getColor());
+		ModelAxle.render(GearFactory.findMaterial("Iron").getColor());
 		GlStateManager.popMatrix();
 
 		float lHalf = .375F;

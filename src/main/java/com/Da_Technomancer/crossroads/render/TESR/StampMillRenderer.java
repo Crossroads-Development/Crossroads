@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
@@ -19,6 +19,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
+
 public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEntity>{
 
 	private static final ResourceLocation METAL_TEXTURE = new ResourceLocation(Main.MODID, "textures/blocks/block_cast_iron.png");
@@ -30,6 +32,8 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || state.getBlock() != ModBlocks.stampMill || axle == null){
 			return;
 		}
+		
+		Color ironColor = GearFactory.findMaterial("Iron").getColor();
 
 		float prog = Math.signum(axle.getClientW()) * ((axle.getNextAngle() - axle.getAngle()) * partialTicks + axle.getAngle());
 		GlStateManager.pushMatrix();
@@ -43,7 +47,7 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.rotate(-prog, 0, 1, 0);
-		ModelAxle.render(EnumGearType.IRON.getColor());
+		ModelAxle.render(ironColor);
 
 		//Teeth
 		for(int i = 0; i < 3; i++){
@@ -53,7 +57,7 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 			GlStateManager.rotate(90, 0, 0, 1);
 			GlStateManager.scale(0.4F, 0.5F, 0.4F);
 
-			ModelAxle.render(EnumGearType.IRON.getColor());
+			ModelAxle.render(ironColor);
 			GlStateManager.popMatrix();
 		}
 
@@ -159,8 +163,6 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 			buf.pos(rodRad, -bottom, -rodRad).tex(3D * rodRad, rodRad).endVertex();
 			buf.pos(rodRad, -bottom, rodRad).tex(3D * rodRad, 3D * rodRad).endVertex();
 			buf.pos(-rodRad, -bottom, rodRad).tex(rodRad, 3D * rodRad).endVertex();
-			//TODO
-
 			tes.draw();
 
 			GlStateManager.translate(5F / 16F, 0, 0);
@@ -169,7 +171,5 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
-
-		//TODO
 	}
 }

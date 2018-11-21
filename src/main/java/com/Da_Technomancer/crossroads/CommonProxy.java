@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import com.Da_Technomancer.crossroads.tileentities.ModTileEntity;
@@ -69,10 +70,8 @@ public class CommonProxy{
 	public static void registerBlocks(RegistryEvent.Register<Block> e){
 		IForgeRegistry<Block> registry = e.getRegistry();
 		ModBlocks.init();
-		HeatCableFactory.init();
-		GearFactory.init();
 		ModFluids.init();
-		OreSetup.init();
+		ItemSets.init();
 		for(Block block : ModBlocks.toRegister){
 			registry.register(block);
 		}
@@ -96,7 +95,7 @@ public class CommonProxy{
 		IForgeRegistry<IRecipe> registry = e.getRegistry();
 
 		ModCrafting.init();
-		OreSetup.initCrafting();
+		ItemSets.craftingInit();
 
 		for(IRecipe recipe : ModCrafting.toRegister){
 			if(recipe.getRegistryName() == null){

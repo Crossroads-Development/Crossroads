@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -30,7 +29,7 @@ import java.util.ArrayList;
 
 public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiver, ITickable, IInfoTE{
 	
-	private EnumGearType type;
+	private GearFactory.GearMaterial type;
 	private double[] motionData = new double[4];
 	private double inertia = 0;
 	private boolean borken = false;
@@ -47,19 +46,19 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		chat.add("I: " + inertia + ", Rotation Ratio: " + handlerMain.getRotationRatio());
 	}
 
-	public void initSetup(EnumGearType typ){
+	public void initSetup(GearFactory.GearMaterial typ){
 		type = typ;
 
 		if(!world.isRemote){
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 1, type == null ? -1 : type.ordinal(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 1, type == null ? -1 : type.getIndex(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 
 		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
 	}
 
-	public EnumGearType getMember(){
-		//IRON is returned instead of null to prevent edge case crashes.
-		return type == null ? EnumGearType.IRON : type;
+	public GearFactory.GearMaterial getMember(){
+		//The first material is returned instead of null to prevent edge case crashes.
+		return type == null ? GearFactory.gearMats.get(0) : type;
 	}
 
 	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -1, -1, 2, 2, 2);
@@ -80,7 +79,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			}
 		}
 		if(drop){
-			world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(GearFactory.LARGE_GEARS[type.ordinal()], 1)));
+			world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(GearFactory.gearTypes.get(type).getLargeGear(), 1)));
 		}
 	}
 
@@ -100,7 +99,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			motionData[j] = nbt.getDouble("[" + j + "]mot");
 		}
 		// member
-		type = nbt.hasKey("memb") ? EnumGearType.valueOf(nbt.getString("memb")) : null;
+		type = nbt.getInteger("type") < GearFactory.gearMats.size() ? GearFactory.gearMats.get(nbt.getInteger("type")) : GearFactory.gearMats.get(0);
 		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);
 		//1.125 because r*r/2 so 1.5*1.5/2
 
@@ -120,7 +119,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 		// member
 		if(type != null){
-			nbt.setString("memb", type.name());
+			nbt.setInteger("type", type.getIndex());
 		}
 
 		nbt.setBoolean("new", true);
@@ -133,7 +132,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
 		if(type != null){
-			nbt.setString("memb", type.name());
+			nbt.setInteger("type", type.getIndex());
 		}
 		nbt.setBoolean("new", true);
 		nbt.setFloat("angle", angleW[0]);
@@ -148,7 +147,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
 			angleW[1] = Float.intBitsToFloat((int) (message >>> 32L));
 		}else if(identifier == 1){
-			type = message < 0 || message >= EnumGearType.values().length ? null : EnumGearType.values()[(int) message];
+			type = message < 0 || message >= GearFactory.gearMats.size() ? GearFactory.gearMats.get(0) : GearFactory.gearMats.get((int) message);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
 import com.Da_Technomancer.crossroads.render.bakedModel.BakedModelLoader;
 import com.Da_Technomancer.crossroads.entity.ModEntities;
@@ -32,7 +33,7 @@ public class ClientProxy extends CommonProxy{
 	@Override
 	protected void init(FMLInitializationEvent e){
 		super.init(e);
-		GearFactory.clientInit();
+		ItemSets.clientInit();
 		ModItems.clientInit();
 		AAModTESR.registerBlockRenderer();
 		Keys.init();
@@ -50,6 +51,6 @@ public class ClientProxy extends CommonProxy{
 		ModBlocks.initModels();
 		ModItems.initModels();
 		ModFluids.registerRenderers();
-		HeatCableFactory.clientInit();
+		ItemSets.modelInit();
 	}
 }

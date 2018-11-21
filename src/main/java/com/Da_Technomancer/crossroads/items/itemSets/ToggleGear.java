@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -26,20 +25,25 @@ import java.util.List;
 
 public class ToggleGear extends Item{
 
-	private final EnumGearType type;
+	private final GearFactory.GearMaterial type;
 	private final boolean inverted;
 	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_toggle", "inventory");
 	private static final ModelResourceLocation LOCAT_INV = new ModelResourceLocation(Main.MODID + ":gear_toggle_inv", "inventory");
 
-	public ToggleGear(EnumGearType typeIn, boolean inverted){
+	public ToggleGear(GearFactory.GearMaterial typeIn, boolean inverted){
 		String name = "gear_toggle_" + (inverted ? "inverted_" : "") + typeIn.toString().toLowerCase();
-		setTranslationKey(name);
+		setTranslationKey(inverted ? "gear_toggle_inverted_metal" : "gear_toggle_metal");
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_GEAR);
 		type = typeIn;
 		this.inverted = inverted;
 		ModItems.toRegister.add(this);
 		ModItems.toClientRegister.put(Pair.of(this, 0), inverted ? LOCAT_INV : LOCAT);
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack){
+		return String.format(super.getItemStackDisplayName(stack), type.getName());
 	}
 
 	@Override

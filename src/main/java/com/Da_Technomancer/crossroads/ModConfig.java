@@ -6,6 +6,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public final class ModConfig{
 
@@ -16,6 +17,7 @@ public final class ModConfig{
 	public static Property genRubyOre;
 	public static Property genVoidOre;
 	public static Property processableOres;
+	public static Property gearTypes;
 	public static Property speedPrecision;
 	public static Property weatherControl;
 	public static Property rotateBeam;
@@ -83,7 +85,8 @@ public final class ModConfig{
 		genTinOre = config.get(CAT_ORES, "Generate Tin Ore?", true);
 		genRubyOre = config.get(CAT_ORES, "Generate Ruby Ore?", true);
 		genVoidOre = config.get(CAT_ORES, "Generate Void Crystal Ore?", true);
-		SYNCED_PROPERTIES.add(processableOres = config.get(CAT_ORES, "Metal ore types that Crossroads machines should be able to process", new String[] {"copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"}, "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\" \nThis config MUST match the server settings exactly (color doesn't matter) in multiplayer or THINGS WILL BREAK! It can not sync itself!"));
+		SYNCED_PROPERTIES.add(processableOres = config.get(CAT_ORES, "Metal ore types that Crossroads machines should be able to process", new String[] {"copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"}, "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\" \nThis config MUST match the server settings exactly (color doesn't matter) in multiplayer or THINGS WILL BREAK! It can not sync itself!", Pattern.compile("\\w++ \\p{XDigit}{6}+")));
+		SYNCED_PROPERTIES.add(gearTypes = config.get(CAT_ORES, "Metal types that Crossroads should add gears for", new String[] {"copper FF783C 9000", "tin F0F0F0 7300", "iron A0A0A0 8000", "gold FFFF00 20000", "bronze FFA03C 8800", "copshowium FF8200 0", "lead 74699E 11000", "silver BDF3EE 10000", "nickel F1F2C4 9000", "invar DFEDD8 8000", "platinum 74F5FF 21000", "electrum FEFF8A 15000"}, "Specify the metal then a space then a hexadecimal color then a space then a density in kg/m3, ex. \"copper FF783C 9000\" \nThis config MUST match the server settings exactly (color doesn't matter) in multiplayer or THINGS WILL BREAK! It can not sync itself!", Pattern.compile("\\w++ \\p{XDigit}{6}+ [+]?[0-9]*\\.?[0-9]+")));
 		retrogen = config.get(CAT_ORES, "Retrogen Key", "", "Changing this value will cause retrogen. Leaving it blank disables retrogen. TURN THIS OFF WHEN YOU ARE DONE!");
 		SYNCED_PROPERTIES.add(steamWorth = config.get(CAT_BALANCE, "The number of degrees one bucket of steam is worth", 50D, "Default: 50"));
 		SYNCED_PROPERTIES.add(jouleWorth = config.get(CAT_BALANCE, "The number of Joules generated from one degree worth of steam", 4D, "Default: 4"));

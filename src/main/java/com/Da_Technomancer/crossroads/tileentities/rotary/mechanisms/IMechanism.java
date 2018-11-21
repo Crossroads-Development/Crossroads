@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -24,7 +24,7 @@ public interface IMechanism{
 	 * @param motData The motion data of this mechanism, in order [0]=w, [1]=E, [2]=P, [3]=lastE
 	 * @param te The containing TileEntity
 	 */
-	public default void onRedstoneChange(double prevValue, double newValue, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
+	public default void onRedstoneChange(double prevValue, double newValue, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
 
 	}
 
@@ -36,7 +36,7 @@ public interface IMechanism{
 	 * @param te The calling TE
 	 * @return The value a ratiator should read. If a comparator is reading this, it will be floored and bounded to [0, 15].
 	 */
-	public default double getRatiatorSignal(EnumGearType mat, EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
+	public default double getRatiatorSignal(GearFactory.GearMaterial mat, EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
 		return 0;
 	}
 
@@ -47,7 +47,7 @@ public interface IMechanism{
 	 * @param axis If side is null (axle slot), this is the orientation of this mechanism. If side is not null, this should be ignored, and may be null
 	 * @return The moment of inertia
 	 */
-	public double getInertia(EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis);
+	public double getInertia(GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis);
 
 	/**
 	 * Whether the capability exists. Will only be called for the AxleHandlerCapability and CogHandlerCapability
@@ -59,7 +59,7 @@ public interface IMechanism{
 	 * @param te The containing TileEntity
 	 * @return Whether to allow this capability
 	 */
-	public boolean hasCap(Capability<?> cap, EnumFacing capSide, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te);
+	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te);
 
 	/**
 	 * Called when performing a rotary propogation. The mechanism is responsible for propogating
@@ -73,7 +73,7 @@ public interface IMechanism{
 	 * @param rotRatioIn The previous rotation ratio
 	 * @param lastRadius The previous radius
 	 */
-	public void propogate(EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius);
+	public void propogate(GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius);
 
 	/**
 	 * Used to get the item that should be dropped when broken
@@ -81,7 +81,7 @@ public interface IMechanism{
 	 * @return The dropped itemstack
 	 */
 	@Nonnull
-	public ItemStack getDrop(EnumGearType mat);
+	public ItemStack getDrop(GearFactory.GearMaterial mat);
 
 	/**
 	 * Used to get the bounding box for breaking and collision
@@ -92,5 +92,5 @@ public interface IMechanism{
 	public AxisAlignedBB getBoundingBox(@Nullable EnumFacing side, @Nullable EnumFacing.Axis axis);
 
 	@SideOnly(Side.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, EnumGearType mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis);
+	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis);
 }

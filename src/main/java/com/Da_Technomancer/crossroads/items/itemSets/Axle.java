@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -26,12 +25,12 @@ import java.util.List;
 
 public class Axle extends Item{
 
-	private final EnumGearType type;
+	private final GearFactory.GearMaterial type;
 	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":axle", "inventory");
 
-	public Axle(EnumGearType typeIn){
+	public Axle(GearFactory.GearMaterial typeIn){
 		String name = "axle_" + typeIn.toString().toLowerCase();
-		setTranslationKey(name);
+		setTranslationKey("axle_metal");
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_GEAR);
 		type = typeIn;
@@ -39,6 +38,11 @@ public class Axle extends Item{
 		ModItems.itemAddQue(this);
 		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
 		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"stick" + type.toString()}));
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack){
+		return String.format(super.getItemStackDisplayName(stack), type.getName());
 	}
 
 	@Override

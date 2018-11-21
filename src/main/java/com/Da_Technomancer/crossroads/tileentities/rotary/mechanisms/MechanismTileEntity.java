@@ -8,9 +8,9 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.shared.IAxisHandler;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,7 +65,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	//Public for read-only
 	public final IMechanism[] members = new IMechanism[7];
 	//Public for read-only
-	public final EnumGearType[] mats = new EnumGearType[7];
+	public final GearFactory.GearMaterial[] mats = new GearFactory.GearMaterial[7];
 	// [0]=w, [1]=E, [2]=P, [3]=lastE
 	private final double[][] motionData = new double[7][4];
 	private final double[] inertia = new double[7];
@@ -90,7 +90,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	 * @param axis The new axle orientation, if index = 6. Should be null otherwise.
 	 * @param newTE Whether this TE is newly created this tick
 	 */
-	public void setMechanism(int index, @Nullable IMechanism mechanism, @Nullable EnumGearType mat, @Nullable EnumFacing.Axis axis, boolean newTE){
+	public void setMechanism(int index, @Nullable IMechanism mechanism, @Nullable GearFactory.GearMaterial mat, @Nullable EnumFacing.Axis axis, boolean newTE){
 		members[index] = mechanism;
 		mats[index] = mat;
 		CommonProxy.masterKey++;
@@ -130,7 +130,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.setInteger("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
-				nbt.setInteger("[" + i + "]mat", mats[i].ordinal());
+				nbt.setInteger("[" + i + "]mat", mats[i].getIndex());
 			}
 		}
 
@@ -149,7 +149,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.setInteger("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
-				nbt.setInteger("[" + i + "]mat", mats[i].ordinal());
+				nbt.setInteger("[" + i + "]mat", mats[i].getIndex());
 
 				nbt.setFloat("[" + i + "]cl_w", clientW[i]);
 				nbt.setFloat("[" + i + "]ang", angle[i]);
@@ -180,7 +180,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 					continue;//Sanity check in case a mechanism type gets removed in the future
 				}
 
-				mats[i] = EnumGearType.values()[nbt.getInteger("[" + i + "]mat")];
+				mats[i] = GearFactory.gearMats.get(nbt.getInteger("[" + i + "]mat"));
 
 				// motionData
 				clientW[i] = nbt.getFloat("[" + i + "]cl_w");
@@ -208,7 +208,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 				mats[identifier - 7] = null;
 			}else{
 				members[identifier - 7] = MECHANISMS.get((int) (message & 0xFFFFFFFFL));
-				mats[identifier - 7] = EnumGearType.values()[(int) (message >>> 32L)];
+				mats[identifier - 7] = GearFactory.gearMats.get((int) (message >>> 32L));
 			}
 			axleHandlers[identifier - 7].updateStates(false);
 		}else if(identifier == 14){
@@ -374,7 +374,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 			}
 
 			if(sendPacket && !world.isRemote){
-				ModPackets.network.sendToAllAround(new SendLongToClient((byte) (side + 7), members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].ordinal()) << 32L, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendLongToClient((byte) (side + 7), members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].getIndex()) << 32L, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 

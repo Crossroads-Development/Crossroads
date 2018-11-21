@@ -28,10 +28,10 @@ import java.util.List;
 public class LargeGearMaster extends BlockContainer{
 	
 	private static final AxisAlignedBB NORTH = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D);
-	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(0D, 0D, .125D, 1D, 1D, 1D);
-	private static final AxisAlignedBB EAST = new AxisAlignedBB(.125D, 0D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(0D, 0D, 0.875D, 1D, 1D, 1D);
+	private static final AxisAlignedBB EAST = new AxisAlignedBB(0.875D, 0D, 0D, 1D, 1D, 1D);
 	private static final AxisAlignedBB WEST = new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D);
-	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, .125D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, 0.875D, 0D, 1D, 1D, 1D);
 	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
 	
 	public LargeGearMaster(){
@@ -53,8 +53,9 @@ public class LargeGearMaster extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
-		if(world.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
-			return new ItemStack(GearFactory.LARGE_GEARS[((LargeGearMasterTileEntity) world.getTileEntity(pos)).getMember().ordinal()], 1);
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof LargeGearMasterTileEntity){
+			return new ItemStack(GearFactory.gearTypes.get(((LargeGearMasterTileEntity) te).getMember()).getLargeGear(), 1);
 		}
 		return ItemStack.EMPTY;
 	}
@@ -112,8 +113,8 @@ public class LargeGearMaster extends BlockContainer{
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		LargeGearMasterTileEntity te = (LargeGearMasterTileEntity) world.getTileEntity(pos);
-		if(te.getMember() != null){
-			drops.add(new ItemStack(GearFactory.LARGE_GEARS[te.getMember().ordinal()]));
+		if(te != null && te.getMember() != null){
+			drops.add(new ItemStack(GearFactory.gearTypes.get(te.getMember()).getLargeGear(), 1));
 		}
 		return drops;
 	}

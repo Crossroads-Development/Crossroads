@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -27,18 +26,23 @@ import java.util.List;
 
 public class BasicGear extends Item{
 
-	private final EnumGearType type;
+	private final GearFactory.GearMaterial type;
 	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":gear_base", "inventory");
 
-	public BasicGear(EnumGearType typeIn){
+	public BasicGear(GearFactory.GearMaterial typeIn){
 		String name = "gear_" + typeIn.toString().toLowerCase();
-		setTranslationKey(name);
+		setTranslationKey("gear_metal");
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_GEAR);
 		type = typeIn;
 		ModItems.toRegister.add(this);
 		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
 		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"gear" + typeIn.toString()}));
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack){
+		return String.format(super.getItemStackDisplayName(stack), type.getName());
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.*;
@@ -43,7 +42,7 @@ public final class ModItems{
 	public static final CreativeTabs TAB_GEAR = new CreativeTabs("gear"){
 		@Override
 		public ItemStack createIcon(){
-			return new ItemStack(GearFactory.BASIC_GEARS[EnumGearType.BRONZE.ordinal()]);
+			return new ItemStack(GearFactory.gearTypes.get(GearFactory.findMaterial("Copper")).getSmallGear(), 1);
 		}
 	};
 
@@ -100,12 +99,6 @@ public final class ModItems{
 	public static BasicItem solidRegia;
 	public static FlyingMachine flyingMachine;
 	public static TeslaRay teslaRay;
-	public static Axle axleIron;
-	public static Axle axleCopshowium;
-	public static Clutch clutchIron;
-	public static Clutch clutchCopshowium;
-	public static Clutch clutchInvertedIron;
-	public static Clutch clutchInvertedCopshowium;
 	public static Slag slag;
 
 	/**
@@ -175,12 +168,6 @@ public final class ModItems{
 		solidRegia = new BasicItem("solid_regia");
 		flyingMachine = new FlyingMachine();
 		teslaRay = new TeslaRay();
-		axleIron = new Axle(EnumGearType.IRON);
-		axleCopshowium = new Axle(EnumGearType.COPSHOWIUM);
-		clutchIron = new Clutch(false, EnumGearType.IRON);
-		clutchCopshowium = new Clutch(false, EnumGearType.COPSHOWIUM);
-		clutchInvertedIron = new Clutch(true, EnumGearType.IRON);
-		clutchInvertedCopshowium = new Clutch(true, EnumGearType.COPSHOWIUM);
 		slag = new Slag();
 	}
 

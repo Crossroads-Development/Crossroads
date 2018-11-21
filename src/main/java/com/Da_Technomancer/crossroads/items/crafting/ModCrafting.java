@@ -2,16 +2,14 @@ package com.Da_Technomancer.crossroads.items.crafting;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
-import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.rotary.EnumGearType;
+import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopshowium;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.EssentialsConfig;
@@ -267,8 +265,6 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneRegistry, 1), "*&*", "&^&", "*&*", '*', "nuggetTin", '&', ModBlocks.redstoneKeyboard, '^', "ingotCopshowium"));
 		//Detailed Crafting Table (Cheap Technomancy Recipe)
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.detailedCrafter, 1), "*&*", "&#&", "*&*", '*', "nuggetIron", '&', "nuggetTin", '#', Blocks.CRAFTING_TABLE));
-		//Copshowium Axle
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.axleCopshowium, 2), "*", "|", "*", '*', "ingotCopshowium", '|', "stickWood"));
 		//Clockwork Stabilizer
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.clockworkStabilizer, 1), " # ", "#*#", " # ", '*', ModBlocks.quartzStabilizer, '#', "gearCopshowium"));
 		//Beacon Harness
@@ -307,8 +303,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.ingotCopshowium, 1), "***", "***", "***", '*', "nuggetCopshowium"));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockCopshowium, 1), "***", "***", "***", '*', "ingotCopshowium"));
 
-		// Axle
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.axleIron, 2), "#", "?", "#", '#', "ingotIron", '?', "stickWood"));
 		// Bronze
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.nuggetBronze, 4), "nuggetCopper", "nuggetCopper", "nuggetCopper", "nuggetTin"));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.ingotBronze, 4), "ingotCopper", "ingotCopper", "ingotCopper", "ingotTin"));
@@ -327,18 +321,6 @@ public final class ModCrafting{
 		for(HeatInsulators insul : HeatInsulators.values()){
 			toRegister.add(new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.HEAT_CABLES.get(insul), 4), "###", "???", "###", '#', insul.getItem(), '?', "ingotCopper"));
 			toRegister.add(new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.REDSTONE_HEAT_CABLES.get(insul), 1), "###", "#?#", "###", '#', "dustRedstone", '?', HeatCableFactory.HEAT_CABLES.get(insul)));
-		}
-		//Small Gear
-		//Toggle Gear
-		//Large Gear
-		for(EnumGearType type : EnumGearType.values()){
-			int index = type.ordinal();
-			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS[index], 9), " ? ", "?#?", " ? ", '#', "block" + type.toString(), '?', "ingot" + type.toString()));
-			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.BASIC_GEARS[index], 1), " ? ", "?#?", " ? ", '#', "ingot" + type.toString(), '?', "nugget" + type.toString()));
-			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(GearFactory.TOGGLE_GEARS[index], 1), Blocks.LEVER, "gear" + type.toString()));
-			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(GearFactory.INV_TOGGLE_GEARS[index], 1), Blocks.REDSTONE_TORCH, GearFactory.TOGGLE_GEARS[index]));
-			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(GearFactory.TOGGLE_GEARS[index], 1), GearFactory.INV_TOGGLE_GEARS[index]));
-			toRegister.add(new ShapedOreRecipe(null, new ItemStack(GearFactory.LARGE_GEARS[index], 2), "###", "#$#", "###", '#', "gear" + type.toString(), '$', "block" + type.toString()));
 		}
 		// Steam Boiler
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.steamBoiler, 1), "###", "# #", "&&&", '#', "ingotBronze", '&', "ingotCopper"));
@@ -426,13 +408,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1), new ItemStack(ModBlocks.reactionChamber, 1, 0)));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reagentTank, 1, 1), new ItemStack(ModBlocks.reagentTank, 1, 1)));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reactionChamber, 1, 1), new ItemStack(ModBlocks.reactionChamber, 1, 1)));
-		//Clutches and Inverted Clutches
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.clutchIron, 1), " *", "| ", '|', "stickIron", '*', "ingotTin"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.clutchCopshowium, 1), " *", "| ", '|', "stickCopshowium", '*', "ingotTin"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.clutchInvertedIron, 1), Blocks.REDSTONE_TORCH, ModItems.clutchIron));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.clutchInvertedCopshowium, 1), Blocks.REDSTONE_TORCH, ModItems.clutchCopshowium));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.clutchIron, 1), ModItems.clutchInvertedIron));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.clutchCopshowium, 1), ModItems.clutchInvertedCopshowium));
 		//Wind Turbine
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.windTurbine, 1), "#*#", "*|*", "#*#", '|', "stickIron", '*', Blocks.WOOL, '#', "plankWood"));
 		//Solar Heater
