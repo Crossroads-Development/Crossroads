@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.essentials.shared.IAxleHandler;
 import com.Da_Technomancer.essentials.shared.ISlaveAxisHandler;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -85,5 +86,17 @@ public class RotaryUtil{
 	public static boolean canConnectThrough(World world, BlockPos pos, EnumFacing fromDir, EnumFacing toDir){
 		IBlockState state = world.getBlockState(pos);
 		return !state.getBlock().isNormalCube(state, world, pos) && state.getBlock() != ModBlocks.largeGearSlave && state.getBlock() != ModBlocks.largeGearMaster;
+	}
+
+	/**
+	 * Returns whether the block at the provided position is solid to gears on the specified side
+	 * @param world The World
+	 * @param pos The block's position
+	 * @param side The side the gear will be placed against
+	 * @return Whether it should be solid to small gears
+	 */
+	public static boolean solidToGears(World world, BlockPos pos, EnumFacing side){
+		BlockFaceShape shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
+		return world.isSideSolid(pos, side, false) || shape == BlockFaceShape.SOLID || shape == BlockFaceShape.CENTER || shape == BlockFaceShape.CENTER_BIG || shape == BlockFaceShape.CENTER_SMALL || shape == BlockFaceShape.MIDDLE_POLE || shape == BlockFaceShape.MIDDLE_POLE_THICK || shape == BlockFaceShape.MIDDLE_POLE_THIN;
 	}
 }

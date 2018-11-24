@@ -75,7 +75,7 @@ public class GearFactory{
 			ModCrafting.toRegister.add(new ShapelessOreRecipe(null, new ItemStack(prof.getToggleGear(), 1), Blocks.LEVER, "gear" + metal));
 			ModCrafting.toRegister.add(new ShapelessOreRecipe(null, new ItemStack(prof.getInvToggleGear(), 1), Blocks.REDSTONE_TORCH, prof.getToggleGear()));
 			ModCrafting.toRegister.add(new ShapelessOreRecipe(null, new ItemStack(prof.getToggleGear(), 1), prof.getInvToggleGear()));
-			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getLargeGear(), 2), "###", "#$#", "###", '#', "gear" + metal, '$', "block" + metal));
+			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getLargeGear(), 1), "###", "#$#", "###", '#', "ingot" + metal, '$', "stick" + metal));
 			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getAxle(), 2), "#", "?", "#", '#', "ingot" + metal, '?', "stickWood"));
 			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getClutch(), 1), " *", "| ", '|', "stick" + metal, '*', "ingotTin"));
 			ModCrafting.toRegister.add(new ShapelessOreRecipe(null, new ItemStack(prof.getInvClutch(), 1), Blocks.REDSTONE_TORCH, prof.getClutch()));

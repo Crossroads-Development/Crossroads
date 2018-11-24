@@ -7,6 +7,7 @@ import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -51,6 +52,11 @@ public class LensFrame extends BlockContainer{
 	@Override
 	public boolean hasComparatorInputOverride(IBlockState state){
 		return true;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return face.getAxis() != state.getValue(EssentialsProperties.AXIS) ? BlockFaceShape.CENTER_SMALL : BlockFaceShape.UNDEFINED;
 	}
 
 	@Override

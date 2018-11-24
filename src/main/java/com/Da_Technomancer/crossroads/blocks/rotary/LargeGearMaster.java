@@ -8,6 +8,7 @@ import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,14 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LargeGearMaster extends BlockContainer{
-	
-	private static final AxisAlignedBB NORTH = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D);
-	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(0D, 0D, 0.875D, 1D, 1D, 1D);
-	private static final AxisAlignedBB EAST = new AxisAlignedBB(0.875D, 0D, 0D, 1D, 1D, 1D);
-	private static final AxisAlignedBB WEST = new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D);
-	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, 0.875D, 0D, 1D, 1D, 1D);
-	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
-	
+
+	private static final AxisAlignedBB[] BB = new AxisAlignedBB[] {new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D), new AxisAlignedBB(0D, 0.875D, 0D, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D), new AxisAlignedBB(0D, 0D, 0.875D, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D), new AxisAlignedBB(0.875D, 0D, 0D, 1D, 1D, 1D)};
+
 	public LargeGearMaster(){
 		super(Material.IRON);
 		String name = "large_gear_master";
@@ -48,6 +44,16 @@ public class LargeGearMaster extends BlockContainer{
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new LargeGearMasterTileEntity();
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return face == state.getValue(EssentialsProperties.FACING) ? BlockFaceShape.SOLID : face == state.getValue(EssentialsProperties.FACING).getOpposite() ? BlockFaceShape.CENTER_SMALL : BlockFaceShape.UNDEFINED;
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
+		return side.getAxis() == base_state.getValue(EssentialsProperties.FACING).getAxis();
 	}
 
 	@Override
@@ -77,20 +83,7 @@ public class LargeGearMaster extends BlockContainer{
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		switch(state.getValue(EssentialsProperties.FACING)){
-			case UP:
-				return UP;
-			case DOWN:
-				return DOWN;
-			case NORTH:
-				return NORTH;
-			case SOUTH:
-				return SOUTH;
-			case EAST:
-				return EAST;
-			default:
-				return WEST;
-		}
+		return BB[state.getValue(EssentialsProperties.FACING).getIndex()];
 	}
 
 	@Override

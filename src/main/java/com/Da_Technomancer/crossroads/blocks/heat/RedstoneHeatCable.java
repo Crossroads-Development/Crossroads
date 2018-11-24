@@ -20,6 +20,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -75,6 +76,11 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 		setCreativeTab(ModItems.TAB_HEAT_CABLE);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this, false);
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return BlockFaceShape.UNDEFINED;
 	}
 
 	@SideOnly(Side.CLIENT)

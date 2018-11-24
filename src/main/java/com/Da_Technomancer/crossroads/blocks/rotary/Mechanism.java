@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
@@ -212,7 +213,7 @@ public class Mechanism extends BlockContainer{
 		MechanismTileEntity te = (MechanismTileEntity) worldIn.getTileEntity(pos);
 
 		for(EnumFacing side : EnumFacing.VALUES){
-			if(te.members[side.getIndex()] != null && !worldIn.isSideSolid(pos.offset(side), side.getOpposite(), false)){
+			if(te.members[side.getIndex()] != null && !RotaryUtil.solidToGears(worldIn, pos.offset(side), side.getOpposite())){
 				spawnAsEntity(worldIn, pos, te.members[side.getIndex()].getDrop(te.mats[side.getIndex()]));
 				te.setMechanism(side.getIndex(), null, null, null, false);
 			}

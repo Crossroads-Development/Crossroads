@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.tileentities.beams.QuartzStabilizerTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,6 +32,11 @@ public class QuartzStabilizer extends BeamBlock{
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new QuartzStabilizerTileEntity();
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return BlockFaceShape.UNDEFINED;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -58,7 +59,7 @@ public class BasicGear extends Item{
 		}
 
 		TileEntity te = worldIn.getTileEntity(pos.offset(side));
-		if(te instanceof MechanismTileEntity && worldIn.isSideSolid(pos, side)){
+		if(te instanceof MechanismTileEntity && RotaryUtil.solidToGears(worldIn, pos, side)){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
 			if(mte.members[side.getOpposite().getIndex()] != null){
 				return EnumActionResult.SUCCESS;
@@ -68,7 +69,7 @@ public class BasicGear extends Item{
 			}
 
 			mte.setMechanism(side.getOpposite().getIndex(), MechanismTileEntity.MECHANISMS.get(0), type, null, false);
-		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && worldIn.isSideSolid(pos, side)){
+		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && RotaryUtil.solidToGears(worldIn, pos, side)){
 			if(!playerIn.capabilities.isCreativeMode){
 				playerIn.getHeldItem(hand).shrink(1);
 			}

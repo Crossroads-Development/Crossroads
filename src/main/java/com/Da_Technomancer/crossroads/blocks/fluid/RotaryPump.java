@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -41,6 +42,11 @@ public class RotaryPump extends BlockContainer{
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new RotaryPumpTileEntity();
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return face == EnumFacing.UP ? BlockFaceShape.MIDDLE_POLE_THICK : BlockFaceShape.UNDEFINED;
 	}
 
 	@Override

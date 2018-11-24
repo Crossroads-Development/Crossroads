@@ -18,13 +18,13 @@ public class ModelGearIcositetragon{
 
 	//These contain trigonometry, so shouldn't be calculated every frame.
 	//In some cases, these are going to be used in place of cos in order to store fewer variables. cos(X) = sin(90 - X), so this is allowed. 
-	private final double buffer = Math.pow(10, -3) * 3D;
-	private final double radius = 11F / 24F;
-	private final double sinFirst = (float) (Math.sin(Math.toRadians(7.5)) * radius) + buffer;
-	private final double sinSecond = (float) (Math.sin(Math.toRadians(22.5)) * radius) + buffer;
-	private final double sinThird = (float) (Math.sin(Math.toRadians(37.5)) * radius) + buffer;
-	private final double sinFourth = (float) (Math.sin(Math.toRadians(52.5)) * radius) + buffer;
-	private final double sinFifth = (float) (Math.sin(Math.toRadians(67.5)) * radius) + buffer;
+	private static final double buffer = Math.pow(10, -3) * 3D;
+	private static final double radius = 11F / 24F;
+	private static final double sinFirst = (float) (Math.sin(Math.toRadians(7.5)) * radius) + buffer;
+	private static final double sinSecond = (float) (Math.sin(Math.toRadians(22.5)) * radius) + buffer;
+	private static final double sinThird = (float) (Math.sin(Math.toRadians(37.5)) * radius) + buffer;
+	private static final double sinFourth = (float) (Math.sin(Math.toRadians(52.5)) * radius) + buffer;
+	private static final double sinFifth = (float) (Math.sin(Math.toRadians(67.5)) * radius) + buffer;
 
 	/**
 	 * This model is the same size as a small gear, and must be scaled to 3x size for a large gear.

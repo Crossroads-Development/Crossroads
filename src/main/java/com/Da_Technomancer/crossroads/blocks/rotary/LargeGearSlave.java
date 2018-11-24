@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,13 +32,8 @@ import java.util.Random;
 
 public class LargeGearSlave extends BlockContainer{
 
-	private static final AxisAlignedBB NORTH = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D);
-	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(0D, 0D, 0.875D, 1D, 1D, 1D);
-	private static final AxisAlignedBB EAST = new AxisAlignedBB(0.875D, 0D, 0D, 1D, 1D, 1D);
-	private static final AxisAlignedBB WEST = new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D);
-	private static final AxisAlignedBB UP = new AxisAlignedBB(0D, 0.875D, 0D, 1D, 1D, 1D);
-	private static final AxisAlignedBB DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D);
-	
+	private static final AxisAlignedBB[] BB = new AxisAlignedBB[] {new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D), new AxisAlignedBB(0D, 0.875D, 0D, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D), new AxisAlignedBB(0D, 0D, 0.875D, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D), new AxisAlignedBB(0.875D, 0D, 0D, 1D, 1D, 1D)};
+
 	public LargeGearSlave(){
 		super(Material.IRON);
 		String name = "large_gear_slave";
@@ -66,20 +62,7 @@ public class LargeGearSlave extends BlockContainer{
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		switch(state.getValue(EssentialsProperties.FACING)){
-			case UP:
-				return UP;
-			case DOWN:
-				return DOWN;
-			case NORTH:
-				return NORTH;
-			case SOUTH:
-				return SOUTH;
-			case EAST:
-				return EAST;
-			default:
-				return WEST;
-		}
+		return BB[state.getValue(EssentialsProperties.FACING).getIndex()];
 	}
 	
 	@Override
@@ -98,6 +81,11 @@ public class LargeGearSlave extends BlockContainer{
 			return;
 		}
 		CommonProxy.masterKey++;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return BlockFaceShape.UNDEFINED;
 	}
 
 	@Override
