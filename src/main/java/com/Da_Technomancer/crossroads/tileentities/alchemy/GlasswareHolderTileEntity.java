@@ -12,11 +12,13 @@ import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -101,7 +103,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	 */
 	@Nonnull
 	@Override
-	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking){
+	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, EntityPlayer player, EnumHand hand){
 		IBlockState state = world.getBlockState(pos);
 
 		if(occupied){
@@ -131,7 +133,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			return ItemStack.EMPTY;
 		}
 
-		return super.rightClickWithItem(stack, sneaking);
+		return super.rightClickWithItem(stack, sneaking, player, hand);
 	}
 
 	@Override

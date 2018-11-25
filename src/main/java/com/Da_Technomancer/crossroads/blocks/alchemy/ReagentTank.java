@@ -149,7 +149,7 @@ public class ReagentTank extends BlockContainer{
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof ReagentTankTileEntity){
 			if(!worldIn.isRemote){
-				playerIn.setHeldItem(hand, ((ReagentTankTileEntity) te).rightClickWithItem(playerIn.getHeldItem(hand), playerIn.isSneaking()));
+				playerIn.setHeldItem(hand, ((ReagentTankTileEntity) te).rightClickWithItem(playerIn.getHeldItem(hand), playerIn.isSneaking(), playerIn, hand));
 			}
 			return true;
 		}

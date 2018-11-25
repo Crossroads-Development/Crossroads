@@ -63,7 +63,7 @@ public class Alembic extends BlockContainer{
 		if(!worldIn.isRemote){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof AlembicTileEntity){
-				playerIn.setHeldItem(hand, ((AlembicTileEntity) te).rightClickWithItem(playerIn.getHeldItem(hand), playerIn.isSneaking()));
+				playerIn.setHeldItem(hand, ((AlembicTileEntity) te).rightClickWithItem(playerIn.getHeldItem(hand), playerIn.isSneaking(), playerIn, hand));
 			}
 		}
 		return true;

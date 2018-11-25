@@ -19,6 +19,7 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class AlembicTileEntity extends AlchemyReactorTE{
 
@@ -78,9 +79,8 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 	protected boolean correctReag(){
 		super.correctReag();
 
-		double ambientTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-		ReagentMap movedContents = new ReagentMap();
-
+		ReagentMap toInsert = new ReagentMap();
+		ArrayList<IReagent> moved = new ArrayList<>();
 		for(IReagent type : contents.keySet()){
 			int qty = contents.getQty(type);
 			if(qty == 0){
@@ -91,28 +91,23 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 			if(type.getPhase(cableTemp).flowsUp()){
 				heat -= HeatUtil.toKelvin(cableTemp) * qty;
 				amount -= qty;
-				movedContents.addReagent(type, qty);
+				toInsert.addReagent(type, qty);
+				moved.add(type);
 				markDirty();
 			}
 		}
 
-
 		EnumFacing dir = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 		TileEntity te = world.getTileEntity(pos.offset(dir));
-		if(te instanceof GlasswareHolderTileEntity){
-			GlasswareHolderTileEntity gh = (GlasswareHolderTileEntity) te;
-
-			IChemicalHandler handler = gh.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.UP);
+		if(te != null){
+			IChemicalHandler handler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.UP);
 			if(handler != null){
-				handler.insertReagents(movedContents, EnumFacing.UP, null);
+				handler.insertReagents(toInsert, EnumFacing.UP, null);
 			}
 		}
 
-		for(IReagent type : movedContents.keySet()){
-			int qty = movedContents.getQty(type);
-			if(qty == 0){
-				continue;
-			}
+		double ambientTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		for(IReagent type : moved){
 			Color c = type.getColor(type.getPhase(ambientTemp));
 			if(type.getPhase(ambientTemp).flowsDown()){
 				((WorldServer) world).spawnParticle(ModParticles.COLOR_LIQUID, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * 0.05D) - 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());

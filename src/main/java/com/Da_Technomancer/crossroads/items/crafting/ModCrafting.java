@@ -188,7 +188,7 @@ public final class ModCrafting{
 		//Tesla Coil
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoil, 2), "***", " | ", "|^|", '*', "ingotCopper", '|', "ingotIron", '^', "dustRedstone"));
 		//Vanadium
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.vanadium, 4), "***", "*B*", "***", '*', Items.COAL, 'B', "blockCoal"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.vanadiumOxide, 4), "***", "*B*", "***", '*', Items.COAL, 'B', "blockCoal"));
 		//Charging Stand
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.chargingStand, 1), " * ", "| |", " ^ ", '*', "ingotIron", '|', "stickIron", '^', ModBlocks.glasswareHolder));
 		//Atmos Charger
@@ -411,8 +411,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.windTurbine, 1), "#*#", "*|*", "#*#", '|', "stickIron", '*', Blocks.WOOL, '#', "plankWood"));
 		//Solar Heater
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.solarHeater, 1), "t t", "tct", "ttt", 't', "ingotTin", 'c', "ingotCopper"));
-		//Vanadium smelting
-		GameRegistry.addSmelting(ModItems.vanadium, new ItemStack(ModItems.vanadiumVOxide, 1), .7F);
 		//Heat Reservoir
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatReservoir, 1), "#*#", "***", "#*#", '#', "ingotCopper", '*', "dustSalt"));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.heatReservoir, 1), ModBlocks.heatReservoir));

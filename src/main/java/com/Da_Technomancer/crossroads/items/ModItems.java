@@ -75,8 +75,7 @@ public final class ModItems{
 	public static PrototypeWatch watch;
 	public static BasicItem adamant;
 	public static BasicItem sulfur;
-	public static BasicItem vanadium;
-	public static BasicItem vanadiumVOxide;
+	public static BasicItem vanadiumOxide;
 	public static PhilStone philosopherStone;
 	public static BasicItem practitionerStone;
 	public static BasicItem alchCrystal;
@@ -144,8 +143,7 @@ public final class ModItems{
 		watch = new PrototypeWatch();
 		adamant = new BasicItem("adamant");
 		sulfur = new BasicItem("sulfur", "dustSulfur");
-		vanadium = new BasicItem("vanadium");
-		vanadiumVOxide = new BasicItem("vanadium_5_oxide");
+		vanadiumOxide = new BasicItem("vanadium_oxide");
 		philosopherStone = new PhilStone();
 		practitionerStone = new BasicItem("prac_stone");
 		alchCrystal = new BasicItem("alch_crystal", "gemAlcCryst");

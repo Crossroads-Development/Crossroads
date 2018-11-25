@@ -132,7 +132,7 @@ public class GlasswareHolder extends BlockContainer{
 		if(!worldIn.isRemote){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof GlasswareHolderTileEntity){
-				playerIn.setHeldItem(hand, ((GlasswareHolderTileEntity) te).rightClickWithItem(playerIn.getHeldItem(hand), playerIn.isSneaking()));
+				playerIn.setHeldItem(hand, ((GlasswareHolderTileEntity) te).rightClickWithItem(playerIn.getHeldItem(hand), playerIn.isSneaking(), playerIn, hand));
 			}
 		}
 		return true;

@@ -11,9 +11,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
@@ -21,6 +28,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Implementations must implement hasCapability and getCapability directly. 
@@ -185,7 +193,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	 * Helper method for moving reagents with glassware/solid items. Use is optional, and must be added in the block if used.
 	 */
 	@Nonnull
-	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking){
+	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, EntityPlayer player, EnumHand hand){
 		double temp = HeatUtil.toKelvin(correctTemp());
 		ItemStack out = stack.copy();
 
@@ -255,6 +263,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 				}
 				((AbstractGlassware) out.getItem()).setReagents(out, reag, phialHeat);
 			}
+		}else if(FluidUtil.interactWithFluidHandler(player, hand, falseFluidHandler)){
+			//Attempt to interact with fluid carriers
+			out = player.getHeldItem(hand);
 		}else{
 			//Move solids from hand into carrier
 			IReagent typeProduced = AlchemyCore.ITEM_TO_REAGENT.get(stack);
@@ -431,6 +442,100 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		@Override
 		public int getContent(String id){
 			return contents.getQty(id);
+		}
+	}
+
+	protected final FalseFluidHandler falseFluidHandler = new FalseFluidHandler();
+
+	private class FalseFluidHandler implements IFluidHandler{
+
+		@Override
+		public IFluidTankProperties[] getTankProperties(){
+			return new FluidTankProperties[] {new FluidTankProperties(null, 100, true, true)};
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill){
+			IReagent typ;
+			if(resource != null && (typ = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid())) != null){
+				int canAccept = Math.min((int) ((handler.getTransferCapacity() - amount) * AlchemyCore.MB_PER_REAG), resource.amount);
+				if(canAccept > 0){
+					if(doFill){
+						int reagToFill = canAccept / AlchemyCore.MB_PER_REAG;
+						contents.addReagent(typ, reagToFill);
+						amount += reagToFill;
+						double envTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						if(typ.getBoilingPoint() <= envTemp || typ.getMeltingPoint() > envTemp){
+							envTemp = (double) resource.getFluid().getTemperature();
+						}else{
+							envTemp -= HeatUtil.ABSOLUTE_ZERO;
+						}
+						heat += reagToFill * envTemp;
+						dirtyReag = true;
+						markDirty();
+					}
+					return canAccept;
+				}
+			}
+			return 0;
+		}
+
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain){
+			if(resource == null || resource.amount <= 0 || !AlchemyCore.FLUID_TO_LIQREAGENT.containsKey(resource.getFluid())){
+				return null;
+			}
+
+			IReagent type = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid());
+			if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
+				int toDrain = Math.min(resource.amount, contents.getQty(type) * AlchemyCore.MB_PER_REAG);
+				int reagToDrain = toDrain / AlchemyCore.MB_PER_REAG;
+				if(doDrain){
+					contents.addReagent(type, -reagToDrain);
+					if(amount != 0){
+						double endTemp = heat / amount;
+						amount -= reagToDrain;
+						heat -= reagToDrain * endTemp;
+						heat = Math.max(heat, 0D);
+					}
+					dirtyReag = true;
+					markDirty();
+				}
+				return new FluidStack(resource.getFluid(), toDrain);
+			}
+
+			return null;
+		}
+
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain){
+			if(maxDrain <= 0){
+				return null;
+			}
+
+			//The Fluid-IReagentType BiMap is guaranteed to be equal in length to or shorter than REAGENT_COUNT (and in practice is substantially shorter),
+			//so it's more efficient to iterate over the BiMap and check each IReagentType's index than to iterate over the reagent array and check each reagent in the BiMap.
+			for(Map.Entry<Fluid, IReagent> entry : AlchemyCore.FLUID_TO_LIQREAGENT.entrySet()){
+				IReagent type = entry.getValue();
+				if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
+					int toDrain = Math.min(maxDrain, contents.getQty(type) * AlchemyCore.MB_PER_REAG);
+					if(doDrain){
+						int reagToDrain = toDrain / AlchemyCore.MB_PER_REAG;
+						contents.addReagent(type, -reagToDrain);
+						if(amount != 0){
+							double endTemp = heat / amount;
+							amount -= reagToDrain;
+							heat -= reagToDrain * endTemp;
+							heat = Math.max(heat, 0D);
+						}
+						dirtyReag = true;
+						markDirty();
+					}
+					return new FluidStack(entry.getKey(), toDrain);
+				}
+			}
+
+			return null;
 		}
 	}
 }

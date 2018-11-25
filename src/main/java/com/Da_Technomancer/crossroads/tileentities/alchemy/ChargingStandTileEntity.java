@@ -8,11 +8,13 @@ import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -108,7 +110,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	 */
 	@Nonnull
 	@Override
-	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking){
+	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, EntityPlayer player, EnumHand hand){
 		IBlockState state = world.getBlockState(pos);
 
 		if(occupied){
@@ -125,7 +127,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 				return flask;
 			}
 
-			super.rightClickWithItem(stack, sneaking);
+			super.rightClickWithItem(stack, sneaking, player, hand);
 		}else if(stack.getItem() == ModItems.phial || stack.getItem() == ModItems.florenceFlask){
 			//Add item into TE
 			Triple<ReagentMap, Double, Integer> phialCont = ((AbstractGlassware) stack.getItem()).getReagants(stack);
