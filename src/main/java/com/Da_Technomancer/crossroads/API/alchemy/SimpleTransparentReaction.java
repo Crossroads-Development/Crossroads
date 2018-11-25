@@ -2,11 +2,9 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 public class SimpleTransparentReaction extends SimpleReaction implements ITransparentReaction{
 
-	public SimpleTransparentReaction(Pair<IReagent, Integer>[] reagents, Pair<IReagent, Integer>[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, boolean charged){
+	public SimpleTransparentReaction(ReagentStack[] reagents, ReagentStack[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, boolean charged){
 		super(reagents, products, cat, minTemp, maxTemp, heatChange, charged);
 	}
 
@@ -36,12 +34,12 @@ public class SimpleTransparentReaction extends SimpleReaction implements ITransp
 	}
 
 	@Override
-	public Pair<IReagent, Integer>[] getReagents(){
+	public ReagentStack[] getReagents(){
 		return reagents;
 	}
 
 	@Override
-	public Pair<IReagent, Integer>[] getProducts(){
+	public ReagentStack[] getProducts(){
 		return products;
 	}
 }

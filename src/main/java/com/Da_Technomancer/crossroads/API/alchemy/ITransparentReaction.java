@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 /**
  * Implementers should use the performReaction method to actually perform the reactions. The other methods are used for JEI integration. 
  * Only default reactions should be transparent. 
@@ -31,13 +29,13 @@ public interface ITransparentReaction extends IReaction{
 	public double deltaHeatPer();
 	
 	/**
-	 * Each pair should consist of a required reagent type and the number of 'parts' required to perform the reaction. The number of parts is NOT the minimum quantity, and is only for specifying a ratio. 
+	 * Each stack should consist of a required reagent type and the number of 'parts' required to perform the reaction.
 	 */
-	public Pair<IReagent, Integer>[] getReagents();
+	public ReagentStack[] getReagents();
 	
 	/**
-	 * Each pair should consist of a produced reagent type and the number of 'parts' created by the reaction. 
+	 * Each stack should consist of a produced reagent type and the number of 'parts' created by the reaction.
 	 */
-	public Pair<IReagent, Integer>[] getProducts();
+	public ReagentStack[] getProducts();
 
 }

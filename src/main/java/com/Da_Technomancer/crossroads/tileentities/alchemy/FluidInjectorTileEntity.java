@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
-	private static final double REAG_PER_MB = .05D;
+	private static final int MB_PER_REAG = 100;
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
@@ -98,21 +98,17 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 		public int fill(FluidStack resource, boolean doFill){
 			IReagent typ;
 			if(resource != null && (typ = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid())) != null){
-				int canAccept = Math.min((int) ((handler.getTransferCapacity() - amount) / REAG_PER_MB), resource.amount);
+				int canAccept = Math.min((int) ((handler.getTransferCapacity() - amount) * MB_PER_REAG), resource.amount);
 				if(canAccept > 0){
 					if(doFill){
-						double reagToFill = REAG_PER_MB * (double) canAccept;
-						if(contents[typ.getIndex()] == null){
-							contents[typ.getIndex()] = new ReagentStack(typ, reagToFill);
-						}else{
-							contents[typ.getIndex()].increaseAmount(reagToFill);
-						}
+						int reagToFill = canAccept / MB_PER_REAG;
+						contents.addReagent(typ, reagToFill);
 						amount += reagToFill;
 						double envTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 						if(typ.getBoilingPoint() <= envTemp || typ.getMeltingPoint() > envTemp){
 							envTemp = (double) resource.getFluid().getTemperature();
 						}else{
-							envTemp += 273D;
+							envTemp -= HeatUtil.ABSOLUTE_ZERO;
 						}
 						heat += reagToFill * envTemp;
 						dirtyReag = true;
@@ -130,17 +126,18 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 				return null;
 			}
 
-			int index = AlchemyCore.FLUID_TO_GASREAGENT.get(resource.getFluid()).getIndex();
-			if(contents[index] != null && contents[index].getPhase(handler.getTemp()) == EnumMatterPhase.GAS){
-				int toDrain = (int) Math.min(resource.amount, contents[index].getAmount() / REAG_PER_MB);
-				double reagToDrain = REAG_PER_MB * (double) toDrain;
+			IReagent type = AlchemyCore.FLUID_TO_GASREAGENT.get(resource.getFluid());
+			int qty = contents.getQty(type);
+			if(qty > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.GAS){
+				int toDrain = (int) Math.min(resource.amount, qty * MB_PER_REAG);
+				int reagToDrain = toDrain / MB_PER_REAG;
 				if(doDrain){
-					contents[index].increaseAmount(-reagToDrain);
+					contents.addReagent(type, -reagToDrain);
 					if(amount != 0){
 						double endTemp = heat / amount;
 						amount -= reagToDrain;
 						heat -= reagToDrain * endTemp;
-						heat = Math.max(heat, 0D);
+						heat = Math.max(heat, 0);
 					}
 					dirtyReag = true;
 					markDirty();
@@ -160,12 +157,12 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 			//The Fluid-IReagentType BiMap is guaranteed to be equal in length to or shorter than REAGENT_COUNT (and in practice is substantially shorter),
 			//so it's more efficient to iterate over the BiMap and check each IReagentType's index than to iterate over the reagent array and check each reagent in the BiMap. 
 			for(Map.Entry<Fluid, IReagent> entry : AlchemyCore.FLUID_TO_GASREAGENT.entrySet()){
-				int index = entry.getValue().getIndex();
-				if(contents[index] != null && contents[index].getPhase(handler.getTemp()) == EnumMatterPhase.GAS){
-					int toDrain = (int) Math.min(maxDrain, contents[index].getAmount() / REAG_PER_MB);
+				IReagent type = entry.getValue();
+				if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.GAS){
+					int toDrain = (int) Math.min(maxDrain, contents.getQty(type) * MB_PER_REAG);
 					if(doDrain){
-						double reagToDrain = REAG_PER_MB * (double) toDrain;
-						contents[index].increaseAmount(-reagToDrain);
+						int reagToDrain = MB_PER_REAG * toDrain;
+						contents.addReagent(type, -reagToDrain);
 						if(amount != 0){
 							double endTemp = heat / amount;
 							amount -= reagToDrain;
@@ -194,21 +191,17 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 		public int fill(FluidStack resource, boolean doFill){
 			IReagent typ;
 			if(resource != null && (typ = AlchemyCore.FLUID_TO_GASREAGENT.get(resource.getFluid())) != null){
-				int canAccept = Math.min((int) ((handler.getTransferCapacity() - amount) / REAG_PER_MB), resource.amount);
+				int canAccept = Math.min((int) ((handler.getTransferCapacity() - amount) * MB_PER_REAG), resource.amount);
 				if(canAccept > 0){
 					if(doFill){
-						double reagToFill = REAG_PER_MB * (double) canAccept;
-						if(contents[typ.getIndex()] == null){
-							contents[typ.getIndex()] = new ReagentStack(typ, reagToFill);
-						}else{
-							contents[typ.getIndex()].increaseAmount(reagToFill);
-						}
+						int reagToFill = canAccept / MB_PER_REAG;
+						contents.addReagent(typ, reagToFill);
 						amount += reagToFill;
 						double envTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 						if(typ.getBoilingPoint() > envTemp){
 							envTemp = (double) resource.getFluid().getTemperature();
 						}else{
-							envTemp += 273D;
+							envTemp -= HeatUtil.ABSOLUTE_ZERO;
 						}
 						heat += reagToFill * envTemp;
 						dirtyReag = true;
@@ -226,12 +219,12 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 				return null;
 			}
 
-			int index = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid()).getIndex();
-			if(contents[index] != null && contents[index].getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
-				int toDrain = (int) Math.min(resource.amount, contents[index].getAmount() / REAG_PER_MB);
-				double reagToDrain = REAG_PER_MB * (double) toDrain;
+			IReagent type = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid());
+			if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
+				int toDrain = Math.min(resource.amount, contents.getQty(type) * MB_PER_REAG);
+				int reagToDrain = toDrain / MB_PER_REAG;
 				if(doDrain){
-					contents[index].increaseAmount(-reagToDrain);
+					contents.addReagent(type, -reagToDrain);
 					if(amount != 0){
 						double endTemp = heat / amount;
 						amount -= reagToDrain;
@@ -256,12 +249,12 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 			//The Fluid-IReagentType BiMap is guaranteed to be equal in length to or shorter than REAGENT_COUNT (and in practice is substantially shorter),
 			//so it's more efficient to iterate over the BiMap and check each IReagentType's index than to iterate over the reagent array and check each reagent in the BiMap. 
 			for(Map.Entry<Fluid, IReagent> entry : AlchemyCore.FLUID_TO_LIQREAGENT.entrySet()){
-				int index = entry.getValue().getIndex();
-				if(contents[index] != null && contents[index].getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
-					int toDrain = (int) Math.min(maxDrain, contents[index].getAmount() / REAG_PER_MB);
+				IReagent type = entry.getValue();
+				if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
+					int toDrain = Math.min(maxDrain, contents.getQty(type) * MB_PER_REAG);
 					if(doDrain){
-						double reagToDrain = REAG_PER_MB * (double) toDrain;
-						contents[index].increaseAmount(-reagToDrain);
+						int reagToDrain = MB_PER_REAG * toDrain;
+						contents.addReagent(type, -reagToDrain);
 						if(amount != 0){
 							double endTemp = heat / amount;
 							amount -= reagToDrain;

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.Main;
@@ -94,8 +94,7 @@ public final class ModCrafting{
 			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 4), new OreDictCraftingStack("ingotCopper")}, new ItemStack(ModBlocks.maxwellDemon, 1)));
 			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new OreDictCraftingStack("meatRaw"), new OreDictCraftingStack("gunpowder"), (Predicate<ItemStack>) (ItemStack stack) -> {
 				if(stack.getItem() == ModItems.phial){
-					ReagentStack reag = ModItems.phial.getReagants(stack).getLeft()[5];
-					return reag != null && reag.getAmount() >= 5;
+					return ModItems.phial.getReagants(stack).getLeft().getQty(EnumReagents.NITRIC_ACID.id()) > 0;
 				}
 				return false;
 			}}, new ItemStack(ModItems.nitroglycerin, 8)));

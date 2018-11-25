@@ -97,6 +97,6 @@ public class RotaryUtil{
 	 */
 	public static boolean solidToGears(World world, BlockPos pos, EnumFacing side){
 		BlockFaceShape shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
-		return world.isSideSolid(pos, side, false) || shape == BlockFaceShape.SOLID || shape == BlockFaceShape.CENTER || shape == BlockFaceShape.CENTER_BIG || shape == BlockFaceShape.CENTER_SMALL || shape == BlockFaceShape.MIDDLE_POLE || shape == BlockFaceShape.MIDDLE_POLE_THICK || shape == BlockFaceShape.MIDDLE_POLE_THIN;
+		return world.isSideSolid(pos, side, false) || shape == BlockFaceShape.SOLID || shape == BlockFaceShape.CENTER || shape == BlockFaceShape.CENTER_BIG || shape == BlockFaceShape.CENTER_SMALL;
 	}
 }

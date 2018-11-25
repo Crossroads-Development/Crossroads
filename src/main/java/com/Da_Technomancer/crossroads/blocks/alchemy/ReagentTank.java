@@ -101,12 +101,13 @@ public class ReagentTank extends BlockContainer{
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		if(stack.hasTagCompound()){
 			double am = 0;
-			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-				if(stack.getTagCompound().hasKey(i + "_am")){
-					double amount = stack.getTagCompound().getDouble(i + "_am");
-					am += amount;
-					tooltip.add(new ReagentStack(AlchemyCore.REAGENTS[i], amount).toString());
+			for(String key : stack.getTagCompound().getKeySet()){
+				if(!key.startsWith("qty_")){
+					continue;
 				}
+				int qty = stack.getTagCompound().getInteger(key);
+				am += qty;
+				tooltip.add(new ReagentStack(AlchemyCore.REAGENTS.get(key.substring(4)), qty).toString());
 			}
 
 			tooltip.add("Temp: " + MiscUtil.betterRound(stack.getTagCompound().getDouble("heat") / am - 273D, 3));
@@ -115,7 +116,7 @@ public class ReagentTank extends BlockContainer{
 
 	@Override
 	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stackIn){
-		if(!(te instanceof ReagentTankTileEntity) || ((ReagentTankTileEntity) te).getAmount() <= AlchemyCore.MIN_QUANTITY){
+		if(!(te instanceof ReagentTankTileEntity) || ((ReagentTankTileEntity) te).getAmount() <= 0){
 			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
 		}else{
 			player.addExhaustion(0.005F);

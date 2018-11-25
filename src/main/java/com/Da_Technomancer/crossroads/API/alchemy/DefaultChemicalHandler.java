@@ -15,12 +15,17 @@ public class DefaultChemicalHandler implements IChemicalHandler{
 	}
 
 	@Override
-	public double getContent(){
+	public int getContent(){
 		return 0;
 	}
 
 	@Override
-	public double getTransferCapacity(){
+	public int getContent(String type){
+		return 0;
+	}
+
+	@Override
+	public int getTransferCapacity(){
 		return 0;
 	}
 
@@ -30,17 +35,12 @@ public class DefaultChemicalHandler implements IChemicalHandler{
 	}
 
 	@Override
-	public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
+	public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
 		return false;
 	}
 
 	@Override
 	public void setHeat(double heat){
 		
-	}
-
-	@Override
-	public double getContent(int type){
-		return 0;
 	}
 }

@@ -24,7 +24,7 @@ public class AcidAlchemyEffect implements IAlchEffect{
 	public static final DamageSource ACID_DAMAGE = new DamageSource("chemical").setDamageBypassesArmor();
 	
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase){
+	public void doEffect(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase){
 		if(phase != EnumMatterPhase.SOLID && phase != EnumMatterPhase.GAS && amount >= .02D){
 			for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, phase == EnumMatterPhase.FLAME ? new AxisAlignedBB(pos, pos.add(1, 1, 1)) : new AxisAlignedBB(pos.add(-1, -1, -1), pos.add(2, 2, 2)), EntitySelectors.IS_ALIVE)){
 				e.attackEntityFrom(ACID_DAMAGE, ((float) (amount)));

@@ -10,7 +10,7 @@ public enum EnumTransferMode{
 	private final boolean canInput;
 	private final boolean canOutput;
 	
-	private EnumTransferMode(boolean canInput, boolean canOutput){
+	EnumTransferMode(boolean canInput, boolean canOutput){
 		this.canInput = canInput;
 		this.canOutput = canOutput;
 	}

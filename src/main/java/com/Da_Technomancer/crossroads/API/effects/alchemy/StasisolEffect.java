@@ -1,7 +1,8 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -21,7 +22,7 @@ import java.util.function.Predicate;
 public class StasisolEffect implements IAlchEffect{
 
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount,double heat, EnumMatterPhase phase){
+	public void doEffect(World world, BlockPos pos, int amount,double heat, EnumMatterPhase phase){
 		Chunk c = world.getChunk(pos);
 		if(world.getBiome(pos) != Biomes.ICE_PLAINS){
 			c.getBiomeArray()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = (byte) Biome.getIdForBiome(Biomes.ICE_PLAINS);
@@ -73,9 +74,9 @@ public class StasisolEffect implements IAlchEffect{
 	}
 	
 	@Override
-	public void doEffectAdv(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase, @Nullable ReagentStack[] contents){
+	public void doEffectAdv(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase, @Nullable ReagentMap contents){
 		IBlockState oldState = world.getBlockState(pos);
-		if(contents != null && contents[13] != null && oldState.getBlock().isAir(oldState, world, pos)){
+		if(contents != null && contents.getQty(EnumReagents.QUICKSILVER.id()) > 0 && oldState.getBlock().isAir(oldState, world, pos)){
 			world.setBlockState(pos, Blocks.PACKED_ICE.getDefaultState());
 			return;
 		}

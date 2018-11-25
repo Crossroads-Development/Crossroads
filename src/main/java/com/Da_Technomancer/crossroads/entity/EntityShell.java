@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
+import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -13,20 +14,20 @@ import net.minecraft.world.World;
 
 public class EntityShell extends EntityThrowable{
 
-	private ReagentStack[] contents;
+	private ReagentMap contents;
 	private double temp;
 
 	public EntityShell(World worldIn){
 		super(worldIn);
 	}
 
-	public EntityShell(World worldIn, ReagentStack[] contents, double temp){
+	public EntityShell(World worldIn, ReagentMap contents, double temp){
 		super(worldIn);
 		this.contents = contents;
 		this.temp = temp;
 	}
 
-	public EntityShell(World worldIn, EntityLivingBase throwerIn, ReagentStack[] contents, double temp){
+	public EntityShell(World worldIn, EntityLivingBase throwerIn, ReagentMap contents, double temp){
 		super(worldIn, throwerIn);
 		this.contents = contents;
 		this.temp = temp;
@@ -37,12 +38,10 @@ public class EntityShell extends EntityThrowable{
 		if(!world.isRemote){
 			if(contents != null){
 				BlockPos targetPos = result.getBlockPos();
-				if(targetPos == null){
-					targetPos = result.entityHit.getPosition();
-				}
-				for(ReagentStack r : contents){
-					if(r != null){
-						r.getType().onRelease(world, targetPos, r.getAmount(), temp, r.getPhase(temp), contents);
+				for(IReagent type : contents.keySet()){
+					ReagentStack r = contents.getStack(type);
+					if(!r.isEmpty()){
+						r.getType().onRelease(world, targetPos, r.getAmount(), temp, type.getPhase(temp), contents);
 					}
 				}
 			}
@@ -57,12 +56,7 @@ public class EntityShell extends EntityThrowable{
 		super.readEntityFromNBT(nbt);
 		temp = nbt.getDouble("temp");
 
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			if(nbt.hasKey(i + "_am")){
-				contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am"));
-				contents[i].updatePhase(temp);
-			}
-		}
+		contents = ReagentMap.readFromNBT(nbt);
 	}
 
 	@Override
@@ -71,12 +65,7 @@ public class EntityShell extends EntityThrowable{
 		nbt.setDouble("temp", temp);
 
 		if(contents != null){
-			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-				ReagentStack reag = contents[i];
-				if(reag != null){
-					nbt.setDouble(i + "_am", reag.getAmount());
-				}
-			}
+			contents.writeToNBT(nbt);
 		}
 	}
 }

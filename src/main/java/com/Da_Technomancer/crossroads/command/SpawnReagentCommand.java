@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.command;
 
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -25,31 +27,28 @@ public class SpawnReagentCommand extends CommandBase{
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
-		if(args == null || args.length != 2 || !(sender instanceof EntityPlayerMP)){
-			sender.sendMessage(new TextComponentString("Incorrect # of arguments!"));
-			return;
+		if(args.length != 2 || !(sender instanceof EntityPlayerMP)){
+			throw new CommandException("Incorrect # of arguments!");
 		}
 		
-		int id;
+		String id = args[0];
 		double temp;
+		IReagent type = AlchemyCore.REAGENTS.get(id);
 		try{
-			id = Integer.valueOf(args[0]);
 			temp = Double.valueOf(args[1]);
-			if(id >= AlchemyCore.REAGENT_COUNT || id < 0 || AlchemyCore.REAGENTS[id] == null || temp < -273D){
+			if(type == null || temp < HeatUtil.ABSOLUTE_ZERO){
 				sender.sendMessage(new TextComponentString("Invalid input!"));
 				return;
 			}
 		}catch(NumberFormatException | NullPointerException e){
-			sender.sendMessage(new TextComponentString("Invalid input!"));
-			return;
+			throw new CommandException("Invalid input!");
 		}
 
 		ItemStack toGive = new ItemStack(ModItems.phial, 1, 1);
 		
-		ReagentStack[] reag = new ReagentStack[AlchemyCore.REAGENT_COUNT];
-		reag[id] = new ReagentStack(AlchemyCore.REAGENTS[id], ModItems.phial.getCapacity());
-		reag[id].updatePhase(temp);
-		ModItems.phial.setReagents(toGive, reag, (temp + 273D) * ModItems.phial.getCapacity(), ModItems.phial.getCapacity());
+		ReagentMap reag = new ReagentMap();
+		reag.put(type, ModItems.phial.getCapacity());
+		ModItems.phial.setReagents(toGive, reag, HeatUtil.toKelvin(temp) * ModItems.phial.getCapacity());
 		((EntityPlayerMP) sender).addItemStackToInventory(toGive);
 	}
 

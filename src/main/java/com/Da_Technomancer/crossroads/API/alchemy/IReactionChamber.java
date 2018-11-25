@@ -10,12 +10,8 @@ import net.minecraft.util.EnumParticleTypes;
  */
 public interface IReactionChamber{
 
-	/**
-	 * Array MUST be of size {@link AlchemyCore#REAGENT_COUNT}. May contain null elements. 
-	 * @return An array of the contained reagents. 
-	 */
 	@Nonnull
-	public ReagentStack[] getReagants();
+	public ReagentMap getReagants();
 	
 	/**
 	 * Not the same as temperature.
@@ -38,11 +34,12 @@ public interface IReactionChamber{
 		return cont == 0 ? 0 : (getHeat() / cont) - 273D;
 	}
 	
-	public default double getContent(){
-		double amount = 0;
-		for(ReagentStack reag : getReagants()){
-			if(reag != null){
-				amount += reag.getAmount();
+	public default int getContent(){
+		int amount = 0;
+		ReagentMap map = getReagants();
+		for(Integer qty : map.values()){
+			if(qty != null){
+				amount += qty;
 			}
 		}
 		return amount;
@@ -52,7 +49,7 @@ public interface IReactionChamber{
 		return false;
 	}
 	
-	public double getReactionCapacity();
+	public int getReactionCapacity();
 	
 	/**
 	 * Note: might be called several times in quick succession. 

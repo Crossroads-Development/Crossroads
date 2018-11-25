@@ -2,18 +2,22 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 
 public interface IReagent{
 
 	/**
-	 * @return A human readable name. 
+	 * @return A human readable name
+	 * Note: May return different values based on language or on client vs server side
 	 */
-	public String getName();
+	public default String getName(){
+		return new TextComponentTranslation("reagent." + getId()).getUnformattedComponentText();
+	}
 	
 	/**
 	 * @return The melting temperature. Must be less than boiling temperature. Setting below absolute-zero will disable freezing. 
@@ -33,7 +37,7 @@ public interface IReagent{
 		return false;
 	}
 	
-	public int getIndex();
+	public String getId();
 	
 	/**
 	 * Gets the (purely visual) color. 
@@ -50,13 +54,12 @@ public interface IReagent{
 	 * @param phase This is NOT necessarily the actual phase, this is the phase the reagent should pretend to be/act as when performing the effect. EnumMatterPhase.FLAME when performed as part of a phelostigen effect.
 	 * @param contents
 	 */
-	public default void onRelease(World world, BlockPos pos, double amount, double heat, EnumMatterPhase phase, ReagentStack[] contents){
+	public default void onRelease(World world, BlockPos pos, int amount, double heat, EnumMatterPhase phase, ReagentMap contents){
 		
 	}
 	
-	@Nullable
 	public default ReagentStack getReagentFromStack(ItemStack stack){
-		return null;
+		return ReagentStack.EMPTY;
 	}
 	
 	/**
@@ -72,4 +75,21 @@ public interface IReagent{
 	}
 
 	public List<ItemStack> getJEISolids();
+
+	/**
+	 * @param temp Current temperature. Optional, only used if phase hasn't been set yet to update the phase. If phase should already have been set, this can be left as 0.
+	 * @return The phase
+	 */
+	@Nonnull
+	public default EnumMatterPhase getPhase(double temp){
+		if(isLockedFlame()){
+			return EnumMatterPhase.FLAME;
+		}else if(temp >= getBoilingPoint()){
+			return EnumMatterPhase.GAS;
+		}else if(temp < getMeltingPoint()){
+			return EnumMatterPhase.SOLID;
+		}else{
+			return EnumMatterPhase.LIQUID;
+		}
+	}
 }

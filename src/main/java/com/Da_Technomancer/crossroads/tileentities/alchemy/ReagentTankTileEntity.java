@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Main;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -15,6 +16,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.logging.log4j.Level;
 
+import java.util.ArrayList;
+
 public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	public ReagentTankTileEntity(){
@@ -26,8 +29,8 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	public double transferCapacity(){
-		return 10_000D;
+	public int transferCapacity(){
+		return 10_000;
 	}
 
 	public double getAmount(){
@@ -36,20 +39,14 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	public NBTTagCompound getContentNBT(){
 		NBTTagCompound nbt = new NBTTagCompound();
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			if(contents[i] != null){
-				nbt.setDouble(i + "_am", contents[i].getAmount());
-			}
-		}
-		nbt.setDouble("heat", heat);
+		writeToNBT(nbt);
 		return nbt;
 	}
 
 	public void writeContentNBT(NBTTagCompound nbt){
 		heat = nbt.getDouble("heat");
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			contents[i] = nbt.hasKey(i + "_am") ? new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am")) : null;
-		}
+
+		contents = ReagentMap.readFromNBT(nbt);
 		dirtyReag = true;
 	}
 
@@ -91,29 +88,34 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	public boolean correctReag(){
-		boolean out = super.correctReag();
+		super.correctReag();
+		double endTemp = correctTemp();
+
 		boolean destroy = false;
 
-		if(glass){
-			for(int i = 0; i < contents.length; i++){
-				ReagentStack reag = contents[i];
-				if(reag == null){
-					continue;
-				}
-				if(!reag.getType().canGlassContain()){
-					heat -= (heat / amount) * reag.getAmount();
-					amount -= reag.getAmount();
-					destroy |= reag.getType().destroysBadContainer();
-					contents[i] = null;
-				}
+		ArrayList<IReagent> toRemove = new ArrayList<>(1);
+
+		for(IReagent type : contents.keySet()){
+			ReagentStack reag = contents.getStack(type);
+			if(reag.isEmpty()){
+				continue;
 			}
-			if(destroy){
-				destroyChamber();
-				return false;
+			if(glass && !reag.getType().canGlassContain()){
+				heat -= HeatUtil.toKelvin(endTemp) * reag.getAmount();
+				amount -= reag.getAmount();
+				destroy |= reag.getType().destroysBadContainer();
+				toRemove.add(type);
 			}
 		}
 
-		return out;
+		for(IReagent type : toRemove){
+			contents.remove(type);
+		}
+
+		if(destroy){
+			destroyChamber();
+		}
+		return !destroy;
 	}
 
 	private class ItemHandler implements IItemHandler{
@@ -125,7 +127,9 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			int index = 0;
 			double endTemp = handler.getTemp();
 			for(IReagent reag : AlchemyCore.ITEM_TO_REAGENT.values()){
-				fakeInventory[index] = contents[reag.getIndex()] != null && contents[reag.getIndex()].getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(contents[reag.getIndex()]) : ItemStack.EMPTY;
+				int qty = contents.getQty(reag);
+				ReagentStack rStack = contents.getStack(reag);
+				fakeInventory[index] = qty != 0 && reag.getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(rStack) : ItemStack.EMPTY;
 				index++;
 			}
 		}
@@ -151,15 +155,10 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 					}
 					ItemStack testStack = stack.copy();
 					testStack.setCount(1);
-					double perAmount = reag.getReagentFromStack(testStack).getAmount();
-					int trans = Math.min(stack.getCount(), (int) ((transferCapacity() - amount) / perAmount));
+					int trans = Math.min(stack.getCount(), transferCapacity() - amount);
 					if(!simulate){
-						if(contents[reag.getIndex()] == null){
-							contents[reag.getIndex()] = new ReagentStack(reag, perAmount * (double) trans);
-						}else{
-							contents[reag.getIndex()].increaseAmount(perAmount * (double) trans);
-						}
-						heat += Math.min(reag.getMeltingPoint() + 263D, 290D) * perAmount * (double) trans;
+						contents.addReagent(reag, trans);
+						heat += Math.min(HeatUtil.toKelvin(reag.getMeltingPoint()) - 10D, HeatUtil.toKelvin(20)) * (double) trans;
 						dirtyReag = true;
 						markDirty();
 					}
@@ -179,13 +178,10 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 					ItemStack outStack = fakeInventory[slot].copy();
 					outStack.setCount(canExtract);
 					if(!simulate){
-						int reagIndex = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]).getIndex();
+						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]);
 						double endTemp = handler.getTemp();
-						double reagAmount = AlchemyCore.REAGENTS[reagIndex].getReagentFromStack(outStack).getAmount();
-						if(contents[reagIndex].increaseAmount(-reagAmount) <= 0){
-							contents[reagIndex] = null;
-						}
-						heat -= (endTemp + 273D) * reagAmount;
+						contents.addReagent(reag, -canExtract);
+						heat -= HeatUtil.toKelvin(endTemp + 273D) * canExtract;
 						dirtyReag = true;
 						markDirty();
 					}
@@ -214,9 +210,10 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
 			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
-			for(ReagentStack r : contents){
-				if(r != null){
-					r.getType().onRelease(world, pos, r.getAmount(), temp, r.getPhase(temp), contents);
+			for(IReagent reag : contents.keySet()){
+				int qty = contents.getQty(reag);
+				if(qty > 0){
+					reag.onRelease(world, pos, qty, temp, reag.getPhase(temp), contents);
 				}
 			}
 		}

@@ -161,7 +161,7 @@ public final class RecipeHolder{
 		JEIWrappers.put(ReactionCategory.ID, currentRecipes);
 
 		currentRecipes = new ArrayList<IRecipeWrapper>();
-		for(IReagent reag : AlchemyCore.REAGENTS){
+		for(IReagent reag : AlchemyCore.REAGENTS.values()){
 			if(reag != null){
 				currentRecipes.add(new ReagInfoRecipe(reag));
 			}

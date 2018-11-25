@@ -30,11 +30,11 @@ public class ReactionRecipe implements IRecipeWrapper{
 	public ReactionRecipe(ITransparentReaction reaction){
 		ingr = new ArrayList<ReagIngr>(reaction.getReagents().length);
 		for(int i = 0; i < reaction.getReagents().length; i++){
-			ingr.add(new ReagIngr(reaction.getReagents()[i].getLeft(), reaction.getReagents()[i].getRight()));
+			ingr.add(new ReagIngr(reaction.getReagents()[i].getType(), reaction.getReagents()[i].getAmount()));
 		}
 		prod = new ArrayList<ReagIngr>(reaction.getProducts().length);
 		for(int i = 0; i < reaction.getProducts().length; i++){
-			prod.add(new ReagIngr(reaction.getProducts()[i].getLeft(), reaction.getProducts()[i].getRight()));
+			prod.add(new ReagIngr(reaction.getProducts()[i].getType(), reaction.getProducts()[i].getAmount()));
 		}
 		charged = reaction.charged();
 		catalyst = reaction.getCatalyst();

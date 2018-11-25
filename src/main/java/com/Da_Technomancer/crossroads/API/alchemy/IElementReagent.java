@@ -1,21 +1,12 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import javax.annotation.Nullable;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import javax.annotation.Nonnull;
 
 public interface IElementReagent extends IReagent{
-	
-	public BeamUnit getAlignment();
-	
-	/**
-	 * 0: Primary
-	 * 1: Secondary
-	 * 2: Tertiary
-	 */
-	public byte getLevel();
-	
-	@Nullable
-	public IElementReagent getSecondaryBase();
+
+	@Nonnull
+	public EnumBeamAlignments getAlignment();
 
 }

@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import mezz.jei.api.ingredients.IIngredientHelper;
@@ -15,13 +15,11 @@ import java.util.List;
 public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
-	public ItemStack cheatIngredient(ReagIngr ingredient, boolean fullStack){
+	public ItemStack getCheatItemStack(ReagIngr ingredient){
 		ItemStack toGive = new ItemStack(ModItems.phial, 1, 1);
-
-		ReagentStack[] reag = new ReagentStack[AlchemyCore.REAGENT_COUNT];
-		reag[ingredient.getReag().getIndex()] = new ReagentStack(AlchemyCore.REAGENTS[ingredient.getReag().getIndex()], ModItems.phial.getCapacity());
-		reag[ingredient.getReag().getIndex()].updatePhase(50);
-		ModItems.phial.setReagents(toGive, reag, (50 + 273D) * ModItems.phial.getCapacity(), ModItems.phial.getCapacity());
+		ReagentMap reags = new ReagentMap();
+		reags.addReagent(ingredient.getReag(), ModItems.phial.getCapacity());
+		ModItems.phial.setReagents(toGive, reags, HeatUtil.toKelvin(50) * ModItems.phial.getCapacity());
 		return toGive;
 	}
 	
@@ -52,7 +50,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public String getUniqueId(ReagIngr ingredient){
-		return Main.MODID + ":" + ingredient.getReag().toString();
+		return Main.MODID + ":" + ingredient.getReag().getId();
 	}
 
 	@Override
@@ -67,7 +65,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public Iterable<Color> getColors(ReagIngr ingredient){
-		HashSet<Color> out = new HashSet<Color>();
+		HashSet<Color> out = new HashSet<>();
 		for(EnumMatterPhase p : EnumMatterPhase.values()){
 			out.add(ingredient.getReag().getColor(p));
 		}
@@ -86,6 +84,6 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public String getErrorInfo(ReagIngr ingredient){
-		return "ID: " + ingredient.getReag().getIndex() + "; NAME: " + ingredient.getReag().getName() + "; PARTS: " + ingredient.getParts();
+		return "ID: " + ingredient.getReag().getId() + "; NAME: " + ingredient.getReag().getName() + "; PARTS: " + ingredient.getParts();
 	}
 }

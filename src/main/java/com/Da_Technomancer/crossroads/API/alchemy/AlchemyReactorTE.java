@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -9,6 +10,8 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
+
+import java.util.ArrayList;
 
 /**
  * Implementations must implement hasCapability and getCapability directly. 
@@ -24,7 +27,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	@Override
-	public ReagentStack[] getReagants(){
+	public ReagentMap getReagants(){
 		return contents;
 	}
 
@@ -62,9 +65,10 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
 			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
-			for(ReagentStack r : contents){
-				if(r != null){
-					r.getType().onRelease(world, pos, r.getAmount(), temp, r.getPhase(temp), contents);
+			for(IReagent r : contents.keySet()){
+				ReagentStack rStack = contents.getStack(r);
+				if(!rStack.isEmpty()){
+					r.onRelease(world, pos, rStack.getAmount(), temp, r.getPhase(temp), contents);
 				}
 			}
 		}
@@ -72,41 +76,28 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 
 	@Override
 	protected boolean correctReag(){
-		dirtyReag = false;
-		amount = 0;
-		for(ReagentStack r : contents){
-			if(r != null){
-				amount += r.getAmount();
-			}
-		}
-		if(amount == 0){
-			return true;
-		}
-
+		super.correctReag();
 		double endTemp = correctTemp();
-
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			ReagentStack reag = contents[i];
-			if(reag != null && reag.getAmount() < AlchemyCore.MIN_QUANTITY){
-				heat -= (endTemp + 273D) * reag.getAmount();
-				contents[i] = null;
-			}
-		}
 
 		boolean destroy = false;
 
-		for(int i = 0; i < contents.length; i++){
-			ReagentStack reag = contents[i];
-			if(reag == null){
+		ArrayList<IReagent> toRemove = new ArrayList<>(1);
+
+		for(IReagent type : contents.keySet()){
+			ReagentStack reag = contents.getStack(type);
+			if(reag.isEmpty()){
 				continue;
 			}
-			reag.updatePhase(endTemp);
 			if(glass && !reag.getType().canGlassContain()){
-				heat -= (endTemp + 273D) * reag.getAmount();
+				heat -= HeatUtil.toKelvin(endTemp) * reag.getAmount();
 				amount -= reag.getAmount();
 				destroy |= reag.getType().destroysBadContainer();
-				contents[i] = null;
+				toRemove.add(type);
 			}
+		}
+
+		for(IReagent type : toRemove){
+			contents.remove(type);
 		}
 
 		if(destroy){
@@ -132,8 +123,8 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	@Override
-	public double getReactionCapacity(){
-		return transferCapacity() * 1.5D;
+	public int getReactionCapacity(){
+		return transferCapacity() * 2;
 	}
 
 	@Override

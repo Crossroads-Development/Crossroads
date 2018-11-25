@@ -2,23 +2,17 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 
@@ -29,25 +23,6 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 
 	private double cableTemp = 0;
 	private boolean init = false;
-
-	/**
-	 * @param chat Add info to this list, 1 line per entry. 
-	 * @param device The device type calling this method. 
-	 * @param player The player using the info device.
-	 * @param side The viewed EnumFacing (only used by goggles).
-	 */
-	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add("Temp: " + MiscUtil.betterRound(cableTemp, 3) + "°C");
-		if(amount == 0){
-			chat.add("No reagents");
-		}
-		for(ReagentStack reag : contents){
-			if(reag != null){
-				chat.add(reag.toString());
-			}
-		}
-	}
 
 	public HeatedTubeTileEntity(){
 		super();

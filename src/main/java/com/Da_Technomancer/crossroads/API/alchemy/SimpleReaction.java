@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import javax.annotation.Nullable;
 
 public class SimpleReaction implements IReaction{
@@ -11,13 +9,13 @@ public class SimpleReaction implements IReaction{
 	protected final double maxTemp;
 	protected final IReagent cat;
 	protected final boolean charged;
-	protected final Pair<IReagent, Integer>[] reagents;
-	protected final Pair<IReagent, Integer>[] products;
+	protected final ReagentStack[] reagents;
+	protected final ReagentStack[] products;
 	protected final int amountChange;
 
 	protected static final double HEAT_CONVERSION = 5;//5 was picked somewhat arbitrarily as a conversion factor from J/mol * mol to *C
 
-	public SimpleReaction(Pair<IReagent, Integer>[] reagents, Pair<IReagent, Integer>[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, boolean charged){
+	public SimpleReaction(ReagentStack[] reagents, ReagentStack[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, boolean charged){
 		this.reagents = reagents;
 		this.products = products;
 		this.cat = cat;
@@ -27,11 +25,11 @@ public class SimpleReaction implements IReaction{
 		this.charged = charged;
 		int change = 0;
 
-		for(Pair<IReagent, Integer> reag : reagents){
-			change -= reag.getRight();
+		for(ReagentStack reag : reagents){
+			change -= reag.getAmount();
 		}
-		for(Pair<IReagent, Integer> prod : products){
-			change += prod.getRight();
+		for(ReagentStack prod : products){
+			change += prod.getAmount();
 		}
 
 		this.amountChange = change;
@@ -39,14 +37,13 @@ public class SimpleReaction implements IReaction{
 
 	@Override
 	public boolean performReaction(IReactionChamber chamb){
-
 		//Check charged, catalyst, temperature, and solvent requirements
 		if(charged && !chamb.isCharged()){
 			return false;
 		}
 
-		ReagentStack[] reags = chamb.getReagants();
-		if(cat != null && reags[cat.getIndex()] == null){
+		ReagentMap reags = chamb.getReagants();
+		if(cat != null && reags.getQty(cat) <= 0){
 			return false;
 		}
 		double chambTemp = chamb.getTemp();
@@ -54,45 +51,32 @@ public class SimpleReaction implements IReaction{
 			return false;
 		}
 		
-		double content = chamb.getContent();
+		int content = chamb.getContent();
 
-		double maxReactions = amountChange <= 0 ? 200 : (chamb.getReactionCapacity() - content) / (double) amountChange;
+		int maxReactions = amountChange <= 0 ? 200 : (chamb.getReactionCapacity() - content) / amountChange;
 
-		for(Pair<IReagent, Integer> reag : reagents){
-			if(reags[reag.getLeft().getIndex()] == null){
+		for(ReagentStack reag : reagents){
+			if(reags.getQty(reag.getType()) <= 0){
 				return false;
 			}
-			maxReactions = Math.min(maxReactions, reags[reag.getLeft().getIndex()].getAmount() / (double) reag.getRight());
+			maxReactions = Math.min(maxReactions, reags.getQty(reag.getType()) / reag.getAmount());
 		}
 
 		//temperature change based limit
 		double allowedTempChange = heatChange < 0 ? maxTemp - chambTemp : minTemp - chambTemp;
 		
-		maxReactions = Math.min(maxReactions, -content * allowedTempChange / (heatChange * HEAT_CONVERSION));
+		maxReactions = (int) Math.min(maxReactions, -content * allowedTempChange / (heatChange * HEAT_CONVERSION));
 
-		if(maxReactions <= 0D){
+		if(maxReactions <= 0){
 			return false;
 		}
 
-		//Sanity check, makes sure that the reaction batch is large enough that none of the products will be immediately wiped for being too small a quantity
-		for(Pair<IReagent, Integer> reag : products){
-			if(reags[reag.getLeft().getIndex()] == null && maxReactions * (double) reag.getRight() <= AlchemyCore.MIN_QUANTITY){
-				return false;
-			}
+		for(ReagentStack reag : reagents){
+			reags.addReagent(reag.getType(), -maxReactions * reag.getAmount());
 		}
 
-		for(Pair<IReagent, Integer> reag : reagents){
-			if(reags[reag.getLeft().getIndex()].increaseAmount(-maxReactions * (double) reag.getRight()) <= 0D){
-				reags[reag.getLeft().getIndex()] = null;
-			}
-		}
-
-		for(Pair<IReagent, Integer> reag : products){
-			if(reags[reag.getLeft().getIndex()] == null){
-				reags[reag.getLeft().getIndex()] = new ReagentStack(reag.getLeft(), maxReactions * (double) reag.getRight());
-			}else{
-				reags[reag.getLeft().getIndex()].increaseAmount(maxReactions * (double) reag.getRight());
-			}
+		for(ReagentStack reag : products){
+			reags.addReagent(reag.getType(), maxReactions * reag.getAmount());
 		}
 
 		chamb.addHeat(-heatChange * maxReactions * HEAT_CONVERSION);

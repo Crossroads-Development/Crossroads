@@ -22,7 +22,7 @@ public class VoltusEffect implements IAlchEffect{
 	private static final Color[] BOLT_COLORS = new Color[] {new Color(255, 255, 0, 220), new Color(255, 228, 34, 220), new Color(255, 194, 62, 220)};
 
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase) {
+	public void doEffect(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase) {
 		if(phase != EnumMatterPhase.FLAME || Math.random() > 0.92D){
 			List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - 5, pos.getY() - 5, pos.getZ() - 5, pos.getX() + 5, pos.getY() + 5, pos.getZ() + 5), EntitySelectors.IS_ALIVE);
 			for(EntityLivingBase ent : ents){

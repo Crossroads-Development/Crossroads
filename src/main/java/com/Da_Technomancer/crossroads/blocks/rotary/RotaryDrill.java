@@ -8,6 +8,7 @@ import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -110,6 +111,11 @@ public class RotaryDrill extends BlockContainer{
 	@Override
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(EssentialsProperties.FACING).getIndex();
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return face == state.getValue(EssentialsProperties.FACING).getOpposite() ? BlockFaceShape.CENTER : BlockFaceShape.UNDEFINED;
 	}
 
 	@Override

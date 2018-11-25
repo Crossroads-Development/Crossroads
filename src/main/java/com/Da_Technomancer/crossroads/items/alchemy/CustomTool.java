@@ -1,15 +1,8 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,9 +18,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
 public class CustomTool extends Item{
 
-	public static final HashMap<String, CustomTool> TOOL_TYPES = new HashMap<String, CustomTool>();
+	public static final HashMap<String, CustomTool> TOOL_TYPES = new HashMap<>();
 	
 	private final String toolClass;
 	
@@ -72,9 +70,9 @@ public class CustomTool extends Item{
 		aeth /= crystals.size();
 		adam /= crystals.size();
 
-		nbt.setFloat("attack_dmg", sulf / 6);//0-16
+		nbt.setFloat("attack_dmg", sulf / 6F);//0-16
 		nbt.setInteger("mining_lvl", toolClass.equals("sword") ? 0 : sulf / 10);//0-10
-		nbt.setFloat("mining_spd", toolClass.equals("sword") ? 0 : Math.max(1F, qsil / 5));//1-20
+		nbt.setFloat("mining_spd", toolClass.equals("sword") ? 0 : Math.max(1F, qsil / 5F));//1-20
 		nbt.setFloat("attack_spd", toolClass.equals("pickaxe") ? -2.8F : toolClass.equals("shovel") || toolClass.equals("axe") ? -3F : -5.6F + qsil / 10F);//On swords: -5.6-4.4
 		nbt.setInteger("durability", salt * 52);//0-5200
 		nbt.setInteger("heat", phel / 10);//0-10

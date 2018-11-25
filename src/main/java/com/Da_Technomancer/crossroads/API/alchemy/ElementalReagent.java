@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,35 +13,25 @@ import java.awt.*;
 import java.util.List;
 
 public class ElementalReagent implements IElementReagent{
-	
-	private final int index;
+
 	private final boolean destroyContainer;
-	private final byte level;
 	private final String name;
-	private final BeamUnit range;
+	private final EnumBeamAlignments element;
 	private final Color color;
 	private final IAlchEffect effect;
 	private final int melt;
 	private final int boil;
 	private final Item solidForm;
-	private final IElementReagent secondaryBase;
 	
-	public ElementalReagent(String name, int index, byte level, int melt, int boil, IAlchEffect effect, boolean destroyContainer, BeamUnit range, @Nullable Item solidForm){
-		this(name, index, level, melt, boil, effect, destroyContainer, range, solidForm, null);
-	}
-	
-	public ElementalReagent(String name, int index, byte level, int melt, int boil, IAlchEffect effect, boolean destroyContainer, BeamUnit range, @Nullable Item solidForm, @Nullable IElementReagent secondaryBase){
+	public ElementalReagent(String name, int melt, int boil, IAlchEffect effect, boolean destroyContainer, EnumBeamAlignments element, Color color, @Nullable Item solidForm){
 		this.name = name;
-		this.index = index;
 		this.destroyContainer = destroyContainer;
-		this.level = level;
-		this.range = range;
+		this.element = element;
 		this.effect = effect;
 		this.boil = boil;
 		this.melt = melt;
 		this.solidForm = solidForm;
-		this.secondaryBase = secondaryBase;
-		this.color = range.getTrueRGB();
+		this.color = color;
 		AlchemyCore.ELEMENTAL_REAGS.add(this);
 		if(solidForm != null){
 			AlchemyCore.ITEM_TO_REAGENT.put((stack) -> stack.getItem() == solidForm, this);
@@ -59,11 +49,6 @@ public class ElementalReagent implements IElementReagent{
 	}
 
 	@Override
-	public int getIndex(){
-		return index;
-	}
-
-	@Override
 	public Color getColor(EnumMatterPhase phase){
 		return color;
 	}
@@ -77,9 +62,14 @@ public class ElementalReagent implements IElementReagent{
 	public boolean destroysBadContainer(){
 		return destroyContainer;
 	}
-	
+
 	@Override
-	public void onRelease(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase, ReagentStack[] contents){
+	public String getId(){
+		return name;
+	}
+
+	@Override
+	public void onRelease(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase, ReagentMap contents){
 		if(effect != null){
 			effect.doEffectAdv(world, pos, amount, temp, phase, contents);
 		}
@@ -88,7 +78,7 @@ public class ElementalReagent implements IElementReagent{
 	@Override
 	@Nullable
 	public ReagentStack getReagentFromStack(ItemStack stack){
-		return stack.getItem() == solidForm ? new ReagentStack(this, 1) : null;
+		return stack.getItem() == solidForm ? new ReagentStack(this, 1) : ReagentStack.EMPTY;
 	}
 	
 	/**
@@ -97,7 +87,7 @@ public class ElementalReagent implements IElementReagent{
 	 */
 	@Override
 	public ItemStack getStackFromReagent(ReagentStack reag){
-		return reag != null && reag.getType() == this && reag.getAmount() >= 1 - AlchemyCore.MIN_QUANTITY ? new ItemStack(solidForm, (int) (reag.getAmount() + AlchemyCore.MIN_QUANTITY)) : ItemStack.EMPTY;
+		return !reag.isEmpty() && reag.getType() == this ? new ItemStack(solidForm, reag.getAmount()) : ItemStack.EMPTY;
 	}
 
 	@Override
@@ -106,22 +96,7 @@ public class ElementalReagent implements IElementReagent{
 	}
 
 	@Override
-	public BeamUnit getAlignment(){
-		return range;
+	public EnumBeamAlignments getAlignment(){
+		return element;
 	}
-
-	@Override
-	public byte getLevel(){
-		return level;
-	}
-
-	@Override
-	public IElementReagent getSecondaryBase(){
-		return secondaryBase;
-	}
-
-	@Override
-	public String getName(){
-		return name;
-	}	
 }

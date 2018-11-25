@@ -1,8 +1,6 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.packets.INbtReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityClient;
@@ -39,13 +37,13 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 		ignoreFrustumCheck = true;
 	}
 
-	public void setInitialValues(ReagentStack[] reags, double temp, int radius){
-		this.reags = reags == null ? new ReagentStack[AlchemyCore.REAGENT_COUNT] : reags;
+	public void setInitialValues(ReagentMap reags, double temp, int radius){
+		this.reags = reags == null ? new ReagentMap() : reags;
 		this.temp = temp;
 		maxRadius = radius;
 	}
 
-	private ReagentStack[] reags = null;
+	private ReagentMap reags = null;
 	private double temp = 0;
 
 	@Override
@@ -66,30 +64,18 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt){
-		reags = new ReagentStack[AlchemyCore.REAGENT_COUNT];
+		reags = new ReagentMap();
 		temp = nbt.getDouble("temp");
 		maxRadius = nbt.getInteger("rad");
-
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			if(nbt.hasKey(i + "_am")){
-				reags[i] = new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am"));
-				reags[i].updatePhase(temp);
-			}
-		}
-
+		reags = ReagentMap.readFromNBT(nbt);
 		ticksExisted = nbt.getInteger("life");
 		setInitialValues(reags, temp, maxRadius);
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt){
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			ReagentStack reag = reags[i];
-			if(reag == null){
-				nbt.removeTag(i + "_am");
-			}else{
-				nbt.setDouble(i + "_am", reag.getAmount());
-			}
+		if(reags != null){
+			reags.writeToNBT(nbt);
 		}
 
 		nbt.setDouble("temp", temp);
@@ -111,27 +97,28 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 
 		if(col == null){
 			reagList.clear();
-			double r = 0;
-			double g = 0;
-			double b = 0;
-			double a = 0;
-			double amount = 0;
-			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-				if(this.reags[i] != null){
-					Color color = this.reags[i].getType().getColor(this.reags[i].getPhase(temp));
-					r += this.reags[i].getAmount() * (double) color.getRed();
-					g += this.reags[i].getAmount() * (double) color.getGreen();
-					b += this.reags[i].getAmount() * (double) color.getBlue();
-					a += this.reags[i].getAmount() * (double) color.getAlpha();
-					amount += this.reags[i].getAmount();
+			int r = 0;
+			int g = 0;
+			int b = 0;
+			int a = 0;
+			int amount = 0;
+			for(IReagent type : reags.keySet()){
+				int qty = reags.getQty(type);
+				if(qty > 0){
+					Color color = type.getColor(type.getPhase(temp));
+					r += qty * color.getRed();
+					g += qty * color.getGreen();
+					b += qty * color.getBlue();
+					a += qty * color.getAlpha();
+					amount += qty;
 
-					if(i != 0 && i != 37){//Skips i=0 (phelostigen) & i=37 (ignus infernum)
-						reagList.add(this.reags[i]);
+					if(!type.getId().equals(EnumReagents.PHELOSTOGEN.id()) && !type.getId().equals(EnumReagents.HELLFIRE.id())){
+						reagList.add(reags.getStack(type));
 					}
 				}
 			}
 			NBTTagCompound nbt = new NBTTagCompound();
-			col = new Color((int) (r / amount), (int) (g / amount), (int) (b / amount), (int) (a / amount));
+			col = new Color(r / amount, g / amount, b / amount, a / amount);
 			nbt.setInteger("col", col.getRGB());
 			nbt.setInteger("life", ticksExisted);
 			ModPackets.network.sendToAllAround(new NbtToEntityClient(getUniqueID(), nbt), new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 512));
@@ -180,8 +167,8 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 		}
 	}
 
-	private static void act(ArrayList<ReagentStack> reagList, ReagentStack[] reags, double temp, World world, BlockPos pos, boolean lastAction){
-		if(reags[16] == null){
+	private static void act(ArrayList<ReagentStack> reagList, ReagentMap reags, double temp, World world, BlockPos pos, boolean lastAction){
+		if(reags.getQty(EnumReagents.ALCHEMICAL_SALT.id()) == 0){
 			IBlockState state = world.getBlockState(pos);
 
 			if(state.getBlockHardness(world, pos) >= 0){

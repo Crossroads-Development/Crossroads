@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 
 public class ReagIngr{
 	
-	public static final List<ReagIngr> REAG_TYPES = new ArrayList<ReagIngr>();
+	public static final List<ReagIngr> REAG_TYPES = new ArrayList<>();
 	
 	private final IReagent reag;
 	private final int parts;
@@ -33,7 +33,7 @@ public class ReagIngr{
 	}
 	
 	public static void populate(){
-		for(IReagent r : AlchemyCore.REAGENTS){
+		for(IReagent r : AlchemyCore.REAGENTS.values()){
 			if(r != null){
 				REAG_TYPES.add(new ReagIngr(r, 1));
 			}

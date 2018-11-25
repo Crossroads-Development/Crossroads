@@ -54,7 +54,7 @@ public class GrowEffect implements IEffect{
 				worldIn.setBlockState(pos, Blocks.DEADBUSH.getDefaultState());
 			}
 			double range = Math.sqrt(mult);
-			List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
+			List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntitySelectors.IS_ALIVE);
 			for(EntityLivingBase ent : ents){
 				ent.attackEntityFrom(POTENTIALVOID, (float) mult * 3F / 4F);
 			}

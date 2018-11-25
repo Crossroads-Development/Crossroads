@@ -1,13 +1,9 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
-
+import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.items.ModItems;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,6 +13,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 public class Phial extends AbstractGlassware{
 
@@ -36,8 +34,8 @@ public class Phial extends AbstractGlassware{
 	}
 
 	@Override
-	public double getCapacity(){
-		return 25D;
+	public int getCapacity(){
+		return 25;
 	}
 	
 	@Override
@@ -47,17 +45,18 @@ public class Phial extends AbstractGlassware{
 	
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		Triple<ReagentStack[], Double, Double> contents = getReagants(playerIn.getHeldItem(hand));
+		Triple<ReagentMap, Double, Integer> contents = getReagants(playerIn.getHeldItem(hand));
 		if(contents.getRight() > 0){
 			if(!worldIn.isRemote){
 				double temp = (contents.getMiddle() / contents.getRight()) + 273D;
-				for(ReagentStack r : contents.getLeft()){
-					if(r != null){
-						r.getType().onRelease(worldIn, pos, r.getAmount(), temp, r.getPhase(temp), contents.getLeft());
+				for(IReagent type : contents.getLeft().keySet()){
+					int qty = contents.getLeft().getQty(type);
+					if(qty > 0){
+						type.onRelease(worldIn, pos, qty, temp, type.getPhase(temp), contents.getLeft());
 					}
 				}
 				if(!playerIn.isCreative()){
-					setReagents(playerIn.getHeldItem(hand), new ReagentStack[AlchemyCore.REAGENT_COUNT], 0, 0);
+					setReagents(playerIn.getHeldItem(hand), new ReagentMap(), 0);
 				}
 			}
 			return EnumActionResult.SUCCESS;

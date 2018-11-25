@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -45,13 +46,13 @@ public class ChemicalVentTileEntity extends TileEntity{
 		}
 
 		@Override
-		public double getContent(){
+		public int getContent(){
 			return 0;
 		}
 
 		@Override
-		public double getTransferCapacity(){
-			return 10D;
+		public int getTransferCapacity(){
+			return 10;
 		}
 
 		@Override
@@ -65,40 +66,35 @@ public class ChemicalVentTileEntity extends TileEntity{
 		}
 
 		@Override
-		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
-			double callerTemp = caller == null ? 293 : caller.getTemp() + 273D;
+		public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
+			double callerTemp = caller == null ? HeatUtil.toKelvin(20) : HeatUtil.toKelvin(caller.getTemp());
 			boolean changed = false;
-			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-				ReagentStack r = reag[i];
-				if(r != null){
-					EnumMatterPhase phase = r.getPhase(callerTemp - 273D);
+			for(IReagent type : reag.keySet()){
+				int qty = reag.getQty(type);
+				if(qty > 0){
+					EnumMatterPhase phase = type.getPhase(HeatUtil.toCelcius(callerTemp));
 					if(ignorePhase || (phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp()))){
-						double moved = r.getAmount();
-						if(moved <= 0D){
-							continue;
-						}
 						changed = true;
-						double heatTrans = moved * callerTemp;
-						reag[i] = null;
+						double heatTrans = qty * callerTemp;
+						reag.put(type, 0);
 						if(caller != null){
 							caller.addHeat(-heatTrans);
 						}
 
-						Color col = r.getType().getColor(phase);
+						Color col = type.getColor(phase);
 						WorldServer server = (WorldServer) world;
-
 
 						switch(phase){
 							case GAS:
-								for(int j = 0; j <= (int) moved; j++){
-									server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, 1F, new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()});
+								for(int j = 0; j <= qty; j++){
+									server.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, (Math.random() * 2D - 1D) * 0.25D, 1F, col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha());
 								}
-								r.getType().onRelease(world, pos, r.getAmount(), callerTemp, phase, null);
+								type.onRelease(world, pos, qty, callerTemp, phase, null);
 								break;
 							case LIQUID:
 							case SOLID:
-								for(int j = 0; j <= (int) moved; j++){
-									server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.02D, -Math.random(), (Math.random() * 2D - 1D) * 0.02D, 1F, new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()});
+								for(int j = 0; j <= qty; j++){
+									server.spawnParticle(ModParticles.COLOR_LIQUID, false, (float) pos.getX() + .5F, (float) pos.getY() + .5F, (float) pos.getZ() + .5F, 0, (Math.random() * 2D - 1D) * 0.02D, -Math.random(), (Math.random() * 2D - 1D) * 0.02D, 1F, col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha());
 								}
 								BlockPos searching = pos;
 								for(int j = pos.getY() - 1; j > 0; j--){
@@ -107,10 +103,10 @@ public class ChemicalVentTileEntity extends TileEntity{
 										break;
 									}
 								}
-								r.getType().onRelease(world, searching, r.getAmount(), heatTrans, phase, null);
+								type.onRelease(world, searching, qty, heatTrans, phase, null);
 								break;
 							case FLAME:
-								r.getType().onRelease(world, pos, r.getAmount(), heatTrans, phase, null);
+								type.onRelease(world, pos, qty, heatTrans, phase, null);
 								break;
 							default:
 								break;	
@@ -122,7 +118,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 		}
 
 		@Override
-		public double getContent(int type){
+		public int getContent(String type){
 			return 0;
 		}
 	}

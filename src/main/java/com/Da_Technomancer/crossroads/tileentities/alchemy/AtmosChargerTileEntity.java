@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
@@ -27,9 +28,9 @@ import java.util.ArrayList;
 
 public class AtmosChargerTileEntity extends TileEntity implements ITickable, IInfoTE{
 
-	private static final double VOLTUS_CAPACITY = 100;
+	private static final int VOLTUS_CAPACITY = 100;
 	private static final int FE_CAPACITY = 20_000;
-	private double voltusAmount = 0;
+	private int voltusAmount = 0;
 	private int fe = 0;
 	private boolean extractMode;
 	private int renderTimer;
@@ -135,14 +136,14 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		voltusAmount = nbt.getDouble("voltus");
+		voltusAmount = nbt.getInteger("voltus");
 		fe = nbt.getInteger("fe");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setDouble("voltus", voltusAmount);
+		nbt.setInteger("voltus", voltusAmount);
 		nbt.setInteger("fe", fe);
 		return nbt;
 	}
@@ -237,12 +238,12 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		@Override
-		public double getContent(){
+		public int getContent(){
 			return voltusAmount;
 		}
 
 		@Override
-		public double getTransferCapacity(){
+		public int getTransferCapacity(){
 			return VOLTUS_CAPACITY;
 		}
 
@@ -257,28 +258,25 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		@Override
-		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
+		public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
 			//Only allows insertion of voltus
-			if(voltusAmount >= VOLTUS_CAPACITY || reag[36] == null){
+			if(voltusAmount >= VOLTUS_CAPACITY || reag.getQty(EnumReagents.ELEM_CHARGE.id()) == 0){
 				return false;
 			}
 
-			ReagentStack r = reag[36];
-			double moved = Math.min(reag[36].getAmount(), VOLTUS_CAPACITY - voltusAmount);
+			int moved = Math.min(reag.getQty(EnumReagents.ELEM_CHARGE.id()), VOLTUS_CAPACITY - voltusAmount);
 			voltusAmount += moved;
-			if(r.increaseAmount(-moved) <= 0){
-				reag[36] = null;
-			}
+			reag.addReagent(EnumReagents.ELEM_CHARGE.id(), -moved);
 			if(caller != null){
-				caller.addHeat(-moved * (caller.getTemp() + 273D));
+				caller.addHeat(-moved * HeatUtil.toKelvin(caller.getTemp()));
 			}
 			markDirty();
 			return true;
 		}
 
 		@Override
-		public double getContent(int type){
-			return type == 36 ? voltusAmount : 0;
+		public int getContent(String type){
+			return type.equals(EnumReagents.ELEM_CHARGE.id()) ? voltusAmount : 0;
 		}
 	}
 }

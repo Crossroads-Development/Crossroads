@@ -21,7 +21,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		return oldState.getBlock() != newState.getBlock();
 	}
 
-	private static final double[] LIMITS = new double[] {0.25D, 0.5D, 1, 2, 4, 8, 16};
+	private static final int[] LIMITS = new int[] {1, 2, 4, 8, 16, 32, 64};
 
 	private int limitIndex = 0;
 
@@ -55,28 +55,22 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		}
 
 		if(amount != 0){
-			double limit = LIMITS[limitIndex];
-			ReagentStack[] transReag = new ReagentStack[AlchemyCore.REAGENT_COUNT];
-			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-				if(contents[i] != null){
-					double transLimit = Math.min(contents[i].getAmount(), limit - otherHandler.getContent(i));
-					if(transLimit > 0){
-						transReag[i] = new ReagentStack(AlchemyCore.REAGENTS[i], transLimit);
-						if(contents[i].increaseAmount(-transLimit) <= 0){
-							contents[i] = null;
-						}
-					}
+			int limit = LIMITS[limitIndex];
+			ReagentMap transferReag = new ReagentMap();
+			for(IReagent type : contents.keySet()){
+				int qty = contents.getQty(type);
+				int specificLimit = Math.min(qty, limit - otherHandler.getContent(type.getId()));
+				if(specificLimit > 0){
+					transferReag.put(type, specificLimit);
+					contents.addReagent(type, -specificLimit);
 				}
 			}
 
-			boolean changed = otherHandler.insertReagents(transReag, side.getOpposite(), handler);
-			for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-				if(transReag[i] != null){
-					if(contents[i] == null){
-						contents[i] = transReag[i];
-					}else{
-						contents[i].increaseAmount(transReag[i].getAmount());
-					}
+			boolean changed = otherHandler.insertReagents(transferReag, side.getOpposite(), handler);
+			for(IReagent type : transferReag.keySet()){
+				int qty = transferReag.getQty(type);
+				if(qty > 0){
+					contents.addReagent(type, qty);
 				}
 			}
 

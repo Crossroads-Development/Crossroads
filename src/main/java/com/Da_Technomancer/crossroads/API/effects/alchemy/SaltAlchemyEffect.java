@@ -26,7 +26,7 @@ public class SaltAlchemyEffect implements IAlchEffect{
 	private static final Predicate<Entity> FILTER = (Entity e) -> (e instanceof EntitySlime || e instanceof EntityCreeper) && EntitySelectors.IS_ALIVE.apply(e);
 
 	@Override
-	public void doEffect(World world, BlockPos pos, double amount, double temp, EnumMatterPhase phase){
+	public void doEffect(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase){
 		if(phase == EnumMatterPhase.FLAME){
 			return;
 		}

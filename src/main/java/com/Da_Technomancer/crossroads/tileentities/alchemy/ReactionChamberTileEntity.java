@@ -2,14 +2,12 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
 import com.Da_Technomancer.crossroads.Main;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,29 +22,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.logging.log4j.Level;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-
 public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	private double cableTemp = 0;
 	private boolean init = false;
 	private int energy = 0;
 	private static final int ENERGY_CAPACITY = 100;
-
-	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add("Temp: " + MiscUtil.betterRound(cableTemp, 3) + "°C");
-
-		if(amount == 0){
-			chat.add("No reagents");
-		}
-		for(ReagentStack reag : contents){
-			if(reag != null){
-				chat.add(reag.toString());
-			}
-		}
-	}
 
 	public ReactionChamberTileEntity(){
 		super();
@@ -62,19 +43,18 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	public NBTTagCompound getContentNBT(){
 		NBTTagCompound nbt = new NBTTagCompound();
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			if(contents[i] != null){
-				nbt.setDouble(i + "_am", contents[i].getAmount());
-			}
-		}
-		nbt.setDouble("heat", heat);
+		writeToNBT(nbt);
 		return nbt;
 	}
 
 	public void writeContentNBT(NBTTagCompound nbt){
 		heat = nbt.getDouble("heat");
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			contents[i] = nbt.hasKey(i + "_am") ? new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am")) : null;
+
+		for(String key : nbt.getKeySet()){
+			if(!key.startsWith("qty_")){
+				continue;
+			}
+			contents.addReagent(key.substring(4), nbt.getInteger(key));
 		}
 		dirtyReag = true;
 	}
@@ -108,8 +88,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public double transferCapacity(){
-		return 1000D;
+	public int transferCapacity(){
+		return 1000;
 	}
 
 	@Override
@@ -230,7 +210,9 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			int index = 0;
 			double endTemp = handler.getTemp();
 			for(IReagent reag : AlchemyCore.ITEM_TO_REAGENT.values()){
-				fakeInventory[index] = contents[reag.getIndex()] != null && contents[reag.getIndex()].getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(contents[reag.getIndex()]) : ItemStack.EMPTY;
+				int qty = contents.getQty(reag);
+				ReagentStack rStack = contents.getStack(reag);
+				fakeInventory[index] = qty != 0 && reag.getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(rStack) : ItemStack.EMPTY;
 				index++;
 			}
 		}
@@ -256,15 +238,10 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 					}
 					ItemStack testStack = stack.copy();
 					testStack.setCount(1);
-					double perAmount = reag.getReagentFromStack(testStack).getAmount();
-					int trans = Math.min(stack.getCount(), (int) ((transferCapacity() - amount) / perAmount));
+					int trans = Math.min(stack.getCount(), transferCapacity() - amount);
 					if(!simulate){
-						if(contents[reag.getIndex()] == null){
-							contents[reag.getIndex()] = new ReagentStack(reag, perAmount * (double) trans);
-						}else{
-							contents[reag.getIndex()].increaseAmount(perAmount * (double) trans);
-						}
-						heat += Math.min(reag.getMeltingPoint() + 263D, 290D) * perAmount * (double) trans;
+						contents.addReagent(reag, trans);
+						heat += Math.min(HeatUtil.toKelvin(reag.getMeltingPoint()) - 10D, HeatUtil.toKelvin(20)) * (double) trans;
 						dirtyReag = true;
 						markDirty();
 					}
@@ -284,13 +261,10 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 					ItemStack outStack = fakeInventory[slot].copy();
 					outStack.setCount(canExtract);
 					if(!simulate){
-						int reagIndex = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]).getIndex();
+						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]);
 						double endTemp = handler.getTemp();
-						double reagAmount = AlchemyCore.REAGENTS[reagIndex].getReagentFromStack(outStack).getAmount();
-						if(contents[reagIndex].increaseAmount(-reagAmount) <= 0){
-							contents[reagIndex] = null;
-						}
-						heat -= (endTemp + 273D) * reagAmount;
+						contents.addReagent(reag, -canExtract);
+						heat -= HeatUtil.toKelvin(endTemp + 273D) * canExtract;
 						dirtyReag = true;
 						markDirty();
 					}

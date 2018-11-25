@@ -272,6 +272,46 @@ item.axle_metal.name=%1$s Axle
 item.clutch_metal.name=%1$s Clutch
 item.clutch_inverted_metal.name=Inverted %1$s Clutch
 
+reagent.water=Water
+reagent.phelostogen=Phelostogen
+reagent.aether=Aether
+reagent.adamant=Adamant
+reagent.sulfur=Sulfur
+reagent.quicksilver=Quicksilver
+reagent.alc_salt=Alchemical Salt
+reagent.gunpowder=Gunpowder
+reagent.slag=Slag
+reagent.redstone=Cinnabar
+reagent.salt=Mundane Salt
+reagent.bedrock=Bedrock
+reagent.sulfur_dioxide=Sulfur Dioxide
+reagent.sulfur_trioxide=Sulfur Trioxide
+reagent.sulfuric_acid=Oil of Vitriol
+reagent.nitric_acid=Aziotic Acid
+reagent.hydrochloric_acid=Muriatic Acid
+reagent.aqua_regia=Aqua Regia
+reagent.crystal=Alchemical Crystal
+reagent.philosopher=Philosopher's Stone
+reagent.practitioner=Practitioner's Stone
+reagent.chlorine=Chlorine
+reagent.iron=Iron
+reagent.copper=Copper
+reagent.tin=Tin
+reagent.gold=Gold
+reagent.ruby=Ruby
+reagent.emerald=Emerald
+reagent.diamond=Diamond
+reagent.quartz=Nether Quartz
+reagent.vanadium=Vanadium Oxide
+reagent.densus=Densus
+reagent.anti_densus=Anti-Densus
+reagent.hellfire=Ignis Infernum
+reagent.elem_light=Lumen
+reagent.elem_rift=Eldrine
+reagent.elem_equalibrium=Stasisol
+reagent.elem_fusion=Fusas
+reagent.elem_charge=Voltus
+
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ
 

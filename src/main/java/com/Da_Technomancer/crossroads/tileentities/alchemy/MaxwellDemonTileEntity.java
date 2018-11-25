@@ -62,7 +62,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 
 				IHeatHandler handler = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN);
 				reservePool += handler.getTemp();
-				handler.addHeat(-(handler.getTemp()));
+				handler.addHeat(-handler.getTemp());
 				reservePool /= 2;
 				if(i == 0){
 					tempDown += reservePool;
@@ -78,8 +78,8 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("init", init);
-		nbt.setDouble("tempU", tempUp);
-		nbt.setDouble("tempD", tempDown);
+		nbt.setDouble("temp_u", tempUp);
+		nbt.setDouble("temp_d", tempDown);
 		return nbt;
 	}
 
@@ -87,8 +87,8 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		init = nbt.getBoolean("init");
-		tempUp = nbt.getDouble("tempU");
-		tempDown = nbt.getDouble("tempD");
+		tempUp = nbt.getDouble("temp_u");
+		tempDown = nbt.getDouble("temp_d");
 	}
 
 	private final HeatHandler heatHandlerUp = new HeatHandler(true);

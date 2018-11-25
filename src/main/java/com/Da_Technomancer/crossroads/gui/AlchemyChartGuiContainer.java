@@ -1,15 +1,9 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-
+import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.IElementReagent;
 import com.Da_Technomancer.crossroads.gui.container.AlchemyChartContainer;
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,13 +14,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class AlchemyChartGuiContainer extends GuiContainer{
 
-	private static final int RADIUS = 128;
+	private static final int RADIUS = 136;
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/alchemy_chart_gui.png");
 	private static final ResourceLocation NODE_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/container/nodes.png");
 
-	private final ArrayList<Node> NODES = new ArrayList<Node>();
+	private final ArrayList<Node> NODES = new ArrayList<>();
 
 	public AlchemyChartGuiContainer(EntityPlayer player, World world){
 		super(new AlchemyChartContainer(player, world));
@@ -38,14 +36,20 @@ public class AlchemyChartGuiContainer extends GuiContainer{
 	public void initGui(){
 		super.initGui();
 		NODES.clear();
+		placeNode(AlchemyCore.REAGENTS.get(EnumReagents.PHELOSTOGEN.id()), Color.RED, 0);
+		placeNode(AlchemyCore.REAGENTS.get(EnumReagents.AETHER.id()), Color.GREEN, 0);
+		placeNode(AlchemyCore.REAGENTS.get(EnumReagents.ADAMANT.id()), Color.BLUE, 0);
 		for(IElementReagent reag : AlchemyCore.ELEMENTAL_REAGS){
-				Color rgbColor = reag.getAlignment().getTrueRGB();
-				float[] hsbColor = Color.RGBtoHSB(rgbColor.getRed(), rgbColor.getGreen(), rgbColor.getBlue(), null);
-				double theta = 2D * Math.PI * hsbColor[0];
-				theta += Math.PI / 6D;
-				NODES.add(new Node((int) (RADIUS * (hsbColor[1] * Math.cos(theta))), (int) (RADIUS * (hsbColor[1] * Math.sin(theta))), reag.getLevel(), reag));
-			
+			Color rgbColor = reag.getColor(EnumMatterPhase.GAS);
+			placeNode(reag, rgbColor, 1);
 		}
+	}
+
+	private void placeNode(IReagent reag, Color col, int type){
+		float[] hsbColor = Color.RGBtoHSB(col.getRed(), col.getGreen(), col.getBlue(), null);
+		double theta = 2D * Math.PI * hsbColor[0];
+		theta += Math.PI / 6D;
+		NODES.add(new Node((int) (RADIUS * (hsbColor[1] * Math.cos(theta))), (int) (RADIUS * (hsbColor[1] * Math.sin(theta))), type, reag));
 	}
 
 	@Override
@@ -72,12 +76,14 @@ public class AlchemyChartGuiContainer extends GuiContainer{
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		mc.getTextureManager().bindTexture(NODE_TEXTURE);
-		for(Node node : NODES){
-			node.drawNode(false);
+		GlStateManager.enableBlend();
+		for(int stage = 0; stage < 2; stage++){
+			for(Node node : NODES){
+				node.drawNode(stage == 1);
+			}
 		}
-		for(Node node : NODES){
-			node.drawNode(true);
-		}
+		GlStateManager.disableBlend();
+		GlStateManager.color(1, 1, 1);
 	}
 
 	@Override
@@ -97,40 +103,39 @@ public class AlchemyChartGuiContainer extends GuiContainer{
 		//0: primary, 1: secondary, 2: tertiary
 		private final byte type;
 		//0~DYNAMIC_REAGENT_COUNT
-		private final IElementReagent reag;
+		private final IReagent reag;
 
-		private Node(int xPos, int yPos, byte type, IElementReagent reag){
+		private Node(int xPos, int yPos, int type, IReagent reag){
 			this.xPos = xPos;
 			this.yPos = yPos;
-			this.type = type;
+			this.type = (byte) type;
 			this.reag = reag;
 		}
 
 		private void drawNode(boolean secondStage){
+			Color col = reag.getColor(EnumMatterPhase.GAS);
 			if(secondStage){
+				GlStateManager.color((float) col.getRed() / 255F, (float) col.getGreen() / 255F, (float) col.getBlue() / 255F);
 				drawModalRectWithCustomSizedTexture(xPos + xSize / 2 - 8, yPos + ySize / 2 - 8, 16 * type, 0, 16, 16, 64, 64);
-			}else{
-
-				if(type != 0){
-					drawConnect((int) (RADIUS * Math.sqrt(3) / 2D), RADIUS / 2, xPos, yPos, new Color(1, 0, 0, 80F / 255F));//Phel
-					drawConnect((int) -(RADIUS * Math.sqrt(3) / 2D), RADIUS / 2, xPos, yPos, new Color(0, 1, 0, 80F / 255F));//Aeth
-					drawConnect(0, -RADIUS, xPos, yPos, new Color(0, 0, 1, 80F / 255F));//Adam
-					if(type == 2){
-						if(reag.getSecondaryBase() != null){
-							Color alignSecond = reag.getSecondaryBase().getAlignment().getTrueRGB();
-							float[] hsbColor = Color.RGBtoHSB(alignSecond.getRed(), alignSecond.getGreen(), alignSecond.getBlue(), null);
-							double theta = 2D * Math.PI * hsbColor[0];
-							theta += Math.PI / 6D;
-							drawConnect((int) (RADIUS * (hsbColor[1] * Math.cos(theta))), (int) (RADIUS * (hsbColor[1] * Math.sin(theta))), xPos, yPos, new Color((float) alignSecond.getRed() / 255F, (float) alignSecond.getGreen() / 255F, (float) alignSecond.getBlue() / 255F, 200F / 255F));
-						}
-					}
-				}
+			}else if(type != 0){
+				drawConnect((int) (RADIUS * Math.sqrt(3) / 2D), RADIUS / 2, xPos, yPos, new Color(1, 0, 0, col.getRed() / 255F / 2F));//Phel
+				drawConnect((int) -(RADIUS * Math.sqrt(3) / 2D), RADIUS / 2, xPos, yPos, new Color(0, 1, 0, col.getGreen() / 255F / 2F));//Aeth
+				drawConnect(0, -RADIUS, xPos, yPos, new Color(0, 0, 1, col.getBlue() / 255F / 2F));//Adam
+//				if(type == 2){
+//					if(reag.getSecondaryBase() != null){
+//						Color alignSecond = reag.getSecondaryBase().getAlignment().getTrueRGB();
+//						float[] hsbColor = Color.RGBtoHSB(alignSecond.getRed(), alignSecond.getGreen(), alignSecond.getBlue(), null);
+//						double theta = 2D * Math.PI * hsbColor[0];
+//						theta += Math.PI / 6D;
+//						drawConnect((int) (RADIUS * (hsbColor[1] * Math.cos(theta))), (int) (RADIUS * (hsbColor[1] * Math.sin(theta))), xPos, yPos, new Color((float) alignSecond.getRed() / 255F, (float) alignSecond.getGreen() / 255F, (float) alignSecond.getBlue() / 255F, 200F / 255F));
+//					}
+//				}
 			}
 		}
 
 		private void drawConnect(int xStart, int yStart, int xEnd, int yEnd, Color col){
 			GlStateManager.color((float) col.getRed() / 255F, (float) col.getGreen() / 255F, (float) col.getBlue() / 255F, (float) col.getAlpha() / 255F);
-			
+
 			xStart += xSize / 2;
 			xEnd += xSize / 2;
 			yStart += ySize / 2;
@@ -148,7 +153,7 @@ public class AlchemyChartGuiContainer extends GuiContainer{
 			buf.pos(xStart + cross.x, yStart + cross.y, 0D).tex(1D, 0.75D).endVertex();
 			buf.pos(xStart - cross.x, yStart - cross.y, 0D).tex(1D, 0.5D).endVertex();
 			tessellator.draw();
-			
+
 			GlStateManager.color(1, 1, 1, 1);
 		}
 	}

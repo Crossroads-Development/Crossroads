@@ -28,9 +28,9 @@ import java.util.HashSet;
 public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, IInfoTE{
 
 	protected boolean glass;
-	protected ReagentStack[] contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
+	protected ReagentMap contents = new ReagentMap();
 	protected double heat = 0;
-	protected double amount = 0;
+	protected int amount = 0;
 	protected boolean dirtyReag = false;
 
 	protected Vec3d getParticlePos(){
@@ -38,8 +38,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	}
 
 	/**
-	 * @param chat Add info to this list, 1 line per entry. 
-	 * @param device The device type calling this method. 
+	 * @param chat Add info to this list, 1 line per entry.
 	 * @param player The player using the info device.
 	 * @param side The viewed EnumFacing (only used by goggles).
 	 */
@@ -50,9 +49,10 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		}else{
 			chat.add("No reagents");
 		}
-		for(ReagentStack reag : contents){
-			if(reag != null){
-				chat.add(reag.toString());
+		for(IReagent reag : contents.keySet()){
+			ReagentStack stack = contents.getStack(reag);
+			if(stack != null && !stack.isEmpty()){
+				chat.add(stack.toString());
 			}
 		}
 	}
@@ -67,36 +67,36 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	}
 
 	protected double correctTemp(){
-		return amount <= 0 ? -273D : (heat / amount) - 273D;
+		return amount <= 0 ? HeatUtil.ABSOLUTE_ZERO : HeatUtil.toCelcius(heat / amount);
 	}
 
 	protected boolean correctReag(){
 		dirtyReag = false;
 		amount = 0;
-		for(ReagentStack r : contents){
-			if(r != null){
-				amount += r.getAmount();
+		for(Integer am : contents.values()){
+			if(am != null){
+				amount += am;
 			}
 		}
-		if(amount == 0){
-			return true;
-		}
-		double endTemp = correctTemp();
+//		if(amount <= 0){
+//			return true;
+//		}
+//		double endTemp = correctTemp();
+//
+//		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
+//			ReagentStack reag = contents[i];
+//			if(reag != null && reag.getAmount() < AlchemyCore.MIN_QUANTITY){
+//				heat -= (endTemp + 273D) * reag.getAmount();
+//				contents[i] = null;
+//			}
+//		}
 
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			ReagentStack reag = contents[i];
-			if(reag != null && reag.getAmount() < AlchemyCore.MIN_QUANTITY){
-				heat -= (endTemp + 273D) * reag.getAmount();
-				contents[i] = null;
-			}
-		}
-
-		for(ReagentStack reag : contents){
-			if(reag == null){
-				continue;
-			}
-			reag.updatePhase(endTemp);
-		}
+//		for(ReagentStack reag : contents){
+//			if(reag == null){
+//				continue;
+//			}
+//			reag.updatePhase(endTemp);
+//		}
 		return true;
 	}
 
@@ -126,10 +126,11 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		float[] flameCol = new float[4];
 		float solAmount = 0;
 		float[] solCol = new float[4];
-		for(ReagentStack r : contents){
-			if(r != null){
-				Color col = r.getType().getColor(r.getPhase(temp));
-				switch(r.getPhase(temp)){
+		for(IReagent type : contents.keySet()){
+			ReagentStack r = contents.getStack(type);
+			if(!r.isEmpty()){
+				Color col = r.getType().getColor(type.getPhase(temp));
+				switch(type.getPhase(temp)){
 					case LIQUID:
 						liqAmount += r.getAmount();
 						liqCol[0] += r.getAmount() * (double) col.getRed();
@@ -185,106 +186,83 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	 */
 	@Nonnull
 	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking){
-		double temp = correctTemp() + 273D;//Kelvin
+		double temp = HeatUtil.toKelvin(correctTemp());
 		ItemStack out = stack.copy();
 
 		//Move solids from carrier into hand
 		if(stack.isEmpty()){
-			for(int i = 0; i < contents.length; i++){
-				if(contents[i] != null && contents[i].getPhase(temp) == EnumMatterPhase.SOLID){
-					out = contents[i].getType().getStackFromReagent(contents[i]);
+			for(IReagent type : contents.keySet()){
+				ReagentStack rStack = contents.getStack(type);
+				if(!rStack.isEmpty() && type.getPhase(HeatUtil.toCelcius(temp)) == EnumMatterPhase.SOLID){
+					out = type.getStackFromReagent(rStack);
 					out.setCount(Math.min(out.getMaxStackSize(), out.getCount()));
 					if(!out.isEmpty()){
-						double amountRemoved = AlchemyCore.REAGENTS[i].getReagentFromStack(out).getAmount() * (double) out.getCount();
-						if(contents[i].increaseAmount(-amountRemoved) <= AlchemyCore.MIN_QUANTITY){
-							amount -= contents[i].getAmount();
-							heat -= temp * contents[i].getAmount();
-							contents[i] = null;
-						}
-						amount -= amountRemoved;
-						heat -= temp * amountRemoved;
+						contents.addReagent(type, -out.getCount());
+						amount -= out.getCount();
+						heat -= temp * out.getCount();
 						break;
 					}
 				}
 			}
 		}else if(stack.getItem() instanceof AbstractGlassware){
 			//Move reagents between glassware and carrier
-			Triple<ReagentStack[], Double, Double> phial = ((AbstractGlassware) stack.getItem()).getReagants(stack);
-			ReagentStack[] reag = phial.getLeft();
+			Triple<ReagentMap, Double, Integer> phial = ((AbstractGlassware) stack.getItem()).getReagants(stack);
+			ReagentMap reag = phial.getLeft();
 			double phialHeat = phial.getMiddle();
-			double phialAmount = phial.getRight();
-			if(phialAmount <= AlchemyCore.MIN_QUANTITY){
+			int phialAmount = phial.getRight();
+			if(phialAmount <= 0){
+				reag.clear();
 				//Move from carrier to glassware
 				if(stack.getMetadata() == 0){
 					//Refuse if made of glass and cannot hold contents
-					for(ReagentStack r : contents){
-						if(r != null && !r.getType().canGlassContain()){
+					for(IReagent r : contents.keySet()){
+						if(r != null && contents.getQty(r) > 0 && !r.canGlassContain()){
 							return stack;
 						}
 					}
 				}
-
-				phialAmount = 0;
 				phialHeat = 0;
 
-				double ratioToMove = Math.max(0, Math.min(1D, ((AbstractGlassware) stack.getItem()).getCapacity() / amount));
+				double portion = Math.min(1D, (double) ((AbstractGlassware) stack.getItem()).getCapacity() / (double) amount);
 
-				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-					if(contents[i] != null){
-						double toMove = contents[i].getAmount() * ratioToMove;
-						reag[i] = new ReagentStack(AlchemyCore.REAGENTS[i], toMove);
+				for(IReagent type : contents.keySet()){
+					int qty = contents.getQty(type);
+					if(qty > 0){
+						int toMove = (int) (qty * portion);
+						reag.put(type, toMove);
 						phialHeat += temp * toMove;
-						phialAmount += toMove;
-						if(contents[i].increaseAmount(-toMove) <= AlchemyCore.MIN_QUANTITY){
-							amount -= contents[i].getAmount();
-							heat -= temp * contents[i].getAmount();
-							contents[i] = null;
-						}
+						contents.addReagent(type, -toMove);
 						heat -= temp *toMove;
 						amount -= toMove;
 					}
 				}
-				((AbstractGlassware) out.getItem()).setReagents(out, reag, phialHeat, phialAmount);
+				((AbstractGlassware) out.getItem()).setReagents(out, reag, phialHeat);
 			}else{
 				//Move from glassware to carrier
-				double ratioToMove = Math.max(0, Math.min(1D, (transferCapacity() - amount) / phialAmount));
-				double phialTemp = phialAmount == 0 ? 0 : phialHeat / phialAmount;//Kelvin
-				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-					if(reag[i] != null){
-						double toMove = reag[i].getAmount() * ratioToMove;
-						if(contents[i] == null){
-							contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], toMove);
-						}else{
-							contents[i].increaseAmount(toMove);
-						}
+				double portion = Math.max(0, Math.min(1D, (double) (transferCapacity() - amount) / (double) phialAmount));
+				double phialTemp = phialHeat / phialAmount;//Kelvin
+
+				for(IReagent type : reag.keySet()){
+					int qty = reag.getQty(type);
+					if(qty > 0){
+						int toMove = (int) (qty * portion);
+						reag.addReagent(type, -toMove);
+						contents.addReagent(type, toMove);
+						phialHeat -= phialTemp * toMove;
 						heat += phialTemp * toMove;
 						amount += toMove;
-						if(reag[i].increaseAmount(-toMove) <= AlchemyCore.MIN_QUANTITY){
-							phialAmount -= reag[i].getAmount();
-							phialHeat -= phialTemp * reag[i].getAmount();
-							reag[i] = null;
-						}
-						phialHeat -= phialTemp *toMove;
-						phialAmount -= toMove;
 					}
 				}
-				((AbstractGlassware) out.getItem()).setReagents(out, reag, phialHeat, phialAmount);
+				((AbstractGlassware) out.getItem()).setReagents(out, reag, phialHeat);
 			}
 		}else{
 			//Move solids from hand into carrier
 			IReagent typeProduced = AlchemyCore.ITEM_TO_REAGENT.get(stack);
-			if(typeProduced != null){
-				double amountProduced = typeProduced.getReagentFromStack(stack).getAmount();
-				if(amountProduced <= transferCapacity() - amount){
-					amount += amountProduced;
-					heat += Math.max(0, Math.min(typeProduced.getMeltingPoint() + 273D, HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + 273D)) * amountProduced;
-					out.shrink(1);
-					if(contents[typeProduced.getIndex()] == null){
-						contents[typeProduced.getIndex()] = new ReagentStack(typeProduced, amountProduced);
-					}else{
-						contents[typeProduced.getIndex()].increaseAmount(amountProduced);
-					}
-				}
+			if(typeProduced != null && amount < transferCapacity()){
+				amount++;
+				heat += Math.max(0, Math.min(HeatUtil.toKelvin(typeProduced.getMeltingPoint()), HeatUtil.toKelvin(HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)))));
+				out.shrink(1);
+				contents.addReagent(typeProduced, 1);
 			}
 		}
 
@@ -303,8 +281,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	@Nonnull
 	protected abstract EnumTransferMode[] getModes();
 
-	protected double transferCapacity(){
-		return 10D;
+	protected int transferCapacity(){
+		return 10;
 	}
 
 	protected void performTransfer(){
@@ -338,9 +316,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		super.readFromNBT(nbt);
 		glass = nbt.getBoolean("glass");
 		heat = nbt.getDouble("heat");
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			contents[i] = nbt.hasKey(i + "_am") ? new ReagentStack(AlchemyCore.REAGENTS[i], nbt.getDouble(i + "_am")) : null;
-		}
+
+		contents = ReagentMap.readFromNBT(nbt);
+
 		dirtyReag = true;
 	}
 
@@ -348,12 +326,10 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("glass", glass);
-		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-			if(contents[i] != null){
-				nbt.setDouble(i + "_am", contents[i].getAmount());
-			}
-		}
 		nbt.setDouble("heat", heat);
+
+		contents.writeToNBT(nbt);
+
 		return nbt;
 	}
 
@@ -380,12 +356,12 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public double getContent(){
+		public int getContent(){
 			return amount;
 		}
 
 		@Override
-		public double getTransferCapacity(){
+		public int getTransferCapacity(){
 			return transferCapacity();
 		}
 
@@ -401,53 +377,45 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public boolean insertReagents(ReagentStack[] reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
+		public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
 			if(getMode(side).isInput()){
-				double space = getTransferCapacity() - amount;
+				int space = getTransferCapacity() - amount;
 				if(space <= 0){
 					return false;
 				}
-				double callerTemp = caller == null ? 293 : caller.getTemp() + 273D;
+				double callerTemp = caller == null ? HeatUtil.toKelvin(20) : HeatUtil.toKelvin(caller.getTemp());
 				boolean changed = false;
 
-				HashSet<Integer> validIds = new HashSet<Integer>(4);
-				double totalValid = 0;
+				HashSet<String> validIds = new HashSet<>(4);
+				int totalValid = 0;
 
-				for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-					ReagentStack r = reag[i];
-					if(r != null){
-						EnumMatterPhase phase = r.getPhase(callerTemp - 273D);
+				for(IReagent type : reag.keySet()){
+					ReagentStack r = reag.getStack(type);
+					if(!r.isEmpty()){
+						EnumMatterPhase phase = type.getPhase(HeatUtil.toCelcius(callerTemp));
 						if(ignorePhase || (phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp()))){
-							validIds.add(i);
+							validIds.add(type.getId());
 							totalValid += r.getAmount();
 						}
 					}
 				}
 
-				totalValid = Math.min(1D, space / totalValid);
-
-				for(int i : validIds){
-					ReagentStack r = reag[i];
-					double moved = r.getAmount() * totalValid;
-					if(moved <= 0D){
+				double portion = Math.min(1D, (double) space / (double) totalValid);
+				for(String id : validIds){
+					int moved = (int) (reag.getQty(id) * portion);
+					if(moved <= 0){
 						continue;
 					}
 					amount += moved;
 					changed = true;
 					space -= moved;
 					double heatTrans = moved * callerTemp;
-					if(r.increaseAmount(-moved) <= 0){
-						reag[i] = null;
-					}
+					reag.addReagent(id, -moved);
 					heat += heatTrans;
 					if(caller != null){
 						caller.addHeat(-heatTrans);
 					}
-					if(contents[i] == null){
-						contents[i] = new ReagentStack(AlchemyCore.REAGENTS[i], moved);
-					}else{
-						contents[i].increaseAmount(moved);
-					}
+					contents.addReagent(id, moved);
 				}
 
 				if(changed){
@@ -461,9 +429,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public double getContent(int type){
-			ReagentStack r = contents[type];
-			return r == null ? 0 : r.getAmount();
+		public int getContent(String id){
+			return contents.getQty(id);
 		}
 	}
 }

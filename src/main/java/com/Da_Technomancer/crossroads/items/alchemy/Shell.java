@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.entity.EntityShell;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -30,11 +32,11 @@ public class Shell extends AbstractGlassware{
 		 */
 		@Override
 		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
-			Triple<ReagentStack[], Double, Double> contents = ModItems.shell.getReagants(stack);
+			Triple<ReagentMap, Double, Integer> contents = ModItems.shell.getReagants(stack);
 			if(contents.getRight() > 0){
 				EnumFacing dir = (EnumFacing) source.getBlockState().getValue(BlockDispenser.FACING);
 				World world = source.getWorld();
-				EntityShell entitysnowball = new EntityShell(world, contents.getLeft(), contents.getMiddle() / contents.getRight() - 273D);
+				EntityShell entitysnowball = new EntityShell(world, contents.getLeft(), HeatUtil.toCelcius(contents.getMiddle() / contents.getRight()));
 				entitysnowball.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
 				entitysnowball.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
 				world.spawnEntity(entitysnowball);
@@ -68,8 +70,8 @@ public class Shell extends AbstractGlassware{
 	}
 
 	@Override
-	public double getCapacity(){
-		return 25D;
+	public int getCapacity(){
+		return 25;
 	}
 
 	@Override
@@ -79,7 +81,7 @@ public class Shell extends AbstractGlassware{
 
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn){
 		ItemStack held = playerIn.getHeldItem(handIn);
-		Triple<ReagentStack[], Double, Double> contents = getReagants(held);
+		Triple<ReagentMap, Double, Integer> contents = getReagants(held);
 		if(contents.getRight() > 0){
 			if(!playerIn.capabilities.isCreativeMode){
 				held = ItemStack.EMPTY;
@@ -88,7 +90,7 @@ public class Shell extends AbstractGlassware{
 			worldIn.playSound((EntityPlayer) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 			if(!worldIn.isRemote){
-				EntityShell entitysnowball = new EntityShell(worldIn, playerIn, contents.getLeft(), contents.getMiddle() / contents.getRight() - 273D);
+				EntityShell entitysnowball = new EntityShell(worldIn, playerIn, contents.getLeft(), HeatUtil.toCelcius(contents.getMiddle() / contents.getRight()));
 				entitysnowball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
 				worldIn.spawnEntity(entitysnowball);
 			}

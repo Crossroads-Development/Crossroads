@@ -56,6 +56,6 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 	
 	@Override
 	public List<String> getTooltip(Minecraft minecraft, ReagIngr ingredient, ITooltipFlag tooltipFlag){
-		return tooltipFlag == TooltipFlags.ADVANCED ? ImmutableList.of(ingredient.getReag().getName(), ingredient.getParts() + (ingredient.getParts() == 1 ? " Part" : " Parts"), "ID: " + ingredient.getReag().getIndex()) : ingredient.getParts() == 0 ? ImmutableList.of(ingredient.getReag().getName()) : ImmutableList.of(ingredient.getReag().getName(), ingredient.getParts() + (ingredient.getParts() == 1 ? " Part" : " Parts"));
+		return tooltipFlag == TooltipFlags.ADVANCED ? ImmutableList.of(ingredient.getReag().getName(), ingredient.getParts() + (ingredient.getParts() == 1 ? " Part" : " Parts"), "ID: " + ingredient.getReag().getId()) : ingredient.getParts() == 0 ? ImmutableList.of(ingredient.getReag().getName()) : ImmutableList.of(ingredient.getReag().getName(), ingredient.getParts() + (ingredient.getParts() == 1 ? " Part" : " Parts"));
 	}
 }

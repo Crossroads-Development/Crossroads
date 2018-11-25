@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -16,16 +17,10 @@ public class ReagInfoRecipe implements IRecipeWrapper{
 
 	private final ReagIngr type;
 	private final List<ItemStack> solid;
-	private final double perSolid;
 
 	public ReagInfoRecipe(IReagent type){
 		this.type = new ReagIngr(type, 0);
 		solid = type.getJEISolids();
-		if(!solid.isEmpty()){
-			perSolid = type.getReagentFromStack(solid.get(0)).getAmount();
-		}else{
-			perSolid = 0;
-		}
 	}
 
 	@Override
@@ -41,15 +36,10 @@ public class ReagInfoRecipe implements IRecipeWrapper{
 		FontRenderer fontRenderer = minecraft.fontRenderer;
 		double melt = type.getReag().getMeltingPoint();
 		double boil = type.getReag().getBoilingPoint();
-		String line = "Melting: " + (melt >= Short.MAX_VALUE - 10 ? "Never" : melt < -273 ? "Always" : (melt + "°C"));
+		String line = "Melting: " + (melt >= Short.MAX_VALUE - 10 ? "Never" : melt < HeatUtil.ABSOLUTE_ZERO ? "Always" : (melt + "°C"));
 		fontRenderer.drawString(line, 2, 22, 4210752);
-		line = "Boiling: " + (boil >= Short.MAX_VALUE - 10 ? "Never" : boil < -273 ? "Always" : (boil + "°C"));
+		line = "Boiling: " + (boil >= Short.MAX_VALUE - 10 ? "Never" : boil < HeatUtil.ABSOLUTE_ZERO ? "Always" : (boil + "°C"));
 		fontRenderer.drawString(line, 2, 42, 4210752);
-
-		if(solid != null){
-			line = perSolid + " units per item";
-			fontRenderer.drawString(line, 2, 62, 4210752);
-		}
 
 		GlStateManager.color(1, 1, 1);
 		ReagentIngredientRenderer.RENDERER.render(minecraft, 2, 2, type);

@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
@@ -13,7 +12,6 @@ import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,8 +25,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
@@ -46,21 +42,6 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		if(occupied && amount > 0){
-			chat.add("Temp: " + MiscUtil.betterRound(florence ? cableTemp : (heat / amount) - 273D, 3) + "°C");
-		}
-		if(amount == 0){
-			chat.add("No reagents");
-		}
-		for(ReagentStack reag : contents){
-			if(reag != null){
-				chat.add(reag.toString());
-			}
-		}
-	}
-
-	@Override
 	public void update(){
 		if(world.isRemote){
 			return;
@@ -74,7 +55,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	protected double transferCapacity(){
+	protected int transferCapacity(){
 		return occupied ? florence ? ModItems.florenceFlask.getCapacity() : ModItems.phial.getCapacity() : 0;
 	}
 
@@ -87,11 +68,12 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		occupied = false;
 		florence = false;
 		this.heat = 0;
-		this.contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
+		this.contents.clear();
 		dirtyReag = true;
-		for(ReagentStack r : contents){
-			if(r != null){
-				r.getType().onRelease(world, pos, r.getAmount(), temp, r.getPhase(temp), contents);
+		for(IReagent r : contents.keySet()){
+			int qty = contents.getQty(r);
+			if(qty > 0){
+				r.onRelease(world, pos, qty, temp, r.getPhase(temp), contents);
 			}
 		}
 	}
@@ -100,9 +82,9 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		if(occupied){
 			AbstractGlassware glasswareType = florence ? ModItems.florenceFlask : ModItems.phial;
 			ItemStack flask = new ItemStack(glasswareType, 1, glass ? 0 : 1);
-			glasswareType.setReagents(flask, contents, heat, amount);
+			glasswareType.setReagents(flask, contents, heat);
 			this.heat = 0;
-			this.contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
+			this.contents.clear();
 			dirtyReag = true;
 			occupied = false;
 			markDirty();
@@ -128,16 +110,16 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 				world.setBlockState(pos, state.withProperty(Properties.ACTIVE, false).withProperty(Properties.CRYSTAL, false).withProperty(Properties.CONTAINER_TYPE, false));
 				ItemStack flask = new ItemStack(glasswareType, 1, glass ? 0 : 1);
 				occupied = false;
-				glasswareType.setReagents(flask, contents, heat, amount);
+				glasswareType.setReagents(flask, contents, heat);
 				this.heat = 0;
-				this.contents = new ReagentStack[AlchemyCore.REAGENT_COUNT];
+				this.contents.clear();
 				dirtyReag = true;
 				markDirty();
 				return flask;
 			}
 		}else if(stack.getItem() == ModItems.phial || stack.getItem() == ModItems.florenceFlask){
 			//Add item into TE
-			Triple<ReagentStack[], Double, Double> phialCont = ((AbstractGlassware) stack.getItem()).getReagants(stack);
+			Triple<ReagentMap, Double, Integer> phialCont = ((AbstractGlassware) stack.getItem()).getReagants(stack);
 			this.heat = phialCont.getMiddle();
 			this.contents = phialCont.getLeft();
 			glass = stack.getMetadata() == 0;

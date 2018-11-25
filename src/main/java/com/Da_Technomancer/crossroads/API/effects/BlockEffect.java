@@ -17,6 +17,10 @@ public class BlockEffect implements IEffect{
 
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
+		IBlockState prev = worldIn.getBlockState(pos);
+		if(prev == block){
+			return;
+		}
 		String[] bannedBlocks = ModConfig.getConfigStringList(ModConfig.destroyBlacklist, false);
 		String id = worldIn.getBlockState(pos).getBlock().getRegistryName().toString();
 		for(String s : bannedBlocks){
