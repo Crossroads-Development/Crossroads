@@ -6,8 +6,8 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.essentials.shared.IAxisHandler;
-import com.Da_Technomancer.essentials.shared.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.entity.player.EntityPlayer;
@@ -117,8 +117,10 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	private class CogHandler implements ICogHandler{
 
 		@Override
-		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius){
-			getAxle().propogate(masterIn, key, rotationRatioIn, lastRadius);
+		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient){
+			if(cogOrient == EnumFacing.getFacingFromVector(-masterPos.getX(), -masterPos.getY(), -masterPos.getZ())){
+				getAxle().propogate(masterIn, key, rotationRatioIn, lastRadius);
+			}
 		}
 
 		@Override

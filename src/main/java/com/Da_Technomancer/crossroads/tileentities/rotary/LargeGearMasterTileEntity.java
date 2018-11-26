@@ -10,8 +10,8 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import com.Da_Technomancer.essentials.shared.IAxisHandler;
-import com.Da_Technomancer.essentials.shared.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -242,24 +242,33 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 				}
 			}
 
-			for(EnumFacing sideN : EnumFacing.values()){
-				if(sideN != getFacing() && sideN != getFacing().getOpposite()){
+
+			EnumFacing side = getFacing();
+			
+			for(int i = 0; i < 6; i++){
+				if(i != side.getIndex() && i != side.getOpposite().getIndex()){
+					EnumFacing facing = EnumFacing.byIndex(i);
 					// Adjacent gears
-					TileEntity adjTE = world.getTileEntity(pos.offset(sideN, 2));
-					if(adjTE != null && adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, getFacing())){
-						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, getFacing()).connect(masterIn, key, -rotRatio, 1.5D);
+					TileEntity adjTE = world.getTileEntity(pos.offset(facing, 2));
+					if(adjTE != null){
+						if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){
+							adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -rotRatio, 1.5D, facing.getOpposite());
+						}else if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+							//Check for large gears
+							adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side);
+						}
 					}
 
 					// Diagonal gears
-					TileEntity diagTE = world.getTileEntity(pos.offset(sideN, 2).offset(getFacing()));
-					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()) && RotaryUtil.canConnectThrough(world, pos.offset(sideN, 2), sideN.getOpposite(), getFacing())){
-						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(getFacing(), sideN.getOpposite()) * rotRatio, 1.5D);
+					TileEntity diagTE = world.getTileEntity(pos.offset(facing, 2).offset(side));
+					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(world, pos.offset(facing, 2), facing.getOpposite(), side)){
+						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite());
 					}
 
-					//Behind gears
-					TileEntity behindTE = world.getTileEntity(pos.offset(sideN, 1).offset(getFacing()));
-					if(behindTE != null && behindTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN)){
-						behindTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, sideN).connect(masterIn, key, -RotaryUtil.getDirSign(getFacing(), sideN) * rotRatio, 1.5D);
+					//Underside gears
+					TileEntity undersideTE = world.getTileEntity(pos.offset(facing, 1).offset(side));
+					if(undersideTE != null && undersideTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing)){
+						undersideTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite());
 					}
 				}
 			}
@@ -274,7 +283,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		public void resetAngle(){
 			if(!world.isRemote){
 				angleW[1] = 0;
-				angleW[0] = Math.signum(rotRatio) == -1 ? 7.5F : 0F;
+				angleW[0] = Math.signum(rotRatio * getFacing().getAxisDirection().getOffset()) == -1 ? 7.5F : 0F;
 				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}

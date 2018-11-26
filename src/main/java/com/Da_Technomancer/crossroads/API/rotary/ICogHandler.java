@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import com.Da_Technomancer.essentials.shared.IAxisHandler;
-import com.Da_Technomancer.essentials.shared.IAxleHandler;
+import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nonnull;
 
@@ -16,8 +15,9 @@ public interface ICogHandler{
 	
 	/**
 	 * Should redirect to the AxleHandler propogate method.
+	 * @param cogOrient The orientation of the cogs in the plane (as opposed to the alignment of the plane, which is the capability side)
 	 */
-	public void connect(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius);
+	public void connect(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient);
 
 	public IAxleHandler getAxle();
 }

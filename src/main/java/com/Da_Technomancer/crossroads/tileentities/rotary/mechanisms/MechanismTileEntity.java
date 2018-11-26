@@ -11,8 +11,8 @@ import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.essentials.shared.IAxisHandler;
-import com.Da_Technomancer.essentials.shared.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -307,7 +307,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		}
 
 		@Override
-		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius){
+		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient){
 			axleHandlers[side].propogate(masterIn, key, rotationRatioIn, lastRadius);
 		}
 
@@ -350,7 +350,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		public void resetAngle(){
 			if(!world.isRemote){
 				clientW[side] = 0;
-				angle[side] = Math.signum(rotRatio) == -1 ? 22.5F : 0F;
+				angle[side] = Math.signum(rotRatio * EnumFacing.byIndex(side).getAxisDirection().getOffset()) == -1 ? 22.5F : 0F;
 				ModPackets.network.sendToAllAround(new SendLongToClient((byte) side, (Float.floatToIntBits(angle[side]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(clientW[side]) << 32L), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}

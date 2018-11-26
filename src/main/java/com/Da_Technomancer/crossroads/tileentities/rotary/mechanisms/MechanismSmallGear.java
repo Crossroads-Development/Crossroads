@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
-import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -101,24 +101,28 @@ public class MechanismSmallGear implements IMechanism{
 			}
 		}
 
-		for(int i = 0; i < 6; ++i){
+		for(int i = 0; i < 6; i++){
 			if(i != side.getIndex() && i != side.getOpposite().getIndex()){
 				EnumFacing facing = EnumFacing.byIndex(i);
 				// Adjacent gears
 				TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
 				if(adjTE != null){
 					if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){
-						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D);
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D, facing.getOpposite());
 					}else if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
 						//Check for large gears
-						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing.getOpposite()) * handler.rotRatio, .5D);
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side);
 					}
 				}
 
 				// Diagonal gears
 				TileEntity diagTE = te.getWorld().getTileEntity(te.getPos().offset(facing).offset(side));
 				if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(te.getWorld(), te.getPos().offset(facing), facing.getOpposite(), side)){
-					diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing.getOpposite()) * handler.rotRatio, .5D);
+					diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite());
+				}
+
+				if(sideTE != null && sideTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing)){
+					sideTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite());
 				}
 			}
 		}

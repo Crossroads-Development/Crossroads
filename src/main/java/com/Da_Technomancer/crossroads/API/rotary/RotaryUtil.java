@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.API.rotary;
 
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.essentials.shared.IAxleHandler;
-import com.Da_Technomancer.essentials.shared.ISlaveAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;

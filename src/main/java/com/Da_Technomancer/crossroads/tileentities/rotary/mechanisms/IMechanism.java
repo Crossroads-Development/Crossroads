@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.essentials.shared.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;

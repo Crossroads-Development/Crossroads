@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import com.Da_Technomancer.essentials.shared.IAxisHandler;
-import com.Da_Technomancer.essentials.shared.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 
 public class DefaultAxleHandler implements IAxleHandler{
 
