@@ -1,14 +1,15 @@
-package com.Da_Technomancer.crossroads.blocks.alchemy;
+package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.DynamoTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -86,7 +87,7 @@ public class Dynamo extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: 140.625");
+		tooltip.add("I: 150");
 		tooltip.add("Produces: " + ModConfig.getConfigInt(ModConfig.electPerJoule, true) + "FE/J");
 	}
 
@@ -103,5 +104,14 @@ public class Dynamo extends BlockContainer{
 	@Override
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex();
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		if(face == state.getValue(Properties.HORIZ_FACING)){
+			return BlockFaceShape.CENTER_SMALL;
+		}
+
+		return BlockFaceShape.UNDEFINED;
 	}
 }

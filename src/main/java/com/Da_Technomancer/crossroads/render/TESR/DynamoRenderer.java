@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.DynamoTileEntity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;

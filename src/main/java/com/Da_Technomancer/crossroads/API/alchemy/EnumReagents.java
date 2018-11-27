@@ -39,6 +39,7 @@ public enum EnumReagents{
 	VANADIUM("vanadium"),
 	DENSUS("densus"),
 	ANTI_DENSUS("anti_densus"),
+	CAVORITE("cavorite"),
 	HELLFIRE("hellfire"),
 	ELEM_LIGHT("elem_light"),
 	ELEM_RIFT("elem_rift"),

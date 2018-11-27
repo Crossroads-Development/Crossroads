@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
@@ -77,6 +78,10 @@ public class StampMillTileEntity extends InventoryTE{
 						inventory[1] = produced;
 					}else{
 						inventory[1] = inventory[0].splitStack(1);
+						progress -= REQUIRED * ModConfig.getConfigInt(ModConfig.stampMillDamping, false) / 100;
+						if(progress < 0){
+							progress = 0;
+						}
 					}
 				}
 				markDirty();

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -70,11 +71,6 @@ public class AlchemyChart extends Block{
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean thingamijiger){
 		addCollisionBoxToList(pos, mask, list, getBoundingBox(state, worldIn, pos));
 	}
-	
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
-	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
@@ -95,7 +91,12 @@ public class AlchemyChart extends Block{
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
-	
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return face == state.getValue(Properties.HORIZ_FACING).getOpposite() ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
+	}
+
 	@Override
 	public boolean isFullCube(IBlockState state){
 		return false;

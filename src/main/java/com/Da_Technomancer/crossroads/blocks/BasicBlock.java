@@ -8,10 +8,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class BasicBlock extends Block{
 
-	public BasicBlock(String unlocName, Material mat){
-		this(unlocName, mat, 1.5F);
-	}
-
 	public BasicBlock(String unlocName, Material mat, float hardness){
 		this(unlocName, mat, hardness, null);
 	}

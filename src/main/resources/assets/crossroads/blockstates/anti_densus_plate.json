@@ -3,7 +3,7 @@
 	"defaults": {
 		"model": "crossroads:densus_plate",
 		"textures": {
-			"main": "crossroads:blocks/densus_plate"
+			"main": "crossroads:blocks/anti_densus_plate"
 		},
 		"uvlock": true
 	},

@@ -27,7 +27,8 @@ import static com.Da_Technomancer.crossroads.API.alchemy.EnumReagents.*;
 public final class AlchemyCore{
 
 	public static final int MB_PER_REAG = 100;
-	protected static final int REAGENT_COUNT = 64;
+	//A non-binding reagent count to optimize around
+	protected static final int REAGENT_COUNT = EnumReagents.values().length;
 	public static final int ALCHEMY_TIME = 2;
 
 	public static final ArrayList<IReaction> REACTIONS = new ArrayList<>();
@@ -92,6 +93,9 @@ public final class AlchemyCore{
 		REAGENTS.put(EMERALD.id(), new StaticReagent(EMERALD.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.GREEN, MiscUtil.oreDictPred("gemEmerald"), () -> MiscUtil.getOredictStack("gemEmerald", 1), 0, null));//Couldn't find actual figures on melting/boiling points of emerald/diamond, perhaps due to large variance.
 		REAGENTS.put(DIAMOND.id(), new StaticReagent(DIAMOND.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.CYAN, MiscUtil.oreDictPred("gemDiamond"), () -> MiscUtil.getOredictStack("gemDiamond", 1), 0, null));
 		REAGENTS.put(QUARTZ.id(), new StaticReagent(QUARTZ.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.WHITE, (stack) -> stack.getItem() == Items.QUARTZ, () -> new ItemStack(Items.QUARTZ), 0, null));
+		REAGENTS.put(DENSUS.id(), new StaticReagent(DENSUS.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.BLUE, MiscUtil.oreDictPred("gemDensus"), () -> MiscUtil.getOredictStack("gemDensus", 1), 0, null));
+		REAGENTS.put(ANTI_DENSUS.id(), new StaticReagent(ANTI_DENSUS.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.ORANGE, MiscUtil.oreDictPred("gemAntiDensus"), () -> MiscUtil.getOredictStack("gemAntiDensus", 1), 0, null));
+		REAGENTS.put(CAVORITE.id(), new StaticReagent(CAVORITE.id(), 1000D, 1001D, (EnumMatterPhase phase) -> Color.YELLOW, MiscUtil.oreDictPred("gemCavorite"), () -> MiscUtil.getOredictStack("gemCavorite", 1), 0, null));
 
 		//Dynamic reagents
 		REAGENTS.put(ELEM_LIGHT.id(), new ElementalReagent(ELEM_LIGHT.id(), -275, -274, new LumenEffect(), false, EnumBeamAlignments.LIGHT, new Color(200, 255, 255), null));
@@ -105,8 +109,6 @@ public final class AlchemyCore{
 				return true;
 			}
 		});
-		REAGENTS.put(DENSUS.id(), new StaticReagent(DENSUS.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.BLUE, MiscUtil.oreDictPred("gemDensus"), () -> MiscUtil.getOredictStack("gemDensus", 1), 0, null));
-		REAGENTS.put(ANTI_DENSUS.id(), new StaticReagent(ANTI_DENSUS.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.ORANGE, MiscUtil.oreDictPred("gemAntiDensus"), () -> MiscUtil.getOredictStack("gemAntiDensus", 1), 0, null));
 
 		FLUID_TO_LIQREAGENT.put(BlockDistilledWater.getDistilledWater(), REAGENTS.get(WATER.id()));
 		FLUID_TO_LIQREAGENT.put(BlockMoltenCopper.getMoltenCopper(), REAGENTS.get(COPPER.id()));
@@ -234,7 +236,9 @@ public final class AlchemyCore{
 		//Densus production
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(ADAMANT.id()), 3), new ReagentStack(REAGENTS.get(EMERALD.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(DENSUS.id()), 3)}, null, -273D, 30D, -5D, true));
 		//Anti-Densus production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(DENSUS.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(ANTI_DENSUS.id()), 2)}, null, 200D, 3000D, 20D, true));
+		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(DENSUS.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(ANTI_DENSUS.id()), 1)}, null, 200D, 3000D, 20D, true));
+		//Cavorite production
+		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(CAVORITE.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(CAVORITE.id()), 1)}, null, 2000D, 2200D, -100D, true));
 		//Bedrock production
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(ADAMANT.id()), 1), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 4)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(BEDROCK.id()), 5)}, REAGENTS.get(PRACTITIONER.id()), 0D, 100D, 0D, false));
 	}

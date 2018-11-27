@@ -156,10 +156,9 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.coolingCoil, 4, 0), "* *", " * ", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.coolingCoil, 4, 1), "* *", " * ", '*', "gemAlcCryst"));
 		//Densus Plate
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.densusPlate, 6, 0), "***", '*', "gemDensus"));
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.densusPlate, 6, 1), "***", '*', "gemAntiDensus"));
-		//Dynamo
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.dynamo, 1, 0), "-@-", "===", '@', "gearCopper", '-', "stickIron", '=', "ingotIron"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.densusPlate, 6), "***", '*', "gemDensus"));
+		//Anti-Densus plate
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.antiDensusPlate, 6), "***", '*', "gemAntiDensus"));
 		//Flow Limiter
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.flowLimiter, 2, 0), "*:*", '*', "blockGlass", ':', "ingotGold"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.flowLimiter, 2, 1), "*:*", '*', "gemAlcCryst", ':', "ingotGold"));
@@ -442,6 +441,11 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneTransmitter, 1), "QRQ", "RTR", "QRQ", 'Q', ModItems.luminescentQuartz, 'R', "dustRedstone", 'T', Blocks.REDSTONE_TORCH));
 		//Redstone Receiver
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneReceiver, 1), "QRQ", "RTR", "QRQ", 'Q', ModItems.luminescentQuartz, 'R', "dustRedstone", 'T', "blockRedstone"));
+		//Dynamo
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.dynamo, 1), "-@-", "===", '@', "gearCopper", '-', "stickIron", '=', "ingotIron"));
+		//Cavorite Block
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.cavorite, 1), "**", "**", '*', "gemCavorite"));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.solidCavorite, 4), ModBlocks.cavorite));
 	}
 
 	private static ItemStack getFilledHopper(){

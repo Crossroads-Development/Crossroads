@@ -11,13 +11,18 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ModBlocks{
 
@@ -106,6 +111,8 @@ public class ModBlocks{
 	public static Alembic alembic;
 	public static AlchemyChart alchemyChart;
 	public static DensusPlate densusPlate;
+	public static DensusPlate antiDensusPlate;
+	public static BasicBlock cavorite;
 	public static ChargingStand chargingStand;
 	public static AtmosCharger atmosCharger;
 	public static ReactiveSpot reactiveSpot;
@@ -250,7 +257,15 @@ public class ModBlocks{
 		redsAlchemicalTube = new RedsAlchemicalTube();
 		alembic = new Alembic();
 		alchemyChart = new AlchemyChart();
-		densusPlate = new DensusPlate();
+		densusPlate = new DensusPlate(false);
+		antiDensusPlate = new DensusPlate(true);
+		cavorite = new BasicBlock("block_cavorite", Material.ROCK, 3){
+			@Override
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
+				tooltip.add("Blocks gravity from gravity plates");
+				tooltip.add("Safe for decoration");
+			}
+		};
 		chargingStand = new ChargingStand();
 		atmosCharger = new AtmosCharger();
 		reactiveSpot = new ReactiveSpot();

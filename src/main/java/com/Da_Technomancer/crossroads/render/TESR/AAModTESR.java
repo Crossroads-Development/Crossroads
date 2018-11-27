@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.DynamoTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.rotary.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;

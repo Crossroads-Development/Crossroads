@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DensusPlateTileEntity;
@@ -9,28 +7,20 @@ import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
@@ -43,31 +33,15 @@ public class DensusPlate extends BlockContainer{
 	private static final AxisAlignedBB BBUP = new AxisAlignedBB(0, 0, 0, 1, 0.5D, 1);
 	private static final AxisAlignedBB BBDOWN = new AxisAlignedBB(0, 0.5D, 0, 1, 1, 1);
 
-	public DensusPlate(){
-		//TODO flatten for 1.13
-
-		super(Material.IRON);
-		String name = "densus_plate";
+	public DensusPlate(boolean anti){
+		super(Material.ROCK);
+		String name = anti ? "anti_densus_plate" : "densus_plate";
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
-		Item item = new ItemBlock(this){
-			@Override
-			public String getTranslationKey(ItemStack stack){
-				return stack.getMetadata() == 1 ? "tile.anti_densus_plate" : "tile.densus_plate";
-			}
-			
-			@Override
-			public int getMetadata(int damage){
-				return damage;
-			}
-		}.setMaxDamage(0).setHasSubtypes(true);
-		item.setRegistryName(name);
 		ModBlocks.toRegister.add(this);
-		ModItems.toRegister.add(item);
-		ModItems.toClientRegister.put(Pair.of(item, 0), new ModelResourceLocation(Main.MODID + ":densus_plate", "inventory"));
-		ModItems.toClientRegister.put(Pair.of(item, 1), new ModelResourceLocation(Main.MODID + ":anti_densus_plate", "inventory"));
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -83,7 +57,7 @@ public class DensusPlate extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer)).withProperty(Properties.CONTAINER_TYPE, (meta & 1) == 1);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer));
 	}
 
 	@Override
@@ -110,23 +84,18 @@ public class DensusPlate extends BlockContainer{
 	}
 
 	@Override
-	public int damageDropped(IBlockState state){
-		return state.getValue(Properties.CONTAINER_TYPE) ? 1 : 0;
-	}
-
-	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.FACING, Properties.CONTAINER_TYPE);
+		return new BlockStateContainer(this, EssentialsProperties.FACING);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta >> 1)).withProperty(Properties.CONTAINER_TYPE, (meta & 1) == 1);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(EssentialsProperties.FACING).getIndex() << 1) + (state.getValue(Properties.CONTAINER_TYPE) ? 1 : 0);
+		return state.getValue(EssentialsProperties.FACING).getIndex();
 	}
 
 	@Override
@@ -145,14 +114,12 @@ public class DensusPlate extends BlockContainer{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list){
-		list.add(new ItemStack(this, 1, 0));
-		list.add(new ItemStack(this, 1, 1));
+	public TileEntity createNewTileEntity(World worldIn, int meta){
+		return new DensusPlateTileEntity();
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new DensusPlateTileEntity();
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return face == state.getValue(EssentialsProperties.FACING).getOpposite() ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
 	}
 }

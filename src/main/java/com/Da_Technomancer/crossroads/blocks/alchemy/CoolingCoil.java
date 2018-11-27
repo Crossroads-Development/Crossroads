@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import net.minecraft.block.state.BlockFaceShape;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.Da_Technomancer.crossroads.Main;
@@ -139,5 +140,10 @@ public class CoolingCoil extends BlockContainer{
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list){
 		list.add(new ItemStack(this, 1, 0));
 		list.add(new ItemStack(this, 1, 1));
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return BlockFaceShape.UNDEFINED;
 	}
 }
