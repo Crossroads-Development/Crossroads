@@ -52,7 +52,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected int transferCapacity(){
-		return 2000;
+		return 200;
 	}
 
 	@Nonnull

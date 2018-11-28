@@ -80,31 +80,15 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 
 	protected boolean correctReag(){
 		dirtyReag = false;
+		double temp = correctTemp();
 		amount = 0;
 		for(Integer am : contents.values()){
 			if(am != null){
 				amount += am;
 			}
 		}
-//		if(amount <= 0){
-//			return true;
-//		}
-//		double endTemp = correctTemp();
-//
-//		for(int i = 0; i < AlchemyCore.REAGENT_COUNT; i++){
-//			ReagentStack reag = contents[i];
-//			if(reag != null && reag.getAmount() < AlchemyCore.MIN_QUANTITY){
-//				heat -= (endTemp + 273D) * reag.getAmount();
-//				contents[i] = null;
-//			}
-//		}
+		heat = HeatUtil.toKelvin(temp) * amount;
 
-//		for(ReagentStack reag : contents){
-//			if(reag == null){
-//				continue;
-//			}
-//			reag.updatePhase(endTemp);
-//		}
 		return true;
 	}
 
@@ -327,7 +311,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		super.readFromNBT(nbt);
 		glass = nbt.getBoolean("glass");
 		heat = nbt.getDouble("heat");
-
+		amount = nbt.getInteger("qty");
 		contents = ReagentMap.readFromNBT(nbt);
 
 		dirtyReag = true;
@@ -338,7 +322,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		super.writeToNBT(nbt);
 		nbt.setBoolean("glass", glass);
 		nbt.setDouble("heat", heat);
-
+		nbt.setInteger("qty", amount);
 		contents.writeToNBT(nbt);
 
 		return nbt;
@@ -459,6 +443,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			IReagent typ;
 			if(resource != null && (typ = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid())) != null){
 				int canAccept = Math.min((int) ((handler.getTransferCapacity() - amount) * AlchemyCore.MB_PER_REAG), resource.amount);
+				canAccept -= canAccept % AlchemyCore.MB_PER_REAG;
 				if(canAccept > 0){
 					if(doFill){
 						int reagToFill = canAccept / AlchemyCore.MB_PER_REAG;

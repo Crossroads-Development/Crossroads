@@ -30,7 +30,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	public int transferCapacity(){
-		return 10_000;
+		return 1_000;
 	}
 
 	public double getAmount(){

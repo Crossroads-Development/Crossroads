@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.AdvConduitBakedModel;
 import com.Da_Technomancer.crossroads.render.bakedModel.IAdvConduitModel;
-import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.RedsAlchemicalTubeTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
@@ -21,12 +21,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -42,7 +39,6 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -59,35 +55,24 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE);
 	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
 
-	public RedsAlchemicalTube(){
+	private final boolean crystal;
+
+	public RedsAlchemicalTube(boolean crystal){
 		super(Material.GLASS);
-		String name = "reds_alch_tube";
+		this.crystal = crystal;
+		String name = (crystal ? "crystal_" : "") + "reds_alch_tube";
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		ModBlocks.toRegister.add(this);
-		Item item = new ItemBlock(this){
-			@Override
-			public String getTranslationKey(ItemStack stack){
-				return stack.getMetadata() == 1 ? "tile.reds_alch_tube_cryst" : "tile.reds_alch_tube_glass";
-			}
-			
-			@Override
-			public int getMetadata(int damage){
-				return damage;
-			}
-		}.setMaxDamage(0).setHasSubtypes(true);
-		item.setRegistryName(name);
-		ModItems.toRegister.add(item);
-		ModItems.toClientRegister.put(Pair.of(item, 0), new ModelResourceLocation(Main.MODID + ":reds_alch_tube_glass", "inventory"));
-		ModItems.toClientRegister.put(Pair.of(item, 1), new ModelResourceLocation(Main.MODID + ":reds_alch_tube_cryst", "inventory"));
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new RedsAlchemicalTubeTileEntity((meta & 1) == 0);
+		return new RedsAlchemicalTubeTileEntity(!crystal);
 	}
 
 	@Override
@@ -103,12 +88,12 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.CRYSTAL) ? 1 : 0) + (state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 2 : 0);
+		return state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 1 : 0;
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(EssentialsProperties.REDSTONE_BOOL, (meta & 2) == 2);
+		return getDefaultState().withProperty(EssentialsProperties.REDSTONE_BOOL, (meta & 1) == 1);
 	}
 
 	@Override
@@ -161,11 +146,6 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 		return false;
 	}
 
-	@Override
-	public int damageDropped(IBlockState state){
-		return state.getValue(Properties.CRYSTAL) ? 1 : 0;
-	}
-
 	private static final ResourceLocation GLASS_CAP = new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_cap");
 	private static final ResourceLocation GLASS_OUT = new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_out");
 	private static final ResourceLocation GLASS_IN = new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_in");
@@ -175,7 +155,7 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 
 	@Override
 	public ResourceLocation getTexture(IBlockState state, int mode){
-		return state.getValue(Properties.CRYSTAL) ? mode == 0 ? CRYST_CAP : mode == 1 ? CRYST_OUT : CRYST_IN : mode == 0 ? GLASS_CAP : mode == 1 ? GLASS_OUT : GLASS_IN;
+		return crystal ? mode == 0 ? CRYST_CAP : mode == 1 ? CRYST_OUT : CRYST_IN : mode == 0 ? GLASS_CAP : mode == 1 ? GLASS_OUT : GLASS_IN;
 	}
 
 	@Override
@@ -224,7 +204,7 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 	@Override
 	protected BlockStateContainer createBlockState(){
 		//On this device, light is being re-used. True means crystal, false means glass. 
-		return new ExtendedBlockState(this, new IProperty[] {Properties.CRYSTAL, EssentialsProperties.REDSTONE_BOOL}, new IUnlistedProperty[] {Properties.CONNECT_MODE});
+		return new ExtendedBlockState(this, new IProperty[] {EssentialsProperties.REDSTONE_BOOL}, new IUnlistedProperty[] {Properties.CONNECT_MODE});
 	}
 
 	@Override
@@ -337,13 +317,6 @@ public class RedsAlchemicalTube extends BlockContainer implements IAdvConduitMod
 	@Override
 	public boolean isFullCube(IBlockState state){
 		return false;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list){
-		list.add(new ItemStack(this, 1, 0));
-		list.add(new ItemStack(this, 1, 1));
 	}
 
 	@Override

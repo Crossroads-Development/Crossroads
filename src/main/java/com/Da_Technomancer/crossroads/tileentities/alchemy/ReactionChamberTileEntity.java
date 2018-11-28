@@ -89,7 +89,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	@Override
 	public int transferCapacity(){
-		return 1000;
+		return 200;
 	}
 
 	@Override

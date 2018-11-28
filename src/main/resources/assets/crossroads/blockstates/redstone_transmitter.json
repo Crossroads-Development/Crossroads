@@ -1,5 +1,90 @@
 {
+	"forge_marker": 1,
+	"defaults": {
+		"model": "crossroads:redstone_transmitter"
+	},
 	"variants": {
-		"normal": {"model": "crossroads:redstone_transmitter"}
+		"color": {
+			"white": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_white"
+				}
+			},
+			"orange": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_orange"
+				}
+			},
+			"magenta": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_magenta"
+				}
+			},
+			"light_blue": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_light_blue"
+				}
+			},
+			"yellow": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_yellow"
+				}
+			},
+			"lime": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_lime"
+				}
+			},
+			"pink": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_pink"
+				}
+			},
+			"gray": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_gray"
+				}
+			},
+			"silver": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_silver"
+				}
+			},
+			"cyan": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_cyan"
+				}
+			},
+			"purple": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_purple"
+				}
+			},
+			"blue": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_blue"
+				}
+			},
+			"brown": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_brown"
+				}
+			},
+			"green": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_green"
+				}
+			},
+			"red": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_red"
+				}
+			},
+			"black": {
+				"textures": {
+					"main": "crossroads:blocks/redstone_transmitter_black"
+				}
+			}
+		}
 	}
 }

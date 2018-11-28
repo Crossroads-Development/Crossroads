@@ -124,7 +124,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 			//Shares heat between internal cable & contents
 			if(amount != 0){
 				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-				heat = (cableTemp + 273D) * amount;
+				heat = HeatUtil.toKelvin(cableTemp) * amount;
 				dirtyReag = true;
 			}
 			markDirty();
@@ -136,8 +136,8 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 			cableTemp += tempChange;
 			//Shares heat between internal cable & contents
 			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-				heat = (cableTemp + 273D) * amount;
+				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * HeatUtil.toCelcius(heat / amount)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
+				heat = HeatUtil.toKelvin(cableTemp) * amount;
 				dirtyReag = true;
 			}
 			markDirty();

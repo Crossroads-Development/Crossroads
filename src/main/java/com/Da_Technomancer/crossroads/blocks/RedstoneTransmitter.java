@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneTransmitterTileEntity;
@@ -9,10 +10,13 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockRedstoneDiode;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -21,7 +25,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,6 +45,7 @@ public class RedstoneTransmitter extends BlockContainer{
 		setSoundType(SoundType.STONE);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().withProperty(Properties.COLOR, EnumDyeColor.WHITE));
 	}
 
 	@Override
@@ -88,6 +92,11 @@ public class RedstoneTransmitter extends BlockContainer{
 					heldItem.getTagCompound().setLong("c_link", pos.toLong());
 					playerIn.sendMessage(new TextComponentString("Beginning linking."));
 				}
+			}else if(heldItem.getItem() == Items.DYE){
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(te instanceof RedstoneTransmitterTileEntity){
+					((RedstoneTransmitterTileEntity) te).dye(EnumDyeColor.byDyeDamage(heldItem.getMetadata()));
+				}
 			}
 		}
 		return true;
@@ -98,6 +107,7 @@ public class RedstoneTransmitter extends BlockContainer{
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Transmits redstone signals wirelessly to nearby linked Redstone Receivers");
 		tooltip.add("Link to Receivers with a wrench. Use it on a Transmitter first then a Receiver");
+		tooltip.add("Can be color coded with dyes");
 	}
 
 	@Nullable
@@ -109,5 +119,20 @@ public class RedstoneTransmitter extends BlockContainer{
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState(){
+		return new BlockStateContainer(this, Properties.COLOR);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state){
+		return state.getValue(Properties.COLOR).getMetadata();
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta){
+		return getDefaultState().withProperty(Properties.COLOR, EnumDyeColor.byMetadata(meta));
 	}
 }

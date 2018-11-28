@@ -20,7 +20,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 		return oldState.getBlock() != newState.getBlock();
 	}
 
-	private double cableTemp = 0;
+	private double ambientTemp = 0;
 	private boolean init = false;
 
 	public CoolingCoilTileEntity(){
@@ -34,8 +34,8 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@Override
 	public double correctTemp(){
 		//Shares heat between internal cable & contents
-		heat = (cableTemp + 273D) * amount;
-		return cableTemp;
+		heat = HeatUtil.toKelvin(ambientTemp) * amount;
+		return ambientTemp;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 			return;
 		}
 		if(!init){
-			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			ambientTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 			init = true;
 		}
 		super.update();
@@ -53,14 +53,14 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		cableTemp = nbt.getDouble("temp");
+		ambientTemp = nbt.getDouble("temp");
 		init = nbt.getBoolean("init");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setDouble("temp", cableTemp);
+		nbt.setDouble("temp", ambientTemp);
 		nbt.setBoolean("init", init);
 		return nbt;
 	}

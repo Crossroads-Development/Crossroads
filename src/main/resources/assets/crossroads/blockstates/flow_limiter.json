@@ -30,17 +30,6 @@
 			"south": {
 				"x": 270
 			}
-		},
-		"crystal": {
-			"true": {
-				"textures": {
-					"glass": "crossroads:blocks/alch_tube/cryst_tube_out",
-					"cap": "crossroads:blocks/alch_tube/cryst_tube_cap"
-				}
-			},
-			"false": {
-				
-			}
 		}
 	}
 }

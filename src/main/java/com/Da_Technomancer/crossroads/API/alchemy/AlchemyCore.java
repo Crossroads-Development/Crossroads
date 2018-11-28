@@ -238,7 +238,7 @@ public final class AlchemyCore{
 		//Anti-Densus production
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(DENSUS.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(ANTI_DENSUS.id()), 1)}, null, 200D, 3000D, 20D, true));
 		//Cavorite production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(CAVORITE.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(CAVORITE.id()), 1)}, null, 2000D, 2200D, -100D, true));
+		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(DENSUS.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(CAVORITE.id()), 1)}, null, 2000D, 2200D, -100D, true));
 		//Bedrock production
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(ADAMANT.id()), 1), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 4)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(BEDROCK.id()), 5)}, REAGENTS.get(PRACTITIONER.id()), 0D, 100D, 0D, false));
 	}

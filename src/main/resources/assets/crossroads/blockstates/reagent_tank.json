@@ -1,6 +1,5 @@
 {
 	"variants": {
-		"crystal=false": { "model": "crossroads:reagent_tank_glass" },
-		"crystal=true": { "model": "crossroads:reagent_tank_cryst" }
+		"normal": { "model": "crossroads:reagent_tank_glass" }
 	}
 }

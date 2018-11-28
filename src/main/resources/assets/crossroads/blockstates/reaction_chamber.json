@@ -1,6 +1,5 @@
 {
 	"variants": {
-		"crystal=false": { "model": "crossroads:reaction_chamber_glass" },
-		"crystal=true": { "model": "crossroads:reaction_chamber_cryst" }
+		"normal": { "model": "crossroads:reaction_chamber_glass" }
 	}
 }

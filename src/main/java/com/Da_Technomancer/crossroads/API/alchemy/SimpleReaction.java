@@ -13,8 +13,6 @@ public class SimpleReaction implements IReaction{
 	protected final ReagentStack[] products;
 	protected final int amountChange;
 
-	protected static final double HEAT_CONVERSION = 5;//5 was picked somewhat arbitrarily as a conversion factor from J/mol * mol to *C
-
 	public SimpleReaction(ReagentStack[] reagents, ReagentStack[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, boolean charged){
 		this.reagents = reagents;
 		this.products = products;
@@ -65,7 +63,7 @@ public class SimpleReaction implements IReaction{
 		//temperature change based limit
 		double allowedTempChange = heatChange < 0 ? maxTemp - chambTemp : minTemp - chambTemp;
 		
-		maxReactions = (int) Math.min(maxReactions, -content * allowedTempChange / (heatChange * HEAT_CONVERSION));
+		maxReactions = Math.min(maxReactions, (int) Math.max(1, -content * allowedTempChange / (heatChange)));
 
 		if(maxReactions <= 0){
 			return false;
@@ -79,7 +77,7 @@ public class SimpleReaction implements IReaction{
 			reags.addReagent(reag.getType(), maxReactions * reag.getAmount());
 		}
 
-		chamb.addHeat(-heatChange * maxReactions * HEAT_CONVERSION);
+		chamb.addHeat(-heatChange * maxReactions);
 		chamb.addHeat(amountChange * (chamb.getHeat() / content) * maxReactions);
 		return true;
 	}

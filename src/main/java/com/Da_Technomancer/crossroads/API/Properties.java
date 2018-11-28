@@ -4,6 +4,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.EnumFacing;
 
 public class Properties{
@@ -24,9 +25,8 @@ public class Properties{
 	 * 0: copper 1: iron 2: quartz 3: diamond
 	 */
 	public static final PropertyInteger TEXTURE_4 = PropertyInteger.create("text", 0, 3);
-	/**0 = none, 1 = ruby, 2 = emerald, 3 = diamond, 4 = pure quartz, 5 = luminescent quartz, 6 = void crystal */
-	public static final UnlistedPropertyInteger TEXTURE_7 = new UnlistedPropertyInteger("text_seven", 0, 6);
 	public static final PropertyBool CRYSTAL = PropertyBool.create("crystal");
 	public static final PropertyDirection HORIZ_FACING = PropertyDirection.create("horiz_facing", (EnumFacing side) -> side != null && side.getAxis() != EnumFacing.Axis.Y);
 	public static final PropertyBool CONTAINER_TYPE = PropertyBool.create("container_type");
+	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
 }

@@ -35,7 +35,7 @@ public class Phial extends AbstractGlassware{
 
 	@Override
 	public int getCapacity(){
-		return 25;
+		return 20;
 	}
 	
 	@Override

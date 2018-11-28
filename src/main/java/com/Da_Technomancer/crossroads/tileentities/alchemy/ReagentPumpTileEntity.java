@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -76,7 +75,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.INPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT};
-		boolean outUp = world.getBlockState(pos).getValue(Properties.ORIENT);
+		boolean outUp = world.getBlockState(pos).getValue(Properties.ACTIVE);
 		if(outUp){
 			output[EnumFacing.UP.getIndex()] = EnumTransferMode.OUTPUT;
 			output[EnumFacing.DOWN.getIndex()] = EnumTransferMode.INPUT;

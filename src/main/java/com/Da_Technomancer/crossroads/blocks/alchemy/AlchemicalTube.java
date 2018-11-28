@@ -23,8 +23,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -40,7 +38,6 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -57,35 +54,24 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE);
 	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
 
-	public AlchemicalTube(){
+	private final boolean crystal;
+
+	public AlchemicalTube(boolean crystal){
 		super(Material.GLASS);
-		String name = "alch_tube";
+		this.crystal = crystal;
+		String name = (crystal ? "crystal_" : "") + "alch_tube";
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		ModBlocks.toRegister.add(this);
-		Item item = new ItemBlock(this){
-			@Override
-			public String getTranslationKey(ItemStack stack){
-				return stack.getMetadata() == 1 ? "tile.alch_tube_cryst" : "tile.alch_tube_glass";
-			}
-			
-			@Override
-			public int getMetadata(int damage){
-				return damage;
-			}
-		}.setMaxDamage(0).setHasSubtypes(true);
-		item.setRegistryName(name);
-		ModItems.toRegister.add(item);
-		ModItems.toClientRegister.put(Pair.of(item, 0), new ModelResourceLocation(Main.MODID + ":alch_tube_glass", "inventory"));
-		ModItems.toClientRegister.put(Pair.of(item, 1), new ModelResourceLocation(Main.MODID + ":alch_tube_cryst", "inventory"));
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new AlchemicalTubeTileEntity(meta == 0);
+		return new AlchemicalTubeTileEntity(!crystal);
 	}
 
 	@Override
@@ -97,21 +83,6 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.TRANSLUCENT;
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.CRYSTAL) ? 1 : 0;
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.CRYSTAL, meta == 1);
-	}
-
-	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getStateFromMeta(meta);
 	}
 
 	@Override
@@ -159,11 +130,6 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 		return false;
 	}
 
-	@Override
-	public int damageDropped(IBlockState state){
-		return state.getValue(Properties.CRYSTAL) ? 1 : 0;
-	}
-
 	private static final ResourceLocation GLASS_CAP = new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_cap");
 	private static final ResourceLocation GLASS_OUT = new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_out");
 	private static final ResourceLocation GLASS_IN = new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_in");
@@ -173,7 +139,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 
 	@Override
 	public ResourceLocation getTexture(IBlockState state, int mode){
-		return state.getValue(Properties.CRYSTAL) ? mode == 0 ? CRYST_CAP : mode == 1 ? CRYST_OUT : CRYST_IN : mode == 0 ? GLASS_CAP : mode == 1 ? GLASS_OUT : GLASS_IN;
+		return crystal ? mode == 0 ? CRYST_CAP : mode == 1 ? CRYST_OUT : CRYST_IN : mode == 0 ? GLASS_CAP : mode == 1 ? GLASS_OUT : GLASS_IN;
 	}
 
 	@Override
@@ -199,7 +165,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new ExtendedBlockState(this, new IProperty[] {Properties.CRYSTAL}, new IUnlistedProperty[] {Properties.CONNECT_MODE});
+		return new ExtendedBlockState(this, new IProperty[] {}, new IUnlistedProperty[] {Properties.CONNECT_MODE});
 	}
 
 	@Override
@@ -312,13 +278,6 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 	@Override
 	public boolean isFullCube(IBlockState state){
 		return false;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list){
-		list.add(new ItemStack(this, 1, 0));
-		list.add(new ItemStack(this, 1, 1));
 	}
 
 	@Override

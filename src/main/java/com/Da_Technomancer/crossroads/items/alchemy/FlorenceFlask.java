@@ -28,7 +28,7 @@ public class FlorenceFlask extends AbstractGlassware{
 
 	@Override
 	public int getCapacity(){
-		return 500;
+		return 100;
 	}
 	
 	@Override

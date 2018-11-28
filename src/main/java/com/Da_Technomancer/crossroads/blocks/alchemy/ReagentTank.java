@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -11,58 +11,46 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentTankTileEntity
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class ReagentTank extends BlockContainer{
 
-	public ReagentTank(){
+	private final boolean crystal;
+
+	public ReagentTank(boolean crystal){
 		super(Material.GLASS);
-		String name = "reagent_tank";
+		this.crystal = crystal;
+		String name = (crystal ? "crystal_" : "") + "reagent_tank";
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		ModBlocks.toRegister.add(this);
-		Item item = new ItemBlock(this){
-			@Override
-			public String getTranslationKey(ItemStack stack){
-				return stack.getMetadata() == 1 ? "tile." + name + "_cryst" : "tile." + name + "_glass";
-			}
-			
-			@Override
-			public int getMetadata(int damage){
-				return damage;
-			}
-		}.setMaxDamage(0).setHasSubtypes(true);
-		item.setRegistryName(name);
-		ModItems.toRegister.add(item);
-		ModItems.toClientRegister.put(Pair.of(item, 0), new ModelResourceLocation(Main.MODID + ':' + name + "_glass", "inventory"));
-		ModItems.toClientRegister.put(Pair.of(item, 1), new ModelResourceLocation(Main.MODID + ':' + name + "_cryst", "inventory"));
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new ReagentTankTileEntity((meta & 1) == 0);
+		return new ReagentTankTileEntity(!crystal);
 	}
 
 	@Override
@@ -74,26 +62,6 @@ public class ReagentTank extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.CRYSTAL) ? 1 : 0);
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1);
-	}
-
-	@Override
-	public int damageDropped(IBlockState state){
-		return state.getValue(Properties.CRYSTAL) ? 1 : 0;
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.CRYSTAL);
 	}
 
 	@Override
@@ -110,7 +78,7 @@ public class ReagentTank extends BlockContainer{
 				tooltip.add(new ReagentStack(AlchemyCore.REAGENTS.get(key.substring(4)), qty).toString());
 			}
 
-			tooltip.add("Temp: " + MiscUtil.betterRound(stack.getTagCompound().getDouble("heat") / am - 273D, 3));
+			tooltip.add("Temp: " + HeatUtil.toCelcius(MiscUtil.betterRound(stack.getTagCompound().getDouble("heat") / am, 3)));
 		}
 	}
 
@@ -138,11 +106,6 @@ public class ReagentTank extends BlockContainer{
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
-	
-	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getStateFromMeta(meta);
-	}
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
@@ -154,12 +117,5 @@ public class ReagentTank extends BlockContainer{
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list){
-		list.add(new ItemStack(this, 1, 0));
-		list.add(new ItemStack(this, 1, 1));
 	}
 }

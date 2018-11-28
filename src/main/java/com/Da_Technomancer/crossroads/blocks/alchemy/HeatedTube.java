@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatedTubeTileEntity;
@@ -14,16 +13,14 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -32,7 +29,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -45,35 +41,24 @@ public class HeatedTube extends BlockContainer{
 	private static final AxisAlignedBB BB_Z = new AxisAlignedBB(.25D, .25D, 0, .75D, .75D, 1);
 	private static final AxisAlignedBB BB_VERT = new AxisAlignedBB(0.1875D, 0, 0.1875D, 0.8125D, 1, 0.8125D);
 
-	public HeatedTube(){
+	private final boolean crystal;
+
+	public HeatedTube(boolean crystal){
 		super(Material.GLASS);
-		String name = "heated_tube";
+		this.crystal = crystal;
+		String name = (crystal ? "crystal_"  : "") + "heated_tube";
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		ModBlocks.toRegister.add(this);
-		Item item = new ItemBlock(this){
-			@Override
-			public String getTranslationKey(ItemStack stack){
-				return stack.getMetadata() == 1 ? "tile." + name + "_cryst" : "tile." + name + "_glass";
-			}
-			
-			@Override
-			public int getMetadata(int damage){
-				return damage;
-			}
-		}.setMaxDamage(0).setHasSubtypes(true);
-		item.setRegistryName(name);
-		ModItems.toRegister.add(item);
-		ModItems.toClientRegister.put(Pair.of(item, 0), new ModelResourceLocation(Main.MODID + ':' + name + "_glass", "inventory"));
-		ModItems.toClientRegister.put(Pair.of(item, 1), new ModelResourceLocation(Main.MODID + ':' + name + "_cryst", "inventory"));
+		ModBlocks.blockAddQue(this);
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new HeatedTubeTileEntity((meta & 1) == 0);
+		return new HeatedTubeTileEntity(!crystal);
 	}
 
 	@Override
@@ -89,12 +74,12 @@ public class HeatedTube extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return (state.getValue(Properties.CRYSTAL) ? 1 : 0) + (state.getValue(Properties.HORIZ_FACING).getHorizontalIndex() << 1);
+		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex();
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta >> 1));
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta));
 	}
 	
 	@Override
@@ -109,13 +94,8 @@ public class HeatedTube extends BlockContainer{
 	}
 
 	@Override
-	public int damageDropped(IBlockState state){
-		return state.getValue(Properties.CRYSTAL) ? 1 : 0;
-	}
-
-	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.CRYSTAL, Properties.HORIZ_FACING);
+		return new BlockStateContainer(this, Properties.HORIZ_FACING);
 	}
 
 	@Override
@@ -182,13 +162,6 @@ public class HeatedTube extends BlockContainer{
 	@Override
 	public boolean isFullCube(IBlockState state){
 		return false;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list){
-		list.add(new ItemStack(this, 1, 0));
-		list.add(new ItemStack(this, 1, 1));
 	}
 
 	@Override

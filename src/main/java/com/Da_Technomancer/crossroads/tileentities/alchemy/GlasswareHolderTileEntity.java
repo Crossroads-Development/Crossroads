@@ -129,6 +129,9 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			markDirty();
 			occupied = true;
 			florence = stack.getItem() == ModItems.florenceFlask;
+			if(florence){
+				cableTemp = HeatUtil.toCelcius(heat / phialCont.getRight());
+			}
 			world.setBlockState(pos, state.withProperty(Properties.ACTIVE, true).withProperty(Properties.CRYSTAL, !glass).withProperty(Properties.CONTAINER_TYPE, florence));
 			return ItemStack.EMPTY;
 		}
@@ -257,8 +260,8 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			cableTemp = tempIn;
 			//Shares heat between internal cable & contents
 			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-				heat = (cableTemp + 273D) * amount;
+				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * HeatUtil.toCelcius(heat / amount)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
+				heat = HeatUtil.toKelvin(cableTemp) * amount;
 				dirtyReag = true;
 			}
 			markDirty();
@@ -270,8 +273,8 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			cableTemp += tempChange;
 			//Shares heat between internal cable & contents
 			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-				heat = (cableTemp + 273D) * amount;
+				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * HeatUtil.toCelcius(heat / amount)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
+				heat = HeatUtil.toKelvin(cableTemp) * amount;
 				dirtyReag = true;
 			}
 			markDirty();

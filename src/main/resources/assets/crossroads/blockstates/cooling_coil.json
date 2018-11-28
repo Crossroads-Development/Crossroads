@@ -2,25 +2,14 @@
 	"forge_marker": 1,
 	"defaults": {
 		"model": "crossroads:cooling_coil",
-		"uvlock": false
+		"uvlock": false,
+		"textures": {
+			"glass": "crossroads:blocks/alch_tube/glass_tube_cap",
+			"in": "crossroads:blocks/alch_tube/glass_tube_in",
+			"out": "crossroads:blocks/alch_tube/glass_tube_out"
+		}
 	},
 	"variants": {
-		"crystal": {
-			"true": {
-				"textures": {
-					"glass": "crossroads:blocks/alch_tube/cryst_tube_cap",
-					"in": "crossroads:blocks/alch_tube/cryst_tube_in",
-					"out": "crossroads:blocks/alch_tube/cryst_tube_out"
-				}
-			},
-			"false": {
-				"textures": {
-					"glass": "crossroads:blocks/alch_tube/glass_tube_cap",
-					"in": "crossroads:blocks/alch_tube/glass_tube_in",
-					"out": "crossroads:blocks/alch_tube/glass_tube_out"
-				}
-			}
-		},
 		"horiz_facing": {
 			"west": {
 				"x": 90,
