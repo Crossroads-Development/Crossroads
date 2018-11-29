@@ -8,10 +8,11 @@ import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
@@ -21,8 +22,11 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class TeslaCoil extends BlockContainer{
 
@@ -36,7 +40,7 @@ public class TeslaCoil extends BlockContainer{
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().withProperty(Properties.CRYSTAL, false).withProperty(Properties.ACTIVE, false));
+		setDefaultState(getDefaultState().withProperty(Properties.ACTIVE, false));
 	}
 
 	@Override
@@ -74,10 +78,6 @@ public class TeslaCoil extends BlockContainer{
 		if(worldIn.isRemote){
 			return;
 		}
-		if(!(worldIn.getBlockState(pos.offset(EnumFacing.UP)).getBlock() instanceof TeslaCoilTop)){
-			worldIn.destroyBlock(pos, true);
-		}
-
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof TeslaCoilTileEntity){
 			TeslaCoilTileEntity ts = (TeslaCoilTileEntity) te;
@@ -94,22 +94,12 @@ public class TeslaCoil extends BlockContainer{
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
-		world.setBlockState(pos.offset(EnumFacing.UP), ModBlocks.teslaCoilTop.getDefaultState());
-	}
-
-	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 
 		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
 			if(!worldIn.isRemote){
-				if(playerIn.isSneaking()){
-					worldIn.setBlockState(pos, state.cycleProperty(Properties.CRYSTAL));
-					playerIn.sendMessage(new TextComponentString("Attack Mode: " + (state.getValue(Properties.CRYSTAL) ? "DISABLED" : "ENABLED")));
-				}else{
-					worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_FACING));
-				}
+				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_FACING));
 			}
 			return true;
 		}
@@ -154,21 +144,28 @@ public class TeslaCoil extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZ_FACING, Properties.ACTIVE, Properties.CRYSTAL);
+		return new BlockStateContainer(this, Properties.HORIZ_FACING, Properties.ACTIVE);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta & 3)).withProperty(Properties.ACTIVE, (meta & 4) != 0).withProperty(Properties.CRYSTAL, (meta & 8) != 0);
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta & 3)).withProperty(Properties.ACTIVE, (meta & 4) != 0);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex() + (state.getValue(Properties.ACTIVE) ? 4 : 0) + (state.getValue(Properties.CRYSTAL) ? 8 : 0);
+		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex() + (state.getValue(Properties.ACTIVE) ? 4 : 0);
 	}
 
 	@Override
-	public EnumPushReaction getPushReaction(IBlockState state){
-		return EnumPushReaction.BLOCK;
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return face.getAxis() == EnumFacing.Axis.Y ? BlockFaceShape.SOLID : BlockFaceShape.CENTER_BIG;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
+		tooltip.add("Allows transferring FE when used with a Tesla Coil Top");
+		tooltip.add("Different tops can increase range, transfer rate, or act as a weapon");
+		tooltip.add("Insert a Leyden Jar to increase capacity");
 	}
 }

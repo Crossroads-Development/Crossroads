@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModTileEntity{
@@ -108,6 +109,7 @@ public class ModTileEntity{
 		register(BeamRedirectorTileEntity.class, "beam_redirector");
 		register(RedstoneTransmitterTileEntity.class, "redstone_transmitter");
 		register(RedstoneReceiverTileEntity.class, "redstone_receiver");
+		register(TeslaCoilTopTileEntity.class, "tesla_coil_top");
 	}
 
 	/**
@@ -116,5 +118,6 @@ public class ModTileEntity{
 	 */
 	private static void register(Class<? extends TileEntity> clazz, String ID){
 		GameRegistry.registerTileEntity(clazz, Main.MODID + ':' + ID);
+		//TODO switch to this method once the above method is removed GameRegistry.registerTileEntity(clazz, new ResourceLocation(Main.MODID, ID));
 	}
 }

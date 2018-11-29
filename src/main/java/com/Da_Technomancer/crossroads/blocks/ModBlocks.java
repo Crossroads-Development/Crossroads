@@ -114,7 +114,10 @@ public class ModBlocks{
 	public static HeatLimiter heatLimiter;
 	public static Dynamo dynamo;
 	public static TeslaCoil teslaCoil;
-	public static TeslaCoilTop teslaCoilTop;
+	public static TeslaCoilTop teslaCoilTopNormal;
+	public static TeslaCoilTop teslaCoilTopDistance;
+	public static TeslaCoilTop teslaCoilTopIntensity;
+	public static TeslaCoilTop teslaCoilTopAttack;
 	public static MaxwellDemon maxwellDemon;
 	public static GlasswareHolder glasswareHolder;
 	public static Alembic alembic;
@@ -270,7 +273,10 @@ public class ModBlocks{
 		heatLimiter = new HeatLimiter();
 		dynamo = new Dynamo();
 		teslaCoil = new TeslaCoil();
-		teslaCoilTop = new TeslaCoilTop();
+		teslaCoilTopNormal = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.NORMAL);
+		teslaCoilTopDistance = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.DISTANCE);
+		teslaCoilTopIntensity = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.INTENSITY);
+		teslaCoilTopAttack = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.ATTACK);
 		maxwellDemon = new MaxwellDemon();
 		glasswareHolder = new GlasswareHolder();
 		alembic = new Alembic();

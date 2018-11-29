@@ -14,7 +14,7 @@
 				"y": 180
 			},
 			"east": {
-				
+
 			},
 			"north": {
 				"y": 270
@@ -28,15 +28,7 @@
 				"submodel": "crossroads:tesla_coil_leyden"
 			},
 			"false": {
-				
-			}
-		},
-		"crystal": {
-			"true": {
-				
-			},
-			"false": {
-				
+
 			}
 		}
 	}

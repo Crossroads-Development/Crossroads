@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTopTileEntity;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -120,7 +120,7 @@ public class TeslaRay extends Item{
 				}
 				Vec3d end = targets.get(i + 1).getPositionEyes(0);
 
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(new LooseArcRenderable(start, end, 1, 0, 1, TeslaCoilTileEntity.COLOR_CODES[(int) (Math.random() * 3D)])), new NetworkRegistry.TargetPoint(worldIn.provider.getDimension(), playerIn.posX, playerIn.posY, playerIn.posZ, 512));
+				ModPackets.network.sendToAllAround(new SendLooseArcToClient(new LooseArcRenderable(start, end, 1, 0, 1, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)])), new NetworkRegistry.TargetPoint(worldIn.provider.getDimension(), playerIn.posX, playerIn.posY, playerIn.posZ, 512));
 			}
 
 			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
