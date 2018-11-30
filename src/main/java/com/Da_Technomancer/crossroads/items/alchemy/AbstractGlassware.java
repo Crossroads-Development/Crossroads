@@ -113,7 +113,9 @@ public abstract class AbstractGlassware extends Item{
 		}
 		Triple<ReagentMap, Double, Integer> stored = getReagants(stack);
 
-		tooltip.add("Temperature: " + MiscUtil.betterRound(stored.getRight() == 0 ? 0 : HeatUtil.toCelcius(stored.getMiddle() / stored.getRight()), 3) + "°C");
+		double temp = stored.getRight() == 0 ? 0 : MiscUtil.betterRound(HeatUtil.toCelcius(stored.getMiddle() / stored.getRight()), 3);
+
+		tooltip.add("Temperature: " + (stored.getRight() == 0 ? "N/A" : temp + "°C (" + HeatUtil.toKelvin(temp) + "K)"));
 
 		for(IReagent type : stored.getLeft().keySet()){
 			int qty = stored.getLeft().getQty(type);

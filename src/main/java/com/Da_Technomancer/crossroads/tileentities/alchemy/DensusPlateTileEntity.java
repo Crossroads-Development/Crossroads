@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.DensusPlate;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -17,7 +18,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickable{
 
 	private EnumFacing facing = null;
 	private Boolean anti = null;
-	private static final int RANGE = 64;
+	private static final int RANGE = ModConfig.getConfigInt(ModConfig.gravRange, false);
 
 	private EnumFacing getFacing(){
 		if(facing == null){

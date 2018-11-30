@@ -57,6 +57,7 @@ public class PrototypeWatch extends BeamUsingItem{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setMaxStackSize(1);
 		ModItems.toRegister.add(this);
 		for(int i = 0; i < 8; i++){
 			ModItems.toClientRegister.put(Pair.of(this, i), new ModelResourceLocation(Main.MODID + ":watch_" + i));

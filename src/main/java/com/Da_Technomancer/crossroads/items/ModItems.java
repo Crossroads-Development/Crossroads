@@ -97,6 +97,7 @@ public final class ModItems{
 	public static BasicItem solidMuriatic;
 	public static BasicItem solidRegia;
 	public static BasicItem solidCavorite;
+	public static BasicItem bedrockDust;
 	public static FlyingMachine flyingMachine;
 	public static TeslaRay teslaRay;
 	public static Slag slag;
@@ -166,6 +167,7 @@ public final class ModItems{
 		solidMuriatic = new BasicItem("solid_muriatic");
 		solidRegia = new BasicItem("solid_regia");
 		solidCavorite = new BasicItem("solid_cavorite", "gemCavorite");
+		bedrockDust = new BasicItem("dust_bedrock", "dustBedrock");
 		flyingMachine = new FlyingMachine();
 		teslaRay = new TeslaRay();
 		slag = new Slag();

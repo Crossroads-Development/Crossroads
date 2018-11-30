@@ -58,6 +58,9 @@ public final class ModConfig{
 	public static Property fePerCharge;
 	public static Property redstoneTransmitterRange;
 	public static Property stampMillDamping;
+	public static Property bedrockDust;
+	public static Property phelEffect;
+	public static Property gravRange;
 
 	private static final ArrayList<Property> SYNCED_PROPERTIES = new ArrayList<Property>();
 	public static NBTTagCompound syncPropNBT;
@@ -119,6 +122,9 @@ public final class ModConfig{
 		atmosEffect = config.get(CAT_ALCHEMY, "Level of effects from overcharging the atmosphere (Default 3)", 3, "0: No negative effects. 1: Allow lightning strikes. 2: Allow creeper charging. 3: Allow lightning strikes & creeper charging.");
 		SYNCED_PROPERTIES.add(voltusUsage = config.get(CAT_ALCHEMY, "Voltus used to produce 1000FE of charge in the atmosphere (Default 0.1)", 0.1D));
 		stampMillDamping = config.get(CAT_BALANCE, "Percentage of Stamp Mill progress to be lost on failure?", 0, "Default 0, 0-100. Effectively nerfs ore-tripling", 0, 100);
+		bedrockDust = config.get(CAT_ALCHEMY, "Harvest Bedrock Dust instead of Bedrock", false, "Default: false");
+		phelEffect = config.get(CAT_ALCHEMY, "Allow the full effect of phelostogen", true, "Default: true, if disabled phelostogen lights a single fire instead");
+		gravRange = config.get(CAT_ALCHEMY, "Range of Density Plates", 64, "Deaulft: 64, 0-128", 0, 128);
 
 		//TODO Itemize bobo item configs
 		SYNCED_PROPERTIES.add(addBoboRecipes = config.get(CAT_BOBO, "Add recipes for bobo items? (Default true)", true));

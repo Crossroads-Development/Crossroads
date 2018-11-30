@@ -58,6 +58,7 @@ public class PrototypePistol extends BeamUsingItem{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setMaxStackSize(1);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

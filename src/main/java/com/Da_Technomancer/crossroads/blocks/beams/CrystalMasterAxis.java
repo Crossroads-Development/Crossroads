@@ -79,7 +79,7 @@ public class CrystalMasterAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new CrystalMasterAxisTileEntity(EnumFacing.byIndex(meta));
+		return new CrystalMasterAxisTileEntity();
 
 	}
 

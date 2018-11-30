@@ -28,20 +28,17 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	protected EnumTransferMode[] getModes(){
-		return new EnumTransferMode[] {EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
+		return new EnumTransferMode[] {EnumTransferMode.BOTH, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
 	}
 
 	@Override
 	protected void performTransfer(){
-		for(int i = 0; i < 2; i++){
-			if(amount != 0){
-				EnumFacing side = EnumFacing.byIndex(i);
-				TileEntity te = world.getTileEntity(pos.offset(side.getOpposite()));
-				if(te != null && te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side)){
-					if(te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side).insertReagents(contents, side, handler)){
-						correctReag();
-						markDirty();
-					}
+		if(amount != 0){
+			TileEntity te = world.getTileEntity(pos.offset(EnumFacing.UP));
+			if(te != null && te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+				if(te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.DOWN).insertReagents(contents, EnumFacing.DOWN, handler)){
+					correctReag();
+					markDirty();
 				}
 			}
 		}

@@ -1,13 +1,14 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.CommonProxy;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-import net.minecraft.nbt.NBTTagCompound;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -20,13 +21,32 @@ import java.util.Random;
 
 public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
-	private ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
+	protected ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
 
-	private boolean locked = false;
-	private double sumEnergy = 0;
-	private int ticksExisted = 0;
+	protected boolean locked = false;
+	protected double sumEnergy = 0;
+	protected int ticksExisted = 0;
+	protected byte key;
 	private EnumFacing facing;
-	private byte key;
+	protected static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+	protected int lastKey = 0;
+	protected boolean forceUpdate;
+	protected static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
+
+
+
+	protected EnumFacing getFacing(){
+		if(facing == null){
+			IBlockState state = world.getBlockState(pos);
+			if(!state.getPropertyKeys().contains(EssentialsProperties.FACING)){
+				invalidate();
+				return EnumFacing.DOWN;
+			}
+			facing = state.getValue(EssentialsProperties.FACING);
+		}
+
+		return facing;
+	}
 
 	public void disconnect(){
 		for(IAxleHandler axle : rotaryMembers){
@@ -39,17 +59,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		}
 		CommonProxy.masterKey++;
 	}
-	
-	public MasterAxisTileEntity(){
-		this(EnumFacing.NORTH);
-	}
 
-	public MasterAxisTileEntity(EnumFacing facingIn){
-		super();
-		facing = facingIn;
-	}
-
-	private void runCalc(){
+	protected void runCalc(){
 		double sumIRot = 0;
 		sumEnergy = 0;
 		// IRL you wouldn't say a gear spinning a different direction has
@@ -84,9 +95,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		}
 	}
 
-	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
-
-	private void runAngleCalc(){
+	protected void runAngleCalc(){
 		boolean syncSpin = false;
 		boolean work = false;
 		for(IAxleHandler axle : rotaryMembers){
@@ -110,25 +119,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			}
 		}
 	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("facing", this.facing.getIndex());
-
-		return nbt;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
-		super.readFromNBT(nbt);
-		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
-	}
-
-	private int lastKey = 0;
-	private boolean forceUpdate;
-
-	private static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
 
 	@Override
 	public void update(){
@@ -165,7 +155,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		slaves.removeAll(toRemove);
 	}
 
-	private final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
+	protected final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
@@ -175,7 +165,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		return super.hasCapability(cap, side);
 	}
 
-	private final IAxisHandler handler = new AxisHandler();
+	protected final IAxisHandler handler = new AxisHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -186,7 +176,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		return super.getCapability(cap, side);
 	}
 
-	private class AxisHandler implements IAxisHandler{
+	protected class AxisHandler implements IAxisHandler{
 
 		@Override
 		public void trigger(IAxisHandler masterIn, byte keyIn){

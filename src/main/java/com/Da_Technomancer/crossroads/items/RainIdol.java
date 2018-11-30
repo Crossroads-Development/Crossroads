@@ -25,7 +25,7 @@ public class RainIdol extends Item{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
-		maxStackSize = 1;
+		setMaxStackSize(1);
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 	}

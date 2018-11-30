@@ -71,7 +71,7 @@ public class MasterAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new MasterAxisTileEntity(EnumFacing.byIndex(meta));
+		return new MasterAxisTileEntity();
 
 	}
 	

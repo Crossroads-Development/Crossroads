@@ -27,7 +27,6 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE{
 
 	public static final int[] COLOR_CODES = {new Color(128, 0, 255, 128).getRGB(), new Color(64, 0, 255, 128).getRGB(), new Color(100, 0, 255, 128).getRGB()};
 	private static final int[] ATTACK_COLOR_CODES = {new Color(255, 32, 0, 128).getRGB(), new Color(255, 0, 32, 128).getRGB(), new Color(255, 32, 32, 128).getRGB()};
-	private static final float EFFICIENCY = 0.95F;
 
 	//Relative to this TileEntity's position
 	public BlockPos[] linked = new BlockPos[3];
@@ -74,8 +73,8 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE{
 					TileEntity te = world.getTileEntity(actualPos);
 					if(te instanceof TeslaCoilTileEntity && world.getTileEntity(actualPos.up()) instanceof TeslaCoilTopTileEntity){
 						TeslaCoilTileEntity tcTe = (TeslaCoilTileEntity) te;
-						if(tcTe.handlerIn.getMaxEnergyStored() - tcTe.stored > joltQty * EFFICIENCY){
-							tcTe.stored += joltQty * EFFICIENCY;
+						if(tcTe.handlerIn.getMaxEnergyStored() - tcTe.stored > joltQty * (double) getVariant().efficiency / 100D){
+							tcTe.stored += joltQty * (double) getVariant().efficiency / 100D;
 							tcTe.markDirty();
 							coilTE.stored -= joltQty;
 							markDirty();

@@ -109,6 +109,7 @@ public class TeslaCoilTop extends BlockContainer{
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
 		tooltip.add("Range: " + variant.range);
 		tooltip.add("FE per Jolt: " + variant.joltAmt);
+		tooltip.add("Loss: " + (100 - variant.efficiency) + "%");
 		if(variant == TeslaCoilVariants.ATTACK){
 			tooltip.add("Cannot transfer power. Attacks nearby entities with electric shocks");
 		}
@@ -135,17 +136,20 @@ public class TeslaCoilTop extends BlockContainer{
 
 	public enum TeslaCoilVariants{
 
-		NORMAL(1_000, 8),
-		ATTACK(1_000, 8),
-		DISTANCE(1_000, 32),
-		INTENSITY(10_000, 8);
+		NORMAL(1_000, 8, 95),
+		ATTACK(1_000, 8, 0),
+		DISTANCE(1_000, 32, 95),
+		INTENSITY(10_000, 8, 95),
+		EFFICIENCY(1_000, 8, 100);
 
 		public final int joltAmt;
 		public final int range;
+		public final int efficiency;
 
-		TeslaCoilVariants(int joltAmt, int range){
+		TeslaCoilVariants(int joltAmt, int range, int efficiency){
 			this.joltAmt = joltAmt;
 			this.range = range;
+			this.efficiency = efficiency;
 		}
 
 		@Override

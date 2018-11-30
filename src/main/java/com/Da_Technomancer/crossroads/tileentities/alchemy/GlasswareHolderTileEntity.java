@@ -129,7 +129,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			markDirty();
 			occupied = true;
 			florence = stack.getItem() == ModItems.florenceFlask;
-			if(florence){
+			if(florence && phialCont.getMiddle() > 0){
 				cableTemp = HeatUtil.toCelcius(heat / phialCont.getRight());
 			}
 			world.setBlockState(pos, state.withProperty(Properties.ACTIVE, true).withProperty(Properties.CRYSTAL, !glass).withProperty(Properties.CONTAINER_TYPE, florence));

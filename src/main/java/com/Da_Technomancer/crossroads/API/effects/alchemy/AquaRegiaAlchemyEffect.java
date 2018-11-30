@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
+import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 
 import net.minecraft.block.state.IBlockState;
@@ -26,7 +28,7 @@ public class AquaRegiaAlchemyEffect implements IAlchEffect{
 			
 			IBlockState state = world.getBlockState(pos);
 			if(state.getBlock() == Blocks.BEDROCK){
-				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Blocks.BEDROCK, 1));
+				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ModConfig.getConfigBool(ModConfig.bedrockDust, false) ? new ItemStack(ModItems.bedrockDust, 1) : new ItemStack(Blocks.BEDROCK, 1));
 				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 				return;
 			}

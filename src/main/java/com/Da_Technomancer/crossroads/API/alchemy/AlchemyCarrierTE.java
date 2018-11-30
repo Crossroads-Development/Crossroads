@@ -53,7 +53,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		if(amount != 0){
-			chat.add("Temp: " + MiscUtil.betterRound(handler.getTemp(), 3) + "°C");
+			chat.add("Temp: " + MiscUtil.betterRound(handler.getTemp(), 3) + "°C (" + MiscUtil.betterRound(HeatUtil.toKelvin(handler.getTemp()), 3) + "K)");
 		}else{
 			chat.add("No reagents");
 		}
@@ -255,6 +255,17 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			IReagent typeProduced = AlchemyCore.ITEM_TO_REAGENT.get(stack);
 			if(typeProduced != null && amount < transferCapacity()){
 				amount++;
+
+				double itemTemp;
+				double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				if(biomeTemp < typeProduced.getMeltingPoint()){
+					itemTemp = biomeTemp;
+				}else{
+					itemTemp = Math.max(typeProduced.getMeltingPoint() - 100D, HeatUtil.ABSOLUTE_ZERO);
+				}
+
+				heat += HeatUtil.toKelvin(itemTemp);
+				
 				heat += Math.max(0, Math.min(HeatUtil.toKelvin(typeProduced.getMeltingPoint()), HeatUtil.toKelvin(HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)))));
 				out.shrink(1);
 				contents.addReagent(typeProduced, 1);
@@ -449,13 +460,19 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 						int reagToFill = canAccept / AlchemyCore.MB_PER_REAG;
 						contents.addReagent(typ, reagToFill);
 						amount += reagToFill;
-						double envTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-						if(typ.getBoilingPoint() <= envTemp || typ.getMeltingPoint() > envTemp){
-							envTemp = (double) resource.getFluid().getTemperature();
+						double fluidTemp;
+						double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						if(biomeTemp < typ.getBoilingPoint() && biomeTemp >= typ.getMeltingPoint()){
+							fluidTemp = biomeTemp;
+						}else if(resource.getFluid().getTemperature(resource) < typ.getBoilingPoint() && resource.getFluid().getTemperature(resource) >= typ.getMeltingPoint()){
+							fluidTemp = resource.getFluid().getTemperature(resource);
+						}else if(typ.getMeltingPoint() + 100D < typ.getBoilingPoint()){
+							fluidTemp = typ.getMeltingPoint() + 100D;
 						}else{
-							envTemp -= HeatUtil.ABSOLUTE_ZERO;
+							fluidTemp = (typ.getMeltingPoint() + typ.getBoilingPoint()) / 2D;
 						}
-						heat += reagToFill * envTemp;
+
+						heat += reagToFill * HeatUtil.toKelvin(fluidTemp);
 						dirtyReag = true;
 						markDirty();
 					}
@@ -475,6 +492,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
 				int toDrain = Math.min(resource.amount, contents.getQty(type) * AlchemyCore.MB_PER_REAG);
 				int reagToDrain = toDrain / AlchemyCore.MB_PER_REAG;
+				toDrain = reagToDrain * AlchemyCore.MB_PER_REAG;
 				if(doDrain){
 					contents.addReagent(type, -reagToDrain);
 					if(amount != 0){
@@ -504,8 +522,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 				IReagent type = entry.getValue();
 				if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
 					int toDrain = Math.min(maxDrain, contents.getQty(type) * AlchemyCore.MB_PER_REAG);
+					int reagToDrain = toDrain / AlchemyCore.MB_PER_REAG;
+					toDrain = reagToDrain * AlchemyCore.MB_PER_REAG;
 					if(doDrain){
-						int reagToDrain = toDrain / AlchemyCore.MB_PER_REAG;
 						contents.addReagent(type, -reagToDrain);
 						if(amount != 0){
 							double endTemp = heat / amount;
