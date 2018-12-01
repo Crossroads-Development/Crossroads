@@ -36,7 +36,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	protected double correctTemp(){
 		//Shares heat between internal cable & contents
 		cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-		heat = (cableTemp + 273D) * amount;
+		heat = HeatUtil.toKelvin(cableTemp) * amount;
 		return cableTemp;
 	}
 

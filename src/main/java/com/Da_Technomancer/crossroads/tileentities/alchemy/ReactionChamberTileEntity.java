@@ -69,8 +69,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			init = true;
 		}
 
-		if(energy > 0){
-			energy = Math.max(0, energy - 10);
+		if(energy >= 10){
+			energy -= 10;
 			if(world.getTotalWorldTime() % 10 == 0){
 				NBTTagCompound nbt = new NBTTagCompound();
 				new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), 1, 0F, 0.18F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
@@ -84,7 +84,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	@Override
 	public boolean isCharged(){
-		return energy > 0;
+		return energy >= 10;
 	}
 
 	@Override
@@ -95,8 +95,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	@Override
 	protected double correctTemp(){
 		//Shares heat between internal cable & contents
-		cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-		heat = (cableTemp + 273D) * amount;
+		cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * HeatUtil.toCelcius(heat / amount)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
+		heat = HeatUtil.toKelvin(cableTemp) * amount;
 		return cableTemp;
 	}
 
@@ -241,12 +241,17 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 					int trans = Math.min(stack.getCount(), transferCapacity() - amount);
 					if(!simulate){
 						contents.addReagent(reag, trans);
-						heat += Math.min(HeatUtil.toKelvin(reag.getMeltingPoint()) - 10D, HeatUtil.toKelvin(20)) * (double) trans;
+						double itemTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						if(itemTemp >= reag.getMeltingPoint()){
+							itemTemp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint() - 100D);
+						}
+						heat += HeatUtil.toKelvin(itemTemp) * (double) trans;
+						amount += trans;
 						dirtyReag = true;
 						markDirty();
 					}
 					testStack.setCount(stack.getCount() - trans);
-					return testStack.isEmpty() ? ItemStack.EMPTY : testStack;
+					return testStack;
 				}
 			}
 			return stack;
@@ -264,7 +269,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]);
 						double endTemp = handler.getTemp();
 						contents.addReagent(reag, -canExtract);
-						heat -= HeatUtil.toKelvin(endTemp + 273D) * canExtract;
+						heat -= HeatUtil.toKelvin(endTemp) * canExtract;
+						ReactionChamberTileEntity.this.amount -= canExtract;
 						dirtyReag = true;
 						markDirty();
 					}

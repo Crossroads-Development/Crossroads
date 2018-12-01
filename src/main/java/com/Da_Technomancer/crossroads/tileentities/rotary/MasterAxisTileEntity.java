@@ -155,11 +155,11 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		slaves.removeAll(toRemove);
 	}
 
-	protected final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
+	protected final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<>();
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
+		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == getFacing())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -170,7 +170,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
+		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == getFacing())){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);
@@ -195,15 +195,16 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>(rotaryMembers);
 			rotaryMembers.clear();
 			locked = false;
-			TileEntity te = world.getTileEntity(pos.offset(facing));
-			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
+			EnumFacing dir = getFacing();
+			TileEntity te = world.getTileEntity(pos.offset(dir));
+			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite())){
 				byte keyNew;
 				do {
 					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
 
-				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 1, 0);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite()).propogate(this, key, 1, 0);
 			}
 
 			if(!memberCopy.containsAll(rotaryMembers)){

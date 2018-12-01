@@ -87,7 +87,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	private final ItemHandler itemHandler = new ItemHandler();
 
 	@Override
-	public boolean correctReag(){
+	public void correctReag(){
 		super.correctReag();
 		double endTemp = correctTemp();
 
@@ -115,7 +115,6 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		if(destroy){
 			destroyChamber();
 		}
-		return !destroy;
 	}
 
 	private class ItemHandler implements IItemHandler{
@@ -158,12 +157,17 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 					int trans = Math.min(stack.getCount(), transferCapacity() - amount);
 					if(!simulate){
 						contents.addReagent(reag, trans);
-						heat += Math.min(HeatUtil.toKelvin(reag.getMeltingPoint()) - 10D, HeatUtil.toKelvin(20)) * (double) trans;
+						double itemTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						if(itemTemp >= reag.getMeltingPoint()){
+							itemTemp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint() - 100D);
+						}
+						heat += HeatUtil.toKelvin(itemTemp) * (double) trans;
+						amount += trans;
 						dirtyReag = true;
 						markDirty();
 					}
 					testStack.setCount(stack.getCount() - trans);
-					return testStack.isEmpty() ? ItemStack.EMPTY : testStack;
+					return testStack;
 				}
 			}
 			return stack;
@@ -181,7 +185,8 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]);
 						double endTemp = handler.getTemp();
 						contents.addReagent(reag, -canExtract);
-						heat -= HeatUtil.toKelvin(endTemp + 273D) * canExtract;
+						heat -= HeatUtil.toKelvin(endTemp) * canExtract;
+						ReagentTankTileEntity.this.amount -= canExtract;
 						dirtyReag = true;
 						markDirty();
 					}
@@ -205,7 +210,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	private void destroyChamber(){
 		if(!broken){
 			broken = true;
-			double temp = heat / amount - 273D;
+			double temp = HeatUtil.toCelcius(heat / amount);
 			IBlockState state = world.getBlockState(pos);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);

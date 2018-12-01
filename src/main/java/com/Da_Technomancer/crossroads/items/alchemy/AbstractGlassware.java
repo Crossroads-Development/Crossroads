@@ -115,7 +115,7 @@ public abstract class AbstractGlassware extends Item{
 
 		double temp = stored.getRight() == 0 ? 0 : MiscUtil.betterRound(HeatUtil.toCelcius(stored.getMiddle() / stored.getRight()), 3);
 
-		tooltip.add("Temperature: " + (stored.getRight() == 0 ? "N/A" : temp + "°C (" + HeatUtil.toKelvin(temp) + "K)"));
+		tooltip.add("Temperature: " + (stored.getRight() == 0 ? "N/A" : temp + "°C (" + MiscUtil.betterRound(HeatUtil.toKelvin(temp), 3) + "K)"));
 
 		for(IReagent type : stored.getLeft().keySet()){
 			int qty = stored.getLeft().getQty(type);

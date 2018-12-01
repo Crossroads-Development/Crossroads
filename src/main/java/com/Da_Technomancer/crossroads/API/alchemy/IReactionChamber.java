@@ -66,10 +66,4 @@ public interface IReactionChamber{
 	 * @param particleArgs
 	 */
 	public void addVisualEffect(EnumParticleTypes particleType, double speedX, double speedY, double speedZ, int... particleArgs);
-	
-	/**
-	 * Drops the provided ItemStack into the world
-	 * @param stack
-	 */
-	public void dropItem(ItemStack stack);
 }

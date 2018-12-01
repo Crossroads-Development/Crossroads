@@ -70,13 +70,12 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 	protected double correctTemp(){
 		//Shares heat between internal cable & contents
 		cableTemp = amount <= 0 ? cableTemp : HeatUtil.toCelcius((HeatUtil.toKelvin(cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * heat) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D)));
-		//cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
 		heat = HeatUtil.toKelvin(cableTemp) * amount;
 		return cableTemp;
 	}
 
 	@Override
-	protected boolean correctReag(){
+	protected void correctReag(){
 		super.correctReag();
 
 		ReagentMap toInsert = new ReagentMap();
@@ -116,7 +115,6 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 			}
 			contents.remove(type);
 		}
-		return true;
 	}
 
 	@Override
