@@ -98,7 +98,13 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 
 		double cost = sumIRot * Math.pow(targetSpeed, 2) / 2D;
 		TileEntity batteryTE = world.getTileEntity(pos.offset(EnumFacing.DOWN));
-		double availableEnergy = Math.abs(sumEnergy) + Math.abs(batteryTE != null && batteryTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP) ? batteryTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] : 0);
+		IAxleHandler sourceAxle = batteryTE == null ? null : batteryTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP);
+
+		double availableEnergy = Math.abs(sumEnergy);
+		if(sourceAxle != null){
+			availableEnergy += Math.abs(sourceAxle.getMotionData()[1]);
+		}
+
 		if(availableEnergy - cost < 0){
 			targetSpeed = 0;
 		}else{
@@ -121,8 +127,8 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 			gear.markChanged();
 		}
 
-		if(batteryTE != null && batteryTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP)){
-			batteryTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1] = availableEnergy * RotaryUtil.posOrNeg(batteryTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP).getMotionData()[1], 1);
+		if(sourceAxle != null){
+			sourceAxle.getMotionData()[1] = availableEnergy * RotaryUtil.posOrNeg(sourceAxle.getMotionData()[1], 1);
 		}
 
 		runAngleCalc();

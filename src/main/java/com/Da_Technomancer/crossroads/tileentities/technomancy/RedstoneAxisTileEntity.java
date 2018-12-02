@@ -18,14 +18,23 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		double sumIRot = 0;
 		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
 
+		for(IAxleHandler gear : rotaryMembers){
+			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
+		}
+
 		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
 		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));
-		double availableEnergy = Math.abs(sumEnergy) + Math.abs(backTE != null && backTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] : 0);
+		IAxleHandler sourceAxle = backTE == null ? null : backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing);
+		double availableEnergy = Math.abs(sumEnergy);
+		if(sourceAxle != null){
+			availableEnergy += Math.abs(sourceAxle.getMotionData()[1]);
+		}
 		if(availableEnergy - cost < 0){
 			baseSpeed = 0;
 			cost = 0;
 		}
 		availableEnergy -= cost;
+		sumEnergy = 0;
 
 		for(IAxleHandler gear : rotaryMembers){
 			double newEnergy;
@@ -44,8 +53,9 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 			gear.markChanged();
 		}
 
-		if(backTE != null && backTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
-			backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] = availableEnergy * RotaryUtil.posOrNeg(backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1], 1);
+		if(sourceAxle != null){
+			sourceAxle.getMotionData()[1] = availableEnergy * RotaryUtil.posOrNeg(sourceAxle.getMotionData()[1], 1);
+			sourceAxle.markChanged();
 		}
 
 		runAngleCalc();

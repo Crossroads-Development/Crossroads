@@ -169,7 +169,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == getFacing()){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
 			return type != null;
 		}
 		return super.hasCapability(capability, facing);
@@ -178,7 +178,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == getFacing()){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
 			return (T) handlerMain;
 		}
 		return super.getCapability(capability, facing);
@@ -268,7 +268,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 					//Underside gears
 					TileEntity undersideTE = world.getTileEntity(pos.offset(facing, 1).offset(side));
 					if(undersideTE != null && undersideTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing)){
-						undersideTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite());
+						undersideTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite());
 					}
 				}
 			}

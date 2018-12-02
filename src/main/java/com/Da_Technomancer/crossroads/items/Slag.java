@@ -44,7 +44,7 @@ public class Slag extends Item{
 		ModItems.toRegister.add(this);
 		ModItems.itemAddQue(this);
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, SLAG_DISPENSER_BEHAVIOR);
-		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"materialSlag"}));
+		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"itemSlag"}));
 	}
 
 	@Override

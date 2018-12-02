@@ -19,27 +19,26 @@
 		},
 		{
 			"from": [ 8.0, 8.0, 8.0 ], 
-			"to": [ 9.0, 16.0, 9.0 ], 
+			"to": [ 9.0, 14.0, 9.0 ],
 			"faces": {
-				"north": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"east": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"south": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"west": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"up": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"down": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+				"north": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 16.0 ] },
+				"east": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 16.0 ] },
+				"south": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 16.0 ] },
+				"west": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 16.0 ] },
+				"up": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+				"down": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 2.0 ] }
 			}
 		},
 		{
-			"from": [ 8.1, 15.0, -3.0 ], 
-			"to": [ 8.9, 16, 9.0 ], 
-			"rotation": { "origin": [ 8.0, 15.0, 9.0 ], "axis": "x", "angle": -45.0 },
+			"from": [ 8.0, 14.0, 8.0 ],
+			"to": [ 9.0, 15.0, 14.0 ],
 			"faces": {
-				"north": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"east": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"south": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"west": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"up": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"down": { "texture": "#axle", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+				"north": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 16.0 ] },
+				"east": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+				"south": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 16.0 ] },
+				"west": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+				"up": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 16.0 ] },
+				"down": { "texture": "#axle", "uv": [ 0.0, 0.0, 2.0, 16.0 ] }
 			}
 		}
 		],
@@ -50,9 +49,9 @@
 			"scale": [ 0.375, 0.375, 0.375]
 		},
 		"gui": {
-            "rotation": [ 15, 270, 0 ],
+            "rotation": [ 0, 90, 0 ],
             "translation": [ 0, 0, 0],
-            "scale":[ 0.8, 0.8, 0.8 ]
+            "scale":[ 0.9, 0.9, 0.9 ]
         },
         "ground": {
             "rotation": [ 0, 0, 0 ],
