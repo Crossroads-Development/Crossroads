@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -121,5 +122,9 @@ public final class MiscUtil{
 
 	public static Predicate<ItemStack> oreDictPred(String oreDict){
 		return new OreDictCraftingStack(oreDict);
+	}
+
+	public static String localize(String input){
+		return new TextComponentTranslation(input).getUnformattedComponentText();
 	}
 }

@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -16,7 +16,7 @@ public interface IReagent{
 	 * Note: May return different values based on language or on client vs server side
 	 */
 	public default String getName(){
-		return new TextComponentTranslation("reagent." + getId()).getUnformattedComponentText();
+		return MiscUtil.localize("reagent." + getId());
 	}
 	
 	/**

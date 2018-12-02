@@ -73,7 +73,17 @@ public class RadioButtonGuiObject implements IGuiObject{
 		}
 		return true;
 	}
-	
+
+	@Override
+	public boolean mouseOver(int x, int y){
+		for(ToggleButtonGuiObject button : buttons){
+			if(button.mouseOver(x, y)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public int getPressed(){
 		return pressed;
 	}

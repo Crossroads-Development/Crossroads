@@ -1,6 +1,0 @@
-{
-	"variants": {
-		"orient=true": { "model": "crossroads:addition_axis"},
-		"orient=false": { "model": "crossroads:addition_axis", "y": 90 }
-	}
-}

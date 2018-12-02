@@ -61,6 +61,11 @@ public class OutputLogGuiObject implements IGuiObject{
 	}
 
 	@Override
+	public boolean mouseOver(int x, int y){
+		return x >= this.x && x <= endX && y >= this.y && y <= endY;
+	}
+
+	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
 		Minecraft.getMinecraft().getTextureManager().bindTexture(BAR);
 		Gui.drawScaledCustomSizeModalRect(x, y, 0, 0, 300, 2, 2, endY - y, 300, 20);//left side (top to bottom)

@@ -102,13 +102,18 @@ public class TextBarGuiObject implements IGuiObject{
 
 	@Override
 	public boolean mouseClicked(int x, int y, int button){
-		if(!selected && x >= this.x && x <= endX && y >= this.y && y <= endY){
+		if(!selected && mouseOver(x, y)){
 			selected = !selected;
 			return true;
 		}
 		selected = false;
 		index = text.length();
 		return false;
+	}
+
+	@Override
+	public boolean mouseOver(int x, int y){
+		return x >= this.x && x <= endX && y >= this.y && y <= endY;
 	}
 
 	@Override

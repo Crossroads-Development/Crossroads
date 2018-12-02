@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModTileEntity{
@@ -54,22 +53,13 @@ public class ModTileEntity{
 		register(RateManipulatorTileEntity.class, "rate_manipulator");
 		register(FluxManipulatorTileEntity.class, "flux_manipulator");
 		register(FluxReaderAxisTileEntity.class, "flux_reader_axis");
-		register(MultiplicationAxisTileEntity.class, "multiplication_axis");
-		register(AdditionAxisTileEntity.class, "addition_axis");
-		register(EqualsAxisTileEntity.class, "equals_axis");
-		register(GreaterThanAxisTileEntity.class, "greater_than_axis");
-		register(LessThanAxisTileEntity.class, "less_than_axis");
 		register(RedstoneAxisTileEntity.class, "redstone_axis");
-		register(SquareRootAxisTileEntity.class, "square_root_axis");
+		register(MathAxisTileEntity.class, "math_axis");
 		register(CageChargerTileEntity.class, "cage_charger");
 		register(HamsterWheelTileEntity.class, "hamster_wheel");
 		register(FluidSplitterTileEntity.class, "fluid_splitter");
 		register(BasicFluidSplitterTileEntity.class, "basic_fluid_splitter");
 		register(CopshowiumCreationChamberTileEntity.class, "copshowium_creation_chamber");
-		register(SinAxisTileEntity.class, "sin_axis");
-		register(CosAxisTileEntity.class, "cos_axis");
-		register(ArcSinAxisTileEntity.class, "arcsin_axis");
-		register(ArcCosAxisTileEntity.class, "arccos_axis");
 		register(GatewayFrameTileEntity.class, "gateway_frame");
 		register(RedstoneKeyboardTileEntity.class, "redstone_keyboard");
 		register(PrototypingTableTileEntity.class, "prototyping_table");

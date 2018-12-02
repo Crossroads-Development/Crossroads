@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API;
 
+import com.Da_Technomancer.crossroads.tileentities.technomancy.MathAxisTileEntity;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
@@ -29,4 +30,5 @@ public class Properties{
 	public static final PropertyDirection HORIZ_FACING = PropertyDirection.create("horiz_facing", (EnumFacing side) -> side != null && side.getAxis() != EnumFacing.Axis.Y);
 	public static final PropertyBool CONTAINER_TYPE = PropertyBool.create("container_type");
 	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
+	public static final PropertyEnum<MathAxisTileEntity.Arrangement> ARRANGEMENT = PropertyEnum.create("arrangement", MathAxisTileEntity.Arrangement.class);
 }

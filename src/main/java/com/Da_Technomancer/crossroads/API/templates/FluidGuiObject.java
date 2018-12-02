@@ -87,6 +87,11 @@ public class FluidGuiObject implements IGuiObject{
 	}
 
 	@Override
+	public boolean mouseOver(int x, int y){
+		return x >= this.x && x <= x + 16 && y >= this.y - MAX_HEIGHT && y <= this.y;
+	}
+
+	@Override
 	public boolean mouseClicked(int x, int y, int button){
 		return false;
 	}

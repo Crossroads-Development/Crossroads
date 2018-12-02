@@ -18,6 +18,14 @@ public interface IGuiObject{
 	 * @return Whether it handled the mouse click.
 	 */
 	public boolean mouseClicked(int x, int y, int button);
+
+	/**
+	 * Must have no side effects
+	 * @param x X coordinate
+	 * @param y Y Coordinate
+	 * @return Whether this position is inside this object
+	 */
+	public boolean mouseOver(int x, int y);
 	
 	/**
 	 * Draws the background layer.

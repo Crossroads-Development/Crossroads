@@ -11,10 +11,10 @@ import net.minecraft.init.SoundEvents;
 
 public class ToggleButtonGuiObject implements IGuiObject{
 
-	private final int x;
-	private final int y;
-	private final int endX;
-	private final int endY;
+	protected final int x;
+	protected final int y;
+	protected final int endX;
+	protected final int endY;
 	private final int baseX;
 	private final int baseY;
 	private final String text;
@@ -47,12 +47,17 @@ public class ToggleButtonGuiObject implements IGuiObject{
 
 	@Override
 	public boolean mouseClicked(int x, int y, int button){
-		if(x >= this.x && x <= endX && y >= this.y && y <= endY){
+		if(mouseOver(x, y)){
 			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			depressed = !depressed;
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean mouseOver(int x, int y){
+		return x >= this.x && x <= endX && y >= this.y && y <= endY;
 	}
 
 	@Override

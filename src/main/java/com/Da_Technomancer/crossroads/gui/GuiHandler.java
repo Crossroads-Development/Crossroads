@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.MathAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
@@ -45,6 +46,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int BLAST_FURNACE_GUI = 22;
 	public static final int FAT_FEEDER_GUI = 23;
 	public static final int BEAM_EXTRACTOR_GUI = 24;
+	public static final int MATH_AXIS_GUI = 25;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -60,6 +62,7 @@ public class GuiHandler implements IGuiHandler{
 			case COLOR_CHART_GUI:
 				return new ColorChartContainer(player, world, new BlockPos(x, y, z));
 			case REDSTONE_REGISTRY_GUI://Shares Container with the Redstone Keyboard because its Container function is identical.
+			case MATH_AXIS_GUI:
 			case REDSTONE_KEYBOARD_GUI:
 				return new RedstoneKeyboardContainer();
 			case WATER_CENTRIFUGE_GUI:
@@ -156,6 +159,8 @@ public class GuiHandler implements IGuiHandler{
 				return new FatFeederGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case BEAM_EXTRACTOR_GUI:
 				return new BeamExtractorGuiContainer(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
+			case MATH_AXIS_GUI:
+				return new MathAxisGuiContainer(((MathAxisTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 
 		return null;

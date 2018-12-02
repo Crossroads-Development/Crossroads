@@ -21,18 +21,19 @@ import java.util.Random;
 
 public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
-	protected ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
-
 	protected boolean locked = false;
 	protected double sumEnergy = 0;
 	protected int ticksExisted = 0;
 	protected byte key;
-	private EnumFacing facing;
-	protected static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
 	protected int lastKey = 0;
 	protected boolean forceUpdate;
-	protected static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
+	protected EnumFacing facing;
 
+	protected ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
+	protected final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<>();
+
+	protected static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+	protected static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
 
 
 	protected EnumFacing getFacing(){
@@ -57,6 +58,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			axle.syncAngle();
 			axle.disconnect();
 		}
+		rotaryMembers.clear();
 		CommonProxy.masterKey++;
 	}
 
@@ -143,8 +145,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		}
 	}
 
-	private void triggerSlaves(){
-		HashSet<Pair<ISlaveAxisHandler, EnumFacing>> toRemove = new HashSet<Pair<ISlaveAxisHandler, EnumFacing>>();
+	protected void triggerSlaves(){
+		HashSet<Pair<ISlaveAxisHandler, EnumFacing>> toRemove = new HashSet<>();
 		for(Pair<ISlaveAxisHandler, EnumFacing> slave : slaves){
 			if(slave.getLeft().isInvalid()){
 				toRemove.add(slave);
@@ -154,8 +156,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		}
 		slaves.removeAll(toRemove);
 	}
-
-	protected final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<>();
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
@@ -178,6 +178,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
 	protected class AxisHandler implements IAxisHandler{
 
+		protected final Random RAND = new Random();
+
 		@Override
 		public void trigger(IAxisHandler masterIn, byte keyIn){
 			if(keyIn != key){
@@ -185,14 +187,12 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			}
 		}
 
-		private final Random RAND = new Random();
-
 		@Override
 		public void requestUpdate(){
 			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
-			ArrayList<IAxleHandler> memberCopy = new ArrayList<IAxleHandler>(rotaryMembers);
+			ArrayList<IAxleHandler> memberCopy = new ArrayList<>(rotaryMembers);
 			rotaryMembers.clear();
 			locked = false;
 			EnumFacing dir = getFacing();
