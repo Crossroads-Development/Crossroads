@@ -25,24 +25,17 @@ import java.util.UUID;
 
 public class MechanicalArmTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
 
-	public static final double LOWER_ARM_LENGTH = 3;
-	public static final double UPPER_ARM_LENGTH = 5;
-	public static final double MAXIMUM_LOWER_ANGLE = 17D * Math.PI / 36D;//In radians, from horizontal.
-	public static final double MINIMUM_LOWER_ANGLE = Math.PI / 6D;//In radians, from horizontal.
-	public static final double MAXIMUM_UPPER_ANGLE = .75D * Math.PI;//In radians, from straight down.
-	public static final double MINIMUM_UPPER_ANGLE = Math.PI / 4D;//In radians, from straight down.
-	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+	public static final double MAX_HEIGHT = 5;
+	public static final double MAX_LENGTH = 5;
 
 	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect(), new MechArmPickupFromInvEffect(), new MechArmUseEffect(), new MechArmDepositEffect(), new MechArmDropEntityEffect(), new MechArmThrowEntityEffect(), new MechArmPickupOneFromInvEffect()};
 
-	public double[][] motionData = new double[3][4];
-	/** In radians. */
-	public double[] angle = {0, MAXIMUM_LOWER_ANGLE, MINIMUM_UPPER_ANGLE};
+	private double[][] motionData = new double[3][4];
+	public double[] angle = {0, MAX_HEIGHT, MAX_LENGTH};
 	/** A record of last tick's angles, for rendering movement animation & for release effect*/
 	public double[] angleRecord = new double[3];
 	/**Server side: A record of the last speeds sent to the render.*/
 	private double[] lastSentAngle = new double[3];
-	private static final double PHYS_DATA = 0;
 	/**
 	 * Math.min((redstone - 1) / 6, EFFECTS.length - 1) corresponds to action type, which are:
 	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Throw entity, 7: Pickup one from inventory.
@@ -52,6 +45,9 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	public EntityArmRidable ridable;
 	private UUID ridableID;
 
+	private static final double PHYS_DATA = 0;
+	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+
 	@Override
 	public void update(){
 		if(world.getTotalWorldTime() % 2 == 0){
@@ -59,8 +55,8 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 
 			if(!world.isRemote){
 				angle[0] = -motionData[0][0];
-				angle[1] = Math.min(MAXIMUM_LOWER_ANGLE, Math.max(MINIMUM_LOWER_ANGLE, MAXIMUM_LOWER_ANGLE - Math.abs(motionData[1][0])));
-				angle[2] = Math.min(MAXIMUM_UPPER_ANGLE, Math.max(MINIMUM_UPPER_ANGLE, MINIMUM_UPPER_ANGLE + Math.abs(motionData[2][0])));
+				angle[1] = MAX_HEIGHT - Math.min(MAX_HEIGHT, Math.abs(motionData[1][0]));
+				angle[2] = MAX_LENGTH - Math.min(MAX_LENGTH, Math.abs(motionData[2][0]));
 
 				for(int i = 0; i < 3; i++){
 					if(Math.abs(angle[i] - lastSentAngle[i]) >= CLIENT_SPEED_MARGIN){
@@ -98,13 +94,9 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 
 				EnumFacing side = EnumFacing.byIndex((redstone - 1) % 6);
 
-				double lengthCross = Math.sqrt(Math.pow(LOWER_ARM_LENGTH, 2) + Math.pow(UPPER_ARM_LENGTH, 2) - (2D * LOWER_ARM_LENGTH * UPPER_ARM_LENGTH * Math.cos(angle[2])));
-				double thetaD = angle[1] + angle[2] + Math.asin(Math.sin(angle[2]) * LOWER_ARM_LENGTH / lengthCross);
-				double holder = -Math.cos(thetaD) * lengthCross;
-
-				double posX = (holder * Math.cos(angle[0])) + .5D + (double) pos.getX();
-				double posY = (-Math.sin(thetaD) * lengthCross) + 1D + (double) pos.getY();
-				double posZ = (holder * Math.sin(angle[0])) + .5D + (double) pos.getZ();
+				double posX = angle[2] * Math.cos(angle[0]) + 0.5D + (double) pos.getX();
+				double posY = angle[1] + 1D + (double) pos.getY();
+				double posZ = angle[2] * Math.sin(angle[0]) + 0.5D + (double) pos.getZ();
 				BlockPos endPos = new BlockPos(posX, posY, posZ);
 
 				ridable.setPositionAndUpdate(posX, posY, posZ);

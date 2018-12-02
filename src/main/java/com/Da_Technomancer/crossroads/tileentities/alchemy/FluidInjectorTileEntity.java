@@ -34,9 +34,9 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected void performTransfer(){
 		if(amount != 0){
-			TileEntity te = world.getTileEntity(pos.offset(EnumFacing.UP));
-			if(te != null && te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-				if(te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.DOWN).insertReagents(contents, EnumFacing.DOWN, handler)){
+			TileEntity te = world.getTileEntity(pos.offset(EnumFacing.DOWN));
+			if(te != null && te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.UP)){
+				if(te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.UP).insertReagents(contents, EnumFacing.UP, handler)){
 					correctReag();
 					markDirty();
 				}

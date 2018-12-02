@@ -1,22 +1,15 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import java.awt.Color;
-
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.ResourceLocation;
+
+import java.awt.*;
 
 public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalArmTileEntity>{
-
-	private final ResourceLocation textureGear = new ResourceLocation(Main.MODID, "textures/model/gear_oct.png");
-	private final ModelGearOctagon modelGear = new ModelGearOctagon();
 
 	@Override
 	public void render(MechanicalArmTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
@@ -26,95 +19,55 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 
 		float partialCycle = partialTicks + (float) (te.getWorld().getTotalWorldTime() % 2);//Based on a two tick cycle (to sync with redstone)
 		partialCycle /= 2F;
-		
-		double[] angle = new double[] {te.angle[0] * partialCycle + (1F - partialCycle) * te.angleRecord[0], te.angle[1] * partialCycle + (1F - partialCycle) * te.angleRecord[1], te.angle[2] * partialCycle + (1F - partialCycle) * te.angleRecord[2]};
-
-		Color colorGear = GearFactory.findMaterial("Copshowium").getColor();
 		Color ironColor = GearFactory.findMaterial("Iron").getColor();
+
+		double[] angle = new double[] {te.angle[0] * partialCycle + (1F - partialCycle) * te.angleRecord[0], te.angle[1] * partialCycle + (1F - partialCycle) * te.angleRecord[1], te.angle[2] * partialCycle + (1F - partialCycle) * te.angleRecord[2]};
 
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5D, y + 1D, z + .5D);
 		GlStateManager.rotate(180F - (float) Math.toDegrees(angle[0]), 0, 1, 0);
-		GlStateManager.rotate(90F - (float) Math.toDegrees(angle[1]), 0, 0, 1);
+
+		GlStateManager.translate(0, angle[1] / 2D, 0);
 
 		//Lower arm
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, MechanicalArmTileEntity.LOWER_ARM_LENGTH / 2D, -.25D);
-		//Control Lower Arm
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, -.0625D, .5D);
-		GlStateManager.rotate(22.5F - (float) Math.toDegrees(angle[2]), 0, 1, 0);
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(1, MechanicalArmTileEntity.LOWER_ARM_LENGTH - .125D, 1);
+		GlStateManager.scale(1, angle[1], 1);
 		ModelAxle.render(ironColor);
 		GlStateManager.popMatrix();
 
-		//Lower Gear
-		GlStateManager.translate(0, .046875 + (MechanicalArmTileEntity.LOWER_ARM_LENGTH / 2D) - .125D, 0);
-		GlStateManager.scale(.375D, .375D, .375D);
-		GlStateManager.translate(0, .4375D, 0);
-		modelGear.render(textureGear, colorGear);
-		GlStateManager.popMatrix();
+		GlStateManager.translate(0, angle[1] / 2D, 0);
 
-		//Support Lower Arm
-		GlStateManager.scale(1, MechanicalArmTileEntity.LOWER_ARM_LENGTH, 1);
-		ModelAxle.render(ironColor);
-		GlStateManager.popMatrix();
-
-		//Connecting Joint
+		//Connecting joint
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, MechanicalArmTileEntity.LOWER_ARM_LENGTH + .0625D, 0);
-		GlStateManager.pushMatrix();
-		GlStateManager.rotate(90, 1, 0, 0);
-		//Support Box
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, -.25D, 0);
-		GlStateManager.scale(1.5D, .1875D, 1.5D);
-		ModelAxle.render(ironColor);
-		GlStateManager.popMatrix();
-
-		GlStateManager.rotate(-(float) Math.toDegrees(angle[2]) + 90F, 0, 1, 0);
-
-		//Upper Gear
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, .07421875, 0);
-		GlStateManager.scale(.375D, .375D, .375D);
-		GlStateManager.translate(0, .4375D, 0);
-		modelGear.render(textureGear, colorGear);
-		GlStateManager.popMatrix();
-
-		//Axle
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, -.09375, 0);
-		GlStateManager.scale(1, .3125D, 1);
+		GlStateManager.scale(2D, 0.25D, 2D);
 		ModelAxle.render(ironColor);
 		GlStateManager.popMatrix();
 
 		//Upper Arm
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.scale(.8D, MechanicalArmTileEntity.UPPER_ARM_LENGTH - .375D, .8D);
-		GlStateManager.translate(0, .5D, 0);
+		GlStateManager.scale(.8D, angle[2], .8D);
+		GlStateManager.translate(0, 0.5D, 0);
 		ModelAxle.render(ironColor);
 		GlStateManager.popMatrix();
 
 		//Claw Base
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(-MechanicalArmTileEntity.UPPER_ARM_LENGTH + .375D, 0, 0);
+		GlStateManager.translate(-angle[2], 0, 0);
+		GlStateManager.rotate(90, 1, 0, 0);
 		GlStateManager.scale(1, .5D, 1);
 		ModelAxle.render(ironColor);
 		GlStateManager.popMatrix();
 
 		//Claw Prongs
+		GlStateManager.translate(-angle[2] - .1875D, 0, .1875D);
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.translate(.1875D, MechanicalArmTileEntity.UPPER_ARM_LENGTH - .1875D, 0);
 		GlStateManager.scale(1, .25D, 1);
 		ModelAxle.render(ironColor);
-		GlStateManager.translate(-.375D, 0, 0);
+		GlStateManager.translate(0, 0, -.375D);
 		ModelAxle.render(ironColor);
-		GlStateManager.popMatrix();
-		GlStateManager.popMatrix();
+
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}
