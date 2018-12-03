@@ -1,11 +1,16 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyReactorTE;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
+import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
+import com.Da_Technomancer.crossroads.items.alchemy.Phial;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +27,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
 
@@ -65,7 +69,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected int transferCapacity(){
-		return occupied ? florence ? ModItems.florenceFlask.getCapacity() : ModItems.phial.getCapacity() : 0;
+		return occupied ? florence ? ModItems.florenceFlaskGlass.getCapacity() : ModItems.phialGlass.getCapacity() : 0;
 	}
 
 	@Override
@@ -76,8 +80,6 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
 		occupied = false;
 		florence = false;
-		this.heat = 0;
-		this.contents = new ReagentMap();
 		dirtyReag = true;
 		for(IReagent r : contents.keySet()){
 			int qty = contents.getQty(r);
@@ -85,20 +87,25 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 				r.onRelease(world, pos, qty, temp, r.getPhase(temp), contents);
 			}
 		}
+		contents.clear();
 	}
 
 	public void onBlockDestroyed(IBlockState state){
 		if(occupied){
-			AbstractGlassware glasswareType = florence ? ModItems.florenceFlask : ModItems.phial;
-			ItemStack flask = new ItemStack(glasswareType, 1, glass ? 0 : 1);
-			glasswareType.setReagents(flask, contents, heat);
-			this.heat = 0;
+			ItemStack out = getStoredItem();
 			this.contents.clear();
 			dirtyReag = true;
 			occupied = false;
 			markDirty();
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), flask);
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), out);
 		}
+	}
+
+	private ItemStack getStoredItem(){
+		AbstractGlassware glasswareType = florence ? glass ? ModItems.florenceFlaskGlass : ModItems.florenceFlaskCrystal : glass ? ModItems.phialGlass : ModItems.phialCrystal;
+		ItemStack flask = new ItemStack(glasswareType, 1);
+		glasswareType.setReagents(flask, contents);
+		return flask;
 	}
 
 	/**
@@ -115,29 +122,24 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 
 		if(occupied){
 			if(stack.isEmpty() && sneaking){
-				AbstractGlassware glasswareType = florence ? ModItems.florenceFlask : ModItems.phial;
+				ItemStack out = getStoredItem();
 				world.setBlockState(pos, state.withProperty(Properties.ACTIVE, false).withProperty(Properties.CRYSTAL, false).withProperty(Properties.CONTAINER_TYPE, false));
-				ItemStack flask = new ItemStack(glasswareType, 1, glass ? 0 : 1);
 				occupied = false;
-				glasswareType.setReagents(flask, contents, heat);
-				this.heat = 0;
 				this.contents.clear();
 				dirtyReag = true;
 				markDirty();
-				return flask;
+				return out;
 			}
 
 			super.rightClickWithItem(stack, sneaking, player, hand);
-		}else if(stack.getItem() == ModItems.phial || stack.getItem() == ModItems.florenceFlask){
+		}else if(stack.getItem() instanceof Phial || stack.getItem() instanceof FlorenceFlask){
 			//Add item into TE
-			Triple<ReagentMap, Double, Integer> phialCont = ((AbstractGlassware) stack.getItem()).getReagants(stack);
-			this.heat = phialCont.getMiddle();
-			this.contents = phialCont.getLeft();
-			glass = stack.getMetadata() == 0;
+			this.contents = ((AbstractGlassware) stack.getItem()).getReagants(stack);
+			glass = !((AbstractGlassware) stack.getItem()).isCrystal();
 			dirtyReag = true;
 			markDirty();
 			occupied = true;
-			florence = stack.getItem() == ModItems.florenceFlask;
+			florence = stack.getItem() instanceof FlorenceFlask;
 			world.setBlockState(pos, state.withProperty(Properties.ACTIVE, true).withProperty(Properties.CRYSTAL, !glass).withProperty(Properties.CONTAINER_TYPE, florence));
 			return ItemStack.EMPTY;
 		}
@@ -187,7 +189,6 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	}
 
 	private class ElecHandler implements IEnergyStorage{
-
 
 		@Override
 		public int receiveEnergy(int maxReceive, boolean simulate){

@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -35,16 +34,6 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	@Override
-	public double getHeat(){
-		return heat;
-	}
-
-	@Override
-	public void setHeat(double heatIn){
-		heat = heatIn;
-	}
-
-	@Override
 	public void addVisualEffect(EnumParticleTypes particleType, double speedX, double speedY, double speedZ, int... particleArgs){
 		if(!world.isRemote){
 			Vec3d particlePos = getParticlePos();
@@ -75,7 +64,6 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	@Override
 	protected void correctReag(){
 		super.correctReag();
-		double endTemp = correctTemp();
 
 		boolean destroy = false;
 
@@ -87,15 +75,13 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 				continue;
 			}
 			if(glass && !reag.getType().canGlassContain()){
-				heat -= HeatUtil.toKelvin(endTemp) * reag.getAmount();
-				amount -= reag.getAmount();
 				destroy |= reag.getType().destroysBadContainer();
 				toRemove.add(type);
 			}
 		}
 
 		for(IReagent type : toRemove){
-			contents.remove(type);
+			contents.removeReagent(type, contents.get(type));
 		}
 
 		if(destroy){

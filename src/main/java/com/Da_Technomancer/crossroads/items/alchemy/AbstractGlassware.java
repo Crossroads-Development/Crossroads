@@ -6,15 +6,12 @@ import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,25 +24,26 @@ public abstract class AbstractGlassware extends Item{
 
 	public abstract int getCapacity();
 
+	public abstract boolean isCrystal();
+
 	public static int getColorRGB(ItemStack stack){
 		if(!(stack.getItem() instanceof AbstractGlassware)){
 			return -1;
 		}
 		
-		Triple<ReagentMap, Double, Integer> info = ((AbstractGlassware) stack.getItem()).getReagants(stack);
+		ReagentMap reags = ((AbstractGlassware) stack.getItem()).getReagants(stack);
 		
 		int r = 0;
 		int g = 0;
 		int b = 0;
 		int a = 0;
-		int amount = info.getRight();
+		int amount = reags.getTotalQty();
 		
 		if(amount <= 0){
-			return stack.getMetadata() == 1 ? 0xFFD0D0FF : 0xFFD0D0D0;
+			return ((AbstractGlassware) stack.getItem()).isCrystal() ? 0xFFD0D0FF : 0xFFD0D0D0;
 		}
-		
-		ReagentMap reags = info.getLeft();
-		double temp = HeatUtil.toCelcius(info.getMiddle() / amount);
+
+		double temp = reags.getTempC();
 		
 		for(IReagent reag : reags.keySet()){
 			int qty = reags.getQty(reag);
@@ -62,37 +60,20 @@ public abstract class AbstractGlassware extends Item{
 	
 	/**
 	 * Cache the result to minimize calls to this method. 
-	 * @param stack
-	 * @return The contained reagents, heat, and amount. Modifying the returned array does NOT write through to the ItemStack, use the setReagents method. 
+	 * @param stack The glassware itemstack
+	 * @return The contained reagents. Modifying the returned array does NOT write through to the ItemStack, use the setReagents method.
 	 */
 	@Nonnull
-	public Triple<ReagentMap, Double, Integer> getReagants(ItemStack stack){
-		ReagentMap reagents = new ReagentMap();
-		double heat = 0;
-		int totalAmount = 0;
-		if(stack.hasTagCompound() && stack.getTagCompound().hasKey(TAG_NAME)){
-			NBTTagCompound nbt = stack.getTagCompound().getCompoundTag(TAG_NAME);
-			heat = nbt.getDouble("he");
-
-			for(String key : nbt.getKeySet()){
-				if(!key.startsWith("qty_")){
-					continue;
-				}
-				String id = key.substring(4);//Remove the qty_ header
-				reagents.addReagent(id, nbt.getInteger(key));
-				totalAmount += reagents.getQty(id);
-			}
-		}
-		return Triple.of(reagents, heat, totalAmount);
+	public ReagentMap getReagants(ItemStack stack){
+		return stack.hasTagCompound() ? ReagentMap.readFromNBT(stack.getTagCompound().getCompoundTag(TAG_NAME)) : new ReagentMap();
 	}
 
 	/**
 	 * Call this as little as possible. 
 	 * @param stack The stack to store the reagents to
 	 * @param reagents The reagents to store
-	 * @param heat The heat to store to the phial
 	 */
-	public void setReagents(ItemStack stack, ReagentMap reagents, double heat){
+	public void setReagents(ItemStack stack, ReagentMap reagents){
 		if(!stack.hasTagCompound()){
 			stack.setTagCompound(new NBTTagCompound());
 		}
@@ -101,8 +82,6 @@ public abstract class AbstractGlassware extends Item{
 		stack.getTagCompound().setTag(TAG_NAME, nbt);
 
 		reagents.writeToNBT(nbt);
-
-		nbt.setDouble("he", heat);
 	}
 
 	@Override
@@ -111,30 +90,21 @@ public abstract class AbstractGlassware extends Item{
 		if(!stack.hasTagCompound()){
 			return;
 		}
-		Triple<ReagentMap, Double, Integer> stored = getReagants(stack);
+		ReagentMap stored = getReagants(stack);
 
-		double temp = stored.getRight() == 0 ? 0 : MiscUtil.betterRound(HeatUtil.toCelcius(stored.getMiddle() / stored.getRight()), 3);
+		double temp = stored.getTempC();
 
-		tooltip.add("Temperature: " + (stored.getRight() == 0 ? "N/A" : temp + "°C (" + MiscUtil.betterRound(HeatUtil.toKelvin(temp), 3) + "K)"));
+		tooltip.add("Temperature: " + (stored.getTotalQty() == 0 ? "N/A" : MiscUtil.betterRound(temp, 3) + "°C (" + MiscUtil.betterRound(HeatUtil.toKelvin(temp), 3) + "K)"));
 
-		for(IReagent type : stored.getLeft().keySet()){
-			int qty = stored.getLeft().getQty(type);
+		for(IReagent type : stored.keySet()){
+			int qty = stored.getQty(type);
 			if(qty > 0){
 				tooltip.add(new ReagentStack(type, qty).toString());
 			}
 		}
 
 		if(advanced == ITooltipFlag.TooltipFlags.ADVANCED){
-			tooltip.add("Debug: Heat: " + stored.getMiddle() + "; Qty: " + stored.getRight());
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
-		if(isInCreativeTab(tab)){
-			list.add(new ItemStack(this, 1, 0));
-			list.add(new ItemStack(this, 1, 1));
+			tooltip.add("Debug: Heat: " + stored.getHeat() + "; Qty: " + stored.getTotalQty());
 		}
 	}
 }

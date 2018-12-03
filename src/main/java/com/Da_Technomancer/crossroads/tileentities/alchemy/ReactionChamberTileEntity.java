@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
@@ -24,8 +23,6 @@ import org.apache.logging.log4j.Level;
 
 public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
-	private double cableTemp = 0;
-	private boolean init = false;
 	private int energy = 0;
 	private static final int ENERGY_CAPACITY = 100;
 
@@ -37,25 +34,17 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		super(glass);
 	}
 
-	public double getAmount(){
-		return amount;
-	}
-
 	public NBTTagCompound getContentNBT(){
+		if(contents.getTotalQty() == 0){
+			return null;
+		}
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
 		return nbt;
 	}
 
 	public void writeContentNBT(NBTTagCompound nbt){
-		heat = nbt.getDouble("heat");
-
-		for(String key : nbt.getKeySet()){
-			if(!key.startsWith("qty_")){
-				continue;
-			}
-			contents.addReagent(key.substring(4), nbt.getInteger(key));
-		}
+		contents = ReagentMap.readFromNBT(nbt);
 		dirtyReag = true;
 	}
 
@@ -63,10 +52,6 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	public void update(){
 		if(world.isRemote){
 			return;
-		}
-		if(!init){
-			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-			init = true;
 		}
 
 		if(energy >= 10){
@@ -93,11 +78,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	protected double correctTemp(){
-		//Shares heat between internal cable & contents
-		cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * HeatUtil.toCelcius(heat / amount)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-		heat = HeatUtil.toKelvin(cableTemp) * amount;
-		return cableTemp;
+	protected boolean useCableHeat(){
+		return true;
 	}
 
 	@Override
@@ -108,35 +90,14 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		cableTemp = nbt.getDouble("temp");
-		init = nbt.getBoolean("init");
 		energy = nbt.getInteger("ener");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setDouble("temp", cableTemp);
-		nbt.setBoolean("init", init);
 		nbt.setInteger("ener", energy);
 		return nbt;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY){
-			return true;
-		}
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY){
-			return true;
-		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return true;
-		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side.getAxis() != Axis.Y)){
-			return true;
-		}
-		return super.hasCapability(cap, side);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -238,15 +199,13 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 					}
 					ItemStack testStack = stack.copy();
 					testStack.setCount(1);
-					int trans = Math.min(stack.getCount(), transferCapacity() - amount);
+					int trans = Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty());
 					if(!simulate){
-						contents.addReagent(reag, trans);
 						double itemTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 						if(itemTemp >= reag.getMeltingPoint()){
 							itemTemp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint() - 100D);
 						}
-						heat += HeatUtil.toKelvin(itemTemp) * (double) trans;
-						amount += trans;
+						contents.addReagent(reag, trans, itemTemp);
 						dirtyReag = true;
 						markDirty();
 					}
@@ -267,10 +226,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 					outStack.setCount(canExtract);
 					if(!simulate){
 						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]);
-						double endTemp = handler.getTemp();
-						contents.addReagent(reag, -canExtract);
-						heat -= HeatUtil.toKelvin(endTemp) * canExtract;
-						ReactionChamberTileEntity.this.amount -= canExtract;
+						contents.removeReagent(reag, canExtract);
 						dirtyReag = true;
 						markDirty();
 					}
@@ -308,12 +264,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		public void setTemp(double tempIn){
 			init = true;
 			cableTemp = tempIn;
-			//Shares heat between internal cable & contents
-			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-				heat = (cableTemp + 273D) * amount;
-				dirtyReag = true;
-			}
+			dirtyReag = true;
 			markDirty();
 		}
 
@@ -321,12 +272,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		public void addHeat(double tempChange){
 			init();
 			cableTemp += tempChange;
-			//Shares heat between internal cable & contents
-			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-				heat = (cableTemp + 273D) * amount;
-				dirtyReag = true;
-			}
+			dirtyReag = true;
 			markDirty();
 		}
 	}

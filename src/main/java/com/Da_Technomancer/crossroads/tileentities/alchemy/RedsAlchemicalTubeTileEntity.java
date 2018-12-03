@@ -134,7 +134,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 				if(!hasMatch[i]){
 					hasMatch[i] = true;
 					markSideChanged(i);
-				}else if(amount != 0 && connectMode[i] == 1){
+				}else if(contents.getTotalQty() != 0 && connectMode[i] == 1){
 					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
 						correctReag();
 						markDirty();

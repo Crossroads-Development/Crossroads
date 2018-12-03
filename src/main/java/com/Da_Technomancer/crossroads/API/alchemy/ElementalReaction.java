@@ -24,7 +24,7 @@ public class ElementalReaction implements IReaction{
 				reags.remove(AlchemyCore.REAGENTS.get(EnumReagents.PHELOSTOGEN.id()));
 				reags.remove(AlchemyCore.REAGENTS.get(EnumReagents.AETHER.id()));
 				reags.remove(AlchemyCore.REAGENTS.get(EnumReagents.ADAMANT.id()));
-				reags.addReagent(product, created);
+				reags.addReagent(product, created, reags.getTempC());
 			}
 		}
 		return false;

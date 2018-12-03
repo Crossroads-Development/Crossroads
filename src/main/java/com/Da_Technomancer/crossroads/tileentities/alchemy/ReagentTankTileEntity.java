@@ -33,19 +33,16 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		return 1_000;
 	}
 
-	public double getAmount(){
-		return amount;
-	}
-
 	public NBTTagCompound getContentNBT(){
+		if(contents.getTotalQty() == 0){
+			return null;
+		}
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
 		return nbt;
 	}
 
 	public void writeContentNBT(NBTTagCompound nbt){
-		heat = nbt.getDouble("heat");
-
 		contents = ReagentMap.readFromNBT(nbt);
 		dirtyReag = true;
 	}
@@ -89,7 +86,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	@Override
 	public void correctReag(){
 		super.correctReag();
-		double endTemp = correctTemp();
+		correctTemp();
 
 		boolean destroy = false;
 
@@ -101,8 +98,6 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 				continue;
 			}
 			if(glass && !reag.getType().canGlassContain()){
-				heat -= HeatUtil.toKelvin(endTemp) * reag.getAmount();
-				amount -= reag.getAmount();
 				destroy |= reag.getType().destroysBadContainer();
 				toRemove.add(type);
 			}
@@ -154,15 +149,13 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 					}
 					ItemStack testStack = stack.copy();
 					testStack.setCount(1);
-					int trans = Math.min(stack.getCount(), transferCapacity() - amount);
+					int trans = Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty());
 					if(!simulate){
-						contents.addReagent(reag, trans);
 						double itemTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 						if(itemTemp >= reag.getMeltingPoint()){
 							itemTemp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint() - 100D);
 						}
-						heat += HeatUtil.toKelvin(itemTemp) * (double) trans;
-						amount += trans;
+						contents.addReagent(reag, trans, itemTemp);
 						dirtyReag = true;
 						markDirty();
 					}
@@ -184,9 +177,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 					if(!simulate){
 						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]);
 						double endTemp = handler.getTemp();
-						contents.addReagent(reag, -canExtract);
-						heat -= HeatUtil.toKelvin(endTemp) * canExtract;
-						ReagentTankTileEntity.this.amount -= canExtract;
+						contents.removeReagent(reag, canExtract);
 						dirtyReag = true;
 						markDirty();
 					}
@@ -210,7 +201,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	private void destroyChamber(){
 		if(!broken){
 			broken = true;
-			double temp = HeatUtil.toCelcius(heat / amount);
+			double temp = contents.getTempC();
 			IBlockState state = world.getBlockState(pos);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);

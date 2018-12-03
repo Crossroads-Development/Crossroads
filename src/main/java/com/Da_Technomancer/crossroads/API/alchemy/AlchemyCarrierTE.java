@@ -1,11 +1,13 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,15 +15,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,14 +39,23 @@ import java.util.Map;
  */
 public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, IInfoTE{
 
+	protected boolean init = false;
+	protected double cableTemp = 0;
 	protected boolean glass;
 	protected ReagentMap contents = new ReagentMap();
-	protected double heat = 0;
-	protected int amount = 0;
 	protected boolean dirtyReag = false;
 
 	protected Vec3d getParticlePos(){
 		return new Vec3d(pos).add(0.5D, 0.5D, 0.5D);
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
+
+	protected boolean useCableHeat(){
+		return false;
 	}
 
 	/**
@@ -52,8 +65,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	 */
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		if(amount != 0 || correctTemp() != HeatUtil.ABSOLUTE_ZERO){
-			chat.add("Temp: " + MiscUtil.betterRound(handler.getTemp(), 3) + "°C (" + MiscUtil.betterRound(HeatUtil.toKelvin(handler.getTemp()), 3) + "K)");
+		double temp = correctTemp();
+		if(contents.getTotalQty() != 0 || temp != HeatUtil.ABSOLUTE_ZERO){
+			chat.add("Temp: " + MiscUtil.betterRound(temp, 3) + "°C (" + MiscUtil.betterRound(HeatUtil.toKelvin(temp), 3) + "K)");
 		}else{
 			chat.add("No reagents");
 		}
@@ -75,10 +89,17 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	}
 
 	/**
-	 * @return The current temperature of this machine. Defaults to absolute zero when amount == 0, but this may be overwritten
+	 * @return What the current temperature of this machine should be. Can be overwritten to allow external control of temperature
 	 */
 	protected double correctTemp(){
-		return amount <= 0 ? HeatUtil.ABSOLUTE_ZERO : HeatUtil.toCelcius(heat / amount);
+		if(useCableHeat()){
+			//Shares heat between internal cable & contents
+			cableTemp = HeatUtil.toCelcius((HeatUtil.toKelvin(cableTemp) * EnergyConverters.ALCHEMY_TEMP_CONVERSION + contents.getTempK() * contents.getTotalQty()) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION + contents.getTotalQty()));
+			contents.setTemp(cableTemp);
+			return cableTemp;
+		}else{
+			return contents.getTempC();
+		}
 	}
 
 	/**
@@ -86,13 +107,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	 */
 	protected void correctReag(){
 		dirtyReag = false;
-		amount = 0;
-		for(Integer am : contents.values()){
-			if(am != null){
-				amount += am;
-			}
-		}
-		heat = HeatUtil.toKelvin(correctTemp()) * amount;
+		contents.refresh();
+		contents.setTemp(correctTemp());
 	}
 
 	@Override
@@ -100,6 +116,12 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		if(world.isRemote){
 			return;
 		}
+
+		if(!init && useCableHeat()){
+			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		}
+		init = true;
+
 		if(dirtyReag){
 			correctReag();
 		}
@@ -196,23 +218,19 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 					out = type.getStackFromReagent(rStack);
 					out.setCount(Math.min(out.getMaxStackSize(), out.getCount()));
 					if(!out.isEmpty()){
-						contents.addReagent(type, -out.getCount());
-						amount -= out.getCount();
-						heat -= temp * out.getCount();
+						contents.removeReagent(type, out.getCount());
 						break;
 					}
 				}
 			}
 		}else if(stack.getItem() instanceof AbstractGlassware){
+			boolean crystal = ((AbstractGlassware) stack.getItem()).isCrystal();
 			//Move reagents between glassware and carrier
-			Triple<ReagentMap, Double, Integer> phial = ((AbstractGlassware) stack.getItem()).getReagants(stack);
-			ReagentMap reag = phial.getLeft();
-			double phialHeat = phial.getMiddle();
-			int phialAmount = phial.getRight();
-			if(phialAmount <= 0){
-				reag.clear();
+			ReagentMap phial = ((AbstractGlassware) stack.getItem()).getReagants(stack);
+			if(phial.getTotalQty() <= 0){
+				phial.clear();
 				//Move from carrier to glassware
-				if(stack.getMetadata() == 0){
+				if(!crystal){
 					//Refuse if made of glass and cannot hold contents
 					for(IReagent r : contents.keySet()){
 						if(r != null && contents.getQty(r) > 0 && !r.canGlassContain()){
@@ -220,39 +238,23 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 						}
 					}
 				}
-				phialHeat = 0;
 
-				double portion = Math.min(1D, (double) ((AbstractGlassware) stack.getItem()).getCapacity() / (double) amount);
+				double portion = Math.min(1D, (double) ((AbstractGlassware) stack.getItem()).getCapacity() / (double) contents.getTotalQty());
 
 				for(IReagent type : contents.keySet()){
-					int qty = contents.getQty(type);
-					if(qty > 0){
-						int toMove = (int) (qty * portion);
-						reag.put(type, toMove);
-						phialHeat += temp * toMove;
-						contents.addReagent(type, -toMove);
-						heat -= temp *toMove;
-						amount -= toMove;
-					}
+					phial.transferReagent(type, (int) (contents.getQty(type) * portion), contents);
 				}
-				((AbstractGlassware) out.getItem()).setReagents(out, reag, phialHeat);
+
+				((AbstractGlassware) out.getItem()).setReagents(out, phial);
 			}else{
 				//Move from glassware to carrier
-				double portion = Math.max(0, Math.min(1D, (double) (transferCapacity() - amount) / (double) phialAmount));
-				double phialTemp = phialHeat / phialAmount;//Kelvin
+				double portion = Math.max(0, Math.min(1D, (double) (transferCapacity() - contents.getTotalQty()) / (double) phial.getTotalQty()));
 
-				for(IReagent type : reag.keySet()){
-					int qty = reag.getQty(type);
-					if(qty > 0){
-						int toMove = (int) (qty * portion);
-						reag.addReagent(type, -toMove);
-						contents.addReagent(type, toMove);
-						phialHeat -= phialTemp * toMove;
-						heat += phialTemp * toMove;
-						amount += toMove;
-					}
+				for(IReagent type : phial.keySet()){
+					contents.transferReagent(type, (int) (phial.getQty(type) * portion), phial);
 				}
-				((AbstractGlassware) out.getItem()).setReagents(out, reag, phialHeat);
+
+				((AbstractGlassware) out.getItem()).setReagents(out, phial);
 			}
 		}else if(FluidUtil.interactWithFluidHandler(player, hand, falseFluidHandler)){
 			//Attempt to interact with fluid carriers
@@ -260,7 +262,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		}else{
 			//Move solids from hand into carrier
 			IReagent typeProduced = AlchemyCore.ITEM_TO_REAGENT.get(stack);
-			if(typeProduced != null && amount < transferCapacity()){
+			if(typeProduced != null && contents.getTotalQty() < transferCapacity()){
 				double itemTemp;
 				double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 				if(biomeTemp < typeProduced.getMeltingPoint()){
@@ -269,10 +271,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 					itemTemp = Math.max(typeProduced.getMeltingPoint() - 100D, HeatUtil.ABSOLUTE_ZERO);
 				}
 
-				heat += HeatUtil.toKelvin(itemTemp);
-				amount++;
 				out.shrink(1);
-				contents.addReagent(typeProduced, 1);
+				contents.addReagent(typeProduced, 1, itemTemp);
 			}
 		}
 
@@ -301,7 +301,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			if(modes[i].isOutput()){
 				EnumFacing side = EnumFacing.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
-				if(amount <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+				if(contents.getTotalQty() <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
 					continue;
 				}
 
@@ -311,7 +311,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 					continue;
 				}
 
-				if(amount != 0){
+				if(contents.getTotalQty() != 0){
 					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
 						correctReag();
 						markDirty();
@@ -325,9 +325,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		glass = nbt.getBoolean("glass");
-		heat = nbt.getDouble("heat");
-		amount = nbt.getInteger("qty");
 		contents = ReagentMap.readFromNBT(nbt);
+		cableTemp = nbt.getDouble("temp");
+		init = nbt.getBoolean("init");
 
 		dirtyReag = true;
 	}
@@ -336,11 +336,17 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("glass", glass);
-		nbt.setDouble("heat", heat);
-		nbt.setInteger("qty", amount);
 		contents.writeToNBT(nbt);
+		nbt.setDouble("temp", cableTemp);
+		nbt.setBoolean("init", init);
 
 		return nbt;
+	}
+
+
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+		return getCapability(cap, side) != null;
 	}
 
 	protected EnumContainerType getChannel(){
@@ -371,34 +377,18 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public int getContent(){
-			return amount;
-		}
-
-		@Override
 		public int getTransferCapacity(){
 			return transferCapacity();
 		}
 
 		@Override
-		public double getHeat(){
-			return heat;
-		}
-
-		@Override
-		public void setHeat(double heatIn){
-			heat = heatIn;
-			markDirty();
-		}
-
-		@Override
 		public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
 			if(getMode(side).isInput()){
-				int space = getTransferCapacity() - amount;
+				int space = getTransferCapacity() - contents.getTotalQty();
 				if(space <= 0){
 					return false;
 				}
-				double callerTemp = caller == null ? HeatUtil.toKelvin(20) : HeatUtil.toKelvin(caller.getTemp());
+				double callerTemp = HeatUtil.toKelvin(caller.getTemp());
 				boolean changed = false;
 
 				HashSet<String> validIds = new HashSet<>(4);
@@ -421,16 +411,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 					if(moved <= 0){
 						continue;
 					}
-					amount += moved;
 					changed = true;
-					space -= moved;
-					double heatTrans = moved * callerTemp;
-					reag.addReagent(id, -moved);
-					heat += heatTrans;
-					if(caller != null){
-						caller.addHeat(-heatTrans);
-					}
-					contents.addReagent(id, moved);
+
+					contents.transferReagent(id, moved, reag);
 				}
 
 				if(changed){
@@ -444,7 +427,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public int getContent(String id){
+		public int getContent(IReagent id){
 			return contents.getQty(id);
 		}
 	}
@@ -462,13 +445,11 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		public int fill(FluidStack resource, boolean doFill){
 			IReagent typ;
 			if(resource != null && (typ = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid())) != null){
-				int canAccept = Math.min((int) ((handler.getTransferCapacity() - amount) * AlchemyCore.MB_PER_REAG), resource.amount);
+				int canAccept = Math.min((int) ((handler.getTransferCapacity() - contents.getTotalQty()) * AlchemyCore.MB_PER_REAG), resource.amount);
 				canAccept -= canAccept % AlchemyCore.MB_PER_REAG;
 				if(canAccept > 0){
 					if(doFill){
 						int reagToFill = canAccept / AlchemyCore.MB_PER_REAG;
-						contents.addReagent(typ, reagToFill);
-						amount += reagToFill;
 						double fluidTemp;
 						double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 						if(biomeTemp < typ.getBoilingPoint() && biomeTemp >= typ.getMeltingPoint()){
@@ -481,7 +462,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 							fluidTemp = (typ.getMeltingPoint() + typ.getBoilingPoint()) / 2D;
 						}
 
-						heat += reagToFill * HeatUtil.toKelvin(fluidTemp);
+						contents.addReagent(typ, reagToFill, fluidTemp);
 						dirtyReag = true;
 						markDirty();
 					}
@@ -503,15 +484,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 				int reagToDrain = toDrain / AlchemyCore.MB_PER_REAG;
 				toDrain = reagToDrain * AlchemyCore.MB_PER_REAG;
 				if(doDrain){
-					contents.addReagent(type, -reagToDrain);
-					if(amount != 0){
-						double endTemp = heat / amount;
-						amount -= reagToDrain;
-						heat -= reagToDrain * endTemp;
-						if(heat < 0){
-							heat = 0;
-						}
-					}
+					contents.removeReagent(type, reagToDrain);
 					dirtyReag = true;
 					markDirty();
 				}
@@ -536,15 +509,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 					int reagToDrain = toDrain / AlchemyCore.MB_PER_REAG;
 					toDrain = reagToDrain * AlchemyCore.MB_PER_REAG;
 					if(doDrain){
-						contents.addReagent(type, -reagToDrain);
-						if(amount != 0){
-							double endTemp = heat / amount;
-							amount -= reagToDrain;
-							heat -= reagToDrain * endTemp;
-							if(heat < 0){
-								heat = 0;
-							}
-						}
+						contents.removeReagent(type, reagToDrain);
 						dirtyReag = true;
 						markDirty();
 					}

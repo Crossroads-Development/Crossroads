@@ -238,23 +238,13 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		@Override
-		public int getContent(){
-			return voltusAmount;
-		}
-
-		@Override
 		public int getTransferCapacity(){
 			return VOLTUS_CAPACITY;
 		}
 
 		@Override
-		public double getHeat(){
-			return 0;
-		}
-
-		@Override
-		public void setHeat(double heatIn){
-
+		public double getTemp(){
+			return HeatUtil.ABSOLUTE_ZERO;
 		}
 
 		@Override
@@ -266,17 +256,14 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 
 			int moved = Math.min(reag.getQty(EnumReagents.ELEM_CHARGE.id()), VOLTUS_CAPACITY - voltusAmount);
 			voltusAmount += moved;
-			reag.addReagent(EnumReagents.ELEM_CHARGE.id(), -moved);
-			if(caller != null){
-				caller.addHeat(-moved * HeatUtil.toKelvin(caller.getTemp()));
-			}
+			reag.removeReagent(EnumReagents.ELEM_CHARGE.id(), moved);
 			markDirty();
 			return true;
 		}
 
 		@Override
-		public int getContent(String type){
-			return type.equals(EnumReagents.ELEM_CHARGE.id()) ? voltusAmount : 0;
+		public int getContent(IReagent type){
+			return type == AlchemyCore.REAGENTS.get(EnumReagents.ELEM_CHARGE.id()) ? voltusAmount : 0;
 		}
 	}
 }

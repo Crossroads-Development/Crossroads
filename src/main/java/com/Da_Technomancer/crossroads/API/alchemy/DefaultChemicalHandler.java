@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import net.minecraft.util.EnumFacing;
 
 public class DefaultChemicalHandler implements IChemicalHandler{
@@ -15,12 +16,7 @@ public class DefaultChemicalHandler implements IChemicalHandler{
 	}
 
 	@Override
-	public int getContent(){
-		return 0;
-	}
-
-	@Override
-	public int getContent(String type){
+	public int getContent(IReagent type){
 		return 0;
 	}
 
@@ -30,17 +26,12 @@ public class DefaultChemicalHandler implements IChemicalHandler{
 	}
 
 	@Override
-	public double getHeat(){
-		return 0;
+	public double getTemp(){
+		return HeatUtil.ABSOLUTE_ZERO;
 	}
 
 	@Override
 	public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
 		return false;
-	}
-
-	@Override
-	public void setHeat(double heat){
-		
 	}
 }

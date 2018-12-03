@@ -1,28 +1,15 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class HeatedTubeTileEntity extends AlchemyCarrierTE{
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
-
-	private double cableTemp = 0;
-	private boolean init = false;
 
 	public HeatedTubeTileEntity(){
 		super();
@@ -33,24 +20,8 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	protected double correctTemp(){
-		//Shares heat between internal cable & contents
-		cableTemp = amount <= 0 ? cableTemp : (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-		heat = HeatUtil.toKelvin(cableTemp) * amount;
-		return cableTemp;
-	}
-
-	@Override
-	public void update(){
-		if(world.isRemote){
-			return;
-		}
-		if(!init){
-			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-			init = true;
-		}
-
-		super.update();
+	protected boolean useCableHeat(){
+		return true;
 	}
 
 	@Override
@@ -60,32 +31,6 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
 		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
 		return output;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
-		super.readFromNBT(nbt);
-		cableTemp = nbt.getDouble("temp");
-		init = nbt.getBoolean("init");
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-		super.writeToNBT(nbt);
-		nbt.setDouble("temp", cableTemp);
-		nbt.setBoolean("init", init);
-		return nbt;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getAxis())){
-			return true;
-		}
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == null || side.getAxis() == EnumFacing.Axis.Y)){
-			return true;
-		}
-		return super.hasCapability(cap, side);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -122,11 +67,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 			init = true;
 			cableTemp = tempIn;
 			//Shares heat between internal cable & contents
-			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-				heat = HeatUtil.toKelvin(cableTemp) * amount;
-				dirtyReag = true;
-			}
+			dirtyReag = true;
 			markDirty();
 		}
 
@@ -135,11 +76,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 			init();
 			cableTemp += tempChange;
 			//Shares heat between internal cable & contents
-			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * HeatUtil.toCelcius(heat / amount)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-				heat = HeatUtil.toKelvin(cableTemp) * amount;
-				dirtyReag = true;
-			}
+			dirtyReag = true;
 			markDirty();
 		}
 	}

@@ -44,7 +44,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	protected void performTransfer(){
 		EnumFacing side = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		TileEntity te = world.getTileEntity(pos.offset(side));
-		if(amount <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+		if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
 			return;
 		}
 
@@ -54,30 +54,24 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 			return;
 		}
 
-		if(amount != 0){
-			int limit = LIMITS[limitIndex];
-			ReagentMap transferReag = new ReagentMap();
-			for(IReagent type : contents.keySet()){
-				int qty = contents.getQty(type);
-				int specificLimit = Math.min(qty, limit - otherHandler.getContent(type.getId()));
-				if(specificLimit > 0){
-					transferReag.put(type, specificLimit);
-					contents.addReagent(type, -specificLimit);
-				}
+		int limit = LIMITS[limitIndex];
+		ReagentMap transferReag = new ReagentMap();
+		for(IReagent type : contents.keySet()){
+			int qty = contents.getQty(type);
+			int specificLimit = Math.min(qty, limit - otherHandler.getContent(type));
+			if(specificLimit > 0){
+				transferReag.transferReagent(type, specificLimit, contents);
 			}
+		}
 
-			boolean changed = otherHandler.insertReagents(transferReag, side.getOpposite(), handler);
-			for(IReagent type : transferReag.keySet()){
-				int qty = transferReag.getQty(type);
-				if(qty > 0){
-					contents.addReagent(type, qty);
-				}
-			}
+		boolean changed = otherHandler.insertReagents(transferReag, side.getOpposite(), handler);
+		for(IReagent type : transferReag.keySet()){
+			contents.transferReagent(type, transferReag.getQty(type), transferReag);
+		}
 
-			if(changed){
-				correctReag();
-				markDirty();
-			}
+		if(changed){
+			correctReag();
+			markDirty();
 		}
 	}
 

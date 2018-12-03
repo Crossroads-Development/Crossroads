@@ -34,7 +34,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@Override
 	public double correctTemp(){
 		//Shares heat between internal cable & contents
-		heat = HeatUtil.toKelvin(ambientTemp) * amount;
+		contents.setTemp(ambientTemp);
 		return ambientTemp;
 	}
 

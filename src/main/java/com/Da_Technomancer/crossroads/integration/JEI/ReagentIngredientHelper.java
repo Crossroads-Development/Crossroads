@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import mezz.jei.api.ingredients.IIngredientHelper;
@@ -16,10 +15,10 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public ItemStack getCheatItemStack(ReagIngr ingredient){
-		ItemStack toGive = new ItemStack(ModItems.phial, 1, 1);
+		ItemStack toGive = new ItemStack(ModItems.phialCrystal, 1);
 		ReagentMap reags = new ReagentMap();
-		reags.addReagent(ingredient.getReag(), ModItems.phial.getCapacity());
-		ModItems.phial.setReagents(toGive, reags, HeatUtil.toKelvin(50) * ModItems.phial.getCapacity());
+		reags.addReagent(ingredient.getReag(), ModItems.phialCrystal.getCapacity(), 50);
+		ModItems.phialCrystal.setReagents(toGive, reags);
 		return toGive;
 	}
 	

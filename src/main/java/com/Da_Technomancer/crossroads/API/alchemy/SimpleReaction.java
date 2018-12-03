@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+
 import javax.annotation.Nullable;
 
 public class SimpleReaction implements IReaction{
@@ -70,15 +72,14 @@ public class SimpleReaction implements IReaction{
 		}
 
 		for(ReagentStack reag : reagents){
-			reags.addReagent(reag.getType(), -maxReactions * reag.getAmount());
+			reags.removeReagent(reag.getType(), maxReactions * reag.getAmount());
 		}
 
 		for(ReagentStack reag : products){
-			reags.addReagent(reag.getType(), maxReactions * reag.getAmount());
+			reags.addReagent(reag.getType(), maxReactions * reag.getAmount(), reags.getTempC());
 		}
 
-		chamb.addHeat(-heatChange * maxReactions);
-		chamb.addHeat(amountChange * (chamb.getHeat() / content) * maxReactions);
+		reags.setTemp(HeatUtil.toCelcius(reags.getTempK() * reags.getTotalQty() - heatChange * maxReactions / reags.getTotalQty()));
 		return true;
 	}
 }

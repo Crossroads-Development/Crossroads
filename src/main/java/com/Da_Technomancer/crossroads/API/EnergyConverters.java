@@ -17,9 +17,9 @@ public final class EnergyConverters{
 	public static final double COPSHOWIUM_PER_COPPER = 1.8D;
 
 	/**
-	 * Conversion factor between degrees kelvin normal heat, and degrees kelvin * amount alchemy system. Based on game balance.
+	 * Conversion factor between degrees kelvin * amount alchemy system, and degrees kelvin normal heat. Based on game balance.
 	 */
-	public static final double ALCHEMY_TEMP_CONVERSION = .01D;
+	public static final double ALCHEMY_TEMP_CONVERSION = 100D;
 
 	/**
 	 * @return The number of degrees one bucket of steam is worth

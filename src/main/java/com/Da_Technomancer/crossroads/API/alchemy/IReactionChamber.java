@@ -1,9 +1,8 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import javax.annotation.Nonnull;
-
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
+
+import javax.annotation.Nonnull;
 
 /**
  * To be placed on things that store alchemy reagents and allow reactions.  *
@@ -13,36 +12,27 @@ public interface IReactionChamber{
 	@Nonnull
 	public ReagentMap getReagants();
 	
+//	/**
+//	 * Not the same as temperature.
+//	 * @return
+//	 */
+//	public double getHeat();
+//
+//	public void setHeat(double heatIn);
+//
+//	public default void addHeat(double heatChange){
+//		setHeat(getHeat() + heatChange);
+//	}
+	
 	/**
-	 * Not the same as temperature.
-	 * @return
-	 */
-	public double getHeat();
-	
-	public void setHeat(double heatIn);
-	
-	public default void addHeat(double heatChange){
-		setHeat(getHeat() + heatChange);
-	}
-	
-	/**
-	 * In degrees centigrade. 
-	 * @return
+	 * @return This chamber's temperature in Degrees C
 	 */
 	public default double getTemp(){
-		double cont = getContent();
-		return cont == 0 ? 0 : (getHeat() / cont) - 273D;
+		return getReagants().getTempC();
 	}
 	
 	public default int getContent(){
-		int amount = 0;
-		ReagentMap map = getReagants();
-		for(Integer qty : map.values()){
-			if(qty != null){
-				amount += qty;
-			}
-		}
-		return amount;
+		return getReagants().getTotalQty();
 	}
 	
 	public default boolean isCharged(){

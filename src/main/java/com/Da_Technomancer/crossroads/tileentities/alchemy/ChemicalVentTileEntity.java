@@ -46,28 +46,18 @@ public class ChemicalVentTileEntity extends TileEntity{
 		}
 
 		@Override
-		public int getContent(){
-			return 0;
-		}
-
-		@Override
 		public int getTransferCapacity(){
 			return 10;
 		}
 
 		@Override
-		public double getHeat(){
-			return 0;
-		}
-
-		@Override
-		public void setHeat(double heatIn){
-
+		public double getTemp(){
+			return HeatUtil.ABSOLUTE_ZERO;
 		}
 
 		@Override
 		public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
-			double callerTemp = caller == null ? HeatUtil.toKelvin(20) : HeatUtil.toKelvin(caller.getTemp());
+			double callerTemp = reag.getTempK();
 			boolean changed = false;
 			for(IReagent type : reag.keySet()){
 				int qty = reag.getQty(type);
@@ -76,10 +66,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 					if(ignorePhase || (phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp()))){
 						changed = true;
 						double heatTrans = qty * callerTemp;
-						reag.put(type, 0);
-						if(caller != null){
-							caller.addHeat(-heatTrans);
-						}
+						reag.remove(type);
 
 						Color col = type.getColor(phase);
 						WorldServer server = (WorldServer) world;
@@ -118,7 +105,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 		}
 
 		@Override
-		public int getContent(String type){
+		public int getContent(IReagent type){
 			return 0;
 		}
 	}

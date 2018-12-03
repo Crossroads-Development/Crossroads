@@ -80,11 +80,14 @@ public final class ModItems{
 	public static BasicItem practitionerStone;
 	public static BasicItem alchCrystal;
 	public static BasicItem wasteSalt;
-	public static Phial phial;
+	public static Phial phialGlass;
+	public static FlorenceFlask florenceFlaskGlass;
+	public static Shell shellGlass;
+	public static Phial phialCrystal;
+	public static FlorenceFlask florenceFlaskCrystal;
+	public static Shell shellCrystal;
 	public static LiechWrench liechWrench;
 	public static LeydenJar leydenJar;
-	public static FlorenceFlask florenceFlask;
-	public static Shell shell;
 	public static Nitroglycerin nitroglycerin;
 	public static BasicItem solidQuicksilver;
 	public static BasicItem solidFusas;
@@ -106,7 +109,7 @@ public final class ModItems{
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
 	 */
 	public static final HashMap<Pair<Item, Integer>, ModelResourceLocation> toClientRegister = new HashMap<Pair<Item, Integer>, ModelResourceLocation>();
-	public static final ArrayList<Item> toRegister = new ArrayList<Item>();
+	public static final ArrayList<Item> toRegister = new ArrayList<>();
 
 	/**
 	 * Convenience method to add an Item to the toClientRegister map. 
@@ -150,11 +153,14 @@ public final class ModItems{
 		practitionerStone = new BasicItem("prac_stone");
 		alchCrystal = new BasicItem("alch_crystal", "gemAlcCryst");
 		wasteSalt = new BasicItem("waste_salt", "dustAlcSalt");
-		phial = new Phial();
+		phialGlass = new Phial(false);
+		florenceFlaskGlass = new FlorenceFlask(false);
+		shellGlass = new Shell(false);
+		phialCrystal = new Phial(true);
+		florenceFlaskCrystal = new FlorenceFlask(true);
+		shellCrystal = new Shell(true);
 		liechWrench = new LiechWrench();
 		leydenJar = new LeydenJar();
-		florenceFlask = new FlorenceFlask();
-		shell = new Shell();
 		nitroglycerin = new Nitroglycerin();
 		solidQuicksilver = new BasicItem("solid_quicksilver");
 		solidFusas = new BasicItem("solid_fusas");
@@ -183,6 +189,6 @@ public final class ModItems{
 
 	@SideOnly(Side.CLIENT)
 	public static void clientInit(){
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phial, florenceFlask, shell);
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phialGlass, florenceFlaskGlass, shellGlass, phialCrystal, florenceFlaskCrystal, shellCrystal);
 	}
 }

@@ -55,11 +55,11 @@ public class ReactionChamber extends BlockContainer{
 
 	@Override
 	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stackIn){
-		if(!(te instanceof ReactionChamberTileEntity) || ((ReactionChamberTileEntity) te).getAmount() == 0){
+		if(!(te instanceof ReactionChamberTileEntity)){
 			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
 		}else{
 			player.addExhaustion(0.005F);
-			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1, getMetaFromState(state));
+			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
 			stack.setTagCompound(((ReactionChamberTileEntity) te).getContentNBT());
 			spawnAsEntity(worldIn, pos, stack);
 		}

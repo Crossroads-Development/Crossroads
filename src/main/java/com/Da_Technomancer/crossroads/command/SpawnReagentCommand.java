@@ -44,11 +44,11 @@ public class SpawnReagentCommand extends CommandBase{
 			throw new CommandException("Invalid input!");
 		}
 
-		ItemStack toGive = new ItemStack(ModItems.phial, 1, 1);
+		ItemStack toGive = new ItemStack(ModItems.phialCrystal, 1);
 		
 		ReagentMap reag = new ReagentMap();
-		reag.put(type, ModItems.phial.getCapacity());
-		ModItems.phial.setReagents(toGive, reag, HeatUtil.toKelvin(temp) * ModItems.phial.getCapacity());
+		reag.addReagent(type, ModItems.phialCrystal.getCapacity(), temp);
+		ModItems.phialCrystal.setReagents(toGive, reag);
 		((EntityPlayerMP) sender).addItemStackToInventory(toGive);
 	}
 

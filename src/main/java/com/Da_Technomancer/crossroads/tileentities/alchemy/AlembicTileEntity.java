@@ -1,53 +1,25 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class AlembicTileEntity extends AlchemyReactorTE{
 
-	private double cableTemp = 0;
-	private boolean init = false;
-
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
-
-	@Override
-	public void update(){
-		if(world.isRemote){
-			return;
-		}
-		if(!init){
-			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-			init = true;
-		}
-
-		if(dirtyReag){
-			correctReag();
-		}
-
-		if(world.getTotalWorldTime() % AlchemyCore.ALCHEMY_TIME == 0){
-			performReaction();
-		}
+	protected boolean useCableHeat(){
+		return true;
 	}
 
 	@Override
@@ -67,81 +39,85 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	protected double correctTemp(){
-		//Shares heat between internal cable & contents
-		cableTemp = amount <= 0 ? cableTemp : HeatUtil.toCelcius((HeatUtil.toKelvin(cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * heat) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D)));
-		heat = HeatUtil.toKelvin(cableTemp) * amount;
-		return cableTemp;
-	}
-
-	@Override
 	protected void correctReag(){
 		super.correctReag();
 
-		ReagentMap toInsert = new ReagentMap();
-		ArrayList<IReagent> moved = new ArrayList<>();
-		for(IReagent type : contents.keySet()){
-			int qty = contents.getQty(type);
-			if(qty == 0){
-				continue;
-			}
+		if(contents.getTotalQty() == 0){
+			return;
+		}
 
+		ReagentMap toInsert = new ReagentMap();
+		EnumFacing dir = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
+
+		double ambientTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		for(IReagent type : contents.keySet()){
 			//Movement of upwards-flowing phases from alembic to phial
 			if(type.getPhase(cableTemp).flowsUp()){
-				heat -= HeatUtil.toKelvin(cableTemp) * qty;
-				amount -= qty;
-				toInsert.addReagent(type, qty);
-				moved.add(type);
+				toInsert.transferReagent(type, contents.getQty(type), contents);
 				markDirty();
+
+				Color c = type.getColor(type.getPhase(ambientTemp));
+				if(type.getPhase(ambientTemp).flowsDown()){
+					((WorldServer) world).spawnParticle(ModParticles.COLOR_LIQUID, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * 0.05D) - 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+				}else{
+					((WorldServer) world).spawnParticle(ModParticles.COLOR_GAS, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * -0.05D) + 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+				}
 			}
 		}
 
-		EnumFacing dir = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
+		toInsert.setTemp(ambientTemp);
+
 		TileEntity te = world.getTileEntity(pos.offset(dir));
 		if(te != null){
 			IChemicalHandler handler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.UP);
 			if(handler != null){
-				handler.insertReagents(toInsert, EnumFacing.UP, null);
+				handler.insertReagents(toInsert, EnumFacing.UP, new PsuedoChemHandler(toInsert));
 			}
-		}
-
-		double ambientTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-		for(IReagent type : moved){
-			Color c = type.getColor(type.getPhase(ambientTemp));
-			if(type.getPhase(ambientTemp).flowsDown()){
-				((WorldServer) world).spawnParticle(ModParticles.COLOR_LIQUID, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * 0.05D) - 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
-			}else{
-				((WorldServer) world).spawnParticle(ModParticles.COLOR_GAS, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * -0.05D) + 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
-			}
-			contents.remove(type);
 		}
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
-		super.readFromNBT(nbt);
-		cableTemp = nbt.getDouble("temp");
-		init = nbt.getBoolean("init");
-	}
+	private static class PsuedoChemHandler implements IChemicalHandler{
 
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-		super.writeToNBT(nbt);
-		nbt.setDouble("temp", cableTemp);
-		nbt.setBoolean("init", init);
+		private final ReagentMap contents;
 
-		return nbt;
+		private PsuedoChemHandler(ReagentMap map){
+			contents = map;
+		}
+
+		@Override
+		public int getContent(IReagent type){
+			return contents.getQty(type);
+		}
+
+		@Override
+		public int getTransferCapacity(){
+			return 0;
+		}
+
+		@Override
+		public double getTemp(){
+			return contents.getTempC();
+		}
+
+		@Override
+		public boolean insertReagents(ReagentMap reag, EnumFacing side, @Nonnull IChemicalHandler caller, boolean ignorePhase){
+			return false;
+		}
+
+		@Nonnull
+		@Override
+		public EnumTransferMode getMode(EnumFacing side){
+			return EnumTransferMode.OUTPUT;
+		}
+
+		@Nonnull
+		@Override
+		public EnumContainerType getChannel(EnumFacing side){
+			return EnumContainerType.NONE;
+		}
 	}
 
 	private final HeatHandler heatHandler = new HeatHandler();
-
-	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if((side == null || side == EnumFacing.DOWN) && cap == Capabilities.HEAT_HANDLER_CAPABILITY){
-			return true;
-		}
-		return super.hasCapability(cap, side);
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -172,11 +148,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 			init = true;
 			cableTemp = tempIn;
 			//Shares heat between internal cable & contents
-			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-				heat = (cableTemp + 273D) * amount;
-				dirtyReag = true;
-			}
+			dirtyReag = true;
 			markDirty();
 		}
 
@@ -185,11 +157,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 			init();
 			cableTemp += tempChange;
 			//Shares heat between internal cable & contents
-			if(amount != 0){
-				cableTemp = (cableTemp + EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount * ((heat / amount) - 273D)) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION * amount + 1D);
-				heat = (cableTemp + 273D) * amount;
-				dirtyReag = true;
-			}
+			dirtyReag = true;
 			markDirty();
 		}
 	}

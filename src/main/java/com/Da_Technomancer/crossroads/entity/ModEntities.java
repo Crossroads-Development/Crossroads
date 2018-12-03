@@ -29,7 +29,7 @@ public final class ModEntities{
 	public static void clientInit(){
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, (RenderManager manager) -> (new RenderSnowball<EntityBullet>(manager, Items.IRON_NUGGET, Minecraft.getMinecraft().getRenderItem())));
 		RenderingRegistry.registerEntityRenderingHandler(EntityArmRidable.class, (RenderManager manager) -> (new EntityRenderEmpty(manager)));
-		RenderingRegistry.registerEntityRenderingHandler(EntityShell.class, (RenderManager manager) -> (new RenderSnowball<EntityShell>(manager, ModItems.shell, Minecraft.getMinecraft().getRenderItem())));
+		RenderingRegistry.registerEntityRenderingHandler(EntityShell.class, (RenderManager manager) -> (new RenderSnowball<EntityShell>(manager, ModItems.shellGlass, Minecraft.getMinecraft().getRenderItem())));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNitro.class, (RenderManager manager) -> (new RenderSnowball<EntityNitro>(manager, ModItems.nitroglycerin, Minecraft.getMinecraft().getRenderItem())));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlyingMachine.class, (RenderManager manager) -> (new RenderFlyingMachine(manager)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlameCore.class, (RenderManager manager) -> (new RenderFlameCoreEntity(manager)));
