@@ -117,9 +117,9 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	private class CogHandler implements ICogHandler{
 
 		@Override
-		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient){
+		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient, boolean renderOffset){
 			if(cogOrient == EnumFacing.getFacingFromVector(-masterPos.getX(), -masterPos.getY(), -masterPos.getZ())){
-				getAxle().propogate(masterIn, key, rotationRatioIn, lastRadius);
+				getAxle().propogate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);
 			}
 		}
 

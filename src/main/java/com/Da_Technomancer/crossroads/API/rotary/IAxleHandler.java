@@ -23,8 +23,13 @@ public interface IAxleHandler{
 	/**
 	 * If lastRadius equals 0, then the AxleHandler should not convert the rotationRationIn, as this is an axial connection.
 	 * The caller is normally responsible for adjusting the sign on the rotationRatioIn
+	 * @param masterIn The originating Master Axis
+	 * @param key The propogation key, used for determining if this block has already been checked
+	 * @param rotationRatioIn The rotationRatio of the calling device (which means this block is responsible for adjusting sign and magnitude)
+	 * @param lastRadius The radius of the previous connected device. 0 when connecting axially
+	 * @param renderOffset Whether to render this block at an offset angle. This value should ONLY be used for rendering.
 	 */
-	public void propogate(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius);
+	public void propogate(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, boolean renderOffset);
 
 	public double getMoInertia();
 	

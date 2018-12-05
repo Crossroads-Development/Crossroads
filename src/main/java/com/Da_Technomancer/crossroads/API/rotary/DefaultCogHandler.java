@@ -5,7 +5,7 @@ import net.minecraft.util.EnumFacing;
 public class DefaultCogHandler implements ICogHandler{
 
 	@Override
-	public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient){
+	public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient, boolean renderOffset){
 		
 	}
 

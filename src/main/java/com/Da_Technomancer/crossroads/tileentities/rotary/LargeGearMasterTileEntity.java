@@ -51,7 +51,11 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		}
 		return facing;
 	}
-	
+
+	public boolean isRenderedOffset(){
+		return handlerMain.renderOffset;
+	}
+
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add("Speed: " + MiscUtil.betterRound(motionData[0], 3));
@@ -162,6 +166,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			angleW[1] = Float.intBitsToFloat((int) (message >>> 32L));
 		}else if(identifier == 1){
 			type = message < 0 || message >= GearFactory.gearMats.size() ? GearFactory.gearMats.get(0) : GearFactory.gearMats.get((int) message);
+		}else if(identifier == 2){
+			handlerMain.renderOffset = message == 1;
 		}
 	}
 
@@ -188,6 +194,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 		private byte updateKey;
 		private double rotRatio;
+		private boolean renderOffset;
 
 		@Override
 		public double[] getMotionData(){
@@ -195,7 +202,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		}
 
 		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 			if(type == null){
 				return;
 			}
@@ -218,6 +225,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			}
 
 			rotRatio = rotRatioIn;
+			this.renderOffset = renderOffset;
 
 			if(updateKey == 0){
 				resetAngle();
@@ -237,7 +245,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 					}
 
 					if(connectTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, axleDir.getOpposite())){
-						connectTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, axleDir.getOpposite()).propogate(masterIn, key, rotRatio, 0);
+						connectTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, axleDir.getOpposite()).propogate(masterIn, key, rotRatio, 0, renderOffset);
 					}
 				}
 			}
@@ -252,23 +260,23 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 					TileEntity adjTE = world.getTileEntity(pos.offset(facing, 2));
 					if(adjTE != null){
 						if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){
-							adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -rotRatio, 1.5D, facing.getOpposite());
+							adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -rotRatio, 1.5D, facing.getOpposite(), renderOffset);
 						}else if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
 							//Check for large gears
-							adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side);
+							adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side, renderOffset);
 						}
 					}
 
 					// Diagonal gears
 					TileEntity diagTE = world.getTileEntity(pos.offset(facing, 2).offset(side));
 					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(world, pos.offset(facing, 2), facing.getOpposite(), side)){
-						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite());
+						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite(), renderOffset);
 					}
 
 					//Underside gears
 					TileEntity undersideTE = world.getTileEntity(pos.offset(facing, 1).offset(side));
 					if(undersideTE != null && undersideTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing)){
-						undersideTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite());
+						undersideTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite(), renderOffset);
 					}
 				}
 			}
@@ -283,8 +291,9 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		public void resetAngle(){
 			if(!world.isRemote){
 				angleW[1] = 0;
-				angleW[0] = Math.signum(rotRatio * getFacing().getAxisDirection().getOffset()) == -1 ? 7.5F : 0F;
+				angleW[0] = renderOffset ? 7.5F : 0F;
 				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 2, renderOffset ? 1 : 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 

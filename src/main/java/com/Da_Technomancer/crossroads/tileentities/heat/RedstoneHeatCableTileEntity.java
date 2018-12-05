@@ -21,6 +21,11 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	}
 
 	@Override
+	public Boolean[] getMatches(){
+		return world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL) ? super.getMatches() : new Boolean[] {false, false, false, false, false, false};
+	}
+
+	@Override
 	public void update(){
 		if(world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
 			super.update();
@@ -33,7 +38,7 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
 		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY){
-			if(world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
+			if((facing == null || !locked[facing.getIndex()]) && world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
 				return (T) heatHandler;
 			}else{
 				return null;

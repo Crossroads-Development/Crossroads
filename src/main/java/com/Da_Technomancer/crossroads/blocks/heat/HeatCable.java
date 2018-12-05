@@ -1,25 +1,15 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.CableThemes;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
-import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
-import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.ConduitBakedModel;
 import com.Da_Technomancer.crossroads.render.bakedModel.IConduitModel;
-import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
-
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -53,6 +43,11 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class HeatCable extends BlockContainer implements IConduitModel{
 
@@ -138,6 +133,32 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 			if(held.isEmpty()){
 				return false;
 			}
+			if(EssentialsConfig.isWrench(held, worldIn.isRemote)){
+				if(!worldIn.isRemote){
+					int face;
+					if(hitY < SIZE){
+						face = 0;//Down
+					}else if(hitY > 1F - (float) SIZE){
+						face = 1;//Up
+					}else if(hitX < (float) SIZE){
+						face = 4;//West
+					}else if(hitX > 1F - (float) SIZE){
+						face = 5;//East
+					}else if(hitZ < (float) SIZE){
+						face = 2;//North
+					}else if(hitZ > 1F - (float) SIZE){
+						face = 3;//South
+					}else{
+						face = side.getIndex();
+					}
+					TileEntity te = worldIn.getTileEntity(pos);
+					if(te instanceof HeatCableTileEntity){
+						((HeatCableTileEntity) te).adjust(face);
+					}
+				}
+				return true;
+			}
+
 			for(int oreDict : OreDictionary.getOreIDs(held)){
 				CableThemes match = OREDICT_TO_THEME.get(OreDictionary.getOreName(oreDict));
 				if(match != null && state.getValue(Properties.TEXTURE_4) != match.ordinal()){
@@ -180,12 +201,15 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
-		Boolean[] connect = {false, false, false, false, false, false};
+		TileEntity te = world.getTileEntity(pos);
 
-		for(EnumFacing direction : EnumFacing.values()){
-			TileEntity sideTe = world.getTileEntity(pos.offset(direction));
-			connect[direction.getIndex()] = sideTe != null && ((sideTe instanceof IPrototypePort && ((IPrototypePort) sideTe).getType() == PrototypePortTypes.HEAT && ((IPrototypePort) sideTe).getSide() == direction.getOpposite()) || (sideTe instanceof IPrototypeOwner && ((IPrototypeOwner) sideTe).getTypes()[direction.getOpposite().getIndex()] == PrototypePortTypes.HEAT) || sideTe.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite()));
-		}
+		Boolean[] connect = te instanceof HeatCableTileEntity ? ((HeatCableTileEntity) te).getMatches() : new Boolean[] {false, false, false, false, false, false};
+
+
+//		for(EnumFacing direction : EnumFacing.values()){
+//			TileEntity sideTe = world.getTileEntity(pos.offset(direction));
+//			connect[direction.getIndex()] = sideTe != null && ((sideTe instanceof IPrototypePort && ((IPrototypePort) sideTe).getType() == PrototypePortTypes.HEAT && ((IPrototypePort) sideTe).getSide() == direction.getOpposite()) || (sideTe instanceof IPrototypeOwner && ((IPrototypeOwner) sideTe).getTypes()[direction.getOpposite().getIndex()] == PrototypePortTypes.HEAT) || sideTe.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, direction.getOpposite()));
+//		}
 
 		extendedBlockState = extendedBlockState.withProperty(Properties.CONNECT, connect);
 

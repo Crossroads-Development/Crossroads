@@ -221,7 +221,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 				}while(key == keyNew);
 				key = keyNew;
 
-				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0, false);
 			}
 
 			if(!memberCopy.containsAll(rotaryMembers)){

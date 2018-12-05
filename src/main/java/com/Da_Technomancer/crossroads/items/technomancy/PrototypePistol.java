@@ -351,7 +351,7 @@ public class PrototypePistol extends BeamUsingItem{
 			private byte updateKey;
 
 			@Override
-			public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+			public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 				//If true, this has already been checked.
 				if(key == updateKey || masterIn.addToList(this)){
 					return;

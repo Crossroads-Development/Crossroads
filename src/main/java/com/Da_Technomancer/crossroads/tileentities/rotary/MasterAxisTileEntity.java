@@ -187,12 +187,14 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			}
 		}
 
+		private ArrayList<IAxleHandler> memberCopy;
+
 		@Override
 		public void requestUpdate(){
 			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
-			ArrayList<IAxleHandler> memberCopy = new ArrayList<>(rotaryMembers);
+			memberCopy = new ArrayList<>(rotaryMembers);
 			rotaryMembers.clear();
 			locked = false;
 			EnumFacing dir = getFacing();
@@ -204,7 +206,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 				}while(key == keyNew);
 				key = keyNew;
 
-				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite()).propogate(this, key, 1, 0);
+				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite()).propogate(this, key, 1, 0, false);
 			}
 
 			if(!memberCopy.containsAll(rotaryMembers)){
@@ -220,11 +222,15 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 				axle.syncAngle();
 				axle.disconnect();
 			}
+			memberCopy = null;
 		}
 
 		@Override
 		public void lock(){
 			locked = true;
+			if(memberCopy != null){
+				rotaryMembers.addAll(memberCopy);
+			}
 			for(IAxleHandler gear : rotaryMembers){
 				gear.getMotionData()[0] = 0;
 				gear.getMotionData()[1] = 0;

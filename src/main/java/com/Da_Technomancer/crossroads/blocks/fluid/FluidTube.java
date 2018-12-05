@@ -152,7 +152,7 @@ public class FluidTube extends BlockContainer implements IAdvConduitModel{
 	@Nullable
 	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
-		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
+		ArrayList<AxisAlignedBB> list = new ArrayList<>();
 		Integer[] connectMode = exState.getValue(Properties.CONNECT_MODE);
 		list.add(BB);
 		if(connectMode[0]  != 0){
@@ -191,22 +191,22 @@ public class FluidTube extends BlockContainer implements IAdvConduitModel{
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
 		Integer[] connectMode = exState.getValue(Properties.CONNECT_MODE);
 
-		if(connectMode[0]  != 0){
+		if(connectMode[0] != 0){
 			addCollisionBoxToList(pos, mask, list, DOWN);
 		}
-		if(connectMode[1]  != 0){
+		if(connectMode[1] != 0){
 			addCollisionBoxToList(pos, mask, list, UP);
 		}
-		if(connectMode[2]  != 0){
+		if(connectMode[2] != 0){
 			addCollisionBoxToList(pos, mask, list, NORTH);
 		}
-		if(connectMode[3]  != 0){
+		if(connectMode[3] != 0){
 			addCollisionBoxToList(pos, mask, list, SOUTH);
 		}
-		if(connectMode[4]  != 0){
+		if(connectMode[4] != 0){
 			addCollisionBoxToList(pos, mask, list, WEST);
 		}
-		if(connectMode[5]  != 0){
+		if(connectMode[5] != 0){
 			addCollisionBoxToList(pos, mask, list, EAST);
 		}
 	}

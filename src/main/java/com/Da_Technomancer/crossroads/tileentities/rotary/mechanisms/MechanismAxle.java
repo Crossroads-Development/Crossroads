@@ -76,7 +76,7 @@ public class MechanismAxle implements IMechanism{
 			if(te.members[endDir.getIndex()] != null){
 				//Do internal connection
 				if(te.members[endDir.getIndex()].hasCap(Capabilities.AXLE_HANDLER_CAPABILITY, endDir, te.mats[endDir.getIndex()], endDir, axis, te)){
-					te.axleHandlers[endDir.getIndex()].propogate(masterIn, key, rotRatioIn, 0);
+					te.axleHandlers[endDir.getIndex()].propogate(masterIn, key, rotRatioIn, 0, handler.renderOffset);
 				}
 			}else{
 				//Connect externally
@@ -92,7 +92,7 @@ public class MechanismAxle implements IMechanism{
 					}
 
 					if(endTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, oEndDir)){
-						endTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, oEndDir).propogate(masterIn, key, handler.rotRatio, 0);
+						endTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, oEndDir).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 					}
 				}
 			}

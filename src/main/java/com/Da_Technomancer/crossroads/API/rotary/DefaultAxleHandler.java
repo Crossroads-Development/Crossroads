@@ -1,12 +1,8 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-
 public class DefaultAxleHandler implements IAxleHandler{
 
 	private double[] motionData = new double[4];
-	private double physData = 0;
 
 	@Override
 	public double[] getMotionData(){
@@ -15,11 +11,11 @@ public class DefaultAxleHandler implements IAxleHandler{
 
 	@Override
 	public double getMoInertia(){
-		return physData;
+		return 0;
 	}
 
 	@Override
-	public void propogate(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius){
+	public void propogate(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, boolean renderOffset){
 		
 	}
 

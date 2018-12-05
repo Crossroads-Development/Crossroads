@@ -87,13 +87,13 @@ public class MechanismToggleGear extends MechanismSmallGear{
 				masterIn.addAxisToList(sideTE.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, side.getOpposite()), side.getOpposite());
 			}
 			if(sideTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
-				sideTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).propogate(masterIn, key, handler.rotRatio, 0);
+				sideTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 			}
 		}
 
 		//Axle slot
 		if(te.axleAxis == side.getAxis() && te.members[6] != null && te.members[6].hasCap(Capabilities.AXLE_HANDLER_CAPABILITY, side, te.mats[6], null, te.axleAxis, te)){
-			te.axleHandlers[6].propogate(masterIn, key, handler.rotRatio, 0);
+			te.axleHandlers[6].propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 		}
 
 		if((te.redstoneIn == 0) ^ inverted){
@@ -103,7 +103,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		//Other internal gears
 		for(int i = 0; i < 6; i++){
 			if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.byIndex(i), te.mats[i], EnumFacing.byIndex(i), te.axleAxis, te)){
-				te.axleHandlers[i].propogate(masterIn, key, RotaryUtil.getDirSign(side, EnumFacing.byIndex(i)) * handler.rotRatio, .5D);
+				te.axleHandlers[i].propogate(masterIn, key, RotaryUtil.getDirSign(side, EnumFacing.byIndex(i)) * handler.rotRatio, .5D, handler.renderOffset);
 			}
 		}
 
@@ -115,21 +115,21 @@ public class MechanismToggleGear extends MechanismSmallGear{
 				TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
 				if(adjTE != null){
 					if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){
-						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D, facing.getOpposite());
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D, facing.getOpposite(), handler.renderOffset);
 					}else if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
 						//Check for large gears
-						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side);
+						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side, handler.renderOffset);
 					}
 				}
 
 				// Diagonal gears
 				TileEntity diagTE = te.getWorld().getTileEntity(te.getPos().offset(facing).offset(side));
 				if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(te.getWorld(), te.getPos().offset(facing), facing.getOpposite(), side)){
-					diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite());
+					diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite(), handler.renderOffset);
 				}
 
 				if(sideTE != null && sideTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing)){
-					sideTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite());
+					sideTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset);
 				}
 			}
 		}

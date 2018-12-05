@@ -447,6 +447,7 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 		public boolean connected;
 		public double rotRatio;
 		public byte updateKey;
+		public boolean renderOffset;
 
 		@Override
 		public double[] getMotionData(){
@@ -454,13 +455,14 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 		}
 
 		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 			//If true, this has already been checked.
 			if(key == updateKey || masterIn.addToList(this)){
 				return;
 			}
 
 			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
+			this.renderOffset = renderOffset;
 			updateKey = key;
 			connected = true;
 		}
@@ -532,7 +534,7 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 		public void resetAngle(){
 			if(!world.isRemote){
 				angleW[1] = 0;
-				angleW[0] = Math.signum(rotRatio) == -1 ? 22.5F : 0F;
+				angleW[0] = renderOffset ? 22.5F : 0F;
 				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}

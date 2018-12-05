@@ -124,7 +124,7 @@ public class StampMillTileEntity extends InventoryTE{
 	private class ThroughAxleHandler extends AngleAxleHandler{
 
 		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 			//If true, this has already been checked.
 			if(key == updateKey || masterIn.addToList(this)){
 				return;
@@ -150,7 +150,7 @@ public class StampMillTileEntity extends InventoryTE{
 						masterIn.addAxisToList(te.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, side.getOpposite()), side.getOpposite());
 					}
 					if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
-						te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).propogate(masterIn, key, rotRatioIn, lastRadius);
+						te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).propogate(masterIn, key, rotRatioIn, lastRadius, renderOffset);
 					}
 				}
 			}

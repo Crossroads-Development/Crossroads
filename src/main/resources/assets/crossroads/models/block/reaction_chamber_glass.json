@@ -1,7 +1,32 @@
 {
-	"parent": "block/cube_column",
-	"textures": {
+	"textures":
+	{
 		"side": "crossroads:blocks/reaction_chamber_side_glass",
-		"end": "crossroads:blocks/reaction_chamber_bottom_glass"
-	}
+		"end": "crossroads:blocks/reaction_chamber_bottom_glass",
+		"particle": "crossroads:blocks/reaction_chamber_bottom_glass"
+	},
+	"elements": [{
+		"from": [ 0, 0, 0 ],
+		"to": [ 16, 16, 16 ],
+		"faces": {
+			"down": { "texture": "#end", "uv": [0,0,16,16] },
+			"up": { "texture": "#end", "uv": [0,0,16,16] },
+			"north": { "texture": "#side", "uv": [0,0,16,16] },
+			"south": { "texture": "#side", "uv": [0,0,16,16] },
+			"west": { "texture": "#side", "uv": [0,0,16,16] },
+			"east": { "texture": "#side", "uv": [0,0,16,16] }
+		}
+	},
+		{
+			"from": [ 15.99, 15.99, 15.99 ],
+			"to": [ 0.01, 0.01, 0.01 ],
+			"faces": {
+				"down": { "texture": "#end", "uv": [0,0,16,16] },
+				"up": { "texture": "#end", "uv": [0,0,16,16] },
+				"north": { "texture": "#side", "uv": [0,0,16,16] },
+				"south": { "texture": "#side", "uv": [0,0,16,16] },
+				"west": { "texture": "#side", "uv": [0,0,16,16] },
+				"east": { "texture": "#side", "uv": [0,0,16,16] }
+			}
+		}]
 }

@@ -58,9 +58,14 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 
 		if(handler != null){
 			GlStateManager.rotate((float) handler.getAngle() * dirMult, 0F, 1F, 0F);
-			ModelAxle.render(gear.getMember().getColor());
 			GlStateManager.scale(3, 1, 3);
 			MODEL.render(TEXTURE, TEXTURE_RIM, gear.getMember().getColor());
+
+			GlStateManager.scale(1F / 3F, 1, 1F / 3F);
+			if(gear.isRenderedOffset()){
+				GlStateManager.rotate(-7.5F, 0, 1, 0);
+			}
+			ModelAxle.render(gear.getMember().getColor());
 		}
 
 		GlStateManager.enableLighting();

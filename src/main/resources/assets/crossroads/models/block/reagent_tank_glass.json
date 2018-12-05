@@ -1,6 +1,31 @@
 {
-	"parent": "block/cube_all",
-	"textures": {
-		"all": "crossroads:blocks/reagent_tank_glass"
-	}
+	"textures":
+	{
+		"side": "crossroads:blocks/reagent_tank_glass",
+		"particle": "crossroads:blocks/reagent_tank_glass"
+	},
+	"elements": [{
+		"from": [ 0, 0, 0 ],
+		"to": [ 16, 16, 16 ],
+		"faces": {
+			"down": { "texture": "#side", "uv": [0,0,16,16] },
+			"up": { "texture": "#side", "uv": [0,0,16,16] },
+			"north": { "texture": "#side", "uv": [0,0,16,16] },
+			"south": { "texture": "#side", "uv": [0,0,16,16] },
+			"west": { "texture": "#side", "uv": [0,0,16,16] },
+			"east": { "texture": "#side", "uv": [0,0,16,16] }
+		}
+	},
+		{
+			"from": [ 15.99, 15.99, 15.99 ],
+			"to": [ 0.01, 0.01, 0.01 ],
+			"faces": {
+				"down": { "texture": "#side", "uv": [0,0,16,16] },
+				"up": { "texture": "#side", "uv": [0,0,16,16] },
+				"north": { "texture": "#side", "uv": [0,0,16,16] },
+				"south": { "texture": "#side", "uv": [0,0,16,16] },
+				"west": { "texture": "#side", "uv": [0,0,16,16] },
+				"east": { "texture": "#side", "uv": [0,0,16,16] }
+			}
+		}]
 }

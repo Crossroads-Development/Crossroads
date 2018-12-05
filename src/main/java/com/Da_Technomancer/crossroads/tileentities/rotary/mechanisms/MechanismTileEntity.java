@@ -307,8 +307,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		}
 
 		@Override
-		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient){
-			axleHandlers[side].propogate(masterIn, key, rotationRatioIn, lastRadius);
+		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient, boolean renderOffset){
+			axleHandlers[side].propogate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);
 		}
 
 		@Override
@@ -322,6 +322,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		private final int side;
 		protected byte updateKey;
 		protected double rotRatio;
+		protected boolean renderOffset;
 
 		/**
 		 * @param sideIn Must be between 0 and 6, inclusive
@@ -336,8 +337,9 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		}
 
 		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 			if(members[side] != null){
+				this.renderOffset = renderOffset;
 				members[side].propogate(mats[side], side == 6 ? null : EnumFacing.byIndex(side), axleAxis, MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
 			}
 		}
@@ -350,7 +352,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		public void resetAngle(){
 			if(!world.isRemote){
 				clientW[side] = 0;
-				angle[side] = Math.signum(rotRatio * EnumFacing.byIndex(side).getAxisDirection().getOffset()) == -1 ? 22.5F : 0F;
+				angle[side] = renderOffset && side != 6 ? 22.5F : 0F;
 				ModPackets.network.sendToAllAround(new SendLongToClient((byte) side, (Float.floatToIntBits(angle[side]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(clientW[side]) << 32L), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}

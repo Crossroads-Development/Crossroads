@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.API;
 
 import net.minecraftforge.common.property.IUnlistedProperty;
 
+import java.util.Arrays;
+
 public class UnlistedPropertyIntegerSixArray implements IUnlistedProperty<Integer[]>{
 
 	private final String name;
@@ -27,6 +29,6 @@ public class UnlistedPropertyIntegerSixArray implements IUnlistedProperty<Intege
 
 	@Override
 	public String valueToString(Integer[] value){
-		return value.toString();
+		return Arrays.toString(value);
 	}
 }
