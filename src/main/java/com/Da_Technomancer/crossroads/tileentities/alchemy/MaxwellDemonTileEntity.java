@@ -77,7 +77,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setBoolean("init", init);
+		nbt.setBoolean("initHeat", init);
 		nbt.setDouble("temp_u", tempUp);
 		nbt.setDouble("temp_d", tempDown);
 		return nbt;
@@ -86,7 +86,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		init = nbt.getBoolean("init");
+		init = nbt.getBoolean("initHeat");
 		tempUp = nbt.getDouble("temp_u");
 		tempDown = nbt.getDouble("temp_d");
 	}

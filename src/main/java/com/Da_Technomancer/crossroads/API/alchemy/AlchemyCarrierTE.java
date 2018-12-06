@@ -58,6 +58,10 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		return false;
 	}
 
+	protected void initHeat(){
+
+	}
+
 	/**
 	 * @param chat Add info to this list, 1 line per entry.
 	 * @param player The player using the info device.
@@ -93,6 +97,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	 */
 	protected double correctTemp(){
 		if(useCableHeat()){
+			initHeat();
 			//Shares heat between internal cable & contents
 			cableTemp = HeatUtil.toCelcius((HeatUtil.toKelvin(cableTemp) * EnergyConverters.ALCHEMY_TEMP_CONVERSION + contents.getTempK() * contents.getTotalQty()) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION + contents.getTotalQty()));
 			contents.setTemp(cableTemp);
@@ -327,7 +332,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		glass = nbt.getBoolean("glass");
 		contents = ReagentMap.readFromNBT(nbt);
 		cableTemp = nbt.getDouble("temp");
-		init = nbt.getBoolean("init");
+		init = nbt.getBoolean("initHeat");
 
 		dirtyReag = true;
 	}
@@ -338,7 +343,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		nbt.setBoolean("glass", glass);
 		contents.writeToNBT(nbt);
 		nbt.setDouble("temp", cableTemp);
-		nbt.setBoolean("init", init);
+		nbt.setBoolean("initHeat", init);
 
 		return nbt;
 	}

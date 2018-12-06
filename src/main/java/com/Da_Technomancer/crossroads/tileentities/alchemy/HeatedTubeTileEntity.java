@@ -25,6 +25,14 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
+	protected void initHeat(){
+		if(!init){
+			init = true;
+			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		}
+	}
+
+	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
 		EnumFacing outSide = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
@@ -49,16 +57,9 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 
 	private class HeatHandler implements IHeatHandler{
 
-		private void init(){
-			if(!init){
-				init = true;
-				cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-			}
-		}
-
 		@Override
 		public double getTemp(){
-			init();
+			initHeat();
 			return cableTemp;
 		}
 
@@ -73,7 +74,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 
 		@Override
 		public void addHeat(double tempChange){
-			init();
+			initHeat();
 			cableTemp += tempChange;
 			//Shares heat between internal cable & contents
 			dirtyReag = true;

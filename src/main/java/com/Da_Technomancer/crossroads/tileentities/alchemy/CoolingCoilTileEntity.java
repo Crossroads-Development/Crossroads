@@ -54,14 +54,14 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		ambientTemp = nbt.getDouble("temp");
-		init = nbt.getBoolean("init");
+		init = nbt.getBoolean("initHeat");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setDouble("temp", ambientTemp);
-		nbt.setBoolean("init", init);
+		nbt.setBoolean("initHeat", init);
 		return nbt;
 	}
 

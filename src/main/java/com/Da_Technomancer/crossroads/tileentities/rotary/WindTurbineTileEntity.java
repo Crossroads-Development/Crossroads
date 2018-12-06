@@ -55,7 +55,6 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public void update(){
 		super.update();
 
-
 		if(!world.isRemote){
 			//Every 30 seconds check whether the placement requirements are valid, and cache the result
 			if(newlyPlaced || world.getTotalWorldTime() % 600 == 0){
@@ -68,7 +67,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 				}
 
 				EnumFacing dir = state.getValue(Properties.HORIZ_FACING);
-				BlockPos offsetPos = pos.offset(dir.getOpposite());
+				BlockPos offsetPos = pos.offset(dir);
 				if(world.canSeeSky(offsetPos)){
 					running = true;
 					outer:
@@ -133,7 +132,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && (facing == null || facing == world.getBlockState(pos).getValue(Properties.HORIZ_FACING))){
+		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && (facing == null || facing == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getOpposite())){
 			return (T) axleHandler;
 		}
 		return super.getCapability(capability, facing);

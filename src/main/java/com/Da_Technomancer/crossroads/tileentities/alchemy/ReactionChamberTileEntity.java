@@ -34,6 +34,14 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		super(glass);
 	}
 
+	@Override
+	protected void initHeat(){
+		if(!init){
+			init = true;
+			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		}
+	}
+
 	public NBTTagCompound getContentNBT(){
 		if(contents.getTotalQty() == 0){
 			return null;
@@ -247,16 +255,9 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	private class HeatHandler implements IHeatHandler{
 
-		private void init(){
-			if(!init){
-				init = true;
-				cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-			}
-		}
-
 		@Override
 		public double getTemp(){
-			init();
+			initHeat();
 			return cableTemp;
 		}
 
@@ -270,7 +271,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 		@Override
 		public void addHeat(double tempChange){
-			init();
+			initHeat();
 			cableTemp += tempChange;
 			dirtyReag = true;
 			markDirty();

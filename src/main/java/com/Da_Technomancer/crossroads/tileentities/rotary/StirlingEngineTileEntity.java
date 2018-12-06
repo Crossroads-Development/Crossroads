@@ -68,7 +68,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 
-		nbt.setBoolean("init", init);
+		nbt.setBoolean("initHeat", init);
 		nbt.setDouble("temp_side", tempSide);
 		nbt.setDouble("temp_bottom", tempBottom);
 	}
@@ -77,7 +77,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 
-		init = nbt.getBoolean("init");
+		init = nbt.getBoolean("initHeat");
 		tempSide = nbt.getDouble("temp_side");
 		tempBottom = nbt.getDouble("temp_bottom");
 

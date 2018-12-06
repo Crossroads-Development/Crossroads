@@ -81,7 +81,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setBoolean("init", init);
+		nbt.setBoolean("initHeat", init);
 		nbt.setDouble("heat_in", heatIn);
 		nbt.setDouble("heat_out", heatOut);
 		return nbt;
@@ -90,7 +90,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		init = nbt.getBoolean("init");
+		init = nbt.getBoolean("initHeat");
 		heatIn = nbt.getDouble("heat_in");
 		heatOut = nbt.getDouble("heat_out");
 	}

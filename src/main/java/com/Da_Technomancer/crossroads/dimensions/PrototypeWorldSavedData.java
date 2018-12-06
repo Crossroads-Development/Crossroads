@@ -32,7 +32,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	 * DOES NOT call markDirty() by default unless just being created, modifiers should call it manually.
 	 * Do not call until after the overworld has been initialized.
 	 * Designed to lose all data if the prototype dimension file is deleted.
-	 * @param forceInitWorld If true, this will init (load) the prototype world even if this doesn't have to. 
+	 * @param forceInitWorld If true, this will initHeat (load) the prototype world even if this doesn't have to.
 	 * @return The PrototypeWorldSavedData instance.
 	 */
 	public static PrototypeWorldSavedData get(boolean forceInitWorld){

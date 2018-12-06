@@ -23,6 +23,14 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
+	protected void initHeat(){
+		if(!init){
+			init = true;
+			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		}
+	}
+
+	@Override
 	protected int transferCapacity(){
 		return 200;
 	}
@@ -130,16 +138,9 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 
 	private class HeatHandler implements IHeatHandler{
 
-		private void init(){
-			if(!init){
-				init = true;
-				cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-			}
-		}
-
 		@Override
 		public double getTemp(){
-			init();
+			initHeat();
 			return cableTemp;
 		}
 
@@ -154,7 +155,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 
 		@Override
 		public void addHeat(double tempChange){
-			init();
+			initHeat();
 			cableTemp += tempChange;
 			//Shares heat between internal cable & contents
 			dirtyReag = true;

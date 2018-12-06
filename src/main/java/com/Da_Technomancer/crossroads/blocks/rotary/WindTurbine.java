@@ -62,7 +62,7 @@ public class WindTurbine extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, placer.getHorizontalFacing().getOpposite());
+		return getDefaultState().withProperty(Properties.HORIZ_FACING, placer.getHorizontalFacing());
 	}
 
 	@Override
