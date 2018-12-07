@@ -183,8 +183,8 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTankGlass, 1), "*_*", "_ _", "*_*", '*', "ingotBronze", '_', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentTankCrystal, 1), "*_*", "_ _", "*_*", '*', "ingotBronze", '_', "gemAlcCryst"));
 		//Redstone Alchemical Tube
-		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTubeGlass, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTubeGlass, 1, 0)));
-		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTubeCrystal, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTubeCrystal, 1, 1)));
+		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTubeGlass, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTubeGlass, 1)));
+		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTubeCrystal, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTubeCrystal, 1)));
 		//Tesla Coil
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoil, 2), "|||", "^*^", "|||", '*', "ingotCopper", '|', "ingotIron", '^', "dustRedstone"));
 		//Tesla Coil Tops
@@ -206,7 +206,7 @@ public final class ModCrafting{
 
 
 		//Flying Machine
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.flyingMachine, 1), "___", "@-@", "|+|", '_', "ingotBronze", '@', "gearCopshowium", '-', new ItemStack(ModBlocks.densusPlate, 1, 1), '+', new ItemStack(ModBlocks.densusPlate, 1, 0), '|', "stickIron"));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.flyingMachine, 1), "___", "@-@", "|+|", '_', "ingotBronze", '@', "gearCopshowium", '-', new ItemStack(ModBlocks.antiDensusPlate, 1), '+', new ItemStack(ModBlocks.densusPlate, 1), '|', "stickIron"));
 		//Copshowium Creation Chamber
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModBlocks.fluidCoolingChamber));
 		//Chunk Unlocker
