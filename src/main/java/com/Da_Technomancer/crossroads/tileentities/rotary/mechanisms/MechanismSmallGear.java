@@ -40,7 +40,7 @@ public class MechanismSmallGear implements IMechanism{
 
 	@Override
 	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
-		return (cap == Capabilities.COG_HANDLER_CAPABILITY || cap == Capabilities.AXLE_HANDLER_CAPABILITY) && side == capSide;
+		return (cap == Capabilities.COG_CAPABILITY || cap == Capabilities.AXLE_CAPABILITY) && side == capSide;
 	}
 
 	@Override
@@ -78,25 +78,25 @@ public class MechanismSmallGear implements IMechanism{
 		//Connected block
 		TileEntity sideTE = te.getWorld().getTileEntity(te.getPos().offset(side));
 		if(sideTE != null){
-			if(sideTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, side.getOpposite())){
-				sideTE.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, side.getOpposite()).trigger(masterIn, key);
+			if(sideTE.hasCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite())){
+				sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite()).trigger(masterIn, key);
 			}
-			if(sideTE.hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, side.getOpposite())){
-				masterIn.addAxisToList(sideTE.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, side.getOpposite()), side.getOpposite());
+			if(sideTE.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite())){
+				masterIn.addAxisToList(sideTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite()), side.getOpposite());
 			}
-			if(sideTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
-				sideTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+			if(sideTE.hasCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite())){
+				sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite()).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 			}
 		}
 
 		//Axle slot
-		if(te.axleAxis == side.getAxis() && te.members[6] != null && te.members[6].hasCap(Capabilities.AXLE_HANDLER_CAPABILITY, side, te.mats[6], null, te.axleAxis, te)){
+		if(te.axleAxis == side.getAxis() && te.members[6] != null && te.members[6].hasCap(Capabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.axleAxis, te)){
 			te.axleHandlers[6].propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 		}
 
 		//Other internal gears
 		for(int i = 0; i < 6; i++){
-			if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_HANDLER_CAPABILITY, EnumFacing.byIndex(i), te.mats[i], EnumFacing.byIndex(i), te.axleAxis, te)){
+			if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, EnumFacing.byIndex(i), te.mats[i], EnumFacing.byIndex(i), te.axleAxis, te)){
 				te.axleHandlers[i].propogate(masterIn, key, RotaryUtil.getDirSign(side, EnumFacing.byIndex(i)) * handler.rotRatio, .5D, handler.renderOffset);
 			}
 		}
@@ -107,22 +107,22 @@ public class MechanismSmallGear implements IMechanism{
 				// Adjacent gears
 				TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
 				if(adjTE != null){
-					if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){
-						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D, facing.getOpposite(), handler.renderOffset);
-					}else if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+					if(adjTE.hasCapability(Capabilities.COG_CAPABILITY, side)){
+						adjTE.getCapability(Capabilities.COG_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D, facing.getOpposite(), handler.renderOffset);
+					}else if(adjTE.hasCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())){
 						//Check for large gears
-						adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side, handler.renderOffset);
+						adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side, handler.renderOffset);
 					}
 				}
 
 				// Diagonal gears
 				TileEntity diagTE = te.getWorld().getTileEntity(te.getPos().offset(facing).offset(side));
-				if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(te.getWorld(), te.getPos().offset(facing), facing.getOpposite(), side)){
-					diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite(), handler.renderOffset);
+				if(diagTE != null && diagTE.hasCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(te.getWorld(), te.getPos().offset(facing), facing.getOpposite(), side)){
+					diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite(), handler.renderOffset);
 				}
 
-				if(sideTE != null && sideTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing)){
-					sideTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset);
+				if(sideTE != null && sideTE.hasCapability(Capabilities.COG_CAPABILITY, facing)){
+					sideTE.getCapability(Capabilities.COG_CAPABILITY, facing).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset);
 				}
 			}
 		}

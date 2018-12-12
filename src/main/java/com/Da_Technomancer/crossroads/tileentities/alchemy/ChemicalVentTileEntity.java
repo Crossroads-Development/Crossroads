@@ -16,7 +16,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -25,7 +25,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);

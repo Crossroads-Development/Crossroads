@@ -90,7 +90,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 			return (T) fluidHandler;
 		}
 
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return (T) heatHandler;
 		}
 

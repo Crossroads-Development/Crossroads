@@ -223,10 +223,10 @@ public class RedstoneHeatCable extends BlockContainer implements IConduitModel{
 	@Override
 	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
 		RedstoneHeatCableTileEntity te = (RedstoneHeatCableTileEntity) worldIn.getTileEntity(pos);
-		if(!te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
+		if(!te.hasCapability(Capabilities.HEAT_CAPABILITY, null)){
 			return 0;
 		}
-		double holder = HeatUtil.toKelvin(te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp()) / HeatUtil.toKelvin(insulator.getLimit());
+		double holder = HeatUtil.toKelvin(te.getCapability(Capabilities.HEAT_CAPABILITY, null).getTemp()) / HeatUtil.toKelvin(insulator.getLimit());
 		holder *= 16D;
 
 		return Math.min(15, (int) holder);

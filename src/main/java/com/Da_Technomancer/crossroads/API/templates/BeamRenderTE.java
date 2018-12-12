@@ -179,7 +179,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> cap, EnumFacing dir){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (dir == null || inputSides()[dir.getIndex()])){
+		if(cap == Capabilities.MAGIC_CAPABILITY && (dir == null || inputSides()[dir.getIndex()])){
 			return (T) handler;
 		}
 		return super.getCapability(cap, dir);

@@ -16,8 +16,8 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickable{
 	public void update(){
 		EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 		TileEntity te = world.getTileEntity(pos.offset(facing));
-		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
-			IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
+		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite())){
+			IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite());
 			if(world.isRemote){
 				angle = axle.getAngle();
 				nextAngle = axle.getNextAngle();

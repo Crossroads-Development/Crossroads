@@ -197,10 +197,10 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || getAxis() == side.getAxis())){
+		if(cap == Capabilities.MAGIC_CAPABILITY && (side == null || getAxis() == side.getAxis())){
 			return true;
 		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return true;
 		}
 
@@ -211,13 +211,13 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || getAxis() == side.getAxis())){
+		if(cap == Capabilities.MAGIC_CAPABILITY && (side == null || getAxis() == side.getAxis())){
 			return side == null || side.getAxisDirection() == AxisDirection.POSITIVE ? (T) magicHandler : (T) magicHandlerNeg;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) lensHandler;
 		}
-		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redstoneHandler;
 		}
 

@@ -67,7 +67,7 @@ public class RadiatorTileEntity extends InventoryTE{
 			}
 		}
 
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && side != EnumFacing.UP && side != EnumFacing.DOWN){
+		if(cap == Capabilities.HEAT_CAPABILITY && side != EnumFacing.UP && side != EnumFacing.DOWN){
 			return (T) heatHandler;
 		}
 

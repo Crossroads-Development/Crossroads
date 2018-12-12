@@ -28,7 +28,7 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 	@Override
 	public void render(StampMillTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		IBlockState state = te.getWorld().getBlockState(te.getPos());
-		IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, null);
+		IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || state.getBlock() != ModBlocks.stampMill || axle == null){
 			return;
 		}

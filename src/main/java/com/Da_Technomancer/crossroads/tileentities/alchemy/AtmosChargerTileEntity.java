@@ -154,19 +154,19 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		return (cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side == EnumFacing.DOWN)) || (cap == CapabilityEnergy.ENERGY && side != EnumFacing.UP) || (cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && (side == null || side.getAxis() != EnumFacing.Axis.Y)) || super.hasCapability(cap, side);
+		return (cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == EnumFacing.DOWN)) || (cap == CapabilityEnergy.ENERGY && side != EnumFacing.UP) || (cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && (side == null || side.getAxis() != EnumFacing.Axis.Y)) || super.hasCapability(cap, side);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side == EnumFacing.DOWN)){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == EnumFacing.DOWN)){
 			return (T) handler;
 		}
 		if(cap == CapabilityEnergy.ENERGY && side != EnumFacing.UP){
 			return (T) feHandler;
 		}
-		if((cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && (side == null || side.getAxis() != EnumFacing.Axis.Y))){
+		if((cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && (side == null || side.getAxis() != EnumFacing.Axis.Y))){
 			return (T) redsHandler;
 		}
 		return super.getCapability(cap, side);

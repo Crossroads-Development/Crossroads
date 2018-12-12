@@ -44,11 +44,11 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	protected void performTransfer(){
 		EnumFacing side = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 		TileEntity te = world.getTileEntity(pos.offset(side));
-		if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+		if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
 			return;
 		}
 
-		IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
+		IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
 		EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 		if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
 			return;
@@ -101,7 +101,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -110,7 +110,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis())){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);

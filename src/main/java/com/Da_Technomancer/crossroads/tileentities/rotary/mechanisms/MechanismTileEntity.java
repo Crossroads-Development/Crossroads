@@ -261,26 +261,26 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing != null){
+		if(capability == Capabilities.COG_CAPABILITY && facing != null){
 			return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this);
 		}
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing != null){
+		if(capability == Capabilities.AXLE_CAPABILITY && facing != null){
 			return members[facing.getIndex()] == null && axleAxis == facing.getAxis() ? members[6].hasCap(capability, facing, mats[6], null, axleAxis, this) : members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this);
 		}
 
-		return capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+		return capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY || super.hasCapability(capability, facing);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.COG_HANDLER_CAPABILITY && facing != null){
+		if(capability == Capabilities.COG_CAPABILITY && facing != null){
 			return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this) ? (T) cogHandlers[facing.getIndex()] : null;
 		}
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing != null){
+		if(capability == Capabilities.AXLE_CAPABILITY && facing != null){
 			return members[facing.getIndex()] == null && axleAxis == facing.getAxis() ? members[6].hasCap(capability, facing, mats[6], null, axleAxis, this) ? (T) axleHandlers[6] : null : members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this) ? (T) axleHandlers[facing.getIndex()] : null;
 		}
-		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+		if(capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redsHandler;
 		}
 

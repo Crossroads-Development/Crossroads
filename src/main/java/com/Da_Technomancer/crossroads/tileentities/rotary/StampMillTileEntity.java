@@ -114,7 +114,7 @@ public class StampMillTileEntity extends InventoryTE{
 		}
 
 		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() == ModBlocks.stampMill && cap == Capabilities.AXLE_HANDLER_CAPABILITY && (side == null || side.getAxis() == state.getValue(Properties.HORIZ_AXIS))){
+		if(state.getBlock() == ModBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.getValue(Properties.HORIZ_AXIS))){
 			return (T) axleHandler;
 		}
 
@@ -143,14 +143,14 @@ public class StampMillTileEntity extends InventoryTE{
 				EnumFacing side = EnumFacing.getFacingFromAxis(dir, ax);
 				TileEntity te = world.getTileEntity(pos.offset(side));
 				if(te != null){
-					if(te.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, side.getOpposite())){
-						te.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, side.getOpposite()).trigger(masterIn, key);
+					if(te.hasCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite())){
+						te.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite()).trigger(masterIn, key);
 					}
-					if(te.hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, side.getOpposite())){
-						masterIn.addAxisToList(te.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, side.getOpposite()), side.getOpposite());
+					if(te.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite())){
+						masterIn.addAxisToList(te.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite()), side.getOpposite());
 					}
-					if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite())){
-						te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side.getOpposite()).propogate(masterIn, key, rotRatioIn, lastRadius, renderOffset);
+					if(te.hasCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite())){
+						te.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite()).propogate(masterIn, key, rotRatioIn, lastRadius, renderOffset);
 					}
 				}
 			}

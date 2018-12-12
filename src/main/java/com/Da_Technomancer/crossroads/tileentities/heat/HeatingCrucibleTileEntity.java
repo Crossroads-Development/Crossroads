@@ -158,7 +158,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 			return (T) fluidHandler;
 		}
 
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
 			return (T) heatHandler;
 		}
 

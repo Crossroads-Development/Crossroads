@@ -45,8 +45,8 @@ public class DynamoTileEntity extends ModuleTE{
 		if(world.isRemote){
 			EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 			TileEntity neighbor = world.getTileEntity(pos.offset(facing));
-			if(neighbor != null && neighbor.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
-				IAxleHandler handler = neighbor.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite());
+			if(neighbor != null && neighbor.hasCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite())){
+				IAxleHandler handler = neighbor.getCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite());
 				angle = handler.getAngle();
 				nextAngle = handler.getNextAngle();
 			}else{
@@ -96,7 +96,7 @@ public class DynamoTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && (side == null || side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING))){
+		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING))){
 			return (T) axleHandler;
 		}
 		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getOpposite())){

@@ -1,10 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneReceiverTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.RedstoneTransmitterTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -21,7 +19,6 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -47,35 +44,20 @@ public class RedstoneReceiver extends BlockContainer{
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(!worldIn.isRemote){
-			ItemStack heldItem = playerIn.getHeldItem(hand);
-			if(EssentialsConfig.isWrench(heldItem, false)){
-				if(heldItem.hasTagCompound() && heldItem.getTagCompound().hasKey("c_link")){
-					BlockPos prev = BlockPos.fromLong(heldItem.getTagCompound().getLong("c_link"));
-					TileEntity te = worldIn.getTileEntity(prev);
-					if(te instanceof RedstoneTransmitterTileEntity){
-						int range = ModConfig.getConfigInt(ModConfig.redstoneTransmitterRange, false);
-						if(prev.distanceSq(pos) <= range * range){
-							((RedstoneTransmitterTileEntity) te).link(pos);
-							playerIn.sendMessage(new TextComponentString("Linked transmitter at " + prev + " to send to " + pos + "."));
-							heldItem.getTagCompound().removeTag("c_link");
-						}else{
-							playerIn.sendMessage(new TextComponentString("Out of range; Canceling linking."));
-							heldItem.getTagCompound().removeTag("c_link");
-						}
-					}else{
-						playerIn.sendMessage(new TextComponentString("Invalid pair; Canceling linking."));
-						heldItem.getTagCompound().removeTag("c_link");
-					}
-				}
-			}else if(heldItem.getItem() == Items.DYE){
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof RedstoneReceiverTileEntity){
-					((RedstoneReceiverTileEntity) te).dye(EnumDyeColor.byDyeDamage(heldItem.getMetadata()));
-				}
+		ItemStack heldItem = playerIn.getHeldItem(hand);
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(EssentialsConfig.isWrench(heldItem, false) && te instanceof RedstoneReceiverTileEntity){
+			if(!worldIn.isRemote){
+				((RedstoneReceiverTileEntity) te).wrench(heldItem, playerIn);
 			}
+			return true;
+		}else if(heldItem.getItem() == Items.DYE && te instanceof RedstoneReceiverTileEntity){
+			if(!worldIn.isRemote){
+				((RedstoneReceiverTileEntity) te).dye(EnumDyeColor.byDyeDamage(heldItem.getMetadata()));
+			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override

@@ -179,7 +179,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}
-		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == EnumFacing.UP){
+		if(cap == Capabilities.AXLE_CAPABILITY && side == EnumFacing.UP){
 			return (T) axleHandler;
 		}
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){

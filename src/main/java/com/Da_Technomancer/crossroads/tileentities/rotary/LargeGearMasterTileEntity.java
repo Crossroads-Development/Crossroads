@@ -175,7 +175,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
 			return type != null;
 		}
 		return super.hasCapability(capability, facing);
@@ -184,7 +184,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
 			return (T) handlerMain;
 		}
 		return super.getCapability(capability, facing);
@@ -237,15 +237,15 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 				TileEntity connectTE = world.getTileEntity(pos.offset(axleDir));
 				
 				if(connectTE != null){
-					if(connectTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, axleDir.getOpposite())){
-						connectTE.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, axleDir.getOpposite()).trigger(masterIn, key);
+					if(connectTE.hasCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite())){
+						connectTE.getCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite()).trigger(masterIn, key);
 					}
-					if(connectTE.hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, axleDir.getOpposite())){
-						masterIn.addAxisToList(connectTE.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, axleDir.getOpposite()), axleDir.getOpposite());
+					if(connectTE.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, axleDir.getOpposite())){
+						masterIn.addAxisToList(connectTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, axleDir.getOpposite()), axleDir.getOpposite());
 					}
 
-					if(connectTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, axleDir.getOpposite())){
-						connectTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, axleDir.getOpposite()).propogate(masterIn, key, rotRatio, 0, renderOffset);
+					if(connectTE.hasCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite())){
+						connectTE.getCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite()).propogate(masterIn, key, rotRatio, 0, renderOffset);
 					}
 				}
 			}
@@ -259,24 +259,24 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 					// Adjacent gears
 					TileEntity adjTE = world.getTileEntity(pos.offset(facing, 2));
 					if(adjTE != null){
-						if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, side)){
-							adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, side).connect(masterIn, key, -rotRatio, 1.5D, facing.getOpposite(), renderOffset);
-						}else if(adjTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite())){
+						if(adjTE.hasCapability(Capabilities.COG_CAPABILITY, side)){
+							adjTE.getCapability(Capabilities.COG_CAPABILITY, side).connect(masterIn, key, -rotRatio, 1.5D, facing.getOpposite(), renderOffset);
+						}else if(adjTE.hasCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())){
 							//Check for large gears
-							adjTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side, renderOffset);
+							adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side, renderOffset);
 						}
 					}
 
 					// Diagonal gears
 					TileEntity diagTE = world.getTileEntity(pos.offset(facing, 2).offset(side));
-					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(world, pos.offset(facing, 2), facing.getOpposite(), side)){
-						diagTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite(), renderOffset);
+					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(world, pos.offset(facing, 2), facing.getOpposite(), side)){
+						diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite(), renderOffset);
 					}
 
 					//Underside gears
 					TileEntity undersideTE = world.getTileEntity(pos.offset(facing, 1).offset(side));
-					if(undersideTE != null && undersideTE.hasCapability(Capabilities.COG_HANDLER_CAPABILITY, facing)){
-						undersideTE.getCapability(Capabilities.COG_HANDLER_CAPABILITY, facing).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite(), renderOffset);
+					if(undersideTE != null && undersideTE.hasCapability(Capabilities.COG_CAPABILITY, facing)){
+						undersideTE.getCapability(Capabilities.COG_CAPABILITY, facing).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite(), renderOffset);
 					}
 				}
 			}

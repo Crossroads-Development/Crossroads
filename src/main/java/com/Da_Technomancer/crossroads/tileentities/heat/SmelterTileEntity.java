@@ -93,7 +93,7 @@ public class SmelterTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == EnumFacing.UP || side == null)){
+		if(cap == Capabilities.HEAT_CAPABILITY && (side == EnumFacing.UP || side == null)){
 			return (T) heatHandler;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != EnumFacing.UP){

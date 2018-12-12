@@ -13,13 +13,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -46,49 +44,10 @@ public class TeslaCoilTop extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote) && variant != TeslaCoilVariants.ATTACK){
-			if(!worldIn.isRemote){
-				if(playerIn.isSneaking()){
-					playerIn.sendMessage(new TextComponentString("Clearing tesla coil links."));
-					TileEntity te = worldIn.getTileEntity(pos);
-					if(te instanceof TeslaCoilTopTileEntity){
-						((TeslaCoilTopTileEntity) te).linked = new BlockPos[3];
-					}
-				}else if(heldItem.hasTagCompound() && heldItem.getTagCompound().hasKey("c_link")){
-					BlockPos prev = BlockPos.fromLong(heldItem.getTagCompound().getLong("c_link"));
-					TileEntity te = worldIn.getTileEntity(prev);
-					if(te instanceof TeslaCoilTopTileEntity){
-						BlockPos[] links = ((TeslaCoilTopTileEntity) te).linked;
-						if(prev.distanceSq(pos) <= TeslaCoilVariants.DISTANCE.range * TeslaCoilVariants.DISTANCE.range){
-							for(int i = 0; i < 3; i++){
-								if(links[i] == null){
-									links[i] = pos.subtract(prev);
-									playerIn.sendMessage(new TextComponentString("Linked coil at " + prev + " to send to " + pos + "."));
-									heldItem.getTagCompound().removeTag("c_link");
-									return true;
-								}
-							}
-							playerIn.sendMessage(new TextComponentString("All 3 links already occupied; Canceling linking."));
-							heldItem.getTagCompound().removeTag("c_link");
-						}else{
-							playerIn.sendMessage(new TextComponentString("Out of range; Canceling linking."));
-							heldItem.getTagCompound().removeTag("c_link");
-						}
-					}else{
-						playerIn.sendMessage(new TextComponentString("Invalid pair; Canceling linking."));
-						heldItem.getTagCompound().removeTag("c_link");
-					}
-				}else{
-					if(!heldItem.hasTagCompound()){
-						heldItem.setTagCompound(new NBTTagCompound());
-					}
-
-					TileEntity te = worldIn.getTileEntity(pos);
-					if(te instanceof TeslaCoilTopTileEntity){
-						heldItem.getTagCompound().setLong("c_link", pos.toLong());
-						playerIn.sendMessage(new TextComponentString("Beginning linking."));
-					}
-				}
+		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(!worldIn.isRemote && te instanceof TeslaCoilTopTileEntity){
+				((TeslaCoilTopTileEntity) te).wrench(heldItem, playerIn);
 			}
 			return true;
 		}

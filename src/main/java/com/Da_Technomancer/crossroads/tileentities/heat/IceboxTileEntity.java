@@ -74,7 +74,7 @@ public class IceboxTileEntity extends InventoryTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return (T) heatHandler;
 		}
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){

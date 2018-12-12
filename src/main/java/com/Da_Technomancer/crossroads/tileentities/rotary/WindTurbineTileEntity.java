@@ -132,7 +132,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && (facing == null || facing == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getOpposite())){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getOpposite())){
 			return (T) axleHandler;
 		}
 		return super.getCapability(capability, facing);

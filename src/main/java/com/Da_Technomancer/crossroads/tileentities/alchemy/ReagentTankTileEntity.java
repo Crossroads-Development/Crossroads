@@ -59,7 +59,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return true;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
@@ -71,7 +71,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) handler;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){

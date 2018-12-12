@@ -41,13 +41,13 @@ public class RedstoneKeyboardTileEntity extends TileEntity implements IDoubleRec
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		return cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY || super.hasCapability(cap, side);
+		return cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY || super.hasCapability(cap, side);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redstoneHandler;
 		}
 		return super.getCapability(cap, side);

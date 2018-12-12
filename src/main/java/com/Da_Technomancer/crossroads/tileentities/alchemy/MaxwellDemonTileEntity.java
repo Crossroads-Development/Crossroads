@@ -51,7 +51,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 			EnumFacing dir = EnumFacing.byIndex(i);
 
 			TileEntity te = world.getTileEntity(pos.offset(dir));
-			if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			if(te != null && te.hasCapability(Capabilities.HEAT_CAPABILITY, EnumFacing.DOWN)){
 				double reservePool = i == 0 ? tempDown : tempUp;
 				if(i == 0){
 					tempDown -= reservePool;
@@ -60,7 +60,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 				}
 
 
-				IHeatHandler handler = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, EnumFacing.DOWN);
+				IHeatHandler handler = te.getCapability(Capabilities.HEAT_CAPABILITY, EnumFacing.DOWN);
 				reservePool += handler.getTemp();
 				handler.addHeat(-handler.getTemp());
 				reservePool /= 2;
@@ -96,7 +96,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == null || side.getAxis() == Axis.Y)){
+		if(cap == Capabilities.HEAT_CAPABILITY && (side == null || side.getAxis() == Axis.Y)){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -105,7 +105,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY){
+		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == EnumFacing.UP){
 				return (T) heatHandlerUp;
 			}else if(side == EnumFacing.DOWN){

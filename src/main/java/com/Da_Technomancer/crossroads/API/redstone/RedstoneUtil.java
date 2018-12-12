@@ -36,8 +36,8 @@ public class RedstoneUtil{
 	 */
 	public static double getPowerOnSide(World worldIn, BlockPos pos, EnumFacing side){
 		TileEntity te = worldIn.getTileEntity(pos.offset(side));
-		if(te != null && te.hasCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite())){
-			return te.getCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite()).getOutput(false);
+		if(te != null && te.hasCapability(Capabilities.ADVANCED_REDSTONE_CAPABILITY, side.getOpposite())){
+			return te.getCapability(Capabilities.ADVANCED_REDSTONE_CAPABILITY, side.getOpposite()).getOutput(false);
 		}else{
 			return worldIn.getRedstonePower(pos.offset(side), side);
 		}
@@ -55,8 +55,8 @@ public class RedstoneUtil{
 
 		TileEntity te = worldIn.getTileEntity(offsetPos);
 
-		if(te != null && te.hasCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite())){
-			return te.getCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite()).getOutput(true);
+		if(te != null && te.hasCapability(Capabilities.ADVANCED_REDSTONE_CAPABILITY, side.getOpposite())){
+			return te.getCapability(Capabilities.ADVANCED_REDSTONE_CAPABILITY, side.getOpposite()).getOutput(true);
 		}
 
 		IBlockState state = worldIn.getBlockState(offsetPos);
@@ -77,8 +77,8 @@ public class RedstoneUtil{
 			offsetPos = pos.offset(side, 2);
 			state = worldIn.getBlockState(offsetPos);
 			te = worldIn.getTileEntity(offsetPos);
-			if(te != null && te.hasCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite())){
-				return te.getCapability(Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY, side.getOpposite()).getOutput(true);
+			if(te != null && te.hasCapability(Capabilities.ADVANCED_REDSTONE_CAPABILITY, side.getOpposite())){
+				return te.getCapability(Capabilities.ADVANCED_REDSTONE_CAPABILITY, side.getOpposite()).getOutput(true);
 			}
 
 			if(state.hasComparatorInputOverride()){

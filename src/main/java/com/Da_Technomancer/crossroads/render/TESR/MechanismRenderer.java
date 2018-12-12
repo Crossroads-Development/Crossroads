@@ -32,8 +32,8 @@ public class MechanismRenderer extends TileEntitySpecialRenderer<MechanismTileEn
 //		Color color;
 //
 //		for(EnumFacing side : EnumFacing.values()){
-//			if(te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side)){
-//				IAxleHandler handler = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side);
+//			if(te.hasCapability(Capabilities.AXLE_CAPABILITY, side)){
+//				IAxleHandler handler = te.getCapability(Capabilities.AXLE_CAPABILITY, side);
 //				color = te.getMembers()[side.getIndex()].getColor();
 //				GlStateManager.pushMatrix();
 //				GlStateManager.pushAttrib();

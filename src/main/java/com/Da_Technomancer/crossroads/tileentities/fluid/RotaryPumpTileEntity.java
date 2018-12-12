@@ -114,7 +114,7 @@ public class RotaryPumpTileEntity extends ModuleTE{
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) fluidHandler;
 		}
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
 			return (T) axleHandler;
 		}
 

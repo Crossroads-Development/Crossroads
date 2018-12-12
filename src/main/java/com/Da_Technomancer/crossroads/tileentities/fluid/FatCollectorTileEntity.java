@@ -67,7 +67,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.DOWN && facing != EnumFacing.UP){
 			return (T) mainHandler;
 		}
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
 			return (T) heatHandler;
 		}
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){

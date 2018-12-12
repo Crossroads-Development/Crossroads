@@ -34,8 +34,8 @@ public class CheatWandHeat extends Item{
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		TileEntity te = worldIn.getTileEntity(pos);
-		if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
-			IHeatHandler cable = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null);
+		if(te != null && te.hasCapability(Capabilities.HEAT_CAPABILITY, null)){
+			IHeatHandler cable = te.getCapability(Capabilities.HEAT_CAPABILITY, null);
 			if(playerIn.isSneaking()){
 				cable.setTemp(Math.max(HeatUtil.ABSOLUTE_ZERO, cable.getTemp() - 100));
 			}else{

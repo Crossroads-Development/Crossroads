@@ -306,11 +306,11 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			if(modes[i].isOutput()){
 				EnumFacing side = EnumFacing.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
-				if(contents.getTotalQty() <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+				if(contents.getTotalQty() <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
 					continue;
 				}
 
-				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
+				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass) || otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
 					continue;

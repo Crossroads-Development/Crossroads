@@ -111,10 +111,10 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) handler;
 		}
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY){
+		if(cap == Capabilities.HEAT_CAPABILITY){
 			return (T) heatHandler;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){

@@ -149,16 +149,16 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 		}
 		int[] coords = new int[3];
 		TileEntity te = world.getTileEntity(pos.offset(EnumFacing.DOWN, 2).offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align), 3));
-		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align))){
-			coords[0] = (int) Math.round(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align)).getMotionData()[0]);
+		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align))){
+			coords[0] = (int) Math.round(te.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align)).getMotionData()[0]);
 		}
 		te = world.getTileEntity(pos.offset(EnumFacing.DOWN, 2).offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align), 3));
-		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align))){
-			coords[2] = (int) Math.round(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align)).getMotionData()[0]);
+		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align))){
+			coords[2] = (int) Math.round(te.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align)).getMotionData()[0]);
 		}
 		te = world.getTileEntity(pos.offset(EnumFacing.UP));
-		if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-			coords[1] = (int) Math.round(te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0]);
+		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN)){
+			coords[1] = (int) Math.round(te.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN).getMotionData()[0]);
 		}
 
 		return new BlockPos(coords[0], coords[1], coords[2]);
@@ -166,7 +166,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
+		if(cap == Capabilities.MAGIC_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
 			return true;
 		}
 
@@ -176,7 +176,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
+		if(cap == Capabilities.MAGIC_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
 			return (T) magicHandler;
 		}
 

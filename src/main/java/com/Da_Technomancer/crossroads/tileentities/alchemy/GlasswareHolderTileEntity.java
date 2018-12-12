@@ -147,11 +147,11 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		if(state.getBlock() == ModBlocks.glasswareHolder && state.getValue(Properties.ACTIVE)){
 			EnumFacing side = EnumFacing.UP;
 			TileEntity te = world.getTileEntity(pos.offset(side));
-			if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+			if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
 				return;
 			}
 
-			IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
+			IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
 			EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 			if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
 				return;
@@ -193,10 +193,10 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if((side == null || side == EnumFacing.UP) && cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && occupied){
+		if((side == null || side == EnumFacing.UP) && cap == Capabilities.CHEMICAL_CAPABILITY && occupied){
 			return (T) handler;
 		}
-		if((side == null || side == EnumFacing.DOWN) && cap == Capabilities.HEAT_HANDLER_CAPABILITY){
+		if((side == null || side == EnumFacing.DOWN) && cap == Capabilities.HEAT_CAPABILITY){
 			IBlockState state = world.getBlockState(pos);
 			if(state.getValue(Properties.CONTAINER_TYPE)){
 				return (T) heatHandler;

@@ -192,7 +192,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY){
+		if(cap == Capabilities.AXLE_CAPABILITY){
 			if(side == EnumFacing.DOWN || side == EnumFacing.EAST || side == EnumFacing.WEST){
 				return true;
 			}
@@ -203,7 +203,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY){
+		if(cap == Capabilities.AXLE_CAPABILITY){
 			if(side == EnumFacing.DOWN){
 				return (T) axles[0];
 			}else if(side == EnumFacing.EAST){

@@ -1,18 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-
-import java.util.ArrayList;
 
 public class HeatReservoirTileEntity extends ModuleTE{
 
@@ -36,7 +28,7 @@ public class HeatReservoirTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY){
+		if(capability == Capabilities.HEAT_CAPABILITY){
 			return (T) heatHandler;
 		}
 		return super.getCapability(capability, facing);

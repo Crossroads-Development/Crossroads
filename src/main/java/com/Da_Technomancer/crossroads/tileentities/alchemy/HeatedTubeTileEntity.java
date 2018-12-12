@@ -44,10 +44,10 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getAxis())){
 			return (T) handler;
 		}
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == null || side.getAxis() == EnumFacing.Axis.Y)){
+		if(cap == Capabilities.HEAT_CAPABILITY && (side == null || side.getAxis() == EnumFacing.Axis.Y)){
 			return (T) heatHandler;
 		}
 		return super.getCapability(cap, side);

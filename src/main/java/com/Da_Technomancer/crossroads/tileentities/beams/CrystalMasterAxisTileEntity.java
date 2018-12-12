@@ -117,10 +117,10 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != getFacing()){
+		if(cap == Capabilities.MAGIC_CAPABILITY && side != getFacing()){
 			return true;
 		}
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == getFacing())){
+		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return true;
 		}
 
@@ -130,10 +130,10 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != getFacing()){
+		if(cap == Capabilities.MAGIC_CAPABILITY && side != getFacing()){
 			return (T) magicHandler;
 		}
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == getFacing())){
+		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return (T) handler;
 		}
 

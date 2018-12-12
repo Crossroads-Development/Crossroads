@@ -159,7 +159,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == getFacing())){
+		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -170,7 +170,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == getFacing())){
+		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);
@@ -199,14 +199,14 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			locked = false;
 			EnumFacing dir = getFacing();
 			TileEntity te = world.getTileEntity(pos.offset(dir));
-			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite())){
+			if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())){
 				byte keyNew;
 				do {
 					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
 
-				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, dir.getOpposite()).propogate(this, key, 1, 0, false);
+				te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite()).propogate(this, key, 1, 0, false);
 			}
 
 			if(!memberCopy.containsAll(rotaryMembers)){

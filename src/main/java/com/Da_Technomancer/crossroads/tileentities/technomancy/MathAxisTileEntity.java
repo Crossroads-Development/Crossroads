@@ -80,12 +80,12 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	protected void runCalc(){
 		EnumFacing side1 = getFacing().getOpposite();
 		TileEntity te1 = world.getTileEntity(pos.offset(side1));
-		double in1 = te1 != null && te1.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side1.getOpposite()) ? te1.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, side1.getOpposite()).getMotionData()[0] : 0;
+		double in1 = te1 != null && te1.hasCapability(Capabilities.AXLE_CAPABILITY, side1.getOpposite()) ? te1.getCapability(Capabilities.AXLE_CAPABILITY, side1.getOpposite()).getMotionData()[0] : 0;
 		double in2 = 0;
 
 		if(mode.format == Arrangement.DOUBLE){
 			TileEntity te2 = world.getTileEntity(pos.offset(EnumFacing.UP));
-			in2 = te2 != null && te2.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN) ? te2.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] : 0;
+			in2 = te2 != null && te2.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN) ? te2.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] : 0;
 		}
 
 		double targetSpeed = mode.getFunction().applyAsDouble(in1, in2);
@@ -98,7 +98,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 
 		double cost = sumIRot * Math.pow(targetSpeed, 2) / 2D;
 		TileEntity batteryTE = world.getTileEntity(pos.offset(EnumFacing.DOWN));
-		IAxleHandler sourceAxle = batteryTE == null ? null : batteryTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.UP);
+		IAxleHandler sourceAxle = batteryTE == null ? null : batteryTE.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.UP);
 
 		double availableEnergy = Math.abs(sumEnergy);
 		if(sourceAxle != null){
@@ -166,7 +166,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY && (side == getFacing().getOpposite() || (mode.format == Arrangement.DOUBLE && side == EnumFacing.UP))){
+		if(cap == Capabilities.SLAVE_AXIS_CAPABILITY && (side == getFacing().getOpposite() || (mode.format == Arrangement.DOUBLE && side == EnumFacing.UP))){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -175,10 +175,10 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == getFacing())){
+		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return (T) mathAxisHandler;
 		}
-		if(cap == Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY && (side == getFacing().getOpposite() || (mode.format == Arrangement.DOUBLE && side == EnumFacing.UP))){
+		if(cap == Capabilities.SLAVE_AXIS_CAPABILITY && (side == getFacing().getOpposite() || (mode.format == Arrangement.DOUBLE && side == EnumFacing.UP))){
 			return (T) slaveHandler;
 		}
 

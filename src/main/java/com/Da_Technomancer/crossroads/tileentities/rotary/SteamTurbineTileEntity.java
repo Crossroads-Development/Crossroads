@@ -50,8 +50,8 @@ public class SteamTurbineTileEntity extends ModuleTE{
 		if(world.isRemote){
 			IAxleHandler gear = null;
 			TileEntity te = world.getTileEntity(pos.offset(EnumFacing.UP));
-			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
-				gear = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN);
+			if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN)){
+				gear = te.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN);
 			}
 			completion = (float) (gear == null ? 0 : gear.getAngle());
 			return;
@@ -102,7 +102,7 @@ public class SteamTurbineTileEntity extends ModuleTE{
 				return (T) waterHandler;
 			}
 		}
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.UP){
+		if(capability == Capabilities.AXLE_CAPABILITY && facing == EnumFacing.UP){
 			return (T) axleHandler;
 		}
 

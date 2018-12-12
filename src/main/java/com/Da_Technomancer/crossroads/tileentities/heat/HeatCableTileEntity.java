@@ -98,8 +98,8 @@ public class HeatCableTileEntity extends ModuleTE{
 			}
 
 			TileEntity te = world.getTileEntity(pos.offset(side));
-			if(te != null && te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite())){
-				IHeatHandler handler = te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, side.getOpposite());
+			if(te != null && te.hasCapability(Capabilities.HEAT_CAPABILITY, side.getOpposite())){
+				IHeatHandler handler = te.getCapability(Capabilities.HEAT_CAPABILITY, side.getOpposite());
 				temp += handler.getTemp();
 				handler.addHeat(-handler.getTemp());
 				heatHandlers.add(handler);
@@ -169,7 +169,7 @@ public class HeatCableTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == null || !locked[facing.getIndex()])){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || !locked[facing.getIndex()])){
 			return (T) heatHandler;
 		}
 		return super.getCapability(capability, facing);

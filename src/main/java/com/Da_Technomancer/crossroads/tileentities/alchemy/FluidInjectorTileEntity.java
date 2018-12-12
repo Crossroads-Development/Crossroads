@@ -33,7 +33,7 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || side == EnumFacing.DOWN)){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == EnumFacing.DOWN)){
 			return (T) handler;
 		}
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){

@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,11 +12,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE{
+public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE, ILinkTE{
 
 	private ArrayList<BlockPos> linked = new ArrayList<>();
 	private double output;
@@ -37,13 +40,15 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 
 
 	public void dye(EnumDyeColor color){
-		world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.COLOR, color));
+		if(world.getBlockState(pos).getValue(Properties.COLOR) != color){
+			world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.COLOR, color));
 
-		for(BlockPos link : linked){
-			BlockPos worldLink = pos.add(link);
-			IBlockState linkState = world.getBlockState(worldLink);
-			if(linkState.getBlock() == ModBlocks.redstoneReceiver){
-				world.setBlockState(worldLink, linkState.withProperty(Properties.COLOR, color));
+			for(BlockPos link : linked){
+				BlockPos worldLink = pos.add(link);
+				IBlockState linkState = world.getBlockState(worldLink);
+				if(linkState.getBlock() == ModBlocks.redstoneReceiver){
+					world.setBlockState(worldLink, linkState.withProperty(Properties.COLOR, color));
+				}
 			}
 		}
 	}
@@ -52,6 +57,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 		return output;
 	}
 
+	@Override
 	public void clearLinks(){
 		while(!linked.isEmpty()){
 			BlockPos linkPos = pos.add(linked.remove(0));
@@ -60,19 +66,6 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 				((RedstoneReceiverTileEntity) te).setSrc(null);
 			}
 			markDirty();
-		}
-	}
-
-	public void link(BlockPos link){
-		BlockPos linkPos = link.subtract(pos);
-		if(!linked.contains(linkPos)){
-			linked.add(linkPos);
-			TileEntity receiver = world.getTileEntity(link);
-			if(receiver instanceof RedstoneReceiverTileEntity){
-				((RedstoneReceiverTileEntity) receiver).setSrc(pos.subtract(link));
-			}
-
-			world.neighborChanged(linkPos, ModBlocks.redstoneTransmitter, linkPos);
 		}
 	}
 
@@ -105,5 +98,49 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 			nbt.setLong("link_" + i, linked.get(i).toLong());
 		}
 		return nbt;
+	}
+
+	@Override
+	public TileEntity getTE(){
+		return this;
+	}
+
+	@Override
+	public boolean canLink(ILinkTE otherTE){
+		return otherTE instanceof RedstoneReceiverTileEntity;
+	}
+
+	@Override
+	public ArrayList<BlockPos> getLinks(){
+		return linked;
+	}
+
+	@Override
+	public int getRange(){
+		return ModConfig.getConfigInt(ModConfig.redstoneTransmitterRange, false);
+	}
+
+	@Override
+	public int getMaxLinks(){
+		return 64;
+	}
+
+	@Override
+	public boolean link(ILinkTE endpoint, EntityPlayer player){
+		BlockPos linkPos = endpoint.getTE().getPos().subtract(pos);
+		if(linked.contains(linkPos)){
+			player.sendMessage(new TextComponentString("Device already linked; Canceling linking"));
+		}else if(linked.size() < getMaxLinks()){
+			linked.add(linkPos);
+			((RedstoneReceiverTileEntity) endpoint).setSrc(pos.subtract(((RedstoneReceiverTileEntity) endpoint).getPos()));
+			((RedstoneReceiverTileEntity) endpoint).dye(world.getBlockState(pos).getValue(Properties.COLOR));
+
+			world.neighborChanged(linkPos, ModBlocks.redstoneTransmitter, linkPos);
+			player.sendMessage(new TextComponentString("Linked device at " + getTE().getPos() + " to send to " + endpoint.getTE().getPos()));
+			return true;
+		}else{
+			player.sendMessage(new TextComponentString("All " + getMaxLinks() + " links already occupied; Canceling linking"));
+		}
+		return false;
 	}
 }

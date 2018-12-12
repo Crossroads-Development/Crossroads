@@ -50,7 +50,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != EnumFacing.DOWN){
+		if(cap == Capabilities.MAGIC_CAPABILITY && side != EnumFacing.DOWN){
 			return true;
 		}
 
@@ -60,7 +60,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY && side != EnumFacing.DOWN){
+		if(cap == Capabilities.MAGIC_CAPABILITY && side != EnumFacing.DOWN){
 			return (T) magicHandler;
 		}
 

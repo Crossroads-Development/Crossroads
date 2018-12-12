@@ -63,7 +63,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 
 		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
 		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));
-		double availableEnergy = Math.abs(sumEnergy) + Math.abs(backTE != null && backTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing) ? backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] : 0);
+		double availableEnergy = Math.abs(sumEnergy) + Math.abs(backTE != null && backTE.hasCapability(Capabilities.AXLE_CAPABILITY, facing) ? backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing).getMotionData()[1] : 0);
 		if(availableEnergy - cost < 0){
 			baseSpeed = 0;
 			cost = 0;
@@ -87,8 +87,8 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 			gear.markChanged();
 		}
 
-		if(backTE != null && backTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing)){
-			backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1] = availableEnergy * RotaryUtil.posOrNeg(backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing).getMotionData()[1], 1);
+		if(backTE != null && backTE.hasCapability(Capabilities.AXLE_CAPABILITY, facing)){
+			backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing).getMotionData()[1] = availableEnergy * RotaryUtil.posOrNeg(backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing).getMotionData()[1], 1);
 		}
 
 		runAngleCalc();
@@ -177,7 +177,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
+		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == facing)){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -188,7 +188,7 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.AXIS_HANDLER_CAPABILITY && (side == null || side == facing)){
+		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == facing)){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);
@@ -214,14 +214,14 @@ public class FluxReaderAxisTileEntity extends TileEntity implements ITickable{
 			rotaryMembers.clear();
 			locked = false;
 			TileEntity te = world.getTileEntity(pos.offset(facing));
-			if(te != null && te.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite())){
+			if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite())){
 				byte keyNew;
 				do {
 					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
 
-				te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0, false);
+				te.getCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite()).propogate(this, key, 0, 0, false);
 			}
 
 			if(!memberCopy.containsAll(rotaryMembers)){

@@ -96,7 +96,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) saltHandler;
 		}
-		if(cap == Capabilities.AXLE_HANDLER_CAPABILITY && facing == EnumFacing.UP){
+		if(cap == Capabilities.AXLE_CAPABILITY && facing == EnumFacing.UP){
 			return (T) axleHandler;
 		}
 

@@ -109,7 +109,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 			return (T) waterHandler;
 		}
 
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
 			return (T) heatHandler;
 		}
 

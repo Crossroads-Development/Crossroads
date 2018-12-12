@@ -77,7 +77,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 
 		TileEntity te = world.getTileEntity(pos.offset(dir));
 		if(te != null){
-			IChemicalHandler handler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, EnumFacing.UP);
+			IChemicalHandler handler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, EnumFacing.UP);
 			if(handler != null){
 				handler.insertReagents(toInsert, EnumFacing.UP, new PsuedoChemHandler(toInsert));
 			}
@@ -130,7 +130,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if((side == null || side == EnumFacing.DOWN) && cap == Capabilities.HEAT_HANDLER_CAPABILITY){
+		if((side == null || side == EnumFacing.DOWN) && cap == Capabilities.HEAT_CAPABILITY){
 			return (T) heatHandler;
 		}
 		return super.getCapability(cap, side);

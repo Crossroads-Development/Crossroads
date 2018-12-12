@@ -113,7 +113,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 					}
 					continue;
 				}
-				if(!te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+				if(!te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
 					if(connectMode[i] != 0){
 						connectMode[i] = 0;
 						markSideChanged(i);
@@ -121,7 +121,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 					continue;
 				}
 
-				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
+				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
 					if(connectMode[i] != 0){
@@ -179,7 +179,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && !locked && (side == null || connectMode[side.getIndex()] != 0)){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && !locked && (side == null || connectMode[side.getIndex()] != 0)){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -188,7 +188,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemyCarrierTE implements II
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && !locked && (side == null || connectMode[side.getIndex()] != 0)){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && !locked && (side == null || connectMode[side.getIndex()] != 0)){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);

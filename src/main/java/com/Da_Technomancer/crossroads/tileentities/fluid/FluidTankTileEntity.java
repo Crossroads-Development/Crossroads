@@ -60,7 +60,7 @@ public class FluidTankTileEntity extends TileEntity{
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) mainHandler;
 		}
-		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+		if(capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redstoneHandler;
 		}
 
@@ -69,7 +69,7 @@ public class FluidTankTileEntity extends TileEntity{
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return true;
 		}
 		return super.hasCapability(capability, facing);

@@ -18,13 +18,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -76,30 +74,20 @@ public class RedstoneTransmitter extends BlockContainer{
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(!worldIn.isRemote){
-			ItemStack heldItem = playerIn.getHeldItem(hand);
-			if(EssentialsConfig.isWrench(heldItem, false)){
-				if(playerIn.isSneaking()){
-					playerIn.sendMessage(new TextComponentString("Clearing receiver links."));
-					TileEntity te = worldIn.getTileEntity(pos);
-					if(te instanceof RedstoneTransmitterTileEntity){
-						((RedstoneTransmitterTileEntity) te).clearLinks();
-					}
-				}else if(!heldItem.hasTagCompound() || !heldItem.getTagCompound().hasKey("c_link")){
-					if(!heldItem.hasTagCompound()){
-						heldItem.setTagCompound(new NBTTagCompound());
-					}
-					heldItem.getTagCompound().setLong("c_link", pos.toLong());
-					playerIn.sendMessage(new TextComponentString("Beginning linking."));
-				}
-			}else if(heldItem.getItem() == Items.DYE){
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof RedstoneTransmitterTileEntity){
-					((RedstoneTransmitterTileEntity) te).dye(EnumDyeColor.byDyeDamage(heldItem.getMetadata()));
-				}
+		ItemStack heldItem = playerIn.getHeldItem(hand);
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(EssentialsConfig.isWrench(heldItem, false) && te instanceof RedstoneTransmitterTileEntity){
+			if(!worldIn.isRemote){
+				((RedstoneTransmitterTileEntity) te).wrench(heldItem, playerIn);
 			}
+			return true;
+		}else if(heldItem.getItem() == Items.DYE && te instanceof RedstoneTransmitterTileEntity){
+			if(!worldIn.isRemote){
+				((RedstoneTransmitterTileEntity) te).dye(EnumDyeColor.byDyeDamage(heldItem.getMetadata()));
+			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override

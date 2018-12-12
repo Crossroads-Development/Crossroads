@@ -35,11 +35,11 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 			if(modes[i].isOutput()){
 				EnumFacing side = EnumFacing.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
-				if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+				if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
 					continue;
 				}
 
-				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
+				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
 					continue;
@@ -56,7 +56,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);

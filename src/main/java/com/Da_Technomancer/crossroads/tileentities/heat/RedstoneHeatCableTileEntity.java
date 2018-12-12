@@ -37,14 +37,14 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY){
+		if(capability == Capabilities.HEAT_CAPABILITY){
 			if((facing == null || !locked[facing.getIndex()]) && world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
 				return (T) heatHandler;
 			}else{
 				return null;
 			}
 		}
-		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+		if(capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redstoneHandler;
 		}
 		return super.getCapability(capability, facing);

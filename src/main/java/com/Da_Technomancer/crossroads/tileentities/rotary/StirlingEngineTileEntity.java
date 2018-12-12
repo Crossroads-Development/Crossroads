@@ -90,10 +90,10 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.UP)){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == EnumFacing.UP)){
 			return (T) axleHandler;
 		}
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && facing != EnumFacing.UP){
+		if(capability == Capabilities.HEAT_CAPABILITY && facing != EnumFacing.UP){
 			return facing == EnumFacing.DOWN ? (T) bottomHeatHandler : (T) sideHeatHandler;
 		}
 

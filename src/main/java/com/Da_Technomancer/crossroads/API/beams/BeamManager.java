@@ -34,8 +34,8 @@ public class BeamManager{
 	public boolean emit(@Nullable BeamUnit mag, World world){
 		for(int i = 1; i <= BeamManager.MAX_DISTANCE; i++){
 			TileEntity checkTE = world.getTileEntity(pos.offset(dir, i));
-			if(checkTE != null && checkTE.hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite())){
-				checkTE.getCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir.getOpposite()).setMagic(mag);
+			if(checkTE != null && checkTE.hasCapability(Capabilities.MAGIC_CAPABILITY, dir.getOpposite())){
+				checkTE.getCapability(Capabilities.MAGIC_CAPABILITY, dir.getOpposite()).setMagic(mag);
 				if(dist != i * i || (mag == null ? lastSent != null : !mag.equals(lastSent))){
 					dist = i;
 					lastSent = mag;

@@ -72,7 +72,7 @@ public class HeatReservoir extends BlockContainer{
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		if(stack.hasTagCompound()){
 			HeatReservoirTileEntity te = (HeatReservoirTileEntity) world.getTileEntity(pos);
-			te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).setTemp(stack.getTagCompound().getDouble("temp"));
+			te.getCapability(Capabilities.HEAT_CAPABILITY, null).setTemp(stack.getTagCompound().getDouble("temp"));
 		}
 	}
 }

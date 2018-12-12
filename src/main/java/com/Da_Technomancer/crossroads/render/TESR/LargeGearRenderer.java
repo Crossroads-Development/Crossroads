@@ -33,7 +33,7 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 		GlStateManager.translate(x + .5D, y + .5D, z + .5D);
 
 		EnumFacing facing = gear.getFacing();
-		IAxleHandler handler = gear.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing);
+		IAxleHandler handler = gear.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		float dirMult = facing.getAxisDirection() == EnumFacing.AxisDirection.POSITIVE ? -1 : 1;
 
 		switch(facing){

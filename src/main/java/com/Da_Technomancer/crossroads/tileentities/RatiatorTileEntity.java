@@ -69,7 +69,7 @@ public class RatiatorTileEntity extends TileEntity implements IInfoTE{
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && getDir() == side){
+		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && getDir() == side){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -78,7 +78,7 @@ public class RatiatorTileEntity extends TileEntity implements IInfoTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY && getDir() == side){
+		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && getDir() == side){
 			return (T) redstoneHandler;
 		}
 		return super.getCapability(cap, side);

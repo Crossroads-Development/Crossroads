@@ -83,7 +83,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 			
 			if(connectMode[i] != 0){
 				te = world.getTileEntity(pos.offset(side));
-				if(te == null || !te.hasCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite())){
+				if(te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
 					if(hasMatch[i]){
 						hasMatch[i] = false;
 						markSideChanged(i);
@@ -91,7 +91,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 					continue;
 				}
 
-				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_HANDLER_CAPABILITY, side.getOpposite());
+				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
 					if(hasMatch[i]){
@@ -148,7 +148,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		init();
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -158,7 +158,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		init();
-		if(cap == Capabilities.CHEMICAL_HANDLER_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);

@@ -64,7 +64,7 @@ public class HeatSinkTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY ){
+		if(capability == Capabilities.HEAT_CAPABILITY){
 			return (T) heatHandler;
 		}
 

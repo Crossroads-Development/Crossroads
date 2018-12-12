@@ -27,7 +27,7 @@ public class WindTurbineRenderer extends TileEntitySpecialRenderer<WindTurbineTi
 			return;
 		}
 		IBlockState state = te.getWorld().getBlockState(te.getPos());
-		IAxleHandler axle = te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, null);
+		IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
 		if(state.getBlock() != ModBlocks.windTurbine || axle == null){
 			return;

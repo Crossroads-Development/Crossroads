@@ -81,7 +81,7 @@ public class SaltReactorTileEntity extends InventoryTE{
 			return (T) outputFluidHandler;
 		}
 
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
 			return (T) heatHandler;
 		}
 

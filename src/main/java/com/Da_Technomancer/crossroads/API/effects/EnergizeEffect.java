@@ -13,8 +13,8 @@ public class EnergizeEffect implements IEffect{
 	public void doEffect(World worldIn, BlockPos pos, double mult){
 		if(worldIn.getTileEntity(pos) != null){
 			TileEntity te = worldIn.getTileEntity(pos);
-			if(te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null)){
-				te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).addHeat(mult);
+			if(te.hasCapability(Capabilities.HEAT_CAPABILITY, null)){
+				te.getCapability(Capabilities.HEAT_CAPABILITY, null).addHeat(mult);
 			}
 			//Effect in crystal master axis
 		}
@@ -25,8 +25,8 @@ public class EnergizeEffect implements IEffect{
 		public void doEffect(World worldIn, BlockPos pos, double mult){
 			if(worldIn.getTileEntity(pos) != null){
 				TileEntity te = worldIn.getTileEntity(pos);
-				if(te.hasCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null) && te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).getTemp() >= HeatUtil.ABSOLUTE_ZERO + mult){
-					te.getCapability(Capabilities.HEAT_HANDLER_CAPABILITY, null).addHeat(-mult);
+				if(te.hasCapability(Capabilities.HEAT_CAPABILITY, null) && te.getCapability(Capabilities.HEAT_CAPABILITY, null).getTemp() >= HeatUtil.ABSOLUTE_ZERO + mult){
+					te.getCapability(Capabilities.HEAT_CAPABILITY, null).addHeat(-mult);
 				}
 				//Effect in crystal master axis
 			}

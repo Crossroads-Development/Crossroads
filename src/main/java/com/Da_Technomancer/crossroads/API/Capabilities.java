@@ -12,6 +12,8 @@ import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
+import com.Da_Technomancer.crossroads.API.technomancy.DefaultFluxHandler;
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxHandler;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -23,28 +25,31 @@ import net.minecraftforge.common.util.INBTSerializable;
 public class Capabilities{
 
 	@CapabilityInject(IHeatHandler.class)
-	public static Capability<IHeatHandler> HEAT_HANDLER_CAPABILITY = null;
+	public static Capability<IHeatHandler> HEAT_CAPABILITY = null;
 
 	@CapabilityInject(IAxleHandler.class)
-	public static Capability<IAxleHandler> AXLE_HANDLER_CAPABILITY = null;
+	public static Capability<IAxleHandler> AXLE_CAPABILITY = null;
 	
 	@CapabilityInject(ICogHandler.class)
-	public static Capability<ICogHandler> COG_HANDLER_CAPABILITY = null;
+	public static Capability<ICogHandler> COG_CAPABILITY = null;
 	
 	@CapabilityInject(IBeamHandler.class)
-	public static Capability<IBeamHandler> MAGIC_HANDLER_CAPABILITY = null;
+	public static Capability<IBeamHandler> MAGIC_CAPABILITY = null;
 	
 	@CapabilityInject(IAxisHandler.class)
-	public static Capability<IAxisHandler> AXIS_HANDLER_CAPABILITY = null;
+	public static Capability<IAxisHandler> AXIS_CAPABILITY = null;
 	
 	@CapabilityInject(ISlaveAxisHandler.class)
-	public static Capability<ISlaveAxisHandler> SLAVE_AXIS_HANDLER_CAPABILITY = null;
+	public static Capability<ISlaveAxisHandler> SLAVE_AXIS_CAPABILITY = null;
 	
 	@CapabilityInject(IAdvancedRedstoneHandler.class)
-	public static Capability<IAdvancedRedstoneHandler> ADVANCED_REDSTONE_HANDLER_CAPABILITY = null;
+	public static Capability<IAdvancedRedstoneHandler> ADVANCED_REDSTONE_CAPABILITY = null;
 	
 	@CapabilityInject(IChemicalHandler.class)
-	public static Capability<IChemicalHandler> CHEMICAL_HANDLER_CAPABILITY = null;
+	public static Capability<IChemicalHandler> CHEMICAL_CAPABILITY = null;
+
+	@CapabilityInject(IFluxHandler.class)
+	public static Capability<IFluxHandler> FLUX_CAPABILITY = null;
 
 	public static void register(){
 		CapabilityManager.INSTANCE.register(IHeatHandler.class, new DefaultStorage<>(), DefaultHeatHandler::new);
@@ -55,6 +60,7 @@ public class Capabilities{
 		CapabilityManager.INSTANCE.register(ISlaveAxisHandler.class, new DefaultStorage<>(), DefaultSlaveAxisHandler::new);
 		CapabilityManager.INSTANCE.register(IAdvancedRedstoneHandler.class, new DefaultStorage<>(), DefaultAdvancedRedstoneHandler::new);
 		CapabilityManager.INSTANCE.register(IChemicalHandler.class, new DefaultStorage<>(), DefaultChemicalHandler::new);
+		CapabilityManager.INSTANCE.register(IFluxHandler.class, new DefaultStorage<>(), DefaultFluxHandler::new);
 	}
 
 	/**

@@ -26,7 +26,7 @@ public class RotaryDrillRenderer extends TileEntitySpecialRenderer<RotaryDrillTi
 		}
 
 		IBlockState state = drill.getWorld().getBlockState(drill.getPos());
-		IAxleHandler axle = drill.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, null);
+		IAxleHandler axle = drill.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
 		if(!(state.getBlock() instanceof RotaryDrill) || axle == null){
 			return;

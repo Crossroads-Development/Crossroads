@@ -98,7 +98,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
 		EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY && (side == null || side.getAxis() == facing.getAxis())){
+		if(cap == Capabilities.HEAT_CAPABILITY && (side == null || side.getAxis() == facing.getAxis())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -108,7 +108,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
-		if(cap == Capabilities.HEAT_HANDLER_CAPABILITY){
+		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == facing.getOpposite()){
 				return (T) heatHandlerIn;
 			}else if(side == facing){

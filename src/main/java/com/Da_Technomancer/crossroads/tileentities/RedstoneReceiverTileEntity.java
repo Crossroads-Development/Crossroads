@@ -4,6 +4,8 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
+import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +20,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE{
+public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, ILinkTE{
 
 	private BlockPos src = null;
 
@@ -43,11 +45,15 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	public void dye(EnumDyeColor color){
-		world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.COLOR, color));
-		BlockPos worldSrc = pos.add(src);
-		IBlockState srcState = world.getBlockState(worldSrc);
-		if(srcState.getBlock() == ModBlocks.redstoneTransmitter){
-			world.setBlockState(worldSrc, srcState.withProperty(Properties.COLOR, color));
+		if(world.getBlockState(pos).getValue(Properties.COLOR) != color){
+			world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.COLOR, color));
+			if(src != null){
+				BlockPos worldSrc = pos.add(src);
+				TileEntity srcTE = world.getTileEntity(worldSrc);
+				if(srcTE instanceof RedstoneTransmitterTileEntity){
+					((RedstoneTransmitterTileEntity) srcTE).dye(color);
+				}
+			}
 		}
 	}
 	
@@ -80,7 +86,7 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE{
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		return capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+		return capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY || super.hasCapability(capability, facing);
 	}
 
 	private final RedstoneHandler redsHandler = new RedstoneHandler();
@@ -89,10 +95,35 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.ADVANCED_REDSTONE_HANDLER_CAPABILITY){
+		if(capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redsHandler;
 		}
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public TileEntity getTE(){
+		return this;
+	}
+
+	@Override
+	public boolean canLink(ILinkTE otherTE){
+		return false;
+	}
+
+	@Override
+	public ArrayList<BlockPos> getLinks(){
+		return new ArrayList<>(1);
+	}
+
+	@Override
+	public int getMaxLinks(){
+		return 0;
+	}
+
+	@Override
+	public int getRange(){
+		return ModConfig.getConfigInt(ModConfig.redstoneTransmitterRange, false);
 	}
 
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{

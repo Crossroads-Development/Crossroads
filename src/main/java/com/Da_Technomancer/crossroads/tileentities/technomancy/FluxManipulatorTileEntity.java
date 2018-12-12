@@ -18,10 +18,10 @@ public class FluxManipulatorTileEntity extends TileEntity implements ITickable{
 	public void update(){
 		if(!world.isRemote && world.getTotalWorldTime() % 5 != lastTick){
 			TileEntity upTE = world.getTileEntity(pos.offset(EnumFacing.UP));
-			if(upTE != null && upTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN)){
+			if(upTE != null && upTE.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN)){
 				FieldWorldSavedData data = FieldWorldSavedData.get(world);
 				if(data.fieldNodes.containsKey(MiscUtil.getLongFromChunkPos(new ChunkPos(pos)))){
-					netForce += upTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] / 5D;
+					netForce += upTE.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] / 5D;
 					if(world.getTotalWorldTime() % 5 == 0){
 						data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).fluxForce += Math.round(netForce);
 						netForce = 0;

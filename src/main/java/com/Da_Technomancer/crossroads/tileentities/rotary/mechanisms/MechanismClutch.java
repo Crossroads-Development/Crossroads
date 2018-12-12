@@ -57,7 +57,7 @@ public class MechanismClutch extends MechanismAxle{
 
 	@Override
 	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
-		return cap == Capabilities.AXLE_HANDLER_CAPABILITY && side == null && capSide.getAxis() == axis && (te.redstoneIn != 0 ^ inverted || capSide.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE);
+		return cap == Capabilities.AXLE_CAPABILITY && side == null && capSide.getAxis() == axis && (te.redstoneIn != 0 ^ inverted || capSide.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class MechanismClutch extends MechanismAxle{
 			
 			if(te.members[endDir.getIndex()] != null){
 				//Do internal connection
-				if(te.members[endDir.getIndex()].hasCap(Capabilities.AXLE_HANDLER_CAPABILITY, endDir, te.mats[endDir.getIndex()], endDir, axis, te)){
+				if(te.members[endDir.getIndex()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.getIndex()], endDir, axis, te)){
 					te.axleHandlers[endDir.getIndex()].propogate(masterIn, key, rotRatioIn, 0, handler.renderOffset);
 				}
 			}else{
@@ -111,16 +111,16 @@ public class MechanismClutch extends MechanismAxle{
 				TileEntity endTE = te.getWorld().getTileEntity(te.getPos().offset(endDir));
 				EnumFacing oEndDir = endDir.getOpposite();
 				if(endTE != null){
-					if(endTE.hasCapability(Capabilities.AXIS_HANDLER_CAPABILITY, oEndDir)){
-						endTE.getCapability(Capabilities.AXIS_HANDLER_CAPABILITY, oEndDir).trigger(masterIn, key);
+					if(endTE.hasCapability(Capabilities.AXIS_CAPABILITY, oEndDir)){
+						endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir).trigger(masterIn, key);
 					}
 
-					if(endTE.hasCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, oEndDir)){
-						masterIn.addAxisToList(endTE.getCapability(Capabilities.SLAVE_AXIS_HANDLER_CAPABILITY, oEndDir), oEndDir);
+					if(endTE.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, oEndDir)){
+						masterIn.addAxisToList(endTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, oEndDir), oEndDir);
 					}
 
-					if(endTE.hasCapability(Capabilities.AXLE_HANDLER_CAPABILITY, oEndDir)){
-						endTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, oEndDir).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+					if(endTE.hasCapability(Capabilities.AXLE_CAPABILITY, oEndDir)){
+						endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 					}
 				}
 			}

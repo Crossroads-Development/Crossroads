@@ -97,7 +97,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.COG_HANDLER_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(EssentialsProperties.FACING) == facing){
+		if(capability == Capabilities.COG_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(EssentialsProperties.FACING) == facing){
 			return true;
 		}else{
 			return super.hasCapability(capability, facing);
@@ -107,7 +107,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.COG_HANDLER_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(EssentialsProperties.FACING) == facing){
+		if(capability == Capabilities.COG_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(EssentialsProperties.FACING) == facing){
 			return (T) handler;
 		}else{
 			return super.getCapability(capability, facing);
@@ -127,7 +127,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 		public IAxleHandler getAxle(){
 			TileEntity te = world.getTileEntity(pos.add(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
-				return te.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, world.getBlockState(pos).getValue(EssentialsProperties.FACING));
+				return te.getCapability(Capabilities.AXLE_CAPABILITY, world.getBlockState(pos).getValue(EssentialsProperties.FACING));
 			}
 			return null;
 		}

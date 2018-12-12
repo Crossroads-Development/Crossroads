@@ -249,7 +249,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	@Override
 	public boolean hasCap(Capability<?> cap, EnumFacing side){
 		EnumFacing dir = adjustSide(side, false);
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY){
+		if(cap == Capabilities.MAGIC_CAPABILITY){
 			return true;
 		}
 		TileEntity te = world.getTileEntity(pos.offset(dir));
@@ -260,7 +260,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	@SuppressWarnings("unchecked")
 	public <T> T getCap(Capability<T> cap, EnumFacing side) throws NullPointerException{
 		EnumFacing dir = adjustSide(side, false);
-		if(cap == Capabilities.MAGIC_HANDLER_CAPABILITY){
+		if(cap == Capabilities.MAGIC_CAPABILITY){
 			return (T) getHandler(dir.getIndex(), true);
 		}
 		return world.getTileEntity(pos.offset(dir)).getCapability(cap, dir.getOpposite());

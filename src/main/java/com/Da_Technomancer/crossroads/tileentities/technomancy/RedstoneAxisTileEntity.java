@@ -24,7 +24,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
 		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
 		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));
-		IAxleHandler sourceAxle = backTE == null ? null : backTE.getCapability(Capabilities.AXLE_HANDLER_CAPABILITY, facing);
+		IAxleHandler sourceAxle = backTE == null ? null : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		double availableEnergy = Math.abs(sumEnergy);
 		if(sourceAxle != null){
 			availableEnergy += Math.abs(sourceAxle.getMotionData()[1]);

@@ -62,7 +62,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
-		if(capability == Capabilities.HEAT_HANDLER_CAPABILITY && (facing == null || facing.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_AXIS))){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_AXIS))){
 			return (T) heatHandler;
 		}
 		return super.getCapability(capability, facing);
