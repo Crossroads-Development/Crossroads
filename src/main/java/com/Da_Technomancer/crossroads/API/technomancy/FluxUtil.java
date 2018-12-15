@@ -19,7 +19,12 @@ import java.util.Random;
 
 public class FluxUtil{
 
+	public static final int FLUX_TIME = 5;
 	private static final Random RAND = new Random();
+
+	public static void renderFlux(World world, BlockPos startPos, BlockPos endPos, int flux){
+		//TODO
+	}
 
 	public static void fluxEvent(World worldIn, BlockPos pos, int intensity){
 		if(worldIn.provider instanceof WorkspaceWorldProvider || worldIn.provider instanceof PrototypeWorldProvider){

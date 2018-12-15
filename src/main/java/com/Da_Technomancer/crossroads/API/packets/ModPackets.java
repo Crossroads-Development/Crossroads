@@ -20,7 +20,6 @@ public class ModPackets{
 		network.registerMessage(SendChatToClient.class, SendChatToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendFieldsToClient.class, SendFieldsToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendBeamItemToServer.class, SendBeamItemToServer.class, packetId++, Side.SERVER);
-		network.registerMessage(SendLooseBeamToClient.class, SendLooseBeamToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendDimLoadToClient.class, SendDimLoadToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendDoubleToServer.class, SendDoubleToServer.class, packetId++, Side.SERVER);
 		network.registerMessage(SendIntToServer.class, SendIntToServer.class, packetId++, Side.SERVER);
@@ -31,7 +30,7 @@ public class ModPackets{
 		network.registerMessage(SendDoubleArrayToServer.class, SendDoubleArrayToServer.class, packetId++, Side.SERVER);
 		network.registerMessage(SendDoubleArrayToClient.class, SendDoubleArrayToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendSpinToClient.class, SendSpinToClient.class, packetId++, Side.CLIENT);
-		network.registerMessage(SendLooseArcToClient.class, SendLooseArcToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(AddVisualToClient.class, AddVisualToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(NbtToEntityClient.class, NbtToEntityClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(NbtToEntityServer.class, NbtToEntityServer.class, packetId++, Side.SERVER);
 		network.registerMessage(SendBiomeUpdateToClient.class, SendBiomeUpdateToClient.class, packetId++, Side.CLIENT);

@@ -1,13 +1,15 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.API.*;
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
+import com.Da_Technomancer.crossroads.render.RenderUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -21,7 +23,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -81,23 +82,10 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 			markDirty();
 			if(renderTimer <= 0){
 				renderTimer = 10;
-				world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.25F, -5F);
-
-				NBTTagCompound nbt = new NBTTagCompound();
-				new LooseArcRenderable(pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() - 0.8F, pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() - 0.8F, 1, 0F, 0.4F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-
-				nbt = new NBTTagCompound();
-				new LooseArcRenderable(pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() + 1.8F, pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() + 1.8F, 1, 0F, 0.4F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-
-				nbt = new NBTTagCompound();
-				new LooseArcRenderable(pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() - 0.8F, pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() - 0.8F, 1, 0F, 0.4F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-
-				nbt = new NBTTagCompound();
-				new LooseArcRenderable(pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() + 1.8F, pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() + 1.8F, 1, 0F, 0.4F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() - 0.8F, pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() + 1.8F, pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() - 0.8F, pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() + 1.8F, pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
 			}
 		}else{
 			int oldCharge = AtmosChargeSavedData.getCharge(world);
@@ -114,21 +102,10 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 				renderTimer = 10;
 				world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 
-				NBTTagCompound nbt = new NBTTagCompound();
-				new LooseArcRenderable(pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() - 0.8F, pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() - 0.8F, 1, 0F, 0.4F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-
-				nbt = new NBTTagCompound();
-				new LooseArcRenderable(pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() + 1.8F, pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() + 1.8F, 1, 0F, 0.4F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-
-				nbt = new NBTTagCompound();
-				new LooseArcRenderable(pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() - 0.8F, pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() - 0.8F, 1, 0F, 0.4F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-
-				nbt = new NBTTagCompound();
-				new LooseArcRenderable(pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() + 1.8F, pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() + 1.8F, 1, 0F, 0.4F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]).saveToNBT(nbt);
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(nbt), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() - 0.8F, pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() + 1.8F, pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() - 0.8F, pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() + 1.8F, pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
 			}
 		}
 	}

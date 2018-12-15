@@ -132,6 +132,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 			player.sendMessage(new TextComponentString("Device already linked; Canceling linking"));
 		}else if(linked.size() < getMaxLinks()){
 			linked.add(linkPos);
+			getTE().markDirty();
 			((RedstoneReceiverTileEntity) endpoint).setSrc(pos.subtract(((RedstoneReceiverTileEntity) endpoint).getPos()));
 			((RedstoneReceiverTileEntity) endpoint).dye(world.getBlockState(pos).getValue(Properties.COLOR));
 

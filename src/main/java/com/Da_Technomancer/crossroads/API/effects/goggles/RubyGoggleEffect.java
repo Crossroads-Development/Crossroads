@@ -1,20 +1,16 @@
 package com.Da_Technomancer.crossroads.API.effects.goggles;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendLooseBeamToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
+import com.Da_Technomancer.crossroads.render.RenderUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -50,9 +46,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 				world.setBlockState(new BlockPos(end), Blocks.FIRE.getDefaultState());
 			}
 
-			NBTTagCompound beamNBT = new NBTTagCompound();
-			new LooseBeamRenderable(start.x, start.y, start.z, (int) Math.sqrt(end.squareDistanceTo(start)), player.rotationPitch, player.rotationYawHead, (byte) 1, Color.RED.getRGB()).saveToNBT(beamNBT);
-			ModPackets.network.sendToAllAround(new SendLooseBeamToClient(beamNBT), new NetworkRegistry.TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512));
+			RenderUtil.addBeam(world.provider.getDimension(), start.x, start.y, start.z, (int) Math.sqrt(end.squareDistanceTo(start)), player.rotationPitch, player.rotationYawHead, (byte) 1, Color.RED.getRGB());
 		}
 	}
 }

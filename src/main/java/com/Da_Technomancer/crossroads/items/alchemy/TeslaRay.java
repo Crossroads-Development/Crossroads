@@ -1,9 +1,7 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTopTileEntity;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,7 +9,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,7 +16,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,10 +117,8 @@ public class TeslaRay extends Item{
 				}
 				Vec3d end = targets.get(i + 1).getPositionEyes(0);
 
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(new LooseArcRenderable(start, end, 1, 0, 1, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)])), new NetworkRegistry.TargetPoint(worldIn.provider.getDimension(), playerIn.posX, playerIn.posY, playerIn.posZ, 512));
+				RenderUtil.addArc(playerIn.world.provider.getDimension(), start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
 			}
-
-			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 
 			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 		}else{

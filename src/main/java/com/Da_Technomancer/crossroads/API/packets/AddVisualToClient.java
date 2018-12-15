@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
-
+import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,25 +10,22 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 @SuppressWarnings("serial")
-public class SendLooseBeamToClient extends Message<SendLooseBeamToClient>{
+public class AddVisualToClient extends Message<AddVisualToClient>{
 
-	public SendLooseBeamToClient(){
+	public AddVisualToClient(){
 		
 	}
 	
 	public NBTTagCompound nbt;
 
-	/**
-	 * @param nbt Should represent a {@link LooseBeamRenderable}
-	 */
-	public SendLooseBeamToClient(NBTTagCompound nbt){
-		this.nbt = nbt; 
+	public AddVisualToClient(NBTTagCompound nbt){
+		this.nbt = nbt;
 	}
 
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
+			Main.logger.error("MessageToClient received on wrong side:" + context.side);
 			return null;
 		}
 
@@ -36,7 +33,7 @@ public class SendLooseBeamToClient extends Message<SendLooseBeamToClient>{
 		minecraft.addScheduledTask(new Runnable(){
 			@Override
 			public void run(){
-				SafeCallable.beamsToRender.add(LooseBeamRenderable.readFromNBT(nbt));
+				SafeCallable.effectsToRender.add(RenderUtil.visualFactories[nbt.getInteger("id")].apply(nbt));
 			}
 		});
 

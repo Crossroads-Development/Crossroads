@@ -2,18 +2,13 @@ package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.API.alchemy.DefaultChemicalHandler;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
-import com.Da_Technomancer.crossroads.API.heat.DefaultHeatHandler;
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.beams.DefaultBeamHandler;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.heat.DefaultHeatHandler;
+import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.redstone.DefaultAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.rotary.*;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.DefaultFluxHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxHandler;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -48,9 +43,6 @@ public class Capabilities{
 	@CapabilityInject(IChemicalHandler.class)
 	public static Capability<IChemicalHandler> CHEMICAL_CAPABILITY = null;
 
-	@CapabilityInject(IFluxHandler.class)
-	public static Capability<IFluxHandler> FLUX_CAPABILITY = null;
-
 	public static void register(){
 		CapabilityManager.INSTANCE.register(IHeatHandler.class, new DefaultStorage<>(), DefaultHeatHandler::new);
 		CapabilityManager.INSTANCE.register(IAxleHandler.class, new DefaultStorage<>(), DefaultAxleHandler::new);
@@ -60,7 +52,6 @@ public class Capabilities{
 		CapabilityManager.INSTANCE.register(ISlaveAxisHandler.class, new DefaultStorage<>(), DefaultSlaveAxisHandler::new);
 		CapabilityManager.INSTANCE.register(IAdvancedRedstoneHandler.class, new DefaultStorage<>(), DefaultAdvancedRedstoneHandler::new);
 		CapabilityManager.INSTANCE.register(IChemicalHandler.class, new DefaultStorage<>(), DefaultChemicalHandler::new);
-		CapabilityManager.INSTANCE.register(IFluxHandler.class, new DefaultStorage<>(), DefaultFluxHandler::new);
 	}
 
 	/**

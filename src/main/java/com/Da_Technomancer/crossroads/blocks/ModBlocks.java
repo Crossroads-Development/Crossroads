@@ -135,8 +135,9 @@ public class ModBlocks{
 	public static PermeableQuartz permeableQuartz;
 	public static RedstoneTransmitter redstoneTransmitter;
 	public static RedstoneReceiver redstoneReceiver;
+	public static FluxNode fluxNode;
 
-	public static final ArrayList<Block> toRegister = new ArrayList<Block>();
+	public static final ArrayList<Block> toRegister = new ArrayList<>();
 	
 	/**
 	 * Registers the item form of a block and the item model.
@@ -292,6 +293,7 @@ public class ModBlocks{
 		permeableQuartz = new PermeableQuartz();
 		redstoneTransmitter = new RedstoneTransmitter();
 		redstoneReceiver = new RedstoneReceiver();
+		fluxNode = new FluxNode();
 	}
 
 	@SideOnly(Side.CLIENT)

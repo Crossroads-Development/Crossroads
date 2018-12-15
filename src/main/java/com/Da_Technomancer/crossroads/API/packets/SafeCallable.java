@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
-import com.Da_Technomancer.crossroads.API.technomancy.LooseBeamRenderable;
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.render.IVisualEffect;
 import net.minecraft.client.gui.GuiNewChat;
 
 import java.lang.reflect.Method;
@@ -14,8 +13,7 @@ import java.util.ArrayList;
  */	
 public class SafeCallable{
 
-	public static final ArrayList<LooseBeamRenderable> beamsToRender = new ArrayList<LooseBeamRenderable>();
-	public static final ArrayList<LooseArcRenderable> arcsToRender = new ArrayList<LooseArcRenderable>();
+	public static final ArrayList<IVisualEffect> effectsToRender = new ArrayList<IVisualEffect>();
 	
 	protected static final Method printChatNoLog;
 

@@ -100,6 +100,7 @@ public class ModTileEntity{
 		register(RedstoneTransmitterTileEntity.class, "redstone_transmitter");
 		register(RedstoneReceiverTileEntity.class, "redstone_receiver");
 		register(TeslaCoilTopTileEntity.class, "tesla_coil_top");
+		register(FluxNodeTileEntity.class, "flux_node");
 	}
 
 	/**

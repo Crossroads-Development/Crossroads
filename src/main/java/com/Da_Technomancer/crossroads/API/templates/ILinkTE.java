@@ -59,6 +59,7 @@ public interface ILinkTE{
 			player.sendMessage(new TextComponentString("Device already linked; Canceling linking"));
 		}else if(links.size() < getMaxLinks()){
 			links.add(linkPos);
+			getTE().markDirty();
 			player.sendMessage(new TextComponentString("Linked device at " + getTE().getPos() + " to send to " + endpoint.getTE().getPos()));
 			return true;
 		}else{

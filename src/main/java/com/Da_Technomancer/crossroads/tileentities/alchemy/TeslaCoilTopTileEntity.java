@@ -1,33 +1,27 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.alchemy.LooseArcRenderable;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendLooseArcToClient;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.alchemy.TeslaCoilTop;
+import com.Da_Technomancer.crossroads.render.RenderUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILinkTE{
 
-	public static final int[] COLOR_CODES = {new Color(128, 0, 255, 128).getRGB(), new Color(64, 0, 255, 128).getRGB(), new Color(100, 0, 255, 128).getRGB()};
-	private static final int[] ATTACK_COLOR_CODES = {new Color(255, 32, 0, 128).getRGB(), new Color(255, 0, 32, 128).getRGB(), new Color(255, 32, 32, 128).getRGB()};
+	public static final int[] COLOR_CODES = {0xFFECCFFF, 0xFFFCDFFF, 0xFFFFFAFF};
+	private static final int[] ATTACK_COLOR_CODES = {0xFFFFCCCC, 0xFFFFFFCC, 0xFFFFFAFA};
 
 	//Relative to this TileEntity's position
 	private ArrayList<BlockPos> linked = new ArrayList<>(3);
@@ -55,14 +49,12 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 			//ATTACK
 			List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
 
-			if(!ents.isEmpty()){
+			if(!ents.isEmpty() && coilTE.stored >= joltQty){
 				EntityLivingBase ent = ents.get(world.rand.nextInt(ents.size()));
 				coilTE.stored -= joltQty;
 				markDirty();
 
-				ModPackets.network.sendToAllAround(new SendLooseArcToClient(new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, 1F, ATTACK_COLOR_CODES[(int) (world.getTotalWorldTime() % 3)])), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-				world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
-
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, ATTACK_COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
 				ent.onStruckByLightning(new EntityLightningBolt(world, ent.posX, ent.posY, ent.posZ, true));
 				return true;
 			}
@@ -80,8 +72,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 							coilTE.stored -= joltQty;
 							markDirty();
 
-							ModPackets.network.sendToAllAround(new SendLooseArcToClient(new LooseArcRenderable(pos.getX() + 0.5F, pos.getY() + 1F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 2F, actualPos.getZ() + 0.5F, 5, 0.6F, 1F, COLOR_CODES[(int) (world.getTotalWorldTime() % 3)])), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-							world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
+							RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
 							break;
 						}
 					}
@@ -126,7 +117,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 
 	@Override
 	public boolean canLink(ILinkTE otherTE){
-		return otherTE instanceof TeslaCoilTopTileEntity && variant != TeslaCoilTop.TeslaCoilVariants.ATTACK;
+		return otherTE instanceof TeslaCoilTopTileEntity && getVariant() != TeslaCoilTop.TeslaCoilVariants.ATTACK;
 	}
 
 	@Override
@@ -136,6 +127,6 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 
 	@Override
 	public int getRange(){
-		return variant.range;
+		return getVariant().range;
 	}
 }

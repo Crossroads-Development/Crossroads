@@ -96,7 +96,7 @@ public class TeslaCoilTop extends BlockContainer{
 	public enum TeslaCoilVariants{
 
 		NORMAL(1_000, 8, 95),
-		ATTACK(1_000, 8, 0),
+		ATTACK(1_000, 6, 0),
 		DISTANCE(1_000, 32, 95),
 		INTENSITY(10_000, 8, 95),
 		EFFICIENCY(1_000, 8, 100);
