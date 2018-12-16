@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.client.Minecraft;
@@ -22,7 +21,7 @@ public class GatewayFrameRenderer extends TileEntitySpecialRenderer<GatewayFrame
 
 	@Override
 	public void render(GatewayFrameTileEntity frame, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(frame == null || !frame.getWorld().isBlockLoaded(frame.getPos(), false) || frame.getWorld().getBlockState(frame.getPos()) != ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP)){
+		if(frame == null || !frame.getWorld().isBlockLoaded(frame.getPos(), false) || frame.getWorld().getBlockState(frame.getPos()).getValue(EssentialsProperties.FACING) != EnumFacing.UP){
 			return;
 		}
 		GlStateManager.pushMatrix();
@@ -31,7 +30,7 @@ public class GatewayFrameRenderer extends TileEntitySpecialRenderer<GatewayFrame
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.color(1, 1, 1, frame.alpha);
+		GlStateManager.color(1, 1, 1, (float) Math.sin((frame.getWorld().getTotalWorldTime() + partialTicks) / 10D) / 6F + 5F / 6F);
 		float brightX = OpenGlHelper.lastBrightnessX;
 		float brightY = OpenGlHelper.lastBrightnessY;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
@@ -57,6 +56,5 @@ public class GatewayFrameRenderer extends TileEntitySpecialRenderer<GatewayFrame
 		GlStateManager.disableBlend();
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
-
 	}
 }

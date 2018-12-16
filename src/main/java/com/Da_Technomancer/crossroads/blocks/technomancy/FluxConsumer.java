@@ -1,13 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.CopshowiumCreationChamberTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxConsumerTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -19,33 +18,22 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CopshowiumCreationChamber extends BlockContainer{
+public class FluxConsumer extends BlockContainer{
 
-	public CopshowiumCreationChamber(){
-		super(Material.ROCK);
-		String name = "copshowium_creation_chamber";
+	public FluxConsumer(){
+		super(Material.IRON);
+		String name = "flux_void";
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
 		setHardness(3);
+		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new CopshowiumCreationChamberTileEntity();
-	}
-	
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
 	}
 
 	@Override
@@ -56,16 +44,25 @@ public class CopshowiumCreationChamber extends BlockContainer{
 			if(!worldIn.isRemote && te instanceof ILinkTE){
 				((ILinkTE) te).wrench(heldItem, playerIn);
 			}
-		}else{
-			playerIn.openGui(Main.instance, GuiHandler.COPSHOWIUM_CHAMBER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			return true;
 		}
-		return true;
+		return false;
 	}
-	
+
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Uses time beams to turn liquids into Copshowium");
-		tooltip.add("Produces 4 flux/ingot produced when using worse liquids");
+	public TileEntity createNewTileEntity(World worldIn, int meta){
+		return new FluxConsumerTileEntity();
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state){
+		return EnumBlockRenderType.MODEL;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
+		tooltip.add("Destroys 4 flux/cycle");
+		tooltip.add("Does not break when filled with flux");
+		tooltip.add("FOR DEVELOPMENT AND TESTING PURPOSES; WILL BE REPLACED IN FUTURE");
 	}
 }

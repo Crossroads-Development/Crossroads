@@ -2,11 +2,11 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.technomancy.FluxTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -21,7 +21,6 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -34,11 +33,14 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GatewayFrameTileEntity extends TileEntity implements ITickable, IInfoTE{
-
+public class GatewayFrameTileEntity extends FluxTE{
 
 	private final IBeamHandler magicHandler = new BeamHandler();
 	private GameProfileNonPicky owner;
+	private boolean cacheValid;
+	private EnumBeamAlignments element;
+	private Axis cached;
+
 
 	public void setOwner(GameProfileNonPicky owner){
 		this.owner = owner;
@@ -46,12 +48,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
-
-	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 		if(world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP)){
 			BlockPos target = dialedCoord();
 			if(target != null){
@@ -60,62 +58,78 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 		}
 	}
 
-	private boolean cacheValid;
-	public float alpha;
-
 	@Override
 	public void update(){
-		if(world.isRemote){
-			alpha = (((float) Math.sin((double) world.getTotalWorldTime() / 10D) + 1F) / 6F) + (2F / 3F);
-		}
+		super.update();
 
 		if(!world.isRemote){
 			if(BeamManager.beamStage == 1){
 				cacheValid = false;
 				if(world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
-					if(owner != null && magicPassed && getAlignment() != null && world.provider.getDimension() != 1){
-						world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP));
+					if(owner != null && element != null && getAlignment() != null){
+						Integer dim = null;
+						switch(element){
+							case VOID:
+								dim = 1;
+								break;
+							case ENERGY:
+								dim = -1;
+								break;
+							case POTENTIAL:
+								dim = 0;
+								break;
+							case RIFT:
+								dim = ModDimensions.getDimForPlayer(owner);
+								break;
+							default:
+								break;
+						}
 
-						List<Entity> toTransport = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() - 1, pos.getY() - 3, pos.getZ() - 1, pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1), EntitySelectors.IS_ALIVE);
-						if(toTransport != null && !toTransport.isEmpty()){
-							int dim = ModDimensions.getDimForPlayer(owner);
-							int currentDim = world.provider.getDimension();
-							boolean inDim = dim == currentDim;
+						if(dim != null){
+							world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP), 2);
 
-							if(!inDim && DimensionManager.getWorld(dim) == null){
-								DimensionManager.initDimension(dim);
-							}
+							addFlux(1);
 
-							BlockPos target = dialedCoord();
+							List<Entity> toTransport = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() - 1, pos.getY() - 3, pos.getZ() - 1, pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1), EntitySelectors.IS_ALIVE);
+							if(!toTransport.isEmpty()){
+								int currentDim = world.provider.getDimension();
 
-							GatewayTeleporter porter = inDim ? new GatewayTeleporter(DimensionManager.getWorld(0), target.getX(), target.getY(), target.getZ()) : new GatewayTeleporter(DimensionManager.getWorld(dim), .5D, 33, .5D);
+								if(dim != currentDim && DimensionManager.getWorld(dim) == null){
+									DimensionManager.initDimension(dim);
+								}
 
-							PlayerList playerList = world.getMinecraftServer().getPlayerList();
-							for(Entity ent : toTransport){
-								if(ent instanceof EntityPlayerMP){
-									playerList.transferPlayerToDimension((EntityPlayerMP) ent, inDim ? 0 : dim, porter);
-								}else{
-									playerList.transferEntityToWorld(ent, currentDim, (WorldServer) world, DimensionManager.getWorld(inDim ? 0 : dim), porter);
+								BlockPos target = dialedCoord();
+
+								GatewayTeleporter porter = new GatewayTeleporter(DimensionManager.getWorld(dim), target.getX(), target.getY(), target.getZ());
+
+								PlayerList playerList = world.getMinecraftServer().getPlayerList();
+								for(Entity ent : toTransport){
+									addFlux(8);
+									if(ent instanceof EntityPlayerMP){
+										playerList.transferPlayerToDimension((EntityPlayerMP) ent, dim, porter);
+									}else{
+										playerList.transferEntityToWorld(ent, currentDim, (WorldServer) world, DimensionManager.getWorld(dim), porter);
+									}
 								}
 							}
+						}else{
+							world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.DOWN), 2);
 						}
 					}else{
-						world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.DOWN));
+						world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.DOWN), 2);
 					}
 				}
-				magicPassed = false;
+				element = null;
 			}
 		}
 	}
-
 	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -3, -1, 2, 0, 2);
+
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		return RENDER_BOX.offset(pos);
 	}
-
-	private Axis cached;
 
 	/**
 	 * Returns null unless called on the top frame and there is a valid placement of 2 other frames.
@@ -164,19 +178,10 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 		return new BlockPos(coords[0], coords[1], coords[2]);
 	}
 
-	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
-			return true;
-		}
-
-		return super.hasCapability(cap, side);
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_CAPABILITY && (side == null || side.getAxis() != Axis.Y) && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
+		if(cap == Capabilities.MAGIC_CAPABILITY && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
 			return (T) magicHandler;
 		}
 
@@ -207,7 +212,15 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 		}
 	}
 
-	private boolean magicPassed = false;
+	@Override
+	public boolean isFluxEmitter(){
+		return true;
+	}
+
+	@Override
+	public boolean isFluxReceiver(){
+		return false;
+	}
 
 	private static class GatewayTeleporter implements ITeleporter{
 
@@ -238,8 +251,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 		@Override
 		public void setMagic(BeamUnit mag){
-			if(EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.RIFT){
-				magicPassed = true;
+			if(mag != null){
+				element = EnumBeamAlignments.getAlignment(mag);
 				markDirty();
 			}
 		}

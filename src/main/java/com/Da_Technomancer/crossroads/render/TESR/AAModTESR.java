@@ -44,6 +44,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(PrototypeTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(WindTurbineTileEntity.class, new WindTurbineRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(StampMillTileEntity.class, new StampMillRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(FluxNodeTileEntity.class, new FluxNodeRenderer());
 	}
 
 	private static void reg(Block block){

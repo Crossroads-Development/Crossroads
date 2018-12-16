@@ -255,7 +255,10 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.clockworkStabilizer, 1), " # ", "#*#", " # ", '*', ModBlocks.quartzStabilizer, '#', "gearCopshowium"));
 		//Beacon Harness
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beaconHarness, 1), "^&^", "&*&", "^&^", '*', "ingotCopshowium", '&', ModItems.lensArray, '^', ModItems.luminescentQuartz));
-
+		//Flux node
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxNode, 1), "I|I", "CCC", " I ", 'I', "ingotIron", '|', "stickIron", 'C', "ingotCopshowium"));
+		//Flux Consumer
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxConsumer, 1), "CN", 'C', "ingotCopshowium", 'N', ModBlocks.fluxNode));
 
 		//Ores
 		//Tin

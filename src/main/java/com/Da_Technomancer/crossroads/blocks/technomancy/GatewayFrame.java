@@ -1,26 +1,29 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
+import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class GatewayFrame extends BlockContainer{
 
@@ -43,6 +46,19 @@ public class GatewayFrame extends BlockContainer{
 			facing = EnumFacing.DOWN;
 		}
 		return getDefaultState().withProperty(EssentialsProperties.FACING, placer instanceof FakePlayer ? EnumFacing.NORTH : facing);
+	}
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		ItemStack heldItem = playerIn.getHeldItem(hand);
+		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(!worldIn.isRemote && te instanceof ILinkTE){
+				((ILinkTE) te).wrench(heldItem, playerIn);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -92,5 +108,13 @@ public class GatewayFrame extends BlockContainer{
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
+		tooltip.add("Opens a portal through space, including to a personal workspace dimension");
+		tooltip.add("Uses a beam to maintain the portal");
+		tooltip.add("Potential: Overworld; Energy: Nether; Void: The End; Rift: The Workspace Dimension");
+		tooltip.add("Produces 1 flux/cycle while running, and 8 flux for every entity teleported");
 	}
 }

@@ -97,13 +97,13 @@ public class StampMill extends BlockContainer{
 
 	@Override
 	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
-		return BlockFaceShape.UNDEFINED;
+		return state.getValue(Properties.HORIZ_AXIS) == face.getAxis() ? BlockFaceShape.CENTER_SMALL : BlockFaceShape.UNDEFINED;
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: 200");//TODO
+		tooltip.add("I: 200");
 		tooltip.add("Consumes: Up to 10J/t while running");
 		tooltip.add("Reaches peak speed above 10 rad/s");
 	}

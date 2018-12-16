@@ -136,6 +136,7 @@ public class ModBlocks{
 	public static RedstoneTransmitter redstoneTransmitter;
 	public static RedstoneReceiver redstoneReceiver;
 	public static FluxNode fluxNode;
+	public static FluxConsumer fluxConsumer;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
 	
@@ -294,6 +295,7 @@ public class ModBlocks{
 		redstoneTransmitter = new RedstoneTransmitter();
 		redstoneReceiver = new RedstoneReceiver();
 		fluxNode = new FluxNode();
+		fluxConsumer = new FluxConsumer();
 	}
 
 	@SideOnly(Side.CLIENT)

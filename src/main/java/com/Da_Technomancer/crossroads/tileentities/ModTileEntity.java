@@ -101,6 +101,7 @@ public class ModTileEntity{
 		register(RedstoneReceiverTileEntity.class, "redstone_receiver");
 		register(TeslaCoilTopTileEntity.class, "tesla_coil_top");
 		register(FluxNodeTileEntity.class, "flux_node");
+		register(FluxConsumerTileEntity.class, "flux_void");
 	}
 
 	/**
@@ -109,6 +110,7 @@ public class ModTileEntity{
 	 */
 	private static void register(Class<? extends TileEntity> clazz, String ID){
 		GameRegistry.registerTileEntity(clazz, Main.MODID + ':' + ID);
-		//TODO switch to this method once the above method is removed GameRegistry.registerTileEntity(clazz, new ResourceLocation(Main.MODID, ID));
+		//TODO switch to this method once the above method is removed
+		//GameRegistry.registerTileEntity(clazz, new ResourceLocation(Main.MODID, ID));
 	}
 }

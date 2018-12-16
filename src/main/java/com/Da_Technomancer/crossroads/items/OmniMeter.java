@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxHandler;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
@@ -96,6 +97,10 @@ public class OmniMeter extends Item{
 					}
 				}
 			}
+		}
+
+		if(te instanceof IFluxHandler){
+			chat.add(((IFluxHandler) te).getFlux() + "/" + ((IFluxHandler) te).getCapacity() + " Flux");
 		}
 
 		if(te instanceof IInfoTE){

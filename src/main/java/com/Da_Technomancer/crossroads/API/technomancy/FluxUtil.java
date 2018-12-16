@@ -1,10 +1,12 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.WorkspaceWorldProvider;
+import com.Da_Technomancer.crossroads.render.RenderUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,15 +17,17 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
 import org.apache.logging.log4j.Level;
 
+import java.awt.*;
 import java.util.Random;
 
 public class FluxUtil{
 
-	public static final int FLUX_TIME = 5;
+	public static final int FLUX_TIME = BeamManager.BEAM_TIME;
 	private static final Random RAND = new Random();
+	private static final int[] fluxCol = new int[] {new Color(255, 0, 0, 255).getRGB(), new Color(255, 240, 240, 255).getRGB(), new Color(255, 150, 0, 255).getRGB()};
 
 	public static void renderFlux(World world, BlockPos startPos, BlockPos endPos, int flux){
-		//TODO
+		RenderUtil.addArc(world.provider.getDimension(), startPos.getX() + 0.5F, startPos.getY() + 0.5F, startPos.getZ() + 0.5F, endPos.getX() + 0.5F, endPos.getY() + 0.5F, endPos.getZ() + 0.5F, startPos.getX() + 0.5F, startPos.getY() + 0.5F, startPos.getZ() + 0.5F, (int) Math.ceil(flux / 8D), 0.25F, (byte) FLUX_TIME, fluxCol[RAND.nextInt(3)]);
 	}
 
 	public static void fluxEvent(World worldIn, BlockPos pos, int intensity){

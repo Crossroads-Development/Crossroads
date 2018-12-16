@@ -2,25 +2,35 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
+import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxHandler;
+import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopshowium;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
-public class CopshowiumCreationChamberTileEntity extends InventoryTE{
+public class CopshowiumCreationChamberTileEntity extends InventoryTE implements IFluxHandler, ILinkTE{
+
+	protected int flux;
+	protected ArrayList<BlockPos> links = new ArrayList<>(getMaxLinks());
+	public static final int CAPACITY = 1_296;
+
 
 	public CopshowiumCreationChamberTileEntity(){
 		super(0);
@@ -33,7 +43,35 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 		return 2;
 	}
 
-	public static final int CAPACITY = 1_296;
+	@Override
+	public void update(){
+		super.update();
+
+		if(world.isRemote || flux == 0 || world.getTotalWorldTime() % FluxUtil.FLUX_TIME != 0){
+			return;
+		}
+
+		IFluxHandler[] targets = new IFluxHandler[getMaxLinks()];
+		int targetCount = 0;
+		int moved = 0;
+
+		for(BlockPos link : links){
+			BlockPos endPos = pos.add(link);
+			TileEntity te = world.getTileEntity(endPos);
+			if(te instanceof IFluxHandler && ((IFluxHandler) te).isFluxReceiver() && ((IFluxHandler) te).canReceiveFlux()){
+				targets[targetCount] = (IFluxHandler) te;
+				targetCount++;
+			}
+		}
+
+		for(int i = 0; i < targetCount; i++){
+			moved += flux / targetCount;
+			targets[i].addFlux(flux / targetCount);
+			FluxUtil.renderFlux(world, pos, ((TileEntity) targets[i]).getPos(), flux / targetCount);
+		}
+		flux -= moved;
+		markDirty();
+	}
 
 	private final FluidHandler inputHandler = new FluidHandler(0);
 	private final FluidHandler outputHandler = new FluidHandler(1);
@@ -69,6 +107,94 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 		return "container.copshowium_maker";
 	}
 
+
+	@Override
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+		super.addInfo(chat, player, side, hitX, hitY, hitZ);
+		for(BlockPos link : links){
+			chat.add("Linked Position: X=" + (pos.getX() + link.getX()) + " Y=" + (pos.getY() + link.getY()) + " Z=" + (pos.getZ() + link.getZ()));
+		}
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
+		nbt.setInteger("flux", flux);
+		for(int i = 0; i < links.size(); i++){
+			nbt.setLong("link" + i, links.get(i).toLong());
+		}
+
+		return nbt;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
+		flux = nbt.getInteger("flux");
+		for(int i = 0; i < getMaxLinks(); i++){
+			if(nbt.hasKey("link" + i)){
+				links.add(BlockPos.fromLong(nbt.getLong("link" + i)));
+			}
+		}
+	}
+
+	@Override
+	public TileEntity getTE(){
+		return this;
+	}
+
+	@Override
+	public boolean canLink(ILinkTE otherTE){
+		return otherTE instanceof IFluxHandler && ((IFluxHandler) otherTE).isFluxReceiver();
+	}
+
+	@Override
+	public ArrayList<BlockPos> getLinks(){
+		return links;
+	}
+
+	@Override
+	public boolean canReceiveFlux(){
+		return false;
+	}
+
+	@Override
+	public int getFlux(){
+		return flux;
+	}
+
+	@Override
+	public int getMaxLinks(){
+		return 4;
+	}
+
+	@Override
+	public int getCapacity(){
+		return 64;
+	}
+
+	@Override
+	public int addFlux(int fluxIn){
+		flux += fluxIn;
+		markDirty();
+		if(flux > getCapacity()){
+			world.destroyBlock(pos, false);
+			world.createExplosion(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 0, false);
+			FluxUtil.fluxEvent(world, pos, 64);
+		}
+		return flux;
+	}
+
+	@Override
+	public boolean isFluxEmitter(){
+		return true;
+	}
+
+	@Override
+	public boolean isFluxReceiver(){
+		return false;
+	}
+
 	private class BeamHandler implements IBeamHandler{
 
 		@Override
@@ -82,20 +208,13 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 						world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());
 					}
 				}else if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false))){
-					FieldWorldSavedData data = FieldWorldSavedData.get(world);
-					if(data.fieldNodes.containsKey(MiscUtil.getLongFromChunkPos(new ChunkPos(pos)))){
-						if(data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).flux + 1 < 8 * (fluids[0].amount / 72)){
-							return;
-						}
-
-						data.fieldNodes.get(MiscUtil.getLongFromChunkPos(new ChunkPos(pos))).fluxForce -= 8 * (fluids[0].amount / 72);
-
-						fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) fluids[0].amount) * EnergyConverters.COPSHOWIUM_PER_COPPER) + (fluids[1] == null ? 0 : fluids[1].amount));
-						fluids[0] = null;
-						markDirty();
-						if(fluids[1].amount > CAPACITY){
-							world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());
-						}
+					int created = (int) (((double) fluids[0].amount) * EnergyConverters.COPSHOWIUM_PER_COPPER);
+					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), created + (fluids[1] == null ? 0 : fluids[1].amount));
+					fluids[0] = null;
+					addFlux(4 * created / EnergyConverters.INGOT_MB);
+					markDirty();
+					if(fluids[1].amount > CAPACITY){
+						world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());
 					}
 				}
 			}

@@ -24,56 +24,70 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 
 	private boolean disabled = false;
 	private int flux = 0;
+	private int throughput = 0;
 	protected ArrayList<BlockPos> links = new ArrayList<>(getMaxLinks());
-	private int clientFlux;
+	private int clientThroughput;
+	private float angle;
+
+	@Override
+	protected EnumFacing getFacing(){
+		return EnumFacing.UP;
+	}
 
 	private void syncFlux(){
-		if(Math.abs(clientFlux - flux) >= 8){
-			clientFlux = flux;
-			ModPackets.network.sendToAllAround(new SendIntToClient(0, clientFlux, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		throughput = flux;
+		if(clientThroughput == 0 ^ throughput == 0 || Math.abs(clientThroughput - throughput) >= 4){
+			clientThroughput = throughput;
+			ModPackets.network.sendToAllAround(new SendIntToClient(0, clientThroughput, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
+	}
+
+	public float getRenderAngle(float partialTicks){
+		return angle + partialTicks * (float) Math.toDegrees(clientThroughput) / 4F / 20F;
 	}
 
 	@Override
 	public void update(){
-		super.update();
-
-		if(!world.isRemote){
+		if(world.isRemote){
+			angle += Math.toDegrees(clientThroughput) / 4F / 20F;
+		}else if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
 			syncFlux();
-			if(flux == 0 || world.getTotalWorldTime() % FluxUtil.FLUX_TIME != 0){
-				return;
-			}
 
-			IFluxHandler[] targets = new IFluxHandler[getMaxLinks()];
-			int targetCount = 0;
+			if(flux != 0){
 
-			for(int i = 0; i < links.size(); i++){
-				BlockPos endPos = pos.add(links.get(i));
-				TileEntity te = world.getTileEntity(endPos);
-				if(te instanceof IFluxHandler && ((IFluxHandler) te).isFluxReceiver() && !((IFluxHandler) te).canReceiveFlux()){
-					targets[i] = (IFluxHandler) te;
-					targetCount++;
+				IFluxHandler[] targets = new IFluxHandler[getMaxLinks()];
+				int targetCount = 0;
+
+				for(BlockPos link : links){
+					BlockPos endPos = pos.add(link);
+					TileEntity te = world.getTileEntity(endPos);
+					if(te instanceof IFluxHandler && ((IFluxHandler) te).isFluxReceiver() && ((IFluxHandler) te).canReceiveFlux()){
+						targets[targetCount] = (IFluxHandler) te;
+						targetCount++;
+					}
+				}
+
+				int movedFlux = 0;
+
+				for(int i = 0; i < targetCount; i++){
+					targets[i].addFlux(flux / targetCount);
+					movedFlux += flux / targetCount;
+					FluxUtil.renderFlux(world, pos, ((TileEntity) targets[i]).getPos(), flux / targetCount);
+				}
+
+				flux -= movedFlux;
+				if(movedFlux != 0){
+					markDirty();
 				}
 			}
-
-			int movedFlux = 0;
-
-			for(int i = 0; i < targetCount; i++){
-				targets[i].addFlux(flux / targetCount);
-				movedFlux += flux / targetCount;
-				FluxUtil.renderFlux(world, pos, ((TileEntity) targets[i]).getPos(), flux / targetCount);
-			}
-
-			flux -= movedFlux;
-			if(movedFlux != 0){
-				markDirty();
-			}
 		}
+
+		super.update();
 	}
 
 	@Override
 	protected void runCalc(){
-		double baseSpeed = flux;
+		double baseSpeed = throughput / 4D;
 
 		for(IAxleHandler gear : rotaryMembers){
 			if(gear.getMoInertia() > 0){
@@ -83,12 +97,10 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 		}
 
 		for(IAxleHandler gear : rotaryMembers){
-
 			// set w
 			gear.getMotionData()[0] = gear.getRotationRatio() * baseSpeed;
 			// set energy
 			gear.getMotionData()[1] = 0;
-			sumEnergy += (double) 0;
 			// set power
 			gear.getMotionData()[2] = -gear.getMotionData()[3] * 20;
 			// set lastE
@@ -152,7 +164,6 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 		for(BlockPos link : links){
 			chat.add("Linked Position: X=" + (pos.getX() + link.getX()) + " Y=" + (pos.getY() + link.getY()) + " Z=" + (pos.getZ() + link.getZ()));
 		}
-		chat.add(flux + "/" + getCapacity() + " Flux");
 	}
 
 	@Override
@@ -160,6 +171,7 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 		super.writeToNBT(nbt);
 		nbt.setInteger("flux", flux);
 		nbt.setBoolean("disabled", disabled);
+		nbt.setInteger("throughput", throughput);
 		for(int i = 0; i < links.size(); i++){
 			nbt.setLong("link" + i, links.get(i).toLong());
 		}
@@ -170,7 +182,7 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
-		nbt.setInteger("flux", flux);
+		nbt.setInteger("throughput", throughput);
 		return nbt;
 	}
 
@@ -178,7 +190,8 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		flux = nbt.getInteger("flux");
-		clientFlux = flux;
+		throughput = nbt.getInteger("throughput");
+		clientThroughput = throughput;
 		disabled = nbt.getBoolean("disabled");
 		for(int i = 0; i < getMaxLinks(); i++){
 			if(nbt.hasKey("link" + i)){
@@ -205,7 +218,7 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 	@Override
 	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
 		if(identifier == 0){
-			clientFlux = message;
+			clientThroughput = message;
 		}
 	}
 }

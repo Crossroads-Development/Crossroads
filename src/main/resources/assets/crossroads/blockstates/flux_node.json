@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"redstone_bool=true": { "model": "crossroads:flux_node" },
+		"redstone_bool=false": { "model": "crossroads:flux_node" }
+	}
+}

@@ -20,27 +20,29 @@ public abstract class FluxTE extends ModuleTE implements ILinkTE, IFluxHandler{
 	public void update(){
 		super.update();
 
-		if(flux == 0 || world.getTotalWorldTime() % FluxUtil.FLUX_TIME != 0){
+		if(world.isRemote || flux == 0 || world.getTotalWorldTime() % FluxUtil.FLUX_TIME != 0){
 			return;
 		}
 
 		IFluxHandler[] targets = new IFluxHandler[getMaxLinks()];
 		int targetCount = 0;
+		int moved = 0;
 
-		for(int i = 0; i < links.size(); i++){
-			BlockPos endPos = pos.add(links.get(i));
+		for(BlockPos link : links){
+			BlockPos endPos = pos.add(link);
 			TileEntity te = world.getTileEntity(endPos);
-			if(te instanceof IFluxHandler && ((IFluxHandler) te).isFluxReceiver() && !((IFluxHandler) te).canReceiveFlux()){
-				targets[i] = (IFluxHandler) te;
+			if(te instanceof IFluxHandler && ((IFluxHandler) te).isFluxReceiver() && ((IFluxHandler) te).canReceiveFlux()){
+				targets[targetCount] = (IFluxHandler) te;
 				targetCount++;
 			}
 		}
 
 		for(int i = 0; i < targetCount; i++){
+			moved += flux / targetCount;
 			targets[i].addFlux(flux / targetCount);
 			FluxUtil.renderFlux(world, pos, ((TileEntity) targets[i]).getPos(), flux / targetCount);
 		}
-		flux = 0;
+		flux -= moved;
 		markDirty();
 	}
 
@@ -50,7 +52,6 @@ public abstract class FluxTE extends ModuleTE implements ILinkTE, IFluxHandler{
 		for(BlockPos link : links){
 			chat.add("Linked Position: X=" + (pos.getX() + link.getX()) + " Y=" + (pos.getY() + link.getY()) + " Z=" + (pos.getZ() + link.getZ()));
 		}
-		chat.add(flux + "/" + getCapacity() + " Flux");
 	}
 
 	@Override
