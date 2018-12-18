@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -22,14 +23,18 @@ public class SendPlayerTickCountToClient extends Message<SendPlayerTickCountToCl
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
+			Main.logger.error("MessageToClient received on wrong side:" + context.side);
 			return null;
 		}
 
 		Minecraft minecraft = Minecraft.getMinecraft();
 		minecraft.addScheduledTask(new Runnable(){
 			public void run(){
-				SafeCallable.playerTickCount = tickCount;
+				if(tickCount > 0){
+					SafeCallable.playerTickCount += tickCount - 1;
+				}else{
+					SafeCallable.playerTickCount = 0;
+				}
 			}
 		});
 

@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -61,7 +60,7 @@ public class BeaconHarness extends BeamBlock{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
+		if(ILinkTE.isLinkTool(heldItem)){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(!worldIn.isRemote && te instanceof ILinkTE){
 				((ILinkTE) te).wrench(heldItem, playerIn);

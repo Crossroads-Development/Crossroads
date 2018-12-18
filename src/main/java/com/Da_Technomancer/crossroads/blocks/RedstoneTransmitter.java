@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
+import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneTransmitterTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockRedstoneDiode;
@@ -76,7 +76,7 @@ public class RedstoneTransmitter extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 		TileEntity te = worldIn.getTileEntity(pos);
-		if(EssentialsConfig.isWrench(heldItem, false) && te instanceof RedstoneTransmitterTileEntity){
+		if(ILinkTE.isLinkTool(heldItem) && te instanceof RedstoneTransmitterTileEntity){
 			if(!worldIn.isRemote){
 				((RedstoneTransmitterTileEntity) te).wrench(heldItem, playerIn);
 			}

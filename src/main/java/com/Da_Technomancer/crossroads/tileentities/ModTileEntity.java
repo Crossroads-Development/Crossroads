@@ -49,10 +49,6 @@ public class ModTileEntity{
 		register(RatiatorTileEntity.class, "ratiator");
 		register(BeaconHarnessTileEntity.class, "beacon_harness");
 		register(FatFeederTileEntity.class, "fat_feeder");
-		register(ChunkUnlockerTileEntity.class, "chunk_unlocker");
-		register(RateManipulatorTileEntity.class, "rate_manipulator");
-		register(FluxManipulatorTileEntity.class, "flux_manipulator");
-		register(FluxReaderAxisTileEntity.class, "flux_reader_axis");
 		register(RedstoneAxisTileEntity.class, "redstone_axis");
 		register(MathAxisTileEntity.class, "math_axis");
 		register(CageChargerTileEntity.class, "cage_charger");
@@ -102,6 +98,7 @@ public class ModTileEntity{
 		register(TeslaCoilTopTileEntity.class, "tesla_coil_top");
 		register(FluxNodeTileEntity.class, "flux_node");
 		register(FluxConsumerTileEntity.class, "flux_void");
+		register(TemporalAcceleratorTileEntity.class, "temporal_accelerator");
 	}
 
 	/**

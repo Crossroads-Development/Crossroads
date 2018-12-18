@@ -1,8 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxReaderAxisTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockContainer;
@@ -10,18 +11,24 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
-public class FluxReaderAxis extends BlockContainer{
-	
-	public FluxReaderAxis(){
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class TemporalAccelerator extends BlockContainer{
+
+	public TemporalAccelerator(){
 		super(Material.IRON);
-		String name = "flux_reader_axis";
+		String name = "temporal_accelerator";
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -33,37 +40,35 @@ public class FluxReaderAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer);
-		return getDefaultState().withProperty(EssentialsProperties.FACING, enumfacing);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer));
 	}
-	
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof FluxReaderAxisTileEntity){
-			((FluxReaderAxisTileEntity) te).disconnect();
-		}
-		super.breakBlock(world, pos, blockstate);
-	}
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		ItemStack heldItem = playerIn.getHeldItem(hand);
+		if(ILinkTE.isLinkTool(heldItem)){
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(!worldIn.isRemote && te instanceof ILinkTE){
+				((ILinkTE) te).wrench(heldItem, playerIn);
+			}
+			return true;
+		}else if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof FluxReaderAxisTileEntity){
-					((FluxReaderAxisTileEntity) te).disconnect();
+				if(playerIn.isSneaking()){
+					if(te instanceof TemporalAcceleratorTileEntity){
+						playerIn.sendMessage(new TextComponentString("Size set to " + ((TemporalAcceleratorTileEntity) te).adjustSize()));
+					}
+				}else{
+					worldIn.setBlockState(pos, state.cycleProperty(EssentialsProperties.FACING));
+					if(!worldIn.isRemote && te instanceof TemporalAcceleratorTileEntity){
+						((TemporalAcceleratorTileEntity) te).resetCache();
+					}
 				}
-				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.FACING, state.getValue(EssentialsProperties.FACING).rotateY()));
 			}
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public int damageDropped(IBlockState state){
-		return 0;
 	}
 
 	@Override
@@ -73,8 +78,7 @@ public class FluxReaderAxis extends BlockContainer{
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		EnumFacing facing = EnumFacing.byIndex(meta);
-		return this.getDefaultState().withProperty(EssentialsProperties.FACING, facing);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta));
 	}
 
 	@Override
@@ -84,8 +88,7 @@ public class FluxReaderAxis extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new FluxReaderAxisTileEntity(EnumFacing.byIndex(meta));
-
+		return new TemporalAcceleratorTileEntity();
 	}
 
 	@Override
@@ -102,5 +105,17 @@ public class FluxReaderAxis extends BlockContainer{
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
 		return state.withRotation(mirrorIn.toRotation(state.getValue(EssentialsProperties.FACING)));
 	}
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
 
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
+		tooltip.add("Accelerates or slows time in an area");
+		tooltip.add("Uses a time beam from the back, with each 8 power boosting time by 1, or a void-time beam to slow/stop time");
+		tooltip.add("Adjust area via shift-right clicking with a wrench");
+		tooltip.add("Produces size*boost flux/cycle, or size flux/cycle when slowing time; Flux production accelerates when time is fully stopped");
+	}
 }

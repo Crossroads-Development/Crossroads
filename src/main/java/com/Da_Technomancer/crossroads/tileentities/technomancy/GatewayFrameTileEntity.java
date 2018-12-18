@@ -41,6 +41,9 @@ public class GatewayFrameTileEntity extends FluxTE{
 	private EnumBeamAlignments element;
 	private Axis cached;
 
+	public void resetCache(){
+		cacheValid = false;
+	}
 
 	public void setOwner(GameProfileNonPicky owner){
 		this.owner = owner;

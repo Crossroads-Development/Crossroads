@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.technomancy.FluxTE;
+import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 
 public class FluxConsumerTileEntity extends FluxTE{
 
@@ -8,7 +9,9 @@ public class FluxConsumerTileEntity extends FluxTE{
 	public void update(){
 		super.update();
 
-		flux = Math.max(0, flux - 8);
+		if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
+			flux = Math.max(0, flux - 4);
+		}
 	}
 
 	@Override

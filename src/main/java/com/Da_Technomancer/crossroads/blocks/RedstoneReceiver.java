@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneReceiverTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -46,7 +46,7 @@ public class RedstoneReceiver extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 		TileEntity te = worldIn.getTileEntity(pos);
-		if(EssentialsConfig.isWrench(heldItem, false) && te instanceof RedstoneReceiverTileEntity){
+		if(ILinkTE.isLinkTool(heldItem) && te instanceof RedstoneReceiverTileEntity){
 			if(!worldIn.isRemote){
 				((RedstoneReceiverTileEntity) te).wrench(heldItem, playerIn);
 			}

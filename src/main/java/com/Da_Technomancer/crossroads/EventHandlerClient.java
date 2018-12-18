@@ -38,8 +38,6 @@ import java.util.Random;
 
 public final class EventHandlerClient{
 
-//	private static final ResourceLocation TEXTURE_FIELDS = new ResourceLocation(Main.MODID, "textures/gui/field.png");
-
 	private static final Random RAND = new Random();
 
 	@SubscribeEvent
@@ -70,89 +68,6 @@ public final class EventHandlerClient{
 				}
 			}
 		}
-
-//		//Fields
-//		if(helmet.getItem() == ModItems.moduleGoggles && helmet.hasTagCompound()){
-//			game.profiler.startSection(Main.MODNAME + ": Field Render");
-//			Chunk chunk = game.world.getChunk(game.player.getPosition());
-//			ChunkField fields = FieldWorldSavedData.get(game.world).fieldNodes.get(MiscUtil.getLongFromChunk(chunk));
-//			if(fields != null){
-//				GlStateManager.pushMatrix();
-//				GlStateManager.pushAttrib();
-//				GlStateManager.disableLighting();
-//				GlStateManager.enableAlpha();
-//				GlStateManager.enableBlend();
-//				float brightX = OpenGlHelper.lastBrightnessX;
-//				float brightY = OpenGlHelper.lastBrightnessY;
-//				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-//				GlStateManager.disableCull();
-//				GlStateManager.translate(chunk.getPos().getXStart() - game.player.getPositionEyes(e.getPartialTicks()).x, 0, chunk.getPos().getZStart() - game.player.getPositionEyes(e.getPartialTicks()).z);
-//				Tessellator tes = Tessellator.getInstance();
-//				BufferBuilder buf = tes.getBuffer();
-//				if(helmet.getTagCompound().hasKey(EnumGoggleLenses.QUARTZ.name())){
-//
-//					//Rate layer
-//					GlStateManager.translate(0, .01F, 0);
-//					if(ModConfig.fieldLinesPotential.getBoolean()){
-//						GlStateManager.color(0, 1, 0);
-//						GlStateManager.glLineWidth(10F);
-//						GlStateManager.disableTexture2D();
-//						buf.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-//						for(int j = 0; j < 16; j++){
-//							for(int k = 0; k < 16; k++){
-//								if(j != 15){
-//									buf.pos(0.5D + j, (((float) fields.nodes[j][k]) + 1F) / 8F, 0.5D + k).endVertex();
-//									buf.pos(1.5D + j, (((float) fields.nodes[j + 1][k]) + 1F) / 8F, 0.5D + k).endVertex();
-//								}
-//								//
-//								if(k != 15){
-//									buf.pos(0.5D + j, (((float) fields.nodes[j][k]) + 1F) / 8F, 0.5D + k).endVertex();
-//									buf.pos(0.5D + j, (((float) fields.nodes[j][k + 1]) + 1F) / 8F, 1.5D + k).endVertex();
-//								}
-//							}
-//						}
-//						tes.draw();
-//						GlStateManager.color(1F, 1F, 1F);
-//						GlStateManager.enableTexture2D();
-//					}else{
-//						game.getTextureManager().bindTexture(TEXTURE_FIELDS);
-//						GlStateManager.color(0, 1, 0, .3F);
-//						buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-//						for(int j = 0; j < 15; j++){
-//							for(int k = 0; k < 15; k++){
-//								buf.pos(0.5D + j, (((float) fields.nodes[j][k]) + 1F) / 8F, 0.5D + k).tex(0, 0).endVertex();
-//								buf.pos(1.5D + j, (((float) fields.nodes[j + 1][k]) + 1F) / 8F, 0.5D + k).tex(1, 0).endVertex();
-//								buf.pos(1.5D + j, (((float) fields.nodes[j + 1][k + 1]) + 1F) / 8F, 1.5D + k).tex(1, 1).endVertex();
-//								buf.pos(0.5D + j, (((float) fields.nodes[j][k + 1]) + 1F) / 8F, 1.5D + k).tex(0, 1).endVertex();
-//							}
-//						}
-//						tes.draw();
-//						GlStateManager.color(1F, 1F, 1F);
-//					}
-//
-//					//Flux layer
-//					GlStateManager.translate(0, .01F, 0);
-//					game.getTextureManager().bindTexture(TEXTURE_FIELDS);
-//					GlStateManager.color(1, 0, 0, .3F);
-//					buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-//					buf.pos(0.5D, (((float) fields.flux) + 1F) / 8F, 0.5D).tex(0, 0).endVertex();
-//					buf.pos(15.5D, (((float) fields.flux) + 1F) / 8F, 0.5D).tex(1, 0).endVertex();
-//					buf.pos(15.5D, (((float) fields.flux) + 1F) / 8F, 15.5D).tex(1, 1).endVertex();
-//					buf.pos(0.5D, (((float) fields.flux) + 1F) / 8F, 15.5D).tex(0, 1).endVertex();
-//					tes.draw();
-//					GlStateManager.color(1F, 1F, 1F);
-//				}
-//
-//				GlStateManager.enableCull();
-//				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-//				GlStateManager.disableBlend();
-//				GlStateManager.disableAlpha();
-//				GlStateManager.enableLighting();
-//				GlStateManager.popAttrib();
-//				GlStateManager.popMatrix();
-//			}
-//			game.profiler.endSection();
-//		}
 
 		//IVisualEffects
 		if(!SafeCallable.effectsToRender.isEmpty()){
@@ -192,195 +107,6 @@ public final class EventHandlerClient{
 
 			game.profiler.endSection();
 		}
-
-
-//		//Loose beams
-//		if(!SafeCallable.beamsToRender.isEmpty()){
-//			game.profiler.startSection(Main.MODNAME + ": Loose beam draw");
-//
-//			GlStateManager.disableLighting();
-//			GlStateManager.disableCull();
-//			float brightX = OpenGlHelper.lastBrightnessX;
-//			float brightY = OpenGlHelper.lastBrightnessY;
-//			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-//			Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
-//
-//			ArrayList<LooseBeamRenderable> toRemove = new ArrayList<LooseBeamRenderable>();
-//
-//			for(LooseBeamRenderable beam : SafeCallable.beamsToRender){
-//				GlStateManager.pushMatrix();
-//				GlStateManager.pushAttrib();
-//				Color col = new Color(beam.color);
-//				GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F);
-//				GlStateManager.translate(beam.x - game.player.posX, beam.y - game.player.posY, beam.z - game.player.posZ);
-//				GlStateManager.rotate(-beam.angleY, 0, 1, 0);
-//				GlStateManager.rotate(beam.angleX + 90F, 1, 0, 0);
-//				final double small = -(beam.width / 16D);
-//				final double big = (beam.width / 16D);
-//				final double length = beam.length;
-//
-//				Tessellator tes = Tessellator.getInstance();
-//				BufferBuilder buf = tes.getBuffer();
-//				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-//				//+Z
-//				buf.pos(small, length, big).tex(1, 0).endVertex();
-//				buf.pos(small, 0, big).tex(1, length).endVertex();
-//				buf.pos(big, 0, big).tex(0, length).endVertex();
-//				buf.pos(big, length, big).tex(0, 0).endVertex();
-//				//-Z
-//				buf.pos(big, length, small).tex(1, 0).endVertex();
-//				buf.pos(big, 0, small).tex(1, length).endVertex();
-//				buf.pos(small, 0, small).tex(0, length).endVertex();
-//				buf.pos(small, length, small).tex(0, 0).endVertex();
-//				//-X
-//				buf.pos(small, length, small).tex(1, 0).endVertex();
-//				buf.pos(small, 0, small).tex(1, length).endVertex();
-//				buf.pos(small, 0, big).tex(0, length).endVertex();
-//				buf.pos(small, length, big).tex(0, 0).endVertex();
-//				//+X
-//				buf.pos(big, length, big).tex(1, 0).endVertex();
-//				buf.pos(big, 0, big).tex(1, length).endVertex();
-//				buf.pos(big, 0, small).tex(0, length).endVertex();
-//				buf.pos(big, length, small).tex(0, 0).endVertex();
-//				tes.draw();
-//				GlStateManager.color(1, 1, 1);
-//				GlStateManager.popAttrib();
-//				GlStateManager.popMatrix();
-//
-//				if(beam.lastTick != game.world.getTotalWorldTime()){
-//					beam.lastTick = game.world.getTotalWorldTime();
-//					if(beam.lifeTime-- < 0){
-//						toRemove.add(beam);
-//					}
-//				}
-//			}
-//
-//			for(LooseBeamRenderable beam : toRemove){
-//				SafeCallable.beamsToRender.remove(beam);
-//			}
-//
-//			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-//			GlStateManager.enableCull();
-//			GlStateManager.enableLighting();
-//
-//			game.profiler.endSection();
-//		}
-
-//		//Lightning arcs
-//		if(!SafeCallable.effectsToRender.isEmpty()){
-//			game.profiler.startSection(Main.MODNAME + ": Lightning arc draw");
-//
-//			GlStateManager.enableBlend();
-//			GlStateManager.disableLighting();
-//			GlStateManager.disableCull();
-//			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-//			GlStateManager.disableTexture2D();
-//			float brightX = OpenGlHelper.lastBrightnessX;
-//			float brightY = OpenGlHelper.lastBrightnessY;
-//			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-//
-//			ArrayList<LooseArcRenderable> toRemove = new ArrayList<>();
-//
-//			final float arcWidth = 0.05F;
-//
-//			for(LooseArcRenderable arc : SafeCallable.effectsToRender){
-//				GlStateManager.pushMatrix();
-//				GlStateManager.pushAttrib();
-//				Color col = new Color(arc.color, true);
-//				GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, col.getAlpha() / 255F);
-//				GlStateManager.translate(-game.player.posX, -game.player.posY, -game.player.posZ);
-//				Tessellator tes = Tessellator.getInstance();
-//				BufferBuilder buf = tes.getBuffer();
-//				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-//
-//				Pair<Vec3d, Vec3d> sourceVec = arc.getCurrentEndpoints(e.getPartialTicks());
-//
-//				float distance = (float) sourceVec.getLeft().subtract(sourceVec.getRight()).length();//(float) Math.sqrt(Math.pow(arc.xEn - arc.xSt, 2D) + Math.pow(arc.yEn - arc.ySt, 2D) + Math.pow(arc.zEn - arc.zSt, 2D));
-//
-//				boolean invalidState = false;
-//
-//				if(arc.lastTick != game.world.getTotalWorldTime()){
-//					invalidState = (game.world.getTotalWorldTime() % 5 == 0) || (arc.lastTick < 0);
-//					arc.lastTick = game.world.getTotalWorldTime();
-//					if(arc.lifeTime-- < 0){
-//						toRemove.add(arc);
-//					}
-//				}
-//
-//				int diverged = (int) (arc.diffusionRate * arc.count);
-//
-//				Vec3d deltaVec = sourceVec.getRight().subtract(sourceVec.getLeft());
-//				Vec3d stepVec = deltaVec.scale(arc.length / distance);
-//				for(int i = 0; i < arc.count - diverged; i++){
-//					Vec3d prev = sourceVec.getLeft();
-//					for(int node = 0; node < (int) (distance / arc.length) - 1; node++){
-//						Vec3d next = arc.states[i][node];
-//
-//
-//						if(invalidState){
-//							next = sourceVec.getLeft().add(stepVec.scale(node + 1)).add(RAND.nextFloat() - .5F, RAND.nextFloat() - .5F, RAND.nextFloat() - .5F);//next = new Vec3d(arc.xSt + (arc.xEn - arc.xSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.ySt + (arc.yEn - arc.ySt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F, arc.zSt + (arc.zEn - arc.zSt) * (float) (node + 1) / distance + RAND.nextFloat() - .5F);
-//							arc.states[i][node] = next;
-//						}
-//
-//						Vec3d vec = next.subtract(prev).crossProduct(game.player.getLook(e.getPartialTicks()));//new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(next.x - game.player.posX, next.y - game.player.posY, next.z - game.player.posZ));
-//						vec = vec.normalize().scale(arcWidth / 2F);
-//						buf.pos(next.x - vec.x, next.y - vec.y, next.z - vec.z).endVertex();
-//						buf.pos(next.x + vec.x, next.y + vec.y, next.z + vec.z).endVertex();
-//						buf.pos(prev.x + vec.x, prev.y + vec.y, prev.z + vec.z).endVertex();
-//						buf.pos(prev.x - vec.x, prev.y - vec.y, prev.z - vec.z).endVertex();
-//
-//						prev = next;
-//					}
-//
-//					Vec3d normal = prev.subtract(sourceVec.getRight()).crossProduct(game.player.getLook(e.getPartialTicks()));//new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(sourceVec.getRight().x - game.player.posX, sourceVec.getRight().y - game.player.posY, sourceVec.getRight().z - game.player.posZ));
-//					normal = normal.normalize().scale(arcWidth / 2F);
-//
-//					buf.pos(sourceVec.getRight().x - normal.x, sourceVec.getRight().y - normal.y, sourceVec.getRight().z - normal.z).endVertex();
-//					buf.pos(sourceVec.getRight().x + normal.x, sourceVec.getRight().y + normal.y, sourceVec.getRight().z + normal.z).endVertex();
-//					buf.pos(prev.x + normal.x, prev.y + normal.y, prev.z + normal.z).endVertex();
-//					buf.pos(prev.x - normal.x, prev.y - normal.y, prev.z - normal.z).endVertex();
-//				}
-//
-//				for(int i = arc.count - diverged; i < arc.count; i++){
-//					Vec3d prev = sourceVec.getLeft();//new Vec3d(arc.xSt, arc.ySt, arc.zSt);
-//					for(int node = 0; node < (int) (distance / arc.length) - 1; node++){
-//						Vec3d next = arc.states[i][node];
-//
-//						if(invalidState){
-//							next = new Vec3d(prev.x + deltaVec.x * (RAND.nextFloat() * 0.2F - .05F) + RAND.nextFloat() * 0.5 - .25F, prev.y + deltaVec.y * (RAND.nextFloat() * .2F - .05F) + RAND.nextFloat() * 0.5 - .25F, prev.z + deltaVec.z * (RAND.nextFloat() * .2F - .05F) + RAND.nextFloat() * 0.5 - .25F);
-//							arc.states[i][node] = next;
-//						}
-//
-//						Vec3d vec = next.subtract(prev).crossProduct(game.player.getLook(e.getPartialTicks()));//new Vec3d(prev.x - game.player.posX, prev.y - game.player.posY, prev.z - game.player.posZ).crossProduct(new Vec3d(next.x - game.player.posX, next.y - game.player.posY, next.z - game.player.posZ));
-//						vec = vec.normalize().scale(arcWidth / 2F);
-//
-//						buf.pos(next.x - vec.x, next.y - vec.y, next.z - vec.z).endVertex();
-//						buf.pos(next.x + vec.x, next.y + vec.y, next.z + vec.z).endVertex();
-//						buf.pos(prev.x + vec.x, prev.y + vec.y, prev.z + vec.z).endVertex();
-//						buf.pos(prev.x - vec.x, prev.y - vec.y, prev.z - vec.z).endVertex();
-//
-//						prev = next;
-//					}
-//				}
-//
-//				tes.draw();
-//				GlStateManager.color(1, 1, 1);
-//				GlStateManager.popAttrib();
-//				GlStateManager.popMatrix();
-//			}
-//
-//			for(LooseArcRenderable arc : toRemove){
-//				SafeCallable.effectsToRender.remove(arc);
-//			}
-//
-//			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-//			GlStateManager.enableTexture2D();
-//			GlStateManager.enableCull();
-//			GlStateManager.disableBlend();
-//			GlStateManager.enableLighting();
-//
-//			game.profiler.endSection();
-//		}
 	}
 
 	private static final ResourceLocation MAGIC_BAR_BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/magic_info_back.png");
@@ -510,19 +236,32 @@ public final class EventHandlerClient{
 				return;
 			}
 			NBTTagCompound entNBT = player.getEntityData();
-			if(!entNBT.hasKey("fStop")){
-				player.updateBlocked = false;
-			}else{
-				entNBT.removeTag("fStop");
+
+			if(entNBT.getBoolean(EventHandlerCommon.MAIN_KEY)){
+				if(!entNBT.getBoolean(EventHandlerCommon.SUB_KEY)){
+					player.updateBlocked = false;
+				}
+				entNBT.setBoolean(EventHandlerCommon.MAIN_KEY, false);
+				entNBT.setBoolean(EventHandlerCommon.SUB_KEY, false);
 			}
+
+
+			if(SafeCallable.playerTickCount == 0){
+				entNBT.setBoolean(EventHandlerCommon.MAIN_KEY, true);
+				if(player.updateBlocked){
+					entNBT.setBoolean(EventHandlerCommon.SUB_KEY, true);
+				}else{
+					player.updateBlocked = true;
+				}
+			}
+
 			if(SafeCallable.playerTickCount == 0){
 				if(player.updateBlocked){
 					entNBT.setBoolean("fStop", true);
 				}else{
 					player.updateBlocked = true;
 				}
-			}else{
-				player.updateBlocked = false;
+			}else if(!player.updateBlocked){
 				int extraTicks = SafeCallable.playerTickCount - 1;
 				for(int i = 0; i < extraTicks; i++){
 					player.onUpdate();

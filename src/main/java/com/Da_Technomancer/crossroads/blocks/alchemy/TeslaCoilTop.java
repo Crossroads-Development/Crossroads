@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTopTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -44,7 +44,7 @@ public class TeslaCoilTop extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
+		if(ILinkTE.isLinkTool(heldItem)){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(!worldIn.isRemote && te instanceof TeslaCoilTopTileEntity){
 				((TeslaCoilTopTileEntity) te).wrench(heldItem, playerIn);

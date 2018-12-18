@@ -51,10 +51,17 @@ public class GatewayFrame extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
+		if(ILinkTE.isLinkTool(heldItem)){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(!worldIn.isRemote && te instanceof ILinkTE){
 				((ILinkTE) te).wrench(heldItem, playerIn);
+			}
+			return true;
+		}else if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
+			worldIn.setBlockState(pos, state.cycleProperty(EssentialsProperties.FACING));
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(!worldIn.isRemote && te instanceof GatewayFrameTileEntity){
+				((GatewayFrameTileEntity) te).resetCache();
 			}
 			return true;
 		}

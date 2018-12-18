@@ -34,6 +34,12 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 		return dir;
 	}
 
+	@Override
+	public void resetBeamer(){
+		super.resetBeamer();
+		dir = null;
+	}
+
 	public int adjustSetting(){
 		setting += 1;
 		setting %= RATES.length;
@@ -63,7 +69,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 
 			//Prevent overfilling by removing excess beams
 			if(storage.getPower() > CAPACITY){
-				storage.subtractBeam(storage.getOutput().mult((double) CAPACITY / (double) storage.getPower(), false));
+				storage.subtractBeam(storage.getOutput().mult(1D - (double) CAPACITY / (double) storage.getPower(), false));
 			}
 		}
 

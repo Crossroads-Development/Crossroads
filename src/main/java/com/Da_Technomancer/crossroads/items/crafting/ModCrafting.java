@@ -15,6 +15,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsBlocks;
+import com.Da_Technomancer.essentials.items.EssentialsItems;
 import com.Da_Technomancer.essentials.items.crafting.EssentialsCrafting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
@@ -209,8 +210,6 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.flyingMachine, 1), "___", "@-@", "|+|", '_', "ingotBronze", '@', "gearCopshowium", '-', new ItemStack(ModBlocks.antiDensusPlate, 1), '+', new ItemStack(ModBlocks.densusPlate, 1), '|', "stickIron"));
 		//Copshowium Creation Chamber
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', ModItems.pureQuartz, '^', ModItems.luminescentQuartz, '&', ModBlocks.fluidCoolingChamber));
-		//Chunk Unlocker
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.chunkUnlocker, 1), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', ModItems.lensArray));
 		//Gateway Frame
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.gatewayFrame, 3), "***", "^^^", "%^%", '*', Blocks.STONE, '^', "ingotCopshowium", '%', "obsidian"));
 		//Beam Cage
@@ -229,14 +228,8 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneAxis, 1), "*^*", "^&^", "*^*", '*', "dustRedstone", '^', "nuggetBronze", '&', ModBlocks.masterAxis));
 		//Math Axis
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.mathAxis, 1), "B|B", "GAG", "B|B", 'B', "nuggetBronze", '|', "stickIron", 'G', "gearCopshowium", 'A', ModBlocks.masterAxis));
-		//Flux Regulated Axis
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxReaderAxis, 1), "***", "*&*", "***", '*', "nuggetCopshowium", '&', ModBlocks.masterAxis));
 		//Master Axis (Cheap Technomancy recipe)
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.masterAxis, 1), "***", "*#*", "*&*", '*', "nuggetIron", '#', "nuggetCopshowium", '&', "stickIron"));
-		//Rate Manipulator
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.rateManipulator, 2), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', "gemEmerald"));
-		//Flux Manipulator
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxManipulator, 2), "*^*", "^&^", "*^*", '*', "ingotBronze", '^', "ingotCopshowium", '&', "gemRuby"));
 		//Pistol
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.pistol, 1), "CBB", "CA ", 'C', "ingotCopshowium", 'B', "ingotBronze", 'A', ModItems.lensArray));
 		toRegister.add(new PrototypeItemSetRecipe(ModItems.pistol, "prot"));
@@ -437,6 +430,8 @@ public final class ModCrafting{
 		//Cavorite Block
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.cavorite, 1), "**", "**", '*', "gemCavorite"));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.solidCavorite, 4), ModBlocks.cavorite));
+		//Linking tool
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.linkingTool, 1), EssentialsItems.wrench, "dustRedstone"));
 	}
 
 	private static ItemStack getFilledHopper(){

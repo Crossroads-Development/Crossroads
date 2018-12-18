@@ -253,6 +253,8 @@ item.dust_bedrock.name=Bedrock Dust
 tile.math_axis.name=Mathematical Master Axis
 tile.flux_node.name=Flux Node
 tile.flux_void.name=Flux Consumer (WIP)
+item.linking_tool.name=Linking Tool
+tile.temporal_accelerator.name=Temporal Accelerator
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=Raw %1$s Grit

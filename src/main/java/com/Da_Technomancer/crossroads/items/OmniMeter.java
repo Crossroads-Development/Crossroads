@@ -93,7 +93,9 @@ public class OmniMeter extends Item{
 							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumBeamAlignments.getAlignment(check).toString() + TextFormatting.RESET.toString()));
 							StoreNBTToClient.syncNBTToClient((EntityPlayerMP) player, false);
 						}
-						chat.add(EnumFacing.byIndex(i).toString() + ": " + check.toString());
+						String dir = EnumFacing.byIndex(i).toString();
+						dir = Character.toUpperCase(dir.charAt(0)) + dir.substring(1);
+						chat.add(dir + ": " + check.toString());
 					}
 				}
 			}

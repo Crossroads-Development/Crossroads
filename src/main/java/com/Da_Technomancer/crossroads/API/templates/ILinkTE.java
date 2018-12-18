@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
+import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +17,10 @@ public interface ILinkTE{
 
 	public static final String POS_NBT = "c_link";
 	public static final String DIM_NBT = "c_link_dim";
+
+	public static boolean isLinkTool(ItemStack stack){
+		return stack.getItem() == ModItems.linkingTool;
+	}
 
 	/**
 	 * @return This TE

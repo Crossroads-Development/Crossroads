@@ -64,10 +64,6 @@ public class ModBlocks{
 	public static Ratiator ratiator;
 	public static BeaconHarness beaconHarness;
 	public static FatFeeder fatFeeder;
-	public static ChunkUnlocker chunkUnlocker; 
-	public static RateManipulator rateManipulator;
-	public static FluxManipulator fluxManipulator;
-	public static FluxReaderAxis fluxReaderAxis;
 	public static RedstoneAxis redstoneAxis;
 	public static CageCharger cageCharger;
 	public static HamsterWheel hamsterWheel;
@@ -137,6 +133,7 @@ public class ModBlocks{
 	public static RedstoneReceiver redstoneReceiver;
 	public static FluxNode fluxNode;
 	public static FluxConsumer fluxConsumer;
+	public static TemporalAccelerator temporalAccelerator;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
 	
@@ -217,10 +214,6 @@ public class ModBlocks{
 		ratiator = new Ratiator();
 		beaconHarness = new BeaconHarness();
 		fatFeeder = new FatFeeder();
-		chunkUnlocker = new ChunkUnlocker();
-		rateManipulator = new RateManipulator();
-		fluxManipulator = new FluxManipulator();
-		fluxReaderAxis = new FluxReaderAxis();
 		redstoneAxis = new RedstoneAxis();
 		cageCharger = new CageCharger();
 		hamsterWheel = new HamsterWheel();
@@ -296,6 +289,7 @@ public class ModBlocks{
 		redstoneReceiver = new RedstoneReceiver();
 		fluxNode = new FluxNode();
 		fluxConsumer = new FluxConsumer();
+		temporalAccelerator = new TemporalAccelerator();
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -104,6 +104,7 @@ public final class ModItems{
 	public static FlyingMachine flyingMachine;
 	public static TeslaRay teslaRay;
 	public static Slag slag;
+	public static LinkingTool linkingTool;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -177,6 +178,7 @@ public final class ModItems{
 		flyingMachine = new FlyingMachine();
 		teslaRay = new TeslaRay();
 		slag = new Slag();
+		linkingTool = new LinkingTool();
 	}
 
 	@SideOnly(Side.CLIENT)

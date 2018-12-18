@@ -18,7 +18,6 @@ public class ModPackets{
 		network.registerMessage(SendDoubleToClient.class, SendDoubleToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(StoreNBTToClient.class, StoreNBTToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendChatToClient.class, SendChatToClient.class, packetId++, Side.CLIENT);
-		network.registerMessage(SendFieldsToClient.class, SendFieldsToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendBeamItemToServer.class, SendBeamItemToServer.class, packetId++, Side.SERVER);
 		network.registerMessage(SendDimLoadToClient.class, SendDimLoadToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendDoubleToServer.class, SendDoubleToServer.class, packetId++, Side.SERVER);

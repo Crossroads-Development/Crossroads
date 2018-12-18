@@ -1,19 +1,17 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.ChunkField;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.API.technomancy.FieldWorldSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,8 +24,8 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -45,15 +43,14 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
-import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
 
 public final class EventHandlerCommon{
 
@@ -108,6 +105,10 @@ public final class EventHandlerCommon{
 		}
 	}
 
+	//The main and sub keys allow differentiating between entities with updateBlocked due to crossroads, and updateBlocked due to other mods. In effect, it is a preemptive compatibility bugfix
+	protected static final String MAIN_KEY = "cr_pause";
+	protected static final String SUB_KEY = "cr_pause_prior";
+
 	@SubscribeEvent
 	public void worldTick(WorldTickEvent e){
 		//Retrogen
@@ -131,111 +132,46 @@ public final class EventHandlerCommon{
 			BeamManager.cycleNumber = e.world.getTotalWorldTime() / BeamManager.BEAM_TIME;
 		}
 
-		//Field calculations
-		if(!e.world.isRemote && e.world.getTotalWorldTime() % 5 == 0 && e.phase == TickEvent.Phase.END){
-			e.world.profiler.startSection(Main.MODNAME + "-Field Calculations");
-			FieldWorldSavedData data = FieldWorldSavedData.get(e.world);
-			HashSet<Long> toRemove = new HashSet<Long>(8);
-
-			for(Entry<Long, ChunkField> datum : data.fieldNodes.entrySet()){
-				Long key = datum.getKey();
-				try{
-					if(datum.getValue().tick(e.world, MiscUtil.getChunkPosFromLong(key))){
-						toRemove.add(key);
-					}
-				}catch(Exception ex){
-					toRemove.add(key);
-					Main.logger.log(Level.ERROR, "Caught an exception while calculating fields in dim: " + e.world.provider.getDimension() + ", ChunkPos: " + MiscUtil.getChunkPosFromLong(key).toString(), ex);
-				}
-			}
-
-			for(long remove : toRemove){
-				data.fieldNodes.remove(remove);
-			}
-
-			e.world.profiler.endSection();
-		}
 
 		//Time Dilation
 		if(!e.world.isRemote && e.phase == Phase.START){
 			e.world.profiler.startSection(Main.MODNAME + ": Entity Time Dilation");
-			HashMap<Long, ChunkField> fields = FieldWorldSavedData.get(e.world).fieldNodes;
-			ArrayList<PrototypeInfo> prototypes = PrototypeWorldSavedData.get(false).prototypes;
-			WorldServer prototypeWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-			HashMap<Long, ChunkField> fieldsProt = prototypeWorld == null ? null : FieldWorldSavedData.get(prototypeWorld).fieldNodes;
-			//A copy of the original list is used to avoid ConcurrentModificationExceptions that arise from entities removing themselves when ticked.
-			ArrayList<Entity> entities = new ArrayList<Entity>(e.world.loadedEntityList);
-			for(Entity ent : entities){
+			ArrayList<TemporalAcceleratorTileEntity.Region> timeStoppers = new ArrayList<>();
+			for(TileEntity te : e.world.tickableTileEntities){
+				if(te instanceof TemporalAcceleratorTileEntity && ((TemporalAcceleratorTileEntity) te).stoppingTime()){
+					timeStoppers.add(((TemporalAcceleratorTileEntity) te).getRegion());
+				}
+			}
+
+			for(Entity ent : e.world.loadedEntityList){
 				NBTTagCompound entNBT = ent.getEntityData();
-				if(!entNBT.hasKey("fStop")){
-					ent.updateBlocked = false;
-				}else{
-					entNBT.removeTag("fStop");
-				}
-
-				int potential = 8;
-
-				BlockPos entityPos = ent.getPosition();
-				long entityChunk = MiscUtil.getLongFromChunkPos(new ChunkPos(entityPos));
-				if(fields.containsKey(entityChunk)){
-					ChunkField entFields = fields.get(entityChunk);
-					int chunkRelX = MiscUtil.getChunkRelativeCoord(entityPos.getX());
-					int chunkRelZ = MiscUtil.getChunkRelativeCoord(entityPos.getZ());
-					potential = 1 + entFields.nodes[chunkRelX][chunkRelZ];
-					if(entFields.nodes[chunkRelX][chunkRelZ] > entFields.flux){
-						potential = 0;
+				if(entNBT.getBoolean(MAIN_KEY)){
+					if(!entNBT.getBoolean(SUB_KEY)){
+						ent.updateBlocked = false;
 					}
+					entNBT.setBoolean(MAIN_KEY, false);
+					entNBT.setBoolean(SUB_KEY, false);
 				}
 
-				if(fieldsProt != null){
-					for(EntityPlayer play : e.world.playerEntities){
-						ItemStack heldStack = play.getHeldItem(EnumHand.MAIN_HAND);
-						int offsetX = 7 + entityPos.getX() - play.getPosition().getX();
-						int offsetZ = 7 + entityPos.getZ() - play.getPosition().getZ();
-						if(heldStack.getItem() == ModItems.watch && heldStack.hasTagCompound() && offsetX < 16 && offsetZ < 16 && offsetX >= 0 && offsetZ >= 0){
-							NBTTagCompound watchNBT = heldStack.getTagCompound().getCompoundTag("prot");
-							if(!watchNBT.hasKey("index")){
-								continue;
-							}
-							int index = watchNBT.getInteger("index");
-							if(prototypes.size() <= index || prototypes.get(index) == null){
-								heldStack.getTagCompound().removeTag("prot");
-								continue;
-							}
-
-							ChunkField watchFields = fieldsProt.get(MiscUtil.getLongFromChunkPos(prototypes.get(index).chunk));
-							if(watchFields != null){
-								potential *= 1 + watchFields.nodes[offsetX][offsetZ];
-								potential /= 8;
-								if(watchFields.nodes[offsetX][offsetZ] > watchFields.flux){
-									potential = 0;
-								}
-							}
+				for(TemporalAcceleratorTileEntity.Region region : timeStoppers){
+					if(region.inRegion(ent.getPosition())){
+						entNBT.setBoolean(MAIN_KEY, true);
+						if(ent.updateBlocked){
+							entNBT.setBoolean(SUB_KEY, true);
+						}else{
+							ent.updateBlocked = true;
 						}
-					}
-				}
-
-				int totalRuns = (potential / 8) + (RAND.nextInt(8) < potential % 8 ? 1 : 0);
-
-				if(totalRuns == 1){
-					continue;
-				}
-				if(ent instanceof EntityPlayerMP){
-					ModPackets.network.sendTo(new SendPlayerTickCountToClient(totalRuns), (EntityPlayerMP) ent);
-				}
-				for(int i = 1; i < totalRuns; i++){
-					ent.onUpdate();
-				}
-				if(totalRuns == 0){
-					if(ent.updateBlocked){
-						entNBT.setBoolean("fStop", true);
-					}else{
-						ent.updateBlocked = true;
+						if(ent instanceof EntityPlayerMP){
+							ModPackets.network.sendTo(new SendPlayerTickCountToClient(0), (EntityPlayerMP) ent);
+						}
+						break;
 					}
 				}
 			}
 			e.world.profiler.endSection();
 		}
+
+
 
 		//Atmospheric overcharge effect
 		if(!e.world.isRemote && (ModConfig.getConfigInt(ModConfig.atmosEffect, false) & 1) == 1){
