@@ -37,11 +37,11 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	/**Server side: A record of the last speeds sent to the render.*/
 	private double[] lastSentAngle = new double[3];
 	/**
-	 * Math.min((redstone - 1) / 6, EFFECTS.length - 1) corresponds to action type, which are:
+	 * (redstone_red_side - 1)%effects_length corresponds to action type, which are:
 	 * 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Throw entity, 7: Pickup one from inventory.
-	 * EnumFacing.byIndex((redstone - 1) % 6) corresponds to an EnumFacing. Only some action types (2, 3, 4, 7) vary based on EnumFacing.
+	 * redstone_yellow_side % 6 corresponds to an (optional) EnumFacing. Only some action types (2, 3, 4, 7) vary based on EnumFacing.
 	 */
-	private int redstone = -1;
+	private int redstone = 0;
 	public EntityArmRidable ridable;
 	private UUID ridableID;
 
@@ -65,10 +65,6 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 					}
 				}
 
-				if(redstone == -1){
-					setRedstone(RedstoneUtil.getPowerOnSide(world, pos, EnumFacing.NORTH));
-				}
-
 				if(ridable == null || ridable.isDead){
 					if(ridableID != null){
 						for(EntityArmRidable ent : world.getEntities(EntityArmRidable.class, (EntityArmRidable filter) -> true)){
@@ -87,22 +83,19 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 					}
 				}
 
-				int actionType = -1;
-				if(redstone != 0){
-					actionType = Math.min((redstone - 1) / 6, EFFECTS.length - 1);
-				}
-
-				EnumFacing side = EnumFacing.byIndex((redstone - 1) % 6);
 
 				double posX = angle[2] * Math.cos(angle[0]) + 0.5D + (double) pos.getX();
 				double posY = angle[1] + 1D + (double) pos.getY();
 				double posZ = angle[2] * Math.sin(angle[0]) + 0.5D + (double) pos.getZ();
 				BlockPos endPos = new BlockPos(posX, posY, posZ);
-
 				ridable.setPositionAndUpdate(posX, posY, posZ);
 
-				if(actionType != -1 && EFFECTS[actionType].onTriggered(world, endPos, posX, posY, posZ, side, ridable, this)){
+				if(redstone > 0){
+					EnumFacing side = EnumFacing.byIndex(((int) Math.round(RedstoneUtil.getPowerOnSide(world, pos, EnumFacing.SOUTH))) % 6);
+					EFFECTS[(redstone - 1) % EFFECTS.length].onTriggered(world, endPos, posX, posY, posZ, side, ridable, this);
 					world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, .5F, .75F);
+					redstone = -redstone;
+					markDirty();
 				}
 			}
 		}
@@ -128,8 +121,11 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		}
 	}
 
-	public void setRedstone(double redstoneIn){
-		redstone = (int) Math.round(redstoneIn);
+	public void setRedstone(int redstoneIn){
+		if(redstone != redstoneIn && -redstone != redstoneIn){
+			redstone = (int) Math.round(redstoneIn);
+			markDirty();
+		}
 	}
 
 	@Override
@@ -158,6 +154,8 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		nbt.setDouble("l_angle1", angleRecord[1]);
 		nbt.setDouble("l_angle2", angleRecord[2]);
 
+		nbt.setInteger("redstone", redstone);
+
 		if(ridableID != null){
 			nbt.setLong("id_greater", ridableID.getMostSignificantBits());
 			nbt.setLong("id_lesser", ridableID.getLeastSignificantBits());
@@ -178,6 +176,8 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		angleRecord[0] = nbt.getDouble("l_angle0");
 		angleRecord[1] = nbt.getDouble("l_angle1");
 		angleRecord[2] = nbt.getDouble("l_angle2");
+
+		redstone = nbt.getInteger("redstone");
 
 		ridableID = nbt.hasKey("id_lesser") ? new UUID(nbt.getLong("id_greater"), nbt.getLong("id_lesser")) : null;
 	}

@@ -43,7 +43,7 @@ public class MechanicalArm extends BlockContainer{
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		 //Redstone controlled by north side.
-		((MechanicalArmTileEntity) worldIn.getTileEntity(pos)).setRedstone(RedstoneUtil.getPowerOnSide(worldIn, pos, EnumFacing.NORTH));
+		((MechanicalArmTileEntity) worldIn.getTileEntity(pos)).setRedstone((int) Math.round(RedstoneUtil.getPowerOnSide(worldIn, pos, EnumFacing.NORTH)));
 	}
 	
 	@Override

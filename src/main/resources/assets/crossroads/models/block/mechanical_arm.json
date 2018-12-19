@@ -2,7 +2,7 @@
 	"parent": "block/cube_all",
 	"textures": {
 		"north": "crossroads:blocks/iron_redstone",
-		"south": "blocks/iron_block",
+		"south": "crossroads:blocks/iron_redstone_yellow",
 		"east": "crossroads:blocks/iron_axle",
 		"west": "crossroads:blocks/iron_axle",
 		"up": "crossroads:blocks/mechanical_arm_top",

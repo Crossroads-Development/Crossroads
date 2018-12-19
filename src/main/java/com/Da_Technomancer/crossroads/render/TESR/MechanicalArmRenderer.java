@@ -32,7 +32,7 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 
 		//Lower arm
 		GlStateManager.pushMatrix();
-		GlStateManager.scale(1, angle[1], 1);
+		GlStateManager.scale(2, angle[1], 2);
 		ModelAxle.render(ironColor);
 		GlStateManager.popMatrix();
 
@@ -40,14 +40,14 @@ public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalA
 
 		//Connecting joint
 		GlStateManager.pushMatrix();
-		GlStateManager.scale(2D, 0.25D, 2D);
+		GlStateManager.scale(4D, 0.25D, 4D);
 		ModelAxle.render(ironColor);
 		GlStateManager.popMatrix();
 
 		//Upper Arm
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.scale(.8D, angle[2], .8D);
+		GlStateManager.scale(1, angle[2], 1);
 		GlStateManager.translate(0, 0.5D, 0);
 		ModelAxle.render(ironColor);
 		GlStateManager.popMatrix();

@@ -239,7 +239,7 @@ public final class ModCrafting{
 		toRegister.add(new PrototypeItemSetRecipe(ModItems.watch, "prot"));
 		toRegister.add(new PrototypeItemClearRecipe(ModItems.watch, "prot"));
 		//Mechanical Arm
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.mechanicalArm, 1), " * ", " ||", "***", '|', "stickIron", '*', "gearCopshowium"));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.mechanicalArm, 1), " *|", " | ", "*I*", 'I', "blockIron", '|', "stickIron", '*', "gearCopshowium"));
 		//Redstone Registry
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneRegistry, 1), "*&*", "&^&", "*&*", '*', "nuggetTin", '&', ModBlocks.redstoneKeyboard, '^', "ingotCopshowium"));
 		//Detailed Crafting Table (Cheap Technomancy Recipe)
