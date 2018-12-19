@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -27,6 +28,11 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return oldState.getBlock() != newState.getBlock();
+	}
+
+	@Override
+	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+		//No-Op, doesn't create links
 	}
 
 	@Override

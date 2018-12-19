@@ -33,7 +33,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	
 	public void setOutput(double[] output){
 		this.output = output == null ? new double[1] : output;
-		index = Math.min(index, output.length - 1);
+		index = Math.min(index, this.output.length - 1);
 	}
 	
 	public int getIndex(){
@@ -45,13 +45,15 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	}
 	
 	public void activate(double power){
-		int floor = (int) Math.floor(power);
-		if(floor >= output.length){
-			index = 0;
-		}else{
-			index += floor;
-			index %= output.length;
-		}
+		index++;
+		index %= output.length;
+//		int floor = (int) Math.floor(power);
+//		if(floor >= output.length){
+//			index = 0;
+//		}else{
+//			index += floor;
+//			index %= output.length;
+//		}
 		world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneRegistry, false);
 	}
 

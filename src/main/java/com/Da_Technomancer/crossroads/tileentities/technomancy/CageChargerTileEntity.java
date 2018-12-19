@@ -36,7 +36,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
-		return (oldState.getBlock() != newState.getBlock());
+		return oldState.getBlock() != newState.getBlock();
 	}
 	
 	public void setCage(ItemStack cage){
@@ -50,7 +50,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_CAPABILITY && side != EnumFacing.DOWN){
+		if(cap == Capabilities.MAGIC_CAPABILITY){
 			return true;
 		}
 
@@ -60,7 +60,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_CAPABILITY && side != EnumFacing.DOWN){
+		if(cap == Capabilities.MAGIC_CAPABILITY){
 			return (T) magicHandler;
 		}
 

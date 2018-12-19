@@ -1,5 +1,8 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
+import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -7,16 +10,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.ArrayList;
 
 /**
  * A helper class to be placed on TileEntities to enable basic linking behaviour
  */
-public interface ILinkTE{
+public interface ILinkTE extends ILongReceiver{
 
 	public static final String POS_NBT = "c_link";
 	public static final String DIM_NBT = "c_link_dim";
+	public static final byte LINK_PACKET_ID = 8;
+	public static final byte CLEAR_PACKET_ID = 9;
 
 	public static boolean isLinkTool(ItemStack stack){
 		return stack.getItem() == ModItems.linkingTool;
@@ -64,6 +70,8 @@ public interface ILinkTE{
 			player.sendMessage(new TextComponentString("Device already linked; Canceling linking"));
 		}else if(links.size() < getMaxLinks()){
 			links.add(linkPos);
+			BlockPos tePos = getTE().getPos();
+			ModPackets.network.sendToAllAround(new SendLongToClient(LINK_PACKET_ID, linkPos.toLong(), tePos), new NetworkRegistry.TargetPoint(getTE().getWorld().provider.getDimension(), tePos.getX(), tePos.getY(), tePos.getZ(), 512));
 			getTE().markDirty();
 			player.sendMessage(new TextComponentString("Linked device at " + getTE().getPos() + " to send to " + endpoint.getTE().getPos()));
 			return true;
@@ -114,5 +122,7 @@ public interface ILinkTE{
 
 	public default void clearLinks(){
 		getLinks().clear();
+		BlockPos tePos = getTE().getPos();
+		ModPackets.network.sendToAllAround(new SendLongToClient(CLEAR_PACKET_ID, 0, tePos), new NetworkRegistry.TargetPoint(getTE().getWorld().provider.getDimension(), tePos.getX(), tePos.getY(), tePos.getZ(), 512));
 	}
 }

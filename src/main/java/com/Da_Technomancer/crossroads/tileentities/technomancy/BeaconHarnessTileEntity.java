@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.IFluxHandler;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -74,6 +75,9 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ILinkTE, IF
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
+		for(int i = 0; i < links.size(); i++){
+			nbt.setLong("link" + i, links.get(i).toLong());
+		}
 		nbt.setBoolean("run", running);
 		return nbt;
 	}
@@ -197,5 +201,14 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ILinkTE, IF
 	@Override
 	protected boolean[] outputSides(){
 		return new boolean[] {false, true, false, false, false, false};
+	}
+
+	@Override
+	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+		if(identifier == LINK_PACKET_ID){
+			links.add(BlockPos.fromLong(message));
+		}else if(identifier == CLEAR_PACKET_ID){
+			links.clear();
+		}
 	}
 }

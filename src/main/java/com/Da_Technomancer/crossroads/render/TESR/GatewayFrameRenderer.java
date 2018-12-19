@@ -8,14 +8,13 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GatewayFrameRenderer extends TileEntitySpecialRenderer<GatewayFrameTileEntity>{
+public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/gateway.png");
 
@@ -24,6 +23,7 @@ public class GatewayFrameRenderer extends TileEntitySpecialRenderer<GatewayFrame
 		if(frame == null || !frame.getWorld().isBlockLoaded(frame.getPos(), false) || frame.getWorld().getBlockState(frame.getPos()).getValue(EssentialsProperties.FACING) != EnumFacing.UP){
 			return;
 		}
+		super.render(frame, x, y, z, partialTicks, destroyStage, alpha);
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
 		GlStateManager.enableBlend();

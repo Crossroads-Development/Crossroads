@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EntitySelectors;
@@ -15,6 +16,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,15 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 			}
 		}
 		return variant;
+	}
+
+	@Override
+	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+		if(identifier == LINK_PACKET_ID){
+			linked.add(BlockPos.fromLong(message));
+		}else if(identifier == CLEAR_PACKET_ID){
+			linked.clear();
+		}
 	}
 
 	protected boolean jolt(TeslaCoilTileEntity coilTE){
@@ -89,6 +100,15 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 		for(BlockPos link : linked){
 			chat.add("Linked Position: X=" + (pos.getX() + link.getX()) + " Y=" + (pos.getY() + link.getY()) + " Z=" + (pos.getZ() + link.getZ()));
 		}
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		for(int i = 0; i < linked.size(); i++){
+			nbt.setLong("link" + i, linked.get(i).toLong());
+		}
+		return nbt;
 	}
 
 	@Override

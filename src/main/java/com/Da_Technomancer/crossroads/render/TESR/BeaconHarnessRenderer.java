@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
@@ -17,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 import java.util.Random;
 
-public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarnessTileEntity>{
+public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEntity>{
 
 	private static final Random rand = new Random();
 	
@@ -26,6 +25,8 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false)){
 			return;
 		}
+
+		super.render(beam, x, y, z, partialTicks, destroyStage, alpha);
 
 		int[] packet = beam.getRenderedBeams();
 		float brightX = OpenGlHelper.lastBrightnessX;

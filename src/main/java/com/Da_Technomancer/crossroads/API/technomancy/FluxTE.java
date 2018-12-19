@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -28,6 +29,15 @@ public abstract class FluxTE extends ModuleTE implements ILinkTE, IFluxHandler{
 		if(moved != 0){
 			flux -= moved;
 			markDirty();
+		}
+	}
+
+	@Override
+	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+		if(identifier == LINK_PACKET_ID){
+			links.add(BlockPos.fromLong(message));
+		}else if(identifier == CLEAR_PACKET_ID){
+			links.clear();
 		}
 	}
 
@@ -59,6 +69,15 @@ public abstract class FluxTE extends ModuleTE implements ILinkTE, IFluxHandler{
 				links.add(BlockPos.fromLong(nbt.getLong("link" + i)));
 			}
 		}
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		for(int i = 0; i < links.size(); i++){
+			nbt.setLong("link" + i, links.get(i).toLong());
+		}
+		return nbt;
 	}
 
 	@Override

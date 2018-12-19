@@ -60,7 +60,7 @@ public class FluxConsumer extends BlockContainer{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Destroys 4 flux/cycle");
+		tooltip.add("Destroys 8 flux/cycle");
 		tooltip.add("Does not break when filled with flux");
 		tooltip.add("FOR DEVELOPMENT AND TESTING PURPOSES; WILL BE REPLACED IN FUTURE");
 	}

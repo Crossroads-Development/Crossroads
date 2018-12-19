@@ -121,6 +121,15 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 	}
 
 	@Override
+	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+		if(identifier == LINK_PACKET_ID){
+			links.add(BlockPos.fromLong(message));
+		}else if(identifier == CLEAR_PACKET_ID){
+			links.clear();
+		}
+	}
+
+	@Override
 	public int addFlux(int fluxIn){
 		flux += fluxIn;
 		markDirty();
@@ -155,6 +164,9 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
+		for(int i = 0; i < links.size(); i++){
+			nbt.setLong("link" + i, links.get(i).toLong());
+		}
 		nbt.setInteger("throughput", throughput);
 		return nbt;
 	}

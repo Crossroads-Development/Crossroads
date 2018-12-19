@@ -8,15 +8,13 @@ import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class FluxNodeRenderer extends TileEntitySpecialRenderer<FluxNodeTileEntity>{
+public class FluxNodeRenderer extends LinkLineRenderer<FluxNodeTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/gimbal.png");
 	private static final ResourceLocation TEXTURE_COP = new ResourceLocation(Main.MODID, "textures/blocks/block_copshowium.png");
@@ -26,6 +24,8 @@ public class FluxNodeRenderer extends TileEntitySpecialRenderer<FluxNodeTileEnti
 		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false)){
 			return;
 		}
+		super.render(te, x, y, z, partialTicks, destroyStage, alpha);
+
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
 		GlStateManager.disableLighting();
@@ -93,23 +93,6 @@ public class FluxNodeRenderer extends TileEntitySpecialRenderer<FluxNodeTileEnti
 		buf.pos(0.5D, 0.5D, 0.5D).tex(1, 1).endVertex();
 		buf.pos(0.5D, 0.5D, -0.5D).tex(1, 0).endVertex();
 		tess.draw();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		float brightX = OpenGlHelper.lastBrightnessX;
-		float brightY = OpenGlHelper.lastBrightnessY;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-
-		//Flux layer TODO
-
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-		GlStateManager.enableLighting();
-		GlStateManager.disableBlend();
-		GlStateManager.popMatrix();
-
-
-
 
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();

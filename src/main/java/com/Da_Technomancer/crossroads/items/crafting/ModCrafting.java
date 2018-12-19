@@ -213,11 +213,11 @@ public final class ModCrafting{
 		//Gateway Frame
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.gatewayFrame, 3), "***", "^^^", "%^%", '*', Blocks.STONE, '^', "ingotCopshowium", '%', "obsidian"));
 		//Beam Cage
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.beamCage, 1), "*&*", '*', ModBlocks.quartzStabilizer, '&', "ingotCopshowium"));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.beamCage, 1), " L ", "*&*", " L ", '*', ModBlocks.quartzStabilizer, '&', "ingotCopshowium", 'L', ModItems.lensArray));
 		//Cage Charger
-		RecipeHolder.technomancyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.cageCharger, 1), "ingotBronze", "ingotBronze", "ingotCopshowium", ModItems.pureQuartz));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.cageCharger, 1), " B ", "QLQ", 'B', "ingotBronze", 'Q', ModItems.pureQuartz, 'L', ModItems.luminescentQuartz));
 		//Beam Staff
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.staffTechnomancy, 1), "*&*", " & ", " | ", '*', ModItems.lensArray, '&', "ingotCopshowium", '|', "stickIron"));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.staffTechnomancy, 1), "*C*", " | ", " | ", '*', ModItems.lensArray, 'C', ModItems.beamCage, '|', "stickIron"));
 		//Modular Goggles
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.moduleGoggles, 1), "***", "^&^", '&', "ingotCopshowium", '*', "ingotBronze", '^', "blockGlass"));
 		//Prototype Port

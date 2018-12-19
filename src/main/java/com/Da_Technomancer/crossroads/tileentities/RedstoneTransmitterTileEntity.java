@@ -2,11 +2,14 @@ package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -14,7 +17,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE, ILinkTE{
@@ -37,7 +42,6 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 			}
 		}
 	}
-
 
 	public void dye(EnumDyeColor color){
 		if(world.getBlockState(pos).getValue(Properties.COLOR) != color){
@@ -67,6 +71,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 			}
 			markDirty();
 		}
+		ModPackets.network.sendToAllAround(new SendLongToClient(CLEAR_PACKET_ID, 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	public void setOutput(double outputIn){
@@ -77,6 +82,15 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 			}
 			markDirty();
 		}
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		for(int i = 0; i < linked.size(); i++){
+			nbt.setLong("link" + i, linked.get(i).toLong());
+		}
+		return nbt;
 	}
 
 	@Override
@@ -132,6 +146,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 			player.sendMessage(new TextComponentString("Device already linked; Canceling linking"));
 		}else if(linked.size() < getMaxLinks()){
 			linked.add(linkPos);
+			ModPackets.network.sendToAllAround(new SendLongToClient(LINK_PACKET_ID, linkPos.toLong(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			getTE().markDirty();
 			((RedstoneReceiverTileEntity) endpoint).setSrc(pos.subtract(((RedstoneReceiverTileEntity) endpoint).getPos()));
 			((RedstoneReceiverTileEntity) endpoint).dye(world.getBlockState(pos).getValue(Properties.COLOR));
@@ -143,5 +158,14 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 			player.sendMessage(new TextComponentString("All " + getMaxLinks() + " links already occupied; Canceling linking"));
 		}
 		return false;
+	}
+
+	@Override
+	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+		if(identifier == LINK_PACKET_ID){
+			linked.add(BlockPos.fromLong(message));
+		}else if(identifier == CLEAR_PACKET_ID){
+			linked.clear();
+		}
 	}
 }
