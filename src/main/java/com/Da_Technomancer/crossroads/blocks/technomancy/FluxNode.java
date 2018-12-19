@@ -4,8 +4,8 @@ import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -38,27 +38,27 @@ public class FluxNode extends BlockContainer{
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().withProperty(EssentialsProperties.REDSTONE_BOOL, false));
+		setDefaultState(getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP));
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.REDSTONE_BOOL);
+		return new BlockStateContainer(this, EssentialsProperties.FACING);
 	}
 
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+		return EnumBlockRenderType.MODEL;
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.REDSTONE_BOOL, meta == 1);
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(EssentialsProperties.REDSTONE_BOOL) ? 1 : 0;
+		return state.getValue(EssentialsProperties.FACING).getIndex();
 	}
 
 	@Override
@@ -70,6 +70,15 @@ public class FluxNode extends BlockContainer{
 				((ILinkTE) te).wrench(heldItem, playerIn);
 			}
 			return true;
+		}else if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(!worldIn.isRemote){
+				worldIn.setBlockState(pos, state.cycleProperty(EssentialsProperties.FACING));
+				if(te instanceof FluxNodeTileEntity){
+					((FluxNodeTileEntity) te).disconnect();
+				}
+			}
+			return true;
 		}
 		return false;
 	}
@@ -77,27 +86,6 @@ public class FluxNode extends BlockContainer{
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new FluxNodeTileEntity();
-	}
-
-	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		if(worldIn.isBlockPowered(pos)){
-			if(!state.getValue(EssentialsProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, true));
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof FluxNodeTileEntity){
-					((FluxNodeTileEntity) te).updateRedstone(true);
-				}
-			}
-		}else{
-			if(state.getValue(EssentialsProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.withProperty(EssentialsProperties.REDSTONE_BOOL, false));
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof FluxNodeTileEntity){
-					((FluxNodeTileEntity) te).updateRedstone(false);
-				}
-			}
-		}
 	}
 
 	@Override
@@ -112,13 +100,13 @@ public class FluxNode extends BlockContainer{
 
 	@Override
 	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
-		return face == EnumFacing.UP ? BlockFaceShape.CENTER_SMALL : BlockFaceShape.UNDEFINED;
+		return face.getAxis() == state.getValue(EssentialsProperties.FACING).getAxis() ? BlockFaceShape.CENTER_SMALL : BlockFaceShape.UNDEFINED;
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
 		tooltip.add("Transports flux");
 		tooltip.add("Gears attached to the top have speed equal to flux throughput over 4");
-		tooltip.add("A redstone signal prevents receiving flux");
+		tooltip.add("Gears attached to the bottom throttle flux input by speed*4");
 	}
 }

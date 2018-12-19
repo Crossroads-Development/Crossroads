@@ -115,8 +115,14 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 
 	private void refreshBeam(boolean positive){
 		int index = positive ? 1 : 0;
-		ModPackets.network.sendToAllAround(new SendIntToClient(index, beamer[index] == null ? 0 : beamer[index].genPacket(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		if(beamer[index] != null && beamer[index].getLastSent() != null){
+		int packet = beamer[index].genPacket();
+		if(positive){
+			packetPos = packet;
+		}else{
+			packetNeg = packet;
+		}
+		ModPackets.network.sendToAllAround(new SendIntToClient(index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		if(beamer[index].getLastSent() != null){
 			prevMag = beamer[index].getLastSent();
 		}
 	}

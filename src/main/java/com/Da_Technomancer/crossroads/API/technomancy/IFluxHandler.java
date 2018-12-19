@@ -5,7 +5,10 @@ package com.Da_Technomancer.crossroads.API.technomancy;
  */
 public interface IFluxHandler{
 
-	public boolean canReceiveFlux();
+	/**
+	 * @return The maximum amount of flux this device is willing to accept this cycle. This value is ignored if isFluxReceiver is false
+	 */
+	public int canAccept();
 
 	public int getCapacity();
 

@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
-import com.Da_Technomancer.crossroads.dimensions.WorkspaceWorldProvider;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,20 +17,71 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import org.apache.logging.log4j.Level;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class FluxUtil{
 
 	public static final int FLUX_TIME = BeamManager.BEAM_TIME;
+	private static final int[] FLUX_COLOR = new int[] {new Color(255, 0, 0, 255).getRGB(), new Color(255, 90, 0, 255).getRGB(), new Color(255, 70, 0, 255).getRGB()};
 	private static final Random RAND = new Random();
-	private static final int[] fluxCol = new int[] {new Color(255, 0, 0, 255).getRGB(), new Color(255, 240, 240, 255).getRGB(), new Color(255, 150, 0, 255).getRGB()};
 
 	public static void renderFlux(World world, BlockPos startPos, BlockPos endPos, int flux){
-		RenderUtil.addArc(world.provider.getDimension(), startPos.getX() + 0.5F, startPos.getY() + 0.5F, startPos.getZ() + 0.5F, endPos.getX() + 0.5F, endPos.getY() + 0.5F, endPos.getZ() + 0.5F, startPos.getX() + 0.5F, startPos.getY() + 0.5F, startPos.getZ() + 0.5F, (int) Math.ceil(flux / 8D), 0.25F, (byte) FLUX_TIME, fluxCol[RAND.nextInt(3)]);
+		RenderUtil.addArc(world.provider.getDimension(), startPos.getX() + 0.5F, startPos.getY() + 0.5F, startPos.getZ() + 0.5F, endPos.getX() + 0.5F, endPos.getY() + 0.5F, endPos.getZ() + 0.5F, startPos.getX() + 0.5F, startPos.getY() + 0.5F, startPos.getZ() + 0.5F, (int) Math.ceil(flux / 8D), 0.25F, (byte) FLUX_TIME, FLUX_COLOR[RAND.nextInt(3)]);
+	}
+
+	public static int transFlux(World world, BlockPos pos, ArrayList<BlockPos> links, int flux){
+		IFluxHandler[] handlers = new IFluxHandler[links.size()];
+		int handlerCount = 0;
+		int slots = 0;
+
+		for(BlockPos offset : links){
+			TileEntity te = world.getTileEntity(pos.add(offset));
+			if(te instanceof IFluxHandler && ((IFluxHandler) te).isFluxReceiver() && ((IFluxHandler) te).canAccept() > 0){
+				handlers[handlerCount] = (IFluxHandler) te;
+				slots += handlers[handlerCount].canAccept();
+				handlerCount++;
+			}
+		}
+
+		if(slots <= flux){
+			for(int i = 0; i < handlerCount; i++){
+				handlers[i].addFlux(handlers[i].canAccept());
+			}
+			return slots;
+		}
+
+		float partial = 0;
+		int lastUnsatified = 0;
+		//Distribute flux as the weighted average of what each handler can accept, with un-distributed decimal quantities of flux stored in partial
+		for(int i = 0; i < handlerCount; i++){
+			float idealAdded = (float) handlers[i].canAccept() * (float) flux / (float) slots;
+			int added = (int) idealAdded;
+			partial += idealAdded - added;
+			if(partial >= 1F){
+				partial -= 1F;
+				added += 1;
+			}
+			if(added < handlers[i].canAccept()){
+				lastUnsatified = i;
+			}
+			handlers[i].addFlux(added);
+			try{
+				renderFlux(world, pos, ((TileEntity) handlers[i]).getPos(), added);
+			}catch(ClassCastException e){
+				Main.logger.log(Level.ERROR, "FluxHandler of type " + handlers[i].getClass() + " not attached to TileEntity! Report to mod author", e);
+			}
+		}
+		//Account for rounding errors
+		if(partial > 0.0005F){
+			handlers[lastUnsatified].addFlux(1);
+		}
+
+		return flux;
 	}
 
 	public static void fluxEvent(World worldIn, BlockPos pos, int intensity){
-		if(worldIn.provider instanceof WorkspaceWorldProvider || worldIn.provider instanceof PrototypeWorldProvider){
+		if(worldIn.provider instanceof PrototypeWorldProvider){
 			return;
 		}
 
@@ -57,7 +107,7 @@ public class FluxUtil{
 			}
 		}else if(severity >= 5 && ModConfig.magicChunk.getBoolean()){
 			ChunkPos base = worldIn.getChunk(pos).getPos();
-			for(int i = 0; i < severity; i++){
+			for(int i = 0; i < 64; i++){
 				BlockPos effectPos = base.getBlock(RAND.nextInt(16), RAND.nextInt(256), RAND.nextInt(16));
 				EnumBeamAlignments element;
 				do{
@@ -87,7 +137,9 @@ public class FluxUtil{
 						nbt.setInteger("y", newPos.getY());
 						nbt.setInteger("z", newPos.getZ());
 						TileEntity newTe = copyTo.getWorld().getTileEntity(newPos);
-						newTe.readFromNBT(nbt);
+						if(newTe != null){
+							newTe.readFromNBT(nbt);
+						}
 					}
 				}
 			}

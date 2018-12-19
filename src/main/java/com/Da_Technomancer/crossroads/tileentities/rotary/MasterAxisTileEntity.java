@@ -12,6 +12,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -35,6 +37,10 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 	protected static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
 	protected static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
 
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return newState.getBlock() != oldState.getBlock();
+	}
 
 	protected EnumFacing getFacing(){
 		if(facing == null){
@@ -60,6 +66,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		}
 		rotaryMembers.clear();
 		CommonProxy.masterKey++;
+		facing = null;
 	}
 
 	protected void runCalc(){

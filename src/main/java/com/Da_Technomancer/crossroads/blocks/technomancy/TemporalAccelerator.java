@@ -61,7 +61,7 @@ public class TemporalAccelerator extends BlockContainer{
 					}
 				}else{
 					worldIn.setBlockState(pos, state.cycleProperty(EssentialsProperties.FACING));
-					if(!worldIn.isRemote && te instanceof TemporalAcceleratorTileEntity){
+					if(te instanceof TemporalAcceleratorTileEntity){
 						((TemporalAcceleratorTileEntity) te).resetCache();
 					}
 				}
@@ -114,8 +114,8 @@ public class TemporalAccelerator extends BlockContainer{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
 		tooltip.add("Accelerates or slows time in an area");
-		tooltip.add("Uses a time beam from the back, with each 8 power boosting time by 1, or a void-time beam to slow/stop time");
+		tooltip.add("Uses a time beam from the back, with each 4 power doubling the rate of time, or a void-time beam to slow/stop time");
 		tooltip.add("Adjust area via shift-right clicking with a wrench");
-		tooltip.add("Produces size*boost flux/cycle, or size flux/cycle when slowing time; Flux production accelerates when time is fully stopped");
+		tooltip.add("Produces size*boost flux/cycle when speeding up time");
 	}
 }

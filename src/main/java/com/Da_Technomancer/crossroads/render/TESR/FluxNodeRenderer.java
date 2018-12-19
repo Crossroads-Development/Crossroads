@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,7 +12,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -29,18 +30,22 @@ public class FluxNodeRenderer extends TileEntitySpecialRenderer<FluxNodeTileEnti
 		GlStateManager.pushAttrib();
 		GlStateManager.disableLighting();
 
+		EnumFacing dir = te.getWorld().getBlockState(te.getPos()).getValue(EssentialsProperties.FACING);
+		GlStateManager.translate(x + .5D, y + .5D, z + .5D);
+		GlStateManager.rotate(-dir.getHorizontalAngle(), 0, 1, 0);
+		GlStateManager.rotate(-90F * (dir.getYOffset() - 1), 1, 0, 0);
+
 
 		float angle = te.getRenderAngle(partialTicks);
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder buf = tess.getBuffer();
 
-		GlStateManager.translate(x + .5D, y + .5D, z + .5D);
-		GlStateManager.rotate(angle, 0, 1, 0);
+		GlStateManager.rotate(dir.getAxisDirection().getOffset() * angle, 0, 1, 0);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 7.5F / 16F, 0);
 		GlStateManager.scale(1, 1F / 16F, 1);
-		ModelAxle.render(GearFactory.findMaterial("Iron").getColor());
+		ModelAxle.render(GearFactory.findMaterial("Copshowium").getColor());
 		GlStateManager.popMatrix();
 
 		GlStateManager.color(1, 1, 1, 1);
@@ -203,7 +208,6 @@ public class FluxNodeRenderer extends TileEntitySpecialRenderer<FluxNodeTileEnti
 		buf.pos(inner, inner, edge).tex(edgeEnd, texWidth - innerTex).endVertex();
 		buf.pos(inner, inner, -edge).tex(texWidth, texWidth - innerTex).endVertex();
 
-		//TODO
 		tess.draw();
 	}
 }

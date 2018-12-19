@@ -27,8 +27,8 @@ public class FluxConsumerTileEntity extends FluxTE{
 	}
 
 	@Override
-	public boolean canReceiveFlux(){
-		return flux < getCapacity();
+	public int canAccept(){
+		return getCapacity() - flux;
 	}
 
 	@Override

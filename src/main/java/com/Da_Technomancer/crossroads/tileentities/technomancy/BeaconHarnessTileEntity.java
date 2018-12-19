@@ -47,26 +47,11 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ILinkTE, IF
 			return;
 		}
 
-		IFluxHandler[] targets = new IFluxHandler[getMaxLinks()];
-		int targetCount = 0;
-		int moved = 0;
-
-		for(BlockPos link : links){
-			BlockPos endPos = pos.add(link);
-			TileEntity te = world.getTileEntity(endPos);
-			if(te instanceof IFluxHandler && ((IFluxHandler) te).isFluxReceiver() && ((IFluxHandler) te).canReceiveFlux()){
-				targets[targetCount] = (IFluxHandler) te;
-				targetCount++;
-			}
+		int moved = FluxUtil.transFlux(world, pos, links, flux);
+		if(moved != 0){
+			flux -= moved;
+			markDirty();
 		}
-
-		for(int i = 0; i < targetCount; i++){
-			moved += flux / targetCount;
-			targets[i].addFlux(flux / targetCount);
-			FluxUtil.renderFlux(world, pos, ((TileEntity) targets[i]).getPos(), flux / targetCount);
-		}
-		flux -= moved;
-		markDirty();
 	}
 
 	private boolean invalid(Color col, boolean colorSafe, @Nullable BeamUnit last){
@@ -134,8 +119,8 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ILinkTE, IF
 	}
 
 	@Override
-	public boolean canReceiveFlux(){
-		return false;
+	public int canAccept(){
+		return 0;
 	}
 
 	@Override

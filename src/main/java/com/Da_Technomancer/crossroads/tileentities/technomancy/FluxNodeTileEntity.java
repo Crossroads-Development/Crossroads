@@ -1,9 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxHandler;
@@ -15,24 +17,20 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE, IInfoTE, IFluxHandler, IIntReceiver{
 
-	private boolean disabled = false;
 	private int flux = 0;
 	private int throughput = 0;
-	protected ArrayList<BlockPos> links = new ArrayList<>(getMaxLinks());
+	private ArrayList<BlockPos> links = new ArrayList<>(getMaxLinks());
 	private int clientThroughput;
 	private float angle;
-
-	@Override
-	protected EnumFacing getFacing(){
-		return EnumFacing.UP;
-	}
 
 	private void syncFlux(){
 		throughput = flux;
@@ -54,29 +52,9 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 			syncFlux();
 
 			if(flux != 0){
-
-				IFluxHandler[] targets = new IFluxHandler[getMaxLinks()];
-				int targetCount = 0;
-
-				for(BlockPos link : links){
-					BlockPos endPos = pos.add(link);
-					TileEntity te = world.getTileEntity(endPos);
-					if(te instanceof IFluxHandler && ((IFluxHandler) te).isFluxReceiver() && ((IFluxHandler) te).canReceiveFlux()){
-						targets[targetCount] = (IFluxHandler) te;
-						targetCount++;
-					}
-				}
-
-				int movedFlux = 0;
-
-				for(int i = 0; i < targetCount; i++){
-					targets[i].addFlux(flux / targetCount);
-					movedFlux += flux / targetCount;
-					FluxUtil.renderFlux(world, pos, ((TileEntity) targets[i]).getPos(), flux / targetCount);
-				}
-
-				flux -= movedFlux;
-				if(movedFlux != 0){
+				int moved = FluxUtil.transFlux(world, pos, links, flux);
+				if(moved != 0){
+					flux -= moved;
 					markDirty();
 				}
 			}
@@ -112,14 +90,9 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 		runAngleCalc();
 	}
 
-	public void updateRedstone(boolean redstoneIn){
-		disabled = redstoneIn;
-		markDirty();
-	}
-
 	@Override
-	public boolean canReceiveFlux(){
-		return !disabled;
+	public int canAccept(){
+		return Math.max(0, (int) Math.round(getCapacity() - axleHandler.speed * 4D));
 	}
 
 	@Override
@@ -170,11 +143,11 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("flux", flux);
-		nbt.setBoolean("disabled", disabled);
 		nbt.setInteger("throughput", throughput);
 		for(int i = 0; i < links.size(); i++){
 			nbt.setLong("link" + i, links.get(i).toLong());
 		}
+		nbt.setDouble("spd", axleHandler.speed);
 
 		return nbt;
 	}
@@ -192,12 +165,12 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 		flux = nbt.getInteger("flux");
 		throughput = nbt.getInteger("throughput");
 		clientThroughput = throughput;
-		disabled = nbt.getBoolean("disabled");
 		for(int i = 0; i < getMaxLinks(); i++){
 			if(nbt.hasKey("link" + i)){
 				links.add(BlockPos.fromLong(nbt.getLong("link" + i)));
 			}
 		}
+		axleHandler.speed = nbt.getDouble("spd");
 	}
 
 	@Override
@@ -219,6 +192,75 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
 		if(identifier == 0){
 			clientThroughput = message;
+		}
+	}
+
+	private final AxleHandler axleHandler = new AxleHandler();
+
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+		if(cap == Capabilities.AXLE_CAPABILITY && side == getFacing().getOpposite()){
+			return true;
+		}
+		return super.hasCapability(cap, side);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+		if(cap == Capabilities.AXLE_CAPABILITY && side == getFacing().getOpposite()){
+			return (T) axleHandler;
+		}
+		return super.getCapability(cap, side);
+	}
+
+	private class AxleHandler implements IAxleHandler{
+
+		private double speed = 0;
+		private double rotRatio;
+		public boolean connected;
+		public byte updateKey;
+
+		@Override
+		public double[] getMotionData(){
+			return new double[] {speed, 0, 0, 0};
+		}
+
+		@Override
+		public void propogate(@Nonnull IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
+			//If true, this has already been checked.
+			if(key == updateKey || masterIn.addToList(this)){
+				return;
+			}
+
+			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
+			updateKey = key;
+			connected = true;
+		}
+
+		@Override
+		public double getMoInertia(){
+			return 0;
+		}
+
+		@Override
+		public double getRotationRatio(){
+			return rotRatio;
+		}
+
+		@Override
+		public void markChanged(){
+			//Not needed for this device
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return false;
+		}
+
+		@Override
+		public void disconnect(){
+			connected = false;
 		}
 	}
 }

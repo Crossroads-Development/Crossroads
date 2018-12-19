@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +95,7 @@ public class GearFactory{
 		}
 	}
 
+	@Nonnull
 	public static GearMaterial findMaterial(String metalName){
 		for(GearMaterial mat : gearMats){
 			if(mat.getName().equals(metalName)){

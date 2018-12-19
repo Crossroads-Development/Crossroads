@@ -52,7 +52,7 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 	}
 
 	public boolean stoppingTime(){
-		return intensity < 0 && RAND.nextInt(8) < -intensity;
+		return intensity < 0 && RAND.nextInt(16) < -intensity;//Random is used to (on average) slow time instead of stopping it at small intensities
 	}
 
 	public int adjustSize(){
@@ -82,7 +82,7 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 		chat.add("Size: " + size);
-		chat.add("Applied Boost: " + (intensity < 0 ? -intensity + "/8" : intensity / 8));
+		chat.add("Applied Boost: " + (intensity < 0 ? Math.max(intensity, -16) + "/16" : "+" + (int) (Math.pow(2, (int) (intensity / 4)) - 1)));
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 
 		if(!world.isRemote && world.getTotalWorldTime() != lastRunTick){
 			lastRunTick = world.getTotalWorldTime();
-			int extraTicks = intensity / 8;
+			int extraTicks = (int) Math.pow(2, (int) (intensity / 4)) - 1;
 			if(extraTicks > 0){
 				//Perform entity effect
 				ArrayList<Entity> ents = (ArrayList<Entity>) world.getEntitiesWithinAABB(Entity.class, getRegion().getBB());
@@ -128,7 +128,7 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 			//Create flux
 			if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
 				if(intensity < 0){
-					if(intensity <= -8){
+					if(intensity <= -16){
 						//The effect of this is that while time is fully stopped, the flux produced increases, but the flux creation is reset once time is again allowed to flow
 						duration += 1;
 						addFlux(size * duration);
@@ -192,9 +192,9 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 		public void setMagic(BeamUnit mag){
 			if(mag != null && (true || EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.TIME)){//TODO temp for testing
 				if(mag.getVoid() == 0){
-					intensity += mag.getPower();
+					intensity += mag.getPower();//Speed up time
 				}else{
-					intensity -= mag.getPower();
+					intensity -= mag.getPower();//Slow down time
 				}
 				markDirty();
 			}
