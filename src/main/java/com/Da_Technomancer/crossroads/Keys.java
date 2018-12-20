@@ -13,9 +13,9 @@ public class Keys{
 	public static KeyBinding controlVoid;
 	
 	protected static void init(){
-		ClientRegistry.registerKeyBinding(controlEnergy = new KeyBinding("controlEnergy.name", Keyboard.KEY_NONE, Main.MODID));
-		ClientRegistry.registerKeyBinding(controlPotential = new KeyBinding("controlPotential.name", Keyboard.KEY_NONE, Main.MODID));
-		ClientRegistry.registerKeyBinding(controlStability = new KeyBinding("controlStability.name", Keyboard.KEY_NONE, Main.MODID));
-		ClientRegistry.registerKeyBinding(controlVoid = new KeyBinding("controlVoid.name", Keyboard.KEY_NONE, Main.MODID));
+		ClientRegistry.registerKeyBinding(controlEnergy = new KeyBinding("control_energy.name", Keyboard.KEY_NONE, Main.MODID));
+		ClientRegistry.registerKeyBinding(controlPotential = new KeyBinding("control_potential.name", Keyboard.KEY_NONE, Main.MODID));
+		ClientRegistry.registerKeyBinding(controlStability = new KeyBinding("control_stability.name", Keyboard.KEY_NONE, Main.MODID));
+		ClientRegistry.registerKeyBinding(controlVoid = new KeyBinding("control_void.name", Keyboard.KEY_NONE, Main.MODID));
 	}
 }

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.dimensions;
 
-import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
+import com.Da_Technomancer.crossroads.API.FlexibleGameProfile;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDimLoadToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
@@ -49,7 +49,7 @@ public class ModDimensions{
 //		}
 		
 		PlayerDimensionMapSavedData data = PlayerDimensionMapSavedData.get(DimensionManager.getWorld(0), DimensionManager.getWorld(0).getMinecraftServer() == null ? null : DimensionManager.getWorld(0).getMinecraftServer().getPlayerProfileCache());
-		HashMap<GameProfileNonPicky, Integer> playerDim = null;
+		HashMap<FlexibleGameProfile, Integer> playerDim = null;
 		try{
 			playerDim = data.playerDim;
 			for(int id : playerDim.values()){
@@ -73,14 +73,14 @@ public class ModDimensions{
 	/** This does not initialize the dimension. If needed, run
 	 * {@link DimensionManager#initDimension(int)} on the dimension if {@link DimensionManager#getWorld(int)} returns null for that dimension. */
 	public static int getDimForPlayer(EntityPlayerMP play){
-		return getDimForPlayer(new GameProfileNonPicky(play.getGameProfile()));
+		return getDimForPlayer(new FlexibleGameProfile(play.getGameProfile()));
 	}
 
 	/** This does not initialize the dimension. If needed, run
 	 * {@link DimensionManager#initDimension(int)} on the dimension if {@link DimensionManager#getWorld(int)} returns null for that dimension. */
-	public static int getDimForPlayer(GameProfileNonPicky play){
+	public static int getDimForPlayer(FlexibleGameProfile play){
 		PlayerDimensionMapSavedData data = PlayerDimensionMapSavedData.get(DimensionManager.getWorld(0), null);
-		HashMap<GameProfileNonPicky, Integer> playerDim = data.playerDim;
+		HashMap<FlexibleGameProfile, Integer> playerDim = data.playerDim;
 		
 		if(playerDim.containsKey(play)){
 			return playerDim.get(play);

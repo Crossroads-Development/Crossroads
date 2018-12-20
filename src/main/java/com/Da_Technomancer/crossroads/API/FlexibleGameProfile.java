@@ -16,15 +16,15 @@ import net.minecraft.server.management.PlayerProfileCache;
  * This version will not immediately return false if only 1 of the two GameProfiles has a null ID or Name.
  * However, in order that equals be symmetric, this will return false if the other object is a normal GameProfile instance.
  */
-public class GameProfileNonPicky extends GameProfile{
+public class FlexibleGameProfile extends GameProfile{
 
 	private boolean newlyCompleted = false;
 	
-	public GameProfileNonPicky(UUID id, String name){
+	public FlexibleGameProfile(UUID id, String name){
 		super(id, name);
 	}
 
-	public GameProfileNonPicky(GameProfile prof){
+	public FlexibleGameProfile(GameProfile prof){
 		super(prof.getId(), prof.getName());
 	}
 	
@@ -37,20 +37,16 @@ public class GameProfileNonPicky extends GameProfile{
 		if (this == other) {
 			return true;
 		}
-		if (!(other instanceof GameProfileNonPicky)) {
+		if(!(other instanceof FlexibleGameProfile)) {
 			return false;
 		}
 
-		final GameProfileNonPicky that = (GameProfileNonPicky) other;
+		final FlexibleGameProfile that = (FlexibleGameProfile) other;
 
-		if (getId() != null && that.getId() != null) {
+		if(getId() != null && that.getId() != null) {
 			return getId().equals(that.getId());
 		}
-		if (getName() != null && that.getName() != null && !getName().equals(that.getName())) {
-			return false;
-		}
-
-		return true;
+		return getName() == null || that.getName() == null || getName().equals(that.getName());
 	}
 	
 	@Override
@@ -77,7 +73,7 @@ public class GameProfileNonPicky extends GameProfile{
 	 * Returns null if no profile was stored to nbt. 
 	 */
 	@Nullable
-	public static GameProfileNonPicky readFromNBT(NBTTagCompound nbt, String name, @Nullable PlayerProfileCache cache){
+	public static FlexibleGameProfile readFromNBT(NBTTagCompound nbt, String name, @Nullable PlayerProfileCache cache){
 		String profName = nbt.getString(name + "_name");
 		if(profName.isEmpty()){
 			return null;
@@ -94,7 +90,7 @@ public class GameProfileNonPicky extends GameProfile{
 			Main.logger.info("Attempting to complete player profile for " + profName + (loadedID ? ". Failed (not severe). " : ". Succeeded. UUID is " + id.toString()));
 		}
 		
-		GameProfileNonPicky out = new GameProfileNonPicky(id, profName);
+		FlexibleGameProfile out = new FlexibleGameProfile(id, profName);
 		out.newlyCompleted = loadedID;
 		return out;
 	}

@@ -27,6 +27,10 @@ import static com.Da_Technomancer.crossroads.API.alchemy.EnumReagents.*;
 public final class AlchemyCore{
 
 	public static final int MB_PER_REAG = 100;
+	/**
+	 * Conversion factor between degrees kelvin * amount alchemy system, and degrees kelvin normal heat. Based on game balance.
+	 */
+	public static final double ALCHEMY_TEMP_CONVERSION = 100D;
 	//A non-binding reagent count to optimize around
 	protected static final int REAGENT_COUNT = EnumReagents.values().length;
 	public static final int ALCHEMY_TIME = 2;

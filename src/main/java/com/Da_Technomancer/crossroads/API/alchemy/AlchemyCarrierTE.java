@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
@@ -99,7 +98,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		if(useCableHeat()){
 			initHeat();
 			//Shares heat between internal cable & contents
-			cableTemp = HeatUtil.toCelcius((HeatUtil.toKelvin(cableTemp) * EnergyConverters.ALCHEMY_TEMP_CONVERSION + contents.getTempK() * contents.getTotalQty()) / (EnergyConverters.ALCHEMY_TEMP_CONVERSION + contents.getTotalQty()));
+			cableTemp = HeatUtil.toCelcius((HeatUtil.toKelvin(cableTemp) * AlchemyCore.ALCHEMY_TEMP_CONVERSION + contents.getTempK() * contents.getTotalQty()) / (AlchemyCore.ALCHEMY_TEMP_CONVERSION + contents.getTotalQty()));
 			contents.setTemp(cableTemp);
 			return cableTemp;
 		}else{

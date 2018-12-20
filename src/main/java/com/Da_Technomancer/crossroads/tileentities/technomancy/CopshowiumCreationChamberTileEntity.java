@@ -27,6 +27,11 @@ import java.util.ArrayList;
 
 public class CopshowiumCreationChamberTileEntity extends InventoryTE implements IFluxHandler, ILinkTE{
 
+	/**
+	 * The number of mB of molten copshowium produced from 1mb of molten copper OR 1mb of distilled water.
+	 * Based on balance and convenience.
+	 */
+	private static final double COPSHOWIUM_PER_COPPER = 1.8D;
 	protected int flux;
 	protected ArrayList<BlockPos> links = new ArrayList<>(getMaxLinks());
 	public static final int CAPACITY = 1_296;
@@ -186,14 +191,14 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 		public void setMagic(BeamUnit mag){
 			if(EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.TIME && fluids[0] != null){
 				if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccExpenLiquid, false))){
-					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) fluids[0].amount) * EnergyConverters.COPSHOWIUM_PER_COPPER) + (fluids[1] == null ? 0 : fluids[1].amount));
+					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) fluids[0].amount) * COPSHOWIUM_PER_COPPER) + (fluids[1] == null ? 0 : fluids[1].amount));
 					fluids[0] = null;
 					markDirty();
 					if(fluids[1].amount > CAPACITY){
 						world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());
 					}
 				}else if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false))){
-					int created = (int) (((double) fluids[0].amount) * EnergyConverters.COPSHOWIUM_PER_COPPER);
+					int created = (int) (((double) fluids[0].amount) * COPSHOWIUM_PER_COPPER);
 					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), created + (fluids[1] == null ? 0 : fluids[1].amount));
 					fluids[0] = null;
 					addFlux(4 * created / EnergyConverters.INGOT_MB);

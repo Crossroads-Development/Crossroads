@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
+import com.Da_Technomancer.crossroads.API.FlexibleGameProfile;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
@@ -36,7 +36,7 @@ import java.util.List;
 public class GatewayFrameTileEntity extends FluxTE{
 
 	private final IBeamHandler magicHandler = new BeamHandler();
-	private GameProfileNonPicky owner;
+	private FlexibleGameProfile owner;
 	private boolean cacheValid;
 	private EnumBeamAlignments element;
 	private Axis cached;
@@ -45,7 +45,7 @@ public class GatewayFrameTileEntity extends FluxTE{
 		cacheValid = false;
 	}
 
-	public void setOwner(GameProfileNonPicky owner){
+	public void setOwner(FlexibleGameProfile owner){
 		this.owner = owner;
 		markDirty();
 	}
@@ -209,7 +209,7 @@ public class GatewayFrameTileEntity extends FluxTE{
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		owner = GameProfileNonPicky.readFromNBT(nbt, "own", world.getMinecraftServer() == null ? null : world.getMinecraftServer().getPlayerProfileCache());
+		owner = FlexibleGameProfile.readFromNBT(nbt, "own", world.getMinecraftServer() == null ? null : world.getMinecraftServer().getPlayerProfileCache());
 		if(owner != null && owner.isNewlyCompleted()){
 			markDirty();
 		}

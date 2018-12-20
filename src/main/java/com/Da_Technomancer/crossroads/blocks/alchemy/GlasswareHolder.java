@@ -15,7 +15,9 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -108,6 +110,11 @@ public class GlasswareHolder extends BlockContainer{
 	@Override
 	public IBlockState getStateFromMeta(int meta){
 		return getDefaultState().withProperty(Properties.CRYSTAL, (meta & 1) == 1).withProperty(Properties.ACTIVE, (meta & 2) == 2).withProperty(EssentialsProperties.REDSTONE_BOOL, (meta & 4) == 4).withProperty(Properties.CONTAINER_TYPE, (meta & 8) == 8);
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		neighborChanged(state, world, pos, this, pos);
 	}
 
 	@Override

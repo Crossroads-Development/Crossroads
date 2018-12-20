@@ -32,7 +32,7 @@ public final class ModItems{
 		}
 	};
 
-	public static final CreativeTabs TAB_HEAT_CABLE = new CreativeTabs("heatCable"){
+	public static final CreativeTabs TAB_HEAT_CABLE = new CreativeTabs("heat_cable"){
 		@Override
 		public ItemStack createIcon(){
 			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 1);

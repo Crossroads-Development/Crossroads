@@ -23,6 +23,7 @@ import java.util.Random;
 public class FluxUtil{
 
 	public static final int FLUX_TIME = BeamManager.BEAM_TIME;
+	public static final int FE_PER_FLUX = 500;//TODO balance
 	private static final int[] FLUX_COLOR = new int[] {new Color(255, 0, 0, 255).getRGB(), new Color(255, 90, 0, 255).getRGB(), new Color(255, 70, 0, 255).getRGB()};
 	private static final Random RAND = new Random();
 

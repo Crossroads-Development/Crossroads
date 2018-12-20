@@ -74,6 +74,11 @@ public class TeslaCoil extends BlockContainer{
 	}
 
 	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		neighborChanged(state, world, pos, this, pos);
+	}
+
+	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos prevPos){
 		if(worldIn.isRemote){
 			return;

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.GameProfileNonPicky;
+import com.Da_Technomancer.crossroads.API.FlexibleGameProfile;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -71,7 +71,7 @@ public class GatewayFrame extends BlockContainer{
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		if(!worldIn.isRemote){
-			((GatewayFrameTileEntity) worldIn.getTileEntity(pos)).setOwner(!(placer instanceof EntityPlayer) ? null : new GameProfileNonPicky(((EntityPlayer) placer).getGameProfile()));
+			((GatewayFrameTileEntity) worldIn.getTileEntity(pos)).setOwner(!(placer instanceof EntityPlayer) ? null : new FlexibleGameProfile(((EntityPlayer) placer).getGameProfile()));
 		}
 	}
 

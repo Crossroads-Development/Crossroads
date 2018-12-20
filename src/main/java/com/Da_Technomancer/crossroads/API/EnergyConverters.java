@@ -11,17 +11,6 @@ public final class EnergyConverters{
 	public static final int FAT_PER_VALUE = 100;
 
 	/**
-	 * The number of mB of molten copshowium produced from 1mb of molten copper OR 1mb of distilled water.
-	 * Based on balance and convenience.
-	 */
-	public static final double COPSHOWIUM_PER_COPPER = 1.8D;
-
-	/**
-	 * Conversion factor between degrees kelvin * amount alchemy system, and degrees kelvin normal heat. Based on game balance.
-	 */
-	public static final double ALCHEMY_TEMP_CONVERSION = 100D;
-
-	/**
 	 * @return The number of degrees one bucket of steam is worth
 	 */
 	public static double degPerSteamBucket(boolean client){

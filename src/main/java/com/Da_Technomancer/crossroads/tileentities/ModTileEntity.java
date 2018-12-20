@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModTileEntity{
@@ -99,6 +100,7 @@ public class ModTileEntity{
 		register(FluxNodeTileEntity.class, "flux_node");
 		register(FluxConsumerTileEntity.class, "flux_void");
 		register(TemporalAcceleratorTileEntity.class, "temporal_accelerator");
+		register(ChronoHarnessTileEntity.class, "chrono_harness");
 	}
 
 	/**
@@ -106,8 +108,6 @@ public class ModTileEntity{
 	 * @param ID Must be lower-case.
 	 */
 	private static void register(Class<? extends TileEntity> clazz, String ID){
-		GameRegistry.registerTileEntity(clazz, Main.MODID + ':' + ID);
-		//TODO switch to this method once the above method is removed
-		//GameRegistry.registerTileEntity(clazz, new ResourceLocation(Main.MODID, ID));
+		GameRegistry.registerTileEntity(clazz, new ResourceLocation(Main.MODID, ID));
 	}
 }
