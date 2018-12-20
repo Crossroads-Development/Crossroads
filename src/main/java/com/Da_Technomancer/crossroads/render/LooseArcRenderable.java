@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -104,9 +105,13 @@ public class LooseArcRenderable implements IVisualEffect{
 		//Render the arcs as stored in states
 		for(int i = 0; i < count; i++){
 			for(int node = 1; node < states[0].length; node++){
-				//We generate a vector based on the player's view angle for use creating a thickness to rendered lines. The vector is chosen such to maximize the apparent thickness from the given view angle
-				Vec3d vec = states[i][node].subtract(states[i][node - 1]).crossProduct(playerLook);
-				vec = vec.normalize().scale(arcWidth / 2F);
+				//We generate a vector based on the player's perspective for use creating a thickness to rendered lines. The vector is chosen such to maximize the apparent thickness from the given view angle
+				//The width vector is the vector from the player's eyes to the closest point on the link line (were it extended indefinitely) to the player's eyes, all cross the link line vector.
+				//If you want to know where this formula comes from... I'm not cramming a quarter page of calculus into these comments
+				Vec3d offsetVec = new Vec3d(states[i][node - 1].x + start.x - playerX, states[i][node - 1].y + start.y - playerY - Minecraft.getMinecraft().player.getEyeHeight(), states[i][node - 1].z + start.z - playerZ);
+				Vec3d deltaVec = states[i][node].subtract(states[i][node - 1]);
+				Vec3d vec = offsetVec.add(deltaVec.scale(-deltaVec.dotProduct(offsetVec) / deltaVec.lengthSquared())).crossProduct(deltaVec);
+				vec = vec.scale(arcWidth / 2F / vec.length());
 
 				buf.pos(states[i][node].x - vec.x, states[i][node].y - vec.y, states[i][node].z - vec.z).endVertex();
 				buf.pos(states[i][node].x + vec.x, states[i][node].y + vec.y, states[i][node].z + vec.z).endVertex();
