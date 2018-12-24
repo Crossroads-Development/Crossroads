@@ -21,25 +21,36 @@ public class RedstoneUtil{
 		double output = 0;
 
 		for(EnumFacing side : EnumFacing.VALUES){
-			output = Math.max(output, getPowerOnSide(worldIn, pos, side));
+			TileEntity te = worldIn.getTileEntity(pos.offset(side));
+			IAdvancedRedstoneHandler redstoneHandler;
+			if(te != null && (redstoneHandler = te.getCapability(Capabilities.ADVANCED_REDSTONE_CAPABILITY, side.getOpposite())) != null){
+				output = Math.max(output, redstoneHandler.getOutput(false));
+			}else{
+				output = Math.max(output, worldIn.getRedstonePower(pos.offset(side), side));
+			}
 		}
 
 		return output;
 	}
 
 	/**
-	 * Measures the redstone power (including adv. redstone) on one specific side
+	 * Measures the redstone power (including adv. redstone) input directly into one specific side
 	 * @param worldIn The world (virtual server side only)
 	 * @param pos The position of the measuring block
 	 * @param side The direction to measure in
 	 * @return The measured redstone power
 	 */
-	public static double getPowerOnSide(World worldIn, BlockPos pos, EnumFacing side){
+	public static double getDirectPowerOnSide(World worldIn, BlockPos pos, EnumFacing side){
 		TileEntity te = worldIn.getTileEntity(pos.offset(side));
 		if(te != null && te.hasCapability(Capabilities.ADVANCED_REDSTONE_CAPABILITY, side.getOpposite())){
 			return te.getCapability(Capabilities.ADVANCED_REDSTONE_CAPABILITY, side.getOpposite()).getOutput(false);
 		}else{
-			return worldIn.getRedstonePower(pos.offset(side), side);
+			IBlockState state = worldIn.getBlockState(pos.offset(side));
+			if(state.getBlock() == Blocks.REDSTONE_BLOCK){
+				return 15;
+			}else{
+				return state.getBlock() == Blocks.REDSTONE_WIRE ? state.getValue(BlockRedstoneWire.POWER) : worldIn.getStrongPower(pos.offset(side), side);
+			}
 		}
 	}
 

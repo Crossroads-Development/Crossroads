@@ -25,10 +25,12 @@ import java.util.UUID;
 
 public class MechanicalArmTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
 
-	public static final double MAX_HEIGHT = 5;
-	public static final double MAX_LENGTH = 5;
+	public static final double BASE_HEIGHT = 4;
+	public static final double BASE_LENGTH = 4;
+	public static final double MAX_HEIGHT = 8;
+	public static final double MAX_LENGTH = 8;
 
-	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect(), new MechArmPickupFromInvEffect(), new MechArmUseEffect(), new MechArmDepositEffect(), new MechArmDropEntityEffect(), new MechArmThrowEntityEffect(), new MechArmPickupOneFromInvEffect()};
+	private static final IMechArmEffect[] EFFECTS = {new MechArmPickupEntityEffect(), new MechArmPickupBlockEffect(), new MechArmPickupFromInvEffect(), new MechArmPickupOneFromInvEffect(), new MechArmUseEffect(), new MechArmAttackEffect(), new MechArmDepositEffect(), new MechArmDropEntityEffect(), new MechArmThrowEntityEffect()};
 
 	private double[][] motionData = new double[3][4];
 	public double[] angle = {0, MAX_HEIGHT, MAX_LENGTH};
@@ -48,15 +50,17 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	private static final double PHYS_DATA = 0;
 	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
 
+	private static double[] getAnglesFromSpeeds(double speedDown, double speedEast, double speedWest){
+		return new double[] {-speedDown, Math.max(Math.min(BASE_HEIGHT + speedEast, MAX_HEIGHT), 0), Math.max(Math.min(BASE_LENGTH + speedWest, MAX_LENGTH), 0)};
+	}
+
 	@Override
 	public void update(){
 		if(world.getTotalWorldTime() % 2 == 0){
 			System.arraycopy(angle, 0, angleRecord, 0, 3);
 
 			if(!world.isRemote){
-				angle[0] = -motionData[0][0];
-				angle[1] = MAX_HEIGHT - Math.min(MAX_HEIGHT, Math.abs(motionData[1][0]));
-				angle[2] = MAX_LENGTH - Math.min(MAX_LENGTH, Math.abs(motionData[2][0]));
+				angle = getAnglesFromSpeeds(motionData[0][0], motionData[1][0], motionData[2][0]);
 
 				for(int i = 0; i < 3; i++){
 					if(Math.abs(angle[i] - lastSentAngle[i]) >= CLIENT_SPEED_MARGIN){
@@ -91,8 +95,14 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 				ridable.setPositionAndUpdate(posX, posY, posZ);
 
 				if(redstone > 0){
-					EnumFacing side = EnumFacing.byIndex(((int) Math.round(RedstoneUtil.getPowerOnSide(world, pos, EnumFacing.SOUTH))) % 6);
-					EFFECTS[(redstone - 1) % EFFECTS.length].onTriggered(world, endPos, posX, posY, posZ, side, ridable, this);
+					IMechArmEffect effect = EFFECTS[(redstone - 1) % EFFECTS.length];
+					if(effect.useSideModifier()){
+						EnumFacing side = EnumFacing.byIndex(((int) Math.round(RedstoneUtil.getDirectPowerOnSide(world, pos, EnumFacing.SOUTH))) % 6);
+						effect.onTriggered(world, endPos, posX, posY, posZ, side, ridable, this);
+					}else{
+						//While there's no reason we need to pass null if useSideModifier is false, it's inefficient to get the side modifier if it won't be used
+						effect.onTriggered(world, endPos, posX, posY, posZ, null, ridable, this);
+					}
 					world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, .5F, .75F);
 					redstone = -redstone;
 					markDirty();

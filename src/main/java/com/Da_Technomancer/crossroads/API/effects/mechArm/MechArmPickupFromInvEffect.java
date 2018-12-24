@@ -17,7 +17,7 @@ public class MechArmPickupFromInvEffect implements IMechArmEffect{
 	@Override
 	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, EnumFacing side, EntityArmRidable ent, MechanicalArmTileEntity arm){
 		TileEntity te = world.getTileEntity(pos);
-		Boolean holdingStack = ent.getPassengers().isEmpty() ? false : ent.getPassengers().get(0) instanceof EntityItem ? true : null;
+		Boolean holdingStack = ent.getPassengers().isEmpty() ? Boolean.FALSE : (ent.getPassengers().get(0) instanceof EntityItem ? Boolean.TRUE : null);
 		if(te == null || holdingStack == null || !te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)){
 			return false;
 		}
@@ -54,5 +54,10 @@ public class MechArmPickupFromInvEffect implements IMechArmEffect{
 		}
 
 		return heldStack.getCount() > startSize;
+	}
+
+	@Override
+	public boolean useSideModifier(){
+		return true;
 	}
 }

@@ -20,4 +20,9 @@ public class MechArmDropEntityEffect implements IMechArmEffect{
 		}
 		return false;
 	}
+
+	@Override
+	public boolean useSideModifier(){
+		return false;
+	}
 }

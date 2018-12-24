@@ -122,8 +122,9 @@ public class Ratiator extends BlockContainer{
 		}
 		RatiatorTileEntity te = ((RatiatorTileEntity) rawTE);
 		double lastOut = te.getOutput();
-		double sidePower = Math.max(RedstoneUtil.getPowerOnSide(worldIn, pos, state.getValue(Properties.HORIZ_FACING).rotateY()), RedstoneUtil.getPowerOnSide(worldIn, pos, state.getValue(Properties.HORIZ_FACING).rotateYCCW()));
-		te.setOutput(state.getValue(EssentialsProperties.REDSTONE_BOOL) ? RedstoneUtil.getMeasuredPower(worldIn, pos, state.getValue(Properties.HORIZ_FACING).getOpposite()) / (sidePower == 0 ? 1D : sidePower) : RedstoneUtil.getMeasuredPower(worldIn, pos, state.getValue(Properties.HORIZ_FACING).getOpposite()) * sidePower);
+		double sidePower = Math.max(RedstoneUtil.getDirectPowerOnSide(worldIn, pos, state.getValue(Properties.HORIZ_FACING).rotateY()), RedstoneUtil.getDirectPowerOnSide(worldIn, pos, state.getValue(Properties.HORIZ_FACING).rotateYCCW()));
+		double backPower = RedstoneUtil.getMeasuredPower(worldIn, pos, state.getValue(Properties.HORIZ_FACING).getOpposite());
+		te.setOutput(state.getValue(EssentialsProperties.REDSTONE_BOOL) ? backPower / (sidePower == 0 ? 1D : sidePower) : backPower * sidePower);
 		if(lastOut != te.getOutput()){
 			worldIn.neighborChanged(pos.offset(state.getValue(Properties.HORIZ_FACING)), this, pos);
 			worldIn.notifyNeighborsOfStateExcept(pos.offset(state.getValue(Properties.HORIZ_FACING)), this, state.getValue(Properties.HORIZ_FACING).getOpposite());

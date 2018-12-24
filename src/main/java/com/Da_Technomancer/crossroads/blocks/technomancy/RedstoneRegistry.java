@@ -25,7 +25,6 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -59,16 +58,16 @@ public class RedstoneRegistry extends BlockContainer{
 		tooltip.add("Stores a list of redstone outputs, and cycles between them on a pulse");
 	}
 
-	@Override
-	public boolean canProvidePower(IBlockState state){
-		return true;
-	}
+//	@Override
+//	public boolean canProvidePower(IBlockState state){
+//		return true;
+//	}
 
-	@Override
-	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
-		TileEntity te = blockAccess.getTileEntity(pos);
-		return Math.min(15, (int) Math.round(((RedstoneRegistryTileEntity) te).getOutput()[((RedstoneRegistryTileEntity) te).getIndex()]));
-	}
+//	@Override
+//	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
+//		TileEntity te = blockAccess.getTileEntity(pos);
+//		return Math.min(15, (int) Math.round(((RedstoneRegistryTileEntity) te).getOutput()[((RedstoneRegistryTileEntity) te).getIndex()]));
+//	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){

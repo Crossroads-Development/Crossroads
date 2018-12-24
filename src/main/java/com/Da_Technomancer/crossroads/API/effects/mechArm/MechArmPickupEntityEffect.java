@@ -26,7 +26,12 @@ public class MechArmPickupEntityEffect implements IMechArmEffect{
 		}
 		return false;
 	}
-	
+
+	@Override
+	public boolean useSideModifier(){
+		return false;
+	}
+
 	private static final Predicate<Entity> CAN_GRAB = new Predicate<Entity>(){
 		@Override
 		public boolean apply(@Nullable Entity input){

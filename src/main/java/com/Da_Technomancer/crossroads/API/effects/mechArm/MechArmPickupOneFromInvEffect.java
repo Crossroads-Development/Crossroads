@@ -62,4 +62,9 @@ public class MechArmPickupOneFromInvEffect implements IMechArmEffect{
 
 		return heldStack.getCount() > startSize;
 	}
+
+	@Override
+	public boolean useSideModifier(){
+		return true;
+	}
 }

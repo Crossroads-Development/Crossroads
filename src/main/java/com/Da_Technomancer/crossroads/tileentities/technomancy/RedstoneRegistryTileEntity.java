@@ -115,7 +115,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 
 		@Override
 		public double getOutput(boolean measure){
-			return output[index];
+			return measure ? output[index] : 0;
 		}
 	}
 }

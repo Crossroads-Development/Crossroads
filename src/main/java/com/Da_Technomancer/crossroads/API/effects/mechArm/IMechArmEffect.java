@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects.mechArm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
@@ -23,6 +24,11 @@ public interface IMechArmEffect{
 	 * @param te The TileEntity calling this method.
 	 * @return Whether this did anything. 
 	 */
-	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, EnumFacing side, @Nonnull EntityArmRidable ent, MechanicalArmTileEntity te);
+	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, @Nullable EnumFacing side, @Nonnull EntityArmRidable ent, MechanicalArmTileEntity te);
+
+	/**
+	 * @return Whether there is any possibility that onTriggered will look at the side argument. Used for optimization
+	 */
+	public boolean useSideModifier();
 
 }

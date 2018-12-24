@@ -61,4 +61,9 @@ public class MechArmUseEffect implements IMechArmEffect{
 		}
 		return false;
 	}
+
+	@Override
+	public boolean useSideModifier(){
+		return true;
+	}
 }
