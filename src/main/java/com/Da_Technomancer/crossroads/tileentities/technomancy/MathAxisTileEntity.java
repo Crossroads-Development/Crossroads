@@ -272,7 +272,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 		ACOS(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/acos.png"), (in1, in2) -> in1 * in1 > 1 ? 0 : Math.acos(in1)),
 		ATAN(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/atan.png"), (in1, in2) -> Math.atan(in1)),
 		LOG(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/log.png"), (in1, in2) -> in1 <= 0 ? 0 : Math.log(in1)),//Base e
-		MOD(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/mod.png"), (in1, in2) -> in1 == 0 ? 0 : in1 % in2),
+		MOD(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/mod.png"), (in1, in2) -> in2 == 0 ? 0 : in1 % in2),
 		MIN(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/min.png"), Math::min),
 		MAX(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/max.png"), Math::max);
 
