@@ -101,6 +101,7 @@ public class ModTileEntity{
 		register(FluxConsumerTileEntity.class, "flux_void");
 		register(TemporalAcceleratorTileEntity.class, "temporal_accelerator");
 		register(ChronoHarnessTileEntity.class, "chrono_harness");
+		register(FluxStabilizerBeamTileEntity.class, "flux_stabilizer_beam");
 	}
 
 	/**

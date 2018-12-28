@@ -135,6 +135,7 @@ public class ModBlocks{
 	public static FluxConsumer fluxConsumer;
 	public static TemporalAccelerator temporalAccelerator;
 	public static ChronoHarness chronoHarness;
+	public static FluxStabilizerBeam fluxStabilizerBeam;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
 	
@@ -292,6 +293,7 @@ public class ModBlocks{
 		fluxConsumer = new FluxConsumer();
 		temporalAccelerator = new TemporalAccelerator();
 		chronoHarness = new ChronoHarness();
+		fluxStabilizerBeam = new FluxStabilizerBeam();
 	}
 
 	@SideOnly(Side.CLIENT)
