@@ -10,7 +10,7 @@ public class FluxConsumerTileEntity extends FluxTE{
 		super.update();
 
 		if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
-			flux = Math.max(0, flux - 8);
+			flux = Math.max(0, flux - 64);
 		}
 	}
 

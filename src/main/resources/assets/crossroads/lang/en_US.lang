@@ -252,11 +252,13 @@ tile.block_cavorite.name=Block of Cavorite
 item.dust_bedrock.name=Bedrock Dust
 tile.math_axis.name=Mathematical Master Axis
 tile.flux_node.name=Flux Node
-tile.flux_void.name=Flux Consumer (WIP)
 item.linking_tool.name=Linking Tool
 tile.temporal_accelerator.name=Temporal Accelerator
 tile.chrono_harness.name=Chrono-Harness
 tile.flux_stabilizer_beam.name=Beam-Powered Flux Stabilizer
+tile.flux_stabilizer_electric.name=Electrical Flux Stabilizer
+tile.flux_stabilizer_mechanical.name=Mechanical Flux Stabilizer
+tile.flux_void.name=Creative Flux Stabilizer
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=Raw %1$s Grit

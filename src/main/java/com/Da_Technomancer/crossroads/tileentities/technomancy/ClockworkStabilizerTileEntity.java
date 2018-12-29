@@ -26,7 +26,6 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 		return dir;
 	}
 
-
 	@Override
 	public void resetBeamer(){
 		super.resetBeamer();
