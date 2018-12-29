@@ -30,6 +30,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -50,7 +51,6 @@ public final class ModCrafting{
 	 */
 	public static final ArrayList<Pair<Object, String[]>> toRegisterOreDict = new ArrayList<>();
 
-	@SuppressWarnings("unchecked")
 	public static void init(){
 
 		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Items.WHEAT, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
@@ -80,26 +80,24 @@ public final class ModCrafting{
 		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopshowium.getMoltenCopshowium(), Pair.of(EnergyConverters.INGOT_MB, Triple.of(new ItemStack(OreSetup.ingotCopshowium, 1), 1500D, 100D)));
 
 		if(ModConfig.addBoboRecipes.getBoolean()){
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.HOPPER, 0), new OreDictCraftingStack("wool"), new ItemRecipePredicate(ModBlocks.fluidTube, 0)}, getFilledHopper()));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.BREAD, 0), new OreDictCraftingStack("dyeMagenta"), new OreDictCraftingStack("dustGlowstone")}, new ItemStack(ModItems.magentaBread)));
-			if(ModConfig.weatherControl.getBoolean()){
-				EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new OreDictCraftingStack("gemLapis"), new OreDictCraftingStack("cobblestone"), new OreDictCraftingStack("nuggetGold")}, new ItemStack(ModItems.rainIdol, 1)));
-			}
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new OreDictCraftingStack("feather"), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Blocks.WATERLILY, 0)}, new ItemStack(ModItems.chickenBoots, 1)));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.DYE, EnumDyeColor.BLACK.getDyeDamage()), new ItemRecipePredicate(Items.FISH, 3), new OreDictCraftingStack("leather")}, new ItemStack(ModItems.squidHelmet, 1)));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.BLAZE_POWDER, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.PORKCHOP, 0)}, new ItemStack(ModItems.pigZombieChestplate, 1)));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.MILK_BUCKET, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.BEEF, 0)}, new ItemStack(ModItems.cowLeggings, 1)));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Items.BLAZE_ROD, 0), new ItemRecipePredicate(Items.DRAGON_BREATH, 0), new ItemRecipePredicate(Items.GOLDEN_APPLE, -1)}, new ItemStack(ModItems.chaosRod, 1)));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(ModBlocks.fluidTube, 0), new ItemRecipePredicate(OreSetup.voidCrystal, 0)}, new ItemStack(ModBlocks.fluidVoid, 1)));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new EdibleBlobRecipePredicate(4, 2), new OreDictCraftingStack("stickIron"), new OreDictCraftingStack("nuggetCopshowium")}, new ItemStack(ModBlocks.hamsterWheel, 1)));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {(Object s) -> EssentialsConfig.isWrench((ItemStack) s, false), new ItemRecipePredicate(ModItems.handCrank, 0), new ItemRecipePredicate(ModItems.staffTechnomancy, 0)}, new ItemStack(ModItems.liechWrench, 1)));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 4), new OreDictCraftingStack("ingotCopper")}, new ItemStack(ModBlocks.maxwellDemon, 1)));
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {new OreDictCraftingStack("meatRaw"), new OreDictCraftingStack("gunpowder"), (Predicate<ItemStack>) (ItemStack stack) -> {
+			registerBoboItem(getFilledHopper(), "Vacuum Hopper", new ItemRecipePredicate(Blocks.HOPPER, 0), new OreDictCraftingStack("wool"), new ItemRecipePredicate(ModBlocks.fluidTube, 0));
+			registerBoboItem(ModItems.magentaBread, "Magenta Bread", new ItemRecipePredicate(Items.BREAD, 0), new OreDictCraftingStack("dyeMagenta"), new OreDictCraftingStack("dustGlowstone"));
+			registerBoboItem(ModItems.rainIdol, "Rain Idol", new OreDictCraftingStack("gemLapis"), new OreDictCraftingStack("cobblestone"), new OreDictCraftingStack("nuggetGold"));
+			registerBoboItem(ModItems.squidHelmet, "Squid Helmet", new ItemRecipePredicate(Items.DYE, EnumDyeColor.BLACK.getDyeDamage()), new ItemRecipePredicate(Items.FISH, 3), new OreDictCraftingStack("leather"));
+			registerBoboItem(ModItems.pigZombieChestplate, "Zombie Pigman Chestplate", new ItemRecipePredicate(Items.BLAZE_POWDER, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.PORKCHOP, 0));
+			registerBoboItem(ModItems.cowLeggings, "Cow Leggings", new ItemRecipePredicate(Items.MILK_BUCKET, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.BEEF, 0));
+			registerBoboItem(ModItems.chickenBoots, "Chicken Boots", new OreDictCraftingStack("feather"), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Blocks.WATERLILY, 0));
+			registerBoboItem(ModItems.chaosRod, "Rod of Discord", new ItemRecipePredicate(Items.BLAZE_ROD, 0), new ItemRecipePredicate(Items.DRAGON_BREATH, 0), new ItemRecipePredicate(Items.GOLDEN_APPLE, -1));
+			registerBoboItem(new ItemStack(ModBlocks.fluidVoid, 1), "Fluid Void", new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(ModBlocks.fluidTube, 0), new ItemRecipePredicate(OreSetup.voidCrystal, 0));
+			registerBoboItem(new ItemStack(ModBlocks.hamsterWheel, 1), "Hamster Wheel", new EdibleBlobRecipePredicate(4, 2), new ComponentCraftingStack("stick"), new OreDictCraftingStack("nuggetCopshowium"));
+			registerBoboItem(ModItems.liechWrench, "Liechtensteinian Navy Wrench", (ItemStack s) -> EssentialsConfig.isWrench(s, false), new ItemRecipePredicate(ModItems.handCrank, 0), new ItemRecipePredicate(ModItems.staffTechnomancy, 0));
+			registerBoboItem(new ItemStack(ModBlocks.maxwellDemon, 1), "Maxwell's Demon", new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 4), new OreDictCraftingStack("ingotCopper"));
+			registerBoboItem(new ItemStack(ModItems.nitroglycerin, 8), "Nitroglycerin", new OreDictCraftingStack("meatRaw"), new OreDictCraftingStack("gunpowder"), (Predicate<ItemStack>) (ItemStack stack) -> {
 				if(stack.getItem() instanceof Phial){
 					return ModItems.phialGlass.getReagants(stack).getQty(EnumReagents.NITRIC_ACID.id()) != 0;
 				}
 				return false;
-			}}, new ItemStack(ModItems.nitroglycerin, 8)));
+			});
 		}
 
 		RecipeHolder.beamExtractRecipes.put(Items.REDSTONE, new BeamUnit(24, 40, 0, 0));
@@ -417,6 +415,10 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilJungle, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.JUNGLE.getMetadata())));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilDarkOak, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.DARK_OAK.getMetadata())));
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilAcacia, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.ACACIA.getMetadata())));
+		//Concrete Powder using slag
+		for(EnumDyeColor color : EnumDyeColor.values()){
+			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(Blocks.CONCRETE_POWDER, 16, color.getMetadata()), "sand", "sand", "sand", "sand", "itemSlag", "itemSlag", "itemSlag", "itemSlag", "dye" + Character.toUpperCase(color.getName().charAt(0)) + color.getName().substring(1)));
+		}
 		//Stamp Mill
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.stampMill, 1), "|-|", "|I|", "|S|", '|', "plankWood", '-', "stickIron", 'I', "blockIron", 'S', "cobblestone"));
 		//Ore Cleanser
@@ -461,6 +463,19 @@ public final class ModCrafting{
 		stack.setTagInfo("display", nbttagcompound1);
 		stack.setStackDisplayName("Vacuum Hopper");
 		return stack;
+	}
+
+	private static void registerBoboItem(Item item, String configName, Predicate<ItemStack> ingr1, Predicate<ItemStack> ingr2, Predicate<ItemStack> ingr3){
+		registerBoboItem(new ItemStack(item, 1), configName, ingr1, ingr2, ingr3);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void registerBoboItem(ItemStack item, String configName, Predicate<ItemStack> ingr1, Predicate<ItemStack> ingr2, Predicate<ItemStack> ingr3){
+		Property prop = ModConfig.config.get(ModConfig.CAT_BOBO, configName + " bobo-item recipe", true, "Default: true");
+		ModConfig.boboItemProperties.add(prop);
+		if(ModConfig.getConfigBool(prop, true)){
+			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {ingr1, ingr2, ingr3}, item));
+		}
 	}
 
 	public static void initOreDict(){

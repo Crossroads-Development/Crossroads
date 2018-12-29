@@ -62,8 +62,8 @@ public class FluxStabilizerElectric extends BlockContainer{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
 		tooltip.add("Destroys up to 8 flux/cycle with FE");
-		tooltip.add("1 flux per " + FluxUtil.FE_PER_FLUX + "FE");
+		tooltip.add("1 flux per " + FluxUtil.getFePerFlux(true) + "FE");
 		tooltip.add("Does not overfill with flux");
-		tooltip.add("Drains energy at " + 8 * FluxUtil.FE_PER_FLUX / 5 + "FE/t regardless of work");
+		tooltip.add("Drains energy at " + 8 * FluxUtil.getFePerFlux(true) / 5 + "FE/t regardless of work");
 	}
 }

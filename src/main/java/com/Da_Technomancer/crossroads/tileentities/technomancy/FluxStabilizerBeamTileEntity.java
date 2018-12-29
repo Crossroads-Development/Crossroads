@@ -17,7 +17,7 @@ public class FluxStabilizerBeamTileEntity extends FluxTE{
 	public void update(){
 		super.update();
 
-		if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
+		if(!world.isRemote && world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
 			stability = Math.min(stability, 8);
 			flux = Math.max(0, flux - stability);
 			stability = 0;

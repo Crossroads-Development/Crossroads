@@ -31,29 +31,30 @@ public class FluxStabilizerMechanicalTileEntity extends MasterAxisTileEntity imp
 
 	@Override
 	public void update(){
-		if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == FluxUtil.FLUX_TIME - 1){
-			//Add the energy a tick in advance
-			if(validRotary()){
-				double speedSign = Math.signum(rotaryMembers.get(0).getMotionData()[0]);
-				if(speedSign == 0){
-					rotaryMembers.get(0).getMotionData()[1] += (2D * Math.random() - 1D) * maxChange;
-				}else{
-					rotaryMembers.get(0).getMotionData()[1] += Math.random() * maxChange * speedSign;
+		if(!world.isRemote){
+			if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == FluxUtil.FLUX_TIME - 1){
+				//Add the energy a tick in advance
+				if(validRotary()){
+					double speedSign = Math.signum(rotaryMembers.get(0).getMotionData()[0]);
+					if(speedSign == 0){
+						rotaryMembers.get(0).getMotionData()[1] += (2D * Math.random() - 1D) * maxChange;
+					}else{
+						rotaryMembers.get(0).getMotionData()[1] += Math.random() * maxChange * speedSign;
+					}
+					markDirty();
 				}
-				markDirty();
+			}else if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
+				if(validRotary()){
+					prevEfficiency = 8 - (int) Math.min(Math.abs(sumEnergy) / energyScale, 8);
+					flux -= prevEfficiency;
+					flux = Math.max(0, flux);
+					markDirty();
+				}
+				stable = true;
 			}
-		}else if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
-			if(validRotary()){
-				prevEfficiency = 8 - (int) Math.min(Math.abs(sumEnergy) / energyScale, 8);
-				flux -= prevEfficiency;
-				flux = Math.max(0, flux);
-				markDirty();
-			}
-			stable = true;
+
+			stable &= !locked;
 		}
-
-		stable &= !locked;
-
 		super.update();
 	}
 

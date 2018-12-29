@@ -19,12 +19,12 @@ public class FluxStabilizerElectricTileEntity extends FluxTE{
 	public void update(){
 		super.update();
 
-		if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
-			flux = Math.max(0, flux - Math.min(8, fe / FluxUtil.FE_PER_FLUX));
+		if(!world.isRemote && world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
+			flux = Math.max(0, flux - Math.min(8, fe / FluxUtil.getFePerFlux(false)));
 			if(fe != 0){
 				markDirty();
 			}
-			fe = Math.max(0, fe - 8 * FluxUtil.FE_PER_FLUX);
+			fe = Math.max(0, fe - 8 * FluxUtil.getFePerFlux(false));
 		}
 	}
 

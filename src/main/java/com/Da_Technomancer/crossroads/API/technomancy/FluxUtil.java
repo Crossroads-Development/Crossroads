@@ -23,9 +23,12 @@ import java.util.Random;
 public class FluxUtil{
 
 	public static final int FLUX_TIME = BeamManager.BEAM_TIME;
-	public static final int FE_PER_FLUX = 500;//TODO balance
 	private static final int[] FLUX_COLOR = new int[] {new Color(255, 0, 0, 255).getRGB(), new Color(255, 90, 0, 255).getRGB(), new Color(255, 70, 0, 255).getRGB()};
 	private static final Random RAND = new Random();
+
+	public static int getFePerFlux(boolean client){
+		return ModConfig.getConfigInt(ModConfig.fePerFlux, client);
+	}
 
 	public static void renderFlux(World world, BlockPos startPos, BlockPos endPos, int flux){
 		RenderUtil.addArc(world.provider.getDimension(), startPos.getX() + 0.5F, startPos.getY() + 0.5F, startPos.getZ() + 0.5F, endPos.getX() + 0.5F, endPos.getY() + 0.5F, endPos.getZ() + 0.5F, startPos.getX() + 0.5F, startPos.getY() + 0.5F, startPos.getZ() + 0.5F, (int) Math.ceil(flux / 8D), 0.25F, (byte) FLUX_TIME, FLUX_COLOR[RAND.nextInt(3)]);

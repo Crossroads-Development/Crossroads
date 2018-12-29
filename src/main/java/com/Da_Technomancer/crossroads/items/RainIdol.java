@@ -1,11 +1,5 @@
 package com.Da_Technomancer.crossroads.items;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.ModConfig;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,8 +12,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
 public class RainIdol extends Item{
 
+	private static final String NBT_KEY = "rain_idol";
+	private static final String NBT_KEY_TIME = "rain_idol_time";
+	
 	protected RainIdol(){
 		String name = "rain_idol";
 		setTranslationKey(name);
@@ -33,9 +33,6 @@ public class RainIdol extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		if(!ModConfig.getConfigBool(ModConfig.weatherControl, true)){
-			tooltip.add("This item has been disabled in the config. It does nothing.");
-		}
 		tooltip.add("Have you heard the word of our lord and saviour, this blue rock with rain powers?");
 	}
 
@@ -47,25 +44,21 @@ public class RainIdol extends Item{
 
 		if(isSelected && entityIn instanceof EntityPlayer){
 			EntityPlayer play = (EntityPlayer) entityIn;
-			if(!ModConfig.getConfigBool(ModConfig.weatherControl, false)){
-				return;
+			if(!play.getEntityData().hasKey(NBT_KEY)){
+				play.getEntityData().setByte(NBT_KEY, (byte) 0);
+				play.getEntityData().setLong(NBT_KEY_TIME, System.currentTimeMillis());
 			}
 
-			if(!play.getEntityData().hasKey("rIdol")){
-				play.getEntityData().setByte("rIdol", (byte) 0);
-				play.getEntityData().setLong("rIdolTime", System.currentTimeMillis());
+			if(System.currentTimeMillis() - play.getEntityData().getLong(NBT_KEY_TIME) > 2_000){
+				play.getEntityData().setByte(NBT_KEY, (byte) 0);
+				play.getEntityData().setLong(NBT_KEY_TIME, System.currentTimeMillis());
 			}
-
-			if(System.currentTimeMillis() - play.getEntityData().getLong("rIdolTime") > 2_000){
-				play.getEntityData().setByte("rIdol", (byte) 0);
-				play.getEntityData().setLong("rIdolTime", System.currentTimeMillis());
-			}
-			byte count = play.getEntityData().getByte("rIdol");
+			byte count = play.getEntityData().getByte(NBT_KEY);
 
 			if(!play.isSneaking() && play.motionY <= 0){
 				if(Math.abs(count) % 2 == 1){
 					count += count > 0 ? 1 : -1;
-					play.getEntityData().setByte("rIdol", count);
+					play.getEntityData().setByte(NBT_KEY, count);
 				}
 				return;
 			}
@@ -84,9 +77,9 @@ public class RainIdol extends Item{
 						play.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 						count = 0;
 					}else{
-						play.getEntityData().setLong("rIdolTime", System.currentTimeMillis());
+						play.getEntityData().setLong(NBT_KEY_TIME, System.currentTimeMillis());
 					}
-					play.getEntityData().setByte("rIdol", count);
+					play.getEntityData().setByte(NBT_KEY, count);
 				}
 			}else{
 				if(count > 0){
@@ -101,9 +94,9 @@ public class RainIdol extends Item{
 						play.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 						count = 0;
 					}else{
-						play.getEntityData().setLong("rIdolTime", System.currentTimeMillis());
+						play.getEntityData().setLong(NBT_KEY_TIME, System.currentTimeMillis());
 					}
-					play.getEntityData().setByte("rIdol", count);
+					play.getEntityData().setByte(NBT_KEY, count);
 				}
 			}	
 		}

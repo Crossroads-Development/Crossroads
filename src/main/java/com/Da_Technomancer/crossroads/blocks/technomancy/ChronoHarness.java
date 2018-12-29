@@ -114,7 +114,7 @@ public class ChronoHarness extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Produces FE for free, but creates flux as a byproduct");
-		tooltip.add("Produces " + FluxUtil.FE_PER_FLUX + "FE/flux at " + ChronoHarnessTileEntity.POWER + "FE/t");
+		tooltip.add("Produces " + FluxUtil.getFePerFlux(true) + "FE/flux at " + ChronoHarnessTileEntity.POWER + "FE/t");
 		tooltip.add("Disabled by a redstone signal");
 	}
 

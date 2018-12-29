@@ -14,7 +14,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 public class ChronoHarnessTileEntity extends FluxTE{
 
-	public static final int POWER = FluxUtil.FE_PER_FLUX / FluxUtil.FLUX_TIME;
+	public static final int POWER = FluxUtil.getFePerFlux(true) / FluxUtil.FLUX_TIME;
 	private static final int CAPACITY = 10_000;
 
 	private int fe = 0;
@@ -36,7 +36,7 @@ public class ChronoHarnessTileEntity extends FluxTE{
 		if(!world.isRemote && fe + POWER <= CAPACITY && !hasRedstone()){
 			fe += POWER;
 			markDirty();
-			partialFlux += (float) POWER / (float) FluxUtil.FE_PER_FLUX;
+			partialFlux += (float) POWER / (float) FluxUtil.getFePerFlux(false);
 			if(partialFlux >= 1F){
 				partialFlux -= 1F;
 				addFlux(1);
