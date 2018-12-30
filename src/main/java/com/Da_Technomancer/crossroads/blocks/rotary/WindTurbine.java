@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindTurbineTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
@@ -48,6 +49,10 @@ public class WindTurbine extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(te instanceof WindTurbineTileEntity){
+					((WindTurbineTileEntity) te).resetCache();
+				}
 				worldIn.setBlockState(pos, state.withProperty(Properties.HORIZ_FACING, state.getValue(Properties.HORIZ_FACING).rotateY()));
 			}
 			return true;

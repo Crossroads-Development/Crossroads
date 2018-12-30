@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 public class WindTurbineTileEntity extends ModuleTE{
 
+	private EnumFacing facing = null;
+
 	public WindTurbineTileEntity(){
 		super();
 	}
@@ -24,6 +26,23 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public WindTurbineTileEntity(boolean newlyPlaced){
 		this();
 		this.newlyPlaced = newlyPlaced;
+	}
+
+	protected EnumFacing getFacing(){
+		if(facing == null){
+			IBlockState state = world.getBlockState(pos);
+			if(state.getBlock() != ModBlocks.windTurbine){
+				invalidate();
+				return EnumFacing.NORTH;
+			}
+			facing = state.getValue(Properties.HORIZ_FACING);
+		}
+
+		return facing;
+	}
+
+	public void resetCache(){
+		facing = null;
 	}
 
 	public static final double POWER_PER_LEVEL = 10D;
@@ -60,20 +79,14 @@ public class WindTurbineTileEntity extends ModuleTE{
 			if(newlyPlaced || world.getTotalWorldTime() % 600 == 0){
 				newlyPlaced = false;
 				running = false;
-				IBlockState state = world.getBlockState(pos);
-				if(state.getBlock() != ModBlocks.windTurbine){
-					invalidate();
-					return;
-				}
-
-				EnumFacing dir = state.getValue(Properties.HORIZ_FACING);
-				BlockPos offsetPos = pos.offset(dir);
+				EnumFacing facing = getFacing();
+				BlockPos offsetPos = pos.offset(facing);
 				if(world.canSeeSky(offsetPos)){
 					running = true;
 					outer:
 					for(int i = -2; i <= 2; i++){
 						for(int j = -2; j <= 2; j++){
-							BlockPos checkPos = offsetPos.add(dir.getZOffset() * i, j, dir.getXOffset() * i);
+							BlockPos checkPos = offsetPos.add(facing.getZOffset() * i, j, facing.getXOffset() * i);
 							IBlockState checkState = world.getBlockState(checkPos);
 							if(!checkState.getBlock().isAir(checkState, world, checkPos)){
 								running = false;
