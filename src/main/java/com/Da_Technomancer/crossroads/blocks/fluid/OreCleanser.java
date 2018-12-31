@@ -55,7 +55,10 @@ public class OreCleanser extends BlockContainer{
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
-		InventoryHelper.dropInventoryItems(world, pos, (InventoryTE) world.getTileEntity(pos));
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof InventoryTE){
+			InventoryHelper.dropInventoryItems(world, pos, (InventoryTE) te);
+		}
 		super.breakBlock(world, pos, blockstate);
 	}
 
@@ -68,7 +71,7 @@ public class OreCleanser extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Washes Ore Grit for more efficient processing");
-		tooltip.add("Uses: 200mB Steam per Ore Grit");
-		tooltip.add("Produces: 200mB Water per Ore Grit");
+		tooltip.add(String.format("Uses: %1$dmB Steam per Ore Grit", OreCleanserTileEntity.WATER_USE));
+		tooltip.add(String.format("Produces: %1$dB Dirty Water per Ore Grit", OreCleanserTileEntity.WATER_USE));
 	}
 }

@@ -8,7 +8,7 @@ buildscript {
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.13.0-2.0.0 BETA 11-WIND TURBINES"
+version = "1.13.0-2.0.0 BETA 12-Ore Processing Balance"
 group = "com.Da_Technomancer.crossroads"
 archivesBaseName = "crossroads"
 

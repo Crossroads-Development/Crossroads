@@ -1,10 +1,14 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import com.Da_Technomancer.crossroads.fluids.BlockDirtyWater;
+import com.Da_Technomancer.crossroads.fluids.BlockSteam;
+import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -37,5 +41,7 @@ public class OreCleanserRecipe implements IRecipeWrapper{
 	public void getIngredients(IIngredients ingredients){
 		ingredients.setInputLists(ItemStack.class, ImmutableList.of(inputs));
 		ingredients.setOutput(ItemStack.class, output);
+		ingredients.setInput(FluidStack.class, new FluidStack(BlockSteam.getSteam(), OreCleanserTileEntity.WATER_USE));
+		ingredients.setOutput(FluidStack.class, new FluidStack(BlockDirtyWater.getDirtyWater(), OreCleanserTileEntity.WATER_USE));
 	}
 }

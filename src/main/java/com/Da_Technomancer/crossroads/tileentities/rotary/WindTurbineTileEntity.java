@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class WindTurbineTileEntity extends ModuleTE{
 
 	private EnumFacing facing = null;
+	public static final double MAX_SPEED = 2D;
 
 	public WindTurbineTileEntity(){
 		super();
@@ -110,7 +111,9 @@ public class WindTurbineTileEntity extends ModuleTE{
 					}
 				}
 
-				motData[1] += (double) level * POWER_PER_LEVEL;
+				if(motData[0] * Math.signum(level) < MAX_SPEED){
+					motData[1] += (double) level * POWER_PER_LEVEL;
+				}
 			}
 		}
 	}

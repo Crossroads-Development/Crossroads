@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindTurbineTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
@@ -119,6 +118,7 @@ public class WindTurbine extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Produces: Up to " + 2 * WindTurbineTileEntity.POWER_PER_LEVEL + "J/t");
+		tooltip.add(String.format("Useless above %1$frad/s", WindTurbineTileEntity.MAX_SPEED));
 		tooltip.add("I: 200");
 		tooltip.add("Randomly changes power direction with the wind");
 		tooltip.add("Requires a view of the sky and a 5x5 empty space");

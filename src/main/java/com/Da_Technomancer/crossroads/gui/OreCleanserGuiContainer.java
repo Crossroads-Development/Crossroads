@@ -21,8 +21,8 @@ public class OreCleanserGuiContainer extends MachineGUI{
 	public void initGui(){
 		super.initGui();
 		guiObjects = new IGuiObject[2];
-		guiObjects[0] = new FluidGuiObject(this, 0, 1,4_000, (width - xSize) / 2, (height - ySize) / 2, 8, 70);
-		guiObjects[1] = new FluidGuiObject(this, 2, 3,4_000, (width - xSize) / 2, (height - ySize) / 2, 62, 70);
+		guiObjects[0] = new FluidGuiObject(this, 0, 1,1_000, (width - xSize) / 2, (height - ySize) / 2, 8, 70);
+		guiObjects[1] = new FluidGuiObject(this, 2, 3,1_000, (width - xSize) / 2, (height - ySize) / 2, 62, 70);
 	}
 
 

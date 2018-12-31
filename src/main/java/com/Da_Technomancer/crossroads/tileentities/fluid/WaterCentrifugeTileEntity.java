@@ -1,10 +1,12 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.fluids.BlockDirtyWater;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -16,6 +18,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class WaterCentrifugeTileEntity extends InventoryTE{
 
@@ -24,7 +27,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 
 	public WaterCentrifugeTileEntity(){
 		super(1);
-		fluidProps[0] = new TankProperty(0, 10_000, true, false, (Fluid f) -> f == FluidRegistry.WATER);
+		fluidProps[0] = new TankProperty(0, 10_000, true, false, (Fluid f) -> f == FluidRegistry.WATER || f == BlockDirtyWater.getDirtyWater());
 		fluidProps[1] = new TankProperty(1, 10_000, false, true, null);
 	}
 
@@ -51,12 +54,28 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 
 		if(Math.abs(motData[0]) >= TIP_POINT && (Math.signum(motData[0]) == -1) == neg){
 			neg = !neg;
-			if(fluids[0] != null && fluids[0].amount >= 100){
-				if((fluids[0].amount -= 100) == 0){
+			if(fluids[0] != null && fluids[0].amount >= 250){
+				boolean dirty = fluids[0].getFluid() != FluidRegistry.WATER;
+				ItemStack product = ItemStack.EMPTY;
+				if(dirty){
+					int choice = world.rand.nextInt(RecipeHolder.dirtyWaterWeights) + 1;
+					for(Pair<Integer, ItemStack> entry : RecipeHolder.dirtyWaterRecipes){
+						choice -= entry.getLeft();
+						if(choice <= 0){
+							product = entry.getRight();
+							break;
+						}
+					}
+				}else{
+					product = MiscUtil.getOredictStack("dustSalt", 1);
+				}
+				if((fluids[0].amount -= 250) == 0){
 					fluids[0] = null;
 				}
-				fluids[1] = new FluidStack(BlockDistilledWater.getDistilledWater(), Math.min(fluidProps[1].getCapacity(), 100 + (fluids[1] == null ? 0 : fluids[1].amount)));
-				inventory[0] = new ItemStack(ModItems.dustSalt, Math.min(64, 1 + inventory[0].getCount()));
+				fluids[1] = new FluidStack(BlockDistilledWater.getDistilledWater(), Math.min(fluidProps[1].getCapacity(), 250 + (fluids[1] == null ? 0 : fluids[1].amount)));
+				if(inventory[0].isEmpty() || inventory[0].isItemEqual(product)){
+					inventory[0] = new ItemStack(product.getItem(), Math.min(64, 1 + inventory[0].getCount()), product.getMetadata());
+				}
 				markDirty();
 			}
 		}

@@ -110,8 +110,9 @@ public class WaterCentrifuge extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Converts water into distilled water and salt. The spin direction needs to keep changing to operate");
+		tooltip.add("Converts water into distilled water and salt or dirty water into distilled water and byproduct");
+		tooltip.add("The spin direction needs to keep changing to operate");
 		tooltip.add("I: 115");
-		tooltip.add("Produces LoL players.");
+		tooltip.add("Produces LoL players");
 	}
 }

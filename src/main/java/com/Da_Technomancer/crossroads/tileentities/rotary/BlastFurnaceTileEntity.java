@@ -23,7 +23,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	private int carbon = 0;
 	public static final int CARBON_LIMIT = 32;
 	private int progress = 0;
-	public static final double REQUIRED_SPD = 2;
+	public static final double REQUIRED_SPD = 2.5;
 	public static final int REQUIRED_PRG = 40;
 
 	public BlastFurnaceTileEntity(){

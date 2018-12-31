@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.fluids.BlockDirtyWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.item.ItemStack;
@@ -8,7 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -17,13 +17,13 @@ import javax.annotation.Nullable;
 
 public class OreCleanserTileEntity extends InventoryTE{
 
-	private static final int WATER_USE = 200;
+	public static final int WATER_USE = 250;
 	private int progress = 0;//Out of 100
 
 	public OreCleanserTileEntity(){
 		super(2);
-		fluidProps[0] = new TankProperty(0, 4_000, true, false, (Fluid f) -> f == BlockSteam.getSteam());//Steam
-		fluidProps[1] = new TankProperty(1, 4_000, false, true);//Water
+		fluidProps[0] = new TankProperty(0, 1_000, true, false, (Fluid f) -> f == BlockSteam.getSteam());//Steam
+		fluidProps[1] = new TankProperty(1, 1_000, false, true);//Water
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 			}
 
 			if(fluids[1] == null){
-				fluids[1] = new FluidStack(FluidRegistry.WATER, WATER_USE);
+				fluids[1] = new FluidStack(BlockDirtyWater.getDirtyWater(), WATER_USE);
 			}else{
 				fluids[1].amount += WATER_USE;
 			}
@@ -117,21 +117,12 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	private final ItemHandler itemHandler = new ItemHandler(null);
 	private final FluidHandler innerFluidHandler = new FluidHandler(-1);
-	private final FluidHandler inputFluidHandler = new FluidHandler(0);
-	private final FluidHandler outputFluidHandler = new FluidHandler(1);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			if(facing == null){
-				return (T) innerFluidHandler;
-			}
-
-			if(facing == EnumFacing.UP){
-				return (T) inputFluidHandler;
-			}
-			return (T) outputFluidHandler;
+			return (T) innerFluidHandler;
 		}
 
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){

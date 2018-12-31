@@ -25,6 +25,7 @@ public final class ModFluids{
 	public static BlockSteam steam;
 	public static BlockLiquidFat liquidFat;
 	public static BlockMoltenCopshowium moltenCopshowium;
+	public static BlockDirtyWater dirtyWater;
 
 	public static void init(){
 		FluidRegistry.registerFluid(BlockSteam.STEAM);
@@ -42,6 +43,10 @@ public final class ModFluids{
 		FluidRegistry.registerFluid(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
 		moltenCopshowium = new BlockMoltenCopshowium();
 		FluidRegistry.addBucketForFluid(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM);
+
+		FluidRegistry.registerFluid(BlockDirtyWater.DIRTY_WATER);
+		dirtyWater = new BlockDirtyWater();
+		FluidRegistry.addBucketForFluid(BlockDirtyWater.DIRTY_WATER);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -50,6 +55,7 @@ public final class ModFluids{
 		registerFluidBlockRendering(BlockDistilledWater.DISTILLED_WATER, "distilled_water");
 		registerFluidBlockRendering(BlockLiquidFat.LIQUID_FAT, "liquid_fat");
 		registerFluidBlockRendering(BlockMoltenCopshowium.MOLTEN_COPSHOWIUM, "copshowium");
+		registerFluidBlockRendering(BlockDirtyWater.DIRTY_WATER, "dirty_water");
 		for(Map.Entry<String, OreSetup.OreProfile> molten : OreSetup.metalStages.entrySet()){
 			BakedModelLoader.MODEL_MAP.put(registerFluidBlockRendering(molten.getValue().molten, "molten_metal_" + molten.getValue().molten.getName()), new ModelFluid(molten.getValue().molten));
 		}

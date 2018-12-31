@@ -31,6 +31,16 @@ public final class RecipeHolder{
 	public static final PredicateMap<ItemStack, ItemStack[]> millRecipes = new PredicateMap<>();
 
 	/**
+	 * The possible outputs and weights of centrifuging dirty water
+	 */
+	public static final ArrayList<Pair<Integer, ItemStack>> dirtyWaterRecipes = new ArrayList<>();
+
+	/**
+	 * The sum of the weights in dirtyWaterRecipes
+	 */
+	public static int dirtyWaterWeights;
+
+	/**
 	 * CraftingStack is input, the ItemStack is the output
 	 */
 	public static final PredicateMap<ItemStack, ItemStack> stampMillRecipes = new PredicateMap<>(ItemStack.EMPTY);

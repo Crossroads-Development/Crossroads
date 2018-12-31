@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
@@ -64,6 +65,17 @@ public final class ModCrafting{
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("blockRedstone"), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("cobblestone"), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("stone"),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
+
+		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Items.GUNPOWDER)));
+		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage())));
+		RecipeHolder.dirtyWaterRecipes.add(Pair.of(25, MiscUtil.getOredictStack("dustSalt", 1)));
+		RecipeHolder.dirtyWaterRecipes.add(Pair.of(10, new ItemStack(Blocks.SAND)));
+		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Blocks.DIRT)));
+		RecipeHolder.dirtyWaterRecipes.add(Pair.of(1, new ItemStack(Items.REDSTONE)));
+
+		for(Pair<Integer, ItemStack> ent : RecipeHolder.dirtyWaterRecipes){
+			RecipeHolder.dirtyWaterWeights += ent.getLeft();
+		}
 
 		RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("cobblestone"), new FluidStack(FluidRegistry.LAVA, 200));
 		RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("obsidian"), new FluidStack(FluidRegistry.LAVA, 1_000));
