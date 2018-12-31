@@ -1,9 +1,5 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.EntityItem;
@@ -11,16 +7,21 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class EnchantEffect implements IEffect{
 
 	private static final Random RAND = new Random();
 	
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, double mult){
+	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
 		ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
 		if(items.size() != 0){
 			for(EntityItem ent : items){
@@ -53,7 +54,7 @@ public class EnchantEffect implements IEffect{
 	public static class DisenchantEffect implements IEffect{
 
 		@Override
-		public void doEffect(World worldIn, BlockPos pos, double mult){
+		public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
 			ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
 			if(items.size() != 0){
 				for(EntityItem ent : items){

@@ -114,11 +114,17 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 				for(int x = (int) bb.minX; x < (int) bb.maxX; x++){
 					for(int y = (int) bb.minY; y < (int) bb.maxY; y++){
 						for(int z = (int) bb.minZ; z < (int) bb.maxZ; z++){
-							TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+							BlockPos effectPos = new BlockPos(x, y, z);
+							IBlockState state = world.getBlockState(effectPos);
+							TileEntity te = world.getTileEntity(effectPos);
 							if(te instanceof ITickable){
 								for(int run = 0; run < extraTicks; run++){
 									((ITickable) te).update();
 								}
+							}
+							//Blocks have a 16^3/randomTickSpeed chance of a random tick each game tick in vanilla
+							if(state.getBlock().getTickRandomly() && RAND.nextInt(16 * 16 * 16 / world.getGameRules().getInt("randomTickSpeed")) < extraTicks){
+								state.getBlock().randomTick(world, effectPos, state, world.rand);
 							}
 						}
 					}
@@ -149,7 +155,7 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_CAPABILITY && (side == null || side == getFacing().getOpposite())){
+		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || side == getFacing().getOpposite())){
 			return (T) magicHandler;
 		}
 

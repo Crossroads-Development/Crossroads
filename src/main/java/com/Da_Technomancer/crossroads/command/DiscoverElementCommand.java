@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.command;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -43,7 +42,7 @@ public class DiscoverElementCommand extends CommandBase{
 			for(EnumBeamAlignments element : EnumBeamAlignments.values()){
 				if(!nbt.hasKey(element.name()) && element != EnumBeamAlignments.NO_MATCH){
 					nbt.setBoolean(element.name(), true);
-					sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.toString()));
+					sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.getLocalName(false)));
 				}
 			}
 			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) sender, false);
@@ -67,7 +66,7 @@ public class DiscoverElementCommand extends CommandBase{
 
 		if(!nbt.hasKey(element.name())){
 			nbt.setBoolean(element.name(), true);
-			sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.toString()));
+			sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.getLocalName(false)));
 			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) sender, false);
 		}
 	}

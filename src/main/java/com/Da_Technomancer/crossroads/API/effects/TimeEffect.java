@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -12,20 +11,21 @@ import net.minecraft.world.World;
 public class TimeEffect implements IEffect{
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, double mult){
+	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
 		TileEntity te = worldIn.getTileEntity(pos);
-		if(te instanceof ITickable && worldIn.rand.nextInt(64) < mult){
-			for(EnumFacing dir : EnumFacing.values()){
-				if(te.hasCapability(Capabilities.MAGIC_CAPABILITY, dir)){
-					return;
+		if(worldIn.rand.nextInt(64) < mult){
+			if(te instanceof ITickable){
+
+				//Don't do extra ticks to beam blocks
+				for(EnumFacing side : EnumFacing.values()){
+					if(te.hasCapability(Capabilities.BEAM_CAPABILITY, side)){
+						return;
+					}
 				}
+				((ITickable) te).update();
 			}
 
-			//Each tick the TileEntity is queried again because some TileEntities destroy themselves on tick.
-			((ITickable) te).update();
-		}
-		if(worldIn.getBlockState(pos).getBlock().getTickRandomly()){
-			for(int i = 0; i < mult * BeamManager.BEAM_TIME; i++){
+			if(worldIn.getBlockState(pos).getBlock().getTickRandomly()){
 				worldIn.getBlockState(pos).getBlock().randomTick(worldIn, pos, worldIn.getBlockState(pos), worldIn.rand);
 			}
 		}
@@ -34,8 +34,8 @@ public class TimeEffect implements IEffect{
 	public static class VoidTimeEffect implements IEffect{
 
 		@Override
-		public void doEffect(World worldIn, BlockPos pos, double mult){
-			FluxUtil.fluxEvent(worldIn, pos, (int) mult);
+		public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
+			FluxUtil.fluxEvent(worldIn, pos, mult);
 		}
 	}
 }

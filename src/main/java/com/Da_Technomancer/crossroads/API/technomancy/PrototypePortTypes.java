@@ -10,8 +10,8 @@ public enum PrototypePortTypes{
 	
 	HEAT(Capabilities.HEAT_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/heat"), true, true, true, true),
 	ROTARY(Capabilities.AXLE_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/rotary"), true, true, true, true),
-	MAGIC_IN(Capabilities.MAGIC_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/magic_in"), true, false, true, false),
-	MAGIC_OUT(Capabilities.MAGIC_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/magic_out"), false, true, false, true),
+	MAGIC_IN(Capabilities.BEAM_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/magic_in"), true, false, true, false),
+	MAGIC_OUT(Capabilities.BEAM_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/magic_out"), false, true, false, true),
 	REDSTONE_IN(Capabilities.ADVANCED_REDSTONE_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/redstone_in"), true, false, false, true),
 	REDSTONE_OUT(Capabilities.ADVANCED_REDSTONE_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/redstone_out"), false, true, true, false);
 

@@ -90,7 +90,7 @@ public class OmniMeter extends Item{
 						if(!nbt.hasKey(EnumBeamAlignments.getAlignment(check).name())){
 							nbt.setBoolean(EnumBeamAlignments.getAlignment(check).name(), true);
 							//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
-							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumBeamAlignments.getAlignment(check).toString() + TextFormatting.RESET.toString()));
+							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumBeamAlignments.getAlignment(check).getLocalName(false) + TextFormatting.RESET.toString()));
 							StoreNBTToClient.syncNBTToClient((EntityPlayerMP) player, false);
 						}
 						String dir = EnumFacing.byIndex(i).toString();

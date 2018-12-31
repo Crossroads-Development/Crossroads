@@ -62,7 +62,7 @@ public class FluidTube extends BlockContainer implements IAdvConduitModel{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
-		setHardness(3);
+		setHardness(2);
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

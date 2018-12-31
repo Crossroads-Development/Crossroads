@@ -64,7 +64,7 @@ public class RedstoneFluidTube extends BlockContainer implements IAdvConduitMode
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
-		setHardness(3);
+		setHardness(2);
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);

@@ -183,7 +183,7 @@ public class PrototypeWatch extends BeamUsingItem{
 					return;
 				}
 				IPrototypePort port = (IPrototypePort) te;
-				if(!port.hasCapPrototype(Capabilities.MAGIC_CAPABILITY)){
+				if(!port.hasCapPrototype(Capabilities.BEAM_CAPABILITY)){
 					return;
 				}
 
@@ -197,7 +197,7 @@ public class PrototypeWatch extends BeamUsingItem{
 						cageNbt.setInteger("stored_" + EnumBeamAlignments.POTENTIAL.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name()) - potential);
 						cageNbt.setInteger("stored_" + EnumBeamAlignments.STABILITY.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name()) - stability);
 						cageNbt.setInteger("stored_" + EnumBeamAlignments.VOID.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.VOID.name()) - voi);
-						port.getCapPrototype(Capabilities.MAGIC_CAPABILITY).setMagic(new BeamUnit(energy, potential, stability, voi));
+						port.getCapPrototype(Capabilities.BEAM_CAPABILITY).setMagic(new BeamUnit(energy, potential, stability, voi));
 					}
 				}
 			}
@@ -257,7 +257,7 @@ public class PrototypeWatch extends BeamUsingItem{
 			if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && side == EnumFacing.SOUTH){
 				return true;
 			}
-			if(cap == Capabilities.MAGIC_CAPABILITY && side == EnumFacing.WEST){
+			if(cap == Capabilities.BEAM_CAPABILITY && side == EnumFacing.WEST){
 				return true;
 			}
 			return false;
@@ -288,7 +288,7 @@ public class PrototypeWatch extends BeamUsingItem{
 				//Control
 				return (T) redstone;
 			}
-			if(cap == Capabilities.MAGIC_CAPABILITY && side == EnumFacing.WEST){
+			if(cap == Capabilities.BEAM_CAPABILITY && side == EnumFacing.WEST){
 				//Magic out
 				return (T) magic;
 			}

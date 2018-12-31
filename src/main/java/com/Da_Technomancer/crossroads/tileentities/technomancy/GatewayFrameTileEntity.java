@@ -184,7 +184,7 @@ public class GatewayFrameTileEntity extends FluxTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_CAPABILITY && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
+		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
 			return (T) magicHandler;
 		}
 

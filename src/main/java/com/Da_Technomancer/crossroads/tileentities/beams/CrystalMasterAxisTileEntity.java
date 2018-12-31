@@ -24,7 +24,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add("Element: " + (currentElement == null ? "NONE" : currentElement.toString() + ", Time: " + time));
+		chat.add("Element: " + (currentElement == null ? "NONE" : currentElement.getLocalName(time < 0) + ", Time: " + time));
 	}
 
 	public EnumBeamAlignments getElement(){
@@ -117,7 +117,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_CAPABILITY && side != getFacing()){
+		if(cap == Capabilities.BEAM_CAPABILITY && side != getFacing()){
 			return true;
 		}
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
@@ -130,7 +130,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.MAGIC_CAPABILITY && side != getFacing()){
+		if(cap == Capabilities.BEAM_CAPABILITY && side != getFacing()){
 			return (T) magicHandler;
 		}
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){

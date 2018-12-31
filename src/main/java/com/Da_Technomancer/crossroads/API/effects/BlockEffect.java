@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects;
 import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -16,7 +17,7 @@ public class BlockEffect implements IEffect{
 	}
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, double mult){
+	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
 		IBlockState prev = worldIn.getBlockState(pos);
 		if(prev == block){
 			return;

@@ -191,7 +191,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 		@Override
 		public int getSlotLimit(int slot){
-			return slot == 0 ? 4 : 0;
+			return 64;
 		}
 	}
 

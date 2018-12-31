@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import java.util.Random;
-
 import net.minecraft.block.BlockSponge;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
@@ -10,15 +8,18 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class DirtEffect implements IEffect{
 
 	private final Random rand = new Random();
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, double mult){
+	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
 
 		if(worldIn.isRemote){
 			return;

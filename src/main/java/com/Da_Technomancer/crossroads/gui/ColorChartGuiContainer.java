@@ -55,7 +55,7 @@ public class ColorChartGuiContainer extends GuiContainer{
 			Color col = getColor(mouseX - guiLeft, mouseY - guiTop);
 			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
 			NBTTagCompound elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
-			drawHoveringText(ImmutableList.of(elementTag.hasKey(elem.name()) ? elem.name() : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, fontRenderer);
+			drawHoveringText(ImmutableList.of(elementTag.hasKey(elem.name()) ? elem.getLocalName(false) : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, fontRenderer);
 		}
 	}
 	

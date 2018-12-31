@@ -16,6 +16,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -69,6 +70,8 @@ public class StaffTechnomancy extends BeamUsingItem{
 					double[] end = new double[] {player.posX, player.getEyeHeight() + player.posY, player.posZ};
 					BlockPos endPos = null;
 					Vec3d look = player.getLookVec().scale(0.2D);
+					EnumFacing effectDir = null;
+
 					for(double d = 0; d < 32; d += 0.2D){
 						end[0] += look.x;
 						end[1] += look.y;
@@ -99,6 +102,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 								end[0] = res.hitVec.x;
 								end[1] = res.hitVec.y;
 								end[2] = res.hitVec.z;
+								effectDir = res.sideHit;
 							}
 							break;
 						}
@@ -107,7 +111,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 
 					IEffect effect = EnumBeamAlignments.getAlignment(mag).getMixEffect(mag.getRGB());
 					if(effect != null && endPos != null && !player.world.isOutsideBuildHeight(endPos)){
-						effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()));
+						effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()), effectDir);
 					}
 
 					Vec3d beamVec = new Vec3d(end[0] - start.x, end[1] - start.y, end[2] - start.z);

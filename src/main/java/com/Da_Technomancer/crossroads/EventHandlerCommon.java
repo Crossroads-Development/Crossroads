@@ -56,6 +56,17 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	public void onEntitySpawn(LivingSpawnEvent e){
+		for(Entity ent : e.getWorld().loadedEntityList){
+			if(ent instanceof EntityGhostMarker){
+				EntityGhostMarker mark = (EntityGhostMarker) ent;
+				if(mark.getType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVector().subtract(e.getEntity().getPositionVector()).length() <= mark.data.getInteger("range")){
+					e.setCanceled(true);
+					return;
+				}
+			}
+		}
+
+
 		if(e.getEntity() instanceof EntityCreeper && (float) AtmosChargeSavedData.getCharge(e.getWorld()) / (float) AtmosChargeSavedData.CAPACITY >= 0.9F && (ModConfig.getConfigInt(ModConfig.atmosEffect, false) & 2) == 2){
 			NBTTagCompound nbt = new NBTTagCompound();
 			e.getEntityLiving().writeEntityToNBT(nbt);
@@ -65,7 +76,7 @@ public final class EventHandlerCommon{
 	}
 
 	private static final Random RAND = new Random();
-	private static final ArrayList<Chunk> TO_RETROGEN = new ArrayList<Chunk>();
+	private static final ArrayList<Chunk> TO_RETROGEN = new ArrayList<>();
 	protected static Ticket loadingTicket;
 
 	/**
@@ -331,10 +342,10 @@ public final class EventHandlerCommon{
 		for(Entity ent : e.getWorld().loadedEntityList){
 			if(ent instanceof EntityGhostMarker){
 				EntityGhostMarker mark = (EntityGhostMarker) ent;
-				if(mark.getType() == EntityGhostMarker.EnumMarkerType.EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).lengthSquared() <= mark.data.getInteger("range")){
+				if(mark.getType() == EntityGhostMarker.EnumMarkerType.EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInteger("range")){
 					e.setCanceled(true);
 					return;
-				}else if(mark.getType() == EntityGhostMarker.EnumMarkerType.VOID_EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).lengthSquared() <= mark.data.getInteger("range")){
+				}else if(mark.getType() == EntityGhostMarker.EnumMarkerType.VOID_EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInteger("range")){
 					perpetuate = true;
 				}
 			}

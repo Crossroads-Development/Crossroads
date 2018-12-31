@@ -133,7 +133,7 @@ public class HeatCableTileEntity extends ModuleTE{
 
 		if(temp > insulator.getLimit()){
 			if(ModConfig.heatEffects.getBoolean()){
-				insulator.getEffect().doEffect(world, pos, 1);
+				insulator.getEffect().doEffect(world, pos, 1, null);
 			}else{
 				world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
 			}

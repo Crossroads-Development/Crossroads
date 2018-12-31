@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 public class OreCleanserTileEntity extends InventoryTE{
 
 	public static final int WATER_USE = 250;
-	private int progress = 0;//Out of 100
+	private int progress = 0;//Out of 50
 
 	public OreCleanserTileEntity(){
 		super(2);
@@ -54,7 +54,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 			progress++;
 			markDirty();
-			if(progress < 100){
+			if(progress < 50){
 				return;
 			}
 

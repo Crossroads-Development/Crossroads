@@ -60,6 +60,7 @@ public class ModBlocks{
 	public static BasicBlock blockLuminescentQuartz;
 	public static BeamSiphon beamSiphon;
 	public static ColorChart colorChart;
+	public static LightCluster lightCluster;
 	public static CrystalMasterAxis crystalMasterAxis;
 	public static Ratiator ratiator;
 	public static BeaconHarness beaconHarness;
@@ -214,6 +215,7 @@ public class ModBlocks{
 		blockLuminescentQuartz = (BasicBlock) new BasicBlock("block_luminescent_quartz", Material.ROCK, 4, "blockQuartz").setLightLevel(1F);
 		beamSiphon = new BeamSiphon();
 		colorChart = new ColorChart();
+		lightCluster = new LightCluster();
 		crystalMasterAxis = new CrystalMasterAxis();
 		ratiator = new Ratiator();
 		beaconHarness = new BeaconHarness();

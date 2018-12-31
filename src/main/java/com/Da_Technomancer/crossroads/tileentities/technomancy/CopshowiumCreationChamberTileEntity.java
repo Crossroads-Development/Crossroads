@@ -75,7 +75,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 			return facing == null ? (T) internalHandler : facing == EnumFacing.UP ? (T) inputHandler : facing == EnumFacing.DOWN ? (T) outputHandler : null;
 		}
 
-		if(capability == Capabilities.MAGIC_CAPABILITY && (facing == null || facing.getAxis() != EnumFacing.Axis.Y)){
+		if(capability == Capabilities.BEAM_CAPABILITY && (facing == null || facing.getAxis() != EnumFacing.Axis.Y)){
 			return (T) magicHandler;
 		}
 

@@ -18,13 +18,13 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PlaceEffect implements IEffect{
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, double mult){
-		ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
+	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
+		List<EntityItem> items = worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
 		if(items.size() != 0){
 			FakePlayer placer = FakePlayerFactory.get((WorldServer) worldIn, new GameProfile(null, Main.MODID + "-place_effect-" + worldIn.provider.getDimension()));
 			for(EntityItem ent : items){
@@ -46,7 +46,7 @@ public class PlaceEffect implements IEffect{
 	public static class BreakEffect implements IEffect{
 
 		@Override
-		public void doEffect(World worldIn, BlockPos pos, double mult){
+		public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
 			String[] bannedBlocks = ModConfig.getConfigStringList(ModConfig.destroyBlacklist, false);
 			String id = worldIn.getBlockState(pos).getBlock().getRegistryName().toString();
 			for(String s : bannedBlocks){

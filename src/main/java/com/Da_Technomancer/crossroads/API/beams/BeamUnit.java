@@ -84,7 +84,7 @@ public class BeamUnit{
 	@Override
 	public String toString(){
 		Color col = getRGB();
-		return EnumBeamAlignments.getAlignment(this).toString() + "-R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue() + "-En: " + contents[0] + ", Po: " + contents[1] + ", St: " + contents[2] + ", Vo: " + contents[3];
+		return EnumBeamAlignments.getAlignment(this).getLocalName(contents[3] != 0) + "-R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue() + "-En: " + contents[0] + ", Po: " + contents[1] + ", St: " + contents[2] + ", Vo: " + contents[3];
 	}
 
 	@Override

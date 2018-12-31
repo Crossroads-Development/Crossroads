@@ -117,7 +117,7 @@ public class FluxUtil{
 				do{
 					element = EnumBeamAlignments.values()[RAND.nextInt(EnumBeamAlignments.values().length)];
 				}while(element == EnumBeamAlignments.TIME || element.getEffect() == null);
-				element.getEffect().doEffect(worldIn, effectPos, severity);
+				element.getEffect().doEffect(worldIn, effectPos, severity, null);
 			}
 		}else if(ModConfig.blastChunk.getBoolean()){
 			worldIn.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), severity, true);

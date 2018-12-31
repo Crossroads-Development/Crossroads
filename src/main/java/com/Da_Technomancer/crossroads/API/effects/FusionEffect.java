@@ -4,13 +4,14 @@ import com.Da_Technomancer.crossroads.items.crafting.BeamTransmute;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class FusionEffect implements IEffect{
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, double mult){
+	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
 		IBlockState state = worldIn.getBlockState(pos);
 
 		BeamTransmute goal = RecipeHolder.fusionBeamRecipes.get(state);
@@ -22,7 +23,7 @@ public class FusionEffect implements IEffect{
 	public static class VoidFusionEffect implements IEffect{
 
 		@Override
-		public void doEffect(World worldIn, BlockPos pos, double mult){
+		public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
 			IBlockState state = worldIn.getBlockState(pos);
 
 			BeamTransmute goal = RecipeHolder.vFusionBeamRecipes.get(state);

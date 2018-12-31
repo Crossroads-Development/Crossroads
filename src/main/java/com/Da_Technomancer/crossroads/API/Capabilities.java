@@ -29,7 +29,7 @@ public class Capabilities{
 	public static Capability<ICogHandler> COG_CAPABILITY = null;
 	
 	@CapabilityInject(IBeamHandler.class)
-	public static Capability<IBeamHandler> MAGIC_CAPABILITY = null;
+	public static Capability<IBeamHandler> BEAM_CAPABILITY = null;
 	
 	@CapabilityInject(IAxisHandler.class)
 	public static Capability<IAxisHandler> AXIS_CAPABILITY = null;

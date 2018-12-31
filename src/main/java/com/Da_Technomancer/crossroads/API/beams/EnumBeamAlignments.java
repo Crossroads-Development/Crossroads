@@ -1,24 +1,11 @@
 package com.Da_Technomancer.crossroads.API.beams;
 
-import java.awt.Color;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.effects.*;
+import net.minecraft.init.Blocks;
 
 import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.API.effects.BlockEffect;
-import com.Da_Technomancer.crossroads.API.effects.ChargeEffect;
-import com.Da_Technomancer.crossroads.API.effects.EnchantEffect;
-import com.Da_Technomancer.crossroads.API.effects.EnergizeEffect;
-import com.Da_Technomancer.crossroads.API.effects.EqualibriumEffect;
-import com.Da_Technomancer.crossroads.API.effects.ExplodeEffect;
-import com.Da_Technomancer.crossroads.API.effects.FusionEffect;
-import com.Da_Technomancer.crossroads.API.effects.GrowEffect;
-import com.Da_Technomancer.crossroads.API.effects.IEffect;
-import com.Da_Technomancer.crossroads.API.effects.LightEffect;
-import com.Da_Technomancer.crossroads.API.effects.PlaceEffect;
-import com.Da_Technomancer.crossroads.API.effects.RiftEffect;
-import com.Da_Technomancer.crossroads.API.effects.TimeEffect;
-
-import net.minecraft.init.Blocks;
+import java.awt.*;
 
 public enum EnumBeamAlignments{
 	
@@ -58,7 +45,7 @@ public enum EnumBeamAlignments{
 	public IEffect getVoidEffect(){
 		return voidEffect;
 	}
-	
+
 	public IEffect getMixEffect(Color col){
 		if(col == null){
 			return effect;
@@ -93,9 +80,11 @@ public enum EnumBeamAlignments{
 		return VOID;
 	}
 
-	@Override
-	public String toString(){
-		String name = name();
-		return Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase();
+	public String getLocalName(boolean voi){
+		if(voi){
+			return MiscUtil.localize("alignment." + toString().toLowerCase() + ".void");
+		}else{
+			return MiscUtil.localize("alignment." + toString().toLowerCase());
+		}
 	}
 }
