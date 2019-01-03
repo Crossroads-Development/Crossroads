@@ -4,12 +4,16 @@ import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.beams.BeamRedirectorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class BeamRedirector extends BeamBlock{
 
@@ -31,5 +35,10 @@ public class BeamRedirector extends BeamBlock{
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		boolean hasRedstone = worldIn.getRedstonePower(pos.east(), EnumFacing.EAST) != 0 || worldIn.getRedstonePower(pos.west(), EnumFacing.WEST) != 0 || worldIn.getRedstonePower(pos.north(), EnumFacing.NORTH) != 0 || worldIn.getRedstonePower(pos.south(), EnumFacing.SOUTH) != 0 || worldIn.getRedstonePower(pos.down(), EnumFacing.DOWN) != 0 || worldIn.getRedstonePower(pos.up(), EnumFacing.UP) != 0;
 		((BeamRedirectorTileEntity) worldIn.getTileEntity(pos)).setRedstone(hasRedstone);
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
+		tooltip.add("Toggles beam output between two directions based on a redstone signal");
 	}
 }

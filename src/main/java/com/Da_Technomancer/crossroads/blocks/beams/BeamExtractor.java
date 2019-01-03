@@ -52,6 +52,7 @@ public class BeamExtractor extends BeamBlock{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		tooltip.add("Produces beams from various items");
 		tooltip.add("Who knew salt had magic powers?");
 	}
 }

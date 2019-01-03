@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxTE;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
@@ -21,6 +22,9 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -51,6 +55,19 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 		return region;
 	}
 
+	@Override
+	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+		super.receiveLong(identifier, message, sendingPlayer);
+		if(identifier == 4){
+			size = (int) message;
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public int getSize(){
+		return size;
+	}
+
 	public boolean stoppingTime(){
 		return intensity < 0 && RAND.nextInt(16) < -intensity;//Random is used to (on average) slow time instead of stopping it at small intensities
 	}
@@ -62,6 +79,7 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 		}
 		region = null;
 		markDirty();
+		ModPackets.network.sendToAllAround(new SendLongToClient((byte) 4, size, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		return size;
 	}
 
@@ -183,6 +201,13 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 	}
 
 	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setInteger("size", size);
+		return nbt;
+	}
+
+	@Override
 	public boolean isFluxEmitter(){
 		return true;
 	}
@@ -196,7 +221,7 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 
 		@Override
 		public void setMagic(BeamUnit mag){
-			if(mag != null && (true || EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.TIME)){//TODO temp for testing
+			if(mag != null && EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.TIME){
 				if(mag.getVoid() == 0){
 					intensity += mag.getPower();//Speed up time
 				}else{

@@ -389,6 +389,8 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beamSiphon, 1), "*L*", "*A*", "*L*", '*', ModItems.pureQuartz, 'L', ModItems.luminescentQuartz, 'A', ModItems.lensArray));
 		//Color Chart
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
+		//Light Cluster
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.lightCluster, 8), ModItems.luminescentQuartz));
 		//Crystalline Master Axis
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.crystalMasterAxis, 1), "*&*", "*#*", "***", '*', ModItems.pureQuartz, '#', ModBlocks.masterAxis, '&', ModItems.lensArray));
 		//Ratiator

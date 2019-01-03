@@ -98,7 +98,7 @@ public class GearFactory{
 	@Nonnull
 	public static GearMaterial findMaterial(String metalName){
 		for(GearMaterial mat : gearMats){
-			if(mat.getName().equals(metalName)){
+			if(mat.getName().toLowerCase().equals(metalName.toLowerCase())){
 				return mat;
 			}
 		}

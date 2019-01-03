@@ -7,6 +7,7 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityShulker;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -33,11 +34,13 @@ public class RiftEffect implements IEffect{
 			return;
 		}
 
-		if(worldIn.getTileEntity(pos) instanceof TileEntitySkull && ((TileEntitySkull) worldIn.getTileEntity(pos)).getSkullType() == 0){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof TileEntitySkull && ((TileEntitySkull) te).getSkullType() == 0){
 			int meta = worldIn.getBlockState(pos).getBlock().getMetaFromState(worldIn.getBlockState(pos));
+			//Annoying vanilla bug where setting from one type of skull to another won't update the texture
 			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 			worldIn.setBlockState(pos, Blocks.SKULL.getStateFromMeta(meta), 3);
-			((TileEntitySkull) worldIn.getTileEntity(pos)).setType(1);
+			((TileEntitySkull) te).setType(1);
 			return;
 		}
 

@@ -1,8 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import ca.weblite.objc.Client;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.blocks.technomancy.CopshowiumCreationChamber;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneTransmitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTopTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;
@@ -50,7 +48,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(FluxNodeTileEntity.class, new FluxNodeRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TeslaCoilTopTileEntity.class, new LinkLineRenderer<TeslaCoilTopTileEntity>());
 		ClientRegistry.bindTileEntitySpecialRenderer(CopshowiumCreationChamberTileEntity.class, new LinkLineRenderer<CopshowiumCreationChamberTileEntity>());
-		ClientRegistry.bindTileEntitySpecialRenderer(TemporalAcceleratorTileEntity.class, new LinkLineRenderer<TemporalAcceleratorTileEntity>());
+		ClientRegistry.bindTileEntitySpecialRenderer(TemporalAcceleratorTileEntity.class, new TemporalAcceleratorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(RedstoneTransmitterTileEntity.class, new LinkLineRenderer<RedstoneTransmitterTileEntity>());
 	}
 

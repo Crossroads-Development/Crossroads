@@ -137,7 +137,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add("Current maximum output: " + setting);
+		chat.add("Current maximum output: " + RATES[setting]);
 		chat.add("Stored: " + (storage.getPower() == 0 ? "Empty" : storage.getOutput().toString()));
 	}
 }

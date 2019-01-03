@@ -14,22 +14,13 @@ import net.minecraft.util.ResourceLocation;
 
 public class ModelGearOctagon{
 
-	private static final ModelGearOctagon INSTANCE = new ModelGearOctagon();
 	public static final ResourceLocation RESOURCE = new ResourceLocation(Main.MODID, "textures/model/gear_oct.png");
 
 	//These contain sqrt, so I don't want to calculate them every frame.
-	private final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));
-	private final float sHalfT = .5F / (1F + (float) Math.sqrt(2F));
+	private static final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));
+	private static final float sHalfT = .5F / (1F + (float) Math.sqrt(2F));
 
 	public static void render(Color c){
-		INSTANCE.render(RESOURCE, c);
-	}
-
-	/**
-	 * TODO Change it to draw about the origin, without the offset. This will require going back and changing everything that uses this.
-	 */
-	@Deprecated
-	public void render(ResourceLocation res, Color color){
 
 		float top = 0.0625F;//-.375F;
 		float lHalf = .4375F;
@@ -42,10 +33,10 @@ public class ModelGearOctagon{
 		float topP = 0.0575F;//-.380F;
 		float bottomP = -0.0575F;//-.495F;
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(res);
+		Minecraft.getMinecraft().renderEngine.bindTexture(RESOURCE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
-		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+		GlStateManager.color(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
 
 		vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(sHalf, top, -lHalf).tex(.5F + sHalfT, .5F - (-lHalfT)).endVertex();
@@ -69,7 +60,7 @@ public class ModelGearOctagon{
 		vb.pos(sHalf, -top, -lHalf).tex(.5F + sHalfT, .5F - (-lHalfT)).endVertex();
 		Tessellator.getInstance().draw();
 
-		GlStateManager.color((color.getRed() - 130F) / 255F, (color.getGreen() - 130F) / 255F, (color.getBlue() - 130F) / 255F);
+		GlStateManager.color((c.getRed() - 130F) / 255F, (c.getGreen() - 130F) / 255F, (c.getBlue() - 130F) / 255F);
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(lHalf, -top, sHalf).tex(1F, .5F + -sHalfT).endVertex();
@@ -130,7 +121,7 @@ public class ModelGearOctagon{
 
 		//Prongs
 
-		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+		GlStateManager.color(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
@@ -283,7 +274,6 @@ public class ModelGearOctagon{
 		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
 		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		Tessellator.getInstance().draw();
-
 
 
 		GlStateManager.pushMatrix();

@@ -7,13 +7,18 @@ import com.Da_Technomancer.crossroads.tileentities.beams.CrystallinePrismTileEnt
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class CrystallinePrism extends BeamBlock{
 
@@ -59,5 +64,10 @@ public class CrystallinePrism extends BeamBlock{
 	@Override
 	public int getMetaFromState(IBlockState state){
 		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex();
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
+		tooltip.add("Splits beams into their constituent elements");
 	}
 }

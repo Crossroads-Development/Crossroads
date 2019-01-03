@@ -38,6 +38,8 @@ public abstract class FluxTE extends ModuleTE implements ILinkTE, IFluxHandler{
 			links.add(BlockPos.fromLong(message));
 		}else if(identifier == CLEAR_PACKET_ID){
 			links.clear();
+		}else{
+			super.receiveLong(identifier, message, sendingPlayer);
 		}
 	}
 
