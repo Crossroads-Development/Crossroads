@@ -93,6 +93,11 @@ public abstract class FluxTE extends ModuleTE implements ILinkTE, IFluxHandler{
 	}
 
 	@Override
+	public boolean canBeginLinking(){
+		return isFluxEmitter();
+	}
+
+	@Override
 	public ArrayList<BlockPos> getLinks(){
 		return links;
 	}

@@ -122,7 +122,7 @@ public class MechanismSmallGear implements IMechanism{
 				}
 
 				if(sideTE != null && sideTE.hasCapability(Capabilities.COG_CAPABILITY, facing)){
-					sideTE.getCapability(Capabilities.COG_CAPABILITY, facing).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset);
+					sideTE.getCapability(Capabilities.COG_CAPABILITY, facing).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset);
 				}
 			}
 		}

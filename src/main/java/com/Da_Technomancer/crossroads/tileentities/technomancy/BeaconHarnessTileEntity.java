@@ -41,6 +41,11 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ILinkTE, IF
 	}
 
 	@Override
+	public boolean canBeginLinking(){
+		return true;
+	}
+
+	@Override
 	public void update(){
 		super.update();
 

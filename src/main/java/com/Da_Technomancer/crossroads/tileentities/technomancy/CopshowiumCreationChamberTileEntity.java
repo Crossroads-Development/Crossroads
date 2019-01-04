@@ -44,6 +44,11 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
+	public boolean canBeginLinking(){
+		return true;
+	}
+
+	@Override
 	protected int fluidTanks(){
 		return 2;
 	}

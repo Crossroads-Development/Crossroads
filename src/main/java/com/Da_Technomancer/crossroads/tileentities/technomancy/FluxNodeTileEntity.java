@@ -45,6 +45,11 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 	}
 
 	@Override
+	public boolean canBeginLinking(){
+		return true;
+	}
+
+	@Override
 	public void update(){
 		if(world.isRemote){
 			angle += Math.toDegrees(clientThroughput) / 4F / 20F;

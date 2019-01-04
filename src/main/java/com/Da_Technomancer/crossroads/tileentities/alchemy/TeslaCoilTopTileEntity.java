@@ -136,6 +136,11 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
+	public boolean canBeginLinking(){
+		return getVariant() != TeslaCoilTop.TeslaCoilVariants.ATTACK;
+	}
+
+	@Override
 	public boolean canLink(ILinkTE otherTE){
 		return otherTE instanceof TeslaCoilTopTileEntity && getVariant() != TeslaCoilTop.TeslaCoilVariants.ATTACK;
 	}

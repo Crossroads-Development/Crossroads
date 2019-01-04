@@ -44,6 +44,11 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 		}
 	}
 
+	@Override
+	public boolean canBeginLinking(){
+		return false;
+	}
+
 	public void setSrc(BlockPos srcIn){
 		src = srcIn;
 		markDirty();

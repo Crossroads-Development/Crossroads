@@ -30,7 +30,13 @@ public class FluxStabilizerMechanicalTileEntity extends MasterAxisTileEntity imp
 	}
 
 	@Override
+	public boolean canBeginLinking(){
+		return false;
+	}
+
+	@Override
 	public void update(){
+
 		if(!world.isRemote){
 			if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == FluxUtil.FLUX_TIME - 1){
 				//Add the energy a tick in advance

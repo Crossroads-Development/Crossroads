@@ -1,11 +1,14 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxTE;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
 
@@ -56,6 +59,16 @@ public class FluxStabilizerBeamTileEntity extends FluxTE{
 	@Override
 	public boolean isFluxReceiver(){
 		return true;
+	}
+
+	@Nullable
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+		if(capability == Capabilities.BEAM_CAPABILITY){
+			return (T) beamHandler;
+		}
+		return super.getCapability(capability, facing);
 	}
 
 	private final BeamHandler beamHandler = new BeamHandler();

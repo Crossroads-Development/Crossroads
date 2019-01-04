@@ -43,6 +43,11 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 		}
 	}
 
+	@Override
+	public boolean canBeginLinking(){
+		return true;
+	}
+
 	public void dye(EnumDyeColor color){
 		if(world.getBlockState(pos).getValue(Properties.COLOR) != color){
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.COLOR, color));

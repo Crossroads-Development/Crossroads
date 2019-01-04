@@ -38,6 +38,11 @@ public interface ILinkTE extends ILongReceiver{
 	}
 
 	/**
+	 * @return Whether this device can ever be the start of a link
+	 */
+	public boolean canBeginLinking();
+
+	/**
 	 *
 	 * @param otherTE The ILinkTE to attempt linking to
 	 * @return Whether this TE is allowed to link to the otherTE. The source TE controls whether the link is allowed, the target is not checked. Do not check range
@@ -104,7 +109,7 @@ public interface ILinkTE extends ILongReceiver{
 			}else{
 				player.sendMessage(new TextComponentString("Invalid pair; Canceling linking"));
 			}
-		}else{
+		}else if(canBeginLinking()){
 			if(!wrench.hasTagCompound()){
 				wrench.setTagCompound(new NBTTagCompound());
 			}
@@ -115,8 +120,10 @@ public interface ILinkTE extends ILongReceiver{
 			return wrench;
 		}
 
-		wrench.getTagCompound().removeTag(POS_NBT);
-		wrench.getTagCompound().removeTag(DIM_NBT);
+		if(wrench.hasTagCompound()){
+			wrench.getTagCompound().removeTag(POS_NBT);
+			wrench.getTagCompound().removeTag(DIM_NBT);
+		}
 		return wrench;
 	}
 
