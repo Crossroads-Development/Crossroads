@@ -1,167 +1,166 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
+import com.Da_Technomancer.crossroads.API.rotary.AxisTypes;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxHandler;
-import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
-import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class FluxStabilizerMechanicalTileEntity extends MasterAxisTileEntity implements ILinkTE, IFluxHandler, IInfoTE{
+public class FluxStabilizerMechanicalTileEntity extends AbstractFluxStabilizerTE{
 
-	private int flux = 0;
-	private static final double maxChange = 100;
-	private boolean stable = true;
-	private static final double energyScale = 100;
-	private int prevEfficiency = 0;
-	private boolean crystal;
+	public static final double EFFICIENCY_SCALE = 0.5D;
+
+	private double[] motData = new double[4];
+	private double target = EFFICIENCY_SCALE;
 
 	public FluxStabilizerMechanicalTileEntity(){
 		super();
 	}
 
 	public FluxStabilizerMechanicalTileEntity(boolean crystal){
-		this();
-		this.crystal = crystal;
+		super(crystal);
 	}
 
 	@Override
-	protected EnumFacing getFacing(){
-		return EnumFacing.UP;
-	}
-
-	@Override
-	public boolean canBeginLinking(){
-		return false;
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+		chat.add("Target speed: " + MiscUtil.betterRound(target, 1));
+		super.addInfo(chat, player, side, hitX, hitY, hitZ);
+		chat.add("Speed: " + MiscUtil.betterRound(motData[0], 3));
+		chat.add("Energy: " + MiscUtil.betterRound(motData[1], 3));
+		chat.add("Power: " + MiscUtil.betterRound(motData[2], 3));
+		chat.add("I: 100, Rotation Ratio: " + MiscUtil.betterRound(axleHandler.rotRatio, 3));
 	}
 
 	@Override
 	public void update(){
-
-		if(!world.isRemote){
-			if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == FluxUtil.FLUX_TIME - 1){
-				//Add the energy a tick in advance
-				if(validRotary()){
-					double speedSign = Math.signum(rotaryMembers.get(0).getMotionData()[0]);
-					if(speedSign == 0){
-						rotaryMembers.get(0).getMotionData()[1] += (2D * Math.random() - 1D) * maxChange;
-					}else{
-						rotaryMembers.get(0).getMotionData()[1] += Math.random() * maxChange * speedSign;
-					}
-					markDirty();
-				}
-			}else if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
-				if(validRotary()){
-					int cap = FluxUtil.getStabilizerLimit(crystal);
-					prevEfficiency = cap - (int) Math.min(Math.abs(sumEnergy) / energyScale, cap);
-					flux -= prevEfficiency;
-					flux = Math.max(0, flux);
-					markDirty();
-				}
-				stable = true;
-			}
-
-			stable &= !locked;
-		}
 		super.update();
-	}
 
-	/**
-	 * @return Whether the current rotary setup allows for draining flux
-	 */
-	private boolean validRotary(){
-		if(!stable || locked || rotaryMembers.isEmpty()){
-			return false;
-		}
+		if(!world.isRemote && world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
+			int efficiency = 0;
+			if(axleHandler.master != null && axleHandler.master.get() != null && axleHandler.master.get().getType() == AxisTypes.NORMAL){
+				efficiency = Math.max(0, FluxUtil.getStabilizerLimit(crystal) - (int) (Math.abs(motData[0] - target) / EFFICIENCY_SCALE));
+			}
 
-		for(IAxleHandler axle : rotaryMembers){
-			if(axle.getMoInertia() != 0){
-				return true;
+			if(clientRunning ^ (efficiency != 0 && flux != 0)){
+				clientRunning = !clientRunning;
+				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 4, clientRunning ? 1L : 0L, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}
+
+			if(efficiency != 0 && flux != 0){
+				markDirty();
+			}
+			flux = Math.max(0, flux - efficiency);
+
+			//Adjust target
+			if(world.rand.nextInt(240) == 0){
+				target = EFFICIENCY_SCALE * (world.rand.nextInt(16) + 1);
+				markDirty();
 			}
 		}
-		return false;
-	}
-
-	@Override
-	public int getCapacity(){
-		return 64;
-	}
-
-	@Override
-	public int getFlux(){
-		return flux;
-	}
-
-	@Override
-	public boolean isFluxEmitter(){
-		return false;
-	}
-
-	@Override
-	public boolean isFluxReceiver(){
-		return true;
-	}
-
-	@Override
-	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
-
-	}
-
-	@Override
-	public int addFlux(int fluxIn){
-		flux += fluxIn;
-		markDirty();
-		return flux;
-	}
-
-	@Override
-	public int canAccept(){
-		return getCapacity() - flux;
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setInteger("flux", flux);
-		nbt.setBoolean("stable", stable);
-		nbt.setBoolean("crystal", crystal);
+		for(int i = 0; i < 4; i++){
+			nbt.setDouble("mot_" + i, motData[i]);
+		}
+		nbt.setDouble("target", target);
 		return nbt;
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	@Override public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		flux = nbt.getInteger("flux");
-		stable = nbt.getBoolean("stable");
-		crystal = nbt.getBoolean("crystal");
+		for(int i = 0; i < 4; i++){
+			motData[i] = nbt.getDouble("mot_" + i);
+		}
+		target = nbt.getDouble("target");
 	}
 
+	@Nullable
 	@Override
-	public TileEntity getTE(){
-		return this;
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == EnumFacing.UP)){
+			return (T) axleHandler;
+		}
+		if(capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
+			return (T) redsHandler;
+		}
+		return super.getCapability(capability, facing);
 	}
 
-	@Override
-	public boolean canLink(ILinkTE otherTE){
-		return false;
+	private final AxleHandler axleHandler = new AxleHandler();
+	private final RedsHandler redsHandler = new RedsHandler();
+
+	private class AxleHandler implements IAxleHandler{
+
+		//Stored in a WeakReference to prevent memory leaks
+		private WeakReference<IAxisHandler> master;
+		private double rotRatio;
+		private byte updateKey;
+
+		@Override
+		public double[] getMotionData(){
+			return motData;
+		}
+
+		@Override
+		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
+			//If true, this has already been checked.
+			if(key == updateKey || masterIn.addToList(this)){
+				return;
+			}
+
+			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
+			updateKey = key;
+			master = new WeakReference<>(masterIn);
+		}
+
+		@Override
+		public double getMoInertia(){
+			return 100;
+		}
+
+		@Override
+		public double getRotationRatio(){
+			return rotRatio;
+		}
+
+		@Override
+		public void markChanged(){
+			markDirty();
+		}
+
+		@Override
+		public boolean shouldManageAngle(){
+			return false;
+		}
+
+		@Override
+		public void disconnect(){
+			master = null;
+		}
 	}
 
-	@Override
-	public ArrayList<BlockPos> getLinks(){
-		return new ArrayList<>(0);
-	}
+	private class RedsHandler implements IAdvancedRedstoneHandler{
 
-	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add("Efficiency: " + prevEfficiency + "/8 flux/cycle");
+		@Override
+		public double getOutput(boolean measure){
+			return measure ? target : 0;
+		}
 	}
 }

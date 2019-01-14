@@ -52,6 +52,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(RedstoneTransmitterTileEntity.class, new LinkLineRenderer<RedstoneTransmitterTileEntity>());
 		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerBeamTileEntity.class, new FluxStabilizerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerElectricTileEntity.class, new FluxStabilizerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerMechanicalTileEntity.class, new FluxStabilizerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(ChronoHarnessTileEntity.class, new LinkLineRenderer<ChronoHarnessTileEntity>());
 	}
 

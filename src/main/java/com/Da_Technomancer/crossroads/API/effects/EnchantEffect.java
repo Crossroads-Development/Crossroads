@@ -32,12 +32,15 @@ public class EnchantEffect implements IEffect{
 
 				ItemStack stack = ent.getItem();
 				for(int i = 0; i < stack.getCount(); i++){
-					ItemStack created = ItemStack.EMPTY;
+					ItemStack created;
 
 					List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(RAND, stack, (int) Math.min(mult, 45), mult >= 64);
 
 					if(stack.getItem() == Items.BOOK){
-						created = new ItemStack(Items.ENCHANTED_BOOK, 1);
+						created = new ItemStack(Items.ENCHANTED_BOOK, 1, 0);
+					}else{
+						created = stack.copy();
+						created.setCount(1);
 					}
 
 					if(created.getItem() == Items.ENCHANTED_BOOK && ench.size() > 1){
@@ -68,9 +71,10 @@ public class EnchantEffect implements IEffect{
 			if(items.size() != 0){
 				for(EntityItem ent : items){
 					if(ent.getItem().getTagCompound() != null && ent.getItem().getTagCompound().hasKey("ench")){
-						ent.getItem().getTagCompound().removeTag("ench");
 						if(ent.getItem().getItem() == Items.ENCHANTED_BOOK){
 							ent.setItem(new ItemStack(Items.BOOK, ent.getItem().getCount()));
+						}else{
+							ent.getItem().getTagCompound().removeTag("ench");
 						}
 					}
 				}

@@ -75,8 +75,9 @@ public class FluxStabilizerMechanical extends BlockContainer{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add(String.format("Destroys up to %1$d flux/cycle when mechanically countered", FluxUtil.getStabilizerLimit(crystal)));
-		tooltip.add("The attached gear has to kept slow to work");
+		tooltip.add(String.format("Destroys up to %1$d flux/cycle when kept at the right speed", FluxUtil.getStabilizerLimit(crystal)));
+		tooltip.add(String.format("Target speed measured by ratiator. Efficiency drops by one for each %1$.1frad/s difference from target", FluxStabilizerMechanicalTileEntity.EFFICIENCY_SCALE));
+		tooltip.add("Axle connection on top. Doesn't work with Redstone or Math Master Axes. I: 100");
 		tooltip.add("Does not overfill with flux");
 	}
 }

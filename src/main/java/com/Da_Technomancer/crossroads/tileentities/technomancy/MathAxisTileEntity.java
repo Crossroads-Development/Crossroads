@@ -3,10 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -52,6 +49,11 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.ARRANGEMENT, mode.getFormat()), 2);
 		}
 		markDirty();
+	}
+
+	@Override
+	protected AxisTypes getType(){
+		return AxisTypes.FIXED;
 	}
 
 	public Mode getMode(){
@@ -235,7 +237,6 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 		}
 	}
 	protected class AxisHandler extends MasterAxisTileEntity.AxisHandler{
-
 
 		@Override
 		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){

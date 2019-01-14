@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
+import com.Da_Technomancer.crossroads.API.rotary.AxisTypes;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
@@ -59,5 +60,10 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		}
 
 		runAngleCalc();
+	}
+
+	@Override
+	protected AxisTypes getType(){
+		return AxisTypes.FIXED;
 	}
 }

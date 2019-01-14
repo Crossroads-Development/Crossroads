@@ -1,8 +1,5 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import net.minecraft.util.EnumFacing;
 
 public class DefaultAxisHandler implements IAxisHandler{
@@ -40,5 +37,10 @@ public class DefaultAxisHandler implements IAxisHandler{
 	@Override
 	public double getTotalEnergy(){
 		return 0;
+	}
+
+	@Override
+	public AxisTypes getType(){
+		return AxisTypes.NORMAL;
 	}
 }

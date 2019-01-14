@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -172,6 +169,10 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		return super.hasCapability(cap, side);
 	}
 
+	protected AxisTypes getType(){
+		return AxisTypes.NORMAL;
+	}
+
 	protected final IAxisHandler handler = new AxisHandler();
 
 	@SuppressWarnings("unchecked")
@@ -273,6 +274,11 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		@Override
 		public double getTotalEnergy(){
 			return sumEnergy;
+		}
+
+		@Override
+		public AxisTypes getType(){
+			return MasterAxisTileEntity.this.getType();
 		}
 	}
 }

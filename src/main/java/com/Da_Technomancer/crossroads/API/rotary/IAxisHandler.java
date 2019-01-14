@@ -33,4 +33,11 @@ public interface IAxisHandler{
 	public void addAxisToList(@Nonnull ISlaveAxisHandler handler, EnumFacing side);
 
 	public double getTotalEnergy();
+
+	/**
+	 * Get the overarching category this axis fits into. Fixed means strict external control speed/energy, normal means normal
+	 * @return The category this axis is. Used by some devices to reject control.
+	 */
+	@Nonnull
+	public AxisTypes getType();
 }

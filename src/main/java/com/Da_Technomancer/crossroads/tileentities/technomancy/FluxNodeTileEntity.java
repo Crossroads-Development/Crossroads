@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import com.Da_Technomancer.crossroads.API.rotary.AxisTypes;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
@@ -66,6 +67,11 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 		}
 
 		super.update();
+	}
+
+	@Override
+	protected AxisTypes getType(){
+		return AxisTypes.FIXED;
 	}
 
 	@Override
