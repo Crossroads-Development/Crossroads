@@ -50,6 +50,9 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(CopshowiumCreationChamberTileEntity.class, new LinkLineRenderer<CopshowiumCreationChamberTileEntity>());
 		ClientRegistry.bindTileEntitySpecialRenderer(TemporalAcceleratorTileEntity.class, new TemporalAcceleratorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(RedstoneTransmitterTileEntity.class, new LinkLineRenderer<RedstoneTransmitterTileEntity>());
+		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerBeamTileEntity.class, new FluxStabilizerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerElectricTileEntity.class, new FluxStabilizerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(ChronoHarnessTileEntity.class, new LinkLineRenderer<ChronoHarnessTileEntity>());
 	}
 
 	private static void reg(Block block){

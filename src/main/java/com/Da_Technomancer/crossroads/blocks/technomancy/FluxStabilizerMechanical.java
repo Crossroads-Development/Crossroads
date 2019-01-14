@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxStabilizerBeamTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxStabilizerMechanicalTileEntity;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -13,6 +13,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -24,9 +25,12 @@ import java.util.List;
 
 public class FluxStabilizerMechanical extends BlockContainer{
 
-	public FluxStabilizerMechanical(){
+	private final boolean crystal;
+
+	public FluxStabilizerMechanical(boolean crystal){
 		super(Material.IRON);
-		String name = "flux_stabilizer_mechanical";
+		this.crystal = crystal;
+		String name = crystal ? "flux_stabilizer_crystal_mechanical" : "flux_stabilizer_mechanical";
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(ModItems.TAB_CROSSROADS);
@@ -51,7 +55,17 @@ public class FluxStabilizerMechanical extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new FluxStabilizerMechanicalTileEntity();
+		return new FluxStabilizerMechanicalTileEntity(crystal);
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public BlockRenderLayer getRenderLayer(){
+		return BlockRenderLayer.CUTOUT;
 	}
 
 	@Override
@@ -61,7 +75,7 @@ public class FluxStabilizerMechanical extends BlockContainer{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Destroys up to 8 flux/cycle when mechanically countered");
+		tooltip.add(String.format("Destroys up to %1$d flux/cycle when mechanically countered", FluxUtil.getStabilizerLimit(crystal)));
 		tooltip.add("The attached gear has to kept slow to work");
 		tooltip.add("Does not overfill with flux");
 	}

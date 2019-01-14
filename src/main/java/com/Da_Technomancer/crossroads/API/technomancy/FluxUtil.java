@@ -34,6 +34,14 @@ public class FluxUtil{
 		RenderUtil.addArc(world.provider.getDimension(), startPos.getX() + 0.5F, startPos.getY() + 0.5F, startPos.getZ() + 0.5F, endPos.getX() + 0.5F, endPos.getY() + 0.5F, endPos.getZ() + 0.5F, startPos.getX() + 0.5F, startPos.getY() + 0.5F, startPos.getZ() + 0.5F, (int) Math.ceil(flux / 8D), 0.25F, (byte) FLUX_TIME, FLUX_COLOR[RAND.nextInt(3)]);
 	}
 
+	public static int getStabilizerLimit(boolean crystal){
+		if(crystal){
+			return 16;
+		}else{
+			return 8;
+		}
+	}
+
 	public static int transFlux(World world, BlockPos pos, ArrayList<BlockPos> links, int flux){
 		IFluxHandler[] handlers = new IFluxHandler[links.size()];
 		int handlerCount = 0;

@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.blocks.alchemy.*;
+import com.Da_Technomancer.crossroads.blocks.beams.*;
 import com.Da_Technomancer.crossroads.blocks.fluid.*;
 import com.Da_Technomancer.crossroads.blocks.heat.*;
-import com.Da_Technomancer.crossroads.blocks.beams.*;
 import com.Da_Technomancer.crossroads.blocks.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.technomancy.*;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -137,8 +137,11 @@ public class ModBlocks{
 	public static TemporalAccelerator temporalAccelerator;
 	public static ChronoHarness chronoHarness;
 	public static FluxStabilizerBeam fluxStabilizerBeam;
+	public static FluxStabilizerBeam fluxStabilizerCrystalBeam;
 	public static FluxStabilizerMechanical fluxStabilizerMechanical;
+	public static FluxStabilizerMechanical fluxStabilizerCrystalMechanical;
 	public static FluxStabilizerElectric fluxStabilizerElectric;
+	public static FluxStabilizerElectric fluxStabilizerCrystalElectric;
 
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
 	
@@ -297,9 +300,12 @@ public class ModBlocks{
 		fluxConsumer = new FluxConsumer();
 		temporalAccelerator = new TemporalAccelerator();
 		chronoHarness = new ChronoHarness();
-		fluxStabilizerBeam = new FluxStabilizerBeam();
-		fluxStabilizerMechanical = new FluxStabilizerMechanical();
-		fluxStabilizerElectric = new FluxStabilizerElectric();
+		fluxStabilizerBeam = new FluxStabilizerBeam(false);
+		fluxStabilizerCrystalBeam = new FluxStabilizerBeam(true);
+		fluxStabilizerMechanical = new FluxStabilizerMechanical(false);
+		fluxStabilizerCrystalMechanical = new FluxStabilizerMechanical(true);
+		fluxStabilizerElectric = new FluxStabilizerElectric(false);
+		fluxStabilizerCrystalElectric = new FluxStabilizerElectric(true);
 	}
 
 	@SideOnly(Side.CLIENT)

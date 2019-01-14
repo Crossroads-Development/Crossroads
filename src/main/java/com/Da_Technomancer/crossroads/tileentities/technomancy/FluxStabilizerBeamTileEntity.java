@@ -4,24 +4,38 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.FluxTE;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 
-public class FluxStabilizerBeamTileEntity extends FluxTE{
+public class FluxStabilizerBeamTileEntity extends AbstractFluxStabilizerTE{
 
 	private int stability = 0;
+
+	public FluxStabilizerBeamTileEntity(){
+		super();
+	}
+
+	public FluxStabilizerBeamTileEntity(boolean crystal){
+		super(crystal);
+	}
 
 	@Override
 	public void update(){
 		super.update();
 
-		if(!world.isRemote && world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
-			stability = Math.min(stability, 8);
+		if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
+			stability = Math.min(stability, FluxUtil.getStabilizerLimit(crystal));
+			if(clientRunning ^ (stability != 0 && flux != 0)){
+				clientRunning = !clientRunning;
+				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 4, clientRunning ? 1L : 0L, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			}
 			flux = Math.max(0, flux - stability);
 			stability = 0;
 		}
@@ -37,28 +51,6 @@ public class FluxStabilizerBeamTileEntity extends FluxTE{
 	@Override public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		stability = nbt.getInteger("stability");
-	}
-
-	@Override
-	public int addFlux(int fluxIn){
-		flux += fluxIn;
-		markDirty();
-		return flux;
-	}
-
-	@Override
-	public boolean isFluxEmitter(){
-		return false;
-	}
-
-	@Override
-	public int canAccept(){
-		return getCapacity() - flux;
-	}
-
-	@Override
-	public boolean isFluxReceiver(){
-		return true;
 	}
 
 	@Nullable

@@ -23,6 +23,16 @@ public class FluxStabilizerMechanicalTileEntity extends MasterAxisTileEntity imp
 	private boolean stable = true;
 	private static final double energyScale = 100;
 	private int prevEfficiency = 0;
+	private boolean crystal;
+
+	public FluxStabilizerMechanicalTileEntity(){
+		super();
+	}
+
+	public FluxStabilizerMechanicalTileEntity(boolean crystal){
+		this();
+		this.crystal = crystal;
+	}
 
 	@Override
 	protected EnumFacing getFacing(){
@@ -51,7 +61,8 @@ public class FluxStabilizerMechanicalTileEntity extends MasterAxisTileEntity imp
 				}
 			}else if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
 				if(validRotary()){
-					prevEfficiency = 8 - (int) Math.min(Math.abs(sumEnergy) / energyScale, 8);
+					int cap = FluxUtil.getStabilizerLimit(crystal);
+					prevEfficiency = cap - (int) Math.min(Math.abs(sumEnergy) / energyScale, cap);
 					flux -= prevEfficiency;
 					flux = Math.max(0, flux);
 					markDirty();
@@ -122,6 +133,7 @@ public class FluxStabilizerMechanicalTileEntity extends MasterAxisTileEntity imp
 		super.writeToNBT(nbt);
 		nbt.setInteger("flux", flux);
 		nbt.setBoolean("stable", stable);
+		nbt.setBoolean("crystal", crystal);
 		return nbt;
 	}
 
@@ -130,6 +142,7 @@ public class FluxStabilizerMechanicalTileEntity extends MasterAxisTileEntity imp
 		super.readFromNBT(nbt);
 		flux = nbt.getInteger("flux");
 		stable = nbt.getBoolean("stable");
+		crystal = nbt.getBoolean("crystal");
 	}
 
 	@Override
