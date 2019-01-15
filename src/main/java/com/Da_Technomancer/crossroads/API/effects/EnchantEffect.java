@@ -23,18 +23,24 @@ public class EnchantEffect implements IEffect{
 	
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
-		ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
+		int range = Math.min(mult, 8);
+		ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-range, -range, -range), pos.add(range, range, range)), EntitySelectors.IS_ALIVE);
 		if(items.size() != 0){
 			for(EntityItem ent : items){
-				if(ent.getItem().isItemEnchanted()){
+				ItemStack stack = ent.getItem();
+
+				if(stack.isItemEnchanted()){
 					continue;
 				}
 
-				ItemStack stack = ent.getItem();
 				for(int i = 0; i < stack.getCount(); i++){
 					ItemStack created;
 
 					List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(RAND, stack, (int) Math.min(mult, 45), mult >= 64);
+
+					if(ench.isEmpty()){
+						break;//Non-enchantable items shouldn't have their stacks recreated
+					}
 
 					if(stack.getItem() == Items.BOOK){
 						created = new ItemStack(Items.ENCHANTED_BOOK, 1, 0);
@@ -67,6 +73,7 @@ public class EnchantEffect implements IEffect{
 
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
+			mult = Math.min(mult, 8);
 			ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
 			if(items.size() != 0){
 				for(EntityItem ent : items){
