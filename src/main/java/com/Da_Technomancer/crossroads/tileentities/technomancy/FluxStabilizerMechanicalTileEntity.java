@@ -18,10 +18,12 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class FluxStabilizerMechanicalTileEntity extends AbstractFluxStabilizerTE{
 
-	public static final double EFFICIENCY_SCALE = 0.5D;
+	public static final double EFFICIENCY_SCALE = 0.25D;
+	private static final Random RAND = new Random();//Due to seeding, we can't use the world random instance
 
 	private double[] motData = new double[4];
 	private double target = EFFICIENCY_SCALE;
@@ -65,8 +67,9 @@ public class FluxStabilizerMechanicalTileEntity extends AbstractFluxStabilizerTE
 			flux = Math.max(0, flux - efficiency);
 
 			//Adjust target
-			if(world.rand.nextInt(240) == 0){
-				target = EFFICIENCY_SCALE * (world.rand.nextInt(16) + 1);
+			if(world.getTotalWorldTime() % (FluxUtil.FLUX_TIME * 240) == 0){
+				RAND.setSeed(world.getTotalWorldTime() ^ ((long) pos.getX() | ((long) pos.getZ()) << 32L));
+				target = EFFICIENCY_SCALE * (RAND.nextInt(16) + 1);
 				markDirty();
 			}
 		}

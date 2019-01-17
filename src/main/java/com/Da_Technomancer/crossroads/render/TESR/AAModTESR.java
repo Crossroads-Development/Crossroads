@@ -53,7 +53,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerBeamTileEntity.class, new FluxStabilizerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerElectricTileEntity.class, new FluxStabilizerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerMechanicalTileEntity.class, new FluxStabilizerRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(ChronoHarnessTileEntity.class, new LinkLineRenderer<ChronoHarnessTileEntity>());
+		ClientRegistry.bindTileEntitySpecialRenderer(ChronoHarnessTileEntity.class, new ChronoHarnessRenderer());
 	}
 
 	private static void reg(Block block){

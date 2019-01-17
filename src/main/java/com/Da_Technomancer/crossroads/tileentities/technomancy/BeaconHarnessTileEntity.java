@@ -24,9 +24,7 @@ import java.util.ArrayList;
 
 public class BeaconHarnessTileEntity extends BeamRenderTE implements ILinkTE, IFluxHandler, IInfoTE{
 
-	public float[] renderOld = new float[8];
-	public float[] renderNew = new float[8];
-	public boolean renderSet = false;
+	public float angle = 0;//Used for rendering. Client side only
 	private int flux;
 	private ArrayList<BlockPos> links = new ArrayList<>(getMaxLinks());
 

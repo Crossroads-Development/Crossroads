@@ -1,0 +1,32 @@
+{
+    "textures": {
+		"base": "crossroads:blocks/block_cast_iron",
+		"particle": "crossroads:blocks/block_cast_iron"
+    },
+    "elements": [
+        {
+            "from": [ 0.0, 0.0, 0.0 ],
+            "to": [ 16.0, 2.0, 16.0 ],
+            "faces": {
+                "north": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+                "east": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+                "south": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+                "west": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+                "up": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "down": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        },
+        {
+            "from": [ 0.0, 14.0, 0.0 ],
+            "to": [ 16.0, 16.0, 16.0 ],
+            "faces": {
+                "north": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+                "east": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+                "south": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+                "west": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 2.0 ] },
+                "up": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "down": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        }
+    ]
+}

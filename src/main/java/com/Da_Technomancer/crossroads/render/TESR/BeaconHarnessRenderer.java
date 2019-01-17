@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
 import net.minecraft.client.Minecraft;
@@ -10,16 +11,17 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.util.Random;
 
 public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEntity>{
 
-	private static final Random rand = new Random();
-	
+	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Main.MODID, "textures/blocks/block_copshowium.png");
+	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Main.MODID, "textures/blocks/block_pure_quartz.png");
+
 	@Override
 	public void render(BeaconHarnessTileEntity beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false)){
@@ -34,7 +36,8 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 		
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
-		
+
+		//Beams
 		for(int dir = 0; dir < 2; ++dir){
 			Triple<Color, Integer, Integer> trip = BeamManager.getTriple(packet[dir]);
 			if(trip.getMiddle() != 0){
@@ -85,7 +88,8 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 				buf.pos(rad, 0, -rad).tex(0, length).endVertex();
 				buf.pos(rad, length, -rad).tex(0, 0).endVertex();
 				tes.draw();
-				
+
+				GlStateManager.color(1, 1, 1);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 				GlStateManager.enableLighting();
 				GlStateManager.popAttrib();
@@ -93,10 +97,54 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 			}
 		}
 		
-		if(packet[1] == 0){
-			return;
+		if(packet[1] != 0){
+			beam.angle += 9F * partialTicks;
 		}
-		
+
+		//Revolving rods
+		GlStateManager.pushMatrix();
+		GlStateManager.pushAttrib();
+		GlStateManager.disableLighting();
+		GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 160, 160);
+
+		float smallOffset = 0.0928F;
+		float largeOffset = 5F / 16F;
+
+		GlStateManager.rotate(beam.angle, 0, 1, 0);
+
+		Minecraft.getMinecraft().getTextureManager().bindTexture(INNER_TEXT);
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		addRod(buf, smallOffset, smallOffset);
+		addRod(buf, smallOffset, -smallOffset);
+		addRod(buf, -smallOffset, -smallOffset);
+		addRod(buf, -smallOffset, smallOffset);
+		tes.draw();
+
+		GlStateManager.rotate(-2F * beam.angle, 0, 1, 0);
+
+		Minecraft.getMinecraft().getTextureManager().bindTexture(OUTER_TEXT);
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		addRod(buf, smallOffset, largeOffset);
+		addRod(buf, smallOffset, -largeOffset);
+		addRod(buf, -smallOffset, largeOffset);
+		addRod(buf, -smallOffset, -largeOffset);
+		addRod(buf, largeOffset, smallOffset);
+		addRod(buf, largeOffset, -smallOffset);
+		addRod(buf, -largeOffset, smallOffset);
+		addRod(buf, -largeOffset, -smallOffset);
+		tes.draw();
+
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+		GlStateManager.enableLighting();
+		GlStateManager.popAttrib();
+		GlStateManager.popMatrix();
+
+
+
+		/* Old "colored starburst" renderer
+
+
 		float ticks = beam.getWorld().getTotalWorldTime() % 20 + partialTicks;
 		
 		if(ticks < 1F && !beam.renderSet){
@@ -141,6 +189,34 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 		GlStateManager.color(1, 1, 1);
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
+
+		*/
+	}
+
+	private void addRod(BufferBuilder buf, double x, double z){
+		float rad = 1F / 16F;
+		float minY = 2F / 16F;
+		float maxY = 14F / 16F;
+		buf.pos(x - rad, minY, z - rad).tex(0, 0).endVertex();
+		buf.pos(x - rad, maxY, z - rad).tex(0, 1).endVertex();
+		buf.pos(x + rad, maxY, z - rad).tex(2F * rad, 1).endVertex();
+		buf.pos(x + rad, minY, z - rad).tex(2F * rad, 0).endVertex();
+
+		buf.pos(x - rad, minY, z + rad).tex(0, 0).endVertex();
+		buf.pos(x + rad, minY, z + rad).tex(2F * rad, 0).endVertex();
+		buf.pos(x + rad, maxY, z + rad).tex(2F * rad, 1).endVertex();
+		buf.pos(x - rad, maxY, z + rad).tex(0, 1).endVertex();
+
+
+		buf.pos(x - rad, minY, z - rad).tex(0, 0).endVertex();
+		buf.pos(x - rad, minY, z + rad).tex(2F * rad, 0).endVertex();
+		buf.pos(x - rad, maxY, z + rad).tex(2F * rad, 1).endVertex();
+		buf.pos(x - rad, maxY, z - rad).tex(0, 1).endVertex();
+
+		buf.pos(x + rad, minY, z - rad).tex(0, 0).endVertex();
+		buf.pos(x + rad, maxY, z - rad).tex(0, 1).endVertex();
+		buf.pos(x + rad, maxY, z + rad).tex(2F * rad, 1).endVertex();
+		buf.pos(x + rad, minY, z + rad).tex(2F * rad, 0).endVertex();
 	}
 
 	@Override

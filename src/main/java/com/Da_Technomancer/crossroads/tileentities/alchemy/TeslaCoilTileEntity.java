@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -105,7 +104,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable{
 	private final EnergyHandlerOut handlerOut = new EnergyHandlerOut();
 
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side.getAxis() != Axis.Y)){
+		if(cap == CapabilityEnergy.ENERGY){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -113,7 +112,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable{
 
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side.getAxis() != Axis.Y)){
+		if(cap == CapabilityEnergy.ENERGY){
 			return (T) (side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING) ? handlerOut : handlerIn);
 		}
 		return super.getCapability(cap, side);
