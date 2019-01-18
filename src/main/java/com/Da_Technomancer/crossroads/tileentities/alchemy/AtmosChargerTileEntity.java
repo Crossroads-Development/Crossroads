@@ -4,10 +4,8 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.alchemy.*;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import net.minecraft.block.state.IBlockState;
@@ -29,16 +27,13 @@ import java.util.ArrayList;
 
 public class AtmosChargerTileEntity extends TileEntity implements ITickable, IInfoTE{
 
-	private static final int VOLTUS_CAPACITY = 100;
 	private static final int FE_CAPACITY = 20_000;
-	private int voltusAmount = 0;
 	private int fe = 0;
 	private boolean extractMode;
 	private int renderTimer;
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add(MiscUtil.betterRound(voltusAmount, 2) + "/" + VOLTUS_CAPACITY + " Voltus");
 		int charge = AtmosChargeSavedData.getCharge(world);
 		chat.add(charge + "/" + AtmosChargeSavedData.CAPACITY + "FE in atmosphere (" + MiscUtil.betterRound(100D * charge / AtmosChargeSavedData.CAPACITY, 1) + "%)");
 	}
@@ -90,13 +85,11 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 		}else{
 			int oldCharge = AtmosChargeSavedData.getCharge(world);
 			int op = Math.min(fe / 1000, (AtmosChargeSavedData.CAPACITY - oldCharge) / 1000);
-			int voltOp = Math.min((int) (voltusAmount / (ModConfig.getConfigDouble(ModConfig.voltusUsage, false))), (AtmosChargeSavedData.CAPACITY - oldCharge - op * 1000) / 1000);
-			if(op <= 0 && voltOp <= 0){
+			if(op <= 0){
 				return;
 			}
 			fe -= op * 1000;
-			voltusAmount -= voltOp * ModConfig.getConfigDouble(ModConfig.voltusUsage, false);
-			AtmosChargeSavedData.setCharge(world, oldCharge + op * 1000 + voltOp * 1000);
+			AtmosChargeSavedData.setCharge(world, oldCharge + op * 1000);
 			markDirty();
 			if(renderTimer <= 0){
 				renderTimer = 10;
@@ -113,33 +106,27 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		voltusAmount = nbt.getInteger("voltus");
 		fe = nbt.getInteger("fe");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setInteger("voltus", voltusAmount);
 		nbt.setInteger("fe", fe);
 		return nbt;
 	}
 
-	private IChemicalHandler handler = new AlchHandler();
 	private ElecHandler feHandler = new ElecHandler();
 	private IAdvancedRedstoneHandler redsHandler = (boolean measure) -> measure ? 15D * (double) AtmosChargeSavedData.getCharge(world) / (double) AtmosChargeSavedData.CAPACITY : 0;
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		return (cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == EnumFacing.DOWN)) || (cap == CapabilityEnergy.ENERGY && side != EnumFacing.UP) || (cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && (side == null || side.getAxis() != EnumFacing.Axis.Y)) || super.hasCapability(cap, side);
+		return (cap == CapabilityEnergy.ENERGY && side != EnumFacing.UP) || (cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && (side == null || side.getAxis() != EnumFacing.Axis.Y)) || super.hasCapability(cap, side);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == EnumFacing.DOWN)){
-			return (T) handler;
-		}
 		if(cap == CapabilityEnergy.ENERGY && side != EnumFacing.UP){
 			return (T) feHandler;
 		}
@@ -199,48 +186,6 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 		@Override
 		public boolean canReceive(){
 			return !extractMode;
-		}
-	}
-
-	private class AlchHandler implements IChemicalHandler{
-
-		@Override
-		public EnumTransferMode getMode(EnumFacing side){
-			return side == EnumFacing.DOWN ? EnumTransferMode.INPUT : EnumTransferMode.NONE;
-		}
-
-		@Override
-		public EnumContainerType getChannel(EnumFacing side){
-			return EnumContainerType.CRYSTAL;
-		}
-
-		@Override
-		public int getTransferCapacity(){
-			return VOLTUS_CAPACITY;
-		}
-
-		@Override
-		public double getTemp(){
-			return HeatUtil.ABSOLUTE_ZERO;
-		}
-
-		@Override
-		public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
-			//Only allows insertion of voltus
-			if(voltusAmount >= VOLTUS_CAPACITY || reag.getQty(EnumReagents.ELEM_CHARGE.id()) == 0){
-				return false;
-			}
-
-			int moved = Math.min(reag.getQty(EnumReagents.ELEM_CHARGE.id()), VOLTUS_CAPACITY - voltusAmount);
-			voltusAmount += moved;
-			reag.removeReagent(EnumReagents.ELEM_CHARGE.id(), moved);
-			markDirty();
-			return true;
-		}
-
-		@Override
-		public int getContent(IReagent type){
-			return type == AlchemyCore.REAGENTS.get(EnumReagents.ELEM_CHARGE.id()) ? voltusAmount : 0;
 		}
 	}
 }

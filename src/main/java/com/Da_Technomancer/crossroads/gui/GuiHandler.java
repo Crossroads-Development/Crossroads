@@ -32,7 +32,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int PROTOTYPE_PORT_GUI = 8;
 	public static final int REDSTONE_REGISTRY_GUI = 9;
 	public static final int WATER_CENTRIFUGE_GUI = 10;
-	public static final int ALCHEMY_CHART_GUI = 11;
+	//
 	public static final int FAKE_CRAFTER_GUI = 12;
 	public static final int STAMP_MILL_GUI = 13;
 	public static final int FAT_COLLECTOR_GUI = 14;
@@ -73,8 +73,6 @@ public class GuiHandler implements IGuiHandler{
 				return new PrototypingTableContainer(player.inventory, ((PrototypingTableTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case PROTOTYPE_PORT_GUI:
 				return new PrototypePortContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case ALCHEMY_CHART_GUI:
-				return new AlchemyChartContainer(player, world);
 			case FAKE_CRAFTER_GUI:
 				return new DetailedCrafterContainer(player.inventory, new BlockPos(x, y, z), true);
 			case STAMP_MILL_GUI:
@@ -131,8 +129,6 @@ public class GuiHandler implements IGuiHandler{
 				return new PrototypePortGuiContainer(((PrototypePortTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case REDSTONE_REGISTRY_GUI:
 				return new RedstoneRegistryGuiContainer(((RedstoneRegistryTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
-			case ALCHEMY_CHART_GUI:
-				return new AlchemyChartGuiContainer(player, world);
 			case FAKE_CRAFTER_GUI:
 				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z), true);
 			case STAMP_MILL_GUI:

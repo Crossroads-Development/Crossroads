@@ -45,7 +45,8 @@ public enum EnumReagents{
 	ELEM_RIFT("elem_rift"),
 	ELEM_EQUAL("elem_equalibrium"),
 	ELEM_FUSION("elem_fusion"),
-	ELEM_CHARGE("elem_charge");
+	ELEM_CHARGE("elem_charge"),
+	ELEM_TIME("elem_time");
 
 	private final String id;
 

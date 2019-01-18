@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.fluids.*;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.PredicateMap;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -107,6 +108,7 @@ public final class AlchemyCore{
 		REAGENTS.put(ELEM_EQUAL.id(), new ElementalReagent(ELEM_EQUAL.id(), 800, 1800, new StasisolEffect(), false, EnumBeamAlignments.EQUALIBRIUM, new Color(255, 128, 255), ModItems.solidStasisol));
 		REAGENTS.put(ELEM_FUSION.id(), new ElementalReagent(ELEM_FUSION.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, null, false, EnumBeamAlignments.FUSION, new Color(128, 255, 255), ModItems.solidFusas));
 		REAGENTS.put(ELEM_CHARGE.id(), new ElementalReagent(ELEM_CHARGE.id(), -275, -274, new VoltusEffect(), true, EnumBeamAlignments.CHARGE, new Color(255, 255, 64, 255), null));
+		REAGENTS.put(ELEM_TIME.id(), new ElementalReagent(ELEM_TIME.id(), 2000, Short.MAX_VALUE, null, false, EnumBeamAlignments.TIME, new Color(255, 130, 0, 255), OreSetup.nuggetCopshowium));
 		REAGENTS.put(HELLFIRE.id(), new StaticReagent(HELLFIRE.id(), -275D, -274D, (EnumMatterPhase phase) -> Color.RED, null, null, 2, new PhelostogenEffect((Integer amount) -> (int) Math.min(64, amount * 2D))){
 			@Override
 			public boolean isLockedFlame(){

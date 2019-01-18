@@ -110,12 +110,12 @@ public class ModBlocks{
 	public static MaxwellDemon maxwellDemon;
 	public static GlasswareHolder glasswareHolder;
 	public static Alembic alembic;
-	public static AlchemyChart alchemyChart;
 	public static DensusPlate densusPlate;
 	public static DensusPlate antiDensusPlate;
 	public static BasicBlock cavorite;
 	public static ChargingStand chargingStand;
 	public static AtmosCharger atmosCharger;
+	public static VoltusGenerator voltusGenerator;
 	public static ReactiveSpot reactiveSpot;
 	public static ClockworkStabilizer clockworkStabilizer;
 	public static WindTurbine windTurbine;
@@ -268,7 +268,6 @@ public class ModBlocks{
 		maxwellDemon = new MaxwellDemon();
 		glasswareHolder = new GlasswareHolder();
 		alembic = new Alembic();
-		alchemyChart = new AlchemyChart();
 		densusPlate = new DensusPlate(false);
 		antiDensusPlate = new DensusPlate(true);
 		cavorite = new BasicBlock("block_cavorite", Material.ROCK, 3){
@@ -280,6 +279,7 @@ public class ModBlocks{
 		};
 		chargingStand = new ChargingStand();
 		atmosCharger = new AtmosCharger();
+		voltusGenerator = new VoltusGenerator();
 		reactiveSpot = new ReactiveSpot();
 		clockworkStabilizer = new ClockworkStabilizer();
 		windTurbine = new WindTurbine();

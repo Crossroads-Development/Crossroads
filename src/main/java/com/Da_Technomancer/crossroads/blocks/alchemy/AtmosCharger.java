@@ -2,10 +2,9 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.render.bakedModel.AtmosChargerBakedModel;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.render.bakedModel.AtmosChargerBakedModel;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AtmosChargerTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
@@ -119,6 +118,8 @@ public class AtmosCharger extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Consumes: " + ModConfig.getConfigDouble(ModConfig.voltusUsage, true) + " Voltus per 1000FE");
+		tooltip.add("Stores and retrieves FE from a shared \"atmosphere\"");
+		tooltip.add("Charging the atmosphere over 50% could have global consequences");
+		tooltip.add("Comparators measure atmospheric charge level");
 	}
 }

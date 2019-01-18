@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"main": "crossroads:blocks/block_pure_quartz",
-		"particle": "crossroads:blocks/block_pure_quartz"
+		"main": "#texture",
+		"particle": "#texture"
 	},
 	"elements": [
 		{

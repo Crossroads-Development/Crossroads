@@ -158,8 +158,6 @@ public final class ModCrafting{
 		//Alchemical Tube
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.alchemicalTubeGlass, 8), "***", "   ", "***", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.alchemicalTubeCrystal, 8), "***", "   ", "***", '*', "gemAlcCryst"));
-		//Alchemy Chart
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.alchemyChart, 1, 0), "***", "*#*", "***", '*', ModItems.wasteSalt, '#', ModBlocks.colorChart));
 		//Alembic
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.alembic, 1, 0), "** ", "***", "** ", '*', "ingotCopper"));
 		//Chemical Vent
@@ -210,6 +208,8 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.chargingStand, 1), " * ", "| |", " ^ ", '*', "ingotIron", '|', "stickIron", '^', ModBlocks.glasswareHolder));
 		//Atmos Charger
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.atmosCharger, 1), "| |", "| |", "*$*", '|', "stickIron", '*', "ingotIron", '$', ModItems.leydenJar));
+		//Voltus Generator
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.voltusGenerator, 1), "*C*", "M$M", "*C*", 'M', "ingotCopper", 'C', ModItems.alchCrystal, '*', "ingotIron", '$', ModItems.leydenJar));
 		//Detailed Crafting Table (Cheap Alchemy Recipe)
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.detailedCrafter, 1), "*&*", "&#&", "*&*", '*', "nuggetIron", '&', "nuggetTin", '#', Blocks.CRAFTING_TABLE));
 		//Tesla Ray

@@ -83,6 +83,7 @@ public class ModTileEntity{
 		register(DensusPlateTileEntity.class, "densus_plate");
 		register(ChargingStandTileEntity.class, "charging_stand");
 		register(AtmosChargerTileEntity.class, "atmos_charger");
+		register(VoltusGeneratorTileEntity.class, "voltus_generator");
 		register(ReactiveSpotTileEntity.class, "reactive_spot");
 		register(ClockworkStabilizerTileEntity.class, "clock_stab");
 		register(WindTurbineTileEntity.class, "wind_turbine");

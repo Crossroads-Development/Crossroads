@@ -1,14 +1,21 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.beams.IBeamTransparent;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -30,6 +37,7 @@ public class LightCluster extends Block implements IBeamTransparent{
 		setSoundType(SoundType.GLASS);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().withProperty(Properties.COLOR, EnumDyeColor.WHITE));
 	}
 
 	@Override
@@ -60,7 +68,7 @@ public class LightCluster extends Block implements IBeamTransparent{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
 		tooltip.add("Permeable to beams");
-		tooltip.add("Safe for decoration");
+		tooltip.add("Safe for decoration, can be dyed");
 	}
 
 	@Nullable
@@ -74,5 +82,30 @@ public class LightCluster extends Block implements IBeamTransparent{
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
 		return BB;
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState(){
+		return new BlockStateContainer(this, Properties.COLOR);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state){
+		return state.getValue(Properties.COLOR).getMetadata();
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta){
+		return getDefaultState().withProperty(Properties.COLOR, EnumDyeColor.byMetadata(meta));
+	}
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+		ItemStack heldItem = playerIn.getHeldItem(hand);
+		if(heldItem.getItem() == Items.DYE){
+			worldIn.setBlockState(pos, state.withProperty(Properties.COLOR, EnumDyeColor.byDyeDamage(heldItem.getMetadata())),  2);
+			return true;
+		}
+		return false;
 	}
 }

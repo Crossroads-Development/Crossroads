@@ -212,6 +212,7 @@ item.solid_muriatic.name=Salt of Muriatic Acid
 item.solid_regia.name=Salt of Aqua Regia
 tile.charging_stand.name=Electrolyzer
 tile.atmos_charger.name=Atmospheric Attenuator
+tile.voltus_generator.name=Voltus Generator
 item.flying_machine.name=Flying Machine
 entity.flying_machine.name=Flying Machine
 tile.reactive_spot.name=Reactive Spot (Internal)
@@ -378,6 +379,7 @@ reagent.elem_rift=Eldrine
 reagent.elem_equalibrium=Stasisol
 reagent.elem_fusion=Fusas
 reagent.elem_charge=Voltus
+reagent.elem_time=Copshowium
 
 #GuideAPI documentation
 #Useful characters for the lazy: §, °, ω, π, θ, √, ², Δ
