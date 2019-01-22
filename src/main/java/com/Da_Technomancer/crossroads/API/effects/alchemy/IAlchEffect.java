@@ -5,20 +5,14 @@ import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 public interface IAlchEffect{
-	
-	public void doEffect(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase);
-	
+
 	/**
-	 * @param world
-	 * @param pos
-	 * @param amount
-	 * @param phase
-	 * @param contents The full contents of the caller. Null if not applicable. 
+	 * @param world The world. Virtual server side only
+	 * @param pos The blockpos to do this effect at
+	 * @param amount The total quantity of this reagent. It is recommended that gas phase effects ignore this value.
+	 * @param phase The current phase of this reagent
+	 * @param contents The full contents of the caller.
 	 */
-	public default void doEffectAdv(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase, @Nullable ReagentMap contents){
-		doEffect(world, pos, amount, temp, phase);
-	}
+	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap contents);
 }

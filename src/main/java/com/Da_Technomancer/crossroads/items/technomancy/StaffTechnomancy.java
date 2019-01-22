@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
@@ -96,7 +97,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 						endPos = newEndPos;
 						IBlockState state = player.world.getBlockState(endPos);
 						AxisAlignedBB bb = state.getBoundingBox(player.world, endPos).offset(endPos);
-						if(state.getBlock().canCollideCheck(state, true) && state.getBlock().isCollidable() && bb.minX <= end[0] && bb.maxX >= end[0] && bb.minY <= end[1] && bb.maxY >= end[1] && bb.minZ <= end[2] && bb.maxZ >= end[2]){
+						if(state.getBlock().canCollideCheck(state, true) && state.getBlock().isCollidable() && BeamManager.solidToBeams(state, player.world, endPos) && bb.minX <= end[0] && bb.maxX >= end[0] && bb.minY <= end[1] && bb.maxY >= end[1] && bb.minZ <= end[2] && bb.maxZ >= end[2]){
 							RayTraceResult res = bb.calculateIntercept(start, new Vec3d(end[0], end[1], end[2]));
 							if(res != null && res.hitVec != null){
 								end[0] = res.hitVec.x;

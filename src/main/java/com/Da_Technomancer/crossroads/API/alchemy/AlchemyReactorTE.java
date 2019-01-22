@@ -52,12 +52,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
 			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
-			for(IReagent r : contents.keySet()){
-				ReagentStack rStack = contents.getStack(r);
-				if(!rStack.isEmpty()){
-					r.onRelease(world, pos, rStack.getAmount(), temp, r.getPhase(temp), contents);
-				}
-			}
+			AlchemyUtil.releaseChemical(world, pos, contents);
 		}
 	}
 
@@ -98,7 +93,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			correctReag();
 		}
 
-		if(world.getTotalWorldTime() % AlchemyCore.ALCHEMY_TIME == 0){
+		if(world.getTotalWorldTime() % AlchemyUtil.ALCHEMY_TIME == 0){
 			spawnParticles();
 			performReaction();
 			performTransfer();

@@ -98,7 +98,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		if(useCableHeat()){
 			initHeat();
 			//Shares heat between internal cable & contents
-			cableTemp = HeatUtil.toCelcius((HeatUtil.toKelvin(cableTemp) * AlchemyCore.ALCHEMY_TEMP_CONVERSION + contents.getTempK() * contents.getTotalQty()) / (AlchemyCore.ALCHEMY_TEMP_CONVERSION + contents.getTotalQty()));
+			cableTemp = HeatUtil.toCelcius((HeatUtil.toKelvin(cableTemp) * AlchemyUtil.ALCHEMY_TEMP_CONVERSION + contents.getTempK() * contents.getTotalQty()) / (AlchemyUtil.ALCHEMY_TEMP_CONVERSION + contents.getTotalQty()));
 			contents.setTemp(cableTemp);
 			return cableTemp;
 		}else{
@@ -130,7 +130,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			correctReag();
 		}
 
-		if(world.getTotalWorldTime() % AlchemyCore.ALCHEMY_TIME == 0){
+		if(world.getTotalWorldTime() % AlchemyUtil.ALCHEMY_TIME == 0){
 			spawnParticles();
 			performTransfer();
 		}
@@ -449,11 +449,11 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		public int fill(FluidStack resource, boolean doFill){
 			IReagent typ;
 			if(resource != null && (typ = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid())) != null){
-				int canAccept = Math.min((int) ((handler.getTransferCapacity() - contents.getTotalQty()) * AlchemyCore.MB_PER_REAG), resource.amount);
-				canAccept -= canAccept % AlchemyCore.MB_PER_REAG;
+				int canAccept = Math.min((int) ((handler.getTransferCapacity() - contents.getTotalQty()) * AlchemyUtil.MB_PER_REAG), resource.amount);
+				canAccept -= canAccept % AlchemyUtil.MB_PER_REAG;
 				if(canAccept > 0){
 					if(doFill){
-						int reagToFill = canAccept / AlchemyCore.MB_PER_REAG;
+						int reagToFill = canAccept / AlchemyUtil.MB_PER_REAG;
 						double fluidTemp;
 						double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 						if(biomeTemp < typ.getBoilingPoint() && biomeTemp >= typ.getMeltingPoint()){
@@ -484,9 +484,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 
 			IReagent type = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid());
 			if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
-				int toDrain = Math.min(resource.amount, contents.getQty(type) * AlchemyCore.MB_PER_REAG);
-				int reagToDrain = toDrain / AlchemyCore.MB_PER_REAG;
-				toDrain = reagToDrain * AlchemyCore.MB_PER_REAG;
+				int toDrain = Math.min(resource.amount, contents.getQty(type) * AlchemyUtil.MB_PER_REAG);
+				int reagToDrain = toDrain / AlchemyUtil.MB_PER_REAG;
+				toDrain = reagToDrain * AlchemyUtil.MB_PER_REAG;
 				if(doDrain){
 					contents.removeReagent(type, reagToDrain);
 					dirtyReag = true;
@@ -509,9 +509,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			for(Map.Entry<Fluid, IReagent> entry : AlchemyCore.FLUID_TO_LIQREAGENT.entrySet()){
 				IReagent type = entry.getValue();
 				if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
-					int toDrain = Math.min(maxDrain, contents.getQty(type) * AlchemyCore.MB_PER_REAG);
-					int reagToDrain = toDrain / AlchemyCore.MB_PER_REAG;
-					toDrain = reagToDrain * AlchemyCore.MB_PER_REAG;
+					int toDrain = Math.min(maxDrain, contents.getQty(type) * AlchemyUtil.MB_PER_REAG);
+					int reagToDrain = toDrain / AlchemyUtil.MB_PER_REAG;
+					toDrain = reagToDrain * AlchemyUtil.MB_PER_REAG;
 					if(doDrain){
 						contents.removeReagent(type, reagToDrain);
 						dirtyReag = true;

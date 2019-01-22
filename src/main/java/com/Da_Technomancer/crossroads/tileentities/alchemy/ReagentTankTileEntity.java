@@ -206,12 +206,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
 			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
-			for(IReagent reag : contents.keySet()){
-				int qty = contents.getQty(reag);
-				if(qty > 0){
-					reag.onRelease(world, pos, qty, temp, reag.getPhase(temp), contents);
-				}
-			}
+			AlchemyUtil.releaseChemical(world, pos, contents);
 		}
 	}
 }

@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyReactorTE;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
@@ -74,12 +74,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 		occupied = false;
 		florence = false;
 		dirtyReag = true;
-		for(IReagent r : contents.keySet()){
-			int qty = contents.getQty(r);
-			if(qty > 0){
-				r.onRelease(world, pos, qty, temp, r.getPhase(temp), contents);
-			}
-		}
+		AlchemyUtil.releaseChemical(world, pos, contents);
 		contents.clear();
 	}
 

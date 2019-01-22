@@ -21,28 +21,28 @@ import net.minecraftforge.fluids.Fluid;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Function;
 
 import static com.Da_Technomancer.crossroads.API.alchemy.EnumReagents.*;
 
 @SuppressWarnings("unchecked")
 public final class AlchemyCore{
 
-	public static final int MB_PER_REAG = 100;
-	/**
-	 * Conversion factor between degrees kelvin * amount alchemy system, and degrees kelvin normal heat. Based on game balance.
-	 */
-	public static final double ALCHEMY_TEMP_CONVERSION = 100D;
 	//A non-binding reagent count to optimize around
 	protected static final int REAGENT_COUNT = EnumReagents.values().length;
-	public static final int ALCHEMY_TIME = 2;
 
 	public static final ArrayList<IReaction> REACTIONS = new ArrayList<>();
 
 	public static final PredicateMap<ItemStack, IReagent> ITEM_TO_REAGENT = new PredicateMap<>();
 	public static final BiMap<Fluid, IReagent> FLUID_TO_LIQREAGENT = HashBiMap.create(5); // For liquid phase.
-	public static final ArrayList<IElementReagent> ELEMENTAL_REAGS = new ArrayList<>(8);
 
 	public static final HashMap<String, IReagent> REAGENTS = new HashMap<>(REAGENT_COUNT);
+
+	/**
+	 * Stores a mapping between each flame-phase reagent and a function for determining flame burst radius from reagent quantity
+	 * Any flame-phase reagent will not have a working effect if not registered in this map
+	 */
+	public static final HashMap<IReagent, Function<Integer, Integer>> FLAME_RANGES = new HashMap<>(2);
 
 	static{
 		// A large number of colors are defined here so that a new color instance won't be initialized every time getColor is called.
@@ -59,21 +59,22 @@ public final class AlchemyCore{
 		Color FAINT_GREEN_COLOR = new Color(0, 255, 0, 150);
 		// Various effects
 		AcidAlchemyEffect ACID_EFFECT = new AcidAlchemyEffect();
-		SaltAlchemyEffect SALT_EFFECT = new SaltAlchemyEffect();
 
 		// Reagents
-		REAGENTS.put(PHELOSTOGEN.id(), new StaticReagent(PHELOSTOGEN.id(), -275D, -274D, (EnumMatterPhase phase) -> PHELOSTIGEN_COLOR, null, null, 2, new PhelostogenEffect((Integer amount) -> (int) Math.min(8, Math.round(amount / 2D)))){
+		IReagent phel;
+		REAGENTS.put(PHELOSTOGEN.id(), phel = new StaticReagent(PHELOSTOGEN.id(), -275D, -274D, (EnumMatterPhase phase) -> PHELOSTIGEN_COLOR, null, null, 2, null){
 			@Override
 			public boolean isLockedFlame(){
 				return true;
 			}
 		});
+		FLAME_RANGES.put(phel, (Integer amount) -> (int) Math.min(8, Math.round(amount / 2D)));
 		REAGENTS.put(AETHER.id(), new StaticReagent(AETHER.id(), -275D, -274D, (EnumMatterPhase phase) -> FAINT_GREEN_COLOR, null, null, 1, new AetherEffect()));
 		REAGENTS.put(ADAMANT.id(), new StaticReagent(ADAMANT.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> DARK_BLUE_COLOR, (stack) -> stack.getItem() == ModItems.adamant, () -> new ItemStack(ModItems.adamant, 1), 0, null));
 		REAGENTS.put(SULFUR.id(), new StaticReagent(SULFUR.id(), 115D, 445D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_YELLOW_COLOR : phase == EnumMatterPhase.LIQUID ? Color.RED : Color.YELLOW, MiscUtil.oreDictPred("dustSulfur"), () -> MiscUtil.getOredictStack("dustSulfur", 1), 0, null));
 		REAGENTS.put(WATER.id(), new StaticReagent(WATER.id(), 0D, 100D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_WHITE_COLOR : TRANSLUCENT_BLUE_COLOR, (stack) -> stack.getItem() == Item.getItemFromBlock(Blocks.PACKED_ICE), () -> new ItemStack(Blocks.PACKED_ICE), 0, null));
 		REAGENTS.put(NITRIC_ACID.id(), new StaticReagent(NITRIC_ACID.id(), -40D, 80D, (EnumMatterPhase phase) -> Color.YELLOW, (stack) -> stack.getItem() == ModItems.solidFortis, () -> new ItemStack(ModItems.solidFortis), 0, ACID_EFFECT));// Salt that forms nitric acid, AKA aqua fortis, in water.
-		REAGENTS.put(SALT.id(), new StaticReagent(SALT.id(), 800D, 1400D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.LIQUID ? Color.ORANGE : Color.WHITE, MiscUtil.oreDictPred("dustSalt"), () -> MiscUtil.getOredictStack("dustSalt", 1), 0, SALT_EFFECT));// AKA table salt (sodium chloride).
+		REAGENTS.put(SALT.id(), new StaticReagent(SALT.id(), 800D, 1400D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.LIQUID ? Color.ORANGE : Color.WHITE, MiscUtil.oreDictPred("dustSalt"), () -> MiscUtil.getOredictStack("dustSalt", 1), 0, new SaltAlchemyEffect()));// AKA table salt (sodium chloride).
 		REAGENTS.put(VANADIUM.id(), new StaticReagent(VANADIUM.id(), 690D, 1750D, (EnumMatterPhase phase) -> Color.YELLOW, (stack) -> stack.getItem() == ModItems.vanadiumOxide, () -> new ItemStack(ModItems.vanadiumOxide), 0, null));// Vanadium (V) oxide. This should decompose at the specified boiling point, but there isn't any real point to adding that.
 		REAGENTS.put(SULFUR_DIOXIDE.id(), new StaticReagent(SULFUR_DIOXIDE.id(), -72D, -10D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, null, 0, null));
 		REAGENTS.put(SULFUR_TRIOXIDE.id(), new StaticReagent(SULFUR_TRIOXIDE.id(), 20D, 40D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, null, 0, null));
@@ -83,7 +84,7 @@ public final class AlchemyCore{
 		REAGENTS.put(QUICKSILVER.id(), new StaticReagent(QUICKSILVER.id(), -40D, 560D, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, (stack) -> stack.getItem() == ModItems.solidQuicksilver, () -> new ItemStack(ModItems.solidQuicksilver), 0, null));// AKA murcury
 		REAGENTS.put(GOLD.id(), new StaticReagent(GOLD.id(), 1100D, 3000D, (EnumMatterPhase phase) -> Color.YELLOW, MiscUtil.oreDictPred("nuggetGold"), () -> MiscUtil.getOredictStack("nuggetGold", 1), 0, null));
 		REAGENTS.put(HYDROCHLORIC_ACID.id(), new StaticReagent(HYDROCHLORIC_ACID.id(), -110D, 90D, (EnumMatterPhase phase) -> CLEAR_COLOR, (ItemStack stack) -> stack.getItem() == ModItems.solidMuriatic, () -> new ItemStack(ModItems.solidMuriatic), 0, ACID_EFFECT));// Hydrogen Chloride, salt that forms hydrochloric acid, AKA muriatic acid, in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve.
-		REAGENTS.put(ALCHEMICAL_SALT.id(), new StaticReagent(ALCHEMICAL_SALT.id(), 900D, 1400D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, MiscUtil.oreDictPred("dustAlcSalt"), () -> MiscUtil.getOredictStack("dustAlcSalt", 1), 0, SALT_EFFECT));//Any salt byproduct that is too boring to bother adding separately.
+		REAGENTS.put(ALCHEMICAL_SALT.id(), new StaticReagent(ALCHEMICAL_SALT.id(), 900D, 1400D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, MiscUtil.oreDictPred("dustAlcSalt"), () -> MiscUtil.getOredictStack("dustAlcSalt", 1), 0, new AlcSaltAlchemyEffect()));//Any salt byproduct that is too boring to bother adding separately.
 		REAGENTS.put(SLAG.id(), new StaticReagent(SLAG.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.DARK_GRAY, MiscUtil.oreDictPred("itemSlag"), () -> MiscUtil.getOredictStack("itemSlag", 1), 0, null));
 		REAGENTS.put(PHILOSOPHER.id(), new StaticReagent(PHILOSOPHER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (stack) -> stack.getItem() == ModItems.philosopherStone, () -> new ItemStack(ModItems.philosopherStone), 2, null));
 		REAGENTS.put(PRACTITIONER.id(), new StaticReagent(PRACTITIONER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_RED_COLOR, (stack) -> stack.getItem() == ModItems.practitionerStone, () -> new ItemStack(ModItems.practitionerStone), 2, null));
@@ -109,12 +110,14 @@ public final class AlchemyCore{
 		REAGENTS.put(ELEM_FUSION.id(), new ElementalReagent(ELEM_FUSION.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, null, false, EnumBeamAlignments.FUSION, new Color(128, 255, 255), ModItems.solidFusas));
 		REAGENTS.put(ELEM_CHARGE.id(), new ElementalReagent(ELEM_CHARGE.id(), -275, -274, new VoltusEffect(), true, EnumBeamAlignments.CHARGE, new Color(255, 255, 64, 255), null));
 		REAGENTS.put(ELEM_TIME.id(), new ElementalReagent(ELEM_TIME.id(), 2000, Short.MAX_VALUE, null, false, EnumBeamAlignments.TIME, new Color(255, 130, 0, 255), OreSetup.nuggetCopshowium));
-		REAGENTS.put(HELLFIRE.id(), new StaticReagent(HELLFIRE.id(), -275D, -274D, (EnumMatterPhase phase) -> Color.RED, null, null, 2, new PhelostogenEffect((Integer amount) -> (int) Math.min(64, amount * 2D))){
+		IReagent hellfire;
+		REAGENTS.put(HELLFIRE.id(), hellfire = new StaticReagent(HELLFIRE.id(), -275D, -274D, (EnumMatterPhase phase) -> Color.RED, null, null, 2, null){
 			@Override
 			public boolean isLockedFlame(){
 				return true;
 			}
 		});
+		FLAME_RANGES.put(hellfire, (Integer amount) -> (int) Math.min(64, amount * 2D));
 
 		FLUID_TO_LIQREAGENT.put(BlockDistilledWater.getDistilledWater(), REAGENTS.get(WATER.id()));
 		FLUID_TO_LIQREAGENT.put(BlockMoltenCopper.getMoltenCopper(), REAGENTS.get(COPPER.id()));

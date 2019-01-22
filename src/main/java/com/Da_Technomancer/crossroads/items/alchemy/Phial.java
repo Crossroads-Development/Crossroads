@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,13 +41,7 @@ public class Phial extends AbstractGlassware{
 		ReagentMap contents = getReagants(playerIn.getHeldItem(hand));
 		if(contents.getTotalQty() != 0){
 			if(!worldIn.isRemote){
-				double temp = contents.getTempC();
-				for(IReagent type : contents.keySet()){
-					int qty = contents.getQty(type);
-					if(qty != 0){
-						type.onRelease(worldIn, pos, qty, temp, type.getPhase(temp), contents);
-					}
-				}
+				AlchemyUtil.releaseChemical(worldIn, pos, contents);
 				if(!playerIn.isCreative()){
 					setReagents(playerIn.getHeldItem(hand), new ReagentMap());
 				}

@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.google.common.base.Predicate;
-
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockVine;
 import net.minecraft.block.material.Material;
@@ -26,13 +26,9 @@ public class SaltAlchemyEffect implements IAlchEffect{
 	private static final Predicate<Entity> FILTER = (Entity e) -> (e instanceof EntitySlime || e instanceof EntityCreeper) && EntitySelectors.IS_ALIVE.apply(e);
 
 	@Override
-	public void doEffect(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase){
-		if(phase == EnumMatterPhase.FLAME){
-			return;
-		}
-
-		int radius = Math.min(1, (int) amount / 100);
-		for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos.add(-radius, -radius, -radius), pos.add(radius, radius, radius)), FILTER)){
+	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
+		float range = 0.5F;
+		for(EntityLiving e : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(pos.getX() + 0.5F - range, pos.getY() + 0.5F - range, pos.getZ() + 0.5F - range, pos.getX() + 0.5F + range, pos.getY() + 0.5F + range, pos.getZ() + 0.5F + range), FILTER)){
 			if(e instanceof EntitySlime){
 				e.setDead();
 				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.SLIME_BALL, ((EntitySlime) e).getSlimeSize() + 1));
@@ -42,18 +38,11 @@ public class SaltAlchemyEffect implements IAlchEffect{
 			}
 		}
 
-		for(int x = -radius; x <= radius; x++){
-			for(int y = -radius; y <= radius; y++){
-				for(int z = -radius; z <= radius; z++){
-					BlockPos killPos = pos.add(x, y, z);
-					IBlockState state = world.getBlockState(killPos);
-					if(state.getMaterial() == Material.PLANTS || ((state.getMaterial() == Material.VINE && !(state.getBlock() instanceof BlockVine)))){
-						world.setBlockState(killPos, Blocks.DEADBUSH.getDefaultState());
-					}else if(state.getBlock() == Blocks.GRASS){
-						world.setBlockState(killPos, Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.COARSE_DIRT));
-					}
-				}
-			}
+		IBlockState state = world.getBlockState(pos);
+		if(state.getMaterial() == Material.PLANTS || ((state.getMaterial() == Material.VINE && !(state.getBlock() instanceof BlockVine)))){
+			world.setBlockState(pos, Blocks.DEADBUSH.getDefaultState());
+		}else if(state.getBlock() == Blocks.GRASS){
+			world.setBlockState(pos, Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.COARSE_DIRT));
 		}
 	}
 }

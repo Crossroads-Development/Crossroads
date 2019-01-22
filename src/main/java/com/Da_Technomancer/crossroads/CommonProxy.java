@@ -44,7 +44,6 @@ public class CommonProxy{
 		ModPackets.preInit();
 		ModDimensions.init();
 		ModEntities.init();
-		ModParticles.init();
 	}
 
 	protected void init(FMLInitializationEvent e){

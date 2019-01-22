@@ -1,6 +1,9 @@
 package com.Da_Technomancer.crossroads;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -129,6 +132,23 @@ public final class ModConfig{
 		SYNCED_PROPERTIES.add(addBoboRecipes = config.get(CAT_BOBO, "Add recipes for bobo items", true, "Default: true"));
 		SYNCED_PROPERTIES.add(heatEffects = config.get(CAT_BOBO, "Cable overheat effects", true, "If false, all heat cable overheating effects are replaced with burning; Default: true"));
 		boboItemProperties.add(heatEffects);
+	}
+
+	/**
+	 * @param world The world (currently unused, may change)
+	 * @param pos The current block position (currently unused, may change)
+	 * @param state The blockstate
+	 * @return Whether the block is protected via the config from destruction
+	 */
+	public static boolean isProtected(World world, BlockPos pos, IBlockState state){
+		String[] bannedBlocks = getConfigStringList(destroyBlacklist, false);
+		String id = state.getBlock().getRegistryName().toString();
+		for(String s : bannedBlocks){
+			if(s.equals(id)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

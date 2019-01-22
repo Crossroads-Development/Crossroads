@@ -1,12 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
-import java.awt.Color;
-
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
-import com.Da_Technomancer.crossroads.particles.ModParticles;
-
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -14,29 +9,12 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 public class ChlorineAlchemyEffect implements IAlchEffect{
 
 	@Override
-	public void doEffect(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase){
-
-		if(phase != EnumMatterPhase.FLAME && phase != EnumMatterPhase.GAS){
-			return;
-		}
-
-		int radius = phase == EnumMatterPhase.FLAME ? 1 : 2 * (int) Math.pow(amount, 1D / 3D);//This affects a cubic area instead of a spherical one because it's so much easier to do a cube.
-		WorldServer worldS = (WorldServer) world;
-		Color col = AlchemyCore.REAGENTS.get(EnumReagents.CHLORINE.id()).getColor(EnumMatterPhase.GAS);
-		
-		for(int x = -radius; x <= radius; x++){
-			for(int y = -radius; y <= radius; y++){
-				for(int z = -radius; z <= radius; z++){
-					worldS.spawnParticle(ModParticles.COLOR_GAS, false, (float) pos.getX() + x + Math.random(), (float) pos.getY() + y + Math.random(), (float) pos.getZ() + z + Math.random(), 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F, col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha());
-				}
-			}
-		}
-		for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.add(-radius, -radius, -radius), pos.add(radius, radius, radius)), EntitySelectors.IS_ALIVE)){
+	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
+		for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)), EntitySelectors.IS_ALIVE)){
 			e.addPotionEffect(new PotionEffect(MobEffects.WITHER, 300, 3));
 			e.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 600, 3));
 			e.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 600, 1));

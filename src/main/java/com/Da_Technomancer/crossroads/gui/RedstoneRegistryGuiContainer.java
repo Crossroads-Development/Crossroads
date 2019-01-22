@@ -1,23 +1,22 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.Arrays;
-
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendDoubleArrayToServer;
+import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;
 import com.Da_Technomancer.crossroads.API.templates.ButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.OutputLogGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleArrayToServer;
-import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.Arrays;
 
 public class RedstoneRegistryGuiContainer extends GuiContainer{
 
@@ -143,7 +142,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 	protected void mouseClicked(int x, int y, int button) throws IOException {
 		super.mouseClicked(x, y, button);
 		if(textBar.mouseClicked(x, y, button)){
-			if(textBar.isSelected() != wasBarSelected && wasBarSelected == true){
+			if(textBar.isSelected() != wasBarSelected && wasBarSelected){
 				setIndexValue();
 			}
 			wasBarSelected = textBar.isSelected();
@@ -261,7 +260,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		}
 	}
 
-	double prevValue = 0;
+	private double prevValue = 0;
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
@@ -278,11 +277,10 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 			}
 		}
 		if(textBar.buttonPress(key, keyCode)){
-			if(textBar.isSelected() != wasBarSelected && wasBarSelected == true){
+			if(textBar.isSelected() != wasBarSelected && wasBarSelected){
 				setIndexValue();
 			}
 			wasBarSelected = textBar.isSelected();
-			return;
 		}else{
 			super.keyTyped(key, keyCode);
 		}
@@ -318,7 +316,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 	}
 
 	private void setOutput(){
-		if(!output.equals(te.getOutput())){
+		if(!Arrays.equals(output, te.getOutput())){
 			te.setOutput(output);
 			ModPackets.network.sendToServer(new SendDoubleArrayToServer("newOutput", output, te.getPos(), te.getWorld().provider.getDimension()));
 		}

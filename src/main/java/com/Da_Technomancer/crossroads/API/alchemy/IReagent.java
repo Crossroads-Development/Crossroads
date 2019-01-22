@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 
@@ -41,25 +41,14 @@ public interface IReagent{
 	
 	/**
 	 * Gets the (purely visual) color. 
-	 * @param phase
+	 * @param phase The current phase
 	 * @return A color for rendering. Alpha is used. 
 	 */
 	public Color getColor(EnumMatterPhase phase);
 
-	/**
-	 * @param world
-	 * @param pos
-	 * @param amount
-	 * @param heat
-	 * @param phase This is NOT necessarily the actual phase, this is the phase the reagent should pretend to be/act as when performing the effect. EnumMatterPhase.FLAME when performed as part of a phelostigen effect.
-	 * @param contents
-	 */
-	public default void onRelease(World world, BlockPos pos, int amount, double heat, EnumMatterPhase phase, ReagentMap contents){
-		
-	}
-	
-	public default ReagentStack getReagentFromStack(ItemStack stack){
-		return ReagentStack.EMPTY;
+	@Nullable
+	public default IAlchEffect getEffect(EnumMatterPhase phase){
+		return null;
 	}
 	
 	/**

@@ -1,9 +1,11 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.API.packets.INbtReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityClient;
+import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -37,14 +39,12 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 		ignoreFrustumCheck = true;
 	}
 
-	public void setInitialValues(ReagentMap reags, double temp, int radius){
+	public void setInitialValues(ReagentMap reags, int radius){
 		this.reags = reags == null ? new ReagentMap() : reags;
-		this.temp = temp;
 		maxRadius = radius;
 	}
 
 	private ReagentMap reags = null;
-	private double temp = 0;
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
@@ -65,11 +65,10 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt){
 		reags = new ReagentMap();
-		temp = nbt.getDouble("temp");
 		maxRadius = nbt.getInteger("rad");
 		reags = ReagentMap.readFromNBT(nbt);
 		ticksExisted = nbt.getInteger("life");
-		setInitialValues(reags, temp, maxRadius);
+		setInitialValues(reags, maxRadius);
 	}
 
 	@Override
@@ -78,7 +77,6 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 			reags.writeToNBT(nbt);
 		}
 
-		nbt.setDouble("temp", temp);
 		nbt.setInteger("rad", maxRadius);
 		nbt.setInteger("life", ticksExisted);
 	}
@@ -91,7 +89,7 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 		ticksExisted++;
 		super.onUpdate();
 
-		if(world.isRemote){
+		if(world.isRemote || reags == null){
 			return;
 		}
 
@@ -102,6 +100,7 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 			int b = 0;
 			int a = 0;
 			int amount = 0;
+			double temp = reags.getTempC();
 			for(IReagent type : reags.keySet()){
 				int qty = reags.getQty(type);
 				if(qty > 0){
@@ -128,6 +127,8 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 			int radius = (int) Math.round(FLAME_VEL * (float) ticksExisted);
 			BlockPos pos = new BlockPos(posX, posY, posZ);
 			boolean lastAction = maxRadius <= radius;
+
+			double temp = reags.getTempC();
 
 			for(int i = 0; i <= radius; i++){
 				for(int j = 0; j <= radius; j++){
@@ -168,17 +169,20 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 	}
 
 	private static void act(ArrayList<ReagentStack> reagList, ReagentMap reags, double temp, World world, BlockPos pos, boolean lastAction){
+		//Block destruction is disabled by alchemical salt
 		if(reags.getQty(EnumReagents.ALCHEMICAL_SALT.id()) == 0){
 			IBlockState state = world.getBlockState(pos);
 
-			if(state.getBlockHardness(world, pos) >= 0){
+			if(!ModConfig.isProtected(world, pos, state) && state.getBlockHardness(world, pos) >= 0){
 				world.setBlockState(pos, lastAction && Math.random() > 0.75D && Blocks.FIRE.canPlaceBlockAt(world, pos) ? Blocks.FIRE.getDefaultState() : Blocks.AIR.getDefaultState(), lastAction ? 3 : 18);
 			}
 		}
 
 		for(ReagentStack r : reagList){
-			if(r != null){//Should never contain null
-				r.getType().onRelease(world, pos, r.getAmount(), temp, EnumMatterPhase.FLAME, reags);
+			IAlchEffect effect;
+			//reagList should never contain null
+			if(r != null && (effect = r.getType().getEffect(r.getType().getPhase(temp))) != null){
+				effect.doEffect(world, pos, r.getAmount(), EnumMatterPhase.FLAME, reags);
 			}
 		}
 	}

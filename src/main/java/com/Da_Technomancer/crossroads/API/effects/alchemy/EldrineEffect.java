@@ -16,13 +16,20 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 
-import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class EldrineEffect implements IAlchEffect{
 
 	@Override
-	public void doEffect(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase){
+	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
+		IBlockState oldState = world.getBlockState(pos);
+
+		//quicksilver makes it create a block instead of transmuting blocks
+		if(reags != null && reags.getQty(EnumReagents.QUICKSILVER.id()) != 0 && oldState.getBlock().isAir(oldState, world, pos)){
+			world.setBlockState(pos, Blocks.GLOWSTONE.getDefaultState());
+			return;
+		}
+
 
 		Chunk c = world.getChunk(pos);
 		if(world.getBiome(pos) != Biomes.HELL){
@@ -30,7 +37,6 @@ public class EldrineEffect implements IAlchEffect{
 			ModPackets.network.sendToDimension(new SendBiomeUpdateToClient(pos, (byte) Biome.getIdForBiome(Biomes.HELL)), world.provider.getDimension());
 		}
 
-		IBlockState oldState = world.getBlockState(pos);
 		if(oldState.getBlock().isAir(oldState, world, pos) || oldState.getBlockHardness(world, pos) < 0){
 			return;
 		}
@@ -71,15 +77,5 @@ public class EldrineEffect implements IAlchEffect{
 				return;
 			}
 		}
-	}
-	
-	@Override
-	public void doEffectAdv(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase, @Nullable ReagentMap contents){
-		IBlockState oldState = world.getBlockState(pos);
-		if(contents != null && contents.getQty(EnumReagents.QUICKSILVER.id()) > 0 && oldState.getBlock().isAir(oldState, world, pos)){
-			world.setBlockState(pos, Blocks.GLOWSTONE.getDefaultState());
-			return;
-		}
-		doEffect(world, pos, amount, temp, phase);
 	}
 }

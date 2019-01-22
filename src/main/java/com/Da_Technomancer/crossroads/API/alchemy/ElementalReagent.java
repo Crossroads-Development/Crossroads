@@ -5,8 +5,6 @@ import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -32,7 +30,6 @@ public class ElementalReagent implements IElementReagent{
 		this.melt = melt;
 		this.solidForm = solidForm;
 		this.color = color;
-		AlchemyCore.ELEMENTAL_REAGS.add(this);
 		if(solidForm != null){
 			AlchemyCore.ITEM_TO_REAGENT.put((stack) -> stack.getItem() == solidForm, this);
 		}
@@ -68,17 +65,10 @@ public class ElementalReagent implements IElementReagent{
 		return name;
 	}
 
-	@Override
-	public void onRelease(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase, ReagentMap contents){
-		if(effect != null){
-			effect.doEffectAdv(world, pos, amount, temp, phase, contents);
-		}
-	}
-
-	@Override
 	@Nullable
-	public ReagentStack getReagentFromStack(ItemStack stack){
-		return stack.getItem() == solidForm ? new ReagentStack(this, 1) : ReagentStack.EMPTY;
+	@Override
+	public IAlchEffect getEffect(EnumMatterPhase phase){
+		return effect;
 	}
 	
 	/**

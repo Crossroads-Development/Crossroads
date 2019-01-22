@@ -5,8 +5,6 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -68,11 +66,6 @@ public class StaticReagent implements IReagent{
 		return boiling;
 	}
 
-	@Override
-	public ReagentStack getReagentFromStack(ItemStack stack){
-		return isSolid != null && isSolid.test(stack) ? new ReagentStack(this, 1) : ReagentStack.EMPTY;
-	}
-
 	/**
 	 * @param reag The reagent (assumes phase is SOLID)
 	 * @return The matching solid ItemStack. ItemStack.EMPTY if there either isn't enough material (or cannot be solidifed for any other reason). 
@@ -102,11 +95,10 @@ public class StaticReagent implements IReagent{
 		return containType == 2;
 	}
 
+	@Nullable
 	@Override
-	public void onRelease(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase, ReagentMap contents){
-		if(effect != null){
-			effect.doEffectAdv(world, pos, amount, temp, phase, contents);
-		}
+	public IAlchEffect getEffect(EnumMatterPhase phase){
+		return effect;
 	}
 
 	@Override

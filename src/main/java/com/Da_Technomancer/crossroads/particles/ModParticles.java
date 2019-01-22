@@ -24,6 +24,7 @@ public class ModParticles{
 	public static final EnumParticleTypes COLOR_GAS;
 	public static final EnumParticleTypes COLOR_LIQUID;
 	public static final EnumParticleTypes COLOR_SOLID;
+	public static final EnumParticleTypes COLOR_SPLASH;
 
 	private static final Field INT_TO_PARTICLE;
 	private static final Field NAME_TO_PARTICLE;
@@ -52,6 +53,7 @@ public class ModParticles{
 		COLOR_GAS = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_gas", new Class<?>[] {String.class, int.class, boolean.class, int.class}, Main.MODID + "_color_gas", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false, 4);
 		COLOR_LIQUID = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_liquid", new Class<?>[] {String.class, int.class, boolean.class, int.class}, Main.MODID + "_color_liquid", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false, 4);
 		COLOR_SOLID = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_solid", new Class<?>[] {String.class, int.class, boolean.class, int.class}, Main.MODID + "_color_solid", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false, 4);
+		COLOR_SPLASH = EnumHelper.addEnum(EnumParticleTypes.class, Main.MODID + "_color_splash", new Class<?>[] {String.class, int.class, boolean.class, int.class}, Main.MODID + "_color_splash", EnumParticleTypes.values()[EnumParticleTypes.values().length - 1].getParticleID() + 1, false, 4);
 		
 		if(INT_TO_PARTICLE == null || NAME_TO_PARTICLE == null){
 			Main.logger.error("NULL INT_TO_PARTICLE or NAME_TO_PARTICLE field! Report to mod author. Several Crossroads particles will not work properly!");
@@ -66,11 +68,13 @@ public class ModParticles{
 				intMap.put(COLOR_GAS.getParticleID(), COLOR_GAS);
 				intMap.put(COLOR_LIQUID.getParticleID(), COLOR_LIQUID);
 				intMap.put(COLOR_SOLID.getParticleID(), COLOR_SOLID);
+				intMap.put(COLOR_SPLASH.getParticleID(), COLOR_SPLASH);
 				
 				nameMap.put(COLOR_FLAME.getParticleName(), COLOR_FLAME);
 				nameMap.put(COLOR_GAS.getParticleName(), COLOR_GAS);
 				nameMap.put(COLOR_LIQUID.getParticleName(), COLOR_LIQUID);
 				nameMap.put(COLOR_SOLID.getParticleName(), COLOR_SOLID);
+				nameMap.put(COLOR_SPLASH.getParticleName(), COLOR_SPLASH);
 				
 			}catch(Exception e){
 				Main.logger.catching(e);
@@ -78,14 +82,11 @@ public class ModParticles{
 		}
 	}
 
-	public static void init(){
-
-	}
-
 	private static IParticleFactory flameFact;
 	private static IParticleFactory gasFact;
 	private static IParticleFactory liquidFact;
 	private static IParticleFactory solidFact;
+	private static IParticleFactory splashFact;
 
 	@SideOnly(Side.CLIENT)
 	public static void clientInit(){
@@ -100,5 +101,9 @@ public class ModParticles{
 		
 		solidFact = new ParticlePowderColor.Factory();
 		Minecraft.getMinecraft().effectRenderer.registerParticle(COLOR_SOLID.getParticleID(), (int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... extraArgs) -> {Particle particle = solidFact.createParticle(particleID, worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, extraArgs); if(extraArgs.length >= 3) particle.setRBGColorF((float) (extraArgs[0]) / 255F, (float) (extraArgs[1]) / 255F, (float) (extraArgs[2]) / 255F); particle.setAlphaF(extraArgs.length < 4 ? 1F : ((float) extraArgs[3]) / 255F); return particle;});
+
+
+		splashFact = new ParticleSplashColor.Factory();
+		Minecraft.getMinecraft().effectRenderer.registerParticle(COLOR_SPLASH.getParticleID(), (int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... extraArgs) -> {Particle particle = splashFact.createParticle(particleID, worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, extraArgs); if(extraArgs.length >= 3) particle.setRBGColorF((float) (extraArgs[0]) / 255F, (float) (extraArgs[1]) / 255F, (float) (extraArgs[2]) / 255F); particle.setAlphaF(extraArgs.length < 4 ? 1F : ((float) extraArgs[3]) / 255F); return particle;});
 	}
 }

@@ -1,16 +1,21 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class RedstoneKeyboardTileEntity extends TileEntity implements IDoubleReceiver{
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+
+public class RedstoneKeyboardTileEntity extends TileEntity implements IDoubleReceiver, IInfoTE{
 
 	public double output;
 	
@@ -52,7 +57,12 @@ public class RedstoneKeyboardTileEntity extends TileEntity implements IDoubleRec
 		}
 		return super.getCapability(cap, side);
 	}
-	
+
+	@Override
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+		chat.add("Current output: " + output);
+	}
+
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{
 
 		@Override

@@ -68,13 +68,8 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		occupied = false;
 		florence = false;
 		dirtyReag = true;
-		for(IReagent r : contents.keySet()){
-			int qty = contents.getQty(r);
-			if(qty > 0){
-				r.onRelease(world, pos, qty, temp, r.getPhase(temp), contents);
-			}
-		}
-		this.contents.clear();
+		AlchemyUtil.releaseChemical(world, pos, contents);
+		contents.clear();
 	}
 
 	public void onBlockDestroyed(IBlockState state){

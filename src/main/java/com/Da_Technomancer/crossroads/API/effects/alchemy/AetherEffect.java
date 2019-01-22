@@ -20,16 +20,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public class AetherEffect implements IAlchEffect{
 
-	protected static final ArrayList<Predicate<IBlockState>> SOIL_GROUP = new ArrayList<Predicate<IBlockState>>();
-	protected static final ArrayList<Predicate<IBlockState>> ROCK_GROUP = new ArrayList<Predicate<IBlockState>>();
-	protected static final ArrayList<Predicate<IBlockState>> FLUD_GROUP = new ArrayList<Predicate<IBlockState>>();//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
-	protected static final ArrayList<Predicate<IBlockState>> CRYS_GROUP = new ArrayList<Predicate<IBlockState>>();
+	protected static final ArrayList<Predicate<IBlockState>> SOIL_GROUP = new ArrayList<>();
+	protected static final ArrayList<Predicate<IBlockState>> ROCK_GROUP = new ArrayList<>();
+	protected static final ArrayList<Predicate<IBlockState>> FLUD_GROUP = new ArrayList<>();//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
+	protected static final ArrayList<Predicate<IBlockState>> CRYS_GROUP = new ArrayList<>();
 
 	static{
 		SOIL_GROUP.add(new MaterialPredicate(Material.GROUND));
@@ -47,19 +46,13 @@ public class AetherEffect implements IAlchEffect{
 		CRYS_GROUP.add(new BlockRecipePredicate(ModBlocks.blockPureQuartz.getDefaultState(), false));
 	}
 
-	@Override
-	public void doEffect(World world, BlockPos pos, int amount, double heat, EnumMatterPhase phase){
-		doTransmute(world, pos);
-	}
-
-	private static void doTransmute(World world, BlockPos pos){
+	private static void doTransmute(IBlockState oldState, World world, BlockPos pos){
 		Chunk c = world.getChunk(pos);
 		if(world.getBiome(pos) != Biomes.PLAINS){
 			c.getBiomeArray()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = (byte) Biome.getIdForBiome(Biomes.PLAINS);
 			ModPackets.network.sendToDimension(new SendBiomeUpdateToClient(pos, (byte) Biome.getIdForBiome(Biomes.PLAINS)), world.provider.getDimension());
 		}
 
-		IBlockState oldState = world.getBlockState(pos);
 		if(oldState.getBlock().isAir(oldState, world, pos) || oldState.getBlockHardness(world, pos) < 0){
 			return;
 		}
@@ -122,12 +115,15 @@ public class AetherEffect implements IAlchEffect{
 	}
 	
 	@Override
-	public void doEffectAdv(World world, BlockPos pos, int amount, double temp, EnumMatterPhase phase, @Nullable ReagentMap contents){
+	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap contents){
 		IBlockState oldState = world.getBlockState(pos);
-		if(contents != null && contents.getQty(EnumReagents.QUICKSILVER.id()) > 0 && oldState.getBlock().isAir(oldState, world, pos)){
+
+		//quicksilver makes it create a block instead of transmuting blocks
+		if(contents.getQty(EnumReagents.QUICKSILVER.id()) != 0 && oldState.getBlock().isAir(oldState, world, pos)){
 			world.setBlockState(pos, Blocks.GRASS.getDefaultState());
 			return;
 		}
-		doEffect(world, pos, amount, temp, phase);
+
+		doTransmute(oldState, world, pos);
 	}
 }
