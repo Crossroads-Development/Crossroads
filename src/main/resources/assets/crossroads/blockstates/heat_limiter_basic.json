@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:heat_limiter_basic", "x": 90},
+		"facing=south": { "model": "crossroads:heat_limiter_basic", "x": 270 },
+		"facing=east": { "model": "crossroads:heat_limiter_basic", "x": 90, "y": 90 },
+		"facing=west": { "model": "crossroads:heat_limiter_basic", "x": 270, "y": 90 },
+		"facing=up": { "model": "crossroads:heat_limiter_basic"},
+		"facing=down": { "model": "crossroads:heat_limiter_basic", "x": 180 }
+	}
+}

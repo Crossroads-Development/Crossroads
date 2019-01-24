@@ -99,7 +99,8 @@ public class ModBlocks{
 	public static ReagentTank reagentTankCrystal;
 	public static ReagentPump reagentPumpCrystal;
 	public static ChemicalVent chemicalVent;
-	public static HeatLimiter heatLimiter;
+	public static HeatLimiterBasic heatLimiterBasic;
+	public static HeatLimiterRedstone heatLimiterRedstone;
 	public static Dynamo dynamo;
 	public static TeslaCoil teslaCoil;
 	public static TeslaCoilTop teslaCoilTopNormal;
@@ -257,7 +258,8 @@ public class ModBlocks{
 		reagentPumpCrystal = new ReagentPump(true);
 		reagentTankCrystal = new ReagentTank(true);
 		chemicalVent = new ChemicalVent();
-		heatLimiter = new HeatLimiter();
+		heatLimiterBasic = new HeatLimiterBasic();
+		heatLimiterRedstone = new HeatLimiterRedstone();
 		dynamo = new Dynamo();
 		teslaCoil = new TeslaCoil();
 		teslaCoilTopNormal = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.NORMAL);

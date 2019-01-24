@@ -2,10 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -37,7 +35,7 @@ public class RedstoneKeyboardTileEntity extends TileEntity implements IDoubleRec
 		if(context.equals("output") || context.equals("newOutput")){
 			output = message;
 			if(!world.isRemote){
-				world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneKeyboard, false);
+				markDirty();
 			}
 		}
 	}

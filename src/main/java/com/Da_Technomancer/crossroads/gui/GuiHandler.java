@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.gui;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.gui.container.*;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterBasicTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
@@ -32,7 +33,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int PROTOTYPE_PORT_GUI = 8;
 	public static final int REDSTONE_REGISTRY_GUI = 9;
 	public static final int WATER_CENTRIFUGE_GUI = 10;
-	//
+	public static final int HEAT_LIMITER_BASIC_GUI = 11;
 	public static final int FAKE_CRAFTER_GUI = 12;
 	public static final int STAMP_MILL_GUI = 13;
 	public static final int FAT_COLLECTOR_GUI = 14;
@@ -61,10 +62,11 @@ public class GuiHandler implements IGuiHandler{
 				return new SteamBoilerContainer(player.inventory, (SteamBoilerTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
 			case COLOR_CHART_GUI:
 				return new ColorChartContainer(player, world, new BlockPos(x, y, z));
-			case REDSTONE_REGISTRY_GUI://Shares Container with the Redstone Keyboard because its Container function is identical.
+			case REDSTONE_REGISTRY_GUI:
 			case MATH_AXIS_GUI:
+			case HEAT_LIMITER_BASIC_GUI:
 			case REDSTONE_KEYBOARD_GUI:
-				return new RedstoneKeyboardContainer();
+				return new BlankContainer();
 			case WATER_CENTRIFUGE_GUI:
 				return new WaterCentrifugeContainer(player.inventory, (WaterCentrifugeTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
 			case CRAFTER_GUI:
@@ -121,6 +123,8 @@ public class GuiHandler implements IGuiHandler{
 				return new RedstoneKeyboardGuiContainer(((RedstoneKeyboardTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case WATER_CENTRIFUGE_GUI:
 				return new WaterCentrifugeGuiContainer(player.inventory, (WaterCentrifugeTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
+			case HEAT_LIMITER_BASIC_GUI:
+				return new HeatLimiterBasicGuiContainer(((HeatLimiterBasicTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case CRAFTER_GUI:
 				return new DetailedCrafterGuiContainer(player.inventory, new BlockPos(x, y, z), false);
 			case PROTOTYPING_GUI:

@@ -71,7 +71,8 @@ public class ModTileEntity{
 		register(CoolingCoilTileEntity.class, "cooling_coil");
 		register(ChemicalVentTileEntity.class, "chemical_vent");
 		register(ReactionChamberTileEntity.class, "reaction_chamber");
-		register(HeatLimiterTileEntity.class, "heat_limiter");
+		register(HeatLimiterBasicTileEntity.class, "heat_limiter_basic");
+		register(HeatLimiterRedstoneTileEntity.class, "heat_limiter");
 		register(DynamoTileEntity.class, "dynamo");
 		register(TeslaCoilTileEntity.class, "tesla_coil");
 		register(ReagentTankTileEntity.class, "reagent_tank");

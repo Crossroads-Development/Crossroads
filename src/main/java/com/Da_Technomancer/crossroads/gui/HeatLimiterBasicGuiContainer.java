@@ -1,20 +1,19 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import java.io.IOException;
-
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendDoubleToServer;
 import com.Da_Technomancer.crossroads.API.templates.ButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToServer;
 import com.Da_Technomancer.crossroads.gui.container.BlankContainer;
-import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
-
+import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterBasicTileEntity;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
-public class RedstoneKeyboardGuiContainer extends GuiContainer{
+import java.io.IOException;
 
-	private final RedstoneKeyboardTileEntity te;
+public class HeatLimiterBasicGuiContainer extends GuiContainer{
+
+	private final HeatLimiterBasicTileEntity te;
 	private TextBarGuiObject textBar;
 	private ButtonGuiObject clearButton;
 	private ToggleButtonGuiObject multButton;
@@ -22,7 +21,7 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 	private ButtonGuiObject piButton;
 	private ButtonGuiObject eulerButton;
 
-	public RedstoneKeyboardGuiContainer(RedstoneKeyboardTileEntity te){
+	public HeatLimiterBasicGuiContainer(HeatLimiterBasicTileEntity te){
 		super(new BlankContainer());
 		xSize = 300;
 		ySize = 20;
@@ -34,7 +33,7 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 		super.initGui();
 
 		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 0, 300, 25, null, (Character key) -> key == '.' || Character.isDigit(key));
-		textBar.setText(doubleToString(te.output));
+		textBar.setText(doubleToString(te.getSetting()));
 		clearButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 20, 20, "C");
 		multButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 20, 20, 20, "⨉");
 		divButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 40, 20, 20, "÷");
@@ -170,9 +169,9 @@ public class RedstoneKeyboardGuiContainer extends GuiContainer{
 			changed = false;
 		}
 		out = Math.abs(out);
-		if(changed && out != te.output){
-			te.output = out;
-			ModPackets.network.sendToServer(new SendDoubleToServer("newOutput", out, te.getPos(), te.getWorld().provider.getDimension()));
+		if(changed && out != te.getSetting()){
+			te.set(out);
+			ModPackets.network.sendToServer(new SendDoubleToServer("new_setting", out, te.getPos(), te.getWorld().provider.getDimension()));
 		}
 	}
 }

@@ -17,7 +17,7 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.ArrayList;
 
-public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class HeatLimiterRedstoneTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
@@ -45,8 +45,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 			heatHandlerIn.init();
 		}
 
-		double goalTemp = RedstoneUtil.getPowerAtPos(world, pos);
-		goalTemp -= 273D;
+		double goalTemp = HeatUtil.toCelcius(RedstoneUtil.getPowerAtPos(world, pos));
 		if(heatOut > goalTemp){
 			if(heatIn < goalTemp){
 				double toTrans = goalTemp - heatOut;
@@ -81,7 +80,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
-		nbt.setBoolean("initHeat", init);
+		nbt.setBoolean("init_heat", init);
 		nbt.setDouble("heat_in", heatIn);
 		nbt.setDouble("heat_out", heatOut);
 		return nbt;
@@ -90,7 +89,7 @@ public class HeatLimiterTileEntity extends TileEntity implements ITickable, IInf
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
-		init = nbt.getBoolean("initHeat");
+		init = nbt.getBoolean("init_heat");
 		heatIn = nbt.getDouble("heat_in");
 		heatOut = nbt.getDouble("heat_out");
 	}

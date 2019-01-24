@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;
 import com.Da_Technomancer.crossroads.API.templates.RadioButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.TexturedToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
-import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
+import com.Da_Technomancer.crossroads.gui.container.BlankContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MathAxisTileEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -20,7 +20,7 @@ public class MathAxisGuiContainer extends GuiContainer{
 	private RadioButtonGuiObject buttons;
 
 	public MathAxisGuiContainer(MathAxisTileEntity te){
-		super(new RedstoneKeyboardContainer());
+		super(new BlankContainer());
 		xSize = 100;
 		ySize = 100;
 		this.te = te;

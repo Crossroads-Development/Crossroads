@@ -2,7 +2,7 @@
 	"ambientocclusion": false,
 	"textures": {
 		"main": "#texture",
-		"particle": "#texture"
+		"particle": "crossroads:blocks/light_cluster_white"
 	},
 	"elements": [
 		{

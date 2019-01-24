@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.templates.OutputLogGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.gui.container.RedstoneKeyboardContainer;
+import com.Da_Technomancer.crossroads.gui.container.BlankContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -40,7 +40,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 	private int focus;
 
 	public RedstoneRegistryGuiContainer(RedstoneRegistryTileEntity te){
-		super(new RedstoneKeyboardContainer());
+		super(new BlankContainer());
 		xSize = 320;
 		ySize = 120;
 		this.te = te;
