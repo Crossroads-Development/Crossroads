@@ -1,0 +1,6 @@
+{
+	"parent": "item/handheld",
+	"textures": {
+		"layer0": "crossroads:items/double_poison_vodka"
+	}
+}

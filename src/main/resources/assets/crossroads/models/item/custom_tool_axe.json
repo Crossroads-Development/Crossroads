@@ -1,6 +1,0 @@
-{
-	"parent": "item/handheld",
-	"textures": {
-		"layer0": "crossroads:items/custom_tool_axe"
-	}
-}

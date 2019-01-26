@@ -110,20 +110,24 @@ public final class ModCrafting{
 				}
 				return false;
 			});
+			registerBoboItem(new ItemStack(ModItems.poisonVodka, 1), "Poison Vodka", new ItemRecipePredicate(ModItems.solidVitriol, 1), new ItemRecipePredicate(Items.POISONOUS_POTATO, 1), (Predicate<ItemStack>) (ItemStack stack) -> stack.getItem() instanceof Phial || stack.getItem() == Items.GLASS_BOTTLE && stack.getCount() == 1);
+			registerBoboItem(new ItemStack(ModItems.doublePoisonVodka, 1), "Double Poison Vodka", new ItemRecipePredicate(ModItems.solidVitriol, 1), new ItemRecipePredicate(Items.POISONOUS_POTATO, 1), new ItemRecipePredicate(ModItems.poisonVodka, 1));
 		}
 
-		RecipeHolder.beamExtractRecipes.put(Items.REDSTONE, new BeamUnit(24, 40, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(ModItems.dustSalt, new BeamUnit(0, 24, 40, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.COAL, new BeamUnit(40, 24, 0, 0));
+
+
+		RecipeHolder.beamExtractRecipes.put(Items.REDSTONE, new BeamUnit(12, 16, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(ModItems.dustSalt, new BeamUnit(0, 12, 16, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.COAL, new BeamUnit(16, 12, 0, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.GLOWSTONE_DUST, new BeamUnit(4, 4, 4, 0));
-		RecipeHolder.beamExtractRecipes.put(ModItems.sulfur, new BeamUnit(64, 0, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(ModItems.solidQuicksilver, new BeamUnit(0, 64, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(ModItems.wasteSalt, new BeamUnit(0, 0, 64, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.ENDER_PEARL, new BeamUnit(64, 0, 64, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.BLAZE_POWDER, new BeamUnit(64, 16, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.GUNPOWDER, new BeamUnit(40, 24, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.SNOWBALL, new BeamUnit(0, 4, 24, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.SLIME_BALL, new BeamUnit(0, 24, 40, 0));
+		RecipeHolder.beamExtractRecipes.put(ModItems.sulfur, new BeamUnit(32, 0, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(ModItems.solidQuicksilver, new BeamUnit(0, 32, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(ModItems.wasteSalt, new BeamUnit(0, 0, 32, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.ENDER_PEARL, new BeamUnit(32, 0, 32, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.BLAZE_POWDER, new BeamUnit(32, 16, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.GUNPOWDER, new BeamUnit(24, 0, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.SLIME_BALL, new BeamUnit(0, 24, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.SNOWBALL, new BeamUnit(0, 0, 24, 0));
 
 		//Fusion beam
 		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.SNOW.getDefaultState(), false), new BeamTransmute(Blocks.ICE.getDefaultState(), 0));

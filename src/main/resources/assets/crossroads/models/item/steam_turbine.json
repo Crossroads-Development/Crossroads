@@ -1,8 +1,5 @@
 {
-	"parent": "crossroads:block/rotary_pump",
-	"textures": {
-		"valve": "crossroads:blocks/valve"
-	},
+	"parent": "crossroads:block/steam_turbine",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

@@ -3,7 +3,7 @@
 	"textures": {
 		"particle": "crossroads:blocks/block_bronze",
 		"bronze": "crossroads:blocks/block_bronze",
-		"iron": "crossroads:blocks/block_cast_iron",
+		"iron": "blocks/iron_block",
 		"glass": "blocks/glass",
 		"valve_base": "crossroads:blocks/valve",
 		"valve": "crossroads:blocks/valve"

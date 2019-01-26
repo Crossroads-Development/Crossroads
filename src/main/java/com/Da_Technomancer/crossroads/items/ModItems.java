@@ -62,7 +62,6 @@ public final class ModItems{
 	public static BasicItem pureQuartz;
 	public static BasicItem luminescentQuartz;
 	public static BasicItem lensArray;
-	public static BasicItem invisItem;
 	public static SquidHelmet squidHelmet;
 	public static PigZombieChestsplate pigZombieChestplate;
 	public static CowLeggings cowLeggings;
@@ -89,6 +88,8 @@ public final class ModItems{
 	public static LiechWrench liechWrench;
 	public static LeydenJar leydenJar;
 	public static Nitroglycerin nitroglycerin;
+	public static PoisonVodka poisonVodka;
+	public static DoublePoisonVodka doublePoisonVodka;
 	public static BasicItem solidQuicksilver;
 	public static BasicItem solidFusas;
 	public static BasicItem solidEldrine;
@@ -136,7 +137,6 @@ public final class ModItems{
 		pureQuartz = new BasicItem("pure_quartz", "gemQuartz");
 		luminescentQuartz = new BasicItem("luminescent_quartz");
 		lensArray = new BasicItem("lens_array");
-		invisItem = new BasicItem("invis_item", null, false);
 		squidHelmet = new SquidHelmet();
 		pigZombieChestplate = new PigZombieChestsplate();
 		cowLeggings = new CowLeggings();
@@ -163,6 +163,8 @@ public final class ModItems{
 		liechWrench = new LiechWrench();
 		leydenJar = new LeydenJar();
 		nitroglycerin = new Nitroglycerin();
+		poisonVodka = new PoisonVodka();
+		doublePoisonVodka = new DoublePoisonVodka();
 		solidQuicksilver = new BasicItem("solid_quicksilver");
 		solidFusas = new BasicItem("solid_fusas");
 		solidEldrine = new BasicItem("solid_eldrine");

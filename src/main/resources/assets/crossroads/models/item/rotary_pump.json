@@ -1,8 +1,5 @@
 {
 	"parent": "crossroads:block/rotary_pump",
-	"textures": {
-		"valve": "crossroads:blocks/valve"
-	},
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],
