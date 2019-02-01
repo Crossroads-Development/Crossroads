@@ -1,57 +1,44 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-public class FluidTankTileEntity extends TileEntity{
+import javax.annotation.Nullable;
 
-	private FluidStack content = null;
-	private final int CAPACITY = 20_000;
+public class FluidTankTileEntity extends InventoryTE{
+
+	public static final int CAPACITY = 16_000;
+
+	public FluidTankTileEntity(){
+		super(0);
+		fluidProps[0] = new TankProperty(0, CAPACITY, true, true);
+	}
+
+	@Override
+	protected int fluidTanks(){
+		return 1;
+	}
 
 	public int getRedstone(){
-		return Math.min(15, Math.max(0, content == null ? 0 : ((int) Math.ceil(15D * content.amount / CAPACITY))));
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
-		super.readFromNBT(nbt);
-		content = FluidStack.loadFluidStackFromNBT(nbt);
-
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-		super.writeToNBT(nbt);
-
-		if(content != null){
-			content.writeToNBT(nbt);
-		}
-
-		return nbt;
+		return Math.min(15, Math.max(0, fluids[0] == null ? 0 : ((int) Math.ceil(15D * fluids[0].amount / CAPACITY))));
 	}
 
 	/*
 	 * For setting the fluidstack on placement.
 	 */
-	public void setContent(FluidStack contentIn){
-		content = contentIn;
+	public void setContent(FluidStack contentsIn){
+		fluids[0] = contentsIn;
 		markDirty();
 	}
 
-	private final IFluidHandler mainHandler = new MainHandler();
+	private final IFluidHandler mainHandler = new FluidHandler(0);
 	private final IAdvancedRedstoneHandler redstoneHandler = new RedstoneHandler();
 
 	@SuppressWarnings("unchecked")
@@ -68,80 +55,25 @@ public class FluidTankTileEntity extends TileEntity{
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return true;
-		}
-		return super.hasCapability(capability, facing);
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+		return false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack){
+		return false;
+	}
+
+	@Override
+	public String getName(){
+		return "container.fluid_tank";
 	}
 
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{
 
 		@Override
 		public double getOutput(boolean read){
-			return read ? content == null ? 0 : 15D * (double) content.amount / (double) CAPACITY : 0;
-		}
-	}
-
-	private class MainHandler implements IFluidHandler{
-
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(content, CAPACITY, true, true)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource != null && (content == null || resource.isFluidEqual(content))){
-				int amount = Math.min(resource.amount, CAPACITY - (content == null ? 0 : content.amount));
-
-				if(doFill && amount != 0){
-					content = new FluidStack(resource.getFluid(), amount + (content == null ? 0 : content.amount), resource.tag);
-					markDirty();
-				}
-
-				return amount;
-			}
-
-			return 0;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource == null || content == null || resource.getFluid() != content.getFluid()){
-				return null;
-			}
-			int amount = Math.min(resource.amount, content.amount);
-
-			if(doDrain){
-				content.amount -= amount;
-				if(content.amount <= 0){
-					content = null;
-				}
-				markDirty();
-			}
-
-			return new FluidStack(resource.getFluid(), amount);
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(maxDrain <= 0 || content == null){
-				return null;
-			}
-			int amount = Math.min(maxDrain, content.amount);
-
-			Fluid fluid = content.getFluid();
-
-			if(doDrain){
-				content.amount -= amount;
-				if(content.amount <= 0){
-					content = null;
-				}
-				markDirty();
-			}
-
-			return new FluidStack(fluid, amount);
+			return read ? fluids[0] == null ? 0 : 15D * (double) fluids[0].amount / (double) CAPACITY : 0;
 		}
 	}
 }

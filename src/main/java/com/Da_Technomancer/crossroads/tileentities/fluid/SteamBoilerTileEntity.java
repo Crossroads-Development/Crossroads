@@ -26,8 +26,8 @@ public class SteamBoilerTileEntity extends InventoryTE{
 
 	public SteamBoilerTileEntity(){
 		super(1);//Salt
-		fluidProps[0] = new TankProperty(0,10_000, true, false, (Fluid f) -> f == FluidRegistry.WATER || f == BlockDistilledWater.getDistilledWater());
-		fluidProps[1] = new TankProperty(1,10_000, false, true, null);
+		fluidProps[0] = new TankProperty(0,8_000, true, false, (Fluid f) -> f == FluidRegistry.WATER || f == BlockDistilledWater.getDistilledWater());
+		fluidProps[1] = new TankProperty(1,8_000, false, true, null);
 	}
 	
 	@Override

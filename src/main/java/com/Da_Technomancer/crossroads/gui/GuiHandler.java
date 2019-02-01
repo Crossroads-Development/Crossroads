@@ -48,6 +48,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int FAT_FEEDER_GUI = 23;
 	public static final int BEAM_EXTRACTOR_GUI = 24;
 	public static final int MATH_AXIS_GUI = 25;
+	public static final int FLUID_TANK_GUI = 26;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -98,6 +99,7 @@ public class GuiHandler implements IGuiHandler{
 			case BLAST_FURNACE_GUI:
 				return new BlastFurnaceContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case FAT_FEEDER_GUI:
+			case FLUID_TANK_GUI:
 				return new FatFeederContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case BEAM_EXTRACTOR_GUI:
 				return new BeamExtractorContainer(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
@@ -161,6 +163,9 @@ public class GuiHandler implements IGuiHandler{
 				return new BeamExtractorGuiContainer(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
 			case MATH_AXIS_GUI:
 				return new MathAxisGuiContainer(((MathAxisTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+			case FLUID_TANK_GUI:
+				return new FluidTankGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+
 		}
 
 		return null;

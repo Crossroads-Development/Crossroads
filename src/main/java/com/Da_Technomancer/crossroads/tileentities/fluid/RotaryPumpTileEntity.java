@@ -42,7 +42,8 @@ public class RotaryPumpTileEntity extends ModuleTE{
 		return 80;
 	}
 
-	private static final double REQUIRED = 50;
+	private static final double REQUIRED = 100;
+	public static final double MAX_POWER = 5;
 	private double progress = 0;
 	private int lastProgress = 0;
 
@@ -59,8 +60,9 @@ public class RotaryPumpTileEntity extends ModuleTE{
 		Block fluidBlock = fluidBlockstate.getBlock();
 		Fluid fl = FluidRegistry.lookupFluidForBlock(fluidBlock);
 		//If anyone knows a builtin way to simplify this if statement, be my guest. It's so long it scares me...
+		//2019-29-1: Looking back on this if statement 2 years later, this is a perfectly reasonable length and not at all scary. If anything, it's too short. If anyone can find a way to make it longer, that would be appreciated
 		if(fl != null && (fluidBlock instanceof BlockFluidClassic && ((BlockFluidClassic) fluidBlock).isSourceBlock(world, pos.offset(EnumFacing.DOWN)) || fluidBlockstate.getValue(BlockLiquid.LEVEL) == 0) && (fluids[0] == null || (CAPACITY - fluids[0].amount >= 1000 && fluids[0].getFluid() == fl))){
-			double holder = motData[1] < 0 ? 0 : Math.min(motData[1], REQUIRED - progress);
+			double holder = motData[1] < 0 ? 0 : Math.min(Math.min(MAX_POWER, motData[1]), REQUIRED - progress);
 			motData[1] -= holder;
 			progress += holder;
 		}else{
@@ -74,7 +76,7 @@ public class RotaryPumpTileEntity extends ModuleTE{
 		}
 
 		if(lastProgress != (int) progress){
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (int) progress, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 1, (int) progress, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			lastProgress = (int) progress;
 		}
 	}

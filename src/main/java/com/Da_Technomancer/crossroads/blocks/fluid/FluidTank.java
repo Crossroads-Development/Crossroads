@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 import net.minecraft.block.BlockContainer;
@@ -78,10 +80,9 @@ public class FluidTank extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
+			playerIn.openGui(Main.instance, GuiHandler.FLUID_TANK_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
-
-		return FluidUtil.getFluidHandler(playerIn.getHeldItem(hand)) != null;
+		return true;
 	}
 
 	@Override

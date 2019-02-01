@@ -238,6 +238,7 @@ container.salt_reactor=Salt Reactor
 container.radiator=Radiator
 container.crucible=Industrial Crucible
 container.icebox=Icebox
+container.fluid_tank=Fluid Tank
 tile.icebox.name=Icebox
 container.fluid_cooler=Fluid Cooler
 container.stamp_mill=Stamp Mill

@@ -26,10 +26,10 @@ public class ModWorldGen implements IWorldGenerator{
 		switch(world.provider.getDimension()){
 			case 0: // Overworld
 				if(ModConfig.genCopperOre.getBoolean()){
-					runGenerator(new WorldGenMinable(OreSetup.oreCopper.getDefaultState(), 8), world, random, chunkX, chunkZ, 8, 2, 30);
+					runGenerator(new WorldGenMinable(OreSetup.oreCopper.getDefaultState(), 18), world, random, chunkX, chunkZ, 2, 0, 30);
 				}
 				if(ModConfig.genTinOre.getBoolean()){
-					runGenerator(new WorldGenMinable(OreSetup.oreTin.getDefaultState(), 4), world, random, chunkX, chunkZ, 5, 2, 30);
+					runGenerator(new WorldGenMinable(OreSetup.oreTin.getDefaultState(), 1), world, random, chunkX, chunkZ, 20, 0, 30);
 				}
 				break;
 			case -1: // Nether

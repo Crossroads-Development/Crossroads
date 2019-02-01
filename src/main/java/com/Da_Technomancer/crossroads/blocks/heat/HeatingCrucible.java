@@ -93,6 +93,7 @@ public class HeatingCrucible extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		tooltip.add("Melts down items. Uses 1000°C per item");
 		for(int i = 0; i < HeatingCrucibleTileEntity.TEMP_TIERS.length; i++){
 			tooltip.add((i + 1) + "x speed: -" + HeatingCrucibleTileEntity.USAGE * (i + 1) + "°C/t when above " + HeatingCrucibleTileEntity.TEMP_TIERS[i] + "°C");
 		}

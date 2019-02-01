@@ -21,22 +21,23 @@ import javax.annotation.Nullable;
 
 public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntReceiver{
 
+	protected static final int CAPACITY = 2000;
+
 	/**
 	 * 0: Locked
 	 * 1: Normal
 	 * 2: Out
 	 * 3: In
 	 */
-	private Integer[] connectMode = null;
-	private final boolean[] hasMatch = new boolean[6];
-
-	private static final int CAPACITY = 2000;
+	protected Integer[] connectMode = null;
+	private final Boolean[] hasMatch = new Boolean[6];
 	private FluidStack content = null;
+	private IFluidHandler[] outHandlers = new IFluidHandler[6];
 
 	public void markSideChanged(int index){
 		init();
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendIntToClient(index, hasMatch[index] ? connectMode[index] : 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient(index, hasMatch[index] != null && hasMatch[index] ? connectMode[index] : 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	public Integer[] getConnectMode(boolean forRender){
@@ -44,7 +45,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 		if(forRender && !world.isRemote){
 			Integer[] out = new Integer[6];
 			for(int i = 0; i < 6; i++){
-				out[i] = hasMatch[i] ? connectMode[i] : 0;
+				out[i] = hasMatch[i] != null && hasMatch[i] ? connectMode[i] : 0;
 			}
 			return out;
 		}
@@ -59,7 +60,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 		}
 	}
 
-	private void init(){
+	protected void init(){
 		if(connectMode == null){
 			connectMode = world.isRemote ? new Integer[] {0, 0, 0, 0, 0, 0} : new Integer[] {1, 1, 1, 1, 1, 1};
 		}
@@ -73,135 +74,183 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 			return;
 		}
 
+		IFluidHandler[] handlers = new IFluidHandler[6];
+		outHandlers = new IFluidHandler[6];
+		Fluid fluid = content == null ? null : content.getFluid();
+
 		for(EnumFacing dir : EnumFacing.values()){
 			int ind = dir.getIndex();
-			TileEntity te = world.getTileEntity(pos.offset(dir));
 
 			if(connectMode[ind] != 0){
-				if(te == null || !te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())){
-					if(hasMatch[ind]){
-						hasMatch[ind] = false;
+				TileEntity te = world.getTileEntity(pos.offset(dir));
+				IFluidHandler handler = null;
+
+				if(te != null && (handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())) != null){
+					if(hasMatch[ind] == null){
+						boolean canFill = handler.getTankProperties().length != 0 && handler.getTankProperties()[0].canFill();
+						boolean canDrain = handler.getTankProperties().length != 0 && handler.getTankProperties()[0].canDrain();
+						connectMode[ind] = canDrain ? canFill ? 1 : 3 : canFill ? 2 : 1;
+						hasMatch[ind] = true;
 						markSideChanged(ind);
 					}
-				}else if(!hasMatch[ind]){
-					hasMatch[ind] = true;
+					if(!hasMatch[ind]){
+						hasMatch[ind] = true;
+						markSideChanged(ind);
+					}
+				}else if(hasMatch[ind] != null && hasMatch[ind]){
+					hasMatch[ind] = false;
 					markSideChanged(ind);
 				}
-			}
 
-			if(te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())){
-				transfer(te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()), ind);
+				if(te != null && handler != null){
+					handlers[ind] = handler;
+				}
 			}
 		}
-	}
 
-	private void transfer(IFluidHandler handler, int dir){
-		if(connectMode[dir] == 2){
-			if(content != null){
-				content.amount -= handler.fill(content, true);
-				if(content.amount <= 0){
-					content = null;
+		//Before we can proceed, we need to know which fluid we're moving
+		//We iterate over all input and bi connections until we find a fluid
+		if(fluid == null){
+			for(int i = 0; i < 6; i++){
+				if(handlers[i] != null && connectMode[i] != 2){
+					FluidStack drainSample = handlers[i].drain(1, false);
+					if(drainSample != null){
+						fluid = drainSample.getFluid();
+						break;
+					}
 				}
-				markDirty();
 			}
-		}else if(connectMode[dir] == 3){
-			if(content == null){
-				content = handler.drain(CAPACITY, true);
+		}
+
+		//If fluid is still null at this point, there must not be any fluid to move
+		if(fluid == null){
+			return;
+		}
+
+		long sumInput = 0;
+		long sumOutput = 0;
+		long sumBi = 0;
+		long sumBiCap = 0;
+		int[] biConts = new int[6];
+		int[] biCaps = new int[6];
+
+		final FluidStack fillTestStack = new FluidStack(fluid, Integer.MAX_VALUE);//We re-use the same fluidstack for capacity fill tests to save initializing the same stack each loop
+
+		//In order to do all movements in one synchronized, order independent action, we need to build up information about all connections
+		for(int i = 0; i < 6; i++){
+			if(handlers[i] != null){
+				switch(connectMode[i]){
+					case 1://bi
+						FluidStack drainSample = handlers[i].drain(Integer.MAX_VALUE, false);
+						if(drainSample == null || drainSample.getFluid() == fluid){
+							int fillSample = handlers[i].fill(fillTestStack, false);
+							if(fillSample == 0 && drainSample == null){//It's blocking all interaction. The fluid doesn't match, or it just doesn't allow fluid movement
+								handlers[i] = null;
+							}else{
+								biConts[i] = drainSample == null ? 0 : drainSample.amount;
+								biCaps[i] = biConts[i] + fillSample;
+								sumBi += biConts[i];
+								sumBiCap += biCaps[i];
+							}
+
+						}else{
+							handlers[i] = null;//Not the same fluid type
+						}
+						break;
+					case 2://output
+						int fillSample = handlers[i].fill(fillTestStack, false);
+						if(fillSample == 0){
+							handlers[i] = null;
+						}else{
+							sumOutput += fillSample;
+						}
+						outHandlers[i] = handlers[i];
+						break;
+					case 3://input
+						FluidStack testDrain = handlers[i].drain(Integer.MAX_VALUE, false);
+						if(testDrain == null || testDrain.getFluid() != fluid){
+							handlers[i] = null;
+						}else{
+							sumInput += testDrain.amount;
+						}
+						break;
+				}
+			}
+		}
+
+		if(sumOutput < sumInput){
+			long biFill = Math.min(sumInput - sumOutput, CAPACITY + sumBiCap - sumBi - (content == null ? 0 : content.amount));
+			long toDrain = biFill + sumOutput;
+			biFill += sumBi + (content == null ? 0 : content.amount);
+			double tarPressure = biFill;
+			tarPressure /= CAPACITY + sumBiCap;
+			for(int i = 0; i < 6; i++){
+				if(handlers[i] != null){
+					switch(connectMode[i]){
+						case 1://bi
+							biFill -= biConts[i];
+							if((double) biConts[i] / biConts[i] < tarPressure){
+								biFill -= handlers[i].fill(new FluidStack(fluid, (int) (tarPressure * biCaps[i] - biConts[i])), true);
+							}else{
+								FluidStack drained = handlers[i].drain((int) (biConts[i] - tarPressure * biCaps[i]), true);
+								biFill += drained == null ? 0 : drained.amount;
+							}
+							break;
+						case 2://output
+							handlers[i].fill(fillTestStack, true);//Completely fill
+							break;
+						case 3://input
+							if(toDrain > 0){
+								FluidStack drained = handlers[i].drain((int) toDrain, true);
+								toDrain -= drained == null ? 0 : drained.amount;
+							}
+							break;
+					}
+				}
+			}
+
+			if(biFill <= 0){
+				content = null;
 				markDirty();
 			}else{
-				FluidStack drained = handler.drain(new FluidStack(content.getFluid(), CAPACITY - content.amount), true);
-				if(drained != null){
-					content.amount += drained.amount;
-					markDirty();
-				}
+				content = new FluidStack(fluid, (int) biFill);
 			}
-		}else if(connectMode[dir] == 1){
+		}else{
+			long fromBi = Math.min(sumOutput - sumInput, sumBi + (content == null ? 0 : content.amount));//The qty being drained from bi to fill out.
+			long biFill = sumBi - fromBi + (content == null ? 0 : content.amount);
+			double tarPressure = biFill;
+			tarPressure /= CAPACITY + sumBiCap;
+			long toFill = sumInput + fromBi;
 
-			// the FluidTankProperties are completely ignored due to them being
-			// unreliable.
-			// Alternate methods of obtaining the information are used
-
-			// False means either draining in not allowed or the tank is empty
-			boolean canDrain = handler.drain(1, false) != null;
-
-			if(!canDrain && content == null){
-				return;
-			}
-			// False means either the tank is full or filling is disallowed with the
-			// liquid in this pipe
-			boolean canFill = handler.fill(content == null ? handler.drain(1, false) : content, false) != 0;
-
-			if(!canDrain && !canFill){
-				// if both are false, there is nothing to be done.
-				return;
-			}
-
-			if(!canDrain){
-				// content != null
-				content.amount -= handler.fill(content, true);
-
-				if(content.amount <= 0){
-					content = null;
-				}
-
-				markDirty();
-
-				//It's possible the connected machine does allow draining but was just empty. This checks for that.
-				if(handler.drain(1, false) == null){
-					return;
-				}
-			}
-			// content can = null
-
-			// If this pipe and the tank are full, there is nothing to be done anyway
-			if(!canFill && CAPACITY != (content == null ? 0 : content.amount)){
-				if(content == null){
-					content = handler.drain(CAPACITY, true);
-					if(content != null && content.amount == 0){
-						content = null;
+			for(int i = 0; i < 6; i++){
+				if(handlers[i] != null){
+					switch(connectMode[i]){
+						case 1://bi
+							biFill -= biConts[i];
+							if((double) biConts[i] / biConts[i] < tarPressure){
+								biFill -= handlers[i].fill(new FluidStack(fluid, (int) (tarPressure * biCaps[i] - biConts[i])), true);
+							}else{
+								FluidStack drained = handlers[i].drain((int) (biConts[i] - tarPressure * biCaps[i]), true);
+								biFill += drained == null ? 0 : drained.amount;
+							}
+							break;
+						case 2://output
+							if(toFill > 0){
+								toFill -= handlers[i].fill(new FluidStack(fluid, (int) toFill), true);
+							}
+							break;
+						case 3://input
+							handlers[i].drain(Integer.MAX_VALUE, true);
+							break;
 					}
-				}else{
-					FluidStack drained = handler.drain(new FluidStack(content.getFluid(), CAPACITY - content.amount), true);
-					content.amount += drained == null ? 0 : drained.amount;
-				}
-				if(content != null && content.amount <= 0){
-					content = null;
-				}
-				markDirty();
-				if(handler.fill(content, false) == 0){
-					return;
 				}
 			}
 
-			// content can = null
-
-			// KNOWN: canFill & canDrain tank & pipe, tank and pipe are not BOTH
-			// full, tank and pipe are not BOTH empty, capacity and contents of
-			// pipe.
-
-			FluidStack fakeFullDrained = handler.drain(Integer.MAX_VALUE, false);
-			long tankContent = fakeFullDrained == null ? 0 : fakeFullDrained.amount;
-			long tankCapacity = tankContent + handler.fill(content == null ? new FluidStack(fakeFullDrained.getFluid(), Integer.MAX_VALUE) : new FluidStack(content.getFluid(), Integer.MAX_VALUE), false);
-
-			long total = (content == null ? 0 : content.amount) + tankContent;
-
-			Fluid fluid = content == null ? fakeFullDrained.getFluid() : content.getFluid();
-
-			long targetOtherContent = Math.round(((double) total * tankCapacity) / ((double) (CAPACITY + tankCapacity)));
-			int targetContent = (int) (total - targetOtherContent);
-
-			content = null;
-
-			if(fluid != null){
-				if(targetOtherContent - tankContent >= 0){
-					handler.fill(new FluidStack(fluid, (int) (targetOtherContent - tankContent)), true);
-				}else{
-					handler.drain((int) (tankContent - targetOtherContent), true);
-				}
-
-				if(targetContent > 0){
-					content = new FluidStack(fluid, targetContent);
-				}
+			if(biFill <= 0){
+				content = null;
+				markDirty();
+			}else{
+				content = new FluidStack(fluid, (int) biFill);
 			}
 		}
 	}
@@ -209,12 +258,13 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	@Override
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
+		content = FluidStack.loadFluidStackFromNBT(nbt);
 		connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
 		for(int i = 0; i < 6; i++){
 			connectMode[i] = Math.max(0, nbt.hasKey("mode_" + i) ? nbt.getInteger("mode_" + i) : 1);
-			hasMatch[i] = nbt.getBoolean("match_" + i);
+			byte match = nbt.getByte("match_" + i);
+			hasMatch[i] = match == 0 ? null : match != 1;
 		}
-		content = FluidStack.loadFluidStackFromNBT(nbt);
 	}
 
 	@Override
@@ -226,7 +276,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 		if(connectMode != null){
 			for(int i = 0; i < 6; i++){
 				nbt.setInteger("mode_" + i, connectMode[i]);
-				nbt.setBoolean("match_" + i, hasMatch[i]);
+				nbt.setByte("match_" + i, hasMatch[i] == null ? 0 : hasMatch[i] ? (byte) 2 : (byte) 1);
 			}
 		}
 
@@ -237,14 +287,14 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound out = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
-			out.setInteger("mode_" + i, hasMatch[i] ? connectMode[i] : 0);
+			out.setInteger("mode_" + i, hasMatch[i] != null && hasMatch[i] ? connectMode[i] : 0);
 		}
 		return out;
 	}
 
-	private final IFluidHandler mainHandler = new MainFluidHandler();
-	private final IFluidHandler inHandler = new InFluidHandler();
-	private final IFluidHandler outHandler = new OutFluidHandler();
+	protected final IFluidHandler mainHandler = new MainFluidHandler();
+	protected final IFluidHandler inHandler = new InFluidHandler();
+	protected final IFluidHandler outHandler = new OutFluidHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -379,8 +429,13 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 
 		@Override
 		public FluidStack drain(FluidStack resource, boolean doDrain){
-
 			if(resource != null && resource.isFluidEqual(content)){
+				for(IFluidHandler outHandler : outHandlers){
+					if(outHandler != null && outHandler.fill(resource, false) != 0){
+						return null;//We refuse to allow extracting liquid out dual connections while this pipe could still push out output-only connections. We therefore prioritize output-only connections over dual connections (similarly to the sorting hopper)
+					}
+				}
+
 				int change = Math.min(content.amount, resource.amount);
 				Fluid fluid = content.getFluid();
 
@@ -404,9 +459,14 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 				return null;
 			}
 
-			int change = Math.min(content.amount, maxDrain);
-			Fluid fluid = content.getFluid();
+			for(IFluidHandler outHandler : outHandlers){
+				if(outHandler != null && outHandler.fill(content, false) != 0){
+					return null;//We refuse to allow extracting liquid out dual connections while this pipe could still push out output-only connections. We therefore prioritize output-only connections over dual connections (similarly to the sorting hopper)
+				}
+			}
 
+			Fluid fluid = content.getFluid();
+			int change = Math.min(content.amount, maxDrain);
 			if(doDrain && change != 0){
 				content.amount -= change;
 				if(content.amount == 0){

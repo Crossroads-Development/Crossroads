@@ -134,6 +134,8 @@ public final class ModCrafting{
 		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.SAND.getDefaultState(), false), new BeamTransmute(ModBlocks.blockPureQuartz.getDefaultState(), 16));
 		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.NETHERRACK.getDefaultState(), false), new BeamTransmute(Blocks.NETHER_BRICK.getDefaultState(), 8));
 		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.COBBLESTONE.getDefaultState(), false), new BeamTransmute(Blocks.STONE.getDefaultState(), 0));
+		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.DIRT.getDefaultState(), false), new BeamTransmute(Blocks.CLAY.getDefaultState(), 0));
+		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.GRASS.getDefaultState(), true), new BeamTransmute(Blocks.CLAY.getDefaultState(), 0));
 		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE), false), new BeamTransmute(Blocks.STONEBRICK.getDefaultState(), 0));
 		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.GRAVEL.getDefaultState(), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState(), 8));
 		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.ROUGH), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 16));
@@ -142,6 +144,7 @@ public final class ModCrafting{
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.ICE.getDefaultState(), false), new BeamTransmute(Blocks.SNOW.getDefaultState(), 0));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(ModBlocks.blockPureQuartz.getDefaultState(), false), new BeamTransmute(Blocks.SAND.getDefaultState(), 16));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.STONE.getDefaultState(), false), new BeamTransmute(Blocks.COBBLESTONE.getDefaultState(), 0));
+		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.CLAY.getDefaultState(), false), new BeamTransmute(Blocks.DIRT.getDefaultState(), 0));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.STONEBRICK.getDefaultState(), false), new BeamTransmute(Blocks.STONE.getDefaultState(), 0));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.NETHER_BRICK.getDefaultState(), false), new BeamTransmute(Blocks.NETHERRACK.getDefaultState(), 8));
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState(), false), new BeamTransmute(Blocks.GRAVEL.getDefaultState(), 8));

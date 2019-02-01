@@ -8,7 +8,7 @@ buildscript {
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.13.0-2.0.0 BETA 19-Vodka"
+version = "1.13.0-2.0.0 BETA 22-Fluid Tubes"
 group = "com.Da_Technomancer.crossroads"
 archivesBaseName = "crossroads"
 

@@ -175,7 +175,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 				id--;
 			}
 			if(useRotary() && id == 0){
-				return (int) (motData[0] * 1_000);
+				return (int) Math.round(motData[0] * 100);
 			}
 		}
 		return 0;
@@ -195,7 +195,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 				id -= 1;
 			}
 			if(useRotary() && id == 0){
-				motData[0] = value / 1_000D;
+				motData[0] = value / 100D;
 			}
 		}
 	}
