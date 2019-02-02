@@ -3,8 +3,11 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EntitySelectors;
@@ -64,19 +67,35 @@ public class FatFeederTileEntity extends InventoryTE{
 				}
 			}
 
-			List<EntityAnimal> animals = world.getEntitiesWithinAABB(EntityAnimal.class, new AxisAlignedBB(pos.subtract(new Vec3i(range, range, range)), pos.add(new Vec3i(range, range, range))), EntitySelectors.IS_ALIVE);
+			List<EntityAgeable> animals = world.getEntitiesWithinAABB(EntityAgeable.class, new AxisAlignedBB(pos.subtract(new Vec3i(range, range, range)), pos.add(new Vec3i(range, range, range))), EntitySelectors.IS_ALIVE);
 
-			if(animals.size() >= 32){
+			if(animals.size() >= 64){
 				return;
 			}
 
-			for(EntityAnimal anim : animals){
-				if(fluids[0].amount >= BREED_AMOUNT && anim.getGrowingAge() == 0 && !anim.isInLove()){
-					anim.setInLove(null);
-					fluids[0].amount -= BREED_AMOUNT;
-					if(fluids[0].amount <= 0){
-						fluids[0] = null;
-						return;
+			//Bobo feature: If this is placed on an Emerald Block, it can feed villagers to make them willing to breed without feeding/trading. It does not bypass the village size requirement
+			boolean canBreedVillagers = world.getBlockState(pos.down()).getBlock() == Blocks.EMERALD_BLOCK;
+
+			for(EntityAgeable ent : animals){
+				if(ent instanceof EntityAnimal){
+					EntityAnimal anim = (EntityAnimal) ent;
+					if(fluids[0].amount >= BREED_AMOUNT && anim.getGrowingAge() == 0 && !anim.isInLove()){
+						anim.setInLove(null);
+						fluids[0].amount -= BREED_AMOUNT;
+						if(fluids[0].amount <= 0){
+							fluids[0] = null;
+							return;
+						}
+					}
+				}else if(ent instanceof EntityVillager && canBreedVillagers){
+					EntityVillager vill = (EntityVillager) ent;
+					if(fluids[0].amount >= BREED_AMOUNT && vill.getGrowingAge() == 0 && !vill.getIsWillingToMate(false)){
+						vill.setIsWillingToMate(true);
+						fluids[0].amount -= BREED_AMOUNT;
+						if(fluids[0].amount <= 0){
+							fluids[0] = null;
+							return;
+						}
 					}
 				}
 			}

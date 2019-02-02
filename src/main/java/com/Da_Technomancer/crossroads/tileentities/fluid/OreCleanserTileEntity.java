@@ -117,12 +117,14 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	private final ItemHandler itemHandler = new ItemHandler(null);
 	private final FluidHandler innerFluidHandler = new FluidHandler(-1);
+	private final FluidHandler inFluidHandler = new FluidHandler(0);
+	private final FluidHandler outFluidHandler = new FluidHandler(1);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return (T) innerFluidHandler;
+			return (T) (facing == null ? innerFluidHandler : facing == EnumFacing.UP ? outFluidHandler : inFluidHandler);
 		}
 
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){

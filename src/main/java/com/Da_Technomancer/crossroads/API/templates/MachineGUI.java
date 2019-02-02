@@ -58,7 +58,7 @@ public abstract class MachineGUI extends GuiContainer{
 			fontRenderer.drawString(s, xSize - 8 - fontRenderer.getStringWidth(s), 6, 0x404040);
 		}
 		if(te.useRotary()){
-			String s = te.getField(2 * te.fluidTanks() + (te.useHeat() ? 1 : 0)) / 1_000D + " rad/s";
+			String s = te.getField(2 * te.fluidTanks() + (te.useHeat() ? 1 : 0)) / 100D + " rad/s";
 			fontRenderer.drawString(s, xSize - 8 - fontRenderer.getStringWidth(s), te.useHeat() ? 16 : 6, 0x404040);
 		}
 	}

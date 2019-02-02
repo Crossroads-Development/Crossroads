@@ -32,7 +32,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	protected Integer[] connectMode = null;
 	private final Boolean[] hasMatch = new Boolean[6];
 	private FluidStack content = null;
-	private IFluidHandler[] outHandlers = new IFluidHandler[6];
+	private IFluidHandler[] outHandlers = null;
 
 	public void markSideChanged(int index){
 		init();
@@ -429,7 +429,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 
 		@Override
 		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource != null && resource.isFluidEqual(content)){
+			if(resource != null && resource.isFluidEqual(content) && outHandlers != null){
 				for(IFluidHandler outHandler : outHandlers){
 					if(outHandler != null && outHandler.fill(resource, false) != 0){
 						return null;//We refuse to allow extracting liquid out dual connections while this pipe could still push out output-only connections. We therefore prioritize output-only connections over dual connections (similarly to the sorting hopper)
@@ -455,7 +455,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 
 		@Override
 		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(content == null || maxDrain == 0){
+			if(content == null || maxDrain == 0 || outHandlers == null){
 				return null;
 			}
 

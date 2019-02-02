@@ -12,12 +12,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -94,6 +96,8 @@ public class DetailedCrafterContainer extends Container{
 			nbt.getCompoundTag("path").setBoolean("technomancy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
+			}else{
+				playUnlockSound();
 			}
 		}
 		
@@ -111,11 +115,17 @@ public class DetailedCrafterContainer extends Container{
 			nbt.getCompoundTag("path").setBoolean("alchemy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
+			}else{
+				playUnlockSound();
 			}
 		}
 		
 		IRecipe recipe = CraftingManager.findMatchingRecipe(inInv, world);
 		outInv.setInventorySlotContents(0, recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv));
+	}
+
+	private void playUnlockSound(){
+		world.playSound(playerInv.player, pos, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2, 0);
 	}
 
 	private static boolean passesAlchemyCriteria(NBTTagCompound elementTag){
