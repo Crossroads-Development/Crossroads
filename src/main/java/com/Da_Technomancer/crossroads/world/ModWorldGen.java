@@ -29,7 +29,7 @@ public class ModWorldGen implements IWorldGenerator{
 					runGenerator(new WorldGenMinable(OreSetup.oreCopper.getDefaultState(), 18), world, random, chunkX, chunkZ, 2, 0, 30);
 				}
 				if(ModConfig.genTinOre.getBoolean()){
-					runGenerator(new WorldGenMinable(OreSetup.oreTin.getDefaultState(), 1), world, random, chunkX, chunkZ, 20, 0, 30);
+					runGenerator(new GemGen(OreSetup.oreTin.getDefaultState(), BlockMatcher.forBlock(Blocks.STONE)), world, random, chunkX, chunkZ, 20, 0, 30);
 				}
 				break;
 			case -1: // Nether

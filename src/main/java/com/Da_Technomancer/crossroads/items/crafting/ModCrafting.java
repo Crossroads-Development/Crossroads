@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopshowium;
+import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.Phial;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
@@ -87,6 +88,7 @@ public final class ModCrafting{
 
 
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.LAVA, Pair.of(1000, Triple.of(new ItemStack(Blocks.OBSIDIAN, 1), 2500D, 1500D)));
+		RecipeHolder.fluidCoolingRecipes.put(BlockSteam.getSteam(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE, 1), 0D, 40D + EnergyConverters.degPerSteamBucket(false))));
 		RecipeHolder.fluidCoolingRecipes.put(BlockDistilledWater.getDistilledWater(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE, 1), 0D, 40D)));
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE, 1), 0D, 40D)));
 		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopshowium.getMoltenCopshowium(), Pair.of(EnergyConverters.INGOT_MB, Triple.of(new ItemStack(OreSetup.ingotCopshowium, 1), 1500D, 100D)));
@@ -188,7 +190,8 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatedTubeGlass, 2), "*#*", '*', "blockGlass", '#', "ingotCopper"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatedTubeCrystal, 2), "*#*", '*', "gemAlcCryst", '#', "ingotCopper"));
 		//Heat Limiter
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatLimiterRedstone, 4, 0), "*&*", "*&*", "*#*", '*', "obsidian", '#', "dustRedstone", '&', "ingotCopper"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.heatLimiterBasic, 4, 0), "*&*", "*&*", "*#*", '*', "obsidian", '#', "dustRedstone", '&', "ingotCopper"));
+		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.heatLimiterRedstone, 1, 0), "dustRedstone", "dustRedstone", "dustRedstpme", ModBlocks.heatLimiterBasic));
 		//Reaction Chamber
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reactionChamberGlass, 1), "*^*", "^#^", "*^*", '*', "ingotBronze", '^', "blockGlass", '#', new ItemStack(ModBlocks.reagentTankGlass, 1)));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reactionChamberCrystal, 1), "*^*", "^#^", "*^*", '*', "ingotBronze", '^', "gemAlcCryst", '#', new ItemStack(ModBlocks.reagentTankCrystal, 1)));
@@ -333,7 +336,7 @@ public final class ModCrafting{
 		// Heat Cable
 		for(HeatInsulators insul : HeatInsulators.values()){
 			toRegister.add(new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.HEAT_CABLES.get(insul), 4), "###", "???", "###", '#', insul.getItem(), '?', "ingotCopper"));
-			toRegister.add(new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.REDSTONE_HEAT_CABLES.get(insul), 1), "###", "#?#", "###", '#', "dustRedstone", '?', HeatCableFactory.HEAT_CABLES.get(insul)));
+			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(HeatCableFactory.REDSTONE_HEAT_CABLES.get(insul), 1), "dustRedstone", "dustRedstone", "dustRedstone", HeatCableFactory.HEAT_CABLES.get(insul)));
 		}
 		// Steam Boiler
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.steamBoiler, 1), "###", "# #", "&&&", '#', "ingotBronze", '&', "ingotCopper"));
@@ -372,7 +375,7 @@ public final class ModCrafting{
 		// Fat Congealer
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fatCongealer, 1), "*^*", "# #", "* *", '*', "ingotTin", '#', "netherrack", '^', "stickIron"));
 		//Redstone Fluid Tube
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneFluidTube, 1), "***", "*&*", "***", '*', "dustRedstone", '&', ModBlocks.fluidTube));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redstoneFluidTube, 1), "dustRedstone", "dustRedstone", "dustRedstone", ModBlocks.fluidTube));
 		//Water Centrifuge
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.waterCentrifuge, 1), "*&*", "^%^", "* *", '*', "ingotBronze", '&', "stickIron", '^', ModBlocks.fluidTube, '%', "ingotTin"));
 		//Pure Quartz
@@ -381,6 +384,7 @@ public final class ModCrafting{
 		//Pure Quartz Block
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.blockPureQuartz, 1), "**", "**", '*', ModItems.pureQuartz));
 		//Luminescent Quartz
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.luminescentQuartz, 1), ModItems.pureQuartz, "dustGlowstone"));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.luminescentQuartz, 4), ModBlocks.blockLuminescentQuartz));
 		//Luminescent Quartz Block
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.blockLuminescentQuartz, 1), "**", "**", '*', ModItems.luminescentQuartz));

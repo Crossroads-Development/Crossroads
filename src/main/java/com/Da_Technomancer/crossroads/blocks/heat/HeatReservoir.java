@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatReservoirTileEntity;
@@ -50,6 +52,7 @@ public class HeatReservoir extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Acts as a buffer to slow down temperature change");
+		tooltip.add("Comparators measure the temperature in Kelvin");
 
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("temp")){
 			tooltip.add(MiscUtil.betterRound(stack.getTagCompound().getDouble("temp"), 3) + "°C");
@@ -74,5 +77,21 @@ public class HeatReservoir extends BlockContainer{
 			HeatReservoirTileEntity te = (HeatReservoirTileEntity) world.getTileEntity(pos);
 			te.getCapability(Capabilities.HEAT_CAPABILITY, null).setTemp(stack.getTagCompound().getDouble("temp"));
 		}
+	}
+
+
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		IHeatHandler heatHandler;
+		if(te != null && (heatHandler = te.getCapability(Capabilities.HEAT_CAPABILITY, null)) != null){
+			return (int) Math.max(15, Math.round(HeatUtil.toKelvin(te.getCapability(Capabilities.HEAT_CAPABILITY, null).getTemp())));
+		}
+		return 0;
 	}
 }

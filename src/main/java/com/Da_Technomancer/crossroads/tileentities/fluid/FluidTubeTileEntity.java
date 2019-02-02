@@ -189,7 +189,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 					switch(connectMode[i]){
 						case 1://bi
 							biFill -= biConts[i];
-							if((double) biConts[i] / biConts[i] < tarPressure){
+							if((double) biConts[i] / biCaps[i] < tarPressure){
 								biFill -= handlers[i].fill(new FluidStack(fluid, (int) (tarPressure * biCaps[i] - biConts[i])), true);
 							}else{
 								FluidStack drained = handlers[i].drain((int) (biConts[i] - tarPressure * biCaps[i]), true);
@@ -227,7 +227,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 					switch(connectMode[i]){
 						case 1://bi
 							biFill -= biConts[i];
-							if((double) biConts[i] / biConts[i] < tarPressure){
+							if((double) biConts[i] / biCaps[i] < tarPressure){
 								biFill -= handlers[i].fill(new FluidStack(fluid, (int) (tarPressure * biCaps[i] - biConts[i])), true);
 							}else{
 								FluidStack drained = handlers[i].drain((int) (biConts[i] - tarPressure * biCaps[i]), true);
