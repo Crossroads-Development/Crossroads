@@ -97,6 +97,9 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 						hasMatch[ind] = true;
 						markSideChanged(ind);
 					}
+					if(connectMode[ind] == 2){
+						outHandlers[ind] = handlers[ind];
+					}
 				}else if(hasMatch[ind] != null && hasMatch[ind]){
 					hasMatch[ind] = false;
 					markSideChanged(ind);
@@ -164,7 +167,6 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 						}else{
 							sumOutput += fillSample;
 						}
-						outHandlers[i] = handlers[i];
 						break;
 					case 3://input
 						FluidStack testDrain = handlers[i].drain(Integer.MAX_VALUE, false);
