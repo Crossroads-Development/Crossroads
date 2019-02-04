@@ -177,8 +177,8 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
 		if(angleW != null){
-			nbt.setFloat("angle", angleW[0]);
-			nbt.setFloat("cl_w", angleW[1]);
+			nbt.setFloat("ang_w_0", angleW[0]);
+			nbt.setFloat("ang_w_1", angleW[1]);
 		}
 		return nbt;
 	}

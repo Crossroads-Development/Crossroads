@@ -33,8 +33,8 @@ public class IceboxTileEntity extends InventoryTE{
 			return;
 		}
 
-		if(burnTime != 0 && temp > -15){
-			temp = Math.max(-15, temp - 10);
+		if(burnTime != 0 && temp > -20){
+			temp = Math.max(-20, temp - 10);
 			if(--burnTime == 0){
 				world.setBlockState(pos, ModBlocks.icebox.getDefaultState().withProperty(Properties.ACTIVE, false), 18);
 			}

@@ -90,6 +90,6 @@ public class Icebox extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Adds: -10°C/t while using cold items as fuel");
-		tooltip.add("Minimum temp: -15°C");
+		tooltip.add("Minimum temp: -20°C");
 	}
 }

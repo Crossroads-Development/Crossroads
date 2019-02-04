@@ -76,15 +76,13 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 
 		IFluidHandler[] handlers = new IFluidHandler[6];
 		outHandlers = new IFluidHandler[6];
-		Fluid fluid = content == null ? null : content.getFluid();
 
 		for(EnumFacing dir : EnumFacing.values()){
 			int ind = dir.getIndex();
 
 			if(connectMode[ind] != 0){
 				TileEntity te = world.getTileEntity(pos.offset(dir));
-				IFluidHandler handler = null;
-
+				IFluidHandler handler;
 				if(te != null && (handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())) != null){
 					if(hasMatch[ind] == null){
 						boolean canFill = handler.getTankProperties().length != 0 && handler.getTankProperties()[0].canFill();
@@ -97,21 +95,23 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 						hasMatch[ind] = true;
 						markSideChanged(ind);
 					}
+
+					handlers[ind] = handler;
+
 					if(connectMode[ind] == 2){
-						outHandlers[ind] = handlers[ind];
+						outHandlers[ind] = handler;
 					}
 				}else if(hasMatch[ind] != null && hasMatch[ind]){
 					hasMatch[ind] = false;
 					markSideChanged(ind);
 				}
-
-				if(te != null && handler != null){
-					handlers[ind] = handler;
-				}
 			}
 		}
 
+
 		//Before we can proceed, we need to know which fluid we're moving
+		Fluid fluid = content == null ? null : content.getFluid();
+
 		//We iterate over all input and bi connections until we find a fluid
 		if(fluid == null){
 			for(int i = 0; i < 6; i++){

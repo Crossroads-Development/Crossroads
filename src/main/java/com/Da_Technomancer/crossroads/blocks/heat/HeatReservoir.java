@@ -90,7 +90,7 @@ public class HeatReservoir extends BlockContainer{
 		TileEntity te = worldIn.getTileEntity(pos);
 		IHeatHandler heatHandler;
 		if(te != null && (heatHandler = te.getCapability(Capabilities.HEAT_CAPABILITY, null)) != null){
-			return (int) Math.max(15, Math.round(HeatUtil.toKelvin(te.getCapability(Capabilities.HEAT_CAPABILITY, null).getTemp())));
+			return (int) Math.max(15, Math.round(HeatUtil.toKelvin(heatHandler.getTemp())));
 		}
 		return 0;
 	}

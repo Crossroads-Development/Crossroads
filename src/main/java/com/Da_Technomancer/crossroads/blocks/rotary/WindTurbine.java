@@ -118,7 +118,7 @@ public class WindTurbine extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Produces: Up to " + 2 * WindTurbineTileEntity.POWER_PER_LEVEL + "J/t");
-		tooltip.add(String.format("Useless above %1$frad/s", WindTurbineTileEntity.MAX_SPEED));
+		tooltip.add("Useless above " + WindTurbineTileEntity.MAX_SPEED + "rad/s");
 		tooltip.add("I: 200");
 		tooltip.add("Randomly changes power direction with the wind");
 		tooltip.add("Requires a view of the sky and a 5x5 empty space");
