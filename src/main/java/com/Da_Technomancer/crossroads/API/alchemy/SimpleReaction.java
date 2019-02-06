@@ -72,12 +72,12 @@ public class SimpleReaction implements IReaction{
 			return false;
 		}
 
-		for(ReagentStack reag : reagents){
-			reags.removeReagent(reag.getType(), maxReactions * reag.getAmount());
-		}
-
 		for(ReagentStack reag : products){
 			reags.addReagent(reag.getType(), maxReactions * reag.getAmount(), reags.getTempC());
+		}
+
+		for(ReagentStack reag : reagents){
+			reags.removeReagent(reag.getType(), maxReactions * reag.getAmount());
 		}
 
 		reags.setTemp(HeatUtil.toCelcius((reags.getTempK() * reags.getTotalQty() - heatChange * maxReactions) / reags.getTotalQty()));
