@@ -80,7 +80,11 @@ public class FluidTank extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
-			playerIn.openGui(Main.instance, GuiHandler.FLUID_TANK_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			if(FluidUtil.getFluidHandler(playerIn.getHeldItem(EnumHand.MAIN_HAND)) != null){
+				return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
+			}else{
+				playerIn.openGui(Main.instance, GuiHandler.FLUID_TANK_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			}
 		}
 		return true;
 	}

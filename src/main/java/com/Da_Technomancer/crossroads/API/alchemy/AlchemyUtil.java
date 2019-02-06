@@ -50,7 +50,7 @@ public class AlchemyUtil{
 			int qty;
 			if((qty = reags.getQty(flameReag.getKey())) != 0){
 				hasFire = true;
-				flameRange = Math.min(flameRange, flameReag.getValue().apply(qty));
+				flameRange = Math.max(flameRange, flameReag.getValue().apply(qty));
 			}
 		}
 
@@ -59,8 +59,8 @@ public class AlchemyUtil{
 			if(ModConfig.getConfigBool(ModConfig.phelEffect, false)){
 				EntityFlameCore coreFlame = new EntityFlameCore(world);
 				coreFlame.setPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-				world.spawnEntity(coreFlame);
 				coreFlame.setInitialValues(reags, flameRange);
+				world.spawnEntity(coreFlame);
 			}else{
 				//If flame effect is disabled in the config, just spawn a single small fire
 				IBlockState prev = world.getBlockState(pos);

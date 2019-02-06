@@ -182,7 +182,7 @@ public final class AlchemyCore{
 		//Bedrock decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(BEDROCK.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 4)}, REAGENTS.get(AQUA_REGIA.id()), 0D, 100D, 100D, false));
 		//Alchemical Crystal production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 2), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(CRYSTAL.id()), 3)}, REAGENTS.get(VANADIUM.id()), -300D, -40D, -35D, false));
+		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 2), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(CRYSTAL.id()), 3)}, REAGENTS.get(VANADIUM.id()), -300D, -10D, -35D, false));
 		//Philosopher's Stone creation
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 1), new ReagentStack(REAGENTS.get(SULFUR.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 1), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(PHILOSOPHER.id()), 4)}, REAGENTS.get(AQUA_REGIA.id()), -300D, -20D, -500D, false));
 		//Practitioner's Stone creation (destroys chamber if proportions are wrong.)

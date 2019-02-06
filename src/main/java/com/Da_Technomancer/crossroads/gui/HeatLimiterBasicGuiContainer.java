@@ -18,6 +18,8 @@ public class HeatLimiterBasicGuiContainer extends GuiContainer{
 	private ButtonGuiObject clearButton;
 	private ToggleButtonGuiObject multButton;
 	private ToggleButtonGuiObject divButton;
+	private ToggleButtonGuiObject plusButton;
+	private ToggleButtonGuiObject minusButton;
 	private ButtonGuiObject piButton;
 	private ButtonGuiObject eulerButton;
 
@@ -35,10 +37,12 @@ public class HeatLimiterBasicGuiContainer extends GuiContainer{
 		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 0, 300, 25, null, (Character key) -> key == '.' || Character.isDigit(key));
 		textBar.setText(doubleToString(te.getSetting()));
 		clearButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 20, 20, "C");
-		multButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 20, 20, 20, "⨉");
-		divButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 40, 20, 20, "÷");
-		piButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 60, 20, 20, "π");
-		eulerButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 80, 20, 20, "e");
+		plusButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 20, 20, 20, "+");
+		minusButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 40, 20, 20, "-");
+		multButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 60, 20, 20, "⨉");
+		divButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 80, 20, 20, "÷");
+		piButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 100, 20, 20, "π");
+		eulerButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 120, 20, 20, "e");
 	}
 
 	@Override
@@ -68,6 +72,8 @@ public class HeatLimiterBasicGuiContainer extends GuiContainer{
 		clearButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		multButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		divButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		plusButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		minusButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		piButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		eulerButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 	}
@@ -78,6 +84,8 @@ public class HeatLimiterBasicGuiContainer extends GuiContainer{
 		clearButton.drawFore(mouseX, mouseY, fontRenderer);
 		multButton.drawFore(mouseX, mouseY, fontRenderer);
 		divButton.drawFore(mouseX, mouseY, fontRenderer);
+		plusButton.drawFore(mouseX, mouseY, fontRenderer);
+		minusButton.drawFore(mouseX, mouseY, fontRenderer);
 		piButton.drawFore(mouseX, mouseY, fontRenderer);
 		eulerButton.drawFore(mouseX, mouseY, fontRenderer);
 	}
@@ -90,8 +98,10 @@ public class HeatLimiterBasicGuiContainer extends GuiContainer{
 				textBar.setText("0");
 			}else if(multButton.mouseClicked(x, y, button)){
 				if(multButton.isDepressed()){
-					if(divButton.isDepressed()){
+					if(divButton.isDepressed() || plusButton.isDepressed() || minusButton.isDepressed()){
 						divButton.setDepressed(false);
+						plusButton.setDepressed(false);
+						minusButton.setDepressed(false);
 						textBar.setText(Double.toString(prevValue));
 					}
 					try{
@@ -116,8 +126,10 @@ public class HeatLimiterBasicGuiContainer extends GuiContainer{
 				}
 			}else if(divButton.mouseClicked(x, y, button)){
 				if(divButton.isDepressed()){
-					if(multButton.isDepressed()){
+					if(multButton.isDepressed() || plusButton.isDepressed() || minusButton.isDepressed()){
 						multButton.setDepressed(false);
+						plusButton.setDepressed(false);
+						minusButton.setDepressed(false);
 						textBar.setText(Double.toString(prevValue));
 					}
 					try{
@@ -140,6 +152,61 @@ public class HeatLimiterBasicGuiContainer extends GuiContainer{
 					}
 
 				}
+			}else if(plusButton.mouseClicked(x, y, button)){
+				if(plusButton.isDepressed()){
+					if(multButton.isDepressed() || divButton.isDepressed() || minusButton.isDepressed()){
+						multButton.setDepressed(false);
+						divButton.setDepressed(false);
+						minusButton.setDepressed(false);
+						textBar.setText(Double.toString(prevValue));
+					}
+					try{
+						prevValue = Double.parseDouble(textBar.getText());
+					}catch(NumberFormatException e){
+						plusButton.setDepressed(false);
+					}
+					textBar.setText("");
+				}else{
+					try{
+						double value = Double.parseDouble(textBar.getText());
+						if(!Double.isFinite(value)){
+							textBar.setText(Double.toString(prevValue));
+						}else{
+							value = prevValue + value;
+							textBar.setText(Double.toString(value));
+						}
+					}catch(NumberFormatException e){
+						textBar.setText(Double.toString(prevValue));
+					}
+				}
+			}else if(minusButton.mouseClicked(x, y, button)){
+					if(minusButton.isDepressed()){
+						if(multButton.isDepressed() || divButton.isDepressed() || plusButton.isDepressed()){
+							multButton.setDepressed(false);
+							divButton.setDepressed(false);
+							plusButton.setDepressed(false);
+							textBar.setText(Double.toString(prevValue));
+						}
+						try{
+							prevValue = Double.parseDouble(textBar.getText());
+						}catch(NumberFormatException e){
+							minusButton.setDepressed(false);
+						}
+						textBar.setText("");
+					}else{
+						try{
+							double value = Double.parseDouble(textBar.getText());
+							if(!Double.isFinite(value)){
+								textBar.setText(Double.toString(prevValue));
+							}else{
+								value = Math.max(0, prevValue - value);
+								textBar.setText(Double.toString(value));
+							}
+						}catch(NumberFormatException e){
+							textBar.setText(Double.toString(prevValue));
+						}
+
+					}
 			}else if(piButton.mouseClicked(x, y, button)){
 				textBar.setText(Double.toString(Math.PI));
 			}else if(eulerButton.mouseClicked(x, y, button)){

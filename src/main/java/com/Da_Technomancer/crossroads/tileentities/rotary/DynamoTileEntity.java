@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,15 +17,6 @@ public class DynamoTileEntity extends ModuleTE{
 	private static final int CHARGE_CAPACITY = 100;
 
 	private static int efficiency = -1;
-	
-	/**
-	 * For client side rendering. 0 on server side.
-	 */
-	public double angle = 0;
-	/**
-	 * For client side rendering. 0 on server side.
-	 */
-	public double nextAngle = 0;
 
 	@Override
 	protected boolean useRotary(){
@@ -42,21 +32,6 @@ public class DynamoTileEntity extends ModuleTE{
 	public void update(){
 		super.update();
 
-		if(world.isRemote){
-			EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
-			TileEntity neighbor = world.getTileEntity(pos.offset(facing));
-			if(neighbor != null && neighbor.hasCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite())){
-				IAxleHandler handler = neighbor.getCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite());
-				angle = handler.getAngle();
-				nextAngle = handler.getNextAngle();
-			}else{
-				angle = 0;
-				nextAngle = 0;
-			}
-			
-			return;
-		}
-
 		if(efficiency < 0){
 			efficiency = ModConfig.getConfigInt(ModConfig.electPerJoule, false);
 		}
@@ -70,13 +45,18 @@ public class DynamoTileEntity extends ModuleTE{
 
 		EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
 		TileEntity neighbor = world.getTileEntity(pos.offset(facing.getOpposite()));
-		if(neighbor != null && neighbor.hasCapability(CapabilityEnergy.ENERGY, facing)){
-			IEnergyStorage handler = neighbor.getCapability(CapabilityEnergy.ENERGY, facing);
+		IEnergyStorage handler;
+		if(neighbor != null && (handler = neighbor.getCapability(CapabilityEnergy.ENERGY, facing)) != null){
 			if(handler.canReceive()){
 				energyHandler.setEnergy(energyHandler.getEnergyStored() - handler.receiveEnergy(energyHandler.getEnergyStored(), false));
 				markDirty();
 			}
 		}
+	}
+
+	@Override
+	protected AxleHandler createAxleHandler(){
+		return new AngleAxleHandler();
 	}
 
 	@Override

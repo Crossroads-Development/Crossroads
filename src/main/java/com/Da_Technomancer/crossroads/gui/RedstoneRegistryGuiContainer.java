@@ -30,6 +30,8 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 	private ButtonGuiObject add;
 
 	private ButtonGuiObject clearButton;
+	private ToggleButtonGuiObject plusButton;
+	private ToggleButtonGuiObject minusButton;
 	private ToggleButtonGuiObject multButton;
 	private ToggleButtonGuiObject divButton;
 	private ButtonGuiObject piButton;
@@ -74,10 +76,12 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		add = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 290, 10, 20, "+");
 
 		clearButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 10, 70, 20, "C");
-		multButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 30, 70, 20, "⨉");
-		divButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 50, 70, 20, "÷");
-		piButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 70, 70, 20, "π");
-		eulerButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 90, 70, 20, "e");
+		plusButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 30, 70, 20, "+");
+		minusButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 50, 70, 20, "-");
+		multButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 70, 70, 20, "⨉");
+		divButton = new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 90, 70, 20, "÷");
+		piButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 110, 70, 20, "π");
+		eulerButton = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 130, 70, 20, "e");
 	}
 
 	private static String doubleToString(double d){
@@ -113,6 +117,8 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		add.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 
 		clearButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		plusButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		minusButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		multButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		divButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		piButton.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
@@ -130,6 +136,8 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		add.drawFore(mouseX, mouseY, fontRenderer);
 
 		clearButton.drawFore(mouseX, mouseY, fontRenderer);
+		plusButton.drawFore(mouseX, mouseY, fontRenderer);
+		minusButton.drawFore(mouseX, mouseY, fontRenderer);
 		multButton.drawFore(mouseX, mouseY, fontRenderer);
 		divButton.drawFore(mouseX, mouseY, fontRenderer);
 		piButton.drawFore(mouseX, mouseY, fontRenderer);
@@ -199,7 +207,9 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 			setIndexValue();
 		}else if(multButton.mouseClicked(x, y, button)){
 			if(multButton.isDepressed()){
-				if(divButton.isDepressed()){
+				if(divButton.isDepressed() || plusButton.isDepressed() || minusButton.isDepressed()){
+					plusButton.setDepressed(false);
+					minusButton.setDepressed(false);
 					divButton.setDepressed(false);
 					textBar.setText(Double.toString(prevValue));
 				}
@@ -226,8 +236,10 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 			}
 		}else if(divButton.mouseClicked(x, y, button)){
 			if(divButton.isDepressed()){
-				if(multButton.isDepressed()){
+				if(multButton.isDepressed() || plusButton.isDepressed() || minusButton.isDepressed()){
 					multButton.setDepressed(false);
+					plusButton.setDepressed(false);
+					minusButton.setDepressed(false);
 					textBar.setText(Double.toString(prevValue));
 				}
 				try{
@@ -243,6 +255,64 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 						textBar.setText(Double.toString(prevValue));
 					}else{
 						value = prevValue / value;
+						textBar.setText(Double.toString(value));
+						setIndexValue();
+					}
+				}catch(NumberFormatException e){
+					textBar.setText(Double.toString(prevValue));
+				}
+
+			}
+		}else if(plusButton.mouseClicked(x, y, button)){
+			if(plusButton.isDepressed()){
+				if(multButton.isDepressed() || divButton.isDepressed() || minusButton.isDepressed()){
+					multButton.setDepressed(false);
+					divButton.setDepressed(false);
+					minusButton.setDepressed(false);
+					textBar.setText(Double.toString(prevValue));
+				}
+				try{
+					prevValue = Double.parseDouble(textBar.getText());
+				}catch(NumberFormatException e){
+					plusButton.setDepressed(false);
+				}
+				textBar.setText("");
+			}else{
+				try{
+					double value = Double.parseDouble(textBar.getText());
+					if(!Double.isFinite(value)){
+						textBar.setText(Double.toString(prevValue));
+					}else{
+						value = prevValue + value;
+						textBar.setText(Double.toString(value));
+						setIndexValue();
+					}
+				}catch(NumberFormatException e){
+					textBar.setText(Double.toString(prevValue));
+				}
+
+			}
+		}else if(minusButton.mouseClicked(x, y, button)){
+			if(minusButton.isDepressed()){
+				if(multButton.isDepressed() || plusButton.isDepressed() || divButton.isDepressed()){
+					multButton.setDepressed(false);
+					plusButton.setDepressed(false);
+					divButton.setDepressed(false);
+					textBar.setText(Double.toString(prevValue));
+				}
+				try{
+					prevValue = Double.parseDouble(textBar.getText());
+				}catch(NumberFormatException e){
+					minusButton.setDepressed(false);
+				}
+				textBar.setText("");
+			}else{
+				try{
+					double value = Double.parseDouble(textBar.getText());
+					if(!Double.isFinite(value)){
+						textBar.setText(Double.toString(prevValue));
+					}else{
+						value = Math.max(prevValue - value, 0);
 						textBar.setText(Double.toString(value));
 						setIndexValue();
 					}

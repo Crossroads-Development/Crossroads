@@ -67,7 +67,6 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 
 	@Override
 	public void destroyChamber(){
-		double temp = getTemp();
 		IBlockState state = world.getBlockState(pos);
 		world.setBlockState(pos, state.withProperty(Properties.ACTIVE, false).withProperty(Properties.CRYSTAL, false).withProperty(Properties.CONTAINER_TYPE, false));
 		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());

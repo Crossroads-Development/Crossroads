@@ -53,7 +53,7 @@ public class SimpleReaction implements IReaction{
 		
 		int content = chamb.getContent();
 
-		int maxReactions = amountChange <= 0 ? 200 : (chamb.getReactionCapacity() - content) / amountChange;
+		int maxReactions = amountChange <= 0 ? 200 : (chamb.getReactionCapacity() - content) / amountChange;//200 chosen arbitrarily as a moderately large positive number
 
 		for(ReagentStack reag : reagents){
 			if(reags.getQty(reag.getType()) <= 0){
@@ -62,10 +62,11 @@ public class SimpleReaction implements IReaction{
 			maxReactions = Math.min(maxReactions, reags.getQty(reag.getType()) / reag.getAmount());
 		}
 
-		//temperature change based limit
-		double allowedTempChange = heatChange < 0 ? maxTemp - chambTemp : minTemp - chambTemp;
-		
-		maxReactions = Math.min(maxReactions, (int) Math.max(1, -content * allowedTempChange / (heatChange)));
+		if(heatChange != 0){
+			//temperature change based limit
+			double allowedTempChange = heatChange < 0 ? maxTemp - chambTemp : minTemp - chambTemp;
+			maxReactions = Math.min(maxReactions, (int) Math.max(1, -content * allowedTempChange / (heatChange + amountChange * allowedTempChange)));
+		}
 
 		if(maxReactions <= 0){
 			return false;

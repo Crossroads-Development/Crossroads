@@ -154,8 +154,8 @@ public final class ModCrafting{
 		RecipeHolder.vFusionBeamRecipes.put(new BlockRecipePredicate(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK), false), new BeamTransmute(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS), 32));
 
 		//Phial
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.phialGlass, 2), "*", "*", "*", '*', "blockGlass"));
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.phialCrystal, 2), "*", "*", "*", '*', "gemAlcCryst"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.phialGlass, 1), "*", "*", '*', "blockGlass"));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.phialCrystal, 1), "*", "*", '*', "gemAlcCryst"));
 		//Florence Flask
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.florenceFlaskGlass, 1), " * ", "* *", "***", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.florenceFlaskCrystal, 1), " * ", "* *", "***", '*', "gemAlcCryst"));
@@ -473,6 +473,8 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.solidCavorite, 4), ModBlocks.cavorite));
 		//Linking tool
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.linkingTool, 1), EssentialsItems.wrench, "dustRedstone"));
+		//Aqua Regia
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.solidRegia, 4), ModItems.solidMuriatic, ModItems.solidMuriatic, ModItems.solidMuriatic, ModItems.solidFortis));
 	}
 
 	private static ItemStack getFilledHopper(){
