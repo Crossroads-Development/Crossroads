@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,6 +18,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -126,5 +128,21 @@ public final class MiscUtil{
 
 	public static String localize(String input){
 		return new TextComponentTranslation(input).getUnformattedComponentText();
+	}
+
+	@Nullable
+	public static Method reflectMethod(Class clazz, String textName, String rawName){
+		try{
+			for(Method m : clazz.getDeclaredMethods()){
+				if(textName.equals(m.getName()) || rawName.equals(m.getName())){
+					m.setAccessible(true);
+					return m;
+				}
+			}
+			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with the Forge method, so the above for loop is used instead.
+		}catch(Exception e){
+			Main.logger.catching(e);
+		}
+		return null;
 	}
 }

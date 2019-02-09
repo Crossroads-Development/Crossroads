@@ -112,8 +112,8 @@ public final class ModCrafting{
 				}
 				return false;
 			});
-			registerBoboItem(new ItemStack(ModItems.poisonVodka, 1), "Poison Vodka", new ItemRecipePredicate(ModItems.solidVitriol, 1), new ItemRecipePredicate(Items.POISONOUS_POTATO, 1), (Predicate<ItemStack>) (ItemStack stack) -> stack.getItem() instanceof Phial || stack.getItem() == Items.GLASS_BOTTLE && stack.getCount() == 1);
-			registerBoboItem(new ItemStack(ModItems.doublePoisonVodka, 1), "Double Poison Vodka", new ItemRecipePredicate(ModItems.solidVitriol, 1), new ItemRecipePredicate(Items.POISONOUS_POTATO, 1), new ItemRecipePredicate(ModItems.poisonVodka, 1));
+			registerBoboItem(new ItemStack(ModItems.poisonVodka, 1), "Poison Vodka", new ItemRecipePredicate(ModItems.solidVitriol, 0), new ItemRecipePredicate(Items.POISONOUS_POTATO, 0), (Predicate<ItemStack>) (ItemStack stack) -> stack.getItem() instanceof Phial || stack.getItem() == Items.GLASS_BOTTLE && stack.getCount() == 1);
+			registerBoboItem(new ItemStack(ModItems.doublePoisonVodka, 1), "Double Poison Vodka", new ItemRecipePredicate(ModItems.solidVitriol, 0), new ItemRecipePredicate(Items.POISONOUS_POTATO, 0), new ItemRecipePredicate(ModItems.poisonVodka, 0));
 		}
 
 
@@ -421,7 +421,7 @@ public final class ModCrafting{
 		//Redstone Fluid Splitter
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.fluidSplitter, 1), ModBlocks.basicFluidSplitter, "dustRedstone", "dustRedstone", "dustRedstone"));
 		//Redstone Keyboard
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), " & ", "&*&", " & ", '*', "ingotBronze", '&', "dustRedstone"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.redstoneKeyboard, 1), "&&&", "&*&", "&&&", '*', "ingotBronze", '&', "dustRedstone"));
 		//Reagent Tank and Reaction Chamber emptying
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reagentTankGlass, 1), new ItemStack(ModBlocks.reagentTankGlass, 1)));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.reactionChamberGlass, 1), new ItemStack(ModBlocks.reactionChamberGlass, 1)));

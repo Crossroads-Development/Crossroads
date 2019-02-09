@@ -76,8 +76,8 @@ public final class AlchemyCore{
 		REAGENTS.put(NITRIC_ACID.id(), new StaticReagent(NITRIC_ACID.id(), -40D, 80D, (EnumMatterPhase phase) -> Color.YELLOW, (stack) -> stack.getItem() == ModItems.solidFortis, () -> new ItemStack(ModItems.solidFortis), 0, ACID_EFFECT));// Salt that forms nitric acid, AKA aqua fortis, in water.
 		REAGENTS.put(SALT.id(), new StaticReagent(SALT.id(), 800D, 1400D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.LIQUID ? Color.ORANGE : Color.WHITE, MiscUtil.oreDictPred("dustSalt"), () -> MiscUtil.getOredictStack("dustSalt", 1), 0, new SaltAlchemyEffect()));// AKA table salt (sodium chloride).
 		REAGENTS.put(VANADIUM.id(), new StaticReagent(VANADIUM.id(), 690D, 1750D, (EnumMatterPhase phase) -> Color.YELLOW, (stack) -> stack.getItem() == ModItems.vanadiumOxide, () -> new ItemStack(ModItems.vanadiumOxide), 0, null));// Vanadium (V) oxide. This should decompose at the specified boiling point, but there isn't any real point to adding that.
-		REAGENTS.put(SULFUR_DIOXIDE.id(), new StaticReagent(SULFUR_DIOXIDE.id(), -72D, -10D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, null, 0, null));
-		REAGENTS.put(SULFUR_TRIOXIDE.id(), new StaticReagent(SULFUR_TRIOXIDE.id(), 20D, 40D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, null, 0, null));
+		REAGENTS.put(SULFUR_DIOXIDE.id(), new StaticReagent(SULFUR_DIOXIDE.id(), -72D, -10D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, null, 0, new DisinfectAlchemyEffect()));
+		//REAGENTS.put(SULFUR_TRIOXIDE.id(), new StaticReagent(SULFUR_TRIOXIDE.id(), 20D, 40D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, null, 0, null));
 		REAGENTS.put(SULFURIC_ACID.id(), new StaticReagent(SULFURIC_ACID.id(), 10D, 340D, (EnumMatterPhase phase) -> BROWN_COLOR, (stack) -> stack.getItem() == ModItems.solidVitriol, () -> new ItemStack(ModItems.solidVitriol, 1), 0, ACID_EFFECT));// Hydrogen Sulfate, salt that forms sulfuric acid, AKA Oil of Vitriol, in water.
 		REAGENTS.put(AQUA_REGIA.id(), new StaticReagent(AQUA_REGIA.id(), -40D, 200D, (EnumMatterPhase phase) -> Color.ORANGE, (stack) -> stack.getItem() == ModItems.solidRegia, () -> new ItemStack(ModItems.solidRegia), 0, new AquaRegiaAlchemyEffect()));// Shouldn't really be its own substance (actually a mixture of nitric and hydrochloric acid), but the code is greatly simplified by making it a separate substance.
 		REAGENTS.put(REDSTONE.id(), new StaticReagent(REDSTONE.id(), 580D, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.RED, MiscUtil.oreDictPred("dustRedstone"), () -> MiscUtil.getOredictStack("dustRedstone", 1), 0, null));// Mercury (II) sulfide.
@@ -139,9 +139,9 @@ public final class AlchemyCore{
 			}
 		});
 		//Sulfur Dioxide oxidation
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_TRIOXIDE.id()), 1)}, REAGENTS.get(VANADIUM.id()), 400D, 620D, -100D, false));
+		//REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_TRIOXIDE.id()), 1)}, REAGENTS.get(VANADIUM.id()), 400D, 620D, -100D, false));
 		//Sulfuric Acid production. 
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_TRIOXIDE.id()), 1), new ReagentStack(REAGENTS.get(WATER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFURIC_ACID.id()), 1)}, null, -300, Double.MAX_VALUE, -100D, false));
+		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1), new ReagentStack(REAGENTS.get(WATER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFURIC_ACID.id()), 1)}, REAGENTS.get(VANADIUM.id()), 400, 620D, -100D, false));
 		//Gunpowder combustion
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GUNPOWDER.id()), 3)}, new ReagentStack[] {}, null, 200D, Double.MAX_VALUE, 0D, false){
 			@Override
@@ -184,9 +184,9 @@ public final class AlchemyCore{
 		//Alchemical Crystal production
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 2), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(CRYSTAL.id()), 3)}, REAGENTS.get(VANADIUM.id()), -300D, -10D, -35D, false));
 		//Philosopher's Stone creation
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 1), new ReagentStack(REAGENTS.get(SULFUR.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 1), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(PHILOSOPHER.id()), 4)}, REAGENTS.get(AQUA_REGIA.id()), -300D, -20D, -500D, false));
+		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 1), new ReagentStack(REAGENTS.get(SULFUR.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 1), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(PHILOSOPHER.id()), 1)}, REAGENTS.get(AQUA_REGIA.id()), -300D, -15D, -500D, false));
 		//Practitioner's Stone creation (destroys chamber if proportions are wrong.)
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1), new ReagentStack(REAGENTS.get(ADAMANT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(PRACTITIONER.id()), 4)}, REAGENTS.get(AQUA_REGIA.id()), -300D, -20D, -5000D, false){
+		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1), new ReagentStack(REAGENTS.get(ADAMANT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(PRACTITIONER.id()), 1)}, REAGENTS.get(AQUA_REGIA.id()), -300D, -25D, -5000D, false){
 			@Override
 			public boolean performReaction(IReactionChamber chamb){
 				boolean performed = super.performReaction(chamb);

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
 import net.minecraft.client.gui.GuiNewChat;
 
@@ -15,25 +15,7 @@ public class SafeCallable{
 
 	public static final ArrayList<IVisualEffect> effectsToRender = new ArrayList<IVisualEffect>();
 	
-	protected static final Method printChatNoLog;
-
-	static{
-		Method holder = null;
-		try{
-			for(Method m : GuiNewChat.class.getDeclaredMethods()){
-				if("func_146237_a".equals(m.getName()) || "setChatLine".equals(m.getName())){
-					holder = m;
-					holder.setAccessible(true);
-					break;
-				}
-			}
-			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with this method, so the above for loop is used instead.
-			//holder = ReflectionHelper.findMethod(GuiNewChat.class, "setChatLine", "func_146237_a", ITextComponent.class, int.class, int.class, boolean.class);
-		}catch(Exception e){
-			Main.logger.catching(e);
-		}
-		printChatNoLog = holder;
-	}
+	protected static final Method printChatNoLog = MiscUtil.reflectMethod(GuiNewChat.class, "setChatLine", "func_146237_a");
 	
 	public static int playerTickCount = 1;
 }
