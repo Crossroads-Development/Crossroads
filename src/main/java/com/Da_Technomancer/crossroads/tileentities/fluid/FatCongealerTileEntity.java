@@ -2,14 +2,14 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
@@ -29,8 +29,8 @@ public class FatCongealerTileEntity extends InventoryTE{
 		return 1;
 	}
 
-	private static final double VALUE_PER_ENERGY = 1D;//TODO These numbers need to be rebalanced
-	private static final double SAT_UPPER_SPEED_BOUND = 2;
+	public static final double HUN_PER_SPD = 4D;
+	public static final double SAT_PER_SPD = 4D;
 
 	@Override
 	public void update(){
@@ -39,30 +39,33 @@ public class FatCongealerTileEntity extends InventoryTE{
 			return;
 		}
 
-		if(world.getTileEntity(pos.offset(EnumFacing.UP)) != null && world.getTileEntity(pos.offset(EnumFacing.UP)).hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN)){
-			IAxleHandler rot = world.getTileEntity(pos.offset(EnumFacing.UP)).getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN);
-			int value = Math.min((int) (Math.abs(rot.getMotionData()[1]) * VALUE_PER_ENERGY), 40);
-			if(value == 0 || fluids[0] == null){
+		TileEntity adjTE;
+		IAxleHandler topHandler;
+		IAxleHandler bottomHandler;
+
+		if((adjTE = world.getTileEntity(pos.offset(EnumFacing.UP))) != null && (topHandler = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN)) != null && (adjTE = world.getTileEntity(pos.down())) != null && (bottomHandler = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.UP)) != null){
+			int hun = (int) Math.min(Math.abs(topHandler.getMotionData()[0]) * HUN_PER_SPD, 20);
+			int sat = (int) Math.min(Math.abs(bottomHandler.getMotionData()[0]) * SAT_PER_SPD, 20);
+			if(hun == 0 && sat == 0 || fluids[0] == null){
 				return;
 			}
-			int sat = (int) (((double) value) * RotaryUtil.findEfficiency(rot.getMotionData()[0], 0, SAT_UPPER_SPEED_BOUND));
-			sat = Math.min(20, sat);
-			value = Math.min(value, 20 + sat);
-			if(value * EnergyConverters.FAT_PER_VALUE > fluids[0].amount){
+			int fluidUse = EnergyConverters.FAT_PER_VALUE * (hun + sat);
+			if(fluidUse > fluids[0].amount){
 				return;
 			}
-			rot.addEnergy(-1, false, false);
-			if((fluids[0].amount -= value * EnergyConverters.FAT_PER_VALUE) <= 0){
+			topHandler.addEnergy(-hun, false, false);
+			bottomHandler.addEnergy(-sat, false, false);
+			if((fluids[0].amount -= fluidUse) <= 0){
 				fluids[0] = null;
 			}
 			ItemStack stack = new ItemStack(ModItems.edibleBlob, 1, 0);
 			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setInteger("food", value - sat);
+			nbt.setInteger("food", hun);
 			nbt.setInteger("sat", sat);
 			stack.setTagCompound(nbt);
-			EntityItem ent = new EntityItem(world, pos.getX() + .5D, pos.getY() - .5D, pos.getZ() + .5D, stack);
-			ent.motionX = 0;
-			ent.motionZ = 0;
+			EntityItem ent = new EntityItem(world, pos.getX() + .5D, pos.getY() + .5D, pos.getZ() + .5D, stack);
+			ent.motionX = 2D * Math.random() - 1D;
+			ent.motionZ = 2D * Math.random() - 1D;
 			world.spawnEntity(ent);
 			markDirty();
 		}

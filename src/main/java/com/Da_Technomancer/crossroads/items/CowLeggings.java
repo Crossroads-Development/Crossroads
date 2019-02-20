@@ -24,7 +24,7 @@ public class CowLeggings extends ItemArmor{
 
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
-		if(stack.getItemDamage() != getMaxDamage(stack) && (player.getActivePotionEffect(MobEffects.POISON) != null || player.getActivePotionEffect(MobEffects.WITHER) != null || player.getActivePotionEffect(MobEffects.NAUSEA) != null || player.getActivePotionEffect(MobEffects.BLINDNESS) != null || player.getActivePotionEffect(MobEffects.SLOWNESS) != null || player.getActivePotionEffect(MobEffects.WEAKNESS) != null || player.getActivePotionEffect(MobEffects.HUNGER) != null)){
+		if(player.getActivePotionEffect(MobEffects.POISON) != null || player.getActivePotionEffect(MobEffects.WITHER) != null || player.getActivePotionEffect(MobEffects.NAUSEA) != null || player.getActivePotionEffect(MobEffects.BLINDNESS) != null || player.getActivePotionEffect(MobEffects.SLOWNESS) != null || player.getActivePotionEffect(MobEffects.WEAKNESS) != null || player.getActivePotionEffect(MobEffects.HUNGER) != null){
 			player.removePotionEffect(MobEffects.POISON);
 			player.removePotionEffect(MobEffects.WITHER);
 			player.removePotionEffect(MobEffects.NAUSEA);
@@ -33,7 +33,6 @@ public class CowLeggings extends ItemArmor{
 			player.removePotionEffect(MobEffects.WEAKNESS);
 			player.removePotionEffect(MobEffects.HUNGER);
 			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_COW_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
-			stack.damageItem(1, player);
 		}
 	}
 }

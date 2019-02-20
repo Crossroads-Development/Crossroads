@@ -71,11 +71,12 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 		if(controller == null){
 			dataManager.set(GRAV_PLATE_ANGLE, 0F);
 		}else{
-			float angle = dataManager.get(GRAV_PLATE_ANGLE);
-			double look = Math.toRadians(-controller.getRotationYawHead() + 90F);
+			float angle = -dataManager.get(GRAV_PLATE_ANGLE);
+			//Fun fact that isn't documented: The server and client have different definitions of angle in the x-z plane. This is weird and annoying, and a pain to work out. Vanilla server definition: Counter clockwise is positive, 0 degrees at -x axis. Vanilla client definition: Clockwise is positive, 0 degrees at +z axis. Someone stab the people at Mojang, please
+			double look = world.isRemote ? Math.toRadians(-controller.getRotationYawHead()) : Math.toRadians(controller.getRotationYawHead() - 90F);
 			motionY -= Math.cos(angle) * ACCEL;
 			motionX += Math.sin(angle) * Math.sin(look) * ACCEL;
-			motionZ -= Math.sin(angle) * Math.cos(look) * ACCEL;
+			motionZ += Math.sin(angle) * Math.cos(look) * ACCEL;
 			rotationYaw = -controller.getRotationYawHead() + 90F;
 			controller.velocityChanged = true;
 		}

@@ -253,12 +253,12 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 				beamer[1] = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, getAxis()), pos);
 			}
 
-			if(mag != null && mag.getVoid() != 0 && contents != 0){
+			if(mag != null && mag.getVoid() != 0 && contents != 0 && contents != 6){
 				setContents(0);
 				if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag, world)){
 					refreshBeam(dir == AxisDirection.POSITIVE);
 				}
-				lastRedstone = Math.max(beamer[0].getLastSent() == null ? 0 : ((double) beamer[0].getLastSent().getPower()), beamer[1].getLastSent() == null ? 0 : ((double) beamer[0].getLastSent().getPower()));
+				lastRedstone = Math.max(beamer[0].getLastSent() == null ? 0 : ((double) beamer[0].getLastSent().getPower()), beamer[1].getLastSent() == null ? 0 : ((double) beamer[1].getLastSent().getPower()));
 				markDirty();
 				return;
 			}

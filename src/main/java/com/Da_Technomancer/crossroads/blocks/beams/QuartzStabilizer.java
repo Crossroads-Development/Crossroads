@@ -59,7 +59,6 @@ public class QuartzStabilizer extends BeamBlock{
 		return false;
 	}
 
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){

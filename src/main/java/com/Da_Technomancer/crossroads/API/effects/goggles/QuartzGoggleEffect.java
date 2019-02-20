@@ -15,6 +15,6 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 			return;
 		}
 
-		OmniMeter.measure(chat, player, player.world, ray.getBlockPos(), ray.sideHit, (float) ray.hitVec.x, (float) ray.hitVec.y, (float) ray.hitVec.z);
+		OmniMeter.measure(chat, player, player.world, ray.getBlockPos(), ray.sideHit, (float) ray.hitVec.x - ray.getBlockPos().getX(), (float) ray.hitVec.y - ray.getBlockPos().getY(), (float) ray.hitVec.z - ray.getBlockPos().getZ());
 	}
 }

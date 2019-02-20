@@ -14,6 +14,8 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
+import java.awt.*;
+
 public class HeatingCrucibleRenderer extends TileEntitySpecialRenderer<HeatingCrucibleTileEntity>{
 
 	@Override
@@ -34,6 +36,8 @@ public class HeatingCrucibleRenderer extends TileEntitySpecialRenderer<HeatingCr
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
 		GlStateManager.disableLighting();
+		Color col = te.getCol();
+		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, 1);
 		GlStateManager.translate(x, y, z);
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();

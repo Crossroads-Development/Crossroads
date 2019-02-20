@@ -2,7 +2,12 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ClockworkStabilizerTileEntity;
+import net.minecraft.block.state.BlockFaceShape;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class ClockworkStabilizer extends BeamBlock{
@@ -15,4 +20,10 @@ public class ClockworkStabilizer extends BeamBlock{
 	public TileEntity createNewTileEntity(World worldIn, int meta){
 		return new ClockworkStabilizerTileEntity();
 	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return BlockFaceShape.UNDEFINED;
+	}
+
 }

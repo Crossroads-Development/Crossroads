@@ -23,10 +23,9 @@ public class SquidHelmet extends ItemArmor{
 
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
-		if(stack.getItemDamage() != getMaxDamage(stack) && player.getAir() <= 150){
+		if(player.getAir() <= 150){
 			player.setAir(300);
 			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_SQUID_DEATH, SoundCategory.PLAYERS, 2.5F, 1F);
-			stack.damageItem(1, player);
 		}
 	}
 }

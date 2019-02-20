@@ -61,6 +61,9 @@ public class FatCongealer extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+		tooltip.add("Creates food from liquid fat with custom stats determined by aattached gears");
+		tooltip.add("Food value is " + FatCongealerTileEntity.HUN_PER_SPD + " * top gear speed");
+		tooltip.add("Saturation value is " + FatCongealerTileEntity.SAT_PER_SPD + " * bottom gear speed");
 		tooltip.add("Welcome to McNotch's, can I take your order?");
 	}
 }

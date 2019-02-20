@@ -33,7 +33,7 @@ public class MillstoneTileEntity extends InventoryTE{
 		if(progress == REQUIRED){
 			return;
 		}
-		double used = 10D * RotaryUtil.findEfficiency(motData[0], 0.2D, 10D);
+		double used = 10D * RotaryUtil.findEfficiency(motData[0], 0.2D, 5D);
 		progress = Math.min(progress + used, REQUIRED);
 		axleHandler.addEnergy(-used, false, false);
 	}

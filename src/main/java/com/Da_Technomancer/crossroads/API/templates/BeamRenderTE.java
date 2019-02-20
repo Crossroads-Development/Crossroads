@@ -9,11 +9,9 @@ import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -39,12 +37,6 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 	protected int getLimit(){
 		return 64_000;
-	}
-
-	protected void overload(){
-		resetBeamer();
-		world.destroyBlock(pos, true);
-		world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 5F, (float) Math.random());
 	}
 
 	/**
@@ -94,8 +86,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 			BeamUnit out = shiftStorage();
 			activeCycle = BeamManager.cycleNumber;
 			if(out != null && out.getPower() > getLimit()){
-				overload();
-				return;
+				out = out.mult((float) getLimit() / (float) out.getPower(), true);
 			}
 			doEmit(out);
 		}

@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -264,6 +265,20 @@ public final class OreSetup{
 				GameRegistry.addSmelting(new ItemStack(ent.getValue().dust, 1), ingot, .7F);
 				RecipeHolder.fluidCoolingRecipes.put(ent.getValue().molten, Pair.of(EnergyConverters.INGOT_MB, Triple.of(ingot, 1500D, 250D)));
 			}
+		}
+
+		OreProfile iron = OreSetup.metalStages.get("Iron");
+		if(iron != null){
+			RecipeHolder.crucibleRecipes.put(new ItemRecipePredicate(Items.MINECART, 0), new FluidStack(iron.molten, 5 * EnergyConverters.INGOT_MB));
+			RecipeHolder.crucibleRecipes.put(new ItemRecipePredicate(Items.IRON_DOOR, 0), new FluidStack(iron.molten, 2 * EnergyConverters.INGOT_MB));
+			RecipeHolder.crucibleRecipes.put(new ItemRecipePredicate(Items.BUCKET, 0), new FluidStack(iron.molten, 3 * EnergyConverters.INGOT_MB));
+			RecipeHolder.crucibleRecipes.put(new ItemRecipePredicate(Blocks.IRON_TRAPDOOR, 0), new FluidStack(iron.molten, 4 * EnergyConverters.INGOT_MB));
+			RecipeHolder.crucibleRecipes.put(new ItemRecipePredicate(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, 0), new FluidStack(iron.molten, 2 * EnergyConverters.INGOT_MB));
+			RecipeHolder.crucibleRecipes.put(new ItemRecipePredicate(Blocks.CAULDRON, 0), new FluidStack(iron.molten, 7 * EnergyConverters.INGOT_MB));
+		}
+		OreProfile gold = OreSetup.metalStages.get("Gold");
+		if(gold != null){
+			RecipeHolder.crucibleRecipes.put(new ItemRecipePredicate(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, 0), new FluidStack(gold.molten, 2 * EnergyConverters.INGOT_MB));
 		}
 	}
 

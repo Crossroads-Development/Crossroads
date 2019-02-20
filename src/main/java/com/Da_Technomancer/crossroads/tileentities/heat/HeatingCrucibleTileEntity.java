@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 
 public class HeatingCrucibleTileEntity extends InventoryTE implements IStringReceiver{
 
@@ -46,8 +47,16 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 
 	@Override
 	public void receiveString(String context, String message, EntityPlayerMP sender){
-		if(world.isRemote && context.equals("text")){
-			activeText = message;
+		if(world.isRemote){
+			if(context.equals("text")){
+				activeText = message;
+			}else if(context.equals("col")){
+				try{
+					col = Integer.valueOf(message);
+				}catch(NumberFormatException e){
+					col = null;
+				}
+			}
 		}
 	}
 
@@ -55,9 +64,14 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	 * The texture to be displayed, if any. 
 	 */
 	private String activeText = "";
+	private Integer col = null;
 
 	public String getActiveTexture(){
 		return activeText;
+	}
+
+	public Color getCol(){
+		return activeText == null ? Color.WHITE : col == null ? Color.WHITE : new Color(col);
 	}
 
 	@Override
@@ -84,7 +98,9 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 				String goal = fluids[0].getFluid().getStill().toString();
 				if(!goal.equals(activeText)){
 					activeText = goal;
+					col = fluids[0].getFluid().getColor(fluids[0]);
 					ModPackets.network.sendToAllAround(new SendStringToClient("text", activeText, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					ModPackets.network.sendToAllAround(new SendStringToClient("col", Integer.toString(col), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}else if(!activeText.isEmpty()){
 				activeText = "";
@@ -125,6 +141,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		activeText = nbt.getString("act");
+		col = nbt.hasKey("col") ? nbt.getInteger("col") : null;
 		progress = nbt.getInteger("prog");
 	}
 
@@ -133,6 +150,9 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		super.writeToNBT(nbt);
 		if(activeText.length() != 0){
 			nbt.setString("act", activeText);
+			if(col != null){
+				nbt.setInteger("col", col);
+			}
 		}
 		nbt.setInteger("prog", progress);
 
@@ -144,6 +164,9 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		NBTTagCompound nbt = super.getUpdateTag();
 		if(activeText.length() != 0){
 			nbt.setString("act", activeText);
+			if(col != null){
+				nbt.setInteger("col", col);
+			}
 		}
 		return nbt;
 	}

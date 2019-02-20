@@ -288,9 +288,8 @@ public final class EventHandlerCommon{
 			EntityLivingBase ent = e.getEntityLiving();
 
 			ItemStack boots = ent.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-			if(boots.getItem() == ModItems.chickenBoots && boots.getItemDamage() != ModItems.chickenBoots.getMaxDamage(boots)){
+			if(boots.getItem() == ModItems.chickenBoots){
 				e.setCanceled(true);
-				boots.damageItem(Math.min((int) e.getAmount(), ModItems.chickenBoots.getMaxDamage(boots) - boots.getItemDamage()), ent);
 				ent.getEntityWorld().playSound(null, ent.posX, ent.posY, ent.posZ, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 				return;
 			}

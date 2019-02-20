@@ -43,7 +43,7 @@ public class ModuleGoggles extends ItemArmor{
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
 		if(!world.isRemote && stack.hasTagCompound()){
-			ArrayList<String> chat = new ArrayList<String>();
+			ArrayList<String> chat = new ArrayList<>();
 			RayTraceResult ray = MiscUtil.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(stack.getTagCompound().getBoolean(lens.name())){

@@ -66,6 +66,11 @@ public final class ModCrafting{
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("blockRedstone"), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("cobblestone"), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("stone"),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreQuartz"),  new ItemStack[] {new ItemStack(Items.QUARTZ, 2)});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreDiamond"),  new ItemStack[] {new ItemStack(Items.DIAMOND, 2)});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreCoal"),  new ItemStack[] {new ItemStack(Items.COAL, 2)});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreRedstone"),  new ItemStack[] {new ItemStack(Items.REDSTONE, 10)});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreLapis"),  new ItemStack[] {new ItemStack(Items.DYE, 10, EnumDyeColor.BLUE.getDyeDamage())});
 
 		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Items.GUNPOWDER)));
 		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage())));
@@ -85,7 +90,6 @@ public final class ModCrafting{
 		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Blocks.SNOW, 0), 400);
 		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Blocks.ICE, 0), 1600);
 		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Blocks.PACKED_ICE, 0), 1600);
-
 
 		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.LAVA, Pair.of(1000, Triple.of(new ItemStack(Blocks.OBSIDIAN, 1), 2500D, 1500D)));
 		RecipeHolder.fluidCoolingRecipes.put(BlockSteam.getSteam(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE, 1), 0D, 15D + EnergyConverters.degPerSteamBucket(false))));
@@ -118,14 +122,15 @@ public final class ModCrafting{
 
 
 
-		RecipeHolder.beamExtractRecipes.put(Items.REDSTONE, new BeamUnit(12, 16, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(ModItems.dustSalt, new BeamUnit(0, 12, 16, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.COAL, new BeamUnit(16, 12, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.REDSTONE, new BeamUnit(18, 24, 0, 0));
+		RecipeHolder.beamExtractRecipes.put(ModItems.dustSalt, new BeamUnit(0, 18, 24, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.COAL, new BeamUnit(24, 18, 0, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.GLOWSTONE_DUST, new BeamUnit(4, 4, 4, 0));
 		RecipeHolder.beamExtractRecipes.put(ModItems.sulfur, new BeamUnit(32, 0, 0, 0));
 		RecipeHolder.beamExtractRecipes.put(ModItems.solidQuicksilver, new BeamUnit(0, 32, 0, 0));
 		RecipeHolder.beamExtractRecipes.put(ModItems.wasteSalt, new BeamUnit(0, 0, 32, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.ENDER_PEARL, new BeamUnit(32, 0, 32, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.DRAGON_BREATH, new BeamUnit(64, 0, 64, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.BLAZE_POWDER, new BeamUnit(32, 16, 0, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.GUNPOWDER, new BeamUnit(24, 0, 0, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.SLIME_BALL, new BeamUnit(0, 24, 0, 0));

@@ -69,11 +69,6 @@ public class TeslaCoil extends BlockContainer{
 	}
 
 	@Override
-	public boolean canPlaceBlockAt(World worldIn, BlockPos pos){
-		return super.canPlaceBlockAt(worldIn, pos) && super.canPlaceBlockAt(worldIn, pos.offset(EnumFacing.UP));
-	}
-
-	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		neighborChanged(state, world, pos, this, pos);
 	}

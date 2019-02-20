@@ -24,8 +24,8 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	 * 1: Out
 	 * 2: In
 	 */
-	private Integer[] connectMode = null;
-	private final boolean[] hasMatch = new boolean[6];
+	protected Integer[] connectMode = null;
+	protected final boolean[] hasMatch = new boolean[6];
 
 	public AlchemicalTubeTileEntity(){
 		super();
@@ -47,7 +47,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 		return connectMode;
 	}
 
-	private void init(){
+	protected void init(){
 		if(connectMode == null){
 			connectMode = world.isRemote ? new Integer[] {0, 0, 0, 0, 0, 0} : new Integer[] {1, 1, 1, 1, 1, 1};
 		}
@@ -74,6 +74,10 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 		super.update();
 	}
 
+	protected boolean isCompatible(EnumContainerType otherType){
+		return otherType == EnumContainerType.NONE || (otherType == EnumContainerType.GLASS) == glass;
+	}
+
 	@Override
 	protected void performTransfer(){
 		init();
@@ -83,31 +87,23 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 			
 			if(connectMode[i] != 0){
 				te = world.getTileEntity(pos.offset(side));
-				if(te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
+				IChemicalHandler otherHandler;
+				if(te != null && (otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())) != null && isCompatible(otherHandler.getChannel(side.getOpposite()))){
+					if(!hasMatch[i]){
+						hasMatch[i] = true;
+						markSideChanged(i);
+					}
+
+					if(contents.getTotalQty() != 0 && connectMode[i] == 1){
+						if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
+							correctReag();
+							markDirty();
+						}
+					}
+				}else{
 					if(hasMatch[i]){
 						hasMatch[i] = false;
 						markSideChanged(i);
-					}
-					continue;
-				}
-
-				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
-				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
-					if(hasMatch[i]){
-						hasMatch[i] = false;
-						markSideChanged(i);
-					}
-					continue;
-				}
-
-				if(!hasMatch[i]){
-					hasMatch[i] = true;
-					markSideChanged(i);
-				}else if(contents.getTotalQty() != 0 && connectMode[i] == 1){
-					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
-						correctReag();
-						markDirty();
 					}
 				}
 			}

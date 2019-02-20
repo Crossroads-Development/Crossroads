@@ -3,6 +3,6 @@
 	"textures": {
 		"side": "crossroads:blocks/netherrack_pipe_framed_tin",
 		"top": "crossroads:blocks/tin_axle",
-		"bottom": "crossroads:blocks/tin_chute"
+		"bottom": "crossroads:blocks/tin_axle"
 	}
 }
