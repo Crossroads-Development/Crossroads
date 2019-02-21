@@ -51,6 +51,9 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	
 	public void setIndex(int index){
 		this.index = Math.min(index, output.length - 1);
+		if(!world.isRemote){
+			world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneRegistry, false);
+		}
 	}
 	
 	public void activate(double power){

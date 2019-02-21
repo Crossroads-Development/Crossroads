@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBeamItemToServer;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +29,7 @@ public abstract class BeamUsingItem extends Item{
 	
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
-		if(player.world.isRemote && getMaxItemUseDuration(stack) == count){
+		if(player.world.isRemote && player == Minecraft.getMinecraft().player && getMaxItemUseDuration(stack) == count){
 			EnumBeamAlignments elemChanged = null;
 			if(Keys.controlEnergy.isKeyDown()){
 				elemChanged = EnumBeamAlignments.ENERGY;

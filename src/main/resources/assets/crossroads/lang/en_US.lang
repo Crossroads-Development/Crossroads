@@ -93,6 +93,7 @@ tile.lens_frame.name=Lens Frame
 tile.block_pure_quartz.name=Block of Pure Quartz
 tile.block_luminescent_quartz.name=Block of Luminescent Quartz
 tile.beam_siphon.name=Beam Siphon
+tile.beam_splitter.name=Beam Splitter
 tile.beam_redirector.name=Beam Redirector
 item.invis_item.name=Invisible Item
 tile.color_chart.name=Color Chart

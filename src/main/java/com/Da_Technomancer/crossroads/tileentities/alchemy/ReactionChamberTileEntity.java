@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraftforge.common.capabilities.Capability;
@@ -86,6 +87,33 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		return new EnumTransferMode[] {EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH};
+	}
+
+	@Override
+	protected void performTransfer(){
+		EnumTransferMode[] modes = getModes();
+		for(int i = 0; i < 6; i++){
+			if(modes[i].isOutput()){
+				EnumFacing side = EnumFacing.byIndex(i);
+				TileEntity te = world.getTileEntity(pos.offset(side));
+				if(contents.getTotalQty() <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
+					continue;
+				}
+
+				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
+				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
+				if(otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
+					continue;
+				}
+
+				if(contents.getTotalQty() != 0){
+					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
+						correctReag();
+						markDirty();
+					}
+				}
+			}
+		}
 	}
 
 	@Override

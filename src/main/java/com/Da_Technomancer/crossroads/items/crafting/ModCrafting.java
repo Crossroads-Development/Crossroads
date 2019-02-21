@@ -71,6 +71,7 @@ public final class ModCrafting{
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreCoal"),  new ItemStack[] {new ItemStack(Items.COAL, 2)});
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreRedstone"),  new ItemStack[] {new ItemStack(Items.REDSTONE, 10)});
 		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreLapis"),  new ItemStack[] {new ItemStack(Items.DYE, 10, EnumDyeColor.BLUE.getDyeDamage())});
+		RecipeHolder.millRecipes.put(new OreDictCraftingStack("blockQuartz"),  new ItemStack[] {new ItemStack(Items.QUARTZ, 4)});
 
 		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Items.GUNPOWDER)));
 		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage())));
@@ -406,9 +407,11 @@ public final class ModCrafting{
 		//Lens Frame
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.lensFrame, 1), "***", "*&*", "***", '*', "stone", '&', ModItems.pureQuartz));
 		//Beam Redirector
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beamRedirector, 1), "*L*", "*R*", "*L*", '*', ModItems.pureQuartz, 'L', ModItems.luminescentQuartz, 'R', "dustRedstone"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beamRedirector, 1), "LRL", "***", "LRL", '*', ModItems.pureQuartz, 'L', ModItems.luminescentQuartz, 'R', "dustRedstone"));
 		//Beam Siphon
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beamSiphon, 1), "*L*", "*A*", "*L*", '*', ModItems.pureQuartz, 'L', ModItems.luminescentQuartz, 'A', ModItems.lensArray));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beamSiphon, 1), "L L", "*A*", "L L", '*', ModItems.pureQuartz, 'L', ModItems.luminescentQuartz, 'A', ModItems.lensArray));
+		//Beam Splitter
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.beamSplitter, 1), "LRL", "*A*", "LRL", '*', ModItems.pureQuartz, 'L', ModItems.luminescentQuartz, 'A', ModItems.lensArray, 'R', "dustRedstone"));
 		//Color Chart
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
 		//Light Cluster

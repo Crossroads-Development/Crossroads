@@ -59,6 +59,7 @@ public class ModBlocks{
 	public static BasicBlock blockPureQuartz;
 	public static BasicBlock blockLuminescentQuartz;
 	public static BeamSiphon beamSiphon;
+	public static BeamSplitter beamSplitter;
 	public static ColorChart colorChart;
 	public static LightCluster lightCluster;
 	public static CrystalMasterAxis crystalMasterAxis;
@@ -218,6 +219,7 @@ public class ModBlocks{
 		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 4, "blockQuartz");
 		blockLuminescentQuartz = (BasicBlock) new BasicBlock("block_luminescent_quartz", Material.ROCK, 4, "blockQuartz").setLightLevel(1F);
 		beamSiphon = new BeamSiphon();
+		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
 		lightCluster = new LightCluster();
 		crystalMasterAxis = new CrystalMasterAxis();

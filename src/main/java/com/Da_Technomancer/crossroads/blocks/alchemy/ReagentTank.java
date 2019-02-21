@@ -76,7 +76,8 @@ public class ReagentTank extends BlockContainer{
 				tooltip.add(new ReagentStack(AlchemyCore.REAGENTS.get(key.substring(4)), qty).toString());
 			}
 
-			tooltip.add("Temp: " + HeatUtil.toCelcius(MiscUtil.betterRound(stack.getTagCompound().getDouble("heat") / am, 3)));
+			double temp = MiscUtil.betterRound(stack.getTagCompound().getDouble("he") / am, 3);
+			tooltip.add("Temp: " + HeatUtil.toCelcius(temp) + "°C (" + temp + "K)");
 		}
 	}
 

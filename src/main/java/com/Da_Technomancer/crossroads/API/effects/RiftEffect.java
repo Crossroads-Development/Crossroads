@@ -58,6 +58,7 @@ public class RiftEffect implements IEffect{
 					ent.setPosition(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
 					Event.Result r = ForgeEventFactory.canEntitySpawn(ent, worldServ, pos.getX(), pos.getY(), pos.getZ(), null);
 					if(r == Event.Result.ALLOW || r == Event.Result.DEFAULT){
+						ent.onInitialSpawn(worldServ.getDifficultyForLocation(pos), null);//Gives mobs weapons/armor, makes slimes not have glitched health, and other essential things
 						worldServ.spawnEntity(ent);
 					}
 				}catch(Exception e){

@@ -46,6 +46,7 @@ public class ModTileEntity{
 		register(BeamReflectorTileEntity.class, "beam_reflector");
 		register(LensFrameTileEntity.class, "lens_frame");
 		register(BeamSiphonTileEntity.class, "beam_siphon");
+		register(BeamSplitterTileEntity.class, "beam_splitter");
 		register(CrystalMasterAxisTileEntity.class, "crystal_master_axis");
 		register(RatiatorTileEntity.class, "ratiator");
 		register(BeaconHarnessTileEntity.class, "beacon_harness");
