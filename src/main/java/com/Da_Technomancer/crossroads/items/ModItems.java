@@ -106,6 +106,7 @@ public final class ModItems{
 	public static TeslaRay teslaRay;
 	public static Slag slag;
 	public static LinkingTool linkingTool;
+	public static DampingPowder dampingPowder;
 
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
@@ -181,6 +182,7 @@ public final class ModItems{
 		teslaRay = new TeslaRay();
 		slag = new Slag();
 		linkingTool = new LinkingTool();
+		dampingPowder = new DampingPowder();
 	}
 
 	@SideOnly(Side.CLIENT)

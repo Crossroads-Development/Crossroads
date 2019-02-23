@@ -273,6 +273,7 @@ tile.flux_stabilizer_mechanical.name=Mechanical Flux Stabilizer
 tile.flux_stabilizer_crystal_mechanical.name=Reinforced Mechanical Flux Stabilizer
 tile.flux_void.name=Creative Flux Stabilizer
 tile.light_cluster.name=Light Cluster
+item.damping_powder.name=Damping Powder
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=Raw %1$s Grit

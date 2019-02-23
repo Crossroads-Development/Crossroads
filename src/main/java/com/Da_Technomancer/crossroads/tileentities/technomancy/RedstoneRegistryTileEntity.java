@@ -51,7 +51,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	
 	public void setIndex(int index){
 		this.index = Math.min(index, output.length - 1);
-		if(!world.isRemote){
+		if(world != null && !world.isRemote){
 			world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneRegistry, false);
 		}
 	}
@@ -76,7 +76,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 		for(int i = 0; i < output.length; i++){
 			output[i] = nbt.getDouble("output_" + i);
 		}
-		setIndex(nbt.getInteger("index"));
+		index = Math.min(nbt.getInteger("index"), output.length - 1);
 	}
 
 	@Override

@@ -71,6 +71,7 @@ public class Shell extends AbstractGlassware{
 		return crystal;
 	}
 
+	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn){
 		ItemStack held = playerIn.getHeldItem(handIn);
 		ReagentMap contents = getReagants(held);

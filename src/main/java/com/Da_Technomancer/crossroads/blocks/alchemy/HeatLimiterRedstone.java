@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterRedstoneTileEntity;
@@ -36,6 +37,7 @@ public class HeatLimiterRedstone extends BlockContainer{
 		setSoundType(SoundType.METAL);
 		ModBlocks.toRegister.add(this);
 		ModBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().withProperty(Properties.ACTIVE, false));
 	}
 
 	@Override
@@ -50,18 +52,20 @@ public class HeatLimiterRedstone extends BlockContainer{
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(EssentialsProperties.FACING).getIndex();
+		return state.getValue(EssentialsProperties.FACING).getIndex() | (state.getValue(Properties.ACTIVE) ? 8 : 0);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta & 7));
+		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta & 7)).withProperty(Properties.ACTIVE, (meta & 8) != 0);
 	}
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
-			if(!worldIn.isRemote){
+			if(playerIn.isSneaking()){
+				worldIn.setBlockState(pos, state.cycleProperty(Properties.ACTIVE));
+			}else{
 				worldIn.setBlockState(pos, state.cycleProperty(EssentialsProperties.FACING));
 			}
 			return true;
@@ -71,7 +75,7 @@ public class HeatLimiterRedstone extends BlockContainer{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.FACING);
+		return new BlockStateContainer(this, EssentialsProperties.FACING, Properties.ACTIVE);
 	}
 
 	@Override
@@ -83,6 +87,7 @@ public class HeatLimiterRedstone extends BlockContainer{
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
 		tooltip.add("Connects two heat cables");
 		tooltip.add("Only allows heat to flow until the front reaches the target temperature");
+		tooltip.add("In red mode, stops when hotter than target; In blue mode, stops when colder than target");
 		tooltip.add("Target temperature in Kelvin set via Ratiator signal");
 	}
 }

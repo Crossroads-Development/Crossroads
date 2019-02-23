@@ -3,10 +3,10 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -66,7 +66,15 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickable,
 			heatHandlerIn.init();
 		}
 
-		double goalTemp = HeatUtil.toCelcius(setting);
+		double goalTemp = HeatUtil.toCelcius(getSetting());
+		boolean blueMode = world.getBlockState(pos).getValue(Properties.ACTIVE);
+
+		if(blueMode){
+			heatIn = -heatIn;
+			heatOut = -heatOut;
+			goalTemp = -goalTemp;
+		}
+
 		if(heatOut > goalTemp){
 			if(heatIn < goalTemp){
 				double toTrans = goalTemp - heatOut;
@@ -95,6 +103,11 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickable,
 			heatOut += toTrans;
 			heatIn -= toTrans;
 			markDirty();
+		}
+
+		if(blueMode){
+			heatIn = -heatIn;
+			heatOut = -heatOut;
 		}
 	}
 
