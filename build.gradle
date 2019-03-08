@@ -8,7 +8,7 @@ buildscript {
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.13.0-2.0.0 BETA 35-Blue mode"
+version = "1.13.0-2.0.0 BETA 36-Locking crash"
 group = "com.Da_Technomancer.crossroads"
 archivesBaseName = "crossroads"
 

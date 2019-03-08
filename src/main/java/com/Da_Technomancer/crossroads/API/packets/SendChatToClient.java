@@ -11,7 +11,6 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.lang.reflect.InvocationTargetException;
 
-@SuppressWarnings("serial")
 public class SendChatToClient extends Message<SendChatToClient>{
 
 	public SendChatToClient(){
@@ -29,7 +28,7 @@ public class SendChatToClient extends Message<SendChatToClient>{
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
+			Main.logger.error("MessageToClient received on wrong side:" + context.side);
 			return null;
 		}
 

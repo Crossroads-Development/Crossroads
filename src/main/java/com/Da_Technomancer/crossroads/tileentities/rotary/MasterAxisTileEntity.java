@@ -207,14 +207,14 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			locked = false;
 			EnumFacing dir = getFacing();
 			TileEntity te = world.getTileEntity(pos.offset(dir));
-			if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())){
+			IAxleHandler axleHandler;
+			if(te != null && (axleHandler = te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())) != null){
 				byte keyNew;
 				do {
 					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
-
-				te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite()).propogate(this, key, 1, 0, false);
+				axleHandler.propogate(this, key, 1, 0, false);
 			}
 
 			if(!memberCopy.containsAll(rotaryMembers)){
@@ -249,6 +249,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 					gear.syncAngle();
 				}
 			}
+			rotaryMembers.clear();
+			memberCopy.clear();
 		}
 
 		@Override

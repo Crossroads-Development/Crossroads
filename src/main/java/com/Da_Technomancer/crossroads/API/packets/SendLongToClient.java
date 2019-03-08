@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-@SuppressWarnings("serial")
 public class SendLongToClient extends Message<SendLongToClient>{
 
 	public SendLongToClient(){
@@ -36,6 +35,7 @@ public class SendLongToClient extends Message<SendLongToClient>{
 		Minecraft minecraft = Minecraft.getMinecraft();
 		final WorldClient worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
+			@Override
 			public void run(){
 				processMessage(worldClient, identifier, message, pos);
 			}
