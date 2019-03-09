@@ -32,7 +32,7 @@ public class RenderFlyingMachine extends Render<EntityFlyingMachine>{
 		GlStateManager.pushAttrib();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x, y, z);
-		GlStateManager.rotate(entityYaw + 90, 0, 1, 0);
+		GlStateManager.rotate(-entityYaw, 0, 1, 0);
 
 		bindEntityTexture(entity);
 

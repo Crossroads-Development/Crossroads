@@ -168,7 +168,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			Minecraft.getMinecraft().renderEngine.bindTexture(ModelGearOctagon.RESOURCE);
 			GlStateManager.color(1, 0, 0);
 
-			float radius = 1F / 16F;
+			float radius = 2F / 16F;
 
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(-radius, top + 0.001F, radius).tex(.5F - radius, .5F + radius).endVertex();
