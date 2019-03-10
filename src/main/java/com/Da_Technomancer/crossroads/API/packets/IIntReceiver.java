@@ -11,6 +11,6 @@ public interface IIntReceiver{
 	 * @param message The actual value being sent. 
 	 * @param sendingPlayer The player who sent the packet. WILL BE NULL IF RECEIVED ON CLIENT SIDE. May also be null if received on server side. 
 	 */
-	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer);
+	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer);
 
 }

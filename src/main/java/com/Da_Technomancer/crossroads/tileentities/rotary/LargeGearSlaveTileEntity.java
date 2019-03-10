@@ -45,12 +45,12 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 		}
 		masterPos = masPos;
 		long longPos = masterPos.toLong();
-		SendIntToClient msg = new SendIntToClient((int) (longPos >> 32), (int) longPos, pos);
+		SendIntToClient msg = new SendIntToClient((byte) (int) (longPos >> 32), (int) longPos, pos);
 		ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	@Override
-	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
 		//A BlockPos can be converted to and from a long, AKA 2 ints. The identifier is the first int, the message is the second.
 		long longPos = ((long) identifier << 32L) | (message & 0xFFFFFFFFL);
 		masterPos = BlockPos.fromLong(longPos);

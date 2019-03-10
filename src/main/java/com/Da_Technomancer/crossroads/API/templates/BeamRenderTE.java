@@ -55,7 +55,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	protected void refreshBeam(int index){
 		int packet = beamer == null || beamer[index] == null ? 0 : beamer[index].genPacket();
 		beamPackets[index] = packet;
-		ModPackets.network.sendToAllAround(new SendIntToClient(index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient((byte) index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		if(beamer != null && beamer[index] != null && beamer[index].getLastSent() != null){
 			prevMag[index] = beamer[index].getLastSent();
 		}
@@ -109,7 +109,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	protected abstract void doEmit(@Nullable BeamUnit toEmit);
 
 	@Override
-	public void receiveInt(int identifier, int message, EntityPlayerMP player){
+	public void receiveInt(byte identifier, int message, EntityPlayerMP player){
 		if(identifier < 6 && identifier >= 0){
 			beamPackets[identifier] = message;
 		}

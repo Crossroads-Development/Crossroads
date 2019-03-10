@@ -333,5 +333,7 @@ public class ModBlocks{
 		glasswareHolder.initModel();
 		chargingStand.initModel();
 		atmosCharger.initModel();
+		reagentPumpGlass.initModel();
+		reagentPumpCrystal.initModel();
 	}
 }

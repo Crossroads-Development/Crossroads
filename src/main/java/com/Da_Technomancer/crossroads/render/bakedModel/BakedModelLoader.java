@@ -17,6 +17,7 @@ public class BakedModelLoader implements ICustomModelLoader{
 		MODEL_MAP.put(PrototypeBakedModel.BAKED_MODEL, new PrototypeModel());
 		MODEL_MAP.put(AdvConduitBakedModel.BAKED_MODEL, new AdvConduitModel());
 		MODEL_MAP.put(AtmosChargerBakedModel.BAKED_MODEL, new AtmosChargerModel());
+		MODEL_MAP.put(ReagentPumpBakedModel.BAKED_MODEL, new ReagentPumpModel());
 	}
 
 	@Override

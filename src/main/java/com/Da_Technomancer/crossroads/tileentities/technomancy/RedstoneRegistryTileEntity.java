@@ -101,7 +101,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	}
 	
 	@Override
-	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
 		if(identifier == 0){
 			setIndex(message);
 		}

@@ -1,6 +1,0 @@
-{
-	"variants": {
-		"active=false": { "model": "crossroads:reagent_pump_glass", "x": 180  },
-		"active=true": { "model": "crossroads:reagent_pump_glass"}
-	}
-}

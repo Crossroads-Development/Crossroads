@@ -93,7 +93,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	public void setContents(int id){
 		contents = id;
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendIntToClient(2, contents, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient((byte) 2, contents, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	public int getContents(){
@@ -110,7 +110,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 			refreshBeam(false);
 		}
 		axis = null;
-		ModPackets.network.sendToAllAround(new SendIntToClient(3, 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient((byte) 3, 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	private void refreshBeam(boolean positive){
@@ -121,7 +121,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		}else{
 			packetNeg = packet;
 		}
-		ModPackets.network.sendToAllAround(new SendIntToClient(index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient((byte) index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		if(beamer[index].getLastSent() != null){
 			prevMag = beamer[index].getLastSent();
 		}
@@ -150,7 +150,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	private BeamManager[] beamer = new BeamManager[2];//0: neg; 1: pos
 
 	@Override
-	public void receiveInt(int identifier, int message, EntityPlayerMP player){
+	public void receiveInt(byte identifier, int message, EntityPlayerMP player){
 		switch(identifier){
 			case 0:
 				packetNeg = message;

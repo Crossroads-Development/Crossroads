@@ -65,7 +65,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		for(EnumFacing dir : EnumFacing.VALUES){
 			ModBlocks.prototype.neighborChanged(null, world, pos, ModBlocks.prototype, pos.offset(dir));
 		}
-		ModPackets.network.sendToAllAround(new SendIntToClient(6, orient, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient((byte) 6, orient, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		refresh();
 		markDirty();
 	}
@@ -275,7 +275,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	private int[] beamPackets = new int[6];
 
 	@Override
-	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
 		if(identifier < 6 && identifier >= 0){
 			beamPackets[identifier] = message;
 		}
@@ -341,7 +341,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		public void setMagic(@Nullable BeamUnit mag){
 			if(beam.emit(mag, world)){
 				beamPackets[side] = beam.genPacket();
-				ModPackets.network.sendToAllAround(new SendIntToClient(index, beam.genPacket(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient((byte) index, beam.genPacket(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				if(beam.getLastSent() != null){
 					prevMag = beam.getLastSent();
 				}

@@ -71,7 +71,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ILinkTE, IF
 	public void trigger(){
 		if(!running && !invalid(null, true, null)){
 			running = true;
-			ModPackets.network.sendToAllAround(new SendIntToClient(0, BeamManager.toPacket(new BeamUnit(1, 1, 1, 0), 2), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, BeamManager.toPacket(new BeamUnit(1, 1, 1, 0), 2), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 
@@ -175,7 +175,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements ILinkTE, IF
 			Color col = Color.getHSBColor(((float) cycles) / 120F, 1, 1);
 			if(invalid(col, cycles < 0 || cycles % 40 < 8, toEmit)){
 				running = false;
-				ModPackets.network.sendToAllAround(new SendIntToClient(0, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				cycles = -9;
 
 				if(beamer[1].emit(null, world)){

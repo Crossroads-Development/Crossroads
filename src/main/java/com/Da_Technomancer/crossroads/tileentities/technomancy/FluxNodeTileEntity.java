@@ -37,7 +37,7 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 		throughput = flux;
 		if(clientThroughput == 0 ^ throughput == 0 || Math.abs(clientThroughput - throughput) >= 4){
 			clientThroughput = throughput;
-			ModPackets.network.sendToAllAround(new SendIntToClient(0, clientThroughput, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, clientThroughput, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 
@@ -212,7 +212,7 @@ public class FluxNodeTileEntity extends MasterAxisTileEntity implements ILinkTE,
 	}
 
 	@Override
-	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
 		if(identifier == 0){
 			clientThroughput = message;
 		}

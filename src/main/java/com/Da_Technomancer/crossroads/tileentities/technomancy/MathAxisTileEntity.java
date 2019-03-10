@@ -61,7 +61,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	}
 
 	@Override
-	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
 		if(identifier == 0 && message >= 0 && message < Mode.values().length){
 			setMode(Mode.values()[message]);
 		}

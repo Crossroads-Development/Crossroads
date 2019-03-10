@@ -33,7 +33,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 		locked = lockIn;
 		markDirty();
 		for(int i = 0; i < 6; i++){
-			ModPackets.network.sendToAllAround(new SendIntToClient(i, locked || !hasMatch[i] ? 0 : connectMode[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			ModPackets.network.sendToAllAround(new SendIntToClient((byte) i, locked || !hasMatch[i] ? 0 : connectMode[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 

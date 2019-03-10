@@ -205,7 +205,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 		Boolean[] connect = te instanceof HeatCableTileEntity ? ((HeatCableTileEntity) te).getMatches() : new Boolean[] {false, false, false, false, false, false};
 
-
+//		TODO relevant for prototypes
 //		for(EnumFacing direction : EnumFacing.values()){
 //			TileEntity sideTe = world.getTileEntity(pos.offset(direction));
 //			connect[direction.getIndex()] = sideTe != null && ((sideTe instanceof IPrototypePort && ((IPrototypePort) sideTe).getType() == PrototypePortTypes.HEAT && ((IPrototypePort) sideTe).getSide() == direction.getOpposite()) || (sideTe instanceof IPrototypeOwner && ((IPrototypeOwner) sideTe).getTypes()[direction.getOpposite().getIndex()] == PrototypePortTypes.HEAT) || sideTe.hasCapability(Capabilities.HEAT_CAPABILITY, direction.getOpposite()));

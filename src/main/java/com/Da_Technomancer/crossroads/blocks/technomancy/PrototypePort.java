@@ -69,7 +69,7 @@ public class PrototypePort extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		PrototypePortTileEntity te = ((PrototypePortTileEntity) worldIn.getTileEntity(pos));
 		if(!worldIn.isRemote && !te.isActive()){
-			ModPackets.network.sendTo(new SendIntToClient(0, te.getSide().getIndex() + (te.getType().ordinal() << 3), pos), (EntityPlayerMP) playerIn);
+			ModPackets.network.sendTo(new SendIntToClient((byte) 0, te.getSide().getIndex() + (te.getType().ordinal() << 3), pos), (EntityPlayerMP) playerIn);
 			playerIn.openGui(Main.instance, GuiHandler.PROTOTYPE_PORT_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
@@ -101,7 +101,7 @@ public class PrototypePort extends BlockContainer{
 		if(!worldIn.isRemote){
 			PrototypePortTileEntity te = ((PrototypePortTileEntity) worldIn.getTileEntity(pos));
 			if(!te.isActive()){
-				ModPackets.network.sendToAllAround(new SendIntToClient(0, te.getSide().getIndex() + (te.getType().ordinal() << 3), pos), new TargetPoint(worldIn.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, te.getSide().getIndex() + (te.getType().ordinal() << 3), pos), new TargetPoint(worldIn.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 	}

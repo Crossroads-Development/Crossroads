@@ -22,10 +22,10 @@ import java.util.function.Function;
 
 public class ConduitBakedModel implements IBakedModel{
 
+	public static final ModelResourceLocation BAKED_MODEL = new ModelResourceLocation(Main.MODID, "conduit");
+
 	private final VertexFormat format;
 	private final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter;
-
-	public static final ModelResourceLocation BAKED_MODEL = new ModelResourceLocation(Main.MODID, "conduit");
 
 	protected ConduitBakedModel(VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter){
 		this.bakedTextureGetter = bakedTextureGetter;

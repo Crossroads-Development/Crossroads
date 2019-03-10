@@ -37,7 +37,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	public void markSideChanged(int index){
 		init();
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendIntToClient(index, hasMatch[index] != null && hasMatch[index] ? connectMode[index] : 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient((byte) index, hasMatch[index] != null && hasMatch[index] ? connectMode[index] : 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	public Integer[] getConnectMode(boolean forRender){
@@ -52,7 +52,8 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 		return connectMode;
 	}
 
-	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sender){
+	@Override
+	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sender){
 		if(identifier < 6){
 			init();
 			connectMode[identifier] = message;

@@ -56,11 +56,11 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	public void markSideChanged(int index){
 		init();
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendIntToClient(index, hasMatch[index] ? connectMode[index] : 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		ModPackets.network.sendToAllAround(new SendIntToClient((byte) index, hasMatch[index] ? connectMode[index] : 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	@Override
-	public void receiveInt(int identifier, int message, @Nullable EntityPlayerMP sender){
+	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sender){
 		if(identifier < 6){
 			init();
 			connectMode[identifier] = message;

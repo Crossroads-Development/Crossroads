@@ -69,7 +69,7 @@ public class MathAxis extends BlockContainer{
 				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_FACING));
 			}
 		}else if(!worldIn.isRemote){
-			ModPackets.network.sendTo(new SendIntToClient(0, ((MathAxisTileEntity) worldIn.getTileEntity(pos)).getMode().ordinal(), pos), (EntityPlayerMP) playerIn);
+			ModPackets.network.sendTo(new SendIntToClient((byte) 0, ((MathAxisTileEntity) worldIn.getTileEntity(pos)).getMode().ordinal(), pos), (EntityPlayerMP) playerIn);
 			playerIn.openGui(Main.instance, GuiHandler.MATH_AXIS_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 

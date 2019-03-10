@@ -10,17 +10,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-@SuppressWarnings("serial")
 public class SendIntToClient extends Message<SendIntToClient>{
 
 	public SendIntToClient(){
 	}
 
-	public int identifier;
+	public byte identifier;
 	public int message;
 	public BlockPos pos;
 
-	public SendIntToClient(int identifier, int message, BlockPos pos){
+	public SendIntToClient(byte identifier, int message, BlockPos pos){
 		this.identifier = identifier;
 		this.message = message;
 		this.pos = pos;
@@ -44,7 +43,7 @@ public class SendIntToClient extends Message<SendIntToClient>{
 		return null;
 	}
 
-	public void processMessage(WorldClient worldClient, int identifier, int message, BlockPos pos){
+	public void processMessage(WorldClient worldClient, byte identifier, int message, BlockPos pos){
 		if(worldClient == null){
 			return;
 		}

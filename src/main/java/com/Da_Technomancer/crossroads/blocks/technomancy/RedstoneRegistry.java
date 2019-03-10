@@ -47,7 +47,7 @@ public class RedstoneRegistry extends BlockContainer{
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!worldIn.isRemote){
 			ModPackets.network.sendTo(new SendDoubleArrayToClient("output", ((RedstoneRegistryTileEntity) worldIn.getTileEntity(pos)).getOutput(), pos), (EntityPlayerMP) playerIn);
-			ModPackets.network.sendTo(new SendIntToClient(0, ((RedstoneRegistryTileEntity) worldIn.getTileEntity(pos)).getIndex(), pos), (EntityPlayerMP) playerIn);
+			ModPackets.network.sendTo(new SendIntToClient((byte) 0, ((RedstoneRegistryTileEntity) worldIn.getTileEntity(pos)).getIndex(), pos), (EntityPlayerMP) playerIn);
 			playerIn.openGui(Main.instance, GuiHandler.REDSTONE_REGISTRY_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;

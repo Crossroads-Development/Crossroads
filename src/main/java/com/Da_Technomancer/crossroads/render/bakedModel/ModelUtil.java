@@ -24,7 +24,19 @@ public class ModelUtil{
 
 	public static BakedQuad createQuad(Vec3d vertex0, Vec3d vertex1, Vec3d vertex2, Vec3d vertex3, @Nullable EnumFacing orient, int u, int v, int uEnd, int vEnd, TextureAtlasSprite sprite, VertexFormat vf){
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(vf);
-		builder.setQuadOrientation(orient);
+
+		if(orient != null){
+			builder.setQuadOrientation(orient);
+
+			//Vertices must be ordered such that they are oriented counter-clockwise when facing the quad, or it renders backwards
+			//This checks for a clockwise orientation and reverses it if necessary, based on the assumption that the orient parameter is the facing intended by the programmer
+			if(vertex2.subtract(vertex0).crossProduct(vertex1.subtract(vertex0)).dotProduct(new Vec3d(orient.getDirectionVec())) > 0){
+				Vec3d swap = vertex3;
+				vertex3 = vertex1;
+				vertex1 = swap;
+			}
+		}
+
 		builder.setTexture(sprite);
 		builder.setApplyDiffuseLighting(false);
 

@@ -15,13 +15,8 @@ public class Properties{
 	public static final UnlistedPropertyIntegerSixArray PORT_TYPE = new UnlistedPropertyIntegerSixArray("port_type");
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
 	public static final PropertyInteger FULLNESS = PropertyInteger.create("fullness", 0, 3);
-	/**
-	 * @deprecated Use HORIZ_AXIS instead
-	 * true means X axis, false means Z axis
-	 */
-	@Deprecated
-	public static final PropertyBool ORIENT = PropertyBool.create("orient");
 	public static final PropertyEnum<EnumFacing.Axis> HORIZ_AXIS = PropertyEnum.create("horiz_axis", EnumFacing.Axis.class, (EnumFacing.Axis axis) -> axis != null && axis.isHorizontal());
+
 	/**
 	 * 0: copper 1: iron 2: quartz 3: diamond
 	 */

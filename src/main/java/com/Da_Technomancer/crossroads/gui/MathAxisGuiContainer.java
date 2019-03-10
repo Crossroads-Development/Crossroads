@@ -98,7 +98,7 @@ public class MathAxisGuiContainer extends GuiContainer{
 		int mode = buttons.getPressed();
 		if(mode != te.getMode().ordinal()){
 			te.setMode(MathAxisTileEntity.Mode.values()[mode]);
-			ModPackets.network.sendToServer(new SendIntToServer(0, mode, te.getPos(), te.getWorld().provider.getDimension()));
+			ModPackets.network.sendToServer(new SendIntToServer((byte) 0, mode, te.getPos(), te.getWorld().provider.getDimension()));
 		}
 	}
 }
