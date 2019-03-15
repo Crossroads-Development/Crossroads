@@ -49,6 +49,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int BEAM_EXTRACTOR_GUI = 24;
 	public static final int MATH_AXIS_GUI = 25;
 	public static final int FLUID_TANK_GUI = 26;
+	public static final int REAGENT_FILTER_GUI = 27;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
@@ -103,6 +104,8 @@ public class GuiHandler implements IGuiHandler{
 				return new FatFeederContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case BEAM_EXTRACTOR_GUI:
 				return new BeamExtractorContainer(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
+			case REAGENT_FILTER_GUI:
+				return new ReagentFilterContainer(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;
@@ -165,7 +168,8 @@ public class GuiHandler implements IGuiHandler{
 				return new MathAxisGuiContainer(((MathAxisTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case FLUID_TANK_GUI:
 				return new FluidTankGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
-
+			case REAGENT_FILTER_GUI:
+				return new ReagentFilterGuiContainer(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 
 		return null;

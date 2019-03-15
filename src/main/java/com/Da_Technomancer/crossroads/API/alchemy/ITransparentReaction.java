@@ -38,4 +38,10 @@ public interface ITransparentReaction extends IReaction{
 	 */
 	public ReagentStack[] getProducts();
 
+	/**
+	 * @return Whether this reaction has a destructive side effect to be careful of
+	 */
+	public default boolean isDestructive(){
+		return false;
+	}
 }

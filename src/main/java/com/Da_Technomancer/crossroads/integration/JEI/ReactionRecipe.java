@@ -17,11 +17,14 @@ import java.util.List;
 
 public class ReactionRecipe implements IRecipeWrapper{
 
-	private Object bolt;//Has to be kept as an Object to prevent crashes without JEI
+	//Has to be kept as an Object to prevent crashes without JEI
+	private Object bolt;
+	private Object blast;
 	
 	private final ArrayList<ReagIngr> ingr;
 	private final ArrayList<ReagIngr> prod;
 	private final boolean charged;
+	private final boolean dangerous;
 	private final IReagent catalyst;
 	private final double minTemp;
 	private final double maxTemp;
@@ -37,6 +40,7 @@ public class ReactionRecipe implements IRecipeWrapper{
 			prod.add(new ReagIngr(reaction.getProducts()[i].getType(), reaction.getProducts()[i].getAmount()));
 		}
 		charged = reaction.charged();
+		dangerous = reaction.isDestructive();
 		catalyst = reaction.getCatalyst();
 		minTemp = reaction.minTemp();
 		maxTemp = reaction.maxTemp();
@@ -65,7 +69,14 @@ public class ReactionRecipe implements IRecipeWrapper{
 			}
 			GlStateManager.color(1, 1, 1);
 			((IDrawable) bolt).draw(minecraft, 66, 2);
-			((IDrawable) bolt).draw(minecraft, 98, 2);
+		}
+
+		if(dangerous){
+			if(blast == null){
+				blast = new DrawableResource(ReactionCategory.ICONS, 64, 0, 16, 16, 0, 0, 0, 0, 256, 256);
+			}
+			GlStateManager.color(1, 1, 1);
+			((IDrawable) blast).draw(minecraft, 98, 2);
 		}
 
 		if(catalyst != null){

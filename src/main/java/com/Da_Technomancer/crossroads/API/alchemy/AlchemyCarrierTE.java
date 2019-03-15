@@ -280,7 +280,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			}
 		}
 
-		if(!ItemStack.areItemsEqual(out, stack) || !ItemStack.areItemStackTagsEqual(out, stack)){
+		if(!ItemStack.areItemsEqual(out, stack) || !ItemStack.areItemStackTagsEqual(out, stack) || out.getCount() != stack.getCount()){
 			markDirty();
 			dirtyReag = true;
 		}
@@ -305,21 +305,19 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			if(modes[i].isOutput()){
 				EnumFacing side = EnumFacing.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
-				if(contents.getTotalQty() <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
+				IChemicalHandler otherHandler;
+				if(contents.getTotalQty() <= 0 || te == null || (otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())) == null){
 					continue;
 				}
 
-				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass) || otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
 					continue;
 				}
 
-				if(contents.getTotalQty() != 0){
-					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
-						correctReag();
-						markDirty();
-					}
+				if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
+					correctReag();
+					markDirty();
 				}
 			}
 		}
@@ -392,7 +390,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 				if(space <= 0){
 					return false;
 				}
-				double callerTemp = HeatUtil.toKelvin(caller.getTemp());
+				double callerTemp = reag.getTempC();
 				boolean changed = false;
 
 				HashSet<String> validIds = new HashSet<>(4);
@@ -401,7 +399,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 				for(IReagent type : reag.keySet()){
 					ReagentStack r = reag.getStack(type);
 					if(!r.isEmpty()){
-						EnumMatterPhase phase = type.getPhase(HeatUtil.toCelcius(callerTemp));
+						EnumMatterPhase phase = type.getPhase(callerTemp);
 						if(ignorePhase || (phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp()))){
 							validIds.add(type.getId());
 							totalValid += r.getAmount();

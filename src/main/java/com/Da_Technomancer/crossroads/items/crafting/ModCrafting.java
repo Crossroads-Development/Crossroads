@@ -232,6 +232,9 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.teslaRay, 1), "C C", "VII", "C C", 'C', "ingotCopshowium", 'I', "ingotIron", 'V', ModItems.leydenJar));
 		//Damping Powder
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.dampingPowder, 4), ModItems.wasteSalt, ModItems.wasteSalt, "dustSalt", "dustRedstone"));
+		//Reagent Filter
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentFilterGlass, 1), "III", "|A|", "III", 'I', "ingotIron", '|', "blockGlass", 'A', ModItems.lensArray));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.reagentFilterCrystal, 1), "III", "|A|", "III", 'I', "ingotIron", '|', ModItems.alchCrystal, 'A', ModItems.lensArray));
 
 		//Flying Machine
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.flyingMachine, 1), "___", "@-@", "|+|", '_', "ingotBronze", '@', "gearCopshowium", '-', new ItemStack(ModBlocks.antiDensusPlate, 1), '+', new ItemStack(ModBlocks.densusPlate, 1), '|', "stickIron"));

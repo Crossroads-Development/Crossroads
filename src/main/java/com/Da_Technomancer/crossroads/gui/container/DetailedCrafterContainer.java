@@ -5,8 +5,10 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.crafting.ComponentCraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
+import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,10 +24,10 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class DetailedCrafterContainer extends Container{
 
@@ -35,7 +37,6 @@ public class DetailedCrafterContainer extends Container{
 	private final World world;
 	private final BlockPos pos;
 	private final boolean fake;
-
 
 	public DetailedCrafterContainer(InventoryPlayer playerInv, BlockPos pos, boolean fake){
 		this.world = playerInv.player.world;
@@ -71,9 +72,6 @@ public class DetailedCrafterContainer extends Container{
 		return fake || world.getBlockState(pos).getBlock() == ModBlocks.detailedCrafter && playerIn.getDistanceSq((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
 	}
 
-	private static final IRecipe UNLOCK_TECHNOMANCY = new ShapelessOreRecipe(null, new ItemStack(GearFactory.gearTypes.get(GearFactory.findMaterial("Copshowium")).getSmallGear(), 1), "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze", "gearBronze");
-	private static final IRecipe UNLOCK_ALCHEMY = new ShapelessOreRecipe(null, new ItemStack(Items.POTIONITEM, 1), Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE, Items.GLASS_BOTTLE);
-	
 	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn){
 		ItemStack out;
@@ -89,15 +87,16 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(UNLOCK_TECHNOMANCY.matches(inInv, world) && nbt.getCompoundTag("elements").hasKey(EnumBeamAlignments.TIME.name()) && ModConfig.getConfigBool(ModConfig.technomancy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy"))){
-			for(int i = 0; i < 9; i++){
-				inInv.decrStackSize(i, 1);
-			}
+		}else if(passesTechnomancyCriteria(nbt.getCompoundTag("elements"), inInv) && ModConfig.getConfigBool(ModConfig.technomancy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy"))){
 			nbt.getCompoundTag("path").setBoolean("technomancy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
 			}else{
 				playUnlockSound();
+			}
+
+			for(int i = 0; i < 9; i++){
+				inInv.decrStackSize(i, 1);
 			}
 		}
 		
@@ -108,15 +107,16 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(UNLOCK_ALCHEMY.matches(inInv, world) && passesAlchemyCriteria(nbt.getCompoundTag("elements")) && ModConfig.getConfigBool(ModConfig.alchemy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("technomancy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("technomancy"))){
-			for(int i = 0; i < 9; i++){
-				inInv.decrStackSize(i, 1);
-			}
+		}else if(passesAlchemyCriteria(nbt.getCompoundTag("elements"), inInv) && ModConfig.getConfigBool(ModConfig.alchemy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("technomancy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("technomancy"))){
 			nbt.getCompoundTag("path").setBoolean("alchemy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
 			}else{
 				playUnlockSound();
+			}
+
+			for(int i = 0; i < 9; i++){
+				inInv.decrStackSize(i, 1);
 			}
 		}
 		
@@ -128,15 +128,42 @@ public class DetailedCrafterContainer extends Container{
 		world.playSound(playerInv.player, pos, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2, 0);
 	}
 
-	private static boolean passesAlchemyCriteria(NBTTagCompound elementTag){
+	private static final Predicate<ItemStack> fillerMats = new OreDictCraftingStack("gemDiamond");
+	private static final Predicate<ItemStack> technomancyKey = new ComponentCraftingStack("gear");
+	private static final Predicate<ItemStack> alchemyKey = new ItemRecipePredicate(Items.GLASS_BOTTLE, 0);
+
+	private static boolean passesTechnomancyCriteria(NBTTagCompound elementTag, InventoryCrafting craftingInv){
+		//In order to unlock technomancy, the player needs to have discovered time
+		if(elementTag.hasKey(EnumBeamAlignments.TIME.name())){
+			for(int i = 0; i < 3; i++){
+				for(int j = 0; j < 3; j++){
+					if(i != 1 && j != 1 && !fillerMats.test(craftingInv.getStackInRowAndColumn(i, j))){
+						return false;
+					}
+				}
+			}
+			return technomancyKey.test(craftingInv.getStackInRowAndColumn(1, 1));
+		}
+
+		return false;
+	}
+
+	private static boolean passesAlchemyCriteria(NBTTagCompound elementTag, InventoryCrafting craftingInv){
 		//In order to unlock alchemy, the player needs to have discovered all elements other than void and time. (Discovering void and/or time doesn't hurt)
 		for(EnumBeamAlignments element : EnumBeamAlignments.values()){
 			if(element != EnumBeamAlignments.TIME && element != EnumBeamAlignments.VOID && element != EnumBeamAlignments.NO_MATCH && !elementTag.getBoolean(element.name())){
 				return false;
 			}
 		}
-		
-		return true;
+
+		for(int i = 0; i < 3; i++){
+			for(int j = 0; j < 3; j++){
+				if(i != 1 && j != 1 && !fillerMats.test(craftingInv.getStackInRowAndColumn(i, j))){
+					return false;
+				}
+			}
+		}
+		return alchemyKey.test(craftingInv.getStackInRowAndColumn(1, 1));
 	}
 	
 	@Nullable

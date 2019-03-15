@@ -131,12 +131,12 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			}
 		}
 
-		for(IReagent type : toRemove){
-			contents.remove(type);
-		}
-
 		if(destroy){
 			destroyChamber();
+		}else{
+			for(IReagent type : toRemove){
+				contents.removeReagent(type, contents.get(type));
+			}
 		}
 	}
 

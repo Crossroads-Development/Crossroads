@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyReactorTE;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
@@ -74,13 +75,13 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 		florence = false;
 		dirtyReag = true;
 		AlchemyUtil.releaseChemical(world, pos, contents);
-		contents.clear();
+		contents = new ReagentMap();
 	}
 
 	public void onBlockDestroyed(IBlockState state){
 		if(occupied){
 			ItemStack out = getStoredItem();
-			this.contents.clear();
+			this.contents = new ReagentMap();
 			dirtyReag = true;
 			occupied = false;
 			markDirty();

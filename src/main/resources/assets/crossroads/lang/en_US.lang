@@ -274,6 +274,9 @@ tile.flux_stabilizer_crystal_mechanical.name=Reinforced Mechanical Flux Stabiliz
 tile.flux_void.name=Creative Flux Stabilizer
 tile.light_cluster.name=Light Cluster
 item.damping_powder.name=Damping Powder
+tile.reagent_filter.name=Glass Resonating Filter
+tile.crystal_reagent_filter.name=Crystal Resonating Filter
+container.reagent_filter=Resonating Filter
 
 item.dust_metal.name=%1$s Dust
 item.gravel_metal.name=Raw %1$s Grit

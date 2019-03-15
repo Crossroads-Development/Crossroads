@@ -13,6 +13,7 @@ public class ElementalReaction implements IReaction{
 	
 	@Override
 	public boolean performReaction(IReactionChamber chamber){
+		//Chamber must be charged to begin
 		if(chamber.isCharged()){
 			//Requires practitioner's catalyst
 			ReagentMap reags = chamber.getReagants();

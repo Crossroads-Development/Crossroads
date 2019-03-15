@@ -5,8 +5,12 @@ import com.Da_Technomancer.crossroads.API.beams.IBeamTransparent;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCarpet;
+import net.minecraft.block.BlockTorch;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -28,7 +32,7 @@ import java.util.List;
 public class LightCluster extends Block implements IBeamTransparent{
 
 	public LightCluster(){
-		super(Material.GLASS);
+		super(Material.CIRCUITS);
 		String name = "light_cluster";
 		setRegistryName(name);
 		setTranslationKey(name);
@@ -43,6 +47,16 @@ public class LightCluster extends Block implements IBeamTransparent{
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		return BlockFaceShape.UNDEFINED;
+	}
+
+	@Override
+	public EnumPushReaction getPushReaction(IBlockState state){
+		return EnumPushReaction.DESTROY;
 	}
 
 	@Override

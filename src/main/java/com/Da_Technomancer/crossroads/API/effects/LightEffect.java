@@ -21,11 +21,9 @@ public class LightEffect implements IEffect{
 			worldIn.setBlockState(pos, Blocks.GLOWSTONE.getDefaultState());
 		}else if(state.getMaterial() == Material.GLASS && state.getBlock() != Blocks.GLOWSTONE && state.getBlock() != ModBlocks.lightCluster && !(state.getBlock() instanceof IBeamTransparent)){
 			worldIn.setBlockState(pos, Blocks.SEA_LANTERN.getDefaultState());
-		}else if(state.getBlock().isReplaceable(worldIn, pos) && !(state.getBlock() instanceof IBeamTransparent)){
-			worldIn.destroyBlock(pos, true);
+		}else if(state.getBlock().isAir(state, worldIn, pos)){
 			worldIn.setBlockState(pos, ModBlocks.lightCluster.getDefaultState());
-		}else if(dir != null && (state = worldIn.getBlockState(offsetPos = pos.offset(dir))).getBlock().isReplaceable(worldIn, offsetPos) && state.getBlock() != ModBlocks.lightCluster && !(state.getBlock() instanceof IBeamTransparent)){
-			worldIn.destroyBlock(offsetPos, true);
+		}else if(dir != null && state.getBlock() != Blocks.GLOWSTONE && state.getBlock() != ModBlocks.blockLuminescentQuartz && state.getBlock() != Blocks.SEA_LANTERN && (state = worldIn.getBlockState(offsetPos = pos.offset(dir))).getBlock().isAir(state, worldIn, offsetPos)){
 			worldIn.setBlockState(offsetPos, ModBlocks.lightCluster.getDefaultState());
 		}
 	}

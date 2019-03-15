@@ -107,6 +107,7 @@ public class ModTileEntity{
 		register(FluxStabilizerBeamTileEntity.class, "flux_stabilizer_beam");
 		register(FluxStabilizerMechanicalTileEntity.class, "flux_stabilizer_mechanical");
 		register(FluxStabilizerElectricTileEntity.class, "flux_stabilizer_electric");
+		register(ReagentFilterTileEntity.class, "reagent_filter");
 	}
 
 	/**

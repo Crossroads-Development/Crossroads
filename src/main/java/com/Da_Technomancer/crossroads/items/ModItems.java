@@ -76,7 +76,7 @@ public final class ModItems{
 	public static BasicItem sulfur;
 	public static BasicItem vanadiumOxide;
 	public static PhilStone philosopherStone;
-	public static BasicItem practitionerStone;
+	public static PhilStone practitionerStone;
 	public static BasicItem alchCrystal;
 	public static BasicItem wasteSalt;
 	public static Phial phialGlass;
@@ -151,8 +151,8 @@ public final class ModItems{
 		adamant = new BasicItem("adamant");
 		sulfur = new BasicItem("sulfur", "dustSulfur");
 		vanadiumOxide = new BasicItem("vanadium_oxide");
-		philosopherStone = new PhilStone();
-		practitionerStone = new BasicItem("prac_stone");
+		philosopherStone = new PhilStone(false);
+		practitionerStone = new PhilStone(true);
 		alchCrystal = new BasicItem("alch_crystal", "gemAlcCryst");
 		wasteSalt = new BasicItem("waste_salt", "dustAlcSalt");
 		phialGlass = new Phial(false);

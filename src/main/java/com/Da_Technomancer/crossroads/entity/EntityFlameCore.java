@@ -116,6 +116,11 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 					}
 				}
 			}
+			if(amount <= 0){
+				setDead();
+				return;
+			}
+
 			NBTTagCompound nbt = new NBTTagCompound();
 			col = new Color(r / amount, g / amount, b / amount, a / amount);
 			nbt.setInteger("col", col.getRGB());

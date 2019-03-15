@@ -47,7 +47,6 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	public void destroyChamber(){
 		if(!broken){
 			broken = true;
-			double temp = getTemp();
 			IBlockState state = world.getBlockState(pos);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
@@ -62,25 +61,24 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 
 		boolean destroy = false;
 
-		ArrayList<IReagent> toRemove = new ArrayList<>(1);
+		ArrayList<IReagent> toRemove = new ArrayList<>(1);//Rare that there is more than 1 at a time
 
 		for(IReagent type : contents.keySet()){
-			ReagentStack reag = contents.getStack(type);
-			if(reag.isEmpty()){
+			if(contents.getQty(type) == 0){
 				continue;
 			}
-			if(glass && !reag.getType().canGlassContain()){
-				destroy |= reag.getType().destroysBadContainer();
+			if(glass && !type.canGlassContain()){
+				destroy |= type.destroysBadContainer();
 				toRemove.add(type);
 			}
 		}
 
-		for(IReagent type : toRemove){
-			contents.removeReagent(type, contents.get(type));
-		}
-
 		if(destroy){
 			destroyChamber();
+		}else{
+			for(IReagent type : toRemove){
+				contents.removeReagent(type, contents.get(type));
+			}
 		}
 	}
 

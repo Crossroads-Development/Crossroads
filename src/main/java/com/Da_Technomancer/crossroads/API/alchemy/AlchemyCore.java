@@ -15,7 +15,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fluids.Fluid;
 
 import java.awt.*;
@@ -86,8 +85,8 @@ public final class AlchemyCore{
 		REAGENTS.put(HYDROCHLORIC_ACID.id(), new StaticReagent(HYDROCHLORIC_ACID.id(), -110D, 90D, (EnumMatterPhase phase) -> CLEAR_COLOR, (ItemStack stack) -> stack.getItem() == ModItems.solidMuriatic, () -> new ItemStack(ModItems.solidMuriatic), 0, ACID_EFFECT));// Hydrogen Chloride, salt that forms hydrochloric acid, AKA muriatic acid, in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve.
 		REAGENTS.put(ALCHEMICAL_SALT.id(), new StaticReagent(ALCHEMICAL_SALT.id(), 900D, 1400D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, MiscUtil.oreDictPred("dustAlcSalt"), () -> MiscUtil.getOredictStack("dustAlcSalt", 1), 0, new AlcSaltAlchemyEffect()));//Any salt byproduct that is too boring to bother adding separately.
 		REAGENTS.put(SLAG.id(), new StaticReagent(SLAG.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.DARK_GRAY, MiscUtil.oreDictPred("itemSlag"), () -> MiscUtil.getOredictStack("itemSlag", 1), 0, null));
-		REAGENTS.put(PHILOSOPHER.id(), new StaticReagent(PHILOSOPHER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (stack) -> stack.getItem() == ModItems.philosopherStone, () -> new ItemStack(ModItems.philosopherStone), 2, null));
-		REAGENTS.put(PRACTITIONER.id(), new StaticReagent(PRACTITIONER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_RED_COLOR, (stack) -> stack.getItem() == ModItems.practitionerStone, () -> new ItemStack(ModItems.practitionerStone), 2, null));
+		REAGENTS.put(PHILOSOPHER.id(), new StaticReagent(PHILOSOPHER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (stack) -> stack.getItem() == ModItems.philosopherStone, () -> new ItemStack(ModItems.philosopherStone), 2, new SpawnItemAlchemyEffect(ModItems.philosopherStone)));
+		REAGENTS.put(PRACTITIONER.id(), new StaticReagent(PRACTITIONER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_RED_COLOR, (stack) -> stack.getItem() == ModItems.practitionerStone, () -> new ItemStack(ModItems.practitionerStone), 2, new SpawnItemAlchemyEffect(ModItems.practitionerStone)));
 		REAGENTS.put(BEDROCK.id(), new StaticReagent(BEDROCK.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.GRAY, (stack) -> stack.getItem() == Item.getItemFromBlock(Blocks.BEDROCK) || MiscUtil.hasOreDict(stack, "dustBedrock"), () -> ModConfig.getConfigBool(ModConfig.bedrockDust, false) ? MiscUtil.getOredictStack("dustBedrock", 1) : new ItemStack(Blocks.BEDROCK), 0, null));
 		REAGENTS.put(CHLORINE.id(), new StaticReagent(CHLORINE.id(), -100D, -35D, (EnumMatterPhase phase) -> TRANSLUCENT_LIME_COLOR, null, null, 0, new ChlorineAlchemyEffect()));
 		REAGENTS.put(CRYSTAL.id(), new StaticReagent(CRYSTAL.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (stack) -> stack.getItem() == ModItems.alchCrystal, () -> new ItemStack(ModItems.alchCrystal), 0, null));
@@ -143,18 +142,8 @@ public final class AlchemyCore{
 		//Sulfuric Acid production. 
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1), new ReagentStack(REAGENTS.get(WATER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFURIC_ACID.id()), 1)}, REAGENTS.get(VANADIUM.id()), 400, 620D, -100D, false));
 		//Gunpowder combustion
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GUNPOWDER.id()), 3)}, new ReagentStack[] {}, null, 200D, Double.MAX_VALUE, 0D, false){
-			@Override
-			public boolean performReaction(IReactionChamber chamb){
-				boolean performed = super.performReaction(chamb);
-				if(performed){
-					chamb.destroyChamber();
-					chamb.addVisualEffect(EnumParticleTypes.SMOKE_NORMAL, Math.random(), Math.random(), Math.random());
-				}
-
-				return performed;
-			}
-		});
+		REACTIONS.add(new DestroyReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GUNPOWDER.id()), 1)}, null, 200D, Double.MAX_VALUE, false));
+		REACTIONS.add(new DestroyReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GUNPOWDER.id()), 1)}, null, -300, Double.MAX_VALUE, true));
 
 		//Phelostogen production (from Gunpowder)
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GUNPOWDER.id()), 2)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1)}, REAGENTS.get(PHILOSOPHER.id()), -300D, 200D, 0D, false));
@@ -185,7 +174,7 @@ public final class AlchemyCore{
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 2), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(CRYSTAL.id()), 3)}, REAGENTS.get(VANADIUM.id()), -300D, -10D, -35D, false));
 		//Philosopher's Stone creation
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 1), new ReagentStack(REAGENTS.get(SULFUR.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 1), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(PHILOSOPHER.id()), 1)}, REAGENTS.get(AQUA_REGIA.id()), -300D, -15D, -500D, false));
-		//Practitioner's Stone creation (destroys chamber if proportions are wrong.)
+		//Practitioner's Stone creation
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1), new ReagentStack(REAGENTS.get(ADAMANT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(PRACTITIONER.id()), 1)}, REAGENTS.get(AQUA_REGIA.id()), -300D, -25D, -5000D, false){
 			@Override
 			public boolean performReaction(IReactionChamber chamb){
@@ -196,12 +185,17 @@ public final class AlchemyCore{
 					int aeth = reags.getQty(AETHER.id());
 					int adam = reags.getQty(ADAMANT.id());
 					int gold = reags.getQty(GOLD.id());
-					if(Math.max(Math.max(phel, aeth), Math.max(adam, gold)) - Math.min(Math.min(phel, aeth), Math.min(adam, gold)) >= 2){
+					if(phel + aeth + adam + gold != 0){
+						//reags.removeReagent(PRACTITIONER.id(), reags.getQty(PRACTITIONER.id()));
 						chamb.destroyChamber();
 					}
 				}
 				return performed;
+			}
 
+			@Override
+			public boolean isDestructive(){
+				return true;//Destructive if the proportions aren't exact
 			}
 		});
 		//Lumen production
@@ -214,6 +208,9 @@ public final class AlchemyCore{
 		REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS.get(ELEM_FUSION.id())));
 		//Voltus production
 		REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS.get(ELEM_CHARGE.id())));
+		//Copshowium production intentionally NOT added. Copshowium production is Technomancy only
+		//REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS.get(ELEM_TIME.id())));
+
 		//Ruby production
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_FUSION.id()), 2), new ReagentStack(REAGENTS.get(COPPER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(RUBY.id()), 2)}, REAGENTS.get(PRACTITIONER.id()), -100, 1000, 0,false));
 		//Emerald production
