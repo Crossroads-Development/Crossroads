@@ -35,7 +35,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		int charge = AtmosChargeSavedData.getCharge(world);
-		chat.add(charge + "/" + AtmosChargeSavedData.CAPACITY + "FE in atmosphere (" + MiscUtil.betterRound(100D * charge / AtmosChargeSavedData.CAPACITY, 1) + "%)");
+		chat.add(charge + "/" + AtmosChargeSavedData.getCapacity() + "FE in atmosphere (" + MiscUtil.betterRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1) + "%)");
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 			}
 		}else{
 			int oldCharge = AtmosChargeSavedData.getCharge(world);
-			int op = Math.min(fe / 1000, (AtmosChargeSavedData.CAPACITY - oldCharge) / 1000);
+			int op = Math.min(fe / 1000, (AtmosChargeSavedData.getCapacity() - oldCharge) / 1000);
 			if(op <= 0){
 				return;
 			}
@@ -117,7 +117,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	private ElecHandler feHandler = new ElecHandler();
-	private IAdvancedRedstoneHandler redsHandler = (boolean measure) -> measure ? 15D * (double) AtmosChargeSavedData.getCharge(world) / (double) AtmosChargeSavedData.CAPACITY : 0;
+	private IAdvancedRedstoneHandler redsHandler = (boolean measure) -> measure ? 15D * (double) AtmosChargeSavedData.getCharge(world) / (double) AtmosChargeSavedData.getCapacity() : 0;
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.Main;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -70,7 +71,6 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 				}
 
 				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
-				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 				if(otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
 					continue;
 				}
@@ -85,16 +85,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		}
 	}
 
-	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return true;
-		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return true;
-		}
-		return super.hasCapability(cap, side);
-	}
+	private final RedstoneHandler redsHandler = new RedstoneHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -105,9 +96,11 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}
+		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
+			return (T) redsHandler;
+		}
 		return super.getCapability(cap, side);
 	}
-
 
 	private final ItemHandler itemHandler = new ItemHandler();
 
@@ -137,6 +130,18 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			for(IReagent type : toRemove){
 				contents.removeReagent(type, contents.get(type));
 			}
+		}
+	}
+
+	public int getRedstone(){
+		return (int) Math.ceil(Math.min(15, 15D * contents.getTotalQty() / (double) transferCapacity()));
+	}
+
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(boolean read){
+			return read ? 15D * Math.min(1D, contents.getTotalQty() / (double) transferCapacity()) : 0;
 		}
 	}
 
@@ -204,7 +209,6 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 					outStack.setCount(canExtract);
 					if(!simulate){
 						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]);
-						double endTemp = handler.getTemp();
 						contents.removeReagent(reag, canExtract);
 						dirtyReag = true;
 						markDirty();
@@ -229,7 +233,6 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	private void destroyChamber(){
 		if(!broken){
 			broken = true;
-			double temp = contents.getTempC();
 			IBlockState state = world.getBlockState(pos);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);

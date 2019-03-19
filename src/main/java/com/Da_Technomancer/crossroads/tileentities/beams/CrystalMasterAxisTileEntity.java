@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.ModConfig;
@@ -114,6 +115,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	private final IBeamHandler magicHandler = new BeamHandler();
+	private final RedstoneHandler redsHandler = new RedstoneHandler();
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
@@ -121,6 +123,9 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 			return true;
 		}
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
+			return true;
+		}
+		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return true;
 		}
 
@@ -135,6 +140,9 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 		}
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return (T) handler;
+		}
+		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
+			return (T) redsHandler;
 		}
 
 		return super.getCapability(cap, side);
@@ -151,11 +159,25 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 				EnumBeamAlignments newElem = EnumBeamAlignments.getAlignment(mag);
 				if(newElem != currentElement){
 					currentElement = newElem;
-					time = mag.getPower() * BeamManager.BEAM_TIME;
+					if(mag.getVoid() == 0){
+						time = mag.getPower() * BeamManager.BEAM_TIME;
+					}
 				}else{
 					time = Math.max(mag.getVoid() == 0 ? time + mag.getPower() * BeamManager.BEAM_TIME : time - mag.getPower() * BeamManager.BEAM_TIME, 0);
 				}
 			}
+		}
+	}
+
+	public int getRedstone(){
+		return (int) Math.min(15, time);
+	}
+
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(boolean read){
+			return read ? time : 0;
 		}
 	}
 }

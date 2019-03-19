@@ -107,7 +107,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 		if((cont == EnumContainerType.GLASS) != glass){
 			return false;
 		}
-		return otherHandler.insertReagents(toTrans, side.getOpposite(), handler);
+		return otherHandler.insertReagents(toTrans, side.getOpposite(), handler, true);
 	}
 
 	@Nullable

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
@@ -9,7 +10,10 @@ import net.minecraft.world.storage.WorldSavedData;
 public class AtmosChargeSavedData extends WorldSavedData{
 
 	public static final String ID = Main.MODID + "_atmos";
-	public static final int CAPACITY = 1_000_000_000;
+
+	public static int getCapacity(){
+		return ModConfig.getConfigInt(ModConfig.atmosCap, true);
+	}
 
 	public AtmosChargeSavedData(){
 		super(ID);

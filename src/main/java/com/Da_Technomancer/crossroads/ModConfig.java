@@ -45,6 +45,7 @@ public final class ModConfig{
 	public static Property allowHellfire;
 	public static Property voltusUsage;
 	public static Property atmosEffect;
+	public static Property atmosCap;
 	public static Property documentCrafttweaker;
 	public static Property addBoboRecipes;
 	public static Property cccExpenLiquid;
@@ -124,6 +125,7 @@ public final class ModConfig{
 		SYNCED_PROPERTIES.add(fePerFlux = config.get(CAT_TECHNOMANCY, "FE equal to 1 flux", 500, "Default: 500", 1, Integer.MAX_VALUE));
 		SYNCED_PROPERTIES.add(allowHellfire = config.get(CAT_ALCHEMY, "Whether to allow crafting Ignis Infernum",true, "Default: true"));
 		atmosEffect = config.get(CAT_ALCHEMY, "Level of effects from overcharging the atmosphere", 3, "0: No negative effects. 1: Allow lightning strikes. 2: Allow creeper charging. 3: Allow lightning strikes & creeper charging. Default: 3", 0, 3);
+		SYNCED_PROPERTIES.add(atmosCap = config.get(CAT_ALCHEMY, "Maximum charge for the atmosphere", 1_000_000_000, "0-2 billion, default 1 billion", 0, 2_000_000_000));
 		SYNCED_PROPERTIES.add(voltusUsage = config.get(CAT_ALCHEMY, "Voltus used to produce 1000FE of charge in the atmosphere", 0.1D, "Default: 0.1", 0, Integer.MAX_VALUE));
 		stampMillDamping = config.get(CAT_BALANCE, "Percentage of Stamp Mill progress to be lost on failure", 0, "Default 0; Range: 0-100. Effectively nerfs ore-tripling", 0, 100);
 		bedrockDust = config.get(CAT_ALCHEMY, "Harvest Bedrock Dust instead of Bedrock", false, "Replaces all recipes involving bedrock with unplacable bedrock dust; Default: false");

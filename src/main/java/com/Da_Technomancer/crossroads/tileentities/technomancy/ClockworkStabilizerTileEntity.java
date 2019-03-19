@@ -1,13 +1,16 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 
 public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
@@ -81,5 +84,28 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 		boolean[] out = new boolean[6];
 		out[getDir().getIndex()] = true;
 		return out;
+	}
+
+	private final RedstoneHandler redsHandler = new RedstoneHandler();
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(Capability<T> cap, EnumFacing dir){
+		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
+			return (T) redsHandler;
+		}
+		return super.getCapability(cap, dir);
+	}
+
+	public int getRedstone(){
+		return (int) Math.min(15, storage.getPower());
+	}
+
+	private class RedstoneHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(boolean read){
+			return read ? storage.getPower() : 0;
+		}
 	}
 } 

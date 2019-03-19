@@ -38,7 +38,7 @@ public class WindTurbineRenderer extends TileEntitySpecialRenderer<WindTurbineTi
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5F, y + .5F, z + .5F);
 		GlStateManager.rotate(-facing.getHorizontalAngle(), 0, 1, 0);
-		GlStateManager.rotate(-((axle.getNextAngle() - axle.getAngle()) * partialTicks + axle.getAngle()), 0, 0, 1);
+		GlStateManager.rotate(facing.getAxisDirection().getOffset() * ((axle.getNextAngle() - axle.getAngle()) * partialTicks + axle.getAngle()), 0, 0, 1);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_BLADE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();

@@ -67,7 +67,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void destroyChamber(){
+	public void destroyChamber(float strength){
 		IBlockState state = world.getBlockState(pos);
 		world.setBlockState(pos, state.withProperty(Properties.ACTIVE, false).withProperty(Properties.CRYSTAL, false).withProperty(Properties.CONTAINER_TYPE, false));
 		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
@@ -76,6 +76,9 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 		dirtyReag = true;
 		AlchemyUtil.releaseChemical(world, pos, contents);
 		contents = new ReagentMap();
+		if(strength > 0){
+			world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), strength, true);
+		}
 	}
 
 	public void onBlockDestroyed(IBlockState state){

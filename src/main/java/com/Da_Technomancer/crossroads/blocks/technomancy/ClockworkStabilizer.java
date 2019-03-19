@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
+import com.Da_Technomancer.crossroads.tileentities.beams.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ClockworkStabilizerTileEntity;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
@@ -26,4 +27,14 @@ public class ClockworkStabilizer extends BeamBlock{
 		return BlockFaceShape.UNDEFINED;
 	}
 
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		return te instanceof ClockworkStabilizerTileEntity ? ((ClockworkStabilizerTileEntity) te).getRedstone() : 0;
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
 }

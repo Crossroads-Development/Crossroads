@@ -67,7 +67,7 @@ public final class EventHandlerCommon{
 		}
 
 
-		if(e.getEntity() instanceof EntityCreeper && (float) AtmosChargeSavedData.getCharge(e.getWorld()) / (float) AtmosChargeSavedData.CAPACITY >= 0.9F && (ModConfig.getConfigInt(ModConfig.atmosEffect, false) & 2) == 2){
+		if(e.getEntity() instanceof EntityCreeper && (float) AtmosChargeSavedData.getCharge(e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F && (ModConfig.getConfigInt(ModConfig.atmosEffect, false) & 2) == 2){
 			NBTTagCompound nbt = new NBTTagCompound();
 			e.getEntityLiving().writeEntityToNBT(nbt);
 			nbt.setBoolean("powered", true);
@@ -187,7 +187,7 @@ public final class EventHandlerCommon{
 		//Atmospheric overcharge effect
 		if(!e.world.isRemote && (ModConfig.getConfigInt(ModConfig.atmosEffect, false) & 1) == 1){
 			e.world.profiler.startSection(Main.MODNAME + ": Overcharge lightning effects");
-			float chargeLevel = (float) AtmosChargeSavedData.getCharge(e.world) / (float) AtmosChargeSavedData.CAPACITY;
+			float chargeLevel = (float) AtmosChargeSavedData.getCharge(e.world) / (float) AtmosChargeSavedData.getCapacity();
 			if(chargeLevel > 0.5F){
 				Iterator<Chunk> iterator = e.world.getPersistentChunkIterable(((WorldServer) (e.world)).getPlayerChunkMap().getChunkIterator());
 				while(iterator.hasNext()){

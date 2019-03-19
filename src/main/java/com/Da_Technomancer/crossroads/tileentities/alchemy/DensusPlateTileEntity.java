@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.DensusPlate;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
@@ -64,7 +65,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickable{
 
 		List<Entity> ents = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() + (dir.getXOffset() == 1 ? 1 : 0), pos.getY() + (dir.getYOffset() == 1 ? 1 : 0), pos.getZ() + (dir.getZOffset() == 1 ? 1 : 0), pos.getX() + (dir.getXOffset() == -1 ? 0 : 1) + effectiveRange * dir.getXOffset(), pos.getY() + (dir.getYOffset() == -1 ? 0 : 1) + effectiveRange * dir.getYOffset(), pos.getZ() + (dir.getZOffset() == -1 ? 0 : 1) + effectiveRange * dir.getZOffset()), EntitySelectors.IS_ALIVE);
 		for(Entity ent : ents){
-			if(ent.isSneaking()){
+			if(ent.isSneaking() || (ent instanceof EntityPlayer && ((EntityPlayer) ent).isSpectator())){
 				continue;
 			}
 			switch(dir.getAxis()){

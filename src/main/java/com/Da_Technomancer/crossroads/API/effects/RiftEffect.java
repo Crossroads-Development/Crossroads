@@ -40,7 +40,10 @@ public class RiftEffect implements IEffect{
 			//Annoying vanilla bug where setting from one type of skull to another won't update the texture
 			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 			worldIn.setBlockState(pos, Blocks.SKULL.getStateFromMeta(meta), 3);
-			((TileEntitySkull) te).setType(1);
+			te = worldIn.getTileEntity(pos);
+			if(te instanceof TileEntitySkull){
+				((TileEntitySkull) te).setType(1);
+			}
 			return;
 		}
 

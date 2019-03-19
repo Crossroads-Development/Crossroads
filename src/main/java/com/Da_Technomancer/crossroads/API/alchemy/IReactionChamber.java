@@ -42,9 +42,9 @@ public interface IReactionChamber{
 	public int getReactionCapacity();
 	
 	/**
-	 * Note: might be called several times in quick succession. 
+	 * Destroys the chamber, and creates an explosion
 	 */
-	public void destroyChamber();
+	public void destroyChamber(float strength);
 	
 	
 	/**

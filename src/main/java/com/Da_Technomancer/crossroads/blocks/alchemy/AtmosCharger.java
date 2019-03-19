@@ -102,7 +102,7 @@ public class AtmosCharger extends BlockContainer{
 
 	@Override
 	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
-		return (int) (15D * (double) AtmosChargeSavedData.getCharge(worldIn) / (double) AtmosChargeSavedData.CAPACITY);
+		return (int) (15D * (double) AtmosChargeSavedData.getCharge(worldIn) / (double) AtmosChargeSavedData.getCapacity());
 	}
 
 	@Override

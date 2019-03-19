@@ -14,7 +14,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 public class DynamoTileEntity extends ModuleTE{
 
-	private static final int CHARGE_CAPACITY = 100;
+	private static final int CHARGE_CAPACITY = 8_000;
 
 	private static int efficiency = -1;
 

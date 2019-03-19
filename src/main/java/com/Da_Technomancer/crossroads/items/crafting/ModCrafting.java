@@ -136,6 +136,7 @@ public final class ModCrafting{
 		RecipeHolder.beamExtractRecipes.put(Items.GUNPOWDER, new BeamUnit(24, 0, 0, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.SLIME_BALL, new BeamUnit(0, 24, 0, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.SNOWBALL, new BeamUnit(0, 0, 24, 0));
+		RecipeHolder.beamExtractRecipes.put(Items.SUGAR, new BeamUnit(8, 12, 0, 0));
 
 		//Fusion beam
 		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.SNOW.getDefaultState(), false), new BeamTransmute(Blocks.ICE.getDefaultState(), 0));
@@ -182,8 +183,10 @@ public final class ModCrafting{
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.coolingCoilCrystal, 4), "* *", " * ", '*', "gemAlcCryst"));
 		//Densus Plate
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.densusPlate, 6), "***", '*', "gemDensus"));
+		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.solidDensus, 1), ModBlocks.densusPlate, ModBlocks.densusPlate));
 		//Anti-Densus plate
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.antiDensusPlate, 6), "***", '*', "gemAntiDensus"));
+		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.solidAntiDensus, 1), ModBlocks.antiDensusPlate, ModBlocks.antiDensusPlate));
 		//Flow Limiter
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.flowLimiterGlass, 2), "*:*", '*', "blockGlass", ':', "ingotGold"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.flowLimiterCrystal, 2), "*:*", '*', "gemAlcCryst", ':', "ingotGold"));
@@ -481,8 +484,8 @@ public final class ModCrafting{
 		//Dynamo
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.dynamo, 1), "-@-", "===", '@', "gearCopper", '-', "stickIron", '=', "ingotIron"));
 		//Cavorite Block
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.cavorite, 1), "**", "**", '*', "gemCavorite"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.solidCavorite, 4), ModBlocks.cavorite));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.cavorite, 2), "**", "**", '*', "gemCavorite"));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.solidCavorite, 2), ModBlocks.cavorite));
 		//Linking tool
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.linkingTool, 1), EssentialsItems.wrench, "dustRedstone"));
 		//Aqua Regia

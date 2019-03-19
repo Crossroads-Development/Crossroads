@@ -44,7 +44,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	protected boolean broken = false;
 
 	@Override
-	public void destroyChamber(){
+	public void destroyChamber(float strength){
 		if(!broken){
 			broken = true;
 			IBlockState state = world.getBlockState(pos);
@@ -52,6 +52,9 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
 			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
 			AlchemyUtil.releaseChemical(world, pos, contents);
+			if(strength > 0F){
+				world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), strength, true);
+			}
 		}
 	}
 
@@ -74,7 +77,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 		}
 
 		if(destroy){
-			destroyChamber();
+			destroyChamber(0);
 		}else{
 			for(IReagent type : toRemove){
 				contents.removeReagent(type, contents.get(type));

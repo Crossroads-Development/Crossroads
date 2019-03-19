@@ -77,7 +77,7 @@ public class ReagentTank extends BlockContainer{
 			}
 
 			double temp = MiscUtil.betterRound(stack.getTagCompound().getDouble("he") / am, 3);
-			tooltip.add("Temp: " + HeatUtil.toCelcius(temp) + "°C (" + temp + "K)");
+			tooltip.add("Temp: " + MiscUtil.betterRound(HeatUtil.toCelcius(temp), 3) + "°C (" + temp + "K)");
 		}
 	}
 
@@ -104,6 +104,17 @@ public class ReagentTank extends BlockContainer{
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		return te instanceof ReagentTankTileEntity ? ((ReagentTankTileEntity) te).getRedstone() : 0;
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
 	}
 
 	@Override

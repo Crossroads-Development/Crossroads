@@ -70,7 +70,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 		if(Math.abs(motData[1]) >= ENERGY_USE){
 			axleHandler.addEnergy(-ENERGY_USE, false, false);
-			if(++ticksExisted % 10 == 0){
+			if(++ticksExisted % 8 == 0){
 				EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
 				if(world.getBlockState(pos.offset(facing)).getBlock().canCollideCheck(world.getBlockState(pos.offset(facing)), false)){
 					float hardness = world.getBlockState(pos.offset(facing)).getBlockHardness(world, pos.offset(facing));
