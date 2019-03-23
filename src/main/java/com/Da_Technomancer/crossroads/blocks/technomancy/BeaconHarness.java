@@ -26,6 +26,7 @@ public class BeaconHarness extends BeamBlock{
 
 	public BeaconHarness(){
 		super("beacon_harness", Material.GLASS);
+		setHardness(0.5F);
 	}
 
 	@Override

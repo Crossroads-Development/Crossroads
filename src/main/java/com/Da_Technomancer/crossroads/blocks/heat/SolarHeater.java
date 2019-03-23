@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.tileentities.heat.SolarHeaterTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -17,7 +18,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,6 +52,14 @@ public class SolarHeater extends BlockContainer{
 	}
 
 	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+		if(face == EnumFacing.DOWN){
+			return BlockFaceShape.CENTER_SMALL;
+		}
+		return BlockFaceShape.UNDEFINED;
+	}
+
+	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
@@ -62,6 +73,13 @@ public class SolarHeater extends BlockContainer{
 	@Override
 	protected BlockStateContainer createBlockState(){
 		return new BlockStateContainer(this, Properties.HORIZ_AXIS);
+	}
+
+	private static final AxisAlignedBB BB = new AxisAlignedBB(0, 0, 0, 1, 0.5D, 1);
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		return BB;
 	}
 
 	@Override

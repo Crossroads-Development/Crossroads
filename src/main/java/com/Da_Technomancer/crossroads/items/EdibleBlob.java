@@ -43,16 +43,26 @@ public class EdibleBlob extends ItemFood{
 		return stack.hasTagCompound() ? stack.getTagCompound().getInteger("food") : 0;
 	}
 
-	/** Normally, this would return a float equal to (saturation restored / (2 * hunger restored)), but due to the fact that this item can sometimes have a hunger value of 0 (divide by 0 error),
-	 * this is instead being used to return (saturation restored).
-	 * This can mess with other mods (appleskin might show the wrong saturation value for example), but nothing too serious and this is probably the best way of doing this. */
+	/**
+	 * Returns (saturation restored / (2 * hunger restored)),
+	 * because vanilla is weird.
+	 */
 	@Override
 	public float getSaturationModifier(ItemStack stack){
+		int hun = getHealAmount(stack);
+		int sat = getTrueSat(stack);
+		return hun != 0 && sat != 0 ? 0.5F * sat / hun : 0;
+	}
+
+	/**
+	 * @param stack The edible blob stack
+	 * @return The actual saturation restored
+	 */
+	private int getTrueSat(ItemStack stack){
 		return stack.hasTagCompound() ? stack.getTagCompound().getInteger("sat") : 0;
 	}
 
 	@Override
-	@Nullable
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving){
 		if(entityLiving instanceof EntityPlayer){
 			EntityPlayer entityplayer = (EntityPlayer) entityLiving;
@@ -61,7 +71,7 @@ public class EdibleBlob extends ItemFood{
 			NBTTagCompound nbt = new NBTTagCompound();
 			food.writeNBT(nbt);
 			nbt.setInteger("foodLevel", Math.min(getHealAmount(stack) + food.getFoodLevel(), 20));
-			nbt.setFloat("foodSaturationLevel", Math.min(20F, food.getSaturationLevel() + getSaturationModifier(stack)));
+			nbt.setFloat("foodSaturationLevel", Math.min(20F, food.getSaturationLevel() + getTrueSat(stack)));
 			food.readNBT(nbt);
 			worldIn.playSound(null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
 			entityplayer.addStat(StatList.getObjectUseStats(this));
@@ -74,8 +84,12 @@ public class EdibleBlob extends ItemFood{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add(stack.hasTagCompound() ? "Food value: " + stack.getTagCompound().getInteger("food") : "ERROR");
-		tooltip.add(stack.hasTagCompound() ? "Saturation value: " + stack.getTagCompound().getInteger("sat") : "ERROR");
+		if(stack.hasTagCompound()){
+			tooltip.add("Food value: " + getHealAmount(stack));
+			tooltip.add("Saturation value: " + getTrueSat(stack));
+		}else{
+			tooltip.add("Error");
+		}
 		tooltip.add("Just like mama used to make.");
 	}
 }

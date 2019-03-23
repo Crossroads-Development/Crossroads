@@ -1,15 +1,13 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
-import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
-import com.Da_Technomancer.crossroads.render.bakedModel.BakedModelLoader;
 import com.Da_Technomancer.crossroads.entity.ModEntities;
 import com.Da_Technomancer.crossroads.fluids.ModFluids;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
+import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
+import com.Da_Technomancer.crossroads.render.bakedModel.BakedModelLoader;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
