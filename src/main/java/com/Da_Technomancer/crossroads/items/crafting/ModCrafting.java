@@ -169,8 +169,6 @@ public final class ModCrafting{
 		//Shell
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.shellGlass, 1), " * ", "* *", " * ", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.shellCrystal, 1), " * ", "* *", " * ", '*', "gemAlcCryst"));
-		//Leyden Jar
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModItems.leydenJar, 1), " | ", "*r*", "***", '|', "stickIron", 'r', "dustRedstone", '*', "nuggetIron"));
 		//Alchemical Tube
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.alchemicalTubeGlass, 8), "***", "   ", "***", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.alchemicalTubeCrystal, 8), "***", "   ", "***", '*', "gemAlcCryst"));
@@ -213,10 +211,7 @@ public final class ModCrafting{
 		//Redstone Alchemical Tube
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTubeGlass, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTubeGlass, 1)));
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(ModBlocks.redsAlchemicalTubeCrystal, 1), "dustRedstone", "dustRedstone", "dustRedstone", new ItemStack(ModBlocks.alchemicalTubeCrystal, 1)));
-		//Tesla Coil
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoil, 2), "|||", "^*^", "|||", '*', "ingotCopper", '|', "ingotIron", '^', "dustRedstone"));
-		//Tesla Coil Tops
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoilTopNormal, 2), "III", " C ", "RCR", 'C', "ingotCopper", 'I', "ingotIron", 'R', "dustRedstone"));
+		//Enhanced Tesla Coil Tops
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoilTopDistance, 1), "TTT", "TCT", "TTT", 'T', "ingotTin", 'C', ModBlocks.teslaCoilTopNormal));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoilTopIntensity, 1), "TTT", "TCT", "TTT", 'T', "ingotGold", 'C', ModBlocks.teslaCoilTopNormal));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoilTopAttack, 1), "TTT", "TCT", "TTT", 'T', "ingotCopper", 'C', ModBlocks.teslaCoilTopNormal));
@@ -490,6 +485,13 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.linkingTool, 1), EssentialsItems.wrench, "dustRedstone"));
 		//Aqua Regia
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(ModItems.solidRegia, 4), ModItems.solidMuriatic, ModItems.solidMuriatic, ModItems.solidMuriatic, ModItems.solidFortis));
+		//Leyden Jar
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModItems.leydenJar, 1), " | ", "*r*", "***", '|', "stickIron", 'r', "dustRedstone", '*', "nuggetIron"));
+		//Tesla Coil
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoil, 2), "|||", "^*^", "|||", '*', "ingotCopper", '|', "ingotIron", '^', "dustRedstone"));
+		//Tesla Coil Tops
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.teslaCoilTopNormal, 2), "III", " C ", "RCR", 'C', "ingotCopper", 'I', "ingotIron", 'R', "dustRedstone"));
+
 	}
 
 	private static ItemStack getFilledHopper(){

@@ -2,7 +2,8 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneTransmitterTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTopTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;

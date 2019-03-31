@@ -1,9 +1,9 @@
-package com.Da_Technomancer.crossroads.tileentities.alchemy;
+package com.Da_Technomancer.crossroads.tileentities.electric;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.items.alchemy.LeydenJar;
+import com.Da_Technomancer.crossroads.items.LeydenJar;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.items.alchemy;
+package com.Da_Technomancer.crossroads.items;
 
 import java.util.List;
 

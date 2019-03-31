@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,11 +23,11 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		if(!cage.isEmpty()){
-			if(cage.getTagCompound() == null){
-				cage.setTagCompound(new NBTTagCompound());
+			BeamUnit cageBeam = BeamCage.getStored(cage);
+			if(cageBeam == null){
+				cageBeam = new BeamUnit(0, 0, 0, 0);
 			}
-			NBTTagCompound nbt = cage.getTagCompound();
-			chat.add("Stored: [Energy: " + nbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name()) + ", Potential: " + nbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name()) + ", Stability: " + nbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name()) + ", Void: " + nbt.getInteger("stored_" + EnumBeamAlignments.VOID.name()) + "]");
+			chat.add("Stored: [Energy: " + cageBeam.getEnergy() + ", Potential: " + cageBeam.getPotential() + ", Stability: " + cageBeam.getStability() + ", Void: " + cageBeam.getVoid() + "]");
 		}
 	}
 	
@@ -87,29 +87,32 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 		@Override
 		public void setMagic(BeamUnit mag){
 			if(mag != null && cage != null){
-				if(cage.getTagCompound() == null){
-					cage.setTagCompound(new NBTTagCompound());
+				BeamUnit cageBeam = BeamCage.getStored(cage);
+				if(cageBeam == null){
+					cageBeam = new BeamUnit(0, 0, 0, 0);
 				}
-				NBTTagCompound nbt = cage.getTagCompound();
-				int energy = nbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name());
+
+
+				int energy = cageBeam.getEnergy();
+				int potential = cageBeam.getPotential();
+				int stability = cageBeam.getStability();
+				int voi = cageBeam.getVoid();
+
 				energy += mag.getEnergy();
 				energy = Math.min(1024, energy);
-				nbt.setInteger("stored_" + EnumBeamAlignments.ENERGY.name(), energy);
-				
-				int potential = nbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name());
+
 				potential += mag.getPotential();
 				potential = Math.min(1024, potential);
-				nbt.setInteger("stored_" + EnumBeamAlignments.POTENTIAL.name(), potential);
-				
-				int stability = nbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name());
+
 				stability += mag.getStability();
 				stability = Math.min(1024, stability);
-				nbt.setInteger("stored_" + EnumBeamAlignments.STABILITY.name(), stability);
-				
-				int voi = nbt.getInteger("stored_" + EnumBeamAlignments.VOID.name());
+
 				voi += mag.getVoid();
 				voi = Math.min(1024, voi);
-				nbt.setInteger("stored_" + EnumBeamAlignments.VOID.name(), voi);
+
+				cageBeam = new BeamUnit(energy, potential, stability, voi);
+
+				BeamCage.storeBeam(cage, cageBeam.getPower() == 0 ? null : cageBeam);
 			}
 		}
 	}

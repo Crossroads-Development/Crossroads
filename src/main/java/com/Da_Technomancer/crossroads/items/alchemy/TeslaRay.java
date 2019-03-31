@@ -1,8 +1,9 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
+import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTopTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;

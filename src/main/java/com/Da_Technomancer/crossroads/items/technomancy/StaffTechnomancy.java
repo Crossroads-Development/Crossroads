@@ -52,18 +52,23 @@ public class StaffTechnomancy extends BeamUsingItem{
 				return;
 			}
 
-			NBTTagCompound cageNbt = cage.getTagCompound();
 			NBTTagCompound nbt = stack.getTagCompound();
 			int energy = nbt.getInteger(EnumBeamAlignments.ENERGY.name());
 			int potential = nbt.getInteger(EnumBeamAlignments.POTENTIAL.name());
 			int stability = nbt.getInteger(EnumBeamAlignments.STABILITY.name());
 			int voi = nbt.getInteger(EnumBeamAlignments.VOID.name());
-			if(energy <= cageNbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name()) && potential <= cageNbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name()) && stability <= cageNbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name()) && voi <= cageNbt.getInteger("stored_" + EnumBeamAlignments.VOID.name())){
+
+			BeamUnit cageBeam = BeamCage.getStored(cage);
+			int beamEn = cageBeam == null ? 0 : cageBeam.getEnergy();
+			int beamPo = cageBeam == null ? 0 : cageBeam.getPotential();
+			int beamSt = cageBeam == null ? 0 : cageBeam.getStability();
+			int beamVo = cageBeam == null ? 0 : cageBeam.getVoid();
+
+			if(energy <= beamEn && potential <= beamPo && stability <= beamSt && voi <= beamVo){
 				if(energy + potential + stability + voi > 0){
-					cageNbt.setInteger("stored_" + EnumBeamAlignments.ENERGY.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name()) - energy);
-					cageNbt.setInteger("stored_" + EnumBeamAlignments.POTENTIAL.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name()) - potential);
-					cageNbt.setInteger("stored_" + EnumBeamAlignments.STABILITY.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name()) - stability);
-					cageNbt.setInteger("stored_" + EnumBeamAlignments.VOID.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.VOID.name()) - voi);
+					BeamCage.storeBeam(cage, new BeamUnit(beamEn - energy, beamPo - potential, beamSt - stability, beamVo - voi));
+
+
 					BeamUnit mag = new BeamUnit(energy, potential, stability, voi);
 
 					double heldOffset = .22D * (player.getActiveHand() == EnumHand.MAIN_HAND ^ player.getPrimaryHand() == EnumHandSide.LEFT ? 1D : -1D);

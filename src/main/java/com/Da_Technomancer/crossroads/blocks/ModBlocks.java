@@ -2,6 +2,9 @@ package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.blocks.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.beams.*;
+import com.Da_Technomancer.crossroads.blocks.electric.Dynamo;
+import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoil;
+import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.blocks.fluid.*;
 import com.Da_Technomancer.crossroads.blocks.heat.*;
 import com.Da_Technomancer.crossroads.blocks.rotary.*;

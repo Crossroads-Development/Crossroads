@@ -1,10 +1,10 @@
-package com.Da_Technomancer.crossroads.blocks.alchemy;
+package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.TeslaCoilTopTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;

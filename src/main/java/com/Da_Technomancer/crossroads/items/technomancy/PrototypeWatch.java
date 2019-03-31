@@ -191,12 +191,15 @@ public class PrototypeWatch extends BeamUsingItem{
 				int potential = nbt.getInteger(EnumBeamAlignments.POTENTIAL.name());
 				int stability = nbt.getInteger(EnumBeamAlignments.STABILITY.name());
 				int voi = nbt.getInteger(EnumBeamAlignments.VOID.name());
-				if(energy <= cageNbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name()) && potential <= cageNbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name()) && stability <= cageNbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name()) && voi <= cageNbt.getInteger("stored_" + EnumBeamAlignments.VOID.name())){
+				ItemStack heldCage = ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND);
+				BeamUnit cageBeam = BeamCage.getStored(heldCage);
+				int beamEn = cageBeam == null ? 0 : cageBeam.getEnergy();
+				int beamPo = cageBeam == null ? 0 : cageBeam.getPotential();
+				int beamSt = cageBeam == null ? 0 : cageBeam.getStability();
+				int beamVo = cageBeam == null ? 0 : cageBeam.getVoid();
+				if(energy <= beamEn && potential <= beamPo && stability <= beamSt && voi <= beamVo){
 					if(energy + potential + stability + voi > 0){
-						cageNbt.setInteger("stored_" + EnumBeamAlignments.ENERGY.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name()) - energy);
-						cageNbt.setInteger("stored_" + EnumBeamAlignments.POTENTIAL.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name()) - potential);
-						cageNbt.setInteger("stored_" + EnumBeamAlignments.STABILITY.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name()) - stability);
-						cageNbt.setInteger("stored_" + EnumBeamAlignments.VOID.name(), cageNbt.getInteger("stored_" + EnumBeamAlignments.VOID.name()) - voi);
+						BeamCage.storeBeam(heldCage, new BeamUnit(beamEn - energy, beamPo - potential, beamSt - stability, beamVo - voi));
 						port.getCapPrototype(Capabilities.BEAM_CAPABILITY).setMagic(new BeamUnit(energy, potential, stability, voi));
 					}
 				}
@@ -324,29 +327,27 @@ public class PrototypeWatch extends BeamUsingItem{
 					EntityLivingBase ent = (EntityLivingBase) user;
 					ItemStack offhand = ent.getHeldItem(EnumHand.OFF_HAND);
 					if(offhand.getItem() == ModItems.beamCage){
-						if(offhand.getTagCompound() == null){
-							offhand.setTagCompound(new NBTTagCompound());
+						BeamUnit cageBeam = BeamCage.getStored(offhand);
+						if(cageBeam == null){
+							cageBeam = new BeamUnit(0, 0, 0, 0);
 						}
-						NBTTagCompound nbt = offhand.getTagCompound();
-						int energy = nbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name());
+						int energy = cageBeam.getEnergy();
 						energy += mag.getEnergy();
 						energy = Math.min(1024, energy);
-						nbt.setInteger("stored_" + EnumBeamAlignments.ENERGY.name(), energy);
 
-						int potential = nbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name());
+						int potential = cageBeam.getPotential();
 						potential += mag.getPotential();
 						potential = Math.min(1024, potential);
-						nbt.setInteger("stored_" + EnumBeamAlignments.POTENTIAL.name(), potential);
 
-						int stability = nbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name());
+						int stability = cageBeam.getStability();
 						stability += mag.getStability();
 						stability = Math.min(1024, stability);
-						nbt.setInteger("stored_" + EnumBeamAlignments.STABILITY.name(), stability);
 
-						int voi = nbt.getInteger("stored_" + EnumBeamAlignments.VOID.name());
+						int voi = cageBeam.getVoid();
 						voi += mag.getVoid();
 						voi = Math.min(1024, voi);
-						nbt.setInteger("stored_" + EnumBeamAlignments.VOID.name(), voi);
+
+						BeamCage.storeBeam(offhand, energy + potential + stability + voi == 0 ? null : new BeamUnit(energy, potential, stability, voi));
 					}
 				}
 			}

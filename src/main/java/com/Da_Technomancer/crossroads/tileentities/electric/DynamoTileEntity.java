@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.tileentities.rotary;
+package com.Da_Technomancer.crossroads.tileentities.electric;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;

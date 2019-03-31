@@ -2,7 +2,9 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
+import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -113,7 +115,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && RecipeHolder.beamExtractRecipes.containsKey(stack.getItem());
+		return index == 0 && (RecipeHolder.beamExtractRecipes.containsKey(stack.getItem()) || stack.getItem() == ModItems.beamCage);
 	}
 
 	@Override
@@ -166,15 +168,16 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || stack.isEmpty() || inv.getCount() >= getSlotLimit(0) || !inv.isEmpty() && !inv.isItemEqual(stack) || !(RecipeHolder.beamExtractRecipes.containsKey(stack.getItem()))){
+			if(!isItemValidForSlot(0, stack) || stack.isEmpty() || inv.getCount() >= getSlotLimit(0) || !inv.isEmpty() && !inv.isItemEqual(stack)){
 				return stack;
 			}
 
-			int moved = Math.min(getSlotLimit(0) - inv.getCount(), stack.getCount());
+			int moved = Math.min(stack.getMaxStackSize() - inv.getCount(), stack.getCount());
 
 			if(!simulate){
 				if(inv.isEmpty()){
-					inv = new ItemStack(stack.getItem(), moved, stack.getMetadata());
+					inv = stack.copy();
+					inv.setCount(moved);
 				}else{
 					inv.grow(moved);
 				}
@@ -186,6 +189,16 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			if(slot == 0){
+				int moved = Math.min(amount, inv.getCount());
+				if(simulate){
+					ItemStack out = inv.copy();
+					out.setCount(moved);
+					return out;
+				}
+				markDirty();
+				return inv.splitStack(moved);
+			}
 			return ItemStack.EMPTY;
 		}
 
@@ -198,13 +211,17 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 	@Override
 	protected void doEmit(BeamUnit toEmit){
 		EnumFacing dir = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
-		if(!inv.isEmpty() && RecipeHolder.beamExtractRecipes.containsKey(inv.getItem())){
-			BeamUnit mag = RecipeHolder.beamExtractRecipes.get(inv.getItem());
-			inv.shrink(1);
-			if(beamer[dir.getIndex()].emit(mag, world)){
-				refreshBeam(dir.getIndex());
+		BeamUnit mag = null;
+		if(!inv.isEmpty()){
+			if(RecipeHolder.beamExtractRecipes.containsKey(inv.getItem())){
+				mag = RecipeHolder.beamExtractRecipes.get(inv.getItem());
+				inv.shrink(1);
+			}else if(inv.getItem() == ModItems.beamCage){
+				mag = BeamCage.getStored(inv);
+				BeamCage.storeBeam(inv, null);
 			}
-		}else if(beamer[dir.getIndex()].emit(null, world)){
+		}
+		if(beamer[dir.getIndex()].emit(mag, world)){
 			refreshBeam(dir.getIndex());
 		}
 	}
