@@ -284,14 +284,10 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.temporalAccelerator, 1), "CCC", "Q|Q", " | ", 'C', "ingotCopshowium", '|', "stickIron", 'Q', ModItems.luminescentQuartz));
 		//Electric Flux Stabilizer
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxStabilizerElectric, 1), "RCR", "CGC", "RCR", 'C', "ingotCopshowium", 'G', "blockGlass", 'R', "dustRedstone"));
-		//Mechanical Flux Stabilizer
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxStabilizerMechanical, 1), "RCR", "CGC", "RCR", 'C', "ingotCopshowium", 'G', "blockGlass", 'R', "gearIron"));
 		//Beam Flux Stabilizer
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxStabilizerBeam, 1), "RCR", "CGC", "RCR", 'C', "ingotCopshowium", 'G', "blockGlass", 'R', ModItems.pureQuartz));
 		//Electric Flux Crystal Stabilizer
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxStabilizerCrystalElectric, 1), "RCR", "CGC", "RCR", 'C', "ingotCopshowium", 'G', ModItems.alchCrystal, 'R', "dustRedstone"));
-		//Mechanical Flux Crystal Stabilizer
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxStabilizerCrystalMechanical, 1), "RCR", "CGC", "RCR", 'C', "ingotCopshowium", 'G', ModItems.alchCrystal, 'R', "gearIron"));
 		//Beam Flux Crystal Stabilizer
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(ModBlocks.fluxStabilizerCrystalBeam, 1), "RCR", "CGC", "RCR", 'C', "ingotCopshowium", 'G', ModItems.alchCrystal, 'R', ModItems.pureQuartz));
 

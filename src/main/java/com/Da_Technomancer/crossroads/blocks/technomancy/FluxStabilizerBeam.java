@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxStabilizerBeamTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.AbstractStabilizerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.StabilizerBeamTileEntity;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -55,7 +55,7 @@ public class FluxStabilizerBeam extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new FluxStabilizerBeamTileEntity(crystal);
+		return new StabilizerBeamTileEntity().setCrystal(crystal);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class FluxStabilizerBeam extends BlockContainer{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add(String.format("Destroys up to %1$d flux/cycle with stability", FluxUtil.getStabilizerLimit(crystal)));
+		tooltip.add(String.format("Destroys up to %1$d flux/cycle with stability", AbstractStabilizerTileEntity.DRAIN_CAP));
 		tooltip.add("1 flux per stability");
 		tooltip.add("Does not overfill with flux");
 	}

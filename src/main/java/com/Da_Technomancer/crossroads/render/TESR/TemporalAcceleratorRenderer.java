@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -20,7 +21,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAcceleratorTileEntity>{
+public class TemporalAcceleratorRenderer extends TileEntitySpecialRenderer<TemporalAcceleratorTileEntity>{
 
 	private static final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));
 	private static final float sHalfT = .5F / (1F + (float) Math.sqrt(2F));

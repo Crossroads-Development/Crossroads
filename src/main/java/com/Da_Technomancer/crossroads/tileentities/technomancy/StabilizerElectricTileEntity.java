@@ -1,46 +1,31 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 
-public class FluxStabilizerElectricTileEntity extends AbstractFluxStabilizerTE{
+public class StabilizerElectricTileEntity extends AbstractStabilizerTileEntity{
 
 	private int fe = 0;
 	private static final int CAPACITY = 10_000;
 
-	public FluxStabilizerElectricTileEntity(){
+	public StabilizerElectricTileEntity(){
 		super();
 	}
 
-	public FluxStabilizerElectricTileEntity(boolean crystal){
-		super(crystal);
-	}
-
 	@Override
-	public void update(){
-		super.update();
-
-		if(!world.isRemote && world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
-			if(clientRunning ^ (fe != 0 && flux != 0)){
-				clientRunning = !clientRunning;
-				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 4, clientRunning ? 1L : 0L, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			}
-			int cap = FluxUtil.getStabilizerLimit(crystal);
-			flux = Math.max(0, flux - Math.min(cap, fe / FluxUtil.getFePerFlux(false)));
-			if(fe != 0){
-				markDirty();
-			}
-			fe = Math.max(0, fe - cap * FluxUtil.getFePerFlux(false));
+	protected int drainFuel(){
+		int drained = Math.min(8 * FluxUtil.getFePerFlux(false), fe);
+		fe -= drained;
+		if(drained != 0){
+			markDirty();
 		}
+		return drained / FluxUtil.getFePerFlux(false);
 	}
 
 	@Override

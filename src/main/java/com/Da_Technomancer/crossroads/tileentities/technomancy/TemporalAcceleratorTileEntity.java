@@ -1,13 +1,15 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.FluxTE;
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAccelerator;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -30,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class TemporalAcceleratorTileEntity extends FluxTE{
+public class TemporalAcceleratorTileEntity extends TileEntity implements ITickable, IInfoTE, ILongReceiver{
 
 	private static final Random RAND = new Random();
 	private final IBeamHandler magicHandler = new BeamHandler();
@@ -57,7 +59,6 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
-		super.receiveLong(identifier, message, sendingPlayer);
 		if(identifier == 4){
 			size = (int) message;
 		}
@@ -98,16 +99,19 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		super.addInfo(chat, player, side, hitX, hitY, hitZ);
+		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world));
 		chat.add("Size: " + size);
 		chat.add("Applied Boost: " + (intensity < 0 ? Math.max(intensity, -16) + "/16" : "+" + (int) (Math.pow(2, (int) (intensity / 4)) - 1)));
 	}
 
 	@Override
 	public void update(){
-		super.update();
-
 		if(!world.isRemote && world.getTotalWorldTime() != lastRunTick){
+			if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){
+				FluxUtil.overloadFlux(world, pos);
+				return;
+			}
+
 			lastRunTick = world.getTotalWorldTime();
 			int extraTicks = (int) Math.pow(2, (int) (intensity / 4)) - 1;
 			if(extraTicks > 0){
@@ -155,14 +159,14 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 					if(intensity <= -16){
 						//The effect of this is that while time is fully stopped, the flux produced increases, but the flux creation is reset once time is again allowed to flow
 						duration += 1;
-						addFlux(size * duration);
+						EntropySavedData.addEntropy(world, size * duration);
 					}else{
 						duration = 0;
-						addFlux(size);
+						EntropySavedData.addEntropy(world, size);
 					}
 				}else{
 					duration = 0;
-					addFlux(size * extraTicks);
+					EntropySavedData.addEntropy(world, size * extraTicks);
 				}
 				intensity = 0;
 				markDirty();
@@ -205,16 +209,6 @@ public class TemporalAcceleratorTileEntity extends FluxTE{
 		NBTTagCompound nbt = super.getUpdateTag();
 		nbt.setInteger("size", size);
 		return nbt;
-	}
-
-	@Override
-	public boolean isFluxEmitter(){
-		return true;
-	}
-
-	@Override
-	public boolean isFluxReceiver(){
-		return false;
 	}
 
 	private class BeamHandler implements IBeamHandler{

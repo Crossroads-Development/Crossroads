@@ -2,11 +2,13 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.FlexibleGameProfile;
+import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.FluxTE;
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
+import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -21,6 +23,7 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -33,7 +36,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GatewayFrameTileEntity extends FluxTE{
+public class GatewayFrameTileEntity extends TileEntity implements ITickable, IInfoTE{
 
 	private final IBeamHandler magicHandler = new BeamHandler();
 	private FlexibleGameProfile owner;
@@ -52,7 +55,7 @@ public class GatewayFrameTileEntity extends FluxTE{
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		super.addInfo(chat, player, side, hitX, hitY, hitZ);
+		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world));
 		if(world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP)){
 			BlockPos target = dialedCoord();
 			if(target != null){
@@ -63,10 +66,13 @@ public class GatewayFrameTileEntity extends FluxTE{
 
 	@Override
 	public void update(){
-		super.update();
-
 		if(!world.isRemote){
 			if(BeamManager.beamStage == 1){
+				if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){
+					FluxUtil.overloadFlux(world, pos);
+					return;
+				}
+
 				cacheValid = false;
 				if(world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
 					if(owner != null && element != null && getAlignment() != null){
@@ -91,7 +97,7 @@ public class GatewayFrameTileEntity extends FluxTE{
 						if(dim != null){
 							world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP), 2);
 
-							addFlux(1);
+							EntropySavedData.addEntropy(world, 1);
 
 							List<Entity> toTransport = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() - 1, pos.getY() - 3, pos.getZ() - 1, pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1), EntitySelectors.IS_ALIVE);
 							if(!toTransport.isEmpty()){
@@ -107,7 +113,7 @@ public class GatewayFrameTileEntity extends FluxTE{
 
 								PlayerList playerList = world.getMinecraftServer().getPlayerList();
 								for(Entity ent : toTransport){
-									addFlux(8);
+									EntropySavedData.addEntropy(world, 8);
 									if(ent instanceof EntityPlayerMP){
 										playerList.transferPlayerToDimension((EntityPlayerMP) ent, dim, porter);
 									}else{
@@ -213,16 +219,6 @@ public class GatewayFrameTileEntity extends FluxTE{
 		if(owner != null && owner.isNewlyCompleted()){
 			markDirty();
 		}
-	}
-
-	@Override
-	public boolean isFluxEmitter(){
-		return true;
-	}
-
-	@Override
-	public boolean isFluxReceiver(){
-		return false;
 	}
 
 	private static class GatewayTeleporter implements ITeleporter{

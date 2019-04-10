@@ -4,7 +4,8 @@ import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxStabilizerElectricTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.AbstractStabilizerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.StabilizerElectricTileEntity;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -55,7 +56,7 @@ public class FluxStabilizerElectric extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta){
-		return new FluxStabilizerElectricTileEntity(crystal);
+		return new StabilizerElectricTileEntity().setCrystal(crystal);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class FluxStabilizerElectric extends BlockContainer{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add(String.format("Destroys up to %1$d flux/cycle with FE", FluxUtil.getStabilizerLimit(crystal)));
+		tooltip.add(String.format("Destroys up to %1$d flux/cycle with FE", AbstractStabilizerTileEntity.DRAIN_CAP));
 		tooltip.add("1 flux per " + FluxUtil.getFePerFlux(true) + "FE");
 		tooltip.add("Does not overfill with flux");
 		tooltip.add("Drains energy at " + 8 * FluxUtil.getFePerFlux(true) / 5 + "FE/t regardless of work");

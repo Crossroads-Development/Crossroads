@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -64,6 +65,8 @@ public final class ModConfig{
 	public static Property phelEffect;
 	public static Property gravRange;
 	public static Property fePerFlux;
+	public static Property entropyDecayRate;
+	public static Property entropyDropBlock;
 
 	public static ArrayList<Property> boboItemProperties = new ArrayList<>();
 
@@ -113,6 +116,8 @@ public final class ModConfig{
 		SYNCED_PROPERTIES.add(technomancy = config.get(CAT_SPECIALIZATION, "Enable Technomancy", true, "Default true"));
 		SYNCED_PROPERTIES.add(alchemy = config.get(CAT_SPECIALIZATION, "Enable Alchemy", true, "Default: true"));
 		SYNCED_PROPERTIES.add(witchcraft = config.get(CAT_SPECIALIZATION, "Enable Witchcraft", true, "Default: true; NYI"));
+		entropyDecayRate = config.get(CAT_TECHNOMANCY, "Natural Entropic Flux decay rate", 1, "Default: 1", 0, EntropySavedData.MAX_VALUE);
+		entropyDropBlock = config.get(CAT_TECHNOMANCY, "Whether Technomancy machines should drop an item when overloaded", false, "Default: false");
 		voidChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Voiding disaster from Technomancy", true, "Default: true");
 		resetChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Reset disaster from Technomancy", true, "Default: true");
 		magicChunk = config.get(CAT_TECHNOMANCY, "Allow Chunk Magic-ifying disaster from Technomancy", true, "Default: true");
@@ -120,9 +125,9 @@ public final class ModConfig{
 		blockedPrototype = config.get(CAT_TECHNOMANCY, "Blocks disallowed to be used in prototypes. Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'.", new String[] {Main.MODID + ":large_gear_slave", Main.MODID + ":large_gear_master", Main.MODID + ":prototype", Main.MODID + ":gateway_frame", "minecraft:portal", "rftools:matter_transmitter", "bloodmagic:blockteleposer"}, "Use to prevent exploits, bugs, travel to the prototype dimension, griefing, and other naughty things. Also, most modded multiblocks should be blocked to prevent bugs.");
 		SYNCED_PROPERTIES.add(allowPrototype = config.get(CAT_TECHNOMANCY, "Restrictions on prototyping", 0, "-1: Prototyping is disabled. May block large amounts of the mod. 0: Default value. 1: Prototyping destroys the template structure the prototype was made from instead of copying the template. (prevents unintended dupe exploits). 2: Prototyping works as normal, except prototype blocks themselves cannot be placed, only used within other compatible devices (such as the watch); Default: 0", -1, 2));
 		maximumPistolDamage = config.get(CAT_TECHNOMANCY, "Maximum pistol damage per shot", -1, "-1 for no cap. Default: -1", -1, Integer.MAX_VALUE);
-		cccExpenLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber without flux", "copper", "An invalid liquid will disable the crafting; Default: copper");
-		cccFieldLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber with flux", "distilled_water", "An invalid liquid will disable the crafting; Default: distilled_water");
-		SYNCED_PROPERTIES.add(fePerFlux = config.get(CAT_TECHNOMANCY, "FE equal to 1 flux", 500, "Default: 500", 1, Integer.MAX_VALUE));
+		cccExpenLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber without Temporal Entropy", "copper", "An invalid liquid will disable the crafting; Default: copper");
+		cccFieldLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber with Temporal Entropy", "distilled_water", "An invalid liquid will disable the crafting; Default: distilled_water");
+		SYNCED_PROPERTIES.add(fePerFlux = config.get(CAT_TECHNOMANCY, "FE equal to 1 Temporal Entropy", 50, "Default: 50", 1, Integer.MAX_VALUE));
 		SYNCED_PROPERTIES.add(allowHellfire = config.get(CAT_ALCHEMY, "Whether to allow crafting Ignis Infernum",true, "Default: true"));
 		atmosEffect = config.get(CAT_ALCHEMY, "Level of effects from overcharging the atmosphere", 3, "0: No negative effects. 1: Allow lightning strikes. 2: Allow creeper charging. 3: Allow lightning strikes & creeper charging. Default: 3", 0, 3);
 		SYNCED_PROPERTIES.add(atmosCap = config.get(CAT_ALCHEMY, "Maximum charge for the atmosphere", 1_000_000_000, "0-2 billion, default 1 billion", 0, 2_000_000_000));

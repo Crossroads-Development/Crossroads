@@ -8,13 +8,14 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntity>{
+public class GatewayFrameRenderer extends TileEntitySpecialRenderer<GatewayFrameTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/gateway.png");
 

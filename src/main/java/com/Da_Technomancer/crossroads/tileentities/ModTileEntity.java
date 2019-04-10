@@ -104,12 +104,11 @@ public class ModTileEntity{
 		register(RedstoneReceiverTileEntity.class, "redstone_receiver");
 		register(TeslaCoilTopTileEntity.class, "tesla_coil_top");
 		register(FluxNodeTileEntity.class, "flux_node");
-		register(FluxConsumerTileEntity.class, "flux_void");
+		register(AbstractStabilizerTileEntity.class, "flux_void");
 		register(TemporalAcceleratorTileEntity.class, "temporal_accelerator");
 		register(ChronoHarnessTileEntity.class, "chrono_harness");
-		register(FluxStabilizerBeamTileEntity.class, "flux_stabilizer_beam");
-		register(FluxStabilizerMechanicalTileEntity.class, "flux_stabilizer_mechanical");
-		register(FluxStabilizerElectricTileEntity.class, "flux_stabilizer_electric");
+		register(StabilizerBeamTileEntity.class, "flux_stabilizer_beam");
+		register(StabilizerElectricTileEntity.class, "flux_stabilizer_electric");
 		register(ReagentFilterTileEntity.class, "reagent_filter");
 	}
 

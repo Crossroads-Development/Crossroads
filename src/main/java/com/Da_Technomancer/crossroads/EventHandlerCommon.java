@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
@@ -182,6 +183,10 @@ public final class EventHandlerCommon{
 			e.world.profiler.endSection();
 		}
 
+		//Temporal Entropy decay
+		if(!e.world.isRemote && e.phase == Phase.START){
+			EntropySavedData.addEntropy(e.world, -ModConfig.getConfigInt(ModConfig.entropyDecayRate, false));
+		}
 
 
 		//Atmospheric overcharge effect

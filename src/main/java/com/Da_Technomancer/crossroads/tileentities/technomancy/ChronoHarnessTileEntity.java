@@ -2,11 +2,13 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.FluxTE;
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -17,16 +19,23 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
-public class ChronoHarnessTileEntity extends FluxTE{
+public class ChronoHarnessTileEntity extends ModuleTE{
 
-	public static final int POWER = FluxUtil.getFePerFlux(true) / FluxUtil.FLUX_TIME;
+	public static final int POWER = 100;
 	private static final int CAPACITY = 10_000;
 	public boolean running = false;//Used for rendering.
 
 	private int fe = 0;
 	private float partialFlux = 0;
 	public float angle = 0;//Used for rendering. Client side only
+
+	@Override
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world));
+		super.addInfo(chat, player, side, hitX, hitY, hitZ);
+	}
 
 	private boolean hasRedstone(){
 		IBlockState state = world.getBlockState(pos);
@@ -50,6 +59,11 @@ public class ChronoHarnessTileEntity extends FluxTE{
 		super.update();
 
 		if(!world.isRemote){
+			if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){
+				FluxUtil.overloadFlux(world, pos);
+				return;
+			}
+
 			boolean shouldRun = fe + POWER <= CAPACITY && !hasRedstone();
 
 			if(shouldRun){
@@ -57,8 +71,9 @@ public class ChronoHarnessTileEntity extends FluxTE{
 				markDirty();
 				partialFlux += (float) POWER / (float) FluxUtil.getFePerFlux(false);
 				if(partialFlux >= 1F){
-					partialFlux -= 1F;
-					addFlux(1);
+					int entropy = (int) Math.floor(partialFlux);
+					partialFlux -= entropy;
+					EntropySavedData.addEntropy(world, entropy);
 				}
 			}
 
@@ -122,16 +137,6 @@ public class ChronoHarnessTileEntity extends FluxTE{
 		NBTTagCompound nbt = super.getUpdateTag();
 		nbt.setBoolean("running", running);
 		return nbt;
-	}
-
-	@Override
-	public boolean isFluxEmitter(){
-		return true;
-	}
-
-	@Override
-	public boolean isFluxReceiver(){
-		return false;
 	}
 
 	private final EnergyHandler energyHandler = new EnergyHandler();

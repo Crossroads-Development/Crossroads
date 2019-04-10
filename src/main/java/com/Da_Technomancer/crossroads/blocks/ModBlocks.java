@@ -140,13 +140,10 @@ public class ModBlocks{
 	public static RedstoneTransmitter redstoneTransmitter;
 	public static RedstoneReceiver redstoneReceiver;
 	public static FluxNode fluxNode;
-	public static FluxConsumer fluxConsumer;
 	public static TemporalAccelerator temporalAccelerator;
 	public static ChronoHarness chronoHarness;
 	public static FluxStabilizerBeam fluxStabilizerBeam;
 	public static FluxStabilizerBeam fluxStabilizerCrystalBeam;
-	public static FluxStabilizerMechanical fluxStabilizerMechanical;
-	public static FluxStabilizerMechanical fluxStabilizerCrystalMechanical;
 	public static FluxStabilizerElectric fluxStabilizerElectric;
 	public static FluxStabilizerElectric fluxStabilizerCrystalElectric;
 
@@ -308,13 +305,10 @@ public class ModBlocks{
 		redstoneTransmitter = new RedstoneTransmitter();
 		redstoneReceiver = new RedstoneReceiver();
 		fluxNode = new FluxNode();
-		fluxConsumer = new FluxConsumer();
 		temporalAccelerator = new TemporalAccelerator();
 		chronoHarness = new ChronoHarness();
 		fluxStabilizerBeam = new FluxStabilizerBeam(false);
 		fluxStabilizerCrystalBeam = new FluxStabilizerBeam(true);
-		fluxStabilizerMechanical = new FluxStabilizerMechanical(false);
-		fluxStabilizerCrystalMechanical = new FluxStabilizerMechanical(true);
 		fluxStabilizerElectric = new FluxStabilizerElectric(false);
 		fluxStabilizerCrystalElectric = new FluxStabilizerElectric(true);
 	}

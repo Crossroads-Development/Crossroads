@@ -5,18 +5,14 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxHandler;
-import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopshowium;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -25,15 +21,13 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class CopshowiumCreationChamberTileEntity extends InventoryTE implements IFluxHandler, ILinkTE{
+public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 
 	/**
 	 * The number of mB of molten copshowium produced from 1mb of molten copper OR 1mb of distilled water.
 	 * Based on balance and convenience.
 	 */
 	private static final double COPSHOWIUM_PER_COPPER = 1.8D;
-	protected int flux;
-	protected ArrayList<BlockPos> links = new ArrayList<>(getMaxLinks());
 	public static final int CAPACITY = 1_296;
 
 
@@ -44,28 +38,14 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public boolean canBeginLinking(){
-		return true;
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world));
+		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 	}
 
 	@Override
 	protected int fluidTanks(){
 		return 2;
-	}
-
-	@Override
-	public void update(){
-		super.update();
-
-		if(world.isRemote || flux == 0 || world.getTotalWorldTime() % FluxUtil.FLUX_TIME != 0){
-			return;
-		}
-
-		int moved = FluxUtil.transFlux(world, pos, links, flux);
-		if(moved != 0){
-			flux -= moved;
-			markDirty();
-		}
 	}
 
 	private final FluidHandler inputHandler = new FluidHandler(0);
@@ -102,99 +82,17 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 		return "container.copshowium_maker";
 	}
 
-
-	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		super.addInfo(chat, player, side, hitX, hitY, hitZ);
-		for(BlockPos link : links){
-			chat.add("Linked Position: X=" + (pos.getX() + link.getX()) + " Y=" + (pos.getY() + link.getY()) + " Z=" + (pos.getZ() + link.getZ()));
-		}
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("flux", flux);
-		for(int i = 0; i < links.size(); i++){
-			nbt.setLong("link" + i, links.get(i).toLong());
-		}
-
-		return nbt;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
-		super.readFromNBT(nbt);
-		flux = nbt.getInteger("flux");
-		for(int i = 0; i < getMaxLinks(); i++){
-			if(nbt.hasKey("link" + i)){
-				links.add(BlockPos.fromLong(nbt.getLong("link" + i)));
-			}
-		}
-	}
-
-	@Override
-	public TileEntity getTE(){
-		return this;
-	}
-
-	@Override
-	public boolean canLink(ILinkTE otherTE){
-		return otherTE instanceof IFluxHandler && ((IFluxHandler) otherTE).isFluxReceiver();
-	}
-
-	@Override
-	public ArrayList<BlockPos> getLinks(){
-		return links;
-	}
-
-	@Override
-	public int canAccept(){
-		return 0;
-	}
-
-	@Override
-	public int getFlux(){
-		return flux;
-	}
-
-	@Override
-	public int getMaxLinks(){
-		return 4;
-	}
-
-	@Override
-	public int getCapacity(){
-		return 64;
-	}
-
-	@Override
-	public int addFlux(int fluxIn){
-		flux += fluxIn;
-		markDirty();
-		if(flux > getCapacity()){
-			world.destroyBlock(pos, false);
-			world.createExplosion(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 0, false);
-			FluxUtil.fluxEvent(world, pos, 64);
-		}
-		return flux;
-	}
-
-	@Override
-	public boolean isFluxEmitter(){
-		return true;
-	}
-
-	@Override
-	public boolean isFluxReceiver(){
-		return false;
-	}
-
 	private class BeamHandler implements IBeamHandler{
 
 		@Override
 		public void setMagic(BeamUnit mag){
 			if(EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.TIME && fluids[0] != null){
+				if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){
+					FluxUtil.overloadFlux(world, pos);
+					return;
+				}
+
+
 				if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccExpenLiquid, false))){
 					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) fluids[0].amount) * COPSHOWIUM_PER_COPPER) + (fluids[1] == null ? 0 : fluids[1].amount));
 					fluids[0] = null;
@@ -202,11 +100,11 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 					if(fluids[1].amount > CAPACITY){
 						world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());
 					}
-				}else if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false))){
+				}else if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false)) && EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.UNSTABLE.getRank()){
 					int created = (int) (((double) fluids[0].amount) * COPSHOWIUM_PER_COPPER);
 					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), created + (fluids[1] == null ? 0 : fluids[1].amount));
 					fluids[0] = null;
-					addFlux(4 * created / EnergyConverters.INGOT_MB);
+					EntropySavedData.addEntropy(world, 4 * created / EnergyConverters.INGOT_MB);
 					markDirty();
 					if(fluids[1].amount > CAPACITY){
 						world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());

@@ -48,12 +48,10 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(StampMillTileEntity.class, new StampMillRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(FluxNodeTileEntity.class, new FluxNodeRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TeslaCoilTopTileEntity.class, new LinkLineRenderer<TeslaCoilTopTileEntity>());
-		ClientRegistry.bindTileEntitySpecialRenderer(CopshowiumCreationChamberTileEntity.class, new LinkLineRenderer<CopshowiumCreationChamberTileEntity>());
 		ClientRegistry.bindTileEntitySpecialRenderer(TemporalAcceleratorTileEntity.class, new TemporalAcceleratorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(RedstoneTransmitterTileEntity.class, new LinkLineRenderer<RedstoneTransmitterTileEntity>());
-		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerBeamTileEntity.class, new FluxStabilizerRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerElectricTileEntity.class, new FluxStabilizerRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(FluxStabilizerMechanicalTileEntity.class, new FluxStabilizerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(StabilizerBeamTileEntity.class, new FluxStabilizerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(StabilizerElectricTileEntity.class, new FluxStabilizerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(ChronoHarnessTileEntity.class, new ChronoHarnessRenderer());
 	}
 

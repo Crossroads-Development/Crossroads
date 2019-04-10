@@ -1,21 +1,22 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.tileentities.technomancy.AbstractFluxStabilizerTE;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.AbstractStabilizerTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class FluxStabilizerRenderer extends LinkLineRenderer<AbstractFluxStabilizerTE>{
+public class FluxStabilizerRenderer extends TileEntitySpecialRenderer<AbstractStabilizerTileEntity>{
 
 	private static final ResourceLocation TEXTURE = TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM;
 
 	@Override
-	public void render(AbstractFluxStabilizerTE te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
+	public void render(AbstractStabilizerTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false)){
 			return;
 		}

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Triple;
@@ -17,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEntity>{
+public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarnessTileEntity>{
 
 	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Main.MODID, "textures/blocks/block_copshowium.png");
 	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Main.MODID, "textures/blocks/block_pure_quartz.png");

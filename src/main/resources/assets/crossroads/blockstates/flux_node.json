@@ -1,10 +1,5 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:flux_node", "x": 270, "y": 180 },
-		"facing=south": { "model": "crossroads:flux_node", "x": 270 },
-		"facing=east": { "model": "crossroads:flux_node", "x": 270, "y": 270 },
-		"facing=west": { "model": "crossroads:flux_node", "x": 270, "y": 90 },
-		"facing=up": { "model": "crossroads:flux_node" },
-		"facing=down": { "model": "crossroads:flux_node", "x": 180 }
+		"normal": { "model": "crossroads:flux_node" }
 	}
 }

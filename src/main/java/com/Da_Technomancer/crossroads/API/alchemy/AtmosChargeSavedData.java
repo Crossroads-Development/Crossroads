@@ -37,8 +37,13 @@ public class AtmosChargeSavedData extends WorldSavedData{
 
 	private static AtmosChargeSavedData get(World world){
 		MapStorage storage = world.getMapStorage();
-		AtmosChargeSavedData data = (AtmosChargeSavedData) storage.getOrLoadData(AtmosChargeSavedData.class, ID);
-
+		AtmosChargeSavedData data;
+		try{
+			data = (AtmosChargeSavedData) storage.getOrLoadData(AtmosChargeSavedData.class, ID);
+		}catch(NullPointerException e){
+			Main.logger.error("Failed AtmosChargeSavedData get due to null MapStorage", e);
+			return new AtmosChargeSavedData();//Blank storage that prevents actual read/write, but avoids a crash
+		}
 		if (data == null) {
 			data = new AtmosChargeSavedData();
 			storage.setData(ID, data);

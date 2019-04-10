@@ -35,7 +35,7 @@ public class TimeEffect implements IEffect{
 
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
-			FluxUtil.fluxEvent(worldIn, pos, mult);
+			FluxUtil.fluxEvent(worldIn, pos, worldIn.rand.nextInt(mult) + 1);
 		}
 	}
 }

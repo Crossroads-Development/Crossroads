@@ -7,11 +7,12 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class ChronoHarnessRenderer extends LinkLineRenderer<ChronoHarnessTileEntity>{
+public class ChronoHarnessRenderer extends TileEntitySpecialRenderer<ChronoHarnessTileEntity>{
 
 	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Main.MODID, "textures/blocks/block_copshowium.png");
 	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Main.MODID, "textures/blocks/block_cast_iron.png");
