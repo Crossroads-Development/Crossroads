@@ -84,10 +84,12 @@ public class TeslaCoil extends BlockContainer{
 			if(worldIn.isBlockPowered(pos)){
 				if(!ts.redstone){
 					ts.redstone = true;
+					ts.syncState();
 					ts.markDirty();
 				}
 			}else if(ts.redstone){
 				ts.redstone = false;
+				ts.syncState();
 				ts.markDirty();
 			}
 		}

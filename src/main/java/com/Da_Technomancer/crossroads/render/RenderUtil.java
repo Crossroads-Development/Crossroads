@@ -2,10 +2,12 @@ package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
+import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -44,7 +46,8 @@ public class RenderUtil{
 	}
 
 	public static void addArc(int dimension, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, float xStFin, float yStFin, float zStFin, int count, float diffusionRate, byte lifespan, int color){
-		DimensionManager.getWorld(dimension).playSound(null, xSt, ySt, zSt, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
+		World world = DimensionManager.getWorld(dimension);
+		world.playSound(null, xSt, ySt, zSt, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setInteger("id", 1);
@@ -61,8 +64,11 @@ public class RenderUtil{
 		nbt.setFloat("diffu", diffusionRate);
 		nbt.setInteger("color", color);
 		nbt.setByte("lif", lifespan);
-		ModPackets.network.sendToAllAround(new AddVisualToClient(nbt), new NetworkRegistry.TargetPoint(dimension, xSt, ySt, zSt, 512));
+
+		if(world.isRemote){
+			SafeCallable.effectsToRender.add(visualFactories[1].apply(nbt));
+		}else{
+			ModPackets.network.sendToAllAround(new AddVisualToClient(nbt), new NetworkRegistry.TargetPoint(dimension, xSt, ySt, zSt, 512));
+		}
 	}
-
-
 }

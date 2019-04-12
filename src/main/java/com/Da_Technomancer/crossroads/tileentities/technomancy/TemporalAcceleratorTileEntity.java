@@ -34,6 +34,7 @@ import java.util.Random;
 
 public class TemporalAcceleratorTileEntity extends TileEntity implements ITickable, IInfoTE, ILongReceiver{
 
+	public static final int FLUX_MULT = 1;
 	private static final Random RAND = new Random();
 	private final IBeamHandler magicHandler = new BeamHandler();
 	private EnumFacing facing;
@@ -156,17 +157,20 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 			//Create flux
 			if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
 				if(intensity < 0){
+					//Stopped time
 					if(intensity <= -16){
 						//The effect of this is that while time is fully stopped, the flux produced increases, but the flux creation is reset once time is again allowed to flow
 						duration += 1;
-						EntropySavedData.addEntropy(world, size * duration);
+						EntropySavedData.addEntropy(world, FLUX_MULT * size * duration);
 					}else{
+						//Slowed time
 						duration = 0;
-						EntropySavedData.addEntropy(world, size);
+						EntropySavedData.addEntropy(world, FLUX_MULT * size);
 					}
 				}else{
+					//Sped up time
 					duration = 0;
-					EntropySavedData.addEntropy(world, size * extraTicks);
+					EntropySavedData.addEntropy(world, FLUX_MULT * size * extraTicks);
 				}
 				intensity = 0;
 				markDirty();

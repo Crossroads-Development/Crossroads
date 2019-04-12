@@ -52,7 +52,7 @@ public class MechanismClutch extends MechanismAxle{
 
 	@Override
 	public double getRatiatorSignal(GearFactory.GearMaterial mat, EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
-		return Math.abs(motData[0]) * 3D;
+		return Math.abs(motData[0]);
 	}
 
 	@Override

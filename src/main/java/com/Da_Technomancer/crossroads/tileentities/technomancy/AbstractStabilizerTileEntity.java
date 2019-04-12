@@ -51,7 +51,7 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 	@Override
 	public void update(){
 		super.update();
-		if(world.isRemote || world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
+		if(world.isRemote){
 			return;
 		}
 
@@ -62,8 +62,10 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 
 		int drain = drainFuel();
 
-		if(drain == 0 ^ runTicks == 0){
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 4, drain != 0 ? 1L : 0L, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		if(drain != 0 ^ clientRunning){
+			clientRunning = !clientRunning;
+			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 4, clientRunning ? 1L : 0L, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			markDirty();
 		}
 
 		drained = drain;
@@ -89,6 +91,7 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 		super.readFromNBT(nbt);
 		crystal = nbt.getBoolean("crystal");
 		clientRunning = nbt.getBoolean("client_running");
+		runTicks = nbt.getInteger("runtime");
 	}
 
 	@Override
@@ -96,6 +99,7 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 		super.writeToNBT(nbt);
 		nbt.setBoolean("crystal", crystal);
 		nbt.setBoolean("client_running", clientRunning);
+		nbt.setInteger("runtime", runTicks);
 		return nbt;
 	}
 

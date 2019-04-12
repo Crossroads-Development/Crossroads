@@ -114,6 +114,7 @@ public class ModBlocks{
 	public static TeslaCoilTop teslaCoilTopIntensity;
 	public static TeslaCoilTop teslaCoilTopAttack;
 	public static TeslaCoilTop teslaCoilTopEfficiency;
+	public static TeslaCoilTop teslaCoilTopDecorative;
 	public static MaxwellDemon maxwellDemon;
 	public static GlasswareHolder glasswareHolder;
 	public static Alembic alembic;
@@ -273,6 +274,7 @@ public class ModBlocks{
 		teslaCoilTopIntensity = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.INTENSITY);
 		teslaCoilTopAttack = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.ATTACK);
 		teslaCoilTopEfficiency = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.EFFICIENCY);
+		teslaCoilTopDecorative = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.DECORATIVE);
 		maxwellDemon = new MaxwellDemon();
 		glasswareHolder = new GlasswareHolder();
 		alembic = new Alembic();

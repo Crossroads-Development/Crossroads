@@ -29,6 +29,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 	 */
 	private static final double COPSHOWIUM_PER_COPPER = 1.8D;
 	public static final int CAPACITY = 1_296;
+	public static final int FLUX_INGOT = 4;
 
 
 	public CopshowiumCreationChamberTileEntity(){
@@ -104,7 +105,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 					int created = (int) (((double) fluids[0].amount) * COPSHOWIUM_PER_COPPER);
 					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), created + (fluids[1] == null ? 0 : fluids[1].amount));
 					fluids[0] = null;
-					EntropySavedData.addEntropy(world, 4 * created / EnergyConverters.INGOT_MB);
+					EntropySavedData.addEntropy(world, FLUX_INGOT * created / EnergyConverters.INGOT_MB);
 					markDirty();
 					if(fluids[1].amount > CAPACITY){
 						world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());

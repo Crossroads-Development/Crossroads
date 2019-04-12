@@ -71,6 +71,8 @@ public class TeslaCoilTop extends BlockContainer{
 		tooltip.add("Loss: " + (100 - variant.efficiency) + "%");
 		if(variant == TeslaCoilVariants.ATTACK){
 			tooltip.add("Cannot transfer power. Attacks nearby entities with electric shocks");
+		}else if(variant == TeslaCoilVariants.DECORATIVE){
+			tooltip.add("Cannot transfer power. Shoots decorative arcs");
 		}
 		if(variant.joltAmt > TeslaCoilTileEntity.CAPACITY){
 			tooltip.add("Requires a Leyden Jar installed in the Tesla Coil");
@@ -99,7 +101,8 @@ public class TeslaCoilTop extends BlockContainer{
 		ATTACK(1_000, 6, 0),
 		DISTANCE(1_000, 32, 95),
 		INTENSITY(10_000, 8, 95),
-		EFFICIENCY(1_000, 8, 100);
+		EFFICIENCY(1_000, 8, 100),
+		DECORATIVE(100, 0, 0);
 
 		public final int joltAmt;
 		public final int range;

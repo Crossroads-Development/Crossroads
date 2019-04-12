@@ -1,8 +1,10 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
@@ -16,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -102,22 +105,29 @@ public class StaffTechnomancy extends BeamUsingItem{
 						endPos = newEndPos;
 						IBlockState state = player.world.getBlockState(endPos);
 						AxisAlignedBB bb = state.getBoundingBox(player.world, endPos).offset(endPos);
-						if(state.getBlock().canCollideCheck(state, true) && state.getBlock().isCollidable() && BeamManager.solidToBeams(state, player.world, endPos) && bb.minX <= end[0] && bb.maxX >= end[0] && bb.minY <= end[1] && bb.maxY >= end[1] && bb.minZ <= end[2] && bb.maxZ >= end[2]){
-							RayTraceResult res = bb.calculateIntercept(start, new Vec3d(end[0], end[1], end[2]));
+						if(state.getBlock().canCollideCheck(state, true) && state.getBlock().isCollidable() && BeamManager.solidToBeams(state, player.world, endPos)){
+							RayTraceResult res = bb.calculateIntercept(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D));
 							if(res != null && res.hitVec != null){
 								end[0] = res.hitVec.x;
 								end[1] = res.hitVec.y;
 								end[2] = res.hitVec.z;
 								effectDir = res.sideHit;
+								break;
 							}
-							break;
 						}
 					}
 
-
-					IEffect effect = EnumBeamAlignments.getAlignment(mag).getMixEffect(mag.getRGB());
-					if(effect != null && endPos != null && !player.world.isOutsideBuildHeight(endPos)){
-						effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()), effectDir);
+					if(endPos != null){//Should always be true
+						TileEntity te = player.world.getTileEntity(endPos);
+						IBeamHandler handler;
+						if(te != null && (handler = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)) != null){
+							handler.setMagic(mag);
+						}else{
+							IEffect effect = EnumBeamAlignments.getAlignment(mag).getMixEffect(mag.getRGB());
+							if(effect != null && !player.world.isOutsideBuildHeight(endPos)){
+								effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()), effectDir);
+							}
+						}
 					}
 
 					Vec3d beamVec = new Vec3d(end[0] - start.x, end[1] - start.y, end[2] - start.z);

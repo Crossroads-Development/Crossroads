@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 
+	public static final int FLUX = 4;
 	public float angle = 0;//Used for rendering. Client side only
 
 	private boolean running;
@@ -105,7 +106,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 				beamer[1].emit(out, world);
 				refreshBeam(1);//Assume the beam changed as the color constantly cycles
 				prevMag[1] = out;
-				EntropySavedData.addEntropy(world, 4);
+				EntropySavedData.addEntropy(world, FLUX * BeamManager.BEAM_TIME);
 				markDirty();
 			}
 		}

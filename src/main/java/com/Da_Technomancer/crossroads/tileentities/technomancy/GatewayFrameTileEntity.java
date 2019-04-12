@@ -38,6 +38,9 @@ import java.util.List;
 
 public class GatewayFrameTileEntity extends TileEntity implements ITickable, IInfoTE{
 
+	public static final int FLUX_MAINTAIN = 1;
+	public static final int FLUX_TRANSPORT = 16;
+
 	private final IBeamHandler magicHandler = new BeamHandler();
 	private FlexibleGameProfile owner;
 	private boolean cacheValid;
@@ -97,7 +100,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 						if(dim != null){
 							world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP), 2);
 
-							EntropySavedData.addEntropy(world, 1);
+							EntropySavedData.addEntropy(world, BeamManager.BEAM_TIME * FLUX_MAINTAIN);
 
 							List<Entity> toTransport = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() - 1, pos.getY() - 3, pos.getZ() - 1, pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1), EntitySelectors.IS_ALIVE);
 							if(!toTransport.isEmpty()){
@@ -113,7 +116,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 								PlayerList playerList = world.getMinecraftServer().getPlayerList();
 								for(Entity ent : toTransport){
-									EntropySavedData.addEntropy(world, 8);
+									EntropySavedData.addEntropy(world, FLUX_TRANSPORT);
 									if(ent instanceof EntityPlayerMP){
 										playerList.transferPlayerToDimension((EntityPlayerMP) ent, dim, porter);
 									}else{

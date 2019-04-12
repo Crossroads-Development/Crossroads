@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -64,7 +65,8 @@ public class CopshowiumCreationChamber extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Uses time beams to turn liquids into Copshowium");
-		tooltip.add("Produces 4 flux/ingot produced when using worse liquids");
+		tooltip.add("Uses time beams to turn liquids into Molten Copshowium");
+		tooltip.add(String.format("Produces %1$.3f%% entropy/ingot produced when using worse liquids", EntropySavedData.getPercentage(CopshowiumCreationChamberTileEntity.FLUX_INGOT)));
+		tooltip.add("Can only use worse liquids when entropy is above " + EntropySavedData.Severity.UNSTABLE.getLowerBound() + "%");
 	}
 }

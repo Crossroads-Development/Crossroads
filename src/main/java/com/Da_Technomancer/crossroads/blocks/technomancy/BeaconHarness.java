@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
@@ -49,7 +50,7 @@ public class BeaconHarness extends BeamBlock{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Produces massive beams when stabilized with a beam of the primary color missing from the output");
-		tooltip.add("Produces 4 flux/cycle while running");
+		tooltip.add(String.format("Produces %1$.3f%% entropy/tick while running", EntropySavedData.getPercentage(BeaconHarnessTileEntity.FLUX)));
 		tooltip.add("It's balanced because it requires nether stars.");
 	}
 

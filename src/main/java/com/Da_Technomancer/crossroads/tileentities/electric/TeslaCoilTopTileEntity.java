@@ -15,6 +15,7 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -52,35 +53,55 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 		}
 	}
 
-	protected boolean jolt(TeslaCoilTileEntity coilTE){
-		int range = getVariant().range;
-		int joltQty = getVariant().joltAmt;
-		
-		if(getVariant() == TeslaCoilTop.TeslaCoilVariants.ATTACK){
+	protected void jolt(TeslaCoilTileEntity coilTE){
+		TeslaCoilTop.TeslaCoilVariants variant = getVariant();
+		int range = variant.range;
+		int joltQty = variant.joltAmt;
+
+		if(variant == TeslaCoilTop.TeslaCoilVariants.ATTACK){
+			if(world.isRemote){
+				return;
+			}
+
 			//ATTACK
 			List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
 
-			if(!ents.isEmpty() && coilTE.stored >= joltQty){
+			if(!ents.isEmpty() && coilTE.getStored() >= joltQty){
 				EntityLivingBase ent = ents.get(world.rand.nextInt(ents.size()));
-				coilTE.stored -= joltQty;
+				coilTE.setStored(coilTE.getStored() - joltQty);
 				markDirty();
 
 				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, ATTACK_COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
 				ent.onStruckByLightning(new EntityLightningBolt(world, ent.posX, ent.posY, ent.posZ, true));
-				return true;
 			}
-		}else{
+		}else if(variant == TeslaCoilTop.TeslaCoilVariants.DECORATIVE){
+			if(coilTE.getStored() >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt){
+				if(world.isRemote){
+					//Spawn the purely decorative bolts on the client side directly to reduce packet load
+					int count = world.rand.nextInt(5) + 1;
+					Vec3d start = new Vec3d(pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F);
+					for(int i = 0; i < count; i++){
+						float angle = world.rand.nextFloat() * 2F * (float) Math.PI;
+						float rad = world.rand.nextFloat() * 2F + 3F;
+						Vec3d end = start.add(new Vec3d(rad * Math.cos(angle), world.rand.nextFloat() * 2F - 1F, rad * Math.sin(angle)));
+						RenderUtil.addArc(world.provider.getDimension(), start, end, 4, 0.6F, COLOR_CODES[world.rand.nextInt(COLOR_CODES.length)]);
+					}
+				}else{
+					coilTE.setStored(coilTE.getStored() - TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt);
+				}
+			}
+		}else if(!world.isRemote){
 			//TRANSFER
 			for(BlockPos linkPos : linked){
-				if(linkPos != null && coilTE.stored >= joltQty && linkPos.distanceSq(BlockPos.ORIGIN) <= range * range){
+				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distanceSq(BlockPos.ORIGIN) <= range * range){
 					BlockPos actualPos = linkPos.add(pos.getX(), pos.getY() - 1, pos.getZ());
 					TileEntity te = world.getTileEntity(actualPos);
 					if(te instanceof TeslaCoilTileEntity && world.getTileEntity(actualPos.up()) instanceof TeslaCoilTopTileEntity){
 						TeslaCoilTileEntity tcTe = (TeslaCoilTileEntity) te;
-						if(tcTe.handlerIn.getMaxEnergyStored() - tcTe.stored > joltQty * (double) getVariant().efficiency / 100D){
-							tcTe.stored += joltQty * (double) getVariant().efficiency / 100D;
+						if(tcTe.handlerIn.getMaxEnergyStored() - tcTe.getStored() > joltQty * (double) variant.efficiency / 100D){
+							tcTe.setStored(tcTe.getStored() + (int) (joltQty * (double) variant.efficiency / 100D));
 							tcTe.markDirty();
-							coilTE.stored -= joltQty;
+							coilTE.setStored(coilTE.getStored() - joltQty);
 							markDirty();
 
 							RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
@@ -90,9 +111,6 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 				}
 			}
 		}
-
-
-		return false;
 	}
 
 	@Override

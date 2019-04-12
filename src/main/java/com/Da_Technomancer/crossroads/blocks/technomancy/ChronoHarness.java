@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -113,8 +114,8 @@ public class ChronoHarness extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Produces FE for free, but creates flux as a byproduct");
-		tooltip.add("Produces " + FluxUtil.getFePerFlux(true) + "FE/flux at " + ChronoHarnessTileEntity.POWER + "FE/t");
+		tooltip.add("Produces FE for free, but creates entropy as a byproduct");
+		tooltip.add(String.format("Produces %1$dFE/t and %2$.3f%% entropy/tick", ChronoHarnessTileEntity.POWER, EntropySavedData.getPercentage(ChronoHarnessTileEntity.POWER / FluxUtil.getFePerFlux(true))));
 		tooltip.add("Disabled by a redstone signal");
 	}
 

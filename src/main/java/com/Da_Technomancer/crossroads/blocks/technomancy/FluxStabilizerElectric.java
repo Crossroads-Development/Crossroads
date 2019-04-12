@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -76,9 +77,8 @@ public class FluxStabilizerElectric extends BlockContainer{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add(String.format("Destroys up to %1$d flux/cycle with FE", AbstractStabilizerTileEntity.DRAIN_CAP));
-		tooltip.add("1 flux per " + FluxUtil.getFePerFlux(true) + "FE");
-		tooltip.add("Does not overfill with flux");
-		tooltip.add("Drains energy at " + 8 * FluxUtil.getFePerFlux(true) / 5 + "FE/t regardless of work");
+		tooltip.add(String.format("Destroys up to %1$.3f%% flux/tick with FE", EntropySavedData.getPercentage(AbstractStabilizerTileEntity.DRAIN_CAP)));
+		tooltip.add(String.format("-%1$.3f%% entropy per %2$dFE", EntropySavedData.getPercentage(1), FluxUtil.getFePerFlux(true)));
+		tooltip.add("Drains energy at " + AbstractStabilizerTileEntity.DRAIN_CAP * FluxUtil.getFePerFlux(true) + "FE/t regardless of work");
 	}
 }

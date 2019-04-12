@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -75,8 +76,7 @@ public class FluxStabilizerBeam extends BlockContainer{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add(String.format("Destroys up to %1$d flux/cycle with stability", AbstractStabilizerTileEntity.DRAIN_CAP));
-		tooltip.add("1 flux per stability");
-		tooltip.add("Does not overfill with flux");
+		tooltip.add(String.format("Destroys up to %1$.3f%% entropy/tick with stability", EntropySavedData.getPercentage(AbstractStabilizerTileEntity.DRAIN_CAP)));
+		tooltip.add(String.format("-%1$.3f%% entropy per stability", EntropySavedData.getPercentage(1)));
 	}
 }

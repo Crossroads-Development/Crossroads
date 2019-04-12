@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,10 +48,12 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	public ItemStack getCage(){
 		return cage;
 	}
-	
+
+	private final RedsHandler redsHandler = new RedsHandler();
+
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.BEAM_CAPABILITY){
+		if(cap == Capabilities.BEAM_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return true;
 		}
 
@@ -62,6 +65,9 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == Capabilities.BEAM_CAPABILITY){
 			return (T) magicHandler;
+		}
+		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
+			return (T) redsHandler;
 		}
 
 		return super.getCapability(cap, side);
@@ -80,6 +86,20 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		cage = new ItemStack(nbt.getCompoundTag("inv"));
+	}
+
+	private class RedsHandler implements IAdvancedRedstoneHandler{
+
+		@Override
+		public double getOutput(boolean measure){
+			if(measure){
+				if(!cage.isEmpty()){
+					BeamUnit cageBeam = BeamCage.getStored(cage);
+					return cageBeam == null ? 0 : cageBeam.getPower();
+				}
+			}
+			return 0;
+		}
 	}
 	
 	private class BeamHandler implements IBeamHandler{
@@ -111,6 +131,10 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 				voi = Math.min(1024, voi);
 
 				cageBeam = new BeamUnit(energy, potential, stability, voi);
+
+				if(cageBeam.getPower() != 0){
+					markDirty();
+				}
 
 				BeamCage.storeBeam(cage, cageBeam.getPower() == 0 ? null : cageBeam);
 			}

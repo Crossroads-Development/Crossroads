@@ -1,10 +1,15 @@
 package com.Da_Technomancer.crossroads.tileentities.electric;
 
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,20 +20,52 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class TeslaCoilTileEntity extends TileEntity implements ITickable{
+public class TeslaCoilTileEntity extends TileEntity implements ITickable, IIntReceiver{
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
-	protected int stored = 0;
+	private int stored = 0;
 	private Boolean hasJar = null;
 	public static final int CAPACITY = 2000;
 	public boolean redstone = false;
+
+	public void syncState(){
+		int message = 0;
+		if(redstone){
+			message |= 1;
+		}
+		message |= stored << 1;
+		ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, message, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+	}
+
+	public void setStored(int storedIn){
+		int prev = stored;
+		stored = storedIn;
+		if(!world.isRemote && prev >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt ^ storedIn >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt){
+			syncState();
+		}
+		markDirty();
+	}
+
+	public int getStored(){
+		return stored;
+	}
+
+	@Override
+	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+		if(identifier == 0){
+			redstone = (message & 1) == 1;
+			stored = message >>> 1;
+		}
+	}
 
 	private boolean hasJar(){
 		if(hasJar == null){
@@ -44,15 +81,15 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if(world.isRemote){
-			return;
-		}
-
 		if(!redstone && world.getTotalWorldTime() % 10 == 0 && stored > 0){
 			TileEntity topTE = world.getTileEntity(pos.up());
-			if(topTE instanceof TeslaCoilTopTileEntity && ((TeslaCoilTopTileEntity) topTE).jolt(this)){
-				markDirty();
+			if(topTE instanceof TeslaCoilTopTileEntity){
+				((TeslaCoilTopTileEntity) topTE).jolt(this);
 			}
+		}
+
+		if(world.isRemote){
+			return;
 		}
 
 		if(!redstone && stored > 0){
@@ -62,7 +99,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable{
 				IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
 				int moved = storage.receiveEnergy(stored, false);
 				if(moved > 0){
-					stored -= moved;
+					setStored(getStored() - moved);
 					markDirty();
 				}
 			}
@@ -70,7 +107,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable{
 	}
 
 	public void addJar(ItemStack stack){
-		stored = Math.min(stored + LeydenJar.getCharge(stack), CAPACITY + LeydenJar.MAX_CHARGE);
+		setStored(Math.min(stored + LeydenJar.getCharge(stack), CAPACITY + LeydenJar.MAX_CHARGE));
 		hasJar = true;
 		markDirty();
 	}
@@ -90,11 +127,19 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable{
 		redstone = nbt.getBoolean("reds");
 	}
 
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setInteger("stored", stored);
+		nbt.setBoolean("reds", redstone);
+		return nbt;
+	}
+
 	@Nonnull
 	public ItemStack removeJar(){
 		ItemStack out = new ItemStack(ModItems.leydenJar, 1);
 		LeydenJar.setCharge(out, Math.min(stored, LeydenJar.MAX_CHARGE));
-		stored -= Math.min(stored, LeydenJar.MAX_CHARGE);
+		setStored(stored - Math.min(stored, LeydenJar.MAX_CHARGE));
 		hasJar = false;
 		markDirty();
 		return out;
@@ -125,7 +170,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable{
 			int toInsert = Math.min(maxReceive, getMaxEnergyStored() - stored);
 
 			if(!simulate){
-				stored += toInsert;
+				setStored(stored + toInsert);
 				markDirty();
 			}
 			return toInsert;
@@ -168,7 +213,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable{
 		public int extractEnergy(int maxExtract, boolean simulate){
 			int toExtract = Math.min(stored, maxExtract);
 			if(!simulate){
-				stored -= toExtract;
+				setStored(stored - toExtract);
 				markDirty();
 			}
 			return toExtract;

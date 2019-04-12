@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -116,6 +117,7 @@ public class TemporalAccelerator extends BlockContainer{
 		tooltip.add("Accelerates or slows time in an area");
 		tooltip.add("Uses a time beam from the back, with each 4 power doubling the rate of time, or a void-time beam to slow/stop time");
 		tooltip.add("Adjust area via shift-right clicking with a wrench");
-		tooltip.add("Produces size*boost flux/cycle when speeding up time");
+		tooltip.add(String.format("Produces size*boost*%1$.3f%% entropy/tick when speeding up time", EntropySavedData.getPercentage(TemporalAcceleratorTileEntity.FLUX_MULT)));
+		tooltip.add("Produces entropy at an accelerating rate while stopping time");
 	}
 }

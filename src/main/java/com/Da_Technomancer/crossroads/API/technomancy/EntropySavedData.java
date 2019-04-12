@@ -108,6 +108,11 @@ public class EntropySavedData extends WorldSavedData{
 		DESTRUCTIVE(3, 100);
 
 		private final int rank;
+
+		public int getLowerBound(){
+			return lowerBound;
+		}
+
 		private final int lowerBound;
 
 		/*

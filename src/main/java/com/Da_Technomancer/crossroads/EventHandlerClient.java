@@ -1,11 +1,13 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.API.packets.SendGoggleConfigureToServer;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.technomancy.PrototypeWatch;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
@@ -120,7 +122,7 @@ public final class EventHandlerClient{
 			EntityPlayer player = Minecraft.getMinecraft().player;
 			ItemStack offStack = player.getHeldItem(EnumHand.OFF_HAND);
 			if(offStack.getItem() == ModItems.beamCage){
-				NBTTagCompound nbt = offStack.hasTagCompound() ? offStack.getTagCompound() : new NBTTagCompound();
+				BeamUnit stored = BeamCage.getStored(offStack);
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
 				GlStateManager.enableBlend();
@@ -137,7 +139,7 @@ public final class EventHandlerClient{
 				Minecraft.getMinecraft().getTextureManager().bindTexture(COLOR_SHEET);
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 				for(int i = 0; i < 4; i++){
-					int extension = 9 * nbt.getInteger(i == 0 ? "stored_ENERGY" : i == 1 ? "stored_POTENTIAL" : i == 2 ? "stored_STABILITY" : "stored_VOID") / 128;
+					int extension = 9 * (stored == null ? 0 : stored.getValues()[i]) / 128;
 					buf.pos(24, 84 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), .0625F).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
 					buf.pos(24 + extension, 84 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), .0625F).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
 					buf.pos(24 + extension, 78 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), 0).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();

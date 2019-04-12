@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.FlexibleGameProfile;
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -71,7 +72,10 @@ public class GatewayFrame extends BlockContainer{
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		if(!worldIn.isRemote){
-			((GatewayFrameTileEntity) worldIn.getTileEntity(pos)).setOwner(!(placer instanceof EntityPlayer) ? null : new FlexibleGameProfile(((EntityPlayer) placer).getGameProfile()));
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(te instanceof GatewayFrameTileEntity){
+				((GatewayFrameTileEntity) te).setOwner(!(placer instanceof EntityPlayer) ? null : new FlexibleGameProfile(((EntityPlayer) placer).getGameProfile()));
+			}
 		}
 	}
 
@@ -122,6 +126,6 @@ public class GatewayFrame extends BlockContainer{
 		tooltip.add("Opens a portal through space, including to a personal workspace dimension");
 		tooltip.add("Uses a beam to maintain the portal");
 		tooltip.add("Potential: Overworld; Energy: Nether; Void: The End; Rift: The Workspace Dimension");
-		tooltip.add("Produces 1 flux/cycle while running, and 8 flux for every entity teleported");
+		tooltip.add(String.format("Produces %1$f%% entropy/tick while running, and %2$f%% entropy for every entity teleported", EntropySavedData.getPercentage(GatewayFrameTileEntity.FLUX_MAINTAIN), EntropySavedData.getPercentage(GatewayFrameTileEntity.FLUX_TRANSPORT)));
 	}
 }

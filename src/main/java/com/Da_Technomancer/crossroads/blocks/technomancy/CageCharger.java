@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEntity;
@@ -48,6 +50,7 @@ public class CageCharger extends BlockContainer{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
 		tooltip.add("Charges Beam Cages placed on it with incoming beams");
+		tooltip.add("Ratiators measure the total power in the held beam cage");
 	}
 
 	@Override
@@ -119,5 +122,20 @@ public class CageCharger extends BlockContainer{
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean sproinksOrSomethingIDontKnowItsLateAndImTired){
 		addCollisionBoxToList(pos, mask, list, BB);
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos){
+		TileEntity te = worldIn.getTileEntity(pos);
+		IAdvancedRedstoneHandler handler;
+		if(te != null && (handler = te.getCapability(Capabilities.ADVANCED_REDSTONE_CAPABILITY, null)) != null){
+			return (int) handler.getOutput(true);
+		}
+		return 0;
 	}
 }

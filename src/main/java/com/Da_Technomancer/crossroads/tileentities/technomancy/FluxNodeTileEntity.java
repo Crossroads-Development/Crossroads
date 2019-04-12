@@ -33,7 +33,7 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 
 	private void syncFlux(){
 		float entropy = (float) EntropySavedData.getEntropy(world);
-		if(clientEntropy == 0 ^ entropy == 0 || Math.abs(clientEntropy - entropy) >= .005D){
+		if(clientEntropy == 0 ^ entropy == 0 || Math.abs(clientEntropy - entropy) >= .005F){
 			clientEntropy = entropy;
 			ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, Float.floatToIntBits(clientEntropy), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			world.updateComparatorOutputLevel(pos, ModBlocks.fluxNode);
@@ -41,7 +41,7 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 	}
 
 	public float getRenderAngle(float partialTicks){
-		return angle + partialTicks * (float) Math.toDegrees(clientEntropy) / 4F / 20F;
+		return angle + partialTicks * clientEntropy * 3.6F / 20F;
 	}
 
 	@Override
@@ -64,6 +64,7 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 	@Override
 	public NBTTagCompound getUpdateTag(){
 		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setFloat("entropy", clientEntropy);
 		nbt.setFloat("angle", angle);
 		return nbt;
 	}
