@@ -49,10 +49,20 @@ public class EntropySavedData extends WorldSavedData{
 	 * Converts an entropy point value to a percentage
 	 * Client side safe
 	 * @param pts The number of points
-	 * @return The equivelent percentage, for display
+	 * @return The equivalent percentage, for display
 	 */
 	public static double getPercentage(int pts){
 		return 100D * Math.min(pts / (double) MAX_VALUE, 1D);
+	}
+
+	/**
+	 * Converts an entropy percentage value to a number of pts
+	 * Client side safe
+	 * @param perc The entropy percentage
+	 * @return The equivalent pts
+	 */
+	public static int getPts(double perc){
+		return (int) (Math.min(perc / 100D, 1D) * (double) MAX_VALUE);
 	}
 
 	/**

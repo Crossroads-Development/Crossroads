@@ -10,7 +10,7 @@ import net.minecraft.util.EnumFacing;
 
 public class BeamSplitterTileEntity extends BeamRenderTE{
 
-	private int redstone;
+	private int redstone = 0;
 	private EnumFacing dir = null;
 
 	private EnumFacing getDir(){
@@ -54,7 +54,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	protected void doEmit(BeamUnit out){
 		//As it would turn out, the problem of meeting a quota for the sum of values drawn from a limited source while also approximately maintaining the source ratio is quite messy when all values must be integers
 		//This is about as clean an implementation as is possible
-		int toFill = out == null ? 0 : (int) Math.round(out.getPower() * 12D / Math.min(redstone, 12));
+		int toFill = out == null ? 0 : (int) Math.round(out.getPower() * Math.min(redstone, 12) / 12D);
 		EnumFacing facing = getDir();
 		BeamUnit toDraw;
 		BeamUnit remain;

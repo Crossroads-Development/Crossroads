@@ -9,14 +9,18 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.items.ModItems;
 
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BeamCage extends Item{
+
+	public static final int CAPACITY = 1024;
 
 	public BeamCage(){
 		String name = "beam_cage";
@@ -47,6 +51,17 @@ public class BeamCage extends Item{
 		nbt.setInteger("stored_" + EnumBeamAlignments.POTENTIAL.name().toLowerCase(), toStore == null ? 0 : toStore.getPotential());
 		nbt.setInteger("stored_" + EnumBeamAlignments.STABILITY.name().toLowerCase(), toStore == null ? 0 : toStore.getStability());
 		nbt.setInteger("stored_" + EnumBeamAlignments.VOID.name().toLowerCase(), toStore == null ? 0 : toStore.getVoid());
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
+		if(isInCreativeTab(tab)){
+			list.add(new ItemStack(this, 1));
+			ItemStack stack = new ItemStack(this, 1);
+			storeBeam(stack, new BeamUnit(CAPACITY, CAPACITY, CAPACITY, CAPACITY));
+			list.add(stack);
+		}
 	}
 
 	@Override

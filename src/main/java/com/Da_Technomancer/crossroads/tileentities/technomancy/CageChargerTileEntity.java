@@ -119,16 +119,16 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 				int voi = cageBeam.getVoid();
 
 				energy += mag.getEnergy();
-				energy = Math.min(1024, energy);
+				energy = Math.min(BeamCage.CAPACITY, energy);
 
 				potential += mag.getPotential();
-				potential = Math.min(1024, potential);
+				potential = Math.min(BeamCage.CAPACITY, potential);
 
 				stability += mag.getStability();
-				stability = Math.min(1024, stability);
+				stability = Math.min(BeamCage.CAPACITY, stability);
 
 				voi += mag.getVoid();
-				voi = Math.min(1024, voi);
+				voi = Math.min(BeamCage.CAPACITY, voi);
 
 				cageBeam = new BeamUnit(energy, potential, stability, voi);
 

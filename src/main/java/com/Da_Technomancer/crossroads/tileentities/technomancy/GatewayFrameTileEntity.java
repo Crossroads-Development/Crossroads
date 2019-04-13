@@ -58,7 +58,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world));
+		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
 		if(world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP)){
 			BlockPos target = dialedCoord();
 			if(target != null){

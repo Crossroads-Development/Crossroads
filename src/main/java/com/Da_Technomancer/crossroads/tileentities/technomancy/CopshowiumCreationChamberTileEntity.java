@@ -27,8 +27,8 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 	 * The number of mB of molten copshowium produced from 1mb of molten copper OR 1mb of distilled water.
 	 * Based on balance and convenience.
 	 */
-	private static final double COPSHOWIUM_PER_COPPER = 1.8D;
-	public static final int CAPACITY = 1_296;
+	private static final double COPSHOWIUM_PER_COPPER = 2D;
+	public static final int CAPACITY = 1_440;
 	public static final int FLUX_INGOT = 4;
 
 
@@ -40,7 +40,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world));
+		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
 		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 	}
 

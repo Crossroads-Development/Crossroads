@@ -50,6 +50,13 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		region = null;
 	}
 
+	@Override
+	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
+		chat.add("Size: " + size);
+		chat.add("Applied Boost: " + (intensity < 0 ? Math.max(intensity, -16) + "/16" : "+" + (int) (Math.pow(2, (int) (intensity / 4)) - 1)));
+	}
+
 	public Region getRegion(){
 		if(region == null){
 			region = new Region(size, pos, getFacing());
@@ -96,13 +103,6 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		}
 
 		return facing;
-	}
-
-	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world));
-		chat.add("Size: " + size);
-		chat.add("Applied Boost: " + (intensity < 0 ? Math.max(intensity, -16) + "/16" : "+" + (int) (Math.pow(2, (int) (intensity / 4)) - 1)));
 	}
 
 	@Override

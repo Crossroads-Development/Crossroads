@@ -65,7 +65,7 @@ public class CopshowiumCreationChamber extends BlockContainer{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Uses time beams to turn liquids into Molten Copshowium");
+		tooltip.add("Uses time beams to turn liquids into Molten Copshowium. Liquid will double in volume. Overfilling the chamber will cause it to burst");
 		tooltip.add(String.format("Produces %1$.3f%% entropy/ingot produced when using worse liquids", EntropySavedData.getPercentage(CopshowiumCreationChamberTileEntity.FLUX_INGOT)));
 		tooltip.add("Can only use worse liquids when entropy is above " + EntropySavedData.Severity.UNSTABLE.getLowerBound() + "%");
 	}

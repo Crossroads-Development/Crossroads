@@ -35,6 +35,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(LensFrameTileEntity.class, new LensFrameRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(BeamSiphonTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(BeamRedirectorTileEntity.class, new BeamRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamSplitterTileEntity.class, new BeamRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(BeaconHarnessTileEntity.class, new BeaconHarnessRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(HamsterWheelTileEntity.class, new HamsterWheelRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(GatewayFrameTileEntity.class, new GatewayFrameRenderer());

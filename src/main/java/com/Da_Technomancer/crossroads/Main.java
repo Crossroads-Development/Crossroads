@@ -1,9 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.command.DiscoverElementCommand;
-import com.Da_Technomancer.crossroads.command.ResetPathCommand;
-import com.Da_Technomancer.crossroads.command.SpawnReagentCommand;
-import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
+import com.Da_Technomancer.crossroads.command.*;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -54,6 +51,7 @@ public final class Main{
 		e.registerServerCommand(new ResetPathCommand());
 		e.registerServerCommand(new DiscoverElementCommand());
 		e.registerServerCommand(new SpawnReagentCommand());
+		e.registerServerCommand(new FluxCommand());
 	}
 
 	@Mod.EventHandler

@@ -33,7 +33,7 @@ public class ChronoHarnessTileEntity extends ModuleTE{
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world));
+		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
 		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 	}
 

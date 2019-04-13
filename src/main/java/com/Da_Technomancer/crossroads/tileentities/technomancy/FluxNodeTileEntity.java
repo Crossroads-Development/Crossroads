@@ -28,7 +28,7 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
-		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world));
+		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
 	}
 
 	private void syncFlux(){
