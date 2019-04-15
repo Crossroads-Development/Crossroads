@@ -2,9 +2,12 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +18,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
@@ -50,10 +56,11 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	private final RedsHandler redsHandler = new RedsHandler();
+	private final ItemHandler itemHandler = new ItemHandler();
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.BEAM_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
+		if(cap == Capabilities.BEAM_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY || cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return true;
 		}
 
@@ -68,6 +75,9 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 		}
 		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redsHandler;
+		}
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return (T) itemHandler;
 		}
 
 		return super.getCapability(cap, side);
@@ -86,6 +96,64 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		cage = new ItemStack(nbt.getCompoundTag("inv"));
+	}
+
+	private class ItemHandler implements IItemHandler{
+
+		@Override
+		public int getSlots(){
+			return 1;
+		}
+
+		@Nonnull
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			return cage;
+		}
+
+		@Nonnull
+		@Override
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate){
+			if(isItemValid(slot, stack) && cage.isEmpty()){
+				if(!simulate){
+					cage = stack;
+					markDirty();
+					world.setBlockState(pos, ModBlocks.cageCharger.getDefaultState().withProperty(Properties.ACTIVE, true));
+				}
+
+				return ItemStack.EMPTY;
+			}
+
+			return stack;
+		}
+
+		@Nonnull
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			if(slot == 0 && !cage.isEmpty() && amount > 0){
+				ItemStack stored = cage;
+
+				if(!simulate){
+					cage = ItemStack.EMPTY;
+					markDirty();
+					world.setBlockState(pos, ModBlocks.cageCharger.getDefaultState().withProperty(Properties.ACTIVE, false));
+				}
+
+				return cage;
+			}
+
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return 1;
+		}
+
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
+			return slot == 0 && stack.getItem() == ModItems.beamCage;
+		}
 	}
 
 	private class RedsHandler implements IAdvancedRedstoneHandler{

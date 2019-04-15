@@ -57,9 +57,15 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return oldState.getBlock() != newState.getBlock();
+	}
+
+	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
-		if(world.getBlockState(pos) == ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP)){
+		IBlockState state = world.getBlockState(pos);
+		if(state.getBlock() == ModBlocks.gatewayFrame && state.getValue(EssentialsProperties.FACING).getAxis() == EnumFacing.Axis.Y){
 			BlockPos target = dialedCoord();
 			if(target != null){
 				chat.add("Dialed: " + target.getX() + ", " + target.getY() + ", " + target.getZ());
@@ -188,6 +194,15 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		return new BlockPos(coords[0], coords[1], coords[2]);
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
+			return true;
+		}
+
+		return super.hasCapability(cap, side);
 	}
 
 	@SuppressWarnings("unchecked")

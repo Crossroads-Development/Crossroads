@@ -45,7 +45,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
 		super.onUsingTick(stack, player, count);
-		if(!player.world.isRemote && (getMaxItemUseDuration(stack) - count) % 5 == 0){
+		if(!player.world.isRemote && !player.isDead && (getMaxItemUseDuration(stack) - count) % 5 == 0){
 			if(!stack.hasTagCompound()){
 				return;
 			}

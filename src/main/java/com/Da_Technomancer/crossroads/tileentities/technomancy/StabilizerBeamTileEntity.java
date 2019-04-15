@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -57,9 +58,17 @@ public class StabilizerBeamTileEntity extends AbstractStabilizerTileEntity{
 
 		@Override
 		public void setMagic(@Nullable BeamUnit mag){
-			if(mag != null && EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.STABILITY){
-				stability += mag.getPower();
-				markDirty();
+			if(mag != null){
+				EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
+				if(align == EnumBeamAlignments.STABILITY){
+					stability += mag.getPower();
+					markDirty();
+				}else if(align == EnumBeamAlignments.TIME && mag.getVoid() != 0){
+					//If FLUX beam is added, create entropy
+					stability = 0;
+					markDirty();
+					EntropySavedData.addEntropy(world, mag.getPower() * 4);
+				}
 			}
 		}
 	}

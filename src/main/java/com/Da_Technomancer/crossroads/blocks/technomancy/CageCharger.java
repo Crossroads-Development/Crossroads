@@ -75,13 +75,14 @@ public class CageCharger extends BlockContainer{
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-		if(!worldIn.isRemote){
+		TileEntity te;
+		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) != null){
 			if(state.getValue(Properties.ACTIVE)){
-				playerIn.inventory.addItemStackToInventory(((CageChargerTileEntity) worldIn.getTileEntity(pos)).getCage());
-				((CageChargerTileEntity) worldIn.getTileEntity(pos)).setCage(ItemStack.EMPTY);
+				playerIn.inventory.addItemStackToInventory(((CageChargerTileEntity) te).getCage());
+				((CageChargerTileEntity) te).setCage(ItemStack.EMPTY);
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ACTIVE, false));
 			}else if(!playerIn.getHeldItem(hand).isEmpty() && playerIn.getHeldItem(hand).getItem() == ModItems.beamCage){
-				((CageChargerTileEntity) worldIn.getTileEntity(pos)).setCage(playerIn.getHeldItem(hand));
+				((CageChargerTileEntity) te).setCage(playerIn.getHeldItem(hand));
 				playerIn.setHeldItem(hand, ItemStack.EMPTY);
 				worldIn.setBlockState(pos, getDefaultState().withProperty(Properties.ACTIVE, true));
 			}

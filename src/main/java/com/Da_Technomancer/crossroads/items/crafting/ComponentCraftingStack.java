@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -18,8 +19,8 @@ public class ComponentCraftingStack implements RecipePredicate<ItemStack>{
 
 	@Override
 	public boolean test(ItemStack stack){
-		for(String metal : OreSetup.metalStages.keySet()){
-			if(MiscUtil.hasOreDict(stack, prefix + metal)){
+		for(GearFactory.GearMaterial metal : GearFactory.gearTypes.keySet()){
+			if(MiscUtil.hasOreDict(stack, prefix + metal.getName())){
 				return true;
 			}
 		}

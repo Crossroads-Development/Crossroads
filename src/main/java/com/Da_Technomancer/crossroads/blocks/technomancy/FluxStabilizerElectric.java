@@ -80,5 +80,7 @@ public class FluxStabilizerElectric extends BlockContainer{
 		tooltip.add(String.format("Destroys up to %1$.3f%% entropy/tick with FE", EntropySavedData.getPercentage(AbstractStabilizerTileEntity.DRAIN_CAP)));
 		tooltip.add(String.format("-%1$.3f%% entropy per %2$dFE", EntropySavedData.getPercentage(1), FluxUtil.getFePerFlux(true)));
 		tooltip.add("Drains energy at " + AbstractStabilizerTileEntity.DRAIN_CAP * FluxUtil.getFePerFlux(true) + "FE/t regardless of work");
+		int limit = crystal ? EntropySavedData.Severity.DESTRUCTIVE.getLowerBound() : EntropySavedData.Severity.HARMFUL.getLowerBound();
+		tooltip.add(String.format("Destroyed when entropy reaches $1%d%%", limit));
 	}
 }

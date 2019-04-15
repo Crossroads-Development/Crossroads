@@ -126,6 +126,6 @@ public class GatewayFrame extends BlockContainer{
 		tooltip.add("Opens a portal through space, including to a personal workspace dimension");
 		tooltip.add("Uses a beam to maintain the portal");
 		tooltip.add("Potential: Overworld; Energy: Nether; Void: The End; Rift: The Workspace Dimension");
-		tooltip.add(String.format("Produces %1$f%% entropy/tick while running, and %2$f%% entropy for every entity teleported", EntropySavedData.getPercentage(GatewayFrameTileEntity.FLUX_MAINTAIN), EntropySavedData.getPercentage(GatewayFrameTileEntity.FLUX_TRANSPORT)));
+		tooltip.add(String.format("Produces %1$.3f%% entropy/tick while running, and %2$.3f%% entropy for every entity teleported", EntropySavedData.getPercentage(GatewayFrameTileEntity.FLUX_MAINTAIN), EntropySavedData.getPercentage(GatewayFrameTileEntity.FLUX_TRANSPORT)));
 	}
 }

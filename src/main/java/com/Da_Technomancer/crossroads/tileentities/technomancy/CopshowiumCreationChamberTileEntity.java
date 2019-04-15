@@ -87,7 +87,8 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 
 		@Override
 		public void setMagic(BeamUnit mag){
-			if(EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.TIME && fluids[0] != null){
+			EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
+			if(align == EnumBeamAlignments.TIME && fluids[0] != null){
 				if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){
 					FluxUtil.overloadFlux(world, pos);
 					return;
@@ -111,6 +112,11 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 						world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());
 					}
 				}
+			}else if(align == EnumBeamAlignments.VOID){
+				//A void beam destroys all stored liquid
+				fluids[0] = null;
+				fluids[1] = null;
+				markDirty();
 			}
 		}
 	}

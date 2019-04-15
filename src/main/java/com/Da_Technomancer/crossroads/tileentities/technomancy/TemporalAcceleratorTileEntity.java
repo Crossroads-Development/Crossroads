@@ -54,7 +54,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
 		chat.add("Size: " + size);
-		chat.add("Applied Boost: " + (intensity < 0 ? Math.max(intensity, -16) + "/16" : "+" + (int) (Math.pow(2, (int) (intensity / 4)) - 1)));
+		chat.add("Applied Boost: " + (intensity < 0 ? Math.max(intensity, -16) + "/16" : "+" + (int) (Math.pow(2, intensity / 4D) - 1)));
 	}
 
 	public Region getRegion(){
@@ -114,7 +114,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 			}
 
 			lastRunTick = world.getTotalWorldTime();
-			int extraTicks = (int) Math.pow(2, (int) (intensity / 4)) - 1;
+			int extraTicks = (int) Math.pow(2, intensity / 4D) - 1;
 			if(extraTicks > 0){
 				//Perform entity effect
 				ArrayList<Entity> ents = (ArrayList<Entity>) world.getEntitiesWithinAABB(Entity.class, getRegion().getBB());
@@ -176,6 +176,15 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 				markDirty();
 			}
 		}
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || side == getFacing().getOpposite())){
+			return true;
+		}
+
+		return super.hasCapability(cap, side);
 	}
 
 	@SuppressWarnings("unchecked")

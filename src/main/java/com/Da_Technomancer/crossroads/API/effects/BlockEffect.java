@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -22,12 +23,9 @@ public class BlockEffect implements IEffect{
 		if(prev == block){
 			return;
 		}
-		String[] bannedBlocks = ModConfig.getConfigStringList(ModConfig.destroyBlacklist, false);
-		String id = worldIn.getBlockState(pos).getBlock().getRegistryName().toString();
-		for(String s : bannedBlocks){
-			if(s.equals(id)){
-				return;
-			}
+
+		if(!MiscUtil.canBreak(worldIn.getBlockState(pos), false)){
+			return;
 		}
 		worldIn.setBlockState(pos, block, 3);
 		SoundType soundtype = block.getBlock().getSoundType(block, worldIn, pos, null);

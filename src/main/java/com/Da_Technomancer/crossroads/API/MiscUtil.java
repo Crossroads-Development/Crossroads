@@ -1,9 +1,10 @@
 package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,7 +12,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
@@ -74,23 +74,8 @@ public final class MiscUtil{
 		return ent.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
 	}
 
-	/**
-	 * Returns a long that contains the chunk's coordinates (In chunk coordinates). Suitable for HashMap keys. 
-	 * It should be noted that this is NOT the same as {@link ChunkPos#asLong(int, int)} in terms of results. 
-	 */
-	public static long getLongFromChunk(@Nonnull Chunk chunk){
-		return (((long) chunk.x) << 32) | (chunk.z & 0xffffffffL);
-	}
-
 	public static ChunkPos getChunkPosFromLong(long combinedCoord){
 		return new ChunkPos((int) (combinedCoord >> 32), (int) combinedCoord);
-	}
-
-	/**
-	 * @returns The coordinate in chunk relative form. NOT the same as coord % 16.
-	 */
-	public static int getChunkRelativeCoord(int coord){
-		return coord - (16 * Math.floorDiv(coord, 16));
 	}
 
 	/**
@@ -128,6 +113,17 @@ public final class MiscUtil{
 
 	public static String localize(String input){
 		return new TextComponentTranslation(input).getUnformattedComponentText();
+	}
+
+	public static boolean canBreak(IBlockState state, boolean client){
+		String[] bannedBlocks = ModConfig.getConfigStringList(ModConfig.destroyBlacklist, client);
+		String id = state.getBlock().getRegistryName().toString();
+		for(String s : bannedBlocks){
+			if(s.equals(id)){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Nullable

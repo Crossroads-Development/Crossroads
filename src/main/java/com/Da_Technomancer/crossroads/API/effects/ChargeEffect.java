@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.ModConfig;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -26,7 +28,8 @@ public class ChargeEffect implements IEffect{
 			worldIn.addWeatherEffect(new EntityLightningBolt(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
 		}
 
-		if(worldIn.getBlockState(pos).getMaterial() == Material.ROCK){
+		IBlockState state = worldIn.getBlockState(pos);
+		if(state.getMaterial() == Material.ROCK && MiscUtil.canBreak(state, false)){
 			worldIn.setBlockState(pos, Blocks.REDSTONE_BLOCK.getDefaultState());
 		}
 	}
