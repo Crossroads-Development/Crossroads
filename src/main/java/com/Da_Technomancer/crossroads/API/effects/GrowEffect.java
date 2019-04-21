@@ -51,8 +51,13 @@ public class GrowEffect implements IEffect{
 
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
-			if(worldIn.getBlockState(pos).getBlock() instanceof IGrowable && worldIn.getBlockState(pos).getBlock() != Blocks.DEADBUSH){
-				worldIn.setBlockState(pos, Blocks.DEADBUSH.getDefaultState());
+			IBlockState state = worldIn.getBlockState(pos);
+			if(state.getBlock() instanceof IGrowable && state.getBlock() != Blocks.DEADBUSH){
+				if(state.getBlock() == Blocks.GRASS){
+					worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
+				}else{
+					worldIn.setBlockState(pos, Blocks.DEADBUSH.getDefaultState());
+				}
 			}
 			double range = Math.sqrt(mult);
 			List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntitySelectors.IS_ALIVE);

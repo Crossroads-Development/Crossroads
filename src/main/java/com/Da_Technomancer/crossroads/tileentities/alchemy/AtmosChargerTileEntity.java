@@ -32,6 +32,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	private int fe = 0;
 	private boolean extractMode;
 	private int renderTimer;
+	private double lastRedstone = 0;
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
@@ -52,6 +53,12 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 		}
 		renderTimer--;
 		extractMode = state.getValue(Properties.ACTIVE);
+
+		double newReds = (double) AtmosChargeSavedData.getCharge(world) / (double) AtmosChargeSavedData.getCapacity();
+		if(Math.abs(lastRedstone - newReds) >= 0.05D){
+			lastRedstone = newReds;
+			markDirty();
+		}
 
 		if(extractMode){
 			if(fe > 0){
@@ -108,17 +115,19 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	public void readFromNBT(NBTTagCompound nbt){
 		super.readFromNBT(nbt);
 		fe = nbt.getInteger("fe");
+		lastRedstone = nbt.getDouble("reds");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("fe", fe);
+		nbt.setDouble("reds", lastRedstone);
 		return nbt;
 	}
 
 	private ElecHandler feHandler = new ElecHandler();
-	private IAdvancedRedstoneHandler redsHandler = (boolean measure) -> measure ? 15D * (double) AtmosChargeSavedData.getCharge(world) / (double) AtmosChargeSavedData.getCapacity() : 0;
+	private final IAdvancedRedstoneHandler redsHandler = (boolean measure) -> measure ? 15D * lastRedstone : 0;
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side){

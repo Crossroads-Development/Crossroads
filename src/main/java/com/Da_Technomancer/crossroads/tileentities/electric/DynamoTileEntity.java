@@ -25,7 +25,7 @@ public class DynamoTileEntity extends ModuleTE{
 
 	@Override
 	public double getMoInertia(){
-		return 150;
+		return 200;
 	}
 
 	@Override

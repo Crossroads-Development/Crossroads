@@ -118,15 +118,27 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 								BlockPos target = dialedCoord();
 
-								GatewayTeleporter porter = new GatewayTeleporter(DimensionManager.getWorld(dim), target.getX(), target.getY(), target.getZ());
+								if(target != null){
+									if(dim != currentDim){
+										GatewayTeleporter porter = new GatewayTeleporter(DimensionManager.getWorld(dim), target.getX(), target.getY(), target.getZ());
+										PlayerList playerList = world.getMinecraftServer().getPlayerList();
 
-								PlayerList playerList = world.getMinecraftServer().getPlayerList();
-								for(Entity ent : toTransport){
-									EntropySavedData.addEntropy(world, FLUX_TRANSPORT);
-									if(ent instanceof EntityPlayerMP){
-										playerList.transferPlayerToDimension((EntityPlayerMP) ent, dim, porter);
+										for(Entity ent : toTransport){
+											EntropySavedData.addEntropy(world, FLUX_TRANSPORT);
+
+
+											if(ent instanceof EntityPlayerMP){
+												playerList.transferPlayerToDimension((EntityPlayerMP) ent, dim, porter);
+											}else{
+												playerList.transferEntityToWorld(ent, currentDim, (WorldServer) world, DimensionManager.getWorld(dim), porter);
+											}
+										}
 									}else{
-										playerList.transferEntityToWorld(ent, currentDim, (WorldServer) world, DimensionManager.getWorld(dim), porter);
+										for(Entity ent : toTransport){
+											EntropySavedData.addEntropy(world, FLUX_TRANSPORT);
+
+											ent.setPosition(target.getX() + 0.5F, target.getY(), target.getZ());
+										}
 									}
 								}
 							}

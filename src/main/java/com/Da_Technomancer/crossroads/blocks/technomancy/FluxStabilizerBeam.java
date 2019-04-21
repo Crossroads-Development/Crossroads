@@ -79,6 +79,6 @@ public class FluxStabilizerBeam extends BlockContainer{
 		tooltip.add(String.format("Destroys up to %1$.3f%% entropy/tick with stability", EntropySavedData.getPercentage(AbstractStabilizerTileEntity.DRAIN_CAP)));
 		tooltip.add(String.format("-%1$.3f%% entropy per stability", EntropySavedData.getPercentage(1)));
 		int limit = crystal ? EntropySavedData.Severity.DESTRUCTIVE.getLowerBound() : EntropySavedData.Severity.HARMFUL.getLowerBound();
-		tooltip.add(String.format("Destroyed when entropy reaches $1%d%%", limit));
+		tooltip.add(String.format("Destroyed when entropy reaches %1$d%%", limit));
 	}
 }

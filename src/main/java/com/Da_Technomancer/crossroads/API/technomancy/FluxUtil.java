@@ -47,12 +47,20 @@ public class FluxUtil{
 			}
 		}else if(intensity >= 30 && ModConfig.resetChunk.getBoolean()){
 			try{
-				Chunk swapWith = ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator.generateChunk(pos.getX() >> 4, pos.getZ() >> 4);
-				swapWith.populate(worldIn.getChunkProvider(), ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator);
+				//The chunk at world gen
+				ChunkPos chunkPos = new ChunkPos(pos);
+				ChunkProviderServer provider = ((ChunkProviderServer) worldIn.getChunkProvider());
+				Chunk swapWith = provider.chunkGenerator.generateChunk(chunkPos.x, chunkPos.z);//provider.provideChunk(chunkPos.x, chunkPos.z);//.generateChunk(pos.getX() >> 4, pos.getZ() >> 4);
+				//The chunk currently
 				Chunk current = worldIn.getChunk(pos);
+				//Perform the swap
 				setChunk(current, swapWith);
+				current.setTerrainPopulated(false);
+				current.populate(provider, provider.chunkGenerator);
+				current.setTerrainPopulated(true);
+				current.populate(provider, provider.chunkGenerator);
 			}catch(Exception e){
-				Main.logger.log(Level.ERROR, "Something went wrong while reseting a chunk. Disable this in the config if necessary. Please report this as a bug.", e);
+				Main.logger.log(Level.ERROR, "Something went wrong while resetting a chunk. Disable this in the config if necessary. Please report this as a bug.", e);
 			}
 		}else if(intensity >= 5 && ModConfig.magicChunk.getBoolean()){
 			ChunkPos base = worldIn.getChunk(pos).getPos();
@@ -72,20 +80,23 @@ public class FluxUtil{
 	}
 
 	private static void setChunk(Chunk copyTo, Chunk copyFrom){
+		World tarWorld = copyTo.getWorld();
+		ChunkPos tarCPos = copyTo.getPos();
+		ChunkPos srcCPos = copyFrom.getPos();
 		for(int x = 0; x < 16; x++){
 			for(int z = 0; z < 16; z++){
-				for(int y = 0; y < 256; y++){
-					BlockPos newPos = copyTo.getPos().getBlock(x, y, z);
-					BlockPos oldPos = copyFrom.getPos().getBlock(x, y, z);
-					copyTo.getWorld().setBlockState(newPos, copyTo.getWorld().getBlockState(oldPos));
-					TileEntity oldTe = copyTo.getWorld().getTileEntity(oldPos);
+				for(int y = 255; y >= 0; y--){
+					BlockPos newPos = tarCPos.getBlock(x, y, z);
+					BlockPos oldPos = srcCPos.getBlock(x, y, z);
+					tarWorld.setBlockState(newPos, copyFrom.getBlockState(oldPos));
+					TileEntity oldTe = copyFrom.getTileEntity(oldPos, Chunk.EnumCreateEntityType.CHECK);
 					if(oldTe != null){
 						NBTTagCompound nbt = new NBTTagCompound();
 						oldTe.writeToNBT(nbt);
 						nbt.setInteger("x", newPos.getX());
 						nbt.setInteger("y", newPos.getY());
 						nbt.setInteger("z", newPos.getZ());
-						TileEntity newTe = copyTo.getWorld().getTileEntity(newPos);
+						TileEntity newTe = tarWorld.getTileEntity(newPos);
 						if(newTe != null){
 							newTe.readFromNBT(nbt);
 						}

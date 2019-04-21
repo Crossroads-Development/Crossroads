@@ -26,7 +26,7 @@ public class ModWorldGen implements IWorldGenerator{
 		switch(world.provider.getDimension()){
 			case 0: // Overworld
 				if(ModConfig.genCopperOre.getBoolean()){
-					runGenerator(new WorldGenMinable(OreSetup.oreCopper.getDefaultState(), 18), world, random, chunkX, chunkZ, 2, 0, 30);
+					runGenerator(new LargeOreGen(OreSetup.oreCopper.getDefaultState(), 18), world, random, chunkX, chunkZ, 2, 0, 30);
 				}
 				if(ModConfig.genTinOre.getBoolean()){
 					runGenerator(new GemGen(OreSetup.oreTin.getDefaultState(), BlockMatcher.forBlock(Blocks.STONE)), world, random, chunkX, chunkZ, 20, 0, 30);
