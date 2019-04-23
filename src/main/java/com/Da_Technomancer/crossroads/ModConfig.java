@@ -87,7 +87,7 @@ public final class ModConfig{
 		config = new Configuration(e.getSuggestedConfigurationFile());
 		config.load();
 
-		speedPrecision = config.get(CAT_INTERNAL, "Speed Precision", .02F, "Lower value means smoother gear rotation and less clipping, but more packets sent AKA lag. Range: 0.0-1.0; Default: .02)", 0F, 1F);
+		speedPrecision = config.get(CAT_INTERNAL, "Angle Precision", .5F, "Lower value means rendered gear speeds will more closely match the actual value, but will increase gear jerkiness and network lag (Range: 0.05-6.0, Default: 0.5)", 0.05F, 6.0F);
 		documentCrafttweaker = config.get(CAT_INTERNAL, "Show CraftTweaker integration documentation in the guide book?", false, "The documentation will appear in the misc section of Technician's Manual, NOT the Mysterious Journal. Pack makers: Turn this off before releasing the pack! Default: false");
 		gearResetTime = config.get(CAT_INTERNAL, "Gear Reset Time", 300, "Interval in ticks between gear network checks Range: 100-2400; Default: 300", 100, 2400);
 		wipeInvalidMappings = config.get(CAT_INTERNAL, "Wipe internal per player dimension mappings on failure?", false, "Only use this if needed, as the mappings between players and technomancy workspace dimensions will be lost. If doing this, delete the files for those dimensions. Also, make a backup of the world file before setting this to true. Default: false");

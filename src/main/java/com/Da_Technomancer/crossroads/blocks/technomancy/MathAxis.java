@@ -61,11 +61,11 @@ public class MathAxis extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(te instanceof MathAxisTileEntity){
+				((MathAxisTileEntity) te).disconnect();
+			}
 			if(!worldIn.isRemote){
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof MathAxisTileEntity){
-					((MathAxisTileEntity) te).disconnect();
-				}
 				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_FACING));
 			}
 		}else if(!worldIn.isRemote){

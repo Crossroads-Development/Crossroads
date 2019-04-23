@@ -62,10 +62,6 @@ public class MechanismAxle implements IMechanism{
 		}
 
 		handler.rotRatio = rotRatioIn;
-
-		if(key == 0){
-			handler.resetAngle();
-		}
 		handler.updateKey = key;
 
 		
@@ -121,9 +117,7 @@ public class MechanismAxle implements IMechanism{
 
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(axis == EnumFacing.Axis.Y ? 0 : 90F, axis == EnumFacing.Axis.Z ? 1 : 0, 0, axis == EnumFacing.Axis.X ? -1 : 0);
-		float angle = (float) (handler.getNextAngle() - handler.getAngle());
-		angle *= partialTicks;
-		angle += handler.getAngle();
+		float angle = handler.getAngle(partialTicks);
 		GlStateManager.rotate(angle, 0F, 1F, 0F);
 		ModelAxle.render(mat.getColor());
 		GlStateManager.popMatrix();

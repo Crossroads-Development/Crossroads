@@ -195,6 +195,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		private byte updateKey;
 		private double rotRatio;
 		private boolean renderOffset;
+		private IAxisHandler axis;
 
 		@Override
 		public double[] getMotionData(){
@@ -224,32 +225,12 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 				return;
 			}
 
+			axis = masterIn;
+
 			rotRatio = rotRatioIn;
 			this.renderOffset = renderOffset;
 
-			if(updateKey == 0){
-				resetAngle();
-			}
 			updateKey = key;
-			
-			for(EnumFacing.AxisDirection dir : EnumFacing.AxisDirection.values()){
-				EnumFacing axleDir = dir == EnumFacing.AxisDirection.POSITIVE ? getFacing() : getFacing().getOpposite();
-				TileEntity connectTE = world.getTileEntity(pos.offset(axleDir));
-				
-				if(connectTE != null){
-					if(connectTE.hasCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite())){
-						connectTE.getCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite()).trigger(masterIn, key);
-					}
-					if(connectTE.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, axleDir.getOpposite())){
-						masterIn.addAxisToList(connectTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, axleDir.getOpposite()), axleDir.getOpposite());
-					}
-
-					if(connectTE.hasCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite())){
-						connectTE.getCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite()).propogate(masterIn, key, rotRatio, 0, renderOffset);
-					}
-				}
-			}
-
 
 			EnumFacing side = getFacing();
 			
@@ -280,6 +261,29 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 					}
 				}
 			}
+
+			for(EnumFacing.AxisDirection dir : EnumFacing.AxisDirection.values()){
+				EnumFacing axleDir = dir == EnumFacing.AxisDirection.POSITIVE ? getFacing() : getFacing().getOpposite();
+				TileEntity connectTE = world.getTileEntity(pos.offset(axleDir));
+
+				if(connectTE != null){
+					if(connectTE.hasCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite())){
+						connectTE.getCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite()).trigger(masterIn, key);
+					}
+					if(connectTE.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, axleDir.getOpposite())){
+						masterIn.addAxisToList(connectTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, axleDir.getOpposite()), axleDir.getOpposite());
+					}
+
+					if(connectTE.hasCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite())){
+						connectTE.getCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite()).propogate(masterIn, key, rotRatio, 0, renderOffset);
+					}
+				}
+			}
+		}
+
+		@Override
+		public void disconnect(){
+			axis = null;
 		}
 
 		@Override
@@ -288,18 +292,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		}
 
 		@Override
-		public void resetAngle(){
-			if(!world.isRemote){
-				angleW[1] = 0;
-				angleW[0] = renderOffset ? 7.5F : 0F;
-				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 2, renderOffset ? 1 : 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			}
-		}
-
-		@Override
-		public float getAngle(){
-			return angleW[0];
+		public float getAngle(float partialTicks){
+			return axis == null ? 0 : axis.getAngle(rotRatio, partialTicks, renderOffset, 7.5F);
 		}
 
 		@Override
@@ -315,22 +309,6 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		@Override
 		public boolean shouldManageAngle(){
 			return true;
-		}
-
-		@Override
-		public void setAngle(float angleIn){
-			angleW[0] = angleIn;
-		}
-
-		@Override
-		public float getClientW(){
-			return angleW[1];
-		}
-
-		@Override
-		public void syncAngle(){
-			angleW[1] = (float) motionData[0];
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 }

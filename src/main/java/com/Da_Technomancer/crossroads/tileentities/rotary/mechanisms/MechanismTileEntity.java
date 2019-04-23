@@ -323,6 +323,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		protected byte updateKey;
 		protected double rotRatio;
 		protected boolean renderOffset;
+		protected IAxisHandler axis;
 
 		/**
 		 * @param sideIn Must be between 0 and 6, inclusive
@@ -340,8 +341,14 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 			if(members[side] != null){
 				this.renderOffset = renderOffset;
+				axis = masterIn;
 				members[side].propogate(mats[side], side == 6 ? null : EnumFacing.byIndex(side), axleAxis, MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
 			}
+		}
+
+		@Override
+		public void disconnect(){
+			axis = null;
 		}
 
 		public double getMoInertia(){
@@ -349,17 +356,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		}
 
 		@Override
-		public void resetAngle(){
-			if(!world.isRemote){
-				clientW[side] = 0;
-				angle[side] = renderOffset && side != 6 ? 22.5F : 0F;
-				ModPackets.network.sendToAllAround(new SendLongToClient((byte) side, (Float.floatToIntBits(angle[side]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(clientW[side]) << 32L), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			}
-		}
-
-		@Override
-		public float getAngle(){
-			return angle[side];
+		public float getAngle(float partialTicks){
+			return axis == null ? 0 : axis.getAngle(rotRatio, partialTicks, renderOffset, 22.5F);
 		}
 
 		private void updateStates(boolean sendPacket){
@@ -393,22 +391,6 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		@Override
 		public boolean shouldManageAngle(){
 			return true;
-		}
-
-		@Override
-		public void setAngle(float angleIn){
-			angle[side] = angleIn;
-		}
-
-		@Override
-		public float getClientW(){
-			return clientW[side];
-		}
-
-		@Override
-		public void syncAngle(){
-			clientW[side] = (float) motionData[side][0];
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) side, (Float.floatToIntBits(angle[side]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(clientW[side]) << 32L), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 }

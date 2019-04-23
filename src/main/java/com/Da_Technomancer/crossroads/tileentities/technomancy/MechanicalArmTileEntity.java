@@ -263,12 +263,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 		}
 
 		@Override
-		public void resetAngle(){
-			//No effect, as in this the angle is used for non-rendering purposes.
-		}
-
-		@Override
-		public float getAngle(){
+		public float getAngle(float partialTicks){
 			return (float) angle[index];
 		}
 

@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -28,14 +26,13 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 	@Override
 	public void render(StampMillTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		IBlockState state = te.getWorld().getBlockState(te.getPos());
-		IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
-		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || state.getBlock() != ModBlocks.stampMill || axle == null){
+		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || state.getBlock() != ModBlocks.stampMill){
 			return;
 		}
 		
 		Color ironColor = GearFactory.findMaterial("Iron").getColor();
 
-		float prog = Math.signum(axle.getClientW()) * ((axle.getNextAngle() - axle.getAngle()) * partialTicks + axle.getAngle());
+		float prog = te.renderAngle(partialTicks);
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5D, y + 1.5F, z + .5D);

@@ -35,8 +35,18 @@ public interface IAxisHandler{
 	public double getTotalEnergy();
 
 	/**
+	 * Gets the render angle for member axles, in degrees
+	 * @param rotRatio The axle rotation ratios
+	 * @param partialTicks Rendering partial ticks
+	 * @param shouldOffset Whether this gear has a visually offset angle
+	 * @param angleOffset The offset this gear would use if shouldOffset is true, in degrees
+	 * @return The angle for use in rendering
+	 */
+	public float getAngle(double rotRatio, float partialTicks, boolean shouldOffset, float angleOffset);
+
+	/**
 	 * Get the overarching category this axis fits into. Fixed means strict external control speed/energy, normal means normal
-	 * @return The category this axis is. Used by some devices to reject control.
+	 * @return The category this axis is.
 	 */
 	@Nonnull
 	public AxisTypes getType();

@@ -42,6 +42,12 @@ public class StampMillTileEntity extends InventoryTE{
 		return new ThroughAxleHandler();
 	}
 
+	public float renderAngle(float partialTicks){
+		float prev = axleHandler.getAngle(partialTicks - 1F);
+		float cur = axleHandler.getAngle(partialTicks);
+		return Math.signum(cur - prev) * cur;
+	}
+
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
 		chat.add("Progress: " + (int) (progress) + "/" + (int) REQUIRED);
@@ -132,7 +138,7 @@ public class StampMillTileEntity extends InventoryTE{
 
 			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
 			updateKey = key;
-			connected = true;
+			axis = masterIn;
 
 			IBlockState state = world.getBlockState(pos);
 			if(state.getBlock() != ModBlocks.stampMill){

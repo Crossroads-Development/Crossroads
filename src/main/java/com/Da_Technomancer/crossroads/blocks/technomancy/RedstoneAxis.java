@@ -50,11 +50,11 @@ public class RedstoneAxis extends BlockContainer{
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(te instanceof RedstoneAxisTileEntity){
+				((RedstoneAxisTileEntity) te).disconnect();
+			}
 			if(!worldIn.isRemote){
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof RedstoneAxisTileEntity){
-					((RedstoneAxisTileEntity) te).disconnect();
-				}
 				worldIn.setBlockState(pos, state.cycleProperty(EssentialsProperties.FACING));
 			}
 			return true;

@@ -5,8 +5,6 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.block.state.IBlockState;
@@ -23,7 +21,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -444,10 +441,10 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 
 	protected class AxleHandler implements IAxleHandler{
 
-		public boolean connected;
 		public double rotRatio;
 		public byte updateKey;
 		public boolean renderOffset;
+		public IAxisHandler axis;
 
 		@Override
 		public double[] getMotionData(){
@@ -464,7 +461,7 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 			rotRatio = rotRatioIn == 0 ? 1 : rotRatioIn;
 			this.renderOffset = renderOffset;
 			updateKey = key;
-			connected = true;
+			axis = masterIn;
 		}
 
 		@Override
@@ -483,13 +480,18 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 		}
 
 		@Override
+		public float getAngle(float partialTicks){
+			return 0;
+		}
+
+		@Override
 		public boolean shouldManageAngle(){
 			return false;
 		}
 
 		@Override
 		public void disconnect(){
-			connected = false;
+			axis = null;
 		}
 	}
 
@@ -505,38 +507,8 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 		}
 
 		@Override
-		public float getAngle(){
-			return angleW[0];
-		}
-
-		@Override
-		public void setAngle(float angleIn){
-			angleW[0] = angleIn;
-		}
-
-		@Override
-		public void markChanged(){
-			markDirty();
-		}
-
-		@Override
-		public float getClientW(){
-			return angleW[1];
-		}
-
-		@Override
-		public void syncAngle(){
-			angleW[1] = (float) motData[0];
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		}
-
-		@Override
-		public void resetAngle(){
-			if(!world.isRemote){
-				angleW[1] = 0;
-				angleW[0] = renderOffset ? 22.5F : 0F;
-				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 0, (Float.floatToIntBits(angleW[0]) & 0xFFFFFFFFL) | ((long) Float.floatToIntBits(angleW[1]) << 32L), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			}
+		public float getAngle(float partialTicks){
+			return axis == null ? 0 : axis.getAngle(rotRatio, partialTicks, renderOffset, 22.5F);
 		}
 	}
 }

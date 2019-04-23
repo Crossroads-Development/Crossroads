@@ -19,8 +19,8 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickable{
 		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite())){
 			IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite());
 			if(world.isRemote){
-				angle = axle.getAngle();
-				nextAngle = axle.getNextAngle();
+				angle = axle.getAngle(0);
+				nextAngle = axle.getAngle(1F);
 				return;
 			}
 			axle.addEnergy(2 * facing.getAxisDirection().getOffset(), true, true);

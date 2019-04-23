@@ -82,7 +82,7 @@ public class LargeGear extends Item{
 				((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos.add(cPos))).setInitial(BlockPos.ORIGIN.subtract(cPos));
 			}
 		}
-		++CommonProxy.masterKey;
+		CommonProxy.masterKey++;
 
 		return EnumActionResult.SUCCESS;
 	}

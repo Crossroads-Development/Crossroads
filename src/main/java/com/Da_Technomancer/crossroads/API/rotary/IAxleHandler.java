@@ -2,9 +2,6 @@ package com.Da_Technomancer.crossroads.API.rotary;
 
 import javax.annotation.Nonnull;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 /**
  * Gears and other rotary connectables use two capabilities, ICogHandler and IAxleHandler. 
  * The AxleHandler represents the core of the block, that can connect to machines and axles.
@@ -34,36 +31,6 @@ public interface IAxleHandler{
 	public double getMoInertia();
 	
 	public double getRotationRatio();
-
-	/**
-	 * Resets the angle based on sign of the rotation ratio (small gears go to 0 degrees if positive or 22.5 if negative). Use is optional.
-	 */
-	public default void resetAngle(){
-		
-	}
-
-	/**
-	 * @return The angle of this axle in degrees. Use is optional. 
-	 */
-	public default float getAngle(){
-		return 0;
-	}
-	
-	/**
-	 * Use is optional. 
-	 * @param angleIn Sets the angle value. 
-	 */
-	public default void setAngle(float angleIn){
-		
-	}
-	
-	/**
-	 * To be used for rendering with partial ticks. Use of this is completely optional. If it is used, then it should return a prediction for the next angle value (usually found by assuming the speed is constant).
-	 */
-	@SideOnly(Side.CLIENT)
-	public default float getNextAngle(){
-		return getAngle() + getClientW() * 9F / (float) Math.PI;
-	}
 
 	/**
 	 * negative value decreases energy. For non-gears (or axes) affecting the
@@ -99,18 +66,9 @@ public interface IAxleHandler{
 	public void markChanged();
 	
 	/**
-	 * @return The angular velocity the client is using to calculate angle. Use is optional. 
+	 * @return The angle of this axle for rendering. In degrees
 	 */
-	public default float getClientW(){
-		return 0;
-	}
-	
-	/**
-	 * Synchronizes the angle and angular velocity to the client. Use is optional.
-	 */
-	public default void syncAngle(){
-		
-	}
+	public float getAngle(float partialTicks);
 	
 	/**
 	 * @return Whether the Master Axis should keep the angle and clientW synchronized to client. If true, this must implement syncAngle, getAngle, setAngle, resetAngle, and getClientW.

@@ -1,37 +1,59 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.packets.ITaylorReceiver;
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendTaylorToClient;
 import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
-public class MasterAxisTileEntity extends TileEntity implements ITickable{
+public class MasterAxisTileEntity extends TileEntity implements ITickable, ITaylorReceiver{
 
 	protected boolean locked = false;
 	protected double sumEnergy = 0;
-	protected int ticksExisted = 0;
+	protected long ticksExisted = 0;
 	protected byte key;
 	protected int lastKey = 0;
 	protected boolean forceUpdate;
 	protected EnumFacing facing;
 
+	protected static final Random RAND = new Random();
+
 	protected ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
 	protected final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<>();
 
-	protected static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+	/**
+	 * Now I know what you're thinking: "What the heck is this for?". Well it's quite simple- no it isn't that's a lie
+	 * The Master Axis is responsible for keeping the rendering angles of all members synced centrally.
+	 * A Taylor Series (if you don't know what that is, I suggest you google "Taylor Series", "Power Series", "Derivatives calculus", and "Painless suicide methods" in that order)
+	 * is used to estimate and extrapolate future and intermediate gear angles to reduce the number of angle information packets that have to be sent.
+	 * The Taylor Series is only regenerated and resynced when its predication begins to significantly diverge from actual values, by more than ANGLE_MARGIN
+	 */
+	private long seriesTimestamp;
+	private float[] taylorSeries = new float[4];
+	/**
+	 * Stores the previous 4 angle values as a reference to calculate and verify the Taylor series.
+	 * The first value is the oldest
+	 */
+	private float[] prevAngles = new float[4];
+
+	private static final float ANGLE_MARGIN = (float) ModConfig.speedPrecision.getDouble();
 	protected static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
 
 	@Override
@@ -52,14 +74,24 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		return facing;
 	}
 
+	@Override
+	public void invalidate(){
+		super.invalidate();
+		//It is important that disconnect is called when this TE is destroyed/removed/invalidated on both the server and client to both prevent memory leaks, and clear up minor rendering abnormalities
+		disconnect();
+	}
+
 	public void disconnect(){
 		for(IAxleHandler axle : rotaryMembers){
 			//For 0-mass gears.
 			axle.getMotionData()[0] = 0;
 			axle.getMotionData()[2] = 0;
 			axle.getMotionData()[3] = 0;
-			axle.syncAngle();
 			axle.disconnect();
+		}
+		for(int i = 0; i < 4; i++){
+			prevAngles[i] = 0;
+			taylorSeries[i] = 0;
 		}
 		rotaryMembers.clear();
 		CommonProxy.masterKey++;
@@ -102,39 +134,69 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 	}
 
 	protected void runAngleCalc(){
-		boolean syncSpin = false;
-		boolean work = false;
-		for(IAxleHandler axle : rotaryMembers){
-			if(axle.shouldManageAngle()){
-				syncSpin = Math.abs(axle.getMotionData()[0] - axle.getClientW()) >= CLIENT_SPEED_MARGIN * axle.getRotationRatio();
-				work = true;
-				break;
+		if(rotaryMembers.isEmpty()){
+			//Clear all angle data
+			for(int i = 0; i < 4; i++){
+				prevAngles[i] = 0;
+				taylorSeries[i] = 0;
 			}
-		}
-		if(!work){
-			return;
-		}
+		}else if(!world.isRemote){//Server side, has members
+			//Add the current angle value to the prevAngles record, and shift the array
+			System.arraycopy(prevAngles, 1, prevAngles, 0, 3);
+			prevAngles[3] = prevAngles[2] + (float) (rotaryMembers.get(0).getMotionData()[0] / rotaryMembers.get(0).getRotationRatio()) / 20F;
 
-		for(IAxleHandler axle : rotaryMembers){
-			if(axle.shouldManageAngle()){
-				float axleSpeed = ((float) axle.getMotionData()[0]);
-				axle.setAngle(axle.getAngle() + (axleSpeed * 9F / (float) Math.PI));
-				if(syncSpin){
-					axle.syncAngle();
+			//The extrapolated value based on the currently used series
+			float currentSim = runSeries(ticksExisted, 0);
+			float delta = currentSim - prevAngles[3];
+
+			if(Math.abs(delta) >= ANGLE_MARGIN){
+				//Take the current simulated angle as the new "true" angle value, to prevent a "jerking" re-alignment of gear angles on the client side
+				for(int i = 0; i < 4; i++){
+					prevAngles[i] += delta;
 				}
+
+				//Generate a new series
+				taylorSeries[0] = 0;
+				taylorSeries[1] = prevAngles[1] - prevAngles[0];
+				taylorSeries[2] = (prevAngles[2] - prevAngles[1]) - taylorSeries[1];
+				taylorSeries[3] = ((prevAngles[3] - prevAngles[2]) - (prevAngles[2] - prevAngles[1])) - taylorSeries[2];
+
+				//Build in the factorial quotients
+				taylorSeries[1] /= 1F;//1!
+				taylorSeries[2] /= 2F;//2!
+				taylorSeries[3] /= 6F;//3!
+				//This series is based on values 3 ticks old, and the timestamp is therefore 3 ticks ago
+				seriesTimestamp = ticksExisted - 3;
+
+				//Set the first term of the Taylor series such that calling runSeries with the current time gets the current angle
+				float offset = runSeries(ticksExisted, 0);
+				taylorSeries[0] = prevAngles[3] - offset;
+
+				//Sync the series to the client
+				ModPackets.network.sendToAllAround(new SendTaylorToClient(seriesTimestamp, taylorSeries, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 	}
 
+	private float runSeries(long time, float partialTicks){
+		float relTime = time - seriesTimestamp;
+		relTime += partialTicks;
+		double result = taylorSeries[0] + (relTime - 0.5F) * taylorSeries[1] + Math.pow(relTime - 1F, 2F) * taylorSeries[2] + Math.pow(relTime - 1.5F, 3F) * taylorSeries[3];
+		return (float) result;
+	}
+
+	@Override
+	public void receiveSeries(long timestamp, float[] series){
+		seriesTimestamp = timestamp;
+		taylorSeries = series;
+	}
+
 	@Override
 	public void update(){
-		if(world.isRemote){
-			return;
-		}
-
 		ticksExisted++;
+		markDirty();
 
-		if(ticksExisted % UPDATE_TIME == 20 || forceUpdate){
+		if(ticksExisted % UPDATE_TIME == 20 || forceUpdate || rotaryMembers.isEmpty()){
 			handler.requestUpdate();
 		}
 
@@ -143,7 +205,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		lastKey = CommonProxy.masterKey;
 
 		if(!locked && !rotaryMembers.isEmpty()){
-			runCalc();
+			if(!world.isRemote){
+				runCalc();
+			}
 			runAngleCalc();
 			triggerSlaves();
 		}
@@ -159,6 +223,35 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 			slave.getLeft().trigger(slave.getRight());
 		}
 		slaves.removeAll(toRemove);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt){
+		super.readFromNBT(nbt);
+		ticksExisted = nbt.getLong("life");
+		for(int i = 0; i < 4; i++){
+			prevAngles[i] = nbt.getFloat("prev_" + i);
+			taylorSeries[i] = nbt.getFloat("taylor_" + i);
+		}
+		seriesTimestamp = nbt.getLong("timestamp");
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+		super.writeToNBT(nbt);
+		nbt.setLong("life", ticksExisted);
+		for(int i = 0; i < 4; i++){
+			nbt.setFloat("prev_" + i, prevAngles[i]);
+			nbt.setFloat("taylor_" + i, taylorSeries[i]);
+		}
+		nbt.setLong("timestamp", seriesTimestamp);
+		return nbt;
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag(){
+		NBTTagCompound nbt = super.getUpdateTag();
+		return writeToNBT(nbt);
 	}
 
 	@Override
@@ -186,8 +279,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
 	protected class AxisHandler implements IAxisHandler{
 
-		protected final Random RAND = new Random();
-
 		@Override
 		public void trigger(IAxisHandler masterIn, byte keyIn){
 			if(keyIn != key){
@@ -199,7 +290,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 
 		@Override
 		public void requestUpdate(){
-			if(world.isRemote || ModConfig.disableSlaves.getBoolean()){
+			if(ModConfig.disableSlaves.getBoolean()){
 				return;
 			}
 			memberCopy = new ArrayList<>(rotaryMembers);
@@ -217,17 +308,10 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 				axleHandler.propogate(this, key, 1, 0, false);
 			}
 
-			if(!memberCopy.containsAll(rotaryMembers)){
-				for(IAxleHandler axle : rotaryMembers){
-					axle.resetAngle();
-				}
-			}
-
 			memberCopy.removeAll(rotaryMembers);
 			for(IAxleHandler axle : memberCopy){
 				//For 0-mass gears.
 				axle.getMotionData()[0] = 0;
-				axle.syncAngle();
 				axle.disconnect();
 			}
 			memberCopy = null;
@@ -245,9 +329,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 				gear.getMotionData()[2] = 0;
 				gear.getMotionData()[3] = 0;
 				gear.markChanged();
-				if(gear.shouldManageAngle()){
-					gear.syncAngle();
-				}
 			}
 			rotaryMembers.clear();
 			memberCopy.clear();
@@ -276,6 +357,17 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable{
 		@Override
 		public double getTotalEnergy(){
 			return sumEnergy;
+		}
+
+		@Override
+		public float getAngle(double rotRatio, float partialTicks, boolean shouldOffset, float angleOffset){
+			float angle = runSeries(ticksExisted, partialTicks);
+			angle *= rotRatio;
+			angle = (float) Math.toDegrees(angle);
+			if(shouldOffset){
+				angle += angleOffset;
+			}
+			return angle;
 		}
 
 		@Override

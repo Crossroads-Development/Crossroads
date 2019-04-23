@@ -57,7 +57,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		tempSide -= 5D * level;
 		tempBottom += 5D * level;
 
-		if(axleHandler.connected && Math.signum(level) * motData[0] < ModConfig.getConfigDouble(ModConfig.stirlingSpeedLimit, false)){
+		if(axleHandler.axis != null && Math.signum(level) * motData[0] < ModConfig.getConfigDouble(ModConfig.stirlingSpeedLimit, false)){
 			motData[1] += ModConfig.getConfigDouble(ModConfig.stirlingMultiplier, false) * 5D * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
 		}
 

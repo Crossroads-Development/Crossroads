@@ -401,6 +401,11 @@ public class PrototypePistol extends BeamUsingItem{
 			}
 
 			@Override
+			public float getAngle(float partialTicks){
+				return 0;
+			}
+
+			@Override
 			public boolean shouldManageAngle(){
 				return false;
 			}

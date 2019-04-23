@@ -127,6 +127,7 @@ public class Mechanism extends BlockContainer{
 
 	@Override
 	public boolean removedByPlayer(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, boolean canHarvest){
+		CommonProxy.masterKey++;
 		if(worldIn.isRemote){
 			return false;
 		}
@@ -152,7 +153,6 @@ public class Mechanism extends BlockContainer{
 						}
 					}
 				}
-				CommonProxy.masterKey++;
 				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 				return true;
 			}else{
@@ -160,7 +160,6 @@ public class Mechanism extends BlockContainer{
 					spawnAsEntity(worldIn, pos, gear.members[out].getDrop(gear.mats[out]));
 				}
 				gear.setMechanism(out, null, null, null, false);
-				CommonProxy.masterKey++;
 				if(gear.members[0] == null && gear.members[1] == null && gear.members[2] == null && gear.members[3] == null && gear.members[4] == null && gear.members[5] == null && gear.members[6] == null){
 					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 					return true;
@@ -211,6 +210,8 @@ public class Mechanism extends BlockContainer{
 
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+		CommonProxy.masterKey++;
+
 		if(worldIn.isRemote){
 			return;
 		}
@@ -228,8 +229,6 @@ public class Mechanism extends BlockContainer{
 		}
 
 		te.updateRedstone();
-
-		CommonProxy.masterKey++;
 	}
 
 	@Override

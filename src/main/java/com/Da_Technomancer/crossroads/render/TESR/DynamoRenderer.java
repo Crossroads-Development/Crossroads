@@ -27,7 +27,7 @@ public class DynamoRenderer extends TileEntitySpecialRenderer<DynamoTileEntity>{
 		GlStateManager.translate(x + .5F, y + .5F, z + .5F);
 		GlStateManager.rotate(270F - facing.getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.rotate(-facing.getAxisDirection().getOffset() * ((axle.getNextAngle() - axle.getAngle()) * partialTicks + axle.getAngle()), 0, 1, 0);
+		GlStateManager.rotate(-facing.getAxisDirection().getOffset() * axle.getAngle(partialTicks), 0, 1, 0);
 		ModelAxle.render(GearFactory.findMaterial("Iron").getColor());
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0.5F, 0);

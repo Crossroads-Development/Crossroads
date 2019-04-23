@@ -86,10 +86,6 @@ public class MechanismClutch extends MechanismAxle{
 		}
 
 		handler.rotRatio = rotRatioIn;
-
-		if(key == 0){
-			handler.resetAngle();
-		}
 		handler.updateKey = key;
 
 		
@@ -193,9 +189,7 @@ public class MechanismClutch extends MechanismAxle{
 		vb.pos(0.25F, 0, -0.25F).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
 		
-		float angle = (float) (handler.getNextAngle() - handler.getAngle());
-		angle *= partialTicks;
-		angle += handler.getAngle();
+		float angle = handler.getAngle(partialTicks);
 		GlStateManager.rotate(angle, 0F, 1F, 0F);
 		ModelAxle.render(mat.getColor());
 		GlStateManager.popMatrix();

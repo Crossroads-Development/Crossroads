@@ -100,7 +100,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 				markDirty();
 			}
 
-			if(running && axleHandler.connected){
+			if(running && axleHandler.axis != null){
 				if(world.getTotalWorldTime() % 10 == 0 && world.rand.nextInt(240) == 0){
 					int prevLevel = level;
 					level = (world.rand.nextInt(2) + 1) * (world.rand.nextBoolean() ? -1 : 1);//Gen a random number from -2 to 2, other than 0

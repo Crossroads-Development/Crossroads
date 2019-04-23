@@ -53,7 +53,7 @@ public class SteamTurbineTileEntity extends ModuleTE{
 			if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN)){
 				gear = te.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN);
 			}
-			completion = (float) (gear == null ? 0 : gear.getAngle());
+			completion = (float) (gear == null ? 0 : gear.getAngle(0));
 			return;
 		}
 
@@ -67,7 +67,7 @@ public class SteamTurbineTileEntity extends ModuleTE{
 					fluids[1] = null;
 				}
 				fluids[0] = new FluidStack(BlockDistilledWater.getDistilledWater(), (fluids[0] == null ? 0 : fluids[0].amount) + (100 * limit));
-				if(axleHandler.connected){
+				if(axleHandler.axis != null){
 					axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket(false) / EnergyConverters.degPerJoule(false), true, true);
 				}
 			}

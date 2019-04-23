@@ -9,7 +9,9 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
+import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +27,21 @@ import java.util.ArrayList;
 public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver, IInfoTE{
 
 	public BlockPos masterPos;//Defined relative to this block's position
+
+	private EnumFacing facing = null;
+
+	protected EnumFacing getFacing(){
+		if(facing == null){
+			IBlockState state = world.getBlockState(pos);
+			if(state.getBlock() != ModBlocks.largeGearSlave){
+				invalidate();
+				return EnumFacing.NORTH;
+			}
+			facing = state.getValue(EssentialsProperties.FACING);
+		}
+
+		return facing;
+	}
 
 	@Override
 	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
@@ -97,7 +114,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.COG_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(EssentialsProperties.FACING) == facing){
+		if(capability == Capabilities.COG_CAPABILITY && isEdge() && getFacing() == facing){
 			return true;
 		}else{
 			return super.hasCapability(capability, facing);
@@ -107,7 +124,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.COG_CAPABILITY && isEdge() && world.getBlockState(pos).getValue(EssentialsProperties.FACING) == facing){
+		if(capability == Capabilities.COG_CAPABILITY && isEdge() && getFacing() == facing){
 			return (T) handler;
 		}else{
 			return super.getCapability(capability, facing);
@@ -127,7 +144,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 		public IAxleHandler getAxle(){
 			TileEntity te = world.getTileEntity(pos.add(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
-				return te.getCapability(Capabilities.AXLE_CAPABILITY, world.getBlockState(pos).getValue(EssentialsProperties.FACING));
+				return te.getCapability(Capabilities.AXLE_CAPABILITY, getFacing());
 			}
 			return null;
 		}

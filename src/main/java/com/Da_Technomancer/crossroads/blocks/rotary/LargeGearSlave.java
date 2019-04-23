@@ -77,9 +77,6 @@ public class LargeGearSlave extends BlockContainer{
 
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		if(worldIn.isRemote){
-			return;
-		}
 		CommonProxy.masterKey++;
 	}
 

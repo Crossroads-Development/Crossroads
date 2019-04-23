@@ -40,6 +40,11 @@ public class DefaultAxisHandler implements IAxisHandler{
 	}
 
 	@Override
+	public float getAngle(double rotRatio, float partialTicks, boolean shouldOffset, float angleOffset){
+		return 0;
+	}
+
+	@Override
 	public AxisTypes getType(){
 		return AxisTypes.NORMAL;
 	}

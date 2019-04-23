@@ -67,34 +67,7 @@ public class MechanismSmallGear implements IMechanism{
 		}
 
 		handler.rotRatio = rotRatioIn;
-
-		if(handler.updateKey == 0){
-			handler.resetAngle();
-		}
 		handler.updateKey = key;
-
-
-		//Connected block
-		TileEntity sideTE = te.getWorld().getTileEntity(te.getPos().offset(side));
-		if(sideTE != null){
-			IAxisHandler axisHandler;
-			if((axisHandler = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite())) != null){
-				axisHandler.trigger(masterIn, key);
-			}
-			ISlaveAxisHandler slaveHandler;
-			if((slaveHandler = sideTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite())) != null){
-				masterIn.addAxisToList(slaveHandler, side.getOpposite());
-			}
-			IAxleHandler axleHandler;
-			if((axleHandler = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite())) != null){
-				axleHandler.propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
-			}
-		}
-
-		//Axle slot
-		if(te.axleAxis == side.getAxis() && te.members[6] != null && te.members[6].hasCap(Capabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.axleAxis, te)){
-			te.axleHandlers[6].propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
-		}
 
 		//Other internal gears
 		for(int i = 0; i < 6; i++){
@@ -103,6 +76,7 @@ public class MechanismSmallGear implements IMechanism{
 			}
 		}
 
+		TileEntity sideTE = te.getWorld().getTileEntity(te.getPos().offset(side));
 		for(int i = 0; i < 6; i++){
 			if(i != side.getIndex() && i != side.getOpposite().getIndex()){
 				EnumFacing facing = EnumFacing.byIndex(i);
@@ -130,6 +104,27 @@ public class MechanismSmallGear implements IMechanism{
 				}
 			}
 		}
+
+		//Connected block
+		if(sideTE != null){
+			IAxisHandler axisHandler;
+			if((axisHandler = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite())) != null){
+				axisHandler.trigger(masterIn, key);
+			}
+			ISlaveAxisHandler slaveHandler;
+			if((slaveHandler = sideTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite())) != null){
+				masterIn.addAxisToList(slaveHandler, side.getOpposite());
+			}
+			IAxleHandler axleHandler;
+			if((axleHandler = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite())) != null){
+				axleHandler.propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+			}
+		}
+
+		//Axle slot
+		if(te.axleAxis == side.getAxis() && te.members[6] != null && te.members[6].hasCap(Capabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.axleAxis, te)){
+			te.axleHandlers[6].propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+		}
 	}
 
 	@Nonnull
@@ -154,9 +149,7 @@ public class MechanismSmallGear implements IMechanism{
 
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(side == EnumFacing.DOWN ? 0 : side == EnumFacing.UP ? 180F : side == EnumFacing.NORTH || side == EnumFacing.EAST ? 90F : -90F, side.getAxis() == EnumFacing.Axis.Z ? 1 : 0, 0, side.getAxis() == EnumFacing.Axis.Z ? 0 : 1);
-		float angle = (float) (handler.getNextAngle() - handler.getAngle());
-		angle *= partialTicks;
-		angle += handler.getAngle();
+		float angle = handler.getAngle(partialTicks);
 		GlStateManager.translate(0, -0.4375F, 0);
 		GlStateManager.rotate((float) -side.getAxisDirection().getOffset() * angle, 0F, 1F, 0F);
 		ModelGearOctagon.render(mat.getColor());
