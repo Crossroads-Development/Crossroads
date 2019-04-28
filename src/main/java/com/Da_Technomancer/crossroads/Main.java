@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.command.*;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import net.minecraftforge.common.DimensionManager;
@@ -56,7 +57,6 @@ public final class Main{
 
 	@Mod.EventHandler
 	public void serverStarted(FMLServerStartedEvent e){
-		CommonProxy.masterKey = 1;
 		ModDimensions.loadDims();
 
 		//For singleplayer.

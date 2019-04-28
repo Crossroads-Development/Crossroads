@@ -36,5 +36,6 @@ public class ModPackets{
 		network.registerMessage(SendGoggleConfigureToServer.class, SendGoggleConfigureToServer.class, packetId++, Side.SERVER);
 		network.registerMessage(SendLongToClient.class, SendLongToClient.class, packetId++, Side.CLIENT);
 		network.registerMessage(SendTaylorToClient.class, SendTaylorToClient.class, packetId++, Side.CLIENT);
+		network.registerMessage(SendMasterKeyToClient.class, SendMasterKeyToClient.class, packetId++, Side.CLIENT);
 	}
 }

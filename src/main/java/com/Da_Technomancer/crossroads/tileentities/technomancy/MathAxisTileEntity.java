@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.rotary.*;
-import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
@@ -161,9 +160,9 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 			handler.requestUpdate();
 		}
 
-		forceUpdate = CommonProxy.masterKey != lastKey;
+		forceUpdate = RotaryUtil.getMasterKey() != lastKey;
 
-		lastKey = CommonProxy.masterKey;
+		lastKey = RotaryUtil.getMasterKey();
 	}
 
 	@Override

@@ -68,6 +68,7 @@ public class BasicGear extends Item{
 				playerIn.getHeldItem(hand).shrink(1);
 			}
 
+			RotaryUtil.increaseMasterKey(true);
 			mte.setMechanism(side.getOpposite().getIndex(), MechanismTileEntity.MECHANISMS.get(0), type, null, false);
 		}else if(worldIn.getBlockState(pos.offset(side)).getBlock().isReplaceable(worldIn, pos.offset(side)) && RotaryUtil.solidToGears(worldIn, pos, side)){
 			if(!playerIn.capabilities.isCreativeMode){
@@ -76,7 +77,10 @@ public class BasicGear extends Item{
 
 			worldIn.setBlockState(pos.offset(side), ModBlocks.sextupleGear.getDefaultState(), 3);
 			te = worldIn.getTileEntity(pos.offset(side));
-			((MechanismTileEntity) te).setMechanism(side.getOpposite().getIndex(), MechanismTileEntity.MECHANISMS.get(0), type, null, true);
+			if(te instanceof MechanismTileEntity){
+				RotaryUtil.increaseMasterKey(true);
+				((MechanismTileEntity) te).setMechanism(side.getOpposite().getIndex(), MechanismTileEntity.MECHANISMS.get(0), type, null, true);
+			}
 		}
 
 		return EnumActionResult.SUCCESS;

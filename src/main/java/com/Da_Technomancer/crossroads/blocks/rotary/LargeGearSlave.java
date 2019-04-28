@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
@@ -77,7 +77,7 @@ public class LargeGearSlave extends BlockContainer{
 
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		CommonProxy.masterKey++;
+		RotaryUtil.increaseMasterKey(true);
 	}
 
 	@Override

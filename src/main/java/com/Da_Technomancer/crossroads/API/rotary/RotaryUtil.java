@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
+import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import net.minecraft.block.state.BlockFaceShape;
@@ -11,6 +13,8 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class RotaryUtil{
+
+	private static int masterKey = 1;
 
 	/**
 	 * This method should be called BEFORE adding an ISlaveAxisHandler to the stored list.
@@ -96,5 +100,24 @@ public class RotaryUtil{
 	public static boolean solidToGears(World world, BlockPos pos, EnumFacing side){
 		BlockFaceShape shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
 		return world.isSideSolid(pos, side, false) || shape == BlockFaceShape.SOLID || shape == BlockFaceShape.CENTER || shape == BlockFaceShape.CENTER_BIG || shape == BlockFaceShape.CENTER_SMALL;
+	}
+
+	/**
+	 * Increases the masterKey by one
+	 * @param sendPacket If true, sends a packet to the client forcing the masterKey to increase
+	 */
+	public static void increaseMasterKey(boolean sendPacket){
+		masterKey++;
+		if(sendPacket){
+			ModPackets.network.sendToAll(new SendMasterKeyToClient(masterKey));
+		}
+	}
+
+	public static int getMasterKey(){
+		return masterKey;
+	}
+
+	public static void setMasterKey(int masterKey){
+		RotaryUtil.masterKey = masterKey;
 	}
 }

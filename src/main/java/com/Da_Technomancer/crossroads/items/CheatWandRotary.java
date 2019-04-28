@@ -35,9 +35,9 @@ public class CheatWandRotary extends Item{
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite())){
 			if(playerIn.isSneaking()){
-				te.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite()).addEnergy(-1000, true, true);
+				te.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite()).addEnergy(-10000, true, true);
 			}else{
-				te.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite()).addEnergy(1000, true, true);
+				te.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite()).addEnergy(10000, true, true);
 			}
 			return EnumActionResult.SUCCESS;
 		}
@@ -48,5 +48,7 @@ public class CheatWandRotary extends Item{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Creative Mode Only");
+		tooltip.add("Adds 10,000J when used on a gear");
+		tooltip.add("Shift clicking removes 10,000J");
 	}
 }

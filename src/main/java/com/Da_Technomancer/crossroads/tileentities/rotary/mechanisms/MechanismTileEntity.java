@@ -11,7 +11,6 @@ import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -93,7 +92,6 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	public void setMechanism(int index, @Nullable IMechanism mechanism, @Nullable GearFactory.GearMaterial mat, @Nullable EnumFacing.Axis axis, boolean newTE){
 		members[index] = mechanism;
 		mats[index] = mat;
-		CommonProxy.masterKey++;
 
 		if(index == 6 && axleAxis != axis){
 			axleAxis = axis;

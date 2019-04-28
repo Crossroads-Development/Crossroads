@@ -50,5 +50,7 @@ public class CheatWandHeat extends Item{
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
 		tooltip.add("Creative Mode Only");
+		tooltip.add("Adds 100°C when used on a cable");
+		tooltip.add("Shift clicking removes 100°C");
 	}
 }

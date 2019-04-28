@@ -8,7 +8,7 @@ buildscript {
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.13.0-2.0.0 BETA 48-Maths"
+version = "1.13.0-2.0.0 BETA 49-Maths but better"
 group = "com.Da_Technomancer.crossroads"
 archivesBaseName = "crossroads"
 

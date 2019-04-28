@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.API.packets.ITaylorReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendTaylorToClient;
 import com.Da_Technomancer.crossroads.API.rotary.*;
-import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.state.IBlockState;
@@ -94,7 +93,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 			taylorSeries[i] = 0;
 		}
 		rotaryMembers.clear();
-		CommonProxy.masterKey++;
+		RotaryUtil.increaseMasterKey(false);
 		facing = null;
 	}
 
@@ -145,31 +144,28 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 			System.arraycopy(prevAngles, 1, prevAngles, 0, 3);
 			prevAngles[3] = prevAngles[2] + (float) (rotaryMembers.get(0).getMotionData()[0] / rotaryMembers.get(0).getRotationRatio()) / 20F;
 
-			//The extrapolated value based on the currently used series
-			float currentSim = runSeries(ticksExisted, 0);
-			float delta = currentSim - prevAngles[3];
 
-			if(Math.abs(delta) >= ANGLE_MARGIN){
+			if(Math.abs(runSeries(ticksExisted, 0, true) - prevAngles[3]) >= ANGLE_MARGIN){
 				//Take the current simulated angle as the new "true" angle value, to prevent a "jerking" re-alignment of gear angles on the client side
+				float delta = runSeries(ticksExisted, 0, false) - prevAngles[3];
 				for(int i = 0; i < 4; i++){
 					prevAngles[i] += delta;
 				}
 
 				//Generate a new series
 				taylorSeries[0] = 0;
-				taylorSeries[1] = prevAngles[1] - prevAngles[0];
-				taylorSeries[2] = (prevAngles[2] - prevAngles[1]) - taylorSeries[1];
-				taylorSeries[3] = ((prevAngles[3] - prevAngles[2]) - (prevAngles[2] - prevAngles[1])) - taylorSeries[2];
+				taylorSeries[1] = prevAngles[3] - prevAngles[2];
+				taylorSeries[2] = taylorSeries[1] - (prevAngles[2] - prevAngles[1]);
+				taylorSeries[3] = taylorSeries[2] - ((prevAngles[2] - prevAngles[1]) - (prevAngles[1] - prevAngles[0]));
 
 				//Build in the factorial quotients
 				taylorSeries[1] /= 1F;//1!
 				taylorSeries[2] /= 2F;//2!
 				taylorSeries[3] /= 6F;//3!
-				//This series is based on values 3 ticks old, and the timestamp is therefore 3 ticks ago
-				seriesTimestamp = ticksExisted - 3;
+				seriesTimestamp = ticksExisted;
 
 				//Set the first term of the Taylor series such that calling runSeries with the current time gets the current angle
-				float offset = runSeries(ticksExisted, 0);
+				float offset = runSeries(ticksExisted, 0, false);
 				taylorSeries[0] = prevAngles[3] - offset;
 
 				//Sync the series to the client
@@ -178,10 +174,17 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 		}
 	}
 
-	private float runSeries(long time, float partialTicks){
+	private float runSeries(long time, float partialTicks, boolean simulate){
 		float relTime = time - seriesTimestamp;
 		relTime += partialTicks;
-		double result = taylorSeries[0] + (relTime - 0.5F) * taylorSeries[1] + Math.pow(relTime - 1F, 2F) * taylorSeries[2] + Math.pow(relTime - 1.5F, 3F) * taylorSeries[3];
+
+		double result = taylorSeries[0] + (relTime - 0.5F) * taylorSeries[1];
+		if(simulate || relTime >= 2F){
+			result += Math.pow(relTime - 1F, 2F) * taylorSeries[2];
+			if(simulate || relTime >= 3F){
+				result += Math.pow(relTime - 1.5F, 3F) * taylorSeries[3];
+			}
+		}
 		return (float) result;
 	}
 
@@ -200,9 +203,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 			handler.requestUpdate();
 		}
 
-		forceUpdate = CommonProxy.masterKey != lastKey;
+		forceUpdate = RotaryUtil.getMasterKey() != lastKey;
 
-		lastKey = CommonProxy.masterKey;
+		lastKey = RotaryUtil.getMasterKey();
 
 		if(!locked && !rotaryMembers.isEmpty()){
 			if(!world.isRemote){
@@ -361,7 +364,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 
 		@Override
 		public float getAngle(double rotRatio, float partialTicks, boolean shouldOffset, float angleOffset){
-			float angle = runSeries(ticksExisted, partialTicks);
+			float angle = runSeries(ticksExisted, partialTicks, false);
 			angle *= rotRatio;
 			angle = (float) Math.toDegrees(angle);
 			if(shouldOffset){

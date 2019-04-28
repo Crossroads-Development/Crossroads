@@ -8,11 +8,11 @@ import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
-import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
@@ -288,7 +288,7 @@ public class PrototypePistol extends BeamUsingItem{
 			}
 			pistolMap.remove(index);
 			active = false;
-			CommonProxy.masterKey++;
+			RotaryUtil.increaseMasterKey(true);
 		}
 
 		@Override

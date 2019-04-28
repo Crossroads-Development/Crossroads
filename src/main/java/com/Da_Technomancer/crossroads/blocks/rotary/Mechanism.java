@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.CommonProxy;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
@@ -127,7 +126,7 @@ public class Mechanism extends BlockContainer{
 
 	@Override
 	public boolean removedByPlayer(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, boolean canHarvest){
-		CommonProxy.masterKey++;
+		RotaryUtil.increaseMasterKey(false);
 		if(worldIn.isRemote){
 			return false;
 		}
@@ -210,7 +209,7 @@ public class Mechanism extends BlockContainer{
 
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		CommonProxy.masterKey++;
+		RotaryUtil.increaseMasterKey(true);
 
 		if(worldIn.isRemote){
 			return;
@@ -274,6 +273,7 @@ public class Mechanism extends BlockContainer{
 			if(te instanceof MechanismTileEntity){
 				MechanismTileEntity mte = (MechanismTileEntity) te;
 				if(mte.axleAxis != null){
+					RotaryUtil.increaseMasterKey(false);
 					if(!worldIn.isRemote){
 						mte.setMechanism(6, mte.members[6], mte.mats[6], EnumFacing.Axis.values()[(mte.axleAxis.ordinal() + 1) % 3], false);
 					}

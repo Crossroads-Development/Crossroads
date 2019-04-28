@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -64,6 +65,7 @@ public class Clutch extends Item{
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
 			if(mte.members[6] == null){
+				RotaryUtil.increaseMasterKey(true);
 				mte.setMechanism(6, MechanismTileEntity.MECHANISMS.get(inverted ? 3 : 2), type, side.getAxis(), false);
 				if(!playerIn.capabilities.isCreativeMode){
 					playerIn.getHeldItem(hand).shrink(1);
@@ -77,6 +79,7 @@ public class Clutch extends Item{
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
 			if(mte.members[6] == null){
+				RotaryUtil.increaseMasterKey(true);
 				mte.setMechanism(6, MechanismTileEntity.MECHANISMS.get(inverted ? 3 : 2), type, side.getAxis(), false);
 				if(!playerIn.capabilities.isCreativeMode){
 					playerIn.getHeldItem(hand).shrink(1);
@@ -93,7 +96,10 @@ public class Clutch extends Item{
 
 			worldIn.setBlockState(pos.offset(side), ModBlocks.sextupleGear.getDefaultState(), 3);
 			te = worldIn.getTileEntity(pos.offset(side));
-			((MechanismTileEntity) te).setMechanism(6, MechanismTileEntity.MECHANISMS.get(inverted ? 3 : 2), type, side.getAxis(), true);
+			if(te instanceof MechanismTileEntity){
+				RotaryUtil.increaseMasterKey(true);
+				((MechanismTileEntity) te).setMechanism(6, MechanismTileEntity.MECHANISMS.get(inverted ? 3 : 2), type, side.getAxis(), true);
+			}
 		}
 
 		return EnumActionResult.SUCCESS;

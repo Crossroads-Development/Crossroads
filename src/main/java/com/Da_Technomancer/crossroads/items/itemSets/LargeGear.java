@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.CommonProxy;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.items.ModItems;
@@ -82,7 +82,7 @@ public class LargeGear extends Item{
 				((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos.add(cPos))).setInitial(BlockPos.ORIGIN.subtract(cPos));
 			}
 		}
-		CommonProxy.masterKey++;
+		RotaryUtil.increaseMasterKey(false);
 
 		return EnumActionResult.SUCCESS;
 	}
