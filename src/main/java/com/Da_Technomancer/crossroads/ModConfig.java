@@ -46,6 +46,8 @@ public final class ModConfig{
 	public static Property addBoboRecipes;
 	public static Property cccExpenLiquid;
 	public static Property cccFieldLiquid;
+	public static Property allowTimeBeam;
+	public static Property timeBlacklist;
 	public static Property destroyBlacklist;
 
 	private static final ArrayList<Property> SYNCED_PROPERTIES = new ArrayList<Property>();
@@ -98,6 +100,8 @@ public final class ModConfig{
 		addBoboRecipes = config.get(CAT_MISC, "Add recipes for bobo items? (Default true)", true, "Disabling these recipes will NOT change the documentation at all. Responsibility for warning users of disabled recipes is left to pack makers.");
 		cccExpenLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber without fields (Default copper).", "copper", "An invalid liquid will disable the crafting");
 		cccFieldLiquid = config.get(CAT_TECHNOMANCY, "Liquid type for the Copshowium Creation Chamber with fields (Default distilledwater).", "distilledwater", "An invalid liquid will disable the crafting");
+		SYNCED_PROPERTIES.add(allowTimeBeam = config.get(CAT_MISC, "Can time beams accelerate time? (Default true).", true));
+		timeBlacklist = config.get(CAT_MISC, "Blocks that time beams shouldn't affect. Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'.", new String[] {});
 		destroyBlacklist = config.get(CAT_INTERNAL, "Blocks that Crossroads shouldn't be able to destroy or replace. Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'.", new String[] {"minecraft:barrier", "minecraft:command_block", "minecraft:end_portal", "minecraft:end_portal_frame", "minecraft:nether_portal", "minecraft:chain_command_block", "minecraft:repeating_command_block", "minecraft:end_gateway", "minecraft:structure_block", "minecraft:structure_void"});
 	}
 
