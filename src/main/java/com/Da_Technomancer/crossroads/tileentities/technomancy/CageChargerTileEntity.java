@@ -134,9 +134,11 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 				ItemStack stored = cage;
 
 				if(!simulate){
+					ItemStack out = cage;
 					cage = ItemStack.EMPTY;
 					markDirty();
 					world.setBlockState(pos, ModBlocks.cageCharger.getDefaultState().withProperty(Properties.ACTIVE, false));
+					return out;
 				}
 
 				return cage;
