@@ -68,10 +68,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	// [0]=w, [1]=E, [2]=P, [3]=lastE
 	private final double[][] motionData = new double[7][4];
 	private final double[] inertia = new double[7];
-	//Public for read-only
-	private final float[] angle = new float[7];
-	//Public for read-only
-	private final float[] clientW = new float[7];
+//	private final float[] angle = new float[7];
+//	private final float[] clientW = new float[7];
 	//Public for read-only
 	public final AxisAlignedBB[] boundingBoxes = new AxisAlignedBB[7];
 
@@ -115,8 +113,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 
 		// motionData
 		for(int i = 0; i < 7; i++){
-			nbt.setFloat("[" + i + "]cl_w", clientW[i]);
-			nbt.setFloat("[" + i + "]ang", angle[i]);
+//			nbt.setFloat("[" + i + "]cl_w", clientW[i]);
+//			nbt.setFloat("[" + i + "]ang", angle[i]);
 			for(int j = 0; j < 4; j++){
 				if(motionData[i][j] != 0){
 					nbt.setDouble("[" + i + "," + j + "]mot", motionData[i][j]);
@@ -149,8 +147,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 				nbt.setInteger("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
 				nbt.setInteger("[" + i + "]mat", mats[i].getIndex());
 
-				nbt.setFloat("[" + i + "]cl_w", clientW[i]);
-				nbt.setFloat("[" + i + "]ang", angle[i]);
+//				nbt.setFloat("[" + i + "]cl_w", clientW[i]);
+//				nbt.setFloat("[" + i + "]ang", angle[i]);
 			}
 		}
 
@@ -181,8 +179,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 				mats[i] = GearFactory.gearMats.get(nbt.getInteger("[" + i + "]mat"));
 
 				// motionData
-				clientW[i] = nbt.getFloat("[" + i + "]cl_w");
-				angle[i] = nbt.getFloat("[" + i + "]ang");
+//				clientW[i] = nbt.getFloat("[" + i + "]cl_w");
+//				angle[i] = nbt.getFloat("[" + i + "]ang");
 				for(int j = 0; j < 4; j++){
 					motionData[i][j] = nbt.getDouble("[" + i + "," + j + "]mot");
 				}
@@ -196,11 +194,11 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
-		if(identifier >= 0 && identifier < 7){
+		/*if(identifier >= 0 && identifier < 7){
 			float angleIn = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
 			angle[identifier] = Math.abs(angleIn - angle[identifier]) > 15F ? angleIn : angle[identifier];
 			clientW[identifier] = Float.intBitsToFloat((int) (message >>> 32L));
-		}else if(identifier >= 7 && identifier < 14){
+		}else */if(identifier >= 7 && identifier < 14){
 			if(message == -1){
 				members[identifier - 7] = null;
 				mats[identifier - 7] = null;
@@ -219,12 +217,14 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 
 	@Override
 	public void update(){
-		if(world.isRemote){
-			for(int i = 0; i < 7; i++){
-				// it's 9 / PI instead of 180 / PI because 20 ticks/second
-				angle[i] += clientW[i] * 9D / Math.PI;
-			}
-		}
+//		if(world.isRemote){
+//			for(int i = 0; i < 7; i++){
+//				// it's 9 / PI instead of 180 / PI because 20 ticks/second
+//				angle[i] += clientW[i] * 9D / Math.PI;
+//			}
+//		}
+
+		//TODO see if it's possible to make this not a ticking tile entity
 
 		if(updateMembers && !world.isRemote){
 			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 14, axleAxis == null ? -1 : axleAxis.ordinal(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
