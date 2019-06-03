@@ -1,17 +1,12 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import java.util.Random;
-
-import org.apache.logging.log4j.Level;
-
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.magic.BeamManager;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
+import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.WorkspaceWorldProvider;
-
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +17,9 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
+import org.apache.logging.log4j.Level;
+
+import java.util.Random;
 
 public class TimeEffect implements IEffect{
 
@@ -29,26 +27,37 @@ public class TimeEffect implements IEffect{
 
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, double mult){
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(te instanceof ITickable){
-			for(EnumFacing dir : EnumFacing.values()){
-				if(te.hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir)){
+		if(ModConfig.getConfigBool(ModConfig.allowTimeBeam, false)){
+			String[] bannedBlocks = ModConfig.getConfigStringList(ModConfig.timeBlacklist, false);
+			String id = worldIn.getBlockState(pos).getBlock().getRegistryName().toString();
+			for(String s : bannedBlocks){
+				if(s.equals(id)){
 					return;
 				}
 			}
 
-			for(int i = 0; i < mult * BeamManager.BEAM_TIME * 16; i++){
-				//Each tick the TileEntity is queried again because some TileEntities destroy themselves on tick. 
-				((ITickable) worldIn.getTileEntity(pos)).update();
-				if(!(worldIn.getTileEntity(pos) instanceof ITickable)){
-					break;
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(te instanceof ITickable){
+				for(EnumFacing dir : EnumFacing.values()){
+					if(te.hasCapability(Capabilities.MAGIC_HANDLER_CAPABILITY, dir)){
+						return;
+					}
+				}
+
+				for(int i = 0; i < mult * BeamManager.BEAM_TIME * 16; i++){
+					//Each tick the TileEntity is queried again because some TileEntities destroy themselves on tick.
+					((ITickable) te).update();
+					te = worldIn.getTileEntity(pos);
+					if(!(te instanceof ITickable)){
+						break;
+					}
 				}
 			}
-		}
 
-		if(worldIn.getBlockState(pos).getBlock().getTickRandomly()){
-			for(int i = 0; i < mult * BeamManager.BEAM_TIME; i++){
-				worldIn.getBlockState(pos).getBlock().randomTick(worldIn, pos, worldIn.getBlockState(pos), RAND);
+			if(worldIn.getBlockState(pos).getBlock().getTickRandomly()){
+				for(int i = 0; i < mult * BeamManager.BEAM_TIME; i++){
+					worldIn.getBlockState(pos).getBlock().randomTick(worldIn, pos, worldIn.getBlockState(pos), RAND);
+				}
 			}
 		}
 	}

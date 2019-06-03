@@ -18,6 +18,7 @@ public class CraftTweakerIntegration{
 		CraftTweakerAPI.registerClass(HeatingCrucibleHandler.class);
 		CraftTweakerAPI.registerClass(FusionBeamHandler.class);
 		CraftTweakerAPI.registerClass(EnvHeatSourceHandler.class);
+		CraftTweakerAPI.registerClass(DetailedCrafterHandler.class);
 
 		if(Loader.isModLoaded("contenttweaker")){
 			CraftTweakerAPI.registerClass(AdvFusionBeamHandler.class);

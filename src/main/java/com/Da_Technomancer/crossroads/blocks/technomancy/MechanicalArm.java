@@ -43,7 +43,10 @@ public class MechanicalArm extends BlockContainer{
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		 //Redstone controlled by north side.
-		((MechanicalArmTileEntity) worldIn.getTileEntity(pos)).setRedstone(Ratiator.getPowerOnSide(worldIn, pos, EnumFacing.NORTH, false));
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof MechanicalArmTileEntity){
+			((MechanicalArmTileEntity) te).setRedstone(Ratiator.getPowerOnSide(worldIn, pos, EnumFacing.NORTH, false));
+		}
 	}
 	
 	@Override
@@ -53,8 +56,9 @@ public class MechanicalArm extends BlockContainer{
 	
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
-		if(worldIn.getTileEntity(pos) instanceof MechanicalArmTileEntity){
-			((MechanicalArmTileEntity) worldIn.getTileEntity(pos)).ridable.setDead();
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof MechanicalArmTileEntity && ((MechanicalArmTileEntity) te).ridable != null){
+			((MechanicalArmTileEntity) te).ridable.setDead();
 		}
 		
 		super.breakBlock(worldIn, pos, state);
