@@ -34,12 +34,17 @@ repositories {
 	maven { url 'http://tehnut.info/maven/' }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
 	maven { url "http://maven.blamejared.com/" }
+	maven {
+		name = "CurseForge"
+		url = "https://minecraft.curseforge.com/api/maven/"
+	}
 }
 
 dependencies {
 	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.5-60"
 	deobfCompile "mezz.jei:jei_1.12.2:4.9.1.168"
 	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.6.465"
+	deobfCompile "essentials:essentials:1.12.2:1.2.1"
 }
 
 processResources {
