@@ -102,5 +102,6 @@
 			"path": "technomancy"
 		}
     ],
-    "read_by_default": true
+  "read_by_default": true,
+  "advancement": "crossroads:crossroads/technomancy"
 }
