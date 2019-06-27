@@ -45,6 +45,9 @@ dependencies {
 	deobfCompile "mezz.jei:jei_1.12.2:4.9.1.168"
 	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.6.465"
 	deobfCompile "essentials:essentials:1.12.2:1.2.1"
+	deobfCompile "contenttweaker:ContentTweaker:1.12.2:4.9.1"
+	deobfCompile "base:base:1.12.2:3.13.0"
+	compile "vazkii.patchouli:Patchouli:1.0-18.91"
 }
 
 processResources {
