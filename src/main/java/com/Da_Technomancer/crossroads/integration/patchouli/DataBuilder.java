@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.integration.patchouli;
 
-import amerifrance.guideapi.api.util.TextHelper;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.HashMap;
@@ -68,8 +68,8 @@ public class DataBuilder {
 		dataMap.put("fat_per_value", EnergyConverters.FAT_PER_VALUE  + "");
 		dataMap.put("brazier_range", EssentialsConfig.getConfigInt(EssentialsConfig.brazierRange, true) + "");
 
-		dataMap.put("ccc_expensive_liquid", TextHelper.localize("fluid." + ModConfig.getConfigString(ModConfig.cccExpenLiquid, true)));
-		dataMap.put("ccc_field_liquid", TextHelper.localize("fluid." + ModConfig.getConfigString(ModConfig.cccFieldLiquid, true)));
+		dataMap.put("ccc_expensive_liquid",  I18n.format("fluid." + ModConfig.getConfigString(ModConfig.cccExpenLiquid, true)));
+		dataMap.put("ccc_field_liquid", I18n.format("fluid." + ModConfig.getConfigString(ModConfig.cccFieldLiquid, true)));
 		dataMap.put("prototype_pistol_cap", ModConfig.getConfigInt(ModConfig.maximumPistolDamage, true) + "");
 		dataMap.put("voltus_usage",  1000F / ModConfig.getConfigDouble(ModConfig.voltusUsage, true) + "");
 
