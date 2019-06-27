@@ -11,7 +11,6 @@
         {
             "type": "crafting",
             "recipe": "crossroads:arcane_extractor",
-            "title": " ",
             "text": "Most items don't make any beam, and just get consumed. The beam exists for 5 ticks, then vanishes. Feeding it items with a hopper would make a pulsating beam as the hopper cannot feed it fast enough."
         }
     ],

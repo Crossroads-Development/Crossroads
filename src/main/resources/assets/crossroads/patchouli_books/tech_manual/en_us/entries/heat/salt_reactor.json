@@ -6,13 +6,11 @@
     "pages": [
         {
             "type": "text",
-			"item": "crossroads:salt_reactor",
             "text": "A Salt Reactor decreases its temperature with salt and distilled water. With a piece of salt and 200mB of distilled water, the Salt Reactor decreases its temperature by 5°C and creates 200mB of normal water. It can cool by up to 5°C/t. Distilled water is inserted in the top, water comes out of side, and salt can be inserted any side."
         },
         {
             "type": "crafting",
             "recipe": "crossroads:salt_reactor",
-			"title": " ",
             "text": "Such a device would work in real life to a lesser extent, as it would be far less effective at cooling, and would be unable to go below the freezing point of water."
         }
     ],

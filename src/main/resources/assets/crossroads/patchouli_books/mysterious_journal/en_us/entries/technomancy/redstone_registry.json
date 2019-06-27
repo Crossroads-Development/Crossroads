@@ -5,15 +5,13 @@
 	"sortnum": 4,
     "pages": [
         {
-            "type": "spotlight",
-            "item": "crossroads:redstone_registry",
+            "type": "text",
             "text": "The Redstone Registry is similar to a Redstone Keyboard, except it has multiple preset outputs that it cycles between. It can store up to 64 values, and will emit (when measured by Ratiator or Comparator) the value it is currently at.  "
         },
         {
             "type": "detailed_crafting",
             "recipe": "tile.redstone_registry",
-			"path": "technomancy",
-			"title": " "
+			"path": "technomancy"
         },
         {
             "type": "text",

@@ -5,15 +5,13 @@
 	"sortnum": 7,
     "pages": [
         {
-            "type": "spotlight",
-            "item": "crossroads:mechanical_beam_splitter",
+            "type": "text",
             "text": "A more precise variant of the Beam Splitter is the Mechanical Beam Splitter. When placed, it can face any horizontal direction. The ratio used to split incoming beams between the top and bottom is controlled by the speed of the gear attached to the direction it is facing. Ratio=ω/15, capped at 1."
         },
         {
             "type": "detailed_crafting",
 			"recipe": "tile.mechanical_beam_splitter",
 			"path": "technomancy",
-			"title": "",
             "text": "The Mechanical Beam Splitter rounds magic normally for the down direction, and the remainder goes up."
         }
     ],

@@ -5,8 +5,7 @@
 	"sortnum": 1,
     "pages": [
         {
-            "type": "spotlight",
-            "item": "crossroads:module_goggles",
+            "type": "text",
             "text": "Modular Goggles are a headpiece that provides no armor, but does not break. On their own, they do nothing. Lenses can be added to the goggles in an anvil with either a Ruby, Emerald, Diamond, or piece of Pure Quartz and some experience. Multiple lenses can be added, but only one of each type."
         },
         {
