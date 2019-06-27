@@ -1,0 +1,21 @@
+{
+    "name": "Grindstone",
+    "category": "rotary",
+    "icon": "crossroads:grindstone",
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Grindstone is the first rotary powered machine you should create. It has an internal gear with I=1. It uses all energy from the internal gear each tick while running, so it runs faster at higher speeds (more energy in the gear each tick). Gears can be connected to it from the top. It uses 100 energy total to grind up an item. Items can be inserted into any side other than the bottom."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:grindstone",
+            "text": "$(br2)Early on, a Hand Crank is sufficient to run a Grindstone, albeit slowly."
+        },
+        {
+            "type": "text",
+            "text": "The grindstpone can process a variety of recipes, most notable the ability to process copper ore into 2 copper dust and 1 sand, vastly increasing your copper yeilds."
+        }
+    ],
+    "read_by_default": true
+}

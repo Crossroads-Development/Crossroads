@@ -1,0 +1,71 @@
+{
+    "name": "Guide to Temporal Fields",
+    "category": "technomancy",
+    "icon": "crossroads:chunk_unlocker",
+	"sortnum": 10,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Using Temporal Fields (or just fields for short) it is possible to manipulate the rate at which time flows for entities in a certain area, or even stop time in an area entirely. However, a single mistake could have disastrous consequences."
+        },
+        {
+            "type": "text",
+            "item": "crossroads:chunk_unlocker",
+            "text": "In order to start using fields within a chunk, the chunk has to be unlocked using a Chunk Unlocker. Place it anywhere inside the chunk, and give the top a redstone signal. The chunk will remain unlocked only while the Chunk Unlocker receives a redstone signal. One a chunk is re-locked, there is a cooldown before it can be unlocked again. "
+        },
+        {
+            "type": "text",
+            "text": "Do not use multiple Chunk Unlockers in the same chunk, or they will interfere with each other. In order to work with fields, it is highly recommended to have Modular Goggles with a quartz lens, as it allows you to see the fields of the chunk you are in."
+        },
+        {
+            "type": "text",
+            "text": "Each chunk has a \"flux\" value, and it is shared throughout the entire chunk. Time is manipulated in entire columns of blocks at a time, from bedrock to sky height. Each column has a value called \"Rate\", which defaults to 8 and can range from 1 to 128. The rate at which time flows for entities in a column is (Rate)/8 speed, so the default Rate of 8 would give (8/8=1) times speed. "
+        },
+        {
+            "type": "text",
+            "text": "The amount of Rate and Flux in a node can actually be seen by wearing the Goggles as mentioned earlier. Rate will be rendered in green, and Flux is rendered in red. Depending on the configuration settings, they will either appear are translucent lines connecting columns or as translucent quadrilaterals with each corner being a column. The height of the lines/corners shows the amount of Flux/Rate, with feet level being 0 and waist height being 8 (2 blocks high is 16, etc.). "
+        },
+        {
+            "type": "text",
+            "text": "Both Rate and Flux can be manipulated with machines, and are recalculated in a cycle every 5 ticks. There are important rules governing Rate and Flux: Rate returns to 8 unless controlled externally, with each influencing device pushing it up or down away from the resting point of 8. Remove all devices changing it, and it will return to 8 next cycle. Flux does not return to 8 on its own, and if increased by 3 to 11 one cycle, and then next cycle 2 is added, it will go to 13 instead of 10. "
+        },
+        {
+            "type": "text",
+            "text": "It also changes randomly when it isn't equal to 8: each cycle it changes by a random amount from 0 to (|current flux - 8|/8), with the upper bound rounded away from 0. If it were, for example, 18 then every cycle it has a chance to increase from 0 to 2. At exactly 8, it doesn't change randomly. Every time the Rate in a column changes, the flux in the chunk increases (even if rate decreased) by |ΔRate/2| (Δ means change in). "
+        },
+        {
+            "type": "text",
+            "text": "If Flux reaches (or would exceed) 128, a flux disaster occurs in the chunk and the chunk will become locked again. There are several flux disasters, all of them extremely unpleasant and destructive (all of them can be disabled in the configuration file). They range from turning everything in the chunk to air, to a small explosion. It should be noted that every time a chunk is unlocked, the Rate and Flux in the contained nodes resets to 8."
+        },
+        {
+            "type": "text",
+            "text": "Normally, neither Flux nor Rate can reach 0, though under special conditions time can still be stopped. If the Rate in a column exceeds the Flux in the chunk, then the rules governing flux change. As long as any node in a chunk has a higher rate than the flux in the chunk, machines cannot affect the node's flux. Flux won't grow randomly, instead growing a constant 2 per cycle (8 per second). "
+        },
+        {
+            "type": "text",
+            "text": "However, for entities, time is effectively stopped while in a column with a lower flux and rate. This means that while it is possible to stop time in an area, it can't be stopped permenently. $(br2)There are 3 machines involved in manipulating the Rate and Flux."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:flux_reader_axis",
+            "title": "Flux Regulated Axis",
+            "text": "The Flux Regulated Master Axis acts identically to a Redstone Master Axis, except instead of setting a speed equal to the received signal strength, the speed equals the chunk's flux."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:flux_manipulator",
+            "text": "The Flux Manipulator changes the flux of the chunk its in each cycle by the angle rotated by a gear attached to the top in the last 5 ticks in radians. The Flux Force it applies is angle/5. The direction rotated controls whether the Flux Force is + or -."
+        },
+        {
+            "type": "text",
+            "item": "crossroads:rate_manipulator",
+            "text": "The Rate Manipulator changes the rate of the column its in by the SPEED of a gear attached to the top (not the angle rotated). It can be configured with a wrench to make it affect multiple columns in the same chunk at once, with a maximum area being a square of radius 9. Be careful, as affecting multiple columns at once will mean the flux gained from changing rate will be higher (changing rate in 9 columns is 9 times the flux gain, for example)."
+        },
+        {
+            "type": "text",
+            "text": "Fields do not interact through $(l:technomancy/prototyping)Prototypes$() (field setups inside $(l:technomancy/prototyping)Prototypes$() do not affect the outside world, and vice-versa). If Flux hits 128 inside of a $(l:technomancy/personal_workspace)Workspace Dimension$() or $(l:technomancy/prototyping)Prototype$(), there is no Flux Disaster (though the chunk still gets re-locked). It is therefore recommended to test field setups in a $(technomancy/personal_workspace)Workspace Dimension$()."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

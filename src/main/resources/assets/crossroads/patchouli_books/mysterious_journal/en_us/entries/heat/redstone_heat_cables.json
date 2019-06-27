@@ -1,0 +1,19 @@
+{
+    "name": "Redstone Heat Cables",
+    "category": "heat",
+    "icon": "minecraft:redstone",
+	"sortnum": 5,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Redstone Heat Cables allow redstone interaction with heat. They are made by surrounding any heat cable with 8 redstone in the crafting grid. A Redstone Heat Cable functions like a normal heat cable, except it only connects to other heat cables or machines while it has a redstone signal. A comparator can also be used with a Redstone Heat Cable to measure the temperature."
+        },
+        {
+            "type": "crafting",
+			"title": "Example Crafting",
+            "recipe": "crossroads:redstone_heat_cable_copper_wool",
+            "text": "The equation for converting °C to redstone strength is as follows: redstone = 15 * (273 + °C) / (273 + insulator melting point). This equation rounds down. Therefore, this will never reach 15 because at that point the cable melts."
+        }
+    ],
+    "read_by_default": true
+}

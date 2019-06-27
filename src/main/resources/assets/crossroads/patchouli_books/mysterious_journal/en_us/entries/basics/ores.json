@@ -1,0 +1,61 @@
+{
+    "name": "Ores",
+    "category": "basics",
+    "icon": "crossroads:ingot_copper",
+	"sortnum": 0,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Crossroads adds 4 different ores into the world."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:ore_native_copper",
+            "text": "Native Copper is very common, but is only found between y=50 & y=70. When broken, it gives 3 copper nuggets."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:ore_copper",
+            "text": "Normal Copper ore is also very common, and is only found below y=30. However, you'll need $(l:basics/copper_processing)infrastructure$() to make it into ingots, and until you have the $(l:basics/copper_processing)infrastructure$() the ores are useless."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:ore_tin",
+            "text": "Tin ore is about as rare as gold, and is only found below y=30. It can be smelted into a tin ingot. Mine any that you find."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:ore_ruby",
+            "text": "Ruby ore is very rare, and is only found mixed in with quartz ore in the nether. It's only useful for magic."
+        },
+        {
+            "type": "text",
+            "text": "Copper and tin can be made into blocks and nuggets with the normal recipe, and rubies can be made into blocks when crafted in a 2x2. Also, copper and tin can be combined to make bronze."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:ingot_bronze_1",
+            "recipe2": "crossroads:block_bronze_0"
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:block_bronze_1"
+        },
+        {
+            "type": "text",
+            "text": "Salt isn't found naturally, but it is created later on. It can be turned into blocks that fall like sand.$(br2)The Salt Block kills plants nearby, turning grass into coarse dirt and plants into dead bushes. Creepers are considered a type of plant.$(br2)Salt also shrivels up slimes into slimeballs, with the number of slimeballs being based on slime size."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:block_salt",
+            "recipe2": "crossroads:dust_salt"
+        },
+        {
+            "type": "relations",
+            "entries": [
+                "basics/copper_processing"
+            ]
+        }
+    ],
+    "read_by_default": true
+}

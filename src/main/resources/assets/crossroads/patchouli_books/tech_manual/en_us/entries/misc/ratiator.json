@@ -1,0 +1,25 @@
+{
+    "name": "Ratiator",
+    "category": "misc",
+    "icon": "crossroads:ratiator",
+	"sortnum": 8,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Ratiator (pronounced ray-shee-ate-er) is a more advanced comparator. Note that it requires materials from the magic system. Instead of comparing two values or subtracting them, it multiplies and divides. Its two modes (changed with a right click) are multiplication and division. The symbol on the plate changes based on the mode. "
+        },
+        {
+            "type": "text",
+            "text": "It multiplies (or divides) the value at the back by the largest input of its two sides. Notably, it can work with decimals or values greater than 15. The moment it outputs to redstone, however, it rounds down to an integer and caps it at 15. To take advantage of the ability to use other values, Ratiators can take input from another Ratiator directly, avoiding capping and rounding. It can measure things behind it like a comparator. "
+        },
+        {
+            "type": "text",
+            "text": "Most comparator-readable things in Crossroads will be able to output decimals and numbers greater than 15 to a Ratiator, and some use different formulas for signal strength with Ratiators (In which case, the relevant entry will specify the other formula.). Shift right clicking a Ratiator with an Omnimeter displays the output."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:ratiator"
+        }
+    ],
+    "read_by_default": true
+}

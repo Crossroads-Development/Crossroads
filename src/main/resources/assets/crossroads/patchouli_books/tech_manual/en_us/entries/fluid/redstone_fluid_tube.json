@@ -1,0 +1,17 @@
+{
+    "name": "Redstone Fluid Tube",
+    "category": "fluid",
+    "icon": "crossroads:redstone_fluid_tube",
+	"sortnum": 5,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Redstone Fluid Tube only allows fluid to flow through it when it has a redstone signal."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:redstone_fluid_tube"
+        }
+    ],
+    "read_by_default": true
+}

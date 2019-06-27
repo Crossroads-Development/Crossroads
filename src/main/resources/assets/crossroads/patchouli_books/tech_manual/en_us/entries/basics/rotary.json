@@ -1,0 +1,27 @@
+{
+    "name": "The Rotary System",
+    "category": "basics",
+    "icon": "crossroads:gear_bronze",
+	"sortnum": 4,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The most complicated energy system in rotary. Rotary energy is carried by gears and axles. There are small gears which take up a single blockspace and large gears which take up a 3x3 area. 6 small gears can fit in one blockspace, one on each side. Small gears require something solid to attach to. They can connect around corners and to adjacent gears. "
+        },
+        {
+            "type": "text",
+            "text": "They can also connect axially to what they are attached to. Large gears do not need a solid support, and only 1 can fit into a blockspace. They connect in the same way small gears do. Axles connect two things together axially, for example connecting a small gear on one end to a large gear, a machine, or another axle on the other end.$(br2)Most (but not all) rotary machines have an internal gear that must be connected to axially."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:master_axis",
+            "text": "Every system of rotary power needs 1 Master Axis. Make sure each system has at least one gear attached to the front of a Master Axis. Additional Master Axes have no effect. There are special Master Axis variants later on."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:hand_crank",
+            "text": "The Hand Crank allows you to add energy to a gear with a right click. Right clicking adds energy counter-clockwise, shift right clicking clockwise. Holding down the button is best. It is not very effective, so it is recommended to switch to automation as soon as possible."
+        }
+    ],
+    "read_by_default": true
+}

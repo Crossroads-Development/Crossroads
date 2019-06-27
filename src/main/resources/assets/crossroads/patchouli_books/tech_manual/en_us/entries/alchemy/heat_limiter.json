@@ -1,0 +1,19 @@
+{
+    "name": "Heat limiter",
+    "category": "alchemy",
+    "icon": "crossroads:heat_limiter",
+	"sortnum": 4,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "crossroads:heat_limiter",
+            "text": "Using a Heat Limiter, the temperature of a machine or heat cable can be tightly controlled. It connects to a heat cable in the front and back. It only allows heat to flow when the temperature of the output, in degrees kelvin, is lower than the redstone (or $(l:misc/ratiator)Ratiator$()) signal strength received."
+        },
+        {
+            "type": "text",
+            "text": "This can be used as a temperature regulator of sorts, to keep the output heat cable at right around the temperature set via a $(l:misc/ratiator)Ratiator$(), provided abundent heat is provided into the input side. placeholder for detailed crafting integration"
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

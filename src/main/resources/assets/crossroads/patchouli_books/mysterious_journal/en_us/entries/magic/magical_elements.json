@@ -1,0 +1,80 @@
+{
+    "name": "Magical Elements",
+    "category": "magic",
+    "icon": "crossroads:lens_array",
+	"sortnum": 1,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Information about the various elements will be added to this entry as you discover them. To add an element to this entry, discover it then close and re-open this entry."
+        },
+		{
+			"type": "elemental_text",
+			"element": "charge",
+			"text": "$(charge)CHARGE$(): Turns any rock materials into redstone blocks. If power is >= to 8, creates lightning wherever it hits. In a $(l:magic/crystalline_master_axis)Crystalline Master Axis$() it adds 10 energy/tick in the + direction."
+		},
+		{
+			"type": "elemental_text",
+			"element": "enchantment",
+			"text": "$(enchantment)ENCHANTMENT$(): Enchants nearby items on the ground randomly. Higher power beams increase enchanting level. Can create treasure enchants when power >= 32. "
+		},
+		{
+			"type": "elemental_text",
+			"element": "energy",
+			"text": "$(energy)ENERGY$(): Adds (power)°C/5 ticks to whatever heat devices it hits. In a $(l:magic/crystalline_master_axis)Crystalline Master Axis$() it adds 10 energy/tick in the direction gears are currently spinning. "
+		},
+		{
+			"type": "elemental_text",
+			"element": "equalibrium",
+			"text": "$(equalibrium)EQUALIBRIUM$(): Prevents any explosions around it while the beam is maintained, with higher powers increasing radius of effect. In a $(l:magic/crystalline_master_axis)Crystalline Master Axis$() it reduces the change in energy each tick by 75%."
+		},
+		{
+			"type": "elemental_text",
+			"element": "expansion",
+			"text": "$(expansion)EXPANSION$(): Places items within a range of (power) as blocks. "
+		},
+		{
+			"type": "elemental_text",
+			"element": "fusion",
+			"text": "$(fusion)FUSION$(): Turns Sand -> Pure Quartz Block when power >= 16, Water -> Ice, Snow -> Ice, Distilled Water -> Packed Ice when power >= 4, Netherrack -> Nether Brick when power >= 8, Gravel -> Prismarine when power >= 8, Prismarine -> Prismarine Bricks when power >= 12, Prismarine Bricks -> Dark Prismarine when power >= 16, Cobblestone -> Stone, Stone -> Stone Bricks."
+		},
+		{
+			"type": "elemental_text",
+			"element": "light",
+			"text": "$(light)LIGHT$(): Converts rock materials into glowstone, and glass materials into sea lanterns."
+		},
+		{
+			"type": "elemental_text",
+			"element": "potential",
+			"text": "$(potential)POTENTIAL$(): Grows crops faster based on power. Heals mobs within a radius of √power by power/2."
+		},
+		{
+			"type": "elemental_text",
+			"element": "rift",
+			"text": "$(rift)RIFT$(): Spawns hostile mobs with a power/64 chance (Up to a mob limit of #of players * 3 * mob limit total). Converts purpur blocks to shulkers, skeleton skulls to wither skeleton skulls, and stone to silverfish stone. "
+		},
+		{
+			"type": "elemental_text",
+			"element": "stability",
+			"text": "$(stability)STABILITY$(): Does nothing on its own. In a $(l:magic/crystalline_master_axis)Crystalline Master Axis$() it prevents power loss."
+		},
+		{
+			"type": "elemental_text",
+			"element": "time",
+			"flag": "crossroads:allow_time_beam",
+			"text": "$(time)TIME$(): Speeds up tile entities and random block updates based on power. $(l)EXTREMELY DANGEROUS IF MIXED WITH VOID!$() (Don't say you weren't warned)."
+		},
+		{
+			"type": "elemental_text",
+			"element": "time",
+			"flag": "!crossroads:allow_time_beam",
+			"text": "$(time)TIME$(): This has been disabled via config. $(l)EXTREMELY DANGEROUS IF MIXED WITH VOID!$() (Don't say you weren't warned)."
+		},
+		{
+			"type": "elemental_text",
+			"element": "void",
+			"text": "$(l)VOID$(): Destroys any block it touches."
+		}
+    ],
+    "read_by_default": true
+}

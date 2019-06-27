@@ -1,0 +1,24 @@
+{
+    "name": "Item Chute",
+    "category": "misc",
+    "icon": "essentials:item_chute",
+	"sortnum": 6,
+    "pages": [
+        {
+            "type": "text",
+            "flag": "!crossroads:item_chute_rotary",
+            "text": "Item Chutes simplify transferring items vertically. There are two parts to a chute: the Item Chute itself and the Item Ports. If there is an inventory in the blockspace the top Item Chute Port points into, items will be inserted into the inventory instead, and will stop outputting items once it fills up."
+        },
+        {
+            "type": "text",
+            "flag": "crossroads:item_chute_rotary",
+            "text": "Item Chutes simplify transferring items vertically. There are two parts to a chute: the Item Chute itself and the Item Ports. A rotary connection goes on the side of the lower Item Chute Port with a small axle-hole. The Item Chute Port requires a small amount of rotary energy for each item elevated. If there is an inventory in the blockspace the top Item Chute Port points into, items will be inserted into the inventory instead, and will stop outputting items once it fills up."
+        },
+        {
+            "type": "crafting",
+            "recipe": "essentials:item_chute_port",
+            "recipe2": "essentials:item_chute"
+        }
+    ],
+    "read_by_default": true
+}

@@ -1,0 +1,17 @@
+{
+    "name": "Fluid Cooling Chamber",
+    "category": "heat",
+    "icon": "crossroads:fluid_cooling_chamber",
+	"sortnum": 4,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Fluid Cooling Chamber is the counterpart to the $(l:heat/heating_crucible)Heating Crucible$() in that it can cool liquids to produce items. Extract items out the bottom, put fluid in the side, and connect heat cables to the top. When the Fluid Cooling Chamber cools a liquid it creates heat, and if the machine gets above a certain temperature it stops working."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:fluid_cooling_chamber"
+        }
+    ],
+    "read_by_default": true
+}

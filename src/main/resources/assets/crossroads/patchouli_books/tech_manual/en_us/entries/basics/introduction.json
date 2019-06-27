@@ -1,0 +1,22 @@
+{
+    "name": "Introduction",
+    "category": "basics",
+    "icon": "minecraft:paper",
+    "sortnum": -1,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Crossroads is a tech & magic mod. The goal of Crossroads is two fold: to add challenges to automate (useful machines with difficult requirements) and tools to automate with (redstone integration, item routing/sorting, block breaking, etc.)."
+        },
+        {
+            "type": "crafting",
+            "recipe": "guideapi:guide_journal",
+            "recipe2": "guideapi:guide_journal_to_manual"
+        },
+        {
+            "type": "text",
+            "text": "Everything in this mod can be automated with only vanilla and Crossroads. Tech is for early and mid game, and the magic part of the mod is available in the later game. Later on you will be able to choose between three paths, Technomancy, Alchemy, and Witchcraft, at which point you will unlock new features and a new section to the journal. However, Witchcraft is NYI."
+        }
+    ],
+    "read_by_default": true
+}

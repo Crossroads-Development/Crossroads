@@ -4,11 +4,15 @@ import com.Da_Technomancer.crossroads.API.MiscOp;
 import com.Da_Technomancer.crossroads.API.magic.EnumMagicElements;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.GearTypes;
+import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.integration.patchouli.DetailedCrafterTrigger;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.google.common.collect.Lists;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -19,6 +23,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -80,7 +85,7 @@ public class DetailedCrafterContainer extends Container{
 		if(!world.isRemote && !nbt.hasKey("path")){
 			nbt.setTag("path", new NBTTagCompound());
 		}
-		
+
 		if(nbt.getCompoundTag("path").getBoolean("technomancy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.technomancyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
@@ -144,7 +149,10 @@ public class DetailedCrafterContainer extends Container{
 	public void onContainerClosed(EntityPlayer playerIn){
 		super.onContainerClosed(playerIn);
 
-
+		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscOp.getPlayerTag(playerInv.player);
+		if (playerIn instanceof EntityPlayerMP) {
+			Main.DETAILEDTRIGGER.trigger((EntityPlayerMP) playerIn, nbt);
+		}
 
 		if(!world.isRemote){
 			clearContainer(playerIn, world, inInv);

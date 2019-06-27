@@ -1,0 +1,67 @@
+{
+    "name": "Introduction to Paths",
+    "category": "basics",
+    "icon": "crossroads:prototype_watch",
+    "sortnum": 6,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Before you read this section, you should have advanced well into magic. There are 3 directions you can go: Technomancy, Alchemy, and Witchcraft. (Witchcraft is NYI, so only 2 way you can go currently). In order to go down a path, you need to unlock it. This will unlock a new section to the journal, and the recipes for the new items."
+        },
+        {
+            "type": "sided_text",
+            "flag": "!crossroads:allow_all_server",
+			"side": "multiplayer",
+            "text": "MULTIPLAYER However, the current configuration settings mean you can only go down one path, which will lock you out of the other two."
+        },
+		{
+			"type": "sided_text",
+			"flag": "!crossroads:allow_all_single",
+			"side": "singleplayer",
+			"text": "SINGLE PLAYER However, the current configuration settings mean you can only go down one path, which will lock you out of the other two."
+		},
+        {
+            "type": "spotlight",
+            "item": "crossroads:detailed_crafter",
+            "text": "In order to unlock a path and then craft the relevant items, you need to make a Detailed Crafter. It functions like a normal crafting table, except that it can unlock the paths and craft items from them.    There is a cheaper recipe for the Detailed Crafter once any path has been unlocked."
+        },
+		{
+			"type": "detailed_crafting",
+			"recipe": "tile.detailed_crafter",
+			"path": "any"
+		},
+        {
+            "type": "text",
+			"flag": "crossroads:technomancy_enabled",
+            "text": "To unlock Technomancy, discover the TIME element. Then place a bronze gear in each of the 9 slots of any Detailed Crafter (consuming the gears)."
+        },
+		{
+			"type": "text",
+			"flag": "!crossroads:technomancy_enabled",
+			"text": "Due to current configuration settings, Technomancy is disabled."
+		},
+        {
+            "type": "text",
+			"flag": "crossroads:alchemy_enabled",
+            "text": "To unlock Alchemy, discover all elements other than TIME and VOID (which are optional). Then place an empty bottle in each of the 9 slots of any Detailed Crafter (consuming the bottles)."
+        },
+		{
+			"type": "text",
+			"flag": "!crossroads:alchemy_enabled",
+			"text": "Due to current configuration settings, Alchemy is disabled."
+		},
+        {
+            "type": "text",
+            "text": "A brief overview of each of the 3 paths is as follows: Technomancy is the hardest path, balanced around the ability to come up with convoluted designs. The simplest task in Technomancy is more complicated than some of the most complicated you have faced so far. However, it provides the tools and devices to make automation a lot easier, and will allow you to greatly improve previous setups. It is also the most powerful, themed around the manipulation of time. "
+        },
+        {
+            "type": "text",
+            "text": "Alchemy is themed around the manipulation of reality. Alchemy allows the changing of the world in huge areas at a time, and the creation of materials with esoteric properties, allowing interesting effects such as anti-gravity. Witchcraft (NYI) will be themed around the manipulation of void. "
+        },
+		{
+			"type": "text",
+			"text": "None of the three paths will have overlapping content, so while in theory Technomancy is the most powerful and Alchemy the second most powerful, each path will have unique things only that path can do."
+		}
+    ],
+    "read_by_default": true
+}

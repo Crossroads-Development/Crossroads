@@ -1,0 +1,33 @@
+{
+    "name": "Prototyped Pistol",
+    "category": "technomancy",
+    "icon": "crossroads:prototype_pistol",
+	"sortnum": 10,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "crossroads:prototype_pistol",
+            "text": "The Prototyped Pistol is a weapon that fires iron nuggets as bullets. It needs a Redstone Input port on the South side and a Rotary port on the Up side, which will connect to a single internal gear of I=10. When the pistol isn't fully loaded, shift-right click with it to load an iron nugget from your inventory. It has a magazine size of 6. "
+        },
+        {
+            "type": "text",
+            "text": "It can only shoot if there is energy in the internal gear in the top rotary port. The projectile will have a speed and damage based on the speed in the gear. As there is no upper limit on speed, depending on design quality a bullet might do no damage or 1-shot the enderdragon. While the right-mouse is held, the South Redstone In port will have a signal strength of 2, or if the player is sneaking, 1, when read by Ratiator."
+        },
+        {
+            "type": "detailed_crafting",
+			"flag": "!crossroads:pistol_damage_capped",
+			"recipe": "item.prototype_pistol",
+			"path": "technomancy",
+            "text": "Damage = |ω*4|"
+        },
+		{
+            "type": "detailed_crafting",
+			"flag": "crossroads:pistol_damage_capped",
+			"recipe": "item.prototype_pistol",
+			"path": "technomancy",
+            "text": "Damage = |ω*4|, capped at #prototype_pistol_cap#"
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

@@ -1,0 +1,44 @@
+{
+    "name": "Basics of Magic",
+    "category": "magic",
+    "icon": "crossroads:pure_quartz",
+    "priority": "true",
+	"sortnum": 0,
+    "pages": [
+        {
+            "type": "text",
+            "text": "You should have a decent amount of infrastructure before preceding. This section is just about the concepts, how magic is made and managed will be covered separately. In the magic system, there are 4 basic elements. Each of the elements is assigned to a different color: $(energy)Energy is red$(), $(potential)Potential is green$(), $(stability)Stability is blue$(), and $(l:magic/void)Void$() is black. $(l:magic/void)Void$() is a more advanced topic that will be covered separately. "
+        },
+        {
+            "type": "text",
+            "text": "Magic is measured in discrete units. Specifically 4 whole numbers, each number refering to a different element. The power of a beam is the sum of those 4 numbers. The interesting thing about elements is what happens when you mix them. A beam could be 3 parts $(energy)energy$() and 3 parts $(potential)potential$(), which would make a yellow beam. The entire RGB chart is possible. Beams are assigned an element based on the color."
+        },
+        {
+            "type": "text",
+            "text": "There are a lot of elements, and you will have to discover most of them yourself (See $(l:magic/discovering_elements)Discovering Elements$()). Magic travels in beams, analogous to beams of light. The thickness of the beam is proportional to the square root of the power, but if the power is >=64, it is very thin (The thickness is just visual). "
+        },
+        {
+            "type": "text",
+            "text": "If a beam collides with any block that isn't specially designed to handle magic (even $(item)glass$() or a $(item)torch$()), or it goes 16 blocks without hitting something, then it does an effect at the end of the beam. The effect done is based on the element. The effects of all discovered elements are in the entry called Magical Elements. Many effects, but not all, are made stronger the more total magic is in the beam, but stop becoming more powerful above power = 64. "
+        },
+        {
+            "type": "text",
+            "text": "The main use for magic are the effects of different elements. Most of the magic related machines will need a crafting ingredient called Pure Quartz. The other crystals of interest are rubies, for interacting with energy, emeralds, for interacting with potential, and diamonds, for interacting with stability. Another crafting ingredient are Lens Arrays, which are very expensive and should be used sparingly. "
+        },
+        {
+            "type": "text",
+            "text": "Most magical devices add a 5 tick delay to any beams passing through them before emitting the beams again. This includes things like $(l:magic/arcane_reflector)Arcane Reflectors$() and $(l:magic/beam_splitter)Beam Splitters.$()"
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:pure_quartz",
+            "recipe2": "crossroads:block_pure_quartz"
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:pure_quartz_0",
+            "recipe2": "crossroads:lens_array"
+        }
+    ],
+    "read_by_default": true
+}

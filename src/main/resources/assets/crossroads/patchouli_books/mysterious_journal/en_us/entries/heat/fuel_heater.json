@@ -1,0 +1,17 @@
+{
+    "name": "Fuel Heater",
+    "category": "heat",
+    "icon": "crossroads:coal_heater",
+	"sortnum": 0,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The simplest way to produce heat is with a Fuel Heater. It burns any furnace fuel with the same duration as a furnace would, producing 1°C/t while doing so. There is a heat connection on the top which can transport heat to something directly above it without a cable, or a heat cable can be connected to the top."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:coal_heater"
+        }
+    ],
+    "read_by_default": true
+}

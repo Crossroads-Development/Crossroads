@@ -1,0 +1,25 @@
+{
+    "name": "Strong Acids",
+    "category": "alchemy",
+    "icon": "crossroads:solid_vitriol",
+	"sortnum": 5,
+    "pages": [
+        {
+            "type": "text",
+            "text": "There are 4 basic acids that are used heavily in crafting. The first 3, Oil of Vitriol, Muriatic Acid, and Aqua Fortis all have the same effect. They damage mobs around them when released, as well as destroying metal blocks other than gold. Higher amounts do more damage. "
+        },
+        {
+            "type": "spotlight",
+            "item": "minecraft:bedrock",
+            "link_recipe": "true",
+            "title": "Aqua Regia",
+            "text": "Aqua Regia, made by blending Muriatic Acid with Aqua Fortis, is unusual in that while it also damages mobs and breaks metal blocks, it a) does more damage than the other acids, b) can break gold blocks, and most importantly c) when used on bedrock breaks the bedrock and drops it as an item."
+        },
+        {
+            "type": "text",
+            "text": "This means that bedrock is now obtainable, and it is used as an ingredient in later recipes."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

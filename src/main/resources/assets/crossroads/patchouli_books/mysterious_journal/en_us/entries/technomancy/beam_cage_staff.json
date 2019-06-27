@@ -1,0 +1,44 @@
+{
+    "name": "Beam Cage & Staff",
+    "category": "technomancy",
+    "icon": "crossroads:beam_cage",
+	"sortnum": 8,
+    "pages": [
+        {
+            "type": "text",
+            "text": "There are several handheld devices which require magic to run. In order to power them, there is the magical equivalent of a battery: the Beam Cage. It can store 1024 each of $(energy)Energy$(), $(potential)Potential$(), $(stability)Stability$(), and $(l:magic/void)Void$(). In order to charge it, a Cage Charger is required. Right click a Cage Charger with a Beam Cage to insert the cage into the charger. Right clicking it again will remove the cage. "
+        },
+        {
+            "type": "text",
+            "text": "In order to charge the cage, send a beam into the charger from any direction other than down. The components of the beam will go into the cage, with any excess magic being lost. In order to use a Beam Cage with a device, there are 4 keybinds that need to be set, $(energy)($(k:controlEnergy.name))$(), ($(potential)($(k:controlPotential.name))$(), $(stability)($(k:controlStability.name))$(), and ($(k:controlVoid.name))$(). You can hover over the $(bold)(Keybind)$() to see the respective binding. Suggested default values are: $(energy)'R'$(), $(potential)'G'$(), $(stability)'B'$(), & 'V' respectively."
+        },
+        {
+            "type": "text",
+            "text": "Devices powered by a Beam Cage can have there magic usage configured by holding the device, along with 1 of the elemental control keys, and right clicking to increase usage of that element by 1, or shift right clicking to decrease it by 1. The settings are capped at 8."
+        },
+        {
+            "type": "detailed_crafting",
+            "recipe": "item.beam_cage",
+            "path": "technomancy"
+        },
+		{
+			"type": "detailed_crafting",
+			"recipe": "tile.cage_charger",
+			"path": "technomancy"
+		},
+		{
+			"type": "empty"
+		},
+        {
+            "type": "spotlight",
+            "item": "crossroads:staff_technomancy",
+            "text": "The first such device is the Beam Staff. Holding it in one hand and a Beam Cage in the other while using the Beam Staff will drain the configured usage from the cage every 5 ticks, and shoot a beam from the staff in the direction the player is looking made from the magic drawn from the Beam Cage. "
+        },
+        {
+            "type": "text",
+            "text": "The beam travels farther than usual, 32 blocks, and can collide with blocks and entities. While it can do an effect at the end (which is the purpose of the staff), it cannot insert the beam into a device such as an $(l:magic/arcane_reflector)Arcane Reflector$()."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

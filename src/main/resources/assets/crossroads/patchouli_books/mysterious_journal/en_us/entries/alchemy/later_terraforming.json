@@ -1,0 +1,39 @@
+{
+    "name": "Later Terraforming",
+    "category": "alchemy",
+    "icon": "minecraft:netherrack",
+	"sortnum": 14,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Each of the three secondary elemental reagents has a transmutative effect like Aether."
+        },
+        {
+            "type": "spotlight",
+            "title": "Elderine",
+            "item": "crossroads:phial:1{\"33_am\": 25.0, am: 25.0, he: 8075.0}",
+            "text": "Eldrine sets the biome to Hell, turns rock into netherrack, turns soil into soul sand, turns crystalline materials into glowstone, and turns liquids to lava. Adding Quicksilver makes it produce glowstone."
+        },
+        {
+            "type": "spotlight",
+            "title": "Lumen",
+            "item": "crossroads:phial:1{\"32_am\": 25.0, am: 25.0, he: 8075.0}",
+            "text": "Lumen sets the biome to Deep Ocean, turns rock to prismarine, soil to clay, liquid to Distilled Water, and crystals to sea lanterns. Adding Quicksilver makes it produce Distilled Water."
+        },
+        {
+            "type": "spotlight",
+            "title": "Statisol",
+            "item": "crossroads:phial:1{am: 25.0, \"34_am\": 25.0, he: 8075.0}",
+            "text": "Stasisol sets the biome to Ice Plains, turns rock to packed ice, turns soil to snow, turns liquid to ice, and turns crystal to Blocks of Pure Quartz. Adding Quicksilver makes it produce snow."
+        },
+        {
+            "type": "spotlight",
+            "title": "Ignis Infernum",
+			"flag": "crossroads:allow_hellfire",
+            "item": "crossroads:phial:1{am: 25.0, he: 8075.0, \"37_am\": 25.0}",
+            "text": "Ignis Infernum has a similar effect as Phelostogen, the only difference being that the radius of Ignis Infernum's flame cloud is dramatically large, able to cover entire small mountains in one go."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

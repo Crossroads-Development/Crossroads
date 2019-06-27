@@ -1,0 +1,40 @@
+{
+    "name": "Sorting Devices",
+    "category": "misc",
+    "icon": "essentials:sorting_hopper",
+	"sortnum": 1,
+    "pages": [
+        {
+            "type": "text",
+            "text": "This section will cover two devices: the Sorting Hopper and the Slotted Chest. On their own, neither of these things are so incredible, but when combined they are very convenient."
+        },
+        {
+            "type": "spotlight",
+            "item": "essentials:sorting_hopper",
+            "text": "The Sorting Hopper functions almost identically to a normal hopper but for a subtle difference that has huge ramifications. While a normal hopper processes extracting items after inserting them, the Sorting Hopper processes extracting items before inserting them. "
+        },
+        {
+            "type": "text",
+            "text": "The reason this is important is that if you make a pillar of sorting hoppers, with them all facing sideways into inventories, then items go into the top inventory first, then the second inventory, and so on. This does not occur with normal hoppers. "
+        },
+        {
+            "type": "text",
+            "text": "This means you can filter items. If the top inventory can only accept sand and the middle one accepts only dirt and the bottom one takes anything, then putting dirt, sand, and gravel into the top hopper will result in all the sand going into the top inventory, all the dirt going into the middle inventory, and all the gravel going into the bottom inventory."
+        },
+        {
+            "type": "spotlight",
+            "item": "essentials:slotted_chest",
+            "text": "The Slotted Chest is a chest the size of a double chest, and it has a very interesting quirk. When removing an item from a slot, it leaves a ghost item behind. You can shift click into the Slotted Chest, but only if the slot the items are going to already has the matching item. To clear a ghost item, shift click it with an empty cursor. "
+        },
+        {
+            "type": "text",
+            "text": "Also, automation will respect the ghost items, will only be able to insert into a slot if it already has a match and when extracting items it always leaves a ghost item behind. This allows you to format your storage chests without fear of shift clicks or automation messing it up."
+        },
+        {
+            "type": "crafting",
+            "recipe": "essentials:sorting_hopper",
+            "recipe2": "essentials:slotted_chest"
+        }
+    ],
+    "read_by_default": true
+}

@@ -1,0 +1,21 @@
+{
+    "name": "Crystalline Prism",
+    "category": "magic",
+    "icon": "crossroads:crystalline_prism",
+	"sortnum": 8,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Crystalline Prism has a front that can only be placed on the horizontal plane, and is another version of the Beam Splitter. Instead of making two beams of identical colors, it takes a beam in the back, top, and/or bottom and outputs up to three beams made from the input beam. "
+        },
+        {
+            "type": "text",
+            "text": "A pure $(energy)energy$() beam from the left of the front, a pure $(potential)potential$() beam from the front, and a pure $(stability)stability$() beam from the right of the front. Any void in the original beam is lost. Crystalline Prisms are expensive, so use them sparingly."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:crystalline_prism"
+        }
+    ],
+    "read_by_default": true
+}

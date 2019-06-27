@@ -1,0 +1,17 @@
+{
+    "name": "Rotary Pump",
+    "category": "fluid",
+    "icon": "crossroads:rotary_pump",
+	"sortnum": 0,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Rotary Pump draws liquids from the world into pipes. It has an internal gear of I=8. Using 50 energy from the internal gear, it will draw a fluid source below it into itself, and the fluid can be piped out the sides. It can only run if it is spinning clockwise. Due to it only draining from source block directly under it, it is most likely only useful for water."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:rotary_pump"
+        }
+    ],
+    "read_by_default": true
+}

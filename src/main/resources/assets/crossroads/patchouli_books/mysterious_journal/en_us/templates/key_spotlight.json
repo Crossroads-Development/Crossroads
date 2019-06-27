@@ -1,0 +1,24 @@
+{
+	    "processor": "com.Da_Technomancer.crossroads.integration.patchouli.KeyTextProcessor",
+		"components": [
+			{
+				"type": "header", "text": "#title", "x": -1
+			},
+			{
+				"type": "text", "text": "#text", "y": 40
+			},
+			{
+				"type": "item", "item": "#item", "x": 50, "y": 15
+			},
+			{
+				"type": "image",
+				"image": "crossroads:textures/patchouli/spotlight.png",
+				"x": 26,
+				"y": 11,
+				"width": 66,
+				"height": 24,
+				"texture_width": 128,
+				"texture_height": 32
+			}
+		]
+}

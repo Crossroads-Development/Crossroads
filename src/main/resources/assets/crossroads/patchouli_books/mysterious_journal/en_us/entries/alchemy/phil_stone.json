@@ -1,0 +1,32 @@
+{
+    "name": "Philosopher's Stone",
+    "category": "alchemy",
+    "icon": "crossroads:phil_stone",
+	"sortnum": 7,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The next tier of Alchemy is gated behind getting at least 1 Philosopher's Stone. "
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:phil_stone",
+            "text": "While crafting the Stone itself isn't that difficult, there is another difficulty: containing it. The Philosopher's Stone is the Alkhest, or universal solvent. It can destroy any glass container it's put in. The item itself will melt through the floor all the way to the void if dropped."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:alch_crystal",
+            "text": "In order to contain the Philosopher's stone, you'll need a new material: Alchemical Crystal. $(br)Every piece of glassware that was previously made of glass can also be made of Alchemical Crystal for a crystal version (it's still called glassware though). The Philosopher's Stone can safely contained in crystal. "
+        },
+        {
+            "type": "text",
+            "text": "Many of the later materials will also require crystal glassware. The Philosopher's Stone is always a catalyst, never an ingredient. It breaks down gunpowder into $(l:alchemy/early_alchemy#sulfur)sulfur$() and a new material ($(l:alchemy/early_terraforming)Phelostogen$()), which is so important it has its own entry in the guide. Bedrock breaks down into $(l:alchemy/early_alchemy#waste_salt)Alchemical Salt$() and Adamant, while redstone is broken down into $(l:alchemy/early_terraforming#aether)Aether$(), $(l:alchemy/early_alchemy#quicksilver)Quicksilver$(), and Sulfur Dioxide."
+        },
+        {
+            "type": "text",
+            "text": "While $(l:alchemy/early_alchemy#sulfur)Sulfur$(), $(l:alchemy/early_alchemy#quicksilver)Quicksilver$(), and $(l:alchemy/early_alchemy#waste_salt)Alchemical Salt$() were the main ingredients in Early Alchemy, $(l:alchemy/early_terraforming#phelostogen)Phelostogen$(), $(l:alchemy/early_terraforming#aether)Aether$(), and Adamant are the many materials of the Philosopher tier. You'll note they're produced alongside their Early Alchemy version."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

@@ -1,0 +1,28 @@
+{
+    "name": "Prototyped Watch",
+    "category": "technomancy",
+    "icon": "crossroads:prototype_watch",
+	"flag": "crossroads:watch_enabled",
+	"sortnum": 11,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "crossroads:prototype_watch",
+            "text": "The Prototyped Watch is a multi-function item which, like the $(l:technomancy/prototyped_pistol)Prototyped Pistol$(), requires a socketed Prototype to function. In addition to the standard Magic ports, it should also have a Redstone-In port on the South side, and optionally a Rotary port on the Up side, Down side, and North side. "
+        },
+        {
+            "type": "text",
+            "text": "Unlike all other things involving Prototypes, fields generated within the Watch's socketed Prototype will affect entities in the outside world while the Watch is held. The Watch's Prototype is confined to 1 chunk on the inside, so field setups inside should take that into account. If there is a field inside the Watch and a field outsid the Watch affecting the same entity, the two speed multipliers are multiplied. Neither of the fields themselves are effected. "
+        },
+        {
+            "type": "text",
+            "text": "The columns within the Watch do not directly correspond to those outside, which is to say that the North-Eastern most column inside the Watch does not necessarily impact what would the be North-Eastern most column of the chunk the player is standing in. Instead, the Watch effects time around it as if the player was standing in the center of the Watch's chunk. The player is located in the 4th node from the northwest, in the part of the node closest to the center of the field, or it can be discribed as the northwest block of the 2x2 grid that composes the center of a field."
+        },
+        {
+            "type": "text",
+            "text": "While holding the Watch and the right-mouse button is held, the South Redstone In port will have a signal strength of 2, or if the player is sneaking, 1, when read by Ratiator. The Rotary Up, Down, and East ports each allow displaying the speed of the gear attached to the port. The 3 speeds are displayed in the top left while the watch is held. This can be used for everything from a countdown timer to making a basic calculator."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

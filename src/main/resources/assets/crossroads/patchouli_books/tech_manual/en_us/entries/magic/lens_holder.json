@@ -1,0 +1,32 @@
+{
+    "name": "Lens Holder",
+    "category": "magic",
+    "icon": "crossroads:lens_holder",
+	"sortnum": 4,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Lens Holder is an important tool for manipulating beams. The Lens Holder can hold certain gemstones that can be inserted/removed either with automation or a right click. The Lens Holder can hold either a diamond, ruby, emerald, or pure quartz. It can also hold a $(l:magic/void)Void Crystal$(), but that is a more advanced topic (See $(l:magic/void)Void$())."
+        },
+        {
+            "type": "text",
+            "text": "When a beam passes through a Lens Holder with a gem in it, the Lens Holder acts as a filter, with the magic that isn't allowed to pass through simply being lost. A diamond allows $(stability)stability$(), a ruby $(energy)energy$(), and an emerald $(potential)potential$(). Pure quartz does not act as a filter, and allows any element to pass through. A word of warning, none of the gemstones can block $(l:magic/void)void$() and if a beam passes through the Lens Holder with any $(l:magic/void)void$() in it, the lens will be destroyed."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:luminescent_quartz",
+            "anchor": "luminescent_quartz",
+            "link_recipe": true,
+            "text": "If a beam of the LIGHT element passes through and the Lens Holder has pure quartz in it, the pure quartz turns into luminescent quartz, which is a crafting ingredient. The light element is the white color, and any color relatively close to white."
+        },
+        {
+            "type": "text",
+            "text": "The Lens Holder also interacts with comparators, emitting a signal based on the power of the beam it is outputting. The equation is redstone = (power / 3) rounded down.  A Ratiator (part of the magic system) uses the formula (signal = power). The Lens Holder is one of the few devices that does NOT add a 5 ticks delay to beams that pass through it."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:lens_holder"
+        }
+    ],
+    "read_by_default": true
+}

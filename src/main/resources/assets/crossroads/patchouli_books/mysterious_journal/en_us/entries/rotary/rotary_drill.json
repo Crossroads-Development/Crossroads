@@ -1,0 +1,24 @@
+{
+    "name": "Rotary Drill",
+    "category": "rotary",
+    "icon": "crossroads:rotary_drill",
+    "pages": [
+        {
+            "type": "text",
+            "text": "A Rotary Drill is a block that, when placed down and provided with rotary power, will break blocks and damage mobs in front of it."
+        },
+        {
+            "type": "text",
+            "text": "The Rotary Drill draws .5 energy from an internal gear every tick, whether it is doing work or not. The internal gear has an I=50. The Rotary Drill doesn't use any extra power when doing work. For breaking blocks, it requires a speed of at least .1 times the hardness of the block. For example, cobblestone has a hardness of 3, so a speed of .3 is required. Obsidian on the other hand has a hardness of 50, so to break obsidian the drill has a minimum speed of 5."
+        },
+        {
+            "type": "text",
+            "text": "When damaging mobs, there is no minimum speed, but more speed means more damage. It deals (10 * speed) damage, so a speed of 5 deals 50 damage. The Rotary Drill deals damage or breaks blocks every half-second."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:rotary_drill"
+        }
+    ],
+    "read_by_default": true
+}

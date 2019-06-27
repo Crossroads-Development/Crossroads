@@ -1,0 +1,34 @@
+{
+    "name": "Heat Exchanger",
+    "category": "heat",
+    "icon": "crossroads:heat_exchanger",
+	"sortnum": 2,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Heat Exchanger serves 2 purposes: to act as a heat sync and to provide a way of generating heat (or decreasing temperature below ambient). The Heat Exchanger has a heat loss of 10°C/t. Also, a Heat Exchanger can perform certain \"recipes\" with blocks directly below it.  "
+        },
+        {
+            "type": "text",
+            "text": "Some conversions produce heat while the Heat Exchanger is below a certain temperature, while others consume heat while the Heat Exchanger is above a certain temperature. $(br2)It is worth noting that these \"recipes\" will function regardless if the liquid below is a full source."
+        },
+        {
+            "type": "text",
+            "text": "The purpose of these \"recipes\" isn't the blocks created, but the temperature change. The temperature change is not immediate, but is applied over time at 25°C/t until the full temperature change has been applied. This means that a Heat Exchanger, kept supplied with certain blocks directly below it, is a constant 25°C/t source or cooler."
+        },
+        {
+            "type": "spotlight",
+			"title": "Insulated Exchanger",
+			"item": "crossroads:insulated_heat_exchanger",
+			"anchor": "insulated_heat_exchanger",
+            "text": "There is also an Insulated Heat Exchanger, which functions indentically to a normal Heat Exchanger except it does not have a passive heat loss of 10°C/t (making it ideal for doing conversions but useless as a heat sync)."
+        },
+        {
+            "type": "crafting",
+			"title": "Heat Exchangers",
+            "recipe": "crossroads:heat_exchanger",
+            "recipe2": "crossroads:insulated_heat_exchanger"
+        }
+    ],
+    "read_by_default": true
+}

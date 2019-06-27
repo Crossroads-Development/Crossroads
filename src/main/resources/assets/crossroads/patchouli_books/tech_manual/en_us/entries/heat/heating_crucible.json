@@ -1,0 +1,19 @@
+{
+    "name": "Heating Crucible",
+    "category": "heat",
+    "icon": "crossroads:heating_crucible",
+	"sortnum": 3,
+    "pages": [
+        {
+            "type": "spotlight",
+			"item": "crossroads:heating_crucible",
+            "text": "The Heating Crucible converts blocks into liquid when heated above 1000°C. Insert items through a hopper or other automated method into the top, pipe the fluid out the sides, then heat it through the bottom. It consumes a constant 10°C/t while above 1000°C whether running or not."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:heating_crucible",
+			"text": "While it can run at any temperature above 1000°C, it is 5 times as fast at 1500°C and above."
+        }
+    ],
+    "read_by_default": true
+}

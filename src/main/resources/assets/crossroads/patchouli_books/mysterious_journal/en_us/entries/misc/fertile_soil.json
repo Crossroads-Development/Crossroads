@@ -1,0 +1,18 @@
+{
+    "name": "Fertile Soil",
+    "category": "misc",
+    "icon": "essentials:fertile_soil",
+	"sortnum": 5,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Fertile Soil is an aid to farming. It has 10 variants, for wheat, carrots, potatoes, beetroot, and the 6 saplings. Crops can be planted on Fertile Soil like it was farmland, and they grow as if on hydrated farm land even without water. They also cannot be trampled."
+        },
+        {
+            "type": "crafting",
+            "recipe": "essentials:fertile_soil",
+            "text": "The main feature of Fertile Soil is that at random intervals, if there is nothing growing on top of it, it plants the crop corresponding to its type on itself for free. Therefore, you no longer need to replant."
+        }
+    ],
+    "read_by_default": true
+}

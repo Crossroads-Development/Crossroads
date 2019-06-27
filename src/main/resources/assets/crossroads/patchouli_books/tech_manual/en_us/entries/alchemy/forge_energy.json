@@ -1,0 +1,43 @@
+{
+    "name": "Forge Energy",
+    "category": "alchemy",
+    "icon": "crossroads:tesla_coil",
+	"sortnum": 2,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "crossroads:dynamo",
+            "text": "Forge Energy can be produced in a Dynamo, which has an axle connection on the back and a FE connection of the front. Rotary Energy is drained almost as fast as it is provided to produce Forge Energy. The more Rotary Energy it draws, the more Forge Energy is produced."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:leyden_jar",
+            "anchor": "leyden_jar",
+            "text": "The Leyden Jar is a type of FE Battery. It can be placed inside Tesla Coils to manually move FE, and increase Tesla Coil capacity."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:tesla_coil",
+            "text": "The Tesla Coil is the main way of transmitting FE. The base has 3 inputs and 1 output for FE (the output is orange). By right clicking the top with a $(l:misc/wrench)wrench$(), then right clicking the top of a nearby Tesla Coil with the same $(l:misc/wrench)wrench$(), the two Tesla Coils will be linked. The Tesla Coil you first clicked on will transfer FE to the second Tesla Coil you clicked on. "
+        },
+        {
+            "type": "text",
+            "text": "Links are one way, and each Tesla Coil can have up to 3 links. Shift-right-clicking the top of a Tesla Coil with a $(l:misc/wrench)wrench$() will clear all its links. Shift-right-clicking the base of the Tesla Coil will toggle on and off \"Attack Mode\". While in attack mode, the Tesla Coil will use stored FE to attack nearby entities, including players. Providing the base with a redstone signal will disable the Tesla Coil from attacking or transmitting FE."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:atmos_charger",
+            "text": "The Atmospheric Attentuator is a way of transmitting FE wirelessly, even between dimensions. Inserting FE into the base will cause it to move the FE into a shared \"Atmosphere\" storage. All players in all dimensions share the same \"Atmosphere\" storage, which has a capacity of 1,000,000,000FE. "
+        },
+        {
+            "type": "text",
+            "text": "Right clicking the base with a $(l:misc/wrench)wrench$() switches it to \"Draining mode\", which extracts FE from the atmosphere and outputs it out the base instead of inserting FE into the atmosphere from the base. A Comparator or $(l:misc/ratiator)Ratiator$() can read how full the atmosphere is, with signal strength 15 meaning its full. "
+        },
+        {
+            "type": "text",
+            "text": "If the atmosphere charge level gets above 50%, various negative global effects will occur that increase in severity as charge increases. The effects can be disabled in the config. The main effect is more lightning strikes."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

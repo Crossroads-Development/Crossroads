@@ -1,0 +1,27 @@
+{
+    "name": "Multi-Piston",
+    "category": "misc",
+    "icon": "crossroads:multi_piston",
+	"sortnum": 7,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Multi-Piston works like a normal piston, but for a few differences. The biggest difference is that instead of extending 1 block, it extends the number of blocks equal to the strength of the redstone signal it is receiving (up to 15 blocks). It also can push up to 64 blocks at a time instead of 12, and it extends and retracts instantly. "
+        },
+        {
+            "type": "text",
+            "text": "When pushing entities with slime blocks, pushing farther at once multiplies the effect. The Multi-Piston also doesn't have quasi-connectivity. To make up for this, the Multi-Piston can have redstone placed on top of it directly. The Multi-Piston has a normal and sticky variant. There is also a simpler recipe for normal pistons that is shapeless."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:multi_piston",
+            "recipe2": "crossroads:multi_piston_sticky"
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:multi_piston_sticky_0",
+            "recipe2": "essentials:piston"
+        }
+    ],
+    "read_by_default": true
+}

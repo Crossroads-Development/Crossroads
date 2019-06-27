@@ -1,0 +1,23 @@
+{
+    "name": "Mysterious Journal",
+    "landing_text": "$(l:https://minecraft.curseforge.com/projects/crossroads-mc)Crossroads$() is a tech & magic mod with the goal of making automation interesting. It has been described as a mod where you make Rube Goldberg machines, except they're the simplest way to do things. There is no one block solution, and every system has to be carefully designed in order to make it the best it can be.",
+    "version": 1,
+    "show_progress": false,
+	"model": "patchouli:book_gray",
+	"book_texture": "patchouli:textures/gui/book_gray.png",
+    "filler_texture": "crossroads:textures/patchouli/page_filler.png",
+	"advancement_namespaces": ["crossroads"],
+    "macros": {
+        "$(energy)": "$(c)",
+        "$(potential)": "$(a)",
+        "$(stability)": "$(9)",
+        "$(fusion)": "$(#8CFFFF)",
+        "$(light)": "$(#FFFFD7)",
+        "$(enchantment)": "$(#919166)",
+        "$(charge)": "$(#969623)",
+        "$(rift)": "$(#FF32FF)",
+        "$(expansion)": "$(#28FFFF)",
+        "$(time)": "$(#FF6400)",
+        "$(equalibrium)": "$(#FF8CFF)"
+    }
+}

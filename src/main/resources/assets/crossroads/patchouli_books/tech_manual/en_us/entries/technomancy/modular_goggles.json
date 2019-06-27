@@ -1,0 +1,44 @@
+{
+    "name": "Modular Goggles",
+    "category": "technomancy",
+    "icon": "crossroads:module_goggles",
+	"sortnum": 1,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "crossroads:module_goggles",
+            "text": "Modular Goggles are a headpiece that provides no armor, but does not break. On their own, they do nothing. Lenses can be added to the goggles in an anvil with either a Ruby, Emerald, Diamond, or piece of Pure Quartz and some experience. Multiple lenses can be added, but only one of each type."
+        },
+        {
+            "type": "detailed_crafting",
+            "recipe": "item.module_goggles",
+			"path": "technomancy"
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:pure_quartz",
+            "title": "Quartz Lens",
+            "text": "Looking at a block that can be read by an Omnimeter while wearing goggles with the quartz lens will cause information to be displayed (and updated every tick)."
+        },
+        {
+            "type": "spotlight",
+            "item": "minecraft:emerald",
+            "title": "Emerald Lens",
+            "text": "The emerald lens grants night vision, and can be toggled with $(potential)($(k:controlPotential.name))$()"
+        },
+        {
+            "type": "spotlight",
+            "item": "minecraft:diamond",
+            "title": "Diamond Lens",
+            "text": "The diamond lens allows opening up a detailed crafting window without needing a Detailed Crafter by pressing $(stability)($(k:controlStability.name))$() with an empty hand."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:gem_ruby",
+            "title": "Ruby Lens",
+            "text": "A ruby lens allows shooting a beam of heat from your eye that sets blocks and mobs on fire wherever you look. It can be toggled on and off by pressing $(energy)($(k:controlEnergy.name))$() with an empty hand."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

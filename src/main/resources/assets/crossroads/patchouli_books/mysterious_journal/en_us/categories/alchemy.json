@@ -1,0 +1,7 @@
+{
+	"name": "Alchemy",
+	"description": "the arts",
+	"icon": "crossroads:phil_stone",
+	"flag": "crossroads:alchemy_enabled",
+	"sortnum": 7
+}

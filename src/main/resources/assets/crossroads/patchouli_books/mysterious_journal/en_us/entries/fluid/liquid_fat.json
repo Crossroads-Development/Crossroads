@@ -1,0 +1,41 @@
+{
+    "name": "Introduction to Liquid Fat",
+    "category": "fluid",
+    "icon": "crossroads:edible_blob",
+	"sortnum": 3,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Food can be liquefied to increase convenience and efficiency. "
+        },
+        {
+            "type": "key_spotlight",
+            "item": "crossroads:fat_collector",
+			"title": "Fat Collector",
+            "text": "The first part is making food into liquid fat with a Fat Collector. When given heat from the bottom and food is inserted into the top, it produces liquid fat, which can be piped out the side. The conversion rate of food value (saturation + hunger) to liquid fat is 1 value = #fat_per_value#mB of liquid fat."
+        },
+        {
+            "type": "text",
+            "text": "However, the exact temperature of the Fat Collector matters. Below 100°C it does nothing, above 200°C it burns up all fat produced, between 140°C and 160°C is optimal, producing 1.2 times as much liquid fat from food as the normal conversion. From 100°C to 140°C and from 160°C to 200°C it is less efficient, producing .8 as much fat from food as the normal conversion. The Fat Collector uses .8°C per value of the food it converts to liquid fat."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:fat_congealer",
+            "text": "The Fat Congealer uses rotary energy from a gear on top of it, and uses liquid fat piped in the side. The exact speed and energy of the gear matters for this machine, as they control the hunger and saturation of the food created."
+        },
+        {
+            "type": "text",
+            "text": "The value of the food created will be equal to (gear energy / 10). The saturation of the food will be equal to the (value * speed / 2). The hunger restored is of course (value - saturation). The hunger and saturation of the food produced is capped at 20. The machine uses 1 energy per food produced. The food produced is dropped as an item from the bottom of the machine. You can use a hopper to catch it. "
+        },
+        {
+            "type": "text",
+            "text": "The Fat Congealer uses an amount of liquid fat based on the value of the food and the conversion ratio mentioned earlier. An example of the math on the Fat Congealer is that a gear on top of it with an energy of 80 and a speed of 1 would produce food with a hunger and saturation value of 4, and would use 800mb of liquid fat."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:fat_collector",
+            "recipe2": "crossroads:fat_congealer"
+        }
+    ],
+    "read_by_default": true
+}

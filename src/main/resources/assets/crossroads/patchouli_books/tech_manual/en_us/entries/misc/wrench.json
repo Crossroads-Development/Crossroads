@@ -1,0 +1,17 @@
+{
+    "name": "Wrench",
+    "category": "misc",
+    "icon": "essentials:wrench",
+	"sortnum": 2,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Like many other tech mods, Crossroads supports using a wrench. Wrenches can be used to rotate many Crossroads blocks. This mod adds a wrench, but any standard wrench will work."
+        },
+        {
+            "type": "crafting",
+            "recipe": "essentials:wrench"
+        }
+    ],
+    "read_by_default": true
+}

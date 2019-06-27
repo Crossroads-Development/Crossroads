@@ -1,0 +1,21 @@
+{
+    "name": "Redstone Keyboard",
+    "category": "misc",
+    "icon": "crossroads:redstone_keyboard",
+	"sortnum": 10,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Redstone Keyboard is a convenient way of having constant redstone signals of a specific strength. Right clicking one will open a GUI where a number can be set. There are various convenient buttons in the interface. The Redstone Keyboard cannot be set to negative numbers."
+        },
+        {
+            "type": "text",
+            "text": "The \u00cf\u20ac button sets the value to pi, the e button sets the value to Euler's number, the C button clears the setting, the x button is for multiplication, and entering a value while it is pressed then unpressing x will multiply the original value by the new value. The / button does the same, but for division. When measured by Ratiator, it emits a signal of the strength set in the GUI. It can also be measured by Comparator, in which case it rounds the contained value and caps it at 15."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:redstone_keyboard"
+        }
+    ],
+    "read_by_default": true
+}

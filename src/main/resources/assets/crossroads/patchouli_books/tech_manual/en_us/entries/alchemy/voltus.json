@@ -1,0 +1,20 @@
+{
+    "name": "Voltus",
+    "category": "alchemy",
+    "icon": "crossroads:atmos_charger",
+	"sortnum": 12,
+    "pages": [
+        {
+            "type": "spotlight",
+            "title": "Voltus",
+            "item": "crossroads:phial:1{\"36_am\": 25.0, am: 25.0, he: 8075.0}",
+            "text": "Voltus, a tertiary elemental reagent, has a lightning effect that shoots damaging electric arcs, similar to those from a Tesla Coil, at any entities nearby where it was released. This can, like all other reagents, be combined with Phelostogen to spread the effect, which can make it act as effective crowd control when thrown."
+        },
+        {
+            "type": "key_text",
+            "text": "Inserting Voltus into the underside of a charging Atmospheric Attenuator will cause the Voltus to be converted to FE, with a lucrative exchange rate (#voltus_usage#FE per Voltus)."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

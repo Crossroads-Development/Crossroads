@@ -1,0 +1,25 @@
+{
+    "name": "Void",
+    "category": "magic",
+    "icon": "crossroads:void_crystal",
+	"sortnum": 10,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Voidis the fourth element, and very powerful. At this point, you should have gone to the End and killed the dragon. Void is pure black in color. To create void beams, fire a beam of RIFT through a Lens Holder containing a Void Crystal. This will emit a beam of pure void, of the same power as the Rift beam. On its own, the Void beam just destroys blocks it touches. "
+        },
+        {
+            "type": "text",
+            "text": "It can destroy any block, even things normally indestructible. Mixing even a tiny bit of void with any other element will change the effect. Usually the new effect is the opposite of the original effect, though not always. You have to work out the exact effects on your own, but they are usually pretty easy to guess. For example, VOID-$(energy)ENERGY$() cools things down instead of heating them up, while VOID-$(stability)STABILITY$() makes explosions based on the power of the beam. "
+        },
+        {
+            "type": "text",
+            "text": "A word of warning, if you have discovered the TIME element, DO NOT COMBINE IT WITH VOID. You have been warned. Also, the Crystalline Master Axis acts differently with beams containing Void than with beams free of Void."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:void_crystal"
+        }
+    ],
+    "read_by_default": true
+}

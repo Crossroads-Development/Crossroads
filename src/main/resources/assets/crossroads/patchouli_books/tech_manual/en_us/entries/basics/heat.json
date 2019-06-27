@@ -1,0 +1,49 @@
+{
+    "name": "The Heat System",
+    "category": "basics",
+    "icon": "crossroads:coal_heater",
+	"sortnum": 2,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The most basic form of energy is heat. Note that in this mod, realism was traded away for playability. Heat is transmitted with heat cables. Heat cables average their temperature with that of things around them. There are several types of insulator that can be used for heat cables."
+        },
+        {
+            "type": "text",
+            "flag": "!insulator_effect_disabled",
+            "text": "The insulator determines 3 things: the rate of heat loss, the melting temperature of the cable, and what the cable does when it melts. A loss of 0.2 means the cable temperature changes by 0.2°C towards the ambient temperature each tick."
+        },
+        {
+            "type": "text",
+            "flag": "!insulator_effect_disabled",
+            "text": "The insulators are Wool, which burns at 300°C, and has a loss of .25, Slime, which turns into a living slime at 500°C, and has a loss of .2, Ice which melts at 0°C, and is at -10°C when first placed, but has the smallest loss of .001. Finally, there is Obsidian, which melts at 2000°C, and has a loss of .015. It should be noted that ice cables are made with packed ice instead of normal ice."
+        },
+        {
+            "type": "text",
+            "flag": "insulator_effect_disabled",
+            "text": "The insulator determines 2 things: the rate of heat loss & melting temperature of the cable. A loss of 0.2 means the cable temperature changes by 0.2°C towards the ambient temperature each tick"
+        },
+        {
+            "type": "text",
+            "flag": "insulator_effect_disabled",
+            "text": "The insulators are Wool, which overheats at 300°C, and has a loss of .25, Slime, which overheats at 500°C, and has a loss of .2, Ice overheats at 0°C, and is at -10°C when first placed, but has the smallest loss off .001. Finally, there is Obsidian, which overheats at 2000°C, and has a loss of .015. When a cable overheats it turns to fire. It should be noted that ice cables are made with packed ice instead of normal ice."
+        },
+        {
+            "type": "text",
+            "text": "Right clicking any heat cable with an iron ingot, a piece of nether quartz, or a diamond will change the texture of the cable. $(br2)This change is purely visual and does not consume the item. Right clicking it with a copper ingot changes the texture back."
+        },
+        {
+            "type": "text",
+            "text": "Most machines which use heat will do so at a constant rate as long as they are above a certain temperature, whether they are doing work or not. Most devices which produce heat have constant heat production while running."
+        },
+        {
+            "type": "text",
+            "text": "There are many approaches to regulating temperature so as to not melt heat cable, but a simple early game approach is to design systems that would produce more heat than is being consumed were none of the machines hot enough to use heat, but producing less heat than would be consumed with the machines drawing heat."
+        },
+        {
+            "type": "text",
+            "text": "This would cause the temperature to rise until the system is hot enough for machines to run, at which point it will stay around the correct temperature, but this has some drawbacks that can be corrected with more advanced, later game, systems."
+        }
+    ],
+    "read_by_default": true
+}

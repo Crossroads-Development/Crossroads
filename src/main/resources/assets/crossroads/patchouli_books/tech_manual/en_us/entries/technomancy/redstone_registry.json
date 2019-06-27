@@ -1,0 +1,33 @@
+{
+    "name": "Redstone Registry",
+    "category": "technomancy",
+    "icon": "crossroads:redstone_registry",
+	"sortnum": 4,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "crossroads:redstone_registry",
+            "text": "The Redstone Registry is similar to a Redstone Keyboard, except it has multiple preset outputs that it cycles between. It can store up to 64 values, and will emit (when measured by Ratiator or Comparator) the value it is currently at.  "
+        },
+        {
+            "type": "detailed_crafting",
+            "recipe": "tile.redstone_registry",
+			"path": "technomancy",
+			"title": " "
+        },
+        {
+            "type": "text",
+            "text": "Every time it receives a redstone signal, it emits the value that is set (rounded signal strength received) ahead of its current value, looping from the final value to the first value as necessary. If the signal it receives is equal to or greater than the number of values it has set, it resets to the first value in the list."
+        },
+        {
+            "type": "text",
+            "text": "The GUI is rather complex, and contains 5 buttons: #, +, -, \u00e2\u2013\u00b2, \u00e2\u2013\u00bc, as well as a bar for entering values (which are locked in by pressing enter) and an area where values are displayed. It can display up to 3 set values at a time in the GUI, and which ones are viewed is controlled with the \u00e2\u2013\u00b2 & \u00e2\u2013\u00bc buttons. "
+        },
+        {
+            "type": "text",
+            "text": "The top of the 3 values displayed (referred to as the focused value) is the one edited by the input bar. A new value can be added with the + button (inserted directly after the currently focused value), or the focused value can be removed from the sequence with the - button. The currently emitted value can be set to the value focused in the GUI with the # button. The currently emitted value is colored yellow in the GUI."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

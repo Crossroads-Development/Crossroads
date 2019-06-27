@@ -1,0 +1,22 @@
+{
+    "name": "Fat Feeder",
+    "category": "fluid",
+    "icon": "crossroads:fat_feeder",
+	"sortnum": 4,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Fat Feeder uses liquid fat to feed players within a certain range. In order to operate, there needs to be a gear (or Axle) on both the top and bottom of the Fat Feeder. Both gears need a non-zero speed. The radius of the Fat Feeder's operation is equal to ((top gear speed) / (bottom gear speed)), rounded down. The direction of the two gears does not matter. "
+        },
+        {
+            "type": "text",
+            "text": "The Fat Feeder consumes liquid fat (inserted via the sides) to refill the hunger and saturation of players within range. As with other machines, #fat_per_value#mB of fat equals 1 value. For every value that the Fat Feeder feeds to nearby players, 1 energy will be moved from the top gear to the bottom gear, always in the direction to decrease the top gear's speed and increase the bottom gear's speed."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:fat_feeder",
+            "text": "While there are many ways to automate this machine, one decent way is to use Axles. Of course, that is just a suggestion."
+        }
+    ],
+    "read_by_default": true
+}

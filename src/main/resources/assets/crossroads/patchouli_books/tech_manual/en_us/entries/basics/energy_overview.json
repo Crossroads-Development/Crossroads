@@ -1,0 +1,30 @@
+{
+    "name": "Overview of Energy",
+    "category": "basics",
+    "icon": "crossroads:omnimeter",
+	"sortnum": 1,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Before you can start using technology, you need to understand the power systems. There are three main ways to transmit energy: Heat, Rotary, and Steam. Energy can be converted between the three forms in certain machines."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:omnimeter",
+            "text": "An Omnimeter (om-nee-mee-ter) is a measurement device. Right clicking on a Crossroads device with an Omnimeter will display information about it. It is recommended that you make and use one."
+        },
+        {
+            "type": "text",
+            "text": "Heat can be turned to steam with a Boiler, and steam can be turned back to heat with a Radiator, or converted to rotary energy with a Turbine.$(br2)As you can see, once energy is converted to rotary form, you cannot change it back to heat. How exactly the energy is converted will be covered in later entries. A quick overview of each form of energy is as follows:"
+        },
+        {
+            "type": "text",
+            "text": "Heat can be turned to steam with a Boiler, and steam can be turned back to heat with a Radiator, or converted to rotary energy with a Turbine.$(br2)Heat is simple, inefficient, and expensive to transfer, and is the main form of energy that you will generate.$(br2)Steam is simple, lossless, and quick to transfer (making it ideal for transferring energy)."
+        },
+        {
+            "type": "text",
+            "text": "Rotary is expensive, instant, and complicated to transfer, and depending on how well you design your system could be very lossy or nearly lossless. Rotary is also the main type of energy you will be using for machines."
+        }
+    ],
+    "read_by_default": true
+}

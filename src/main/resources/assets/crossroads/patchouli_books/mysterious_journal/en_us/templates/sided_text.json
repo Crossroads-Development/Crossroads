@@ -1,0 +1,19 @@
+{
+	    "processor": "com.Da_Technomancer.crossroads.integration.patchouli.MultiPlayerProcessor",
+		"components": [
+			{
+				"type": "text", "text": "#text", "group": "#side"
+			},
+			{
+				"type": "image", 
+				"image": "crossroads:textures/patchouli/page_filler.png",
+				"group": "filler",
+				"x": -6,
+				"y": 4,
+				"width": 128,
+				"height": 128,
+				"texture_width": 128,
+				"texture_height": 128
+			}
+		]
+}

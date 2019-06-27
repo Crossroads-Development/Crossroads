@@ -1,0 +1,32 @@
+{
+    "name": "Early Alchemy",
+    "category": "alchemy",
+    "icon": "crossroads:solid_quicksilver",
+	"sortnum": 1,
+    "pages": [
+        {
+            "type": "text",
+            "text": "During the Early Alchemy stage, there are 3 main materials: Sulfur, Quicksilver, and Alchemical Salt. It would be a good idea to mass produce these things. "
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:sulfur",
+            "anchor": "sulfur",
+            "text": "Sulfur can be obtained by putting gunpowder in glassware with water as a catalyst, turning gunpowder into sulfur in a 2:1 ratio. Caution is required, as heating gunpowder too much makes it explode, destroying the chamber it is in (but nothing around it). "
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:solid_quicksilver",
+            "anchor": "quicksilver",
+            "text": "Heating redstone makes Quicksilver, as mentioned earlier."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:waste_salt",
+            "anchor": "waste_salt",
+            "text": "Alchemical Salt is a bit harder to produce, and can be made as a byproduct with either chlorine gas or muriatic acid (more details in the following sections, or JEI)."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

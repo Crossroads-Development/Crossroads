@@ -1,0 +1,26 @@
+{
+    "name": "Tesla Ray",
+    "category": "alchemy",
+    "icon": "crossroads:tesla_ray",
+	"sortnum": 3,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "crossroads:tesla_ray",
+            "text": "The Tesla Ray is an electrical weapon, well suited for crowd control. Using it requires holding the Tesla Ray in the main hand, and a charged $(l:alchemy/forge_energy#leyden_jar)Leyden Jar$() in the offhand. The Tesla Ray has a cooldown period, just like the attack cooldown on a sword. Using it during its cooldown is very ineffective. "
+        },
+        {
+            "type": "text",
+            "text": "With every shot, it fires out a large electrical bolt in front of you if there's a suitable target, and the bolt can arc up to 3 times. It oly arcs at all if fired when not on cooldown, and it won't fire unless there's an enemy to hit. Every shot of the Ray drains some charge from the $(l:alchemy/forge_energy#leyden_jar)Leyden Jar$(). Producing the Tesla Ray requires a material from Technomancy ($(l:technomancy/ccc)Copshowium)."
+        },
+        {
+            "type": "detailed_crafting",
+            "title": "Tesla Ray",
+            "recipe": "item.tesla_ray",
+            "path": "alchemy",
+            "text": "placeholder for detailed crafter integration"
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

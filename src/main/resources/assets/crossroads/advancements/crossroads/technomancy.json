@@ -1,0 +1,10 @@
+{
+  "criteria": {
+	"technomancy": {
+	  "trigger": "crossroads:detailed_crafter",
+	  "conditions": {
+		"path": "technomancy"
+	  }
+	}
+  }
+}

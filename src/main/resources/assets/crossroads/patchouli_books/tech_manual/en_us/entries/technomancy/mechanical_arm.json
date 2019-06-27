@@ -1,0 +1,106 @@
+{
+    "name": "Mechanical Arm",
+    "category": "technomancy",
+    "icon": "crossroads:mechanical_arm",
+	"sortnum": 6,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Mechanical Arm is a block that can move entities, interact with inventories to move items, place blocks, and use items. It is controlled by 3 attached gears and a redstone signal. A gear on the bottom controls θz, a gear on the east controls θb, and a gear on the west controls θt. The angle θ will be set by the speed of the attached gear, ω. "
+        },
+		{
+			"type": "text",
+			"text": "A redstone signal is accepted on the north side. What matters to this machine is the speed rotated by the gears, not the current angle, in order to make it easier to use. It starts out with θz = 0, θb = 17Π/36 radians, θt = Π/4 radians, with the gear speed being the offset from these values. The bounds for θb is [Π/6, 17Π/36], the bounds for θt is [Π/4, 3Π/4], and there are no bounds for θz."
+		},
+		{
+			"type": "text",
+			"text": " The Mechanical Arm has 2 segments of constant length, and the angle between them is controlled by the 3 θ values, as is shown by the following diagram. lower-length = 3, upper-length=5."
+		},
+		{
+			"type": "image",
+			"images": ["crossroads:textures/patchouli/mech_arm.png"],
+			"title": "Mechanical Arm",
+			"border": true
+		},
+        {
+            "type": "text",
+            "text": "From this information, the formulas for the position of the end point relative to the top center of the base are found to be: (lengthCross and θd exist to shorten the calculations)"
+        },
+        {
+			"type": "image",
+			"images": ["crossroads:textures/patchouli/mech_arm_equat_1.png"],
+			"title": "Equations",
+			"border": true
+		},
+		{
+			"type": "text",
+			"text": "Or, if that is illegible: lengthCross= √(lengthBase² + lengthTop² - 2lengthTop*lengthBase*cos(θt)), θd= θb + θt + arcsin(sin(θt)*lengthBase/lengthCross), x= -cos(θd)lengthCross*cos(θz), y= -sin(θd)lengthCross, z= -cos(θd)lengthCross*sin(θz). $(br2)If the end position is known and you want to solve for the angles required to obtain that end position, then:"
+		},
+		{
+			"type": "image",
+			"images": ["crossroads:textures/patchouli/mech_arm_equat_2.png"],
+			"title": "Equations",
+			"border": true
+		},
+		{
+			"type": "text",
+			"text": "Or, if that is illegible: lengthCross= √(x²+y²+z²), θt= arccos((lengthBase² + lengthTop² - lengthCross²)/(2*lengthBase*lengthTop)), θb= arcsin(y/lengthCross) + arcsin(sin(θt)lengthTop/lengthCross), θz= arctan(z/x)."
+		},
+		{
+			"type": "text",
+			"text": "It is recommended to make some sort of automatic calculation device if you need to do these operations a lot. In order to make the arm actually do anything other than move, a redstone signal must be applied. The exact strength matters, and values only reachable by Ratiator are required. All signal strengths are rounded to the nearest whole number. "
+		},
+		{
+			"type": "text",
+			"text": "The arm has 7 different effects, activated by redstone signal, and each effect gets a direction based on the redstone signal (although many of the effects ignore the direction). A signal of 0 does nothing, and any other signal does an effect. The effects are referred to by index: 0: Pickup entity, 1: Pickup block, 2: Pickup from inventory, 3: Use, 4: Deposit into inventory, 5: Drop entity, 6: Throw entity, 7: Pickup one from inventory. "
+		},
+		{
+			"type": "text",
+			"text": "The effect done with a redstone signal is the one where index=(redstone - 1)/6, capped at 7. The side passed to the effect is referred to by index as well: 0: down, 1: up, 2: north, 3: south, 4: west, 5: east. The side used is index=(redstone - 1)mod(6). (That is, (redstone - 1) modulus 6). The arm can pass through blocks, carry item entities, players, or mobs, and interact with things requiring a right click."
+		},
+		{
+			"type": "text",
+			"text": "Pickup Entity will cause an entity near the end of the arm to be grabbed by the arm, provided the arm has no passengers."
+		},
+		{
+			"type": "text",
+			"text": "Pickup Block will break the block at the end of the arm, and if the arm has no passengers or is carrying an item of the type dropped by the block, will pick up the block's drops."
+		},
+		{
+			"type": "text",
+			"text": "Pickup from inventory will attempt to pull out 1 stack from the inventory at the end of the arm and put it on the end of the arm (uses the direction)."
+		},
+		{
+			"type": "text",
+			"text": "Use will try to right click with the held item, or if it is an ItemBlock place it in midair (uses the direction)."
+		},
+		{
+			"type": "text",
+			"text": "Deposit into inventory will try to place a held stack into the inventory at the end of the arm (uses the direction)."
+		},
+		{
+			"type": "text",
+			"text": "Drop Entity will cause the held entity to be dropped straight down."
+		},
+		{
+			"type": "text",
+			"text": "Throw will release the held entity, throwing it at high speed in the direction the endpoint is from the base of the arm."
+		},
+		{
+			"type": "text",
+			"text": "Pickup one from inventory is the same as Pickup from inventory, except instead of trying to take up to a full stack, it tries to take exactly 1 item."
+		},
+		{
+			"type": "image",
+			"images": ["crossroads:textures/patchouli/unreadable_table.png"],
+			"title": "Mode Table",
+			"border": true
+		},
+		{
+			"type": "detailed_crafting",
+			"recipe": "tile.mechanical_arm",
+			"path": "technomancy"
+		}
+    ],
+    "read_by_default": true
+}

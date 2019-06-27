@@ -1,0 +1,92 @@
+{
+    "name": "Personal Workspace",
+    "category": "technomancy",
+    "icon": "crossroads:gateway_frame",
+	"sortnum": 5,
+    "pages": [
+        {
+            "type": "text",
+            "text": "It is possible to build a portal to a personal empty dimension called a \"Workspace Dimension\". Although saying you are building a portal doesn't do what is actually happening justice. What is actually happening is the application of the technomancy concept that if time flows, then reality must exist, so if time wis forced to flow in an empty void it will force reality to form a dimension around it.  "
+        },
+        {
+            "type": "text",
+            "text": "The first portal you build will use copshowium parts to forcibly start time in the void, creating the dimension. It has no weather, mob spawns, celestial bodies, sunlight, and starts out with only a single stone brick block over the void. Each player gets there own copy that can be built in. It is highly recommended to design field (later Technomancy mechanic) systems in a Workspace Dimension, as there are no flux effects in Workspace Dimensions at all."
+        },
+        {
+            "type": "text",
+            "text": "In order to construct a portal to a Workspace Dimension, create 3 Gateway Frames. Place a Gateway Frame pointing down; The portal will be a 3x3 below this. From the Gateway Frame, go 2 blocks down, and 2 blocks to one side. Place a Gateway Frame pointing inwards. Repeat for the opposite direction. Other blocks near or inside the portal do not interfere. To activate the portal, send a $(rift)RIFT$() beam into the side of the upper Gateway Frame (striped side). "
+        },
+        {
+            "type": "multiblock",
+            "name": "Gateway Portal",
+            "text": "Gateway frames on the side have to be rotated in to face the center (orange dot). The stone is unecessary.",
+            "multiblock": {
+                "mapping": {
+                    "F": "crossroads:gateway_frame",
+                    "S": "minecraft:stonebrick"
+                },
+                "pattern": [
+                    [
+                        "S",
+                        "S",
+                        "F",
+                        "S",
+                        "S"
+                    ],
+                    [
+                        "S",
+                        "_",
+                        "_",
+                        "_",
+                        "S"
+                    ],
+                    [
+                        "F",
+                        "_",
+                        "_",
+                        "_",
+                        "F"
+                    ],
+                    [
+                        "S",
+                        "_",
+                        "0",
+                        "_",
+                        "S"
+                    ]
+                ],
+                "offset": [
+                    0,
+                    0,
+                    0
+                ],
+                "symmetrical": true
+            }
+        },
+        {
+            "type": "detailed_crafting",
+			"recipe": "tile.gateway_frame",
+			"path": "technomancy"
+        },
+        {
+            "type": "text",
+            "text": "The portal opens and closes instantly, and is only open while a $(rift)RIFT$() beam is provided. The portal will link to [0, 33, 0] in the Workspace Dimension, and links to the dimension belonging to the player who placed the top middle block of the gateway (for this reason, fake players cannot place Gateway Frames). Exiting a Workspace dimension can be done either by dying or by using an identical gateway in the Workspace Dimension. "
+        },
+        {
+            "type": "text",
+            "text": "A gateway in a Workspace Dimension will by default link to [0, 0, 0] in the Overworld, but the coordinates can be changed. Attaching gears to the ends of the two side Gateway Frames (the side opposite the middle) will allow controlling the X and Z coordinates with the speed of the attached gears (the gear in the north or west direction controls the X coordinate, the gear in the south or east direction controls the Z coordinate). "
+        },
+        {
+            "type": "text",
+            "text": "For example, if a gear on the end of the south Gateway Frame has a speed of +3 radians/second, sets the target Z to 3. A gear attached to the top Gateway Frame on a side other than the top or bottom controls the Y coordinate. An Omnimeter or $(l:technomancy/modular_goggles)Modular Goggles$() with a quartz lens displays the dialed coordinates when viewing the top Gateway Frame."
+        },
+		{
+			"type": "image",
+			"images": ["crossroads:textures/patchouli/gateway.png"],
+			"title": "Example Setup",
+			"border": true
+		}
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

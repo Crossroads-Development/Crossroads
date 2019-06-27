@@ -1,0 +1,40 @@
+{
+    "name": "Practitioner's Stone",
+    "category": "alchemy",
+    "icon": "crossroads:prac_stone",
+	"sortnum": 11,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "crossroads:prac_stone",
+            "text": "The third and final tier of Alchemy is the Practitioner tier, which is gated behind obtaining a Practitioner's Stone."
+        },
+        {
+            "type": "text",
+            "text": "The Practitioner's Stone is produced by cooling a mixture of equals parts gold, Aether, Phelostogen, and Adamant with an Aqua Regia catalyst. Unlike most reactions, where having the wrong ingredient ratio simply means there will be some leftover unused reagent, getting the ratio wrong when making a Practitioner's Stone will destroy the glassware it's being made it. While the ratio doesn't have to be exactly right, it must be close."
+        },
+        {
+            "type": "text",
+            "text": "Like the Philosopher's Stone, the Practitioner's Stone is strictly a catalyst. $(br2)There are several new elemental reagents that can only be produced through a Practitioner's Stone. Their recipes are $(bold)not$() in JEI."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:alchemy_chart",
+            "text": "Instead, you will need an Alchemy Chart, which is similer to a Color Chart in many ways. If you look in an Alchemy Chart, you will see the three primary elemental reagents in the corners (Phelostogen, Aether, Adamant), connected by arrows to the various newly available elemental reagents. "
+        },
+        {
+            "type": "text",
+            "text": "To produce a secondary elemental reagent (shown an octogon in the chart), you need to combine primaries in the right ratio, with a practitioner's stone catalyst in a charged environment. If you get the ratio wrong, no reaction will occor at all. You don't need to get the ratio exactly right, but you must be close. The farther away an element is displayed in the chart from a primary, the less of that primary is required. "
+        },
+        {
+            "type": "text",
+            "text": "For example, Eldrine is opposite of Aether on the chart, equidistant from Adamant and Phelostogen. Therefore, it is equal parts Phelostogen and Adamant, with no Aether. $(br2)To produce a tertiary, shown as a diamond in the Alchemy Chart, you need to blend the primaries with one of the secondaries. The secondary you need is shown as connected to the tertiary by an arrow. "
+        },
+        {
+            "type": "text",
+            "text": "If at any point you are confused as to which arrow came from where, note that the color of the arrow matches the color of what it came from. Once again, the distance between the tertiary and its ingredients in the chart reveals the ratio, and a Practitioner's stone must be present in a charged environment."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

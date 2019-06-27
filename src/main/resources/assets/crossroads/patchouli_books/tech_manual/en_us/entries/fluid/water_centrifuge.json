@@ -1,0 +1,21 @@
+{
+    "name": "Water Centrifuge",
+    "category": "fluid",
+    "icon": "crossroads:water_centrifuge",
+	"sortnum": 7,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Water Centrifuge is one of the automatable ways to produce salt and distilled water. It has 4 fluid ports, one on each side. The red ports output distilled water, and the orange ports accept water. Salt can be removed from the bottom. A gear needs to be on top of it. The Water Centrifuge itself takes no energy to run, however it still has requirements. "
+        },
+        {
+            "type": "text",
+            "text": "The gear on top needs to reach .5 speed for the machine to produce one batch of salt and distilled water. For the next batch, the speed needs to be .5 in the opposite direction. Basically, the direction of the gear on top needs to keep reversing, and each time it needs to reach a speed of at least .5. One batch uses 100mB of water, and produces 100mB of distilled water and one unit of salt."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:water_centrifuge"
+        }
+    ],
+    "read_by_default": true
+}

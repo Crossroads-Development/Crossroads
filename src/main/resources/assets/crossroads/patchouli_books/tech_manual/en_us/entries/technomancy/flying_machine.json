@@ -1,0 +1,20 @@
+{
+    "name": "Flying Machine",
+    "category": "technomancy",
+    "icon": "crossroads:flying_machine",
+	"sortnum": 12,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Flying Machine is a flying mount which requires materials from both Technomancy and Alchemy to craft. While riding, it has a large blue and orange horizontally mounted \"wheel\". Pressing ($(k:key.forward)) or ($(k:key.back)) rotates this wheel forward or backward. The Flying Machine is propelled in the direction of the blue side of the wheel as far as up and down is concerned, while moving forwards in the direction its rider is looking."
+        },
+        {
+            "type": "detailed_crafting",
+            "recipe": "item.flying_machine",
+            "path": "technomancy",
+            "text": "The Flying Machine cannot hover."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

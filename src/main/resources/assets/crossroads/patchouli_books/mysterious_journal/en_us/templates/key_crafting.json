@@ -1,0 +1,53 @@
+{
+    "processor": "com.Da_Technomancer.crossroads.integration.patchouli.KeyCraftingProcessor",
+	"components": [
+		{
+			"type": "header", "text": "#title", "x": -1, "y": -5
+		},
+		{
+			"type": "text", "text": "#text", "y": 70
+		},
+		{
+			"type": "image",
+			"image": "crossroads:textures/patchouli/detailed_crafting.png",
+			"x": 10,
+			"y": 3,
+			"width": 128,
+			"height": 64,
+            "texture_width": 128,
+            "texture_height": 64,
+			"scale": 1
+		},
+		{
+			"type": "item", "item": "#item1", "x": 15, "y": 8
+		},
+		{
+			"type": "item", "item": "#item2", "x": 34, "y": 8
+		},
+		{
+			"type": "item", "item": "#item3", "x": 53, "y": 8
+		},
+		{
+			"type": "item", "item": "#item4", "x": 15, "y": 27
+		},
+		{
+			"type": "item", "item": "#item5", "x": 34, "y": 27
+		},
+		{
+			"type": "item", "item": "#item6", "x": 53, "y": 27
+		},
+		{
+			"type": "item", "item": "#item7", "x": 15, "y": 46
+		},
+		{
+			"type": "item", "item": "#item8", "x": 34, "y": 46
+		},
+		{
+			"type": "item", "item": "#item9", "x": 53, "y": 46
+		},
+		{
+			"type": "item", "item": "#output", "x": 91, "y": 27, "link_recipe": true
+		}
+		
+	]
+}

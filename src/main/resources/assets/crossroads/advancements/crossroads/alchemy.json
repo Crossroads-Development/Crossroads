@@ -1,0 +1,10 @@
+{
+  "criteria": {
+	"alchemy": {
+	  "trigger": "crossroads:detailed_crafter",
+	  "conditions": {
+		"path": "alchemy"
+	  }
+	}
+  }
+}

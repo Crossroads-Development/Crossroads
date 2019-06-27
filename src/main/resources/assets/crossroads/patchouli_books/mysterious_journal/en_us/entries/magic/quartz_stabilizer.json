@@ -1,0 +1,34 @@
+{
+    "name": "Quartz Stabilizer",
+    "category": "magic",
+    "icon": "crossroads:large_quartz_stabilizer",
+	"sortnum": 4,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Quartz Stabilizer turns beam pulses into constant beams. $(br2)There are two varieties, the small and the large. The Small Stabilizer needs a lens array, making it quite expensive. With $(l:magic/lens_holder#luminescent_quartz)Luminescent Quartz$(), Stabilizers can be made much more cheaply. "
+        },
+        {
+            "type": "text",
+            "text": "Quartz Stabilizers can face any direction when placed, and when it receives a beam from any direction other than the front it stores the magic of the beam. The Quartz Stabilizer will emit a constant beam out the front, draining the stored magic to do so. The Quartz Stabilizer has a capacity of 30 magic for the small version and 150 magic for the large one. Please note that is 30 units of magic ($(energy)energy$() + $(potential)potential$() + $(stability)stability$() + void) not 30 beams. "
+        },
+        {
+            "type": "text",
+            "text": "Any excess magic is lost. The emitted beam has 6 magic for the small version and 15 magic for the large version, and has the same color as the stored magic. The problem is that due to magic being measured in whole numbers and there is a limit on the output of the stabilizer, the outputted color might not exactly match the stored color. Therefore, the stabilizer is most reliable for beams that only contain one basic element, not a blended color."
+        },
+        {
+            "type": "text",
+            "text": "There is no way to make a Quartz Stabilizer hold onto its stored magic without emitting it, so it can't be used for long term magic storage on its own."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:small_quartz_stabilizer",
+            "recipe2": "crossroads:small_quartz_stabilizer_0"
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:large_quartz_stabilizer"
+        }
+    ],
+    "read_by_default": true
+}

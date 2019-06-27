@@ -1,0 +1,48 @@
+{
+    "name": "The Steam System",
+    "category": "basics",
+    "icon": "crossroads:fluid_tube",
+	"sortnum": 3,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Steam is best explained by covering fluids in general. Most machines that need fluid can't have it bucketed in directly, and need you to pipe it in. Fluids obviously flows through pipes. These tubes can handle any fluid, hot or cold, and average out the pressure between themselves and stuff around them. Pressure is the amount of liquid divided by the amount it can store. "
+        },
+        {
+            "type": "text",
+            "text": "Most machines can only accept or output fluids though, so pipes will only insert or extract fluid instead of trying to average pressure. Wrenching the connectors on fluid tubes allows setting them to input only, output only, or disconnecting them. When reconnecting two tubes that were disconnected via wrench, use the wrench on the side of the tube originally disconnected facing towards the other tube."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:fluid_tank",
+            "text": "There are also Fluid Tanks, which store 20 buckets, which can be bucketed in and out of directly. They average their pressure with tubes, and keep their contents when broken. A tank can be emptied by placing it in the crafting grid. Comparators can measure how full a tank is."
+        },
+        {
+            "type": "text",
+            "text": "Steam is just another fluid, and it's only special because it's great for moving energy. Heat can be converted to steam with boilers (more on that later), and steam can be converted back to heat or rotary energy. Also, it flows pretty quickly with no loss, and the tubes don't melt or anything like that."
+        },
+        {
+            "type": "key_spotlight",
+            "item": "crossroads:steam_boiler",
+			"anchor": "steam_boiler",
+			"title": "Steam Boiler",
+            "text": "A Steam Boiler is a bit more complicated than it sounds. Heat goes in the bottom, steam comes out the top, and water goes in the side. The boiler turns water into steam once it hits 110°C. One bucket of steam uses #deg_per_bucket_steam_inefficient#°C and 1000mB of water to create , and 10 pieces of salt are created."
+        },
+        {
+            "type": "text",
+            "text": "Salt can be pulled out the bottom, and if the boiler gets full of salt it stops working. Because salt needs to be hoppered out the bottom and heat goes in the bottom, you can't automate the boiler YET."
+        },
+        {
+            "type": "spotlight",
+            "item": "forge:bucketfilled{FluidName:'distilledwater',Amount:1000}",
+			"anchor": "distilled_water",
+			"title": "Distilled Water",
+            "text": "When you use steam to make rotary energy or heat, you get distilled water back instead of normal water. Distilled water can also be used to make steam with no salt is created, making the boiler automatable. "
+        },
+		{
+			"type": "key_text",
+			"text": "Also, the boiler only has to be heated to #deg_per_bucket_steam#°C, and only uses 50°C per bucket, which is how much heat you can get out of a bucket of steam."
+		}
+    ],
+    "read_by_default": true
+}

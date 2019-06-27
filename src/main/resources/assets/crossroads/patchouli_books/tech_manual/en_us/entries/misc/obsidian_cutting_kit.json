@@ -1,0 +1,17 @@
+{
+    "name": "Obsidian Cutting Kit",
+    "category": "misc",
+    "icon": "essentials:obsidian_cutting_kit",
+	"sortnum": 3,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Obsidian Cutting Kits are a utility for collecting obsidian quickly. Simply right click one on some obsidian to insta-mine the obsidian and destroy the Obsidian Cutting Kit."
+        },
+        {
+            "type": "crafting",
+            "recipe": "essentials:obsidian_cutting_kit"
+        }
+    ],
+    "read_by_default": true
+}

@@ -1,0 +1,6 @@
+{
+	"name": "Rotary Machines",
+	"description": "Rotary is expensive, instant, and complicated to transfer, and depending on how well you design your system could be very lossy or nearly lossless. Rotary is also the main type of energy you will be using for machines.",
+	"icon": "crossroads:gear_bronze",
+	"sortnum": 2
+}

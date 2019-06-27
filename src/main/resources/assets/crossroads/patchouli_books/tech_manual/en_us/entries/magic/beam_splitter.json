@@ -1,0 +1,22 @@
+{
+    "name": "Beam Splitter",
+    "category": "magic",
+    "icon": "crossroads:beam_splitter",
+	"sortnum": 7,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Beam Splitter takes any beam and splits it into 2 beams. Beams go in the sides, and come out the top and bottom. The two outward beams aren't the same size, but they are the same color as the input (with a margin of error, dividing whole numbers again, but no magic is lost in the end). There are two versions of the Beam Splitter, the Basic Beam Splitter and the Redstone Beam Splitter."
+        },
+        {
+            "type": "text",
+            "text": " With the Basic Beam Splitter, the two output beams are the same power. The distribution of magic between the top and bottom beams with a Redstone Beam Splitter depends on the incoming redstone signal strength. The bottom beam has (redstone strength) / 15 of the magic, and the top gets the rest."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:beam_splitter_basic",
+            "recipe2": "crossroads:beam_splitter"
+        }
+    ],
+    "read_by_default": true
+}

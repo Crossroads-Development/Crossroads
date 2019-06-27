@@ -1,0 +1,14 @@
+{
+    "name": "Gem Transmutation",
+    "category": "alchemy",
+    "icon": "minecraft:diamond",
+	"sortnum": 13,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Combining Fusas with one of the four base metals, along with a Practitioner's Stone catalyst, allows producing Rubies, Emeralds, Diamonds, and Nether Quartz."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

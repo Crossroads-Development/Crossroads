@@ -1,0 +1,127 @@
+{
+    "name": "Laboratory Glassware",
+    "category": "alchemy",
+    "icon": "crossroads:florence_flask",
+	"sortnum": 0,
+    "pages": [
+        {
+            "type": "text",
+            "text": "There are two sets of glassware: the manual and the automatic. Everything that can be crafted in one set can also be made in the other. The manual set is simple to use, cheaper, and good for making single batches of a reagent. The automatic set, however, can be automated, making it good for mass production."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:phial",
+            "text": "Reagents can be stored in Glass Phials, which have a capacity of 25. Right clicking on the ground with a Glass Phial will pour out the contents, possibly performing an effect depending on the contents."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:florence_flask",
+            "text": "A Glass Florence Flask is a larger form of a phial (capacity 500) that can't be poured out on the ground."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:shell",
+            "text": "A Glass Shell is like a phial, except right-clicking throws it, causing it to smash (and possibly do an effect) where it lands."
+        },
+        {
+            "type": "text",
+            "text": "All three can be filled/emptied by right clicking it on placed glassware. Item forms of a reagent can be inserted into a placed glassware by right clicking with it on glassware. Items can be removed from a placed glassware with a solid reagent by right clicking with an empty hand."
+        },
+        {
+            "type": "empty"
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:glassware_holder",
+            "text": "A Glassware Stand can hold Phials and Florence Flasks (but not Shells). Glassware can be placed on an empty stand with a right-click, or removed by shift-right-clicking with an empty hand. Reactions can occur inside glassware placed on a stand. A heating cable can be attached to the bottom of a stand to heat/cool a contained Florence Flask."
+        },
+        {
+            "type": "text",
+            "text": "Phials cannot be heated/cooled this way. Florence Flasks are intended for reactions & heating/cooling, while Phials are meant for reagent transfer. Conduits can be attached to the top of the stand (See Automatic Laboratory Glassware), and providing the stand with a redstone signal will force the contents to flow up into a conduit, regardless of phase."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:alembic",
+            "text": "The Alembic is a specialized piece of glassware meant to help with early game quicksilver production. When heated from below, the contents are allowed to react. Anything gaseous leaves the Alembic. If the reagent would flow down at room temperature, it goes into the phial/flask on the stand under the Alembic's spigot. Otherwise, it is lost. "
+        },
+        {
+            "type": "text",
+            "text": "Solid/liquid reagents stay in the Alembic until they boil. If, for example, redstone were put in a hot Alembic it would break down into Sulfur Dioxide and (would would be lost, as it's a gas at room temperature) and liquid quicksilver. Once the quicksilver boils it will leave the Alembic, cool to liquid, and be collected in the glassware under the spigot."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:charging_stand",
+            "text": "The Electrolyzer is a block that accepts Forge Energy, and consumes 10FE/tick whether it's running or not. Placing a Phial or Florence Flask inside while it has energy allows reactions to occur in an energized environment, which is a requirement for some reactions."
+        },
+        {
+            "type": "image",
+            "images": ["crossroads:textures/patchouli/man_glass.png"],
+            "text": "From left to right: A Florence Flask, an Alembic on a Fuel Heater, and a Phial connected to the Alembic.",
+			"border": true
+        },
+        {
+            "type": "text",
+            "text": "The following peices of glassware are automatic glassware, intended for automation:"
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:alch_tube",
+            "text": "Glass Conduits allow moving reagents between different pieces of glassware. Like Fluid Tubes, their connections can be wrenched between input only, output only, and disable connection. Unlike Fluid Tubes, they do not have a setting to average pressure."
+        },
+        {
+            "type": "text",
+            "text": "When using Glass Conduits, it should be noted the taking advantage of the fact that gases can't flow down, while liquids/solids can't flow up, is the main way to separate out a mixture of reagents. There are also Redstone Glass Conduits, which only connect while given a redstone signal."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:reaction_chamber",
+            "text": "The Glass Reaction Vessel has conduit connections on all 6 sides, can connect to heat cables on all 6 sides, can interact with hoppers to move item forms of solid reagents in and out, and can hold Forge Energy (drained at 10FE/tick) to act as an energized environment for reactions."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:reagent_tank",
+            "text": "The Glass Storage Vessel stores a large amount of reagents (Capacity 10,000), and can connect to conduits on all sides. Reactions can not occur inside Storage Vessels."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:reagent_pump",
+            "text": "Glass Reagent Pumps can be oriented either up or down. They output reagents out the way they face, and accept reagents from all other directions. They force reagents to flow in the direction they point, regardless of phase."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:chemical_vent",
+            "anchor": "chemical_vent",
+            "text": "The Chemical Vent vents any reagent inserted into it, acting as a chemical trash can that also does the effect of the reagent around it."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:cooling_coil",
+            "text": "The Glass Cooling Coil makes any reagent that flows through it be at room temperature."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:heated_tube",
+            "text": "The Glass Thermal Conduit connects to a heating cable at the top or bottom, and sets any reagent that flows through it to the temperature of the cable."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:fluid_injector",
+            "anchor": "fluid_injector",
+            "text": "The Fluid Injector allows converting fluids into reagents. Inserting liquids like distilled water or molten copper into the top will allow the reagent form to be conduit-ed out the bottom. Inserted a gas like steam into the bottom allows conduiting the gasous reagent out the top."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:flow_limiter",
+            "text": "The Glass Limiter Conduit is a specialized conduit that stops inserting a reagent once there is too much of that reagent in the target it outputs to. The limit can be toggled between 0.25, 0.5, 1, 2, 4, 8, and 16 by shift-right-clicking on the Limiter Conduit with a wrench."
+        },
+		{
+			"type": "image",
+			"images": ["crossroads:textures/patchouli/aut_glass.png"],
+			"title": "Alembic mimic setup",
+			"text": "From left to right: A Reaction Vessel, a Cooling Coil, a Chemical Vent, and a Storage Vessel.",
+			"border": true
+		}
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

@@ -1,0 +1,22 @@
+{
+    "name": "Crystalline Master Axis",
+    "category": "magic",
+    "icon": "crossroads:master_axis_crystal",
+	"sortnum": 9,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Crystalline Master Axis is an alternative to a normal Master Axis. It functions identically, but for one key difference. It can accept magical beams and alter its behavior based on the element. It can only have the effect from one element active at a time. Every time it receives a beam (limit one beam/side/5 ticks), it acts differently based on the element for the next (beam power * 5) ticks. "
+        },
+        {
+            "type": "text",
+            "text": "The timer does not get reset each time it receives a beam, but instead is increased. Each time it receives an element different from the previous one, it resets the timer and switches to the new element. Not all elements have an effect, but for example $(energy)energy$() increases the total energy of the gear system by 10/tick if there is any energy to begin with, and $(equalibrium)equalibrium$() decreases the change in energy each tick by 75%. "
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:master_axis_crystal",
+            "text": "An Omnimeter can measure the current element and duration in a Crystal Master Axis."
+        }
+    ],
+    "read_by_default": true
+}

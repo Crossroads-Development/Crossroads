@@ -1,0 +1,18 @@
+{
+    "name": "Metal Transmutation",
+    "category": "alchemy",
+    "icon": "crossroads:nugget_copper",
+	"sortnum": 8,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Using the $(l:alchemy/phil_stone)Philosopher's Stone$(), it is possible to mass produce the basic metals: Copper, Tin, Iron, and Gold. All four of those metals break down into $(l:alchemy/early_alchemy#quicksilver)Quicksilver$() and one of the 4 strong acids when exposed to the $(l:alchemy/phil_stone)Philosopher's Stone$() as a catalyst."
+        },
+        {
+            "type": "text",
+            "text": "Combining $(l:alchemy/early_alchemy#quicksilver)Quicksilver$() and one of the 4 strong acids using some Adamant as a catalyst will produce one of the 4 base metals, which can be cooled to solid and pulled out as nuggets, or extracted as molten metal with a $(l:alchemy/laboratory_glassware#fluid_injector)Fluid Injector$() and run through a $(l:heat/fluid_cooling_chamber)Fluid Cooling Chamber$() to produce ingots. Provided Quicksilver and the $(l:alchemy/strong_acids)4 strong acids$() have been automated at this point, this allows easily producing massive amounts of the 4 base metals."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

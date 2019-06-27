@@ -1,0 +1,93 @@
+{
+    "name": "Rotary Mathmatics",
+    "category": "technomancy",
+    "icon": "crossroads:redstone_axis",
+	"sortnum": 3,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Prior to now, the rotary system has been used as little more than an energy type. In Technomancy, the rotary system is used in a far more advanced role: control. The exact speed, and in some cases the exact number of rotations performed (speed * time) will matter. For this reason, the following devices allow greater control over rotary systems."
+        },
+        {
+            "type": "text",
+            "text": "The following devices are different types of Master Axes, all of which can control a network made entirely of 0-mass gears."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:redstone_axis",
+            "text": "The Redstone Master Axis will cause the connected gear to spin with a speed equal to the strength of redstone signal received, and it can use values > 15 or with decimal points if Ratiators are used. All other connected gears have a speed based on Rotation Ratio and the speed of the first gear."
+        },
+        {
+            "type": "text",
+            "text": "In order to cause the attached gears to spin if they have non-zero mass, energy is required which can be provided by a gear on the back of the Redstone Master Axis. The Redstone Master Axis can point any direction. It is often convenient to use Redstone Master Axes in tandem with Redstone Keyboards."
+        },
+        {
+            "type": "text",
+            "text": "Any excess energy in the gear network is inserted into the energy providing gear, any required energy is drawn from it, and if there is not enough available energy then all controlled gears will stop spinning. If the gear network has 0-mass, no energy providing gear is required."
+        },
+        {
+            "type": "empty"
+        },
+        {
+            "type": "text",
+            "text": "The following Master Axes types set the speed of the attached gear based on the speed of other gears. Linking one of these Axes inputs to its output will destroy the Master Axes (dropping it as an item), as otherwise there would be an infinite loop. It is allowed to connect one of these Axes to its own power gear, though fairly pointless to do so. All of the following devices can only face horizontally and have an energy input on the bottom."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:addition_axis",
+            "text": "The Addition Master Axis has 2 inputs (marked by two blue rings on the model) and an output (the top). The controlled gears will have a speed equal to the sum of the speeds of the 2 input gears. If they were to spin in opposite directions, it would be subtraction. For those who care, the model of the Addition Axis shows a real life device called a differential."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:multiplication_axis",
+            "text": "The Multiplication Master Axis has two inputs (back and top, marked by blue rings), and 1 output (the front, marked by an orange ring). The output speed is equal to the product of the two input speeds times. If shift-right-clicked with a wrench, the Multiplication Axis does division instead, with (output speed)=(back input speed)/(top input speed)."
+        },
+        {
+            "type": "text",
+            "text": "(For those who care, the Multiplication Axis model shows a complicated device of springs and continuous transmissions which, if designed for a specific set of units, could in theory multiply the speeds. However, a real device like the one in the model would have a LOT of energy loss.)."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:square_root_axis",
+            "text": "The Square Root Axis has an output speed of the square root of the input speed (with an output speed of 0 for negative inputs)."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:cos_axis",
+            "title": "Cos and Sin Axes",
+            "text": "The Sin and Cos Axes do the Sine and Cosine operations respectively in θ. There is no Tan Axis as tangent(θ) = sine(θ)/cosine(θ)."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:arccos_axis",
+            "title": "ArcSin and ArcCos Axes",
+            "text": "The ArcSin and ArcCos Axes do the ArcSine (inverse sine) and ArcCosine (inverse cosine) operations respectively."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:equals_axis",
+            "text": "The Equal Axis has two inputs (to the left and right of the output), and will output the input speed if, and only if, the two inputs have equal speed."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:greater_than_axis",
+            "text": "The Greater Than Axis has two inputs on the left and right, and has an output speed equal to the higher of the two input speeds."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:less_than_axis",
+            "text": "The Less Than Axis is the same as the Greater Than Axis, except it outputs the lower of the two inputs."
+        },
+        {
+            "type": "text",
+            "text": "Finally, there is a much cheaper recipe for the normal Master Axis as part of Technomancy."
+        },
+		{
+			"type": "detailed_crafting",
+            "recipe": "tile.master_axis",
+            "path": "technomancy"
+		}
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

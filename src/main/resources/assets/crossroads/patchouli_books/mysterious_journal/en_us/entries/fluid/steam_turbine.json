@@ -1,0 +1,18 @@
+{
+    "name": "Steam Turbine",
+    "category": "fluid",
+    "icon": "crossroads:steam_turbine",
+	"sortnum": 1,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Instead of using rotary energy to pump fluids, a Steam Turbine creates rotary energy when steam moves through it. When steam is inserted into the bottom, it is converted to distilled water and rotary energy. If the distilled water tank fills up, the Steam Turbine stops working. The distilled water comes out the sides. Rotary energy is output to a gear on top of the Steam Turbine."
+        },
+        {
+            "type": "key_crafting",
+            "recipe": "crossroads:steam_turbine",
+            "text": "One bucket of steam, fully processed into rotary energy, produces #steam_turbine# units of energy."
+        }
+    ],
+    "read_by_default": true
+}

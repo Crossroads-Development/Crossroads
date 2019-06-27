@@ -1,0 +1,22 @@
+{
+    "name": "Fluid Splitter",
+    "category": "fluid",
+    "icon": "crossroads:fluid_splitter",
+	"sortnum": 6,
+    "pages": [
+        {
+            "type": "text",
+            "text": "There are two variants of Fluid Splitter: The Basic Fluid Splitter and Redstone Fluid Splitter. Both accept fluid from the sides & output it to the top and bottom. The Basic Fluid Splitter will output 1/2 of the inserted fluids to the top and 1/2 to the bottom. The Redstone Fluid Splitter splits fluids based on a redstone signal. (Signal Strength)/15 of the fluid goes to the bottom, and the rest goes out the top. "
+        },
+        {
+            "type": "text",
+            "text": "A rule of thumb to remember which way redstone redirects fluid is that if you were to place a lever on a Redstone Fluid Splitter, the fluid would exit in the direction the lever points."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:basic_fluid_splitter",
+            "recipe2": "crossroads:fluid_splitter"
+        }
+    ],
+    "read_by_default": true
+}

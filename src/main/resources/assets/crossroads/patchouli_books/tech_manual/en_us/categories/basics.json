@@ -1,0 +1,6 @@
+{
+	"name": "The Basics",
+	"description": "Crossroads is a tech & magic mod. The goal of Crossroads is two fold: to add challenges to automate (useful machines with difficult requirements) and tools to automate with (redstone integration, item routing/sorting, block breaking, etc.).",
+	"icon": "crossroads:ore_copper",
+	"sortnum": 0
+}

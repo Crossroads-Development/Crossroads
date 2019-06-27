@@ -1,0 +1,18 @@
+{
+    "name": "Radiator",
+    "category": "fluid",
+    "icon": "crossroads:radiator",
+	"sortnum": 2,
+    "pages": [
+        {
+            "type": "text",
+            "text": "A Radiator converts steam into heat. Insert steam through the bottom and it will be fully converted to distilled water and heat. Distilled water comes out the top and heat cables can be connected to the sides."
+        },
+        {
+            "type": "key_crafting",
+            "recipe": "crossroads:radiator",
+			"text": "One bucket of steam produces #deg_per_bucket_steam#°C of heat."
+        }
+    ],
+    "read_by_default": true
+}

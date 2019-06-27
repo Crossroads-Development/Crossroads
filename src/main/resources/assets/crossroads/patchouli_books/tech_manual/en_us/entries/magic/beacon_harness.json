@@ -1,0 +1,53 @@
+{
+    "name": "Beacon Harness",
+    "category": "magic",
+    "icon": "crossroads:beacon_harness",
+	"sortnum": 11,
+    "pages": [
+        {
+            "type": "text",
+            "text": "A much stronger source of magic than the $(l:magic/arcane_extractor)Arcane Extractor$() is available in the form of the Beacon Harness. While running, it produces a constant beam of about power 512. The color of the beam is not constant, however, and changes over time. If you look at a $(l:magic/discovering_elements#color_chart)Color Chart$(), the color of the beam produced follows the rim of the chart in a circle. It goes in a complete loop once every 30 seconds. "
+        },
+		{
+            "type": "multiblock",
+            "anchor": "beacon_multiblock",
+            "name": "Beacon Harness",
+            "multiblock": {
+                "mapping": {
+                    "H": "crossroads:beacon_harness",
+                    "B": "minecraft:beacon"
+                },
+                "pattern": [
+                    [
+                        "H"
+                    ],
+                    [
+                        "0"
+                    ],
+                    [
+                        "B"
+                    ]
+                ],
+                "symmetrical": true,
+                "offset": [
+                    0,
+                    -1,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "text",
+            "text": "While it can produce very powerful beams, it has a stringent set of requirements. It must be placed 2 blocks above a beacon with no obstruction in between ($(l:magic/beacon_harness#beacon_multiblock)so beacon then airspace then harness$()). In the pattern the color follows, the beam emitted will always contain 2 or fewer basic elements. In order to keep it running, it needs to be supplied with the 1 basic element it isn't emitting (so if it's emitting a mixture of $(stability)STABILITY$() and $(potential)POTENTIAL$(), it requires pure $(energy)ENERGY$()). "
+        },
+        {
+            "type": "text",
+            "text": "Supplying it with an element it is emitting will cause it to shut down. It runs regardless of the inputted beam for the next 2 seconds after and while emitting a pure element, giving any system built to supply it a time margin for adjusting. The Beacon Harness starts in the shut down position. To turn it on, trigger it with redstone (it will keep running after the redstone turns off) and it will run after a 2 second cooldown."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:beacon_harness"
+        }
+    ],
+    "read_by_default": true
+}

@@ -1,0 +1,32 @@
+{
+    "name": "Early Terraforming",
+    "category": "alchemy",
+    "icon": "minecraft:grass",
+	"sortnum": 9,
+    "pages": [
+        {
+            "type": "spotlight",
+            "title": "Phelostogen",
+            "item": "crossroads:phial:1{\"0_am\": 25.0, am: 25.0, he: 8075.0}",
+            "anchor": "phelostogen",
+            "text": "Phelostogen's effect when released is very powerful, and very dangerous if mismanaged. When released, it expands in a cloud of flame (that eventually disappears after reaching a radius based on amount of Phelostogen released, maximum radius ~5 blocks). Everything the flame cloud touches is destroyed, without dropping items."
+        },
+        {
+            "type": "text",
+            "text": " If Phelostogen is released alongside $(l:alchemy/early_alchemy#waste_salt)Alchemical Salt$() it still releases a cloud of flame, but it does not damage anything in any way. If Phelostogen is released alongside $(l:alchemy/early_alchemy#waste_salt)Alchemical Salt$() and 1 or more other chemicals, it will perform the effects of the other chemicals at every point the cloud touches. For example, a mixture of Phelostogen, $(l:alchemy/early_alchemy#waste_salt)Alchemical Salt$(), and $(l:alchemy/strong_acids)Aqua Regia$() would destroy, and drop as an item, all bedrock in an area around where it was released, alongside damaging mobs."
+        },
+        {
+            "type": "spotlight",
+            "title": "Aether",
+            "item": "crossroads:phial:1{am: 25.0, \"1_am\": 25.0, he: 8075.0}",
+            "anchor": "aether",
+            "text": "Aether has a transformative effect. When released onto a block, it changes that single block into another. It turns rock type materials into Stone, soil type materials into Dirt and Grass, crystal type materials into Glass, and liquids into Water. It also changes the biome to plains in that one spot. "
+        },
+        {
+            "type": "text",
+            "text": "This also works in other dimensions. When released alongside $(l:alchemy/early_alchemy#quicksilver)Quicksilver$(), it instead places Grass. If Aether and Phelostogen were to be released together (with some $(l:alchemy/early_alchemy#waste_salt)Alchemical Salt$() of course) it would apply Aether's transformative effect over a larger area, terraforming the area around where it was released. By adding $(l:alchemy/early_alchemy#quicksilver)Quicksilver$() to the mix, it would also fill empty spaces with Grass."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

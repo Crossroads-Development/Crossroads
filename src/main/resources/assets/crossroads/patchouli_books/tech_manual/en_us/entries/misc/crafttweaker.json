@@ -1,0 +1,34 @@
+{
+    "name": "Crafttweaker Integration",
+    "category": "misc",
+    "icon": "minecraft:crafting_table",
+    "flag": "crossroads:document_craft_tweaker",
+	"sortnum": 11,
+    "pages": [
+        {
+            "type": "text",
+            "text": "There are currently 7 recipe types with CraftTweaker support: Arcane Extractor, Heat Exchangers, Fluid Cooling Chambers, Fusion Beams, Grindstones, the Detailed Crafter, and Heating Crucibles. All forms of integration will overwrite pre-existing recipes with the same input when using Add."
+        },
+        {
+            "type": "text",
+            "text": "The Arcane Extractor integration is at \"mods.crossroads.ArcaneExtractor\". addRecipe takes an IItemStack and four integers, these being input followed by produced energy, potential, stability, and void in that order. removeRecipe only takes an IItemStack. Both ignore metadata, and cannot use oredict."
+        },
+        {
+            "type": "text",
+            "text": "The Heat Exchanger is at \"mods.crossroads.EnvHeatSource\". addRecipe takes 2 IBlocks followed by 2 doubles, which are input, output, heat change, and temperature limit in that order. If heat change is negative, temperature limit is a lower bound instead of an upper bound. removeRecipe only takes an IBlock input. Both ignore block metadata and do not accept oredict. If either the input or output blocks do not have an item form (ex. most liquids, fire, etc.) then using IBlocks WILL NOT WORK! Instead, you need to use the methods at \"mods.crossroads.AdvEnvHeatSource\", which take IBlockStates instead of IBlocks. IBlockStates are specified like this: <block:minecraft:fire>, instead of <minecraft:fire>. Using IBlockStates requires that ContentTweaker (an official CraftTweaker addon) be installed."
+        },
+        {
+            "type": "text",
+            "text": "The Fluid Cooling Chamber is at \"mods.crossroads.FluidCoolingChamber\". addRecipe takes IItemStack output, ILiquidStack input, double maxTemp, double heatAdded in that order. removeRecipe only takes an ILiquidStack input."
+        },
+        {
+            "type": "text",
+            "text": "The Fusion Beam is at \"mods.crossroads.FusionBeam\". addRecipe takes IItemStack input, int minPower, IItemStack output, boolean voi. While the inputs and outputs are IItemStacks, they are interpreted as the equivelent blocks, with metadata equal to stack meta. voi controls whether it must be a VOID-FUSION beam. removeRecipe takes IItemStack input, boolean voi. If either input block does not have an item form (ex. most liquids, fire, etc.) then using IItemStacks WILL NOT WORK! Instead, you need to use the methods at \"mods.crossroads.AdvFusionBeam\", which take IBlockStates instead of IItemStacks. IBlockStates are specified like this: <block:minecraft:fire>, instead of <minecraft:fire>."
+        },
+        {
+            "type": "text",
+            "text": "Note that when using the IBlockState form of addRecipe/removeRecipe, there is a boolean parameter after the input IBlockState for whether metadata is ignored. Using IBlockStates requires that ContentTweaker (an official CraftTweaker addon) be installed.The Grindstone is at \"mods.crossroads.Grindstone\". addRecipe takes IItemStack/IOreDictEntry input, IIngredient output1, @Optional IIngredient output2, @Optional IIngredient output3. removeRecipe takes IItemStack/IOreDict input. Be careful when removing/overwriting recipes to match whether the original recipe used an ItemStack or an OreDict.The Heating Crucible is at \"mods.crossroads.HeatingCrucible\". All Heating Crucible recipes activate at 1000°C, which cannot be changed. addRecipe takes IItemStack/IOreDict input, ILiquidStack out, String texture. The texture String should map to a block texture which will be used to display on the crucible when filled with the input for this recipe. removeRecipe takes IItemStack/IOreDict input. Once again, be careful when removing/overwriting recipes to match oreDict/ItemStack with the original recipe. The Detailed Crafter integration can currently only remove recipes, it can not add them. Adding recipes to the Detailed Crafter via Crafttweaker will not be added in MC1.12, but will be in MC1.13+. The Detailed Crafter integration is at mods.crossroads.DetailedCrafter. There are two methods: removeTechnoRecipe and removeAlcRecipe. Both take an IItemStack, and remove all Detailed Crafter recipes that make the passed IItemStack. removeTechnoRecipe only removes Technomancy recipes, while removeAlcRecipe only removes Alchemy recipes."
+        }
+    ],
+    "read_by_default": true
+}

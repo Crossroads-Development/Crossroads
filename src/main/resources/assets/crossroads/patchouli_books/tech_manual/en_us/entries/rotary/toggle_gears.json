@@ -1,0 +1,24 @@
+{
+    "name": "Toggle Gears",
+    "category": "rotary",
+    "icon": "minecraft:redstone",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Toggle Gears allow you to connect and disconnect them from other gears with redstone. They are available for all gear materials, and are made like so:"
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:toggle_gear_gold"
+        },
+        {
+            "type": "text",
+            "text": "They will only connect while they have a redstone signal, so they can be used to split a gear system into two parts (though for both parts to function, both sides need a Master Axis) or to disconnect a machine. Only one can be fit into a blockspace, and it can only be placed on the ground, not walls or ceilings. It doesn't need to be on a solid block, however. A comparator can also be used to measure the energy of a Toggle Gear. "
+        },
+        {
+            "type": "text",
+            "text": "The equation for signal strength is (signal = 15 * speed^2 / 2) rounded down, and limited at 15. A Ratiator (part of the magic system) uses the formula (signal = |speed|/2). Even if a Toggle Gear does not have a redstone signal, it can still interact with Axles or an attached Master Axis."
+        }
+    ],
+    "read_by_default": true
+}

@@ -1,0 +1,26 @@
+{
+    "name": "READ ME FIRST",
+    "category": "basics",
+    "icon": "minecraft:book",
+    "priority": true,
+	"sortnum": -2,
+    "pages": [
+        {
+            "type": "text",
+            "text": "There are TWO versions of this guide book. They both contain the same information, and either one should be sufficient. The two versions are the Mysterious Journal and the Technician's Manual.$(br2)The Mysterious Journal contains lore, and multiple characters. The Technician's Manual is lore free, and only contains information. "
+        },
+        {
+            "type": "text",
+            "text": "The two versions can be crafted into one another in the crafting grid.$(br2)The Technician's Manual is recommended for people who simply want information, the Mysterious Journal is a more interesting (and often humorous) read that still provides information."
+        },
+        {
+            "type": "text",
+            "text": "It should be noted that there is some key information NOT MENTIONED in the Technician's Manual.$(br2)Specifically, there are several secret features that are hinted at in the Mysterious Journal through one of the characters in the book. There is NO MENTION of these features in the Technician's Manual."
+        },
+        {
+            "type": "text",
+            "text": "The Technician's Manual will often give real life scientific context to concepts used in Crossroads (and note where Crossroads diverges from real life)."
+        }
+    ],
+    "read_by_default": true
+}

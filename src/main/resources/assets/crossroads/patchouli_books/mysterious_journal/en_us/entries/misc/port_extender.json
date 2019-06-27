@@ -1,0 +1,21 @@
+{
+    "name": "Port Extender",
+    "category": "misc",
+    "icon": "essentials:port_extender",
+	"sortnum": 9,
+    "pages": [
+        {
+            "type": "text",
+            "text": "A Port Extender enables attaching more item inputs/outputs to one block. By attaching it to a block such as a chest, and orientating the Port Extender so the gray square on the front is going into the block, anything attached to the Port Extender will act as if it is connected to the block itself."
+        },
+        {
+            "type": "text",
+            "text": "Devices going into a Port Extender mimic attaching to the same side of the original block as they face into on the Port Extender, so if a hopper points into the top of a Port Extender pointed into a furnace, the hopper can insert items into the top of the Furnace. Note that this connection is one-way, that Port Extenders cannot be chained, and that this only works for item transfer, not any other type of connection (such as fluid)."
+        },
+        {
+            "type": "crafting",
+            "recipe": "essentials:port_extender"
+        }
+    ],
+    "read_by_default": true
+}

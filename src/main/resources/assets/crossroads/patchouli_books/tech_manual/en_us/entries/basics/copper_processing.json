@@ -1,0 +1,50 @@
+{
+    "name": "Copper Processing",
+    "category": "basics",
+    "icon": "crossroads:ingot_copper",
+	"sortnum": 5,
+    "pages": [
+        {
+            "type": "text",
+            "text": "In order that the instructions on processing copper properly are not spread thinly throughout various entries, in this entry I will explain the basics of copper processing. I will also include an example setup, which while certainly not the best, will work.$(br2)Native copper ore is found commonly near the surface, and drops 3 copper nuggets when mined."
+        },
+        {
+            "type": "text",
+            "text": "Normal copper ore is also very common, and is only found deeper down. Because you will need a lot of copper, it is imperative that you learn to process normal copper ore. It cannot be smelted in a normal furnace. The ore must be melted down in a $(l:heat/heating_crucible)Heating Crucible$() into molten copper.$(br2)Then, molten copper must be run through a $(l:heat/fluid_cooling_chamber)Fluid Cooling Chamber$() to cool it into ingots. When all's said and done, one copper ore will be enough for one copper ingot."
+        },
+        {
+            "type": "text",
+            "text": "However, you can run copper ore through a $(l:rotary/grindstone)Grindstone$() first to turn it into 2 copper dust (and a piece of sand). Each copper dust gives a full ingot worth of molten metal.$(br2)An example setup would be to have a $(l:basics/steam#steam_boiler)Steam Boiler$() heated by an $(l:heat/heat_exchanger#insulated_heat_exchanger)Insulated Heat Exchanger$() (placed directly below it). The $(l:basics/steam#steam_boiler)Steam Boiler$() produces steam, which powers a $(l:fluid/steam_turbine)Steam Turbine$() making rotary energy."
+        },
+        {
+            "type": "text",
+            "text": "The $(l:fluid/steam_turbine)Steam Turbine$() creates steam and $(l:basics/steam#distilled_water)distilled water$(), with the $(l:basics/steam#distilled_water)distilled water$() going back to the $(l:basics/steam#steam_boiler)Steam Boiler$() and the excess steam being fed back into the $(l:fluid/steam_turbine)Steam Turbine$(). The $(l:heat/heat_exchanger#insulated_heat_exchanger)Insulated Heat Exchanger$() is heated via flowing lava underneath, which turns to cobblestone when heat is produced. The cobblestone is broken by a $(l:rotary/rotary_drill)Rotary Drill$() powered by the $(l:fluid/steam_turbine)Steam Turbine$(), making room for more lava to flow."
+        },
+        {
+            "type": "text",
+            "text": "The $(l:fluid/steam_turbine)Steam Turbine$() also powers a $(l:rotary/grindstone)Grindstone$() producing copper dust and sand, and $(l:misc/sorting_hopper)Sorting Hoppers$() are used to separate out the sand. The copper dust goes into a $(l:heat/heating_crucible)Heating Crucible$(), which melts it down into molten copper. The $(heat/heating_crucible)Heating Crucible$() is heated by the $(l:heat/heat_exchanger#insulated_heat_exchanger)Insulated Heat Exchanger$() mentioned earlier through obsidian insulated heat cables, but so that the cables don't overheat, they also go past the $(l:heat/heating_crucible)Heating Crucible$() into a normal $(l:heat/heat_exchanger)Heat Exchanger$() to dump heat."
+        },
+        {
+            "type": "text",
+            "text": "The molten copper goes into a $(l:heat/fluid_cooling_chamber)Fluid Cooling Chamber$(), where it is turned into ingots. The $(l:heat/fluid_cooling_chamber)Fluid Cooling Chamber$() dumps heat through a cable into a normal $(l:heat/heat_exchanger)Heat Exchanger$()."
+        },
+        {
+            "type": "image",
+            "images": ["crossroads:textures/patchouli/copper_process.png"],
+            "title": "Copper Processing",
+            "text": "      An example setup",
+			"border": true
+        },
+        {
+            "type": "relations",
+            "entries": [
+                "basics/ores",
+                "basics/energy_overview",
+                "basics/heat",
+                "basics/steam",
+                "basics/rotary"
+            ]
+        }
+    ],
+    "read_by_default": true
+}

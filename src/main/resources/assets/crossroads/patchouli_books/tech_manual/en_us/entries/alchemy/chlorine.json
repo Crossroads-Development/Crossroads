@@ -1,0 +1,20 @@
+{
+    "name": "Chlorine Gas",
+    "category": "alchemy",
+    "icon": "crossroads:phial{21_am:1.0d,am:1.0d,he:273.0d}",
+	"sortnum": 6,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "crossroads:phial{21_am:69420.0d,am:69420.0d,he:4838088060.0d}",
+            "title": "Chlorine Gas",
+            "text": "Chlorine, a green gas, is an extremely potent weapon. When released, it effects a large area (radius affected by amount released), and any entity in the radius will have many serious status effects, including, but not limited to, Wither 4, Slowness 4, and Hunger 4. "
+        },
+        {
+            "type": "text",
+            "text": "Most anything hit with chlorine will shortly die without milk, making it very effective as a weapon when thrown in Glass Shells. Of course, it also works when released through a $(l:alchemy/laboratory_glassware#chemical_vent)Chemical Vent$()..."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

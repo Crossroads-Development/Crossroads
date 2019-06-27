@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.integration;
 
 import com.Da_Technomancer.crossroads.integration.JEI.ReagIngr;
 import com.Da_Technomancer.crossroads.integration.crafttweaker.CraftTweakerIntegration;
+import com.Da_Technomancer.crossroads.integration.patchouli.DataBuilder;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 
 import net.minecraftforge.fml.common.Loader;
@@ -22,6 +23,10 @@ public class ModIntegration{
 	public static void init(){
 		if(Loader.isModLoaded("jei")){
 			RecipeHolder.rebind();
+		}
+		if (Loader.isModLoaded("patchouli")) {
+			DataBuilder.registerFlags();
+			DataBuilder.registerDataValues();
 		}
 	}
 }

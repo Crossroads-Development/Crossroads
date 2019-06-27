@@ -1,0 +1,28 @@
+{
+    "name": "Discovering Elements",
+    "category": "magic",
+    "icon": "crossroads:color_chart",
+	"sortnum": 2,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The main use for magic are the effects of the different elements. You will have to discover the color of the different elements yourself for the most part, but there are several things that can help you. First of all, using an Omnimeter on any block that emits beams will tell you the color and elemental makeup of the last beam that block fired. "
+        },
+        {
+            "type": "text",
+            "text": "If the element is one you haven't scanned this way before, you will 'Discover' that element."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:color_chart",
+            "anchor": "color_chart",
+            "text": "The Color Chart is an informative GUI. The GUI is a color chart, and mousing over a point on the color chart tells you the RGB value of that point and the element of that point, IF you have already discovered that element with an Omnimeter. "
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:color_chart",
+            "text": "Any spots on the chart that are in black and white has an element you haven't discovered yet on it, so you should try to create a beam of that color and discover it."
+        }
+    ],
+    "read_by_default": true
+}

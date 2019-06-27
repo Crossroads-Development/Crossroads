@@ -1,0 +1,35 @@
+{
+    "name": "Introduction to Alchemy",
+    "category": "alchemy",
+    "priority": true,
+    "sortnum": -1,
+    "icon": "crossroads:phial",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Alchemy is divided into three tiers, or stages: $(l:alchemy/early_alchemy)Early Alchemy$(), $(l:alchemy/phil_stone)Philosopher's Stone$(), and $(l:alchemy/prac_stone)Practitioner's Stone$(). This entry is mainly about Early Alchemy. Most everything in Alchemy needs a material that can't be produced in a normal $(l:basics/paths)Detailed Crafter$(). Most alchemical materials have to be made in various chemical aparatus which will be explained in greater detail."
+        },
+        {
+            "type": "text",
+            "text": "With care, and attention to detail, producing materials like Densus or Chlorine is quite easy. Every type of ingredient that can go into alchemical glassware is a reagent. Any reagent can be viewed in JEI to see uses and recipes, as with any other item. Reagents in glassware can react with one another if all the needed ingredients are present. "
+        },
+        {
+            "type": "text",
+            "text": "Most reactions (alchemical recipes) require a certain temperature range in the glassware, and may require a catalyst (a reagent that has to be present for the reaction to procede, but which won't be consumed). For example, If redstone is heated above 360°C it will turn into 1 part $(l:alchemy/early_alchemy#quicksilver)quicksilver$() and 1 part sulfur dioxide for every 1 part of redstone heated. "
+        },
+        {
+            "type": "text",
+            "text": "This reaction is endothermic, which means that doing the reaction will cool down the glassware it happens in. The opposite is exothermic, which heats the glassware. Isothermic is rarer, and means the temperature doesn't change. Some reactions have an additional requirement: they may require the glassware they are in to be charged (shown by lightning bolts in the JEI reaction view). This will be covered in the following sections as well."
+        },
+        {
+            "type": "text",
+            "text": "Every reagent can exist in one of three phases: Solid, Liquid, or Gas. Heating a reagent above its boiling point (visible in JEI) will make it a gas, cooling it below its melting point makes it a solid, and making it in between makes it a liquid as you'd expect. The phases of matter can be used to separate out materials with different melting/boiling points. All three phases flow sideways in glassware, however only gasses can flow upwards, while only liquids and solids can flow downwards."
+        },
+        {
+            "type": "text",
+            "text": "If a reagent is in the solid phase, you can remove it in item form by right-clicking on the glassware."
+        }
+    ],
+    "read_by_default": true,
+	"advancement": "crossroads:crossroads/alchemy"
+}

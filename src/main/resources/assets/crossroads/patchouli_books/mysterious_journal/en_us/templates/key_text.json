@@ -1,0 +1,8 @@
+{
+	    "processor": "com.Da_Technomancer.crossroads.integration.patchouli.KeyTextProcessor",
+		"components": [
+			{
+				"type": "text", "text": "#text", "y": -5
+			}
+		]
+}

@@ -1,0 +1,19 @@
+{
+    "name": "Clockwork Stabilizer",
+    "category": "technomancy",
+    "icon": "crossroads:clock_stabilizer",
+	"sortnum": 2,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "crossroads:clock_stabilizer",
+            "text": "The Clockwork Stabilizer is like a Quartz Stabilizer, except instead of being set to a constant output power of 6 or 15, the output power is based on how much magic it currently stores. There is no practical limit on how much magic a Clockwork Stabilizer can store, and the output power is always 25% of how much magic it contains."
+        },
+        {
+            "type": "text",
+            "text": "All magic that enters will eventually leave and it will never overflow and waste magic. Placing one somewhere along a magic system lets it act as a sort of buffer in case magic production changes or pulses, and its ideal for large centralized magic supply systems."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

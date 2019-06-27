@@ -1,0 +1,18 @@
+{
+    "name": "Heating Chamber",
+    "category": "heat",
+    "icon": "crossroads:heating_chamber",
+	"sortnum": 1,
+    "pages": [
+        {
+            "type": "spotlight",
+			"item": "crossroads:heating_chamber",
+            "text": "The Heating Chamber is a heat powered furnace, which is faster than a regular furnace. While above 200°C it consumes -2°C/t, and while work towards cooking an item. It takes 50 ticks of being above 200°C (which do not need to be consecutive) to cook one item."
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:heating_chamber"
+        }
+    ],
+    "read_by_default": true
+}

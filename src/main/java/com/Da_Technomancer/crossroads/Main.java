@@ -5,6 +5,8 @@ import com.Da_Technomancer.crossroads.command.ResetPathCommand;
 import com.Da_Technomancer.crossroads.command.SpawnReagentCommand;
 import com.Da_Technomancer.crossroads.command.WorkspaceDimTeleport;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
+import com.Da_Technomancer.crossroads.integration.patchouli.DetailedCrafterTrigger;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -19,6 +21,8 @@ public final class Main{
 	public static final String MODID = "crossroads";
 	public static final String MODNAME = "Crossroads";
 	public static final String VERSION = "gradVERSION";
+
+	public static final DetailedCrafterTrigger DETAILEDTRIGGER = (DetailedCrafterTrigger) CriteriaTriggers.register(new DetailedCrafterTrigger());
 
 	static{
 		FluidRegistry.enableUniversalBucket();

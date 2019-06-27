@@ -1,0 +1,19 @@
+{
+    "name": "Arcane Extractor",
+    "category": "magic",
+    "icon": "crossroads:arcane_extractor",
+	"sortnum": 3,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Arcane Extractor is the crudest way to obtain magic. It has a front which can only be on the horizontal plane, and items can be inserted into any side with a hopper. The extractor destroys any item inserted almost instantly (1 item every 5 ticks), and produces a beam out the front side based on the item used.  "
+        },
+        {
+            "type": "crafting",
+            "recipe": "crossroads:arcane_extractor",
+            "title": " ",
+            "text": "Most items don't make any beam, and just get consumed. The beam exists for 5 ticks, then vanishes. Feeding it items with a hopper would make a pulsating beam as the hopper cannot feed it fast enough."
+        }
+    ],
+    "read_by_default": true
+}

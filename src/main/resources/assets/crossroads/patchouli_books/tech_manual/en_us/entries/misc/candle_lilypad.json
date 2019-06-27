@@ -1,0 +1,17 @@
+{
+    "name": "Candle Lilypad",
+    "category": "misc",
+    "icon": "essentials:candle_lilypad",
+	"sortnum": 4,
+    "pages": [
+        {
+            "type": "text",
+            "text": "A Candle Lilypad is a decorative block that functions as a lilypad while emitting the same amount of light as a torch (14)."
+        },
+        {
+            "type": "crafting",
+            "recipe": "essentials:candle_lilypad"
+        }
+    ],
+    "read_by_default": true
+}

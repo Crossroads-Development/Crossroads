@@ -1,0 +1,30 @@
+{
+    "name": "Gravity Plates",
+    "category": "alchemy",
+    "icon": "crossroads:densus_plate",
+	"sortnum": 10,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Two new materials, Densus and Anti-Densus have very interesting properties. They are both extremely dense, but Anti-Densus has negative density. Both can be crafted into plates in a Detailed Crafter."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:densus_plate",
+            "text": "Densus plates are very strong gravity plates that attract any entity in front of them. They do not affect anything behind them. They have a range of 64 blocks, and work through other blocks. The effects of multiple plates stack. Holding shift prevents Density Plates from affecting you."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:densus_plate:1",
+            "text": "Anti-Density Plates are the same, except they are repulsive instead of attractive."
+        },
+        {
+            "type": "spotlight",
+            "title": "Densus Insulation",
+            "item": "crossroads:heat_cable_copper_densus",
+            "text": "Densus can also be used as an insulator for (redstone) heat cables, and have zero heat loss due to its enourmous density. It also has a very high melting tolerance."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/alchemy"
+}

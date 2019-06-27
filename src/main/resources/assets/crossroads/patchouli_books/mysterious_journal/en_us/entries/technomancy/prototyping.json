@@ -1,0 +1,101 @@
+{
+    "name": "Guide to Prototyping",
+    "category": "technomancy",
+    "icon": "crossroads:prototyping_table",
+	"flag": "!crossroads:prototype_disabled",
+	"sortnum": 9,
+    "pages": [
+        {
+            "type": "text",
+            "flag": "crossroads:prototype_default",
+            "text": "Using prototyping it is possible to compact large, complicated builds into a single block space and copy them quickly and cheaply. In order to produce a Prototype, you need a Prototyping Table. Place it down somewhere. It affects a 16x16x16 cube. It is suggested that the entire area it affects be confined to 1 chunk for reasons that will become apparent with fields later on."
+        },
+        {
+            "type": "text",
+            "flag": "crossroads:prototype_consume",
+            "text": "Using prototyping it is possible to compact large, complicated builds into a single block space. In order to produce a Prototype, you need a Prototyping Table. Place it down somewhere. It affects a 16x16x16 cube. It is suggested that the entire area it affects be confined to 1 chunk for reasons that will become apparent with fields later on."
+        },
+        {
+            "type": "text",
+            "flag": "crossroads:prototype_device",
+            "text": "Using prototyping it is possible to compact large, complicated builds into a single block space for use in special Crossroads devices (by default they can be placed and used as parts of builds, but the configuration file has been changed).In order to produce a Prototype, you need a Prototyping Table. Place it down somewhere. It affects a 16x16x16 cube. It is suggested that the entire area it affects be confined to 1 chunk for reasons that will become apparent with fields later on."
+        },
+        {
+            "type": "detailed_crafting",
+			"recipe": "tile.prototyping_table",
+			"path": "technomancy",
+            "text": "There is a button in the GUI to visualize the affected area, and it can be rotated with a wrench."
+        },
+        {
+            "type": "spotlight",
+            "item": "crossroads:prototype",
+            "text": "A Prototype (the compacted design) can have 6 inputs/outputs (one per side of the block), and only certain things can go in/out of the Prototype (selected during construction). $(l:misc/ratiator)Ratiator$() signals, magic beams, heat, and rotary connections are the only things that can go in or out."
+        },
+        {
+            "type": "text",
+            "flag": "crossroads:prototype_default",
+            "text": "In refers to into the Prototype, out refers to outside the Prototype. In the port interface, select a side. This will be the side of the final Prototype that connects to this port, and the side of the port that connects to the Prototype. It should be noted that $(l:misc/ratiator)Ratiator$() signals do not pass through on there own in either direction, something must be connected."
+        },
+        {
+            "type": "text",
+            "flag": "crossroads:prototype_consume",
+            "text": "In refers to into the Prototype, out refers to outside the Prototype. In the port interface, select a side. This will be the side of the final Prototype that connects to this port, and the side of the port that connects to the Prototype. It should be noted that $(l:misc/ratiator)Ratiator$() signals to not pass through on there own in either direction, something must be connected."
+        },
+        {
+            "type": "text",
+            "flag": "crossroads:prototype_device",
+            "text": "In refers to into the Prototype, out refers to outside the Prototype. In the port interface, select a side. This will be the side of the port that connects to the device containing the Prototype. It should be noted that $(l:misc/ratiator)Ratiator$() signals to not pass through on there going into the Prototype, something must be connected."
+        },
+        {
+            "type": "text",
+            "text": "That is to say, for a $(l:misc/ratiator)Ratiator$() signal to go through, a $(l:misc/ratiator)Ratiator$() must be facing out of (reading) the output end. There can be a maximum of 6 ports, and only 1 port per side. Ports can be given a name in the GUI to help keep track of each one's purpose. To create the Prototype after building a design (complete with ports) in the design area, go into the Prototyping Table interface, supply it with 3 $(l:technomancy/ccc)copshowium$() ingots, and press the \"Prototype\" button."
+        },
+        {
+            "type": "text",
+            "flag": "crossroads:prototype_default",
+            "text": "This will copy the design (at only the cost of the ingots) and create a Prototype block. The Prototype can be copied by placing it in the slot in the right side of the interface, along with the number of $(l:technomancy/ccc)copshowium$() ingots required to produce it, and pressing the Prototype button to produce a duplicate. "
+        },
+        {
+            "type": "text",
+            "flag": "crossroads:prototype_consume",
+            "text": "This will destroy the design (by default it copies it, and it is possible to clone a Prototype, but the configuration file has been changed) and create a Prototype block. The contents of Prototypes are chunkloaded while the Prototype block itself is. There are a finite number of Prototypes that can be created (500), after which the Prototyping Table will refuse to produce any more."
+        },
+		{
+            "type": "text",
+            "flag": "|crossroads:prototype_default,crossroads:prototype_consume",
+            "text": "The contents of Prototypes are chunkloaded while the Prototype block itself is. There are a finite number of Prototypes that can be created (500), after which the Prototyping Table will refuse to produce (or copy) any more."
+        },
+        {
+            "type": "text",
+            "flag": "crossroads:prototype_device",
+            "text": "This will copy the design (at only the cost of the ingots) and create a Prototype block. The Prototype can be copied by placing it in the slot in the right side of the interface, along with the number of $(l:technomancy/ccc)copshowium$() ingots required to produce it, and pressing the Prototype button to produce a duplicate."
+        },
+        {
+            "type": "text",
+            "flag": "crossroads:prototype_device",
+            "text": "The contents of Prototypes are chunkloaded while in use. There are a finite number of Prototypes that can be created (500), after which the Prototyping Table will refuse to produce (or copy) any more."
+        },
+        {
+            "type": "text",
+            "text": "Slots can freed up by placing an unwanted Prototype in the slot in the Prototyping Table with a recycling icon to destroy the Prototype, free up a slot, and return the $(l:technomancy/ccc)copshowium$() ingots required to make it. Destroying the item in any way other than the recycle slot will NOT free up a slot. The slots are shared between all members of a server."
+        },
+        {
+            "type": "text",
+            "text": "There are certain blocks which are blacklisted from being part of a Prototype: other Prototype blocks (no nesting), Large Gears (a multiblock), Portals, and a few others. Things can be added to/removed from this list in the config (DO NOT allow nesting Prototypes or inserting Large Gears though). It is recommended that server owners/pack makers blacklist any multiblocks or ways of teleporting items/players/fluids into or out of the Prototype."
+        },
+        {
+            "type": "text",
+            "text": "There are a few devices which can have a Prototype socketed into them and are controlled by it. For those devices, a Prototype is inserted by crafting it with the device, and removed (and returned) by placing the device alone in the crafting grid. The devices which use a Prototype can be configured to accept magic from a $(l:technomancy/beam_cage_staff)Beam Cage$(). "
+        },
+        {
+            "type": "text",
+            "text": "The devices will have specific requirements for the contained Prototype (but will still accept a Prototype that violates a requirement, but just disable the feature that uses that requirement). There should be a Magic Input port on the East side, and if there is than the drained magic from a $(l:technomancy/beam_cage_staff)Beam Cage$() will be inserted into that port every 5 ticks. There should be a Magic Output port on the West side, and magic sent into it will return to a held $(l:technomancy/beam_cage_staff)Beam Cage$(). "
+        },
+        {
+            "type": "text",
+            "text": "Other requirements vary based on the device. The contained Prototype will be chunkloaded while the device is held. The current prototype devices are the $(l:technomancy/prototyped_pistol)Prototyped Pistol$() and the $(l:technomancy/prototyped_pistol)Prototyped Watch$()."
+        }
+    ],
+    "read_by_default": true,
+    "advancement": "crossroads:crossroads/technomancy"
+}

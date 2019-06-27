@@ -1,0 +1,7 @@
+{
+	"name": "Technomancy",
+	"description": "---",
+	"icon": "crossroads:mechanical_arm",
+	"flag": "crossroads:technomancy_enabled",
+	"sortnum": 6
+}

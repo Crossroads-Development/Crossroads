@@ -1,0 +1,11 @@
+{
+	    "processor": "com.Da_Technomancer.crossroads.integration.patchouli.ElementalProcessor",
+		"components": [
+			{
+				"type": "text", "text": "#text", "group": "text", "y": -5
+			},
+			{
+				"type": "text", "text": "You do not have this element yet. $(l:magic/discovering_elements)Discover it!$()", "group": "undiscovered"
+			}
+		]
+}
