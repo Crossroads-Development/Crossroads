@@ -1,42 +1,40 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.render.bakedModel.PrototypeBakedModel;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypeTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -51,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Prototype extends BlockContainer{
+public class Prototype extends ContainerBlock{
 
 	public Prototype(){
 		super(Material.IRON);
@@ -60,26 +58,26 @@ public class Prototype extends BlockContainer{
 		setRegistryName(name);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new PrototypeTileEntity();
 
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void initModel(){
 		StateMapperBase ignoreState = new StateMapperBase(){
 			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState IBlockState){
+			protected ModelResourceLocation getModelResourceLocation(BlockState IBlockState){
 				return PrototypeBakedModel.BAKED_MODEL;
 			}
 		};
@@ -92,13 +90,13 @@ public class Prototype extends BlockContainer{
 	}
 
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand){
+	public void tick(BlockState state, World worldIn, BlockPos pos, Random rand){
 		worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 	}
 
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
@@ -112,26 +110,26 @@ public class Prototype extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
+	public BlockState getExtendedState(BlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		Integer[] sides = new Integer[6];
 		PrototypePortTypes[] ports = ((PrototypeTileEntity) world.getTileEntity(pos)).getTypes();
 		for(int i = 0; i < 6; i++){
 			sides[i] = ports[i] == null ? null : ports[i].ordinal();
 		}
-		extendedBlockState = extendedBlockState.withProperty(Properties.PORT_TYPE, sides);
+		extendedBlockState = extendedBlockState.with(Properties.PORT_TYPE, sides);
 
 		return extendedBlockState;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		if(stack.hasTagCompound()){
 			tooltip.add("Name: " + stack.getTagCompound().getString("name"));
 			for(int i = 0; i < 6; i++){
 				if(stack.getTagCompound().hasKey("ttip" + i)){
-					tooltip.add(EnumFacing.byIndex(i).name().charAt(0) + EnumFacing.byIndex(i).toString().substring(1) + ": " + stack.getTagCompound().getString("ttip" + i));
+					tooltip.add(Direction.byIndex(i).name().charAt(0) + Direction.byIndex(i).toString().substring(1) + ": " + stack.getTagCompound().getString("ttip" + i));
 				}
 			}
 			if(advanced == ITooltipFlag.TooltipFlags.ADVANCED){
@@ -141,7 +139,7 @@ public class Prototype extends BlockContainer{
 	}
 
 	@Override
-	public boolean removedByPlayer(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, boolean canHarvest){
+	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean canHarvest){
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof PrototypeTileEntity){
 			if(worldIn.isRemote){
@@ -156,12 +154,12 @@ public class Prototype extends BlockContainer{
 	}
 
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, BlockState state, int fortune){
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof PrototypeTileEntity){
 			ItemStack drop = new ItemStack(Item.getItemFromBlock(this), 1, 0);
-			NBTTagCompound nbt = new NBTTagCompound();
+			CompoundNBT nbt = new CompoundNBT();
 			nbt.setInteger("index", ((PrototypeTileEntity) te).getIndex());
 			nbt.setString("name", ((PrototypeTileEntity) te).name);
 			for(int i = 0; i < 6; i++){
@@ -176,18 +174,18 @@ public class Prototype extends BlockContainer{
 	}
 
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, World world, BlockPos pos, PlayerEntity player){
 		//Otherwise it returns an invalid prototype/duplicate.
 		return ItemStack.EMPTY;
 	}
 
 	@Override
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos){
-		return ModConfig.allowPrototype.getInt() != -1 && ModConfig.allowPrototype.getInt() != 2 && super.canPlaceBlockAt(worldIn, pos);
+		return CrossroadsConfig.allowPrototype.getInt() != -1 && CrossroadsConfig.allowPrototype.getInt() != 2 && super.canPlaceBlockAt(worldIn, pos);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(!world.isRemote){
 			if(stack.hasTagCompound()){
 				PrototypeTileEntity te = (PrototypeTileEntity) world.getTileEntity(pos);
@@ -204,7 +202,7 @@ public class Prototype extends BlockContainer{
 					te.markDirty();
 					ModPackets.network.sendToAllAround(new SendNBTToClient(te.getUpdateTag(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 
-					for(EnumFacing side : EnumFacing.HORIZONTALS){
+					for(Direction side : Direction.HORIZONTALS){
 						onNeighborChange(world, pos, pos.offset(side));//Updates the redstone-in ports with initial values. 
 					}
 				}else{
@@ -213,7 +211,7 @@ public class Prototype extends BlockContainer{
 			}else{
 				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			}
-			if(placer instanceof EntityPlayer && ((EntityPlayer) placer).isCreative()){
+			if(placer instanceof PlayerEntity && ((PlayerEntity) placer).isCreative()){
 				//Prevent prototype duplication in creative.
 				placer.setHeldItem(placer.getActiveHand(), ItemStack.EMPTY);
 			}
@@ -221,7 +219,7 @@ public class Prototype extends BlockContainer{
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+	public void breakBlock(World worldIn, BlockPos pos, BlockState state){
 		worldIn.getTileEntity(pos).onChunkUnload();
 		super.breakBlock(worldIn, pos, state);
 	}
@@ -234,7 +232,7 @@ public class Prototype extends BlockContainer{
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.isRemote){
 			return;
 		}
@@ -244,12 +242,12 @@ public class Prototype extends BlockContainer{
 		}
 		PrototypeTileEntity prTe = (PrototypeTileEntity) te;
 		BlockPos dirPos = fromPos.subtract(pos);
-		EnumFacing dir = prTe.adjustSide(EnumFacing.getFacingFromVector(dirPos.getX(), dirPos.getY(), dirPos.getZ()), true);
+		Direction dir = prTe.adjustSide(Direction.getFacingFromVector(dirPos.getX(), dirPos.getY(), dirPos.getZ()), true);
 		if(prTe.getIndex() == -1){
 			return;
 		}
 		PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(prTe.getIndex());
-		WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+		ServerWorld worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
 			BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
 			relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());

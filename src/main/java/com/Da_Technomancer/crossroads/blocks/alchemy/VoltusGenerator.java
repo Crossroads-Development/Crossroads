@@ -1,25 +1,25 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.VoltusGeneratorTileEntity;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.world.World;
+import net.minecraft.block.BlockRenderType;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class VoltusGenerator extends BlockContainer{
+public class VoltusGenerator extends ContainerBlock{
 
 	public VoltusGenerator(){
 		super(Material.IRON);
@@ -27,27 +27,27 @@ public class VoltusGenerator extends BlockContainer{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setSoundType(SoundType.METAL);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Nullable
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new VoltusGeneratorTileEntity();
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("Converts Voltus into FE");
-		tooltip.add("Consumes: " + ModConfig.getConfigDouble(ModConfig.voltusUsage, true) + " Voltus per 1000FE");
+		tooltip.add("Consumes: " + ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.voltusUsage).get() + " Voltus per 1000FE");
 	}
 }

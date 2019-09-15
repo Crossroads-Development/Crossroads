@@ -10,10 +10,10 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.util.Direction;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,7 +32,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	}
 
 	@Override
-	public void onRedstoneChange(double prevValue, double newValue, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, double[] motData, MechanismTileEntity te){
+	public void onRedstoneChange(double prevValue, double newValue, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, double[] motData, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
 			te.getWorld().playSound(null, te.getPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
 			RotaryUtil.increaseMasterKey(true);
@@ -40,12 +40,12 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(Capability<?> cap, Direction capSide, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
 		return ((cap == Capabilities.COG_CAPABILITY && (te.redstoneIn != 0 ^ inverted)) || cap == Capabilities.AXLE_CAPABILITY) && side == capSide;
 	}
 
 	@Override
-	public void propogate(GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+	public void propogate(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 		//This mechanism should never be in the axle slot
 		if(side == null){
 			return;
@@ -78,15 +78,15 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		if((te.redstoneIn != 0) ^ inverted){
 			//Other internal gears
 			for(int i = 0; i < 6; i++){
-				if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, EnumFacing.byIndex(i), te.mats[i], EnumFacing.byIndex(i), te.axleAxis, te)){
-					te.axleHandlers[i].propogate(masterIn, key, RotaryUtil.getDirSign(side, EnumFacing.byIndex(i)) * handler.rotRatio, .5D, !handler.renderOffset);
+				if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, Direction.byIndex(i), te.mats[i], Direction.byIndex(i), te.axleAxis, te)){
+					te.axleHandlers[i].propogate(masterIn, key, RotaryUtil.getDirSign(side, Direction.byIndex(i)) * handler.rotRatio, .5D, !handler.renderOffset);
 				}
 			}
 
 
 			for(int i = 0; i < 6; i++){
 				if(i != side.getIndex() && i != side.getOpposite().getIndex()){
-					EnumFacing facing = EnumFacing.byIndex(i);
+					Direction facing = Direction.byIndex(i);
 					// Adjacent gears
 					TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
 					if(adjTE != null){
@@ -140,8 +140,8 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	private final float sHalfT = .5F / (1F + (float) Math.sqrt(2F));
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	@OnlyIn(Dist.CLIENT)
+	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(side == null){
 			return;
 		}
@@ -149,7 +149,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[side.getIndex()];
 
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(side == EnumFacing.DOWN ? 0 : side == EnumFacing.UP ? 180F : side == EnumFacing.NORTH || side == EnumFacing.EAST ? 90F : -90F, side.getAxis() == EnumFacing.Axis.Z ? 1 : 0, 0, side.getAxis() == EnumFacing.Axis.Z ? 0 : 1);
+		GlStateManager.rotate(side == Direction.DOWN ? 0 : side == Direction.UP ? 180F : side == Direction.NORTH || side == Direction.EAST ? 90F : -90F, side.getAxis() == Direction.Axis.Z ? 1 : 0, 0, side.getAxis() == Direction.Axis.Z ? 0 : 1);
 		float angle = handler.getAngle(partialTicks);
 		GlStateManager.translate(0, -0.4375F, 0);
 		GlStateManager.rotate((float) -side.getAxisDirection().getOffset() * angle, 0F, 1F, 0F);
@@ -158,7 +158,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 		if(inverted){
 			BufferBuilder vb = Tessellator.getInstance().getBuffer();
-			Minecraft.getMinecraft().renderEngine.bindTexture(ModelGearOctagon.RESOURCE);
+			Minecraft.getInstance().renderEngine.bindTexture(ModelGearOctagon.RESOURCE);
 			GlStateManager.color(1, 0, 0);
 
 			float radius = 2F / 16F;
@@ -180,7 +180,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			float lHalfT = .5F;
 			float tHeight = 1F / 16F;
 
-			Minecraft.getMinecraft().renderEngine.bindTexture(ModelGearOctagon.RESOURCE);
+			Minecraft.getInstance().renderEngine.bindTexture(ModelGearOctagon.RESOURCE);
 			BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 			GlStateManager.color(mat.getColor().getRed() / 255F, mat.getColor().getGreen() / 255F, mat.getColor().getBlue() / 255F);

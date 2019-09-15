@@ -1,22 +1,19 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.google.common.base.Predicate;
-import net.minecraft.block.BlockDispenser;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
-import net.minecraft.dispenser.IBehaviorDispenseItem;
+import net.minecraft.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -33,7 +30,7 @@ public class DampingPowder extends Item{
 		}
 	};
 
-	private static final IBehaviorDispenseItem DAMPING_DISPENSER_BEHAVIOR = new BehaviorDefaultDispenseItem(){
+	private static final IDispenseItemBehavior DAMPING_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){
 
 		/**
 		 * Dispense the specified stack, play the dispense sound and spawn particles.
@@ -43,7 +40,7 @@ public class DampingPowder extends Item{
 			stack.shrink(1);
 			List<Entity> ents = source.getWorld().getEntitiesInAABBexcluding(null, new AxisAlignedBB(source.getBlockPos()).grow(RANGE), FLAME_PREDICATE);
 			for(Entity ent : ents){
-				ent.setDead();
+				ent.remove();
 			}
 			if(!ents.isEmpty()){
 				source.getWorld().playSound(null, source.getBlockPos(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.BLOCKS, 1, 0);
@@ -64,24 +61,24 @@ public class DampingPowder extends Item{
 		String name = "damping_powder";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DAMPING_DISPENSER_BEHAVIOR);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
+		DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DAMPING_DISPENSER_BEHAVIOR);
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn){
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
 		ItemStack held = playerIn.getHeldItem(handIn);
 		held.shrink(1);
 		List<Entity> ents = worldIn.getEntitiesInAABBexcluding(playerIn, new AxisAlignedBB(playerIn.getPosition()).grow(RANGE), FLAME_PREDICATE);
 		for(Entity ent : ents){
-			ent.setDead();
+			ent.remove();
 		}
 		if(!ents.isEmpty()){
 			worldIn.playSound(null, playerIn.posX, playerIn.posY + playerIn.getEyeHeight(), playerIn.posZ, SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1, 0);
 		}
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, held);
+		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, held);
 	}
 
 	@Override

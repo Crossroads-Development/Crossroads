@@ -6,9 +6,9 @@ import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 
 /**
  * This command resets the player's chosen path(s), if any. 
@@ -28,18 +28,18 @@ public class ResetPathCommand extends CommandBase{
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
 		if(args == null || args.length > 1){
-			sender.sendMessage(new TextComponentString("Invalid # of arguments!"));
+			sender.sendMessage(new StringTextComponent("Invalid # of arguments!"));
 			return;
 		}
 		
-		EntityPlayerMP target = args.length == 1 ? server.getPlayerList().getPlayerByUsername(args[0]) : sender instanceof EntityPlayerMP ? ((EntityPlayerMP) sender) : null;
+		ServerPlayerEntity target = args.length == 1 ? server.getPlayerList().getPlayerByUsername(args[0]) : sender instanceof ServerPlayerEntity ? ((ServerPlayerEntity) sender) : null;
 		
 		if(target != null){
 			MiscUtil.getPlayerTag(target).removeTag("path");
 			StoreNBTToClient.syncNBTToClient(target, false);
-			target.sendMessage(new TextComponentString("Your path has been reset."));
+			target.sendMessage(new StringTextComponent("Your path has been reset."));
 		}else{
-			sender.sendMessage(new TextComponentString("Target player does not exist!"));
+			sender.sendMessage(new StringTextComponent("Target player does not exist!"));
 		}
 	}
 

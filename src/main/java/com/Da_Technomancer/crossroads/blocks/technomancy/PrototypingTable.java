@@ -1,55 +1,54 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class PrototypingTable extends BlockContainer{
+public class PrototypingTable extends ContainerBlock{
 	
 	public PrototypingTable(){
 		super(Material.IRON);
 		String name = "prototyping_table";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setHardness(3);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
 	}
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.withProperty(Properties.HORIZ_FACING, state.getValue(Properties.HORIZ_FACING).rotateY()));
+				worldIn.setBlockState(pos, state.with(Properties.HORIZ_FACING, state.get(Properties.HORIZ_FACING).rotateY()));
 			}
 			return true;
 		}
 		if(!worldIn.isRemote){
-			playerIn.openGui(Main.instance, GuiHandler.PROTOTYPING_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(Crossroads.instance, GuiHandler.PROTOTYPING_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}
@@ -60,25 +59,25 @@ public class PrototypingTable extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
+	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
+		return getDefaultState().with(Properties.HORIZ_FACING, (placer == null) ? Direction.NORTH : placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new PrototypingTableTileEntity();
 	}
 	
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getTileEntity(pos);
 		InventoryHelper.dropInventoryItems(world, pos, (InventoryTE) te);
 		super.breakBlock(world, pos, blockstate);
 	}
 	
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
@@ -87,12 +86,12 @@ public class PrototypingTable extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta & 3));
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(Properties.HORIZ_FACING, Direction.byHorizontalIndex(meta & 3));
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex();
+	public int getMetaFromState(BlockState state){
+		return state.get(Properties.HORIZ_FACING).getHorizontalIndex();
 	}
 }

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -15,7 +15,7 @@ public class FluidVoidTileEntity extends TileEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) mainHandler;
 		}
@@ -24,7 +24,7 @@ public class FluidVoidTileEntity extends TileEntity{
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
+	public boolean hasCapability(Capability<?> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return true;
 		}

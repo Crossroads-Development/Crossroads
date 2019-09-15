@@ -5,21 +5,21 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
 import com.Da_Technomancer.crossroads.items.alchemy.Phial;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
@@ -49,11 +49,11 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected int transferCapacity(){
-		return occupied ? florence ? ModItems.florenceFlaskGlass.getCapacity() : ModItems.phialGlass.getCapacity() : 0;
+		return occupied ? florence ? CrossroadsItems.florenceFlaskGlass.getCapacity() : CrossroadsItems.phialGlass.getCapacity() : 0;
 	}
 
 	private ItemStack getStoredItem(){
-		AbstractGlassware glasswareType = florence ? glass ? ModItems.florenceFlaskGlass : ModItems.florenceFlaskCrystal : glass ? ModItems.phialGlass : ModItems.phialCrystal;
+		AbstractGlassware glasswareType = florence ? glass ? CrossroadsItems.florenceFlaskGlass : CrossroadsItems.florenceFlaskCrystal : glass ? CrossroadsItems.phialGlass : CrossroadsItems.phialCrystal;
 		ItemStack flask = new ItemStack(glasswareType, 1);
 		glasswareType.setReagents(flask, contents);
 		return flask;
@@ -61,8 +61,8 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@Override
 	public void destroyChamber(float strength){
-		IBlockState state = world.getBlockState(pos);
-		world.setBlockState(pos, state.withProperty(Properties.ACTIVE, false).withProperty(Properties.CRYSTAL, false).withProperty(Properties.CONTAINER_TYPE, false));
+		BlockState state = world.getBlockState(pos);
+		world.setBlockState(pos, state.with(Properties.ACTIVE, false).with(Properties.CRYSTAL, false).with(Properties.CONTAINER_TYPE, false));
 		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
 		occupied = false;
 		florence = false;
@@ -74,7 +74,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		}
 	}
 
-	public void onBlockDestroyed(IBlockState state){
+	public void onBlockDestroyed(BlockState state){
 		if(occupied){
 			ItemStack out = getStoredItem();
 			this.contents = new ReagentMap();
@@ -94,13 +94,13 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	 */
 	@Nonnull
 	@Override
-	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, EntityPlayer player, EnumHand hand){
-		IBlockState state = world.getBlockState(pos);
+	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, PlayerEntity player, Hand hand){
+		BlockState state = world.getBlockState(pos);
 
 		if(occupied){
 			if(stack.isEmpty() && sneaking){
 				ItemStack flask = getStoredItem();
-				world.setBlockState(pos, state.withProperty(Properties.ACTIVE, false).withProperty(Properties.CRYSTAL, false).withProperty(Properties.CONTAINER_TYPE, false));
+				world.setBlockState(pos, state.with(Properties.ACTIVE, false).with(Properties.CRYSTAL, false).with(Properties.CONTAINER_TYPE, false));
 				occupied = false;
 				this.contents.clear();
 				dirtyReag = true;
@@ -118,7 +118,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			if(florence && contents.getTotalQty() != 0){
 				cableTemp = contents.getTempC();
 			}
-			world.setBlockState(pos, state.withProperty(Properties.ACTIVE, true).withProperty(Properties.CRYSTAL, !glass).withProperty(Properties.CONTAINER_TYPE, florence));
+			world.setBlockState(pos, state.with(Properties.ACTIVE, true).with(Properties.CRYSTAL, !glass).with(Properties.CONTAINER_TYPE, florence));
 			return ItemStack.EMPTY;
 		}
 
@@ -140,9 +140,9 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected void performTransfer(){
-		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() == ModBlocks.glasswareHolder && state.getValue(Properties.ACTIVE)){
-			EnumFacing side = EnumFacing.UP;
+		BlockState state = world.getBlockState(pos);
+		if(state.getBlock() == CrossroadsBlocks.glasswareHolder && state.get(Properties.ACTIVE)){
+			Direction side = Direction.UP;
 			TileEntity te = world.getTileEntity(pos.offset(side));
 			if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
 				return;
@@ -154,7 +154,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 				return;
 			}
 
-			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.getValue(EssentialsProperties.REDSTONE_BOOL))){
+			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.get(EssentialsProperties.REDSTONE_BOOL))){
 				correctReag();
 				markDirty();
 			}
@@ -162,14 +162,14 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		occupied = nbt.getBoolean("occupied");
 		florence = occupied && nbt.getBoolean("florence");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("occupied", occupied);
 		nbt.setBoolean("florence", florence);
@@ -189,13 +189,13 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if((side == null || side == EnumFacing.UP) && cap == Capabilities.CHEMICAL_CAPABILITY && occupied){
+	public <T> T getCapability(Capability<T> cap, Direction side){
+		if((side == null || side == Direction.UP) && cap == Capabilities.CHEMICAL_CAPABILITY && occupied){
 			return (T) handler;
 		}
-		if((side == null || side == EnumFacing.DOWN) && cap == Capabilities.HEAT_CAPABILITY){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getValue(Properties.CONTAINER_TYPE)){
+		if((side == null || side == Direction.DOWN) && cap == Capabilities.HEAT_CAPABILITY){
+			BlockState state = world.getBlockState(pos);
+			if(state.get(Properties.CONTAINER_TYPE)){
 				return (T) heatHandler;
 			}
 		}

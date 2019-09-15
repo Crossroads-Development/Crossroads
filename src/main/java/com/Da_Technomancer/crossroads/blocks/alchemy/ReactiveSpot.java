@@ -1,21 +1,20 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class ReactiveSpot extends BlockContainer{
+public class ReactiveSpot extends ContainerBlock{
 
 	public ReactiveSpot(){
 		super(Material.SPONGE);
@@ -23,37 +22,37 @@ public class ReactiveSpot extends BlockContainer{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(0);
-		ModBlocks.toRegister.add(this);
+		CrossroadsBlocks.toRegister.add(this);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new ReactiveSpotTileEntity();
 	}
 
 	@Override
 	@Nullable
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos){
+	public AxisAlignedBB getCollisionBoundingBox(BlockState blockState, IBlockAccess worldIn, BlockPos pos){
 		return NULL_AABB;
 	}
 
 	@Override
-	public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid){
+	public boolean canCollideCheck(BlockState state, boolean hitIfLiquid){
 		return false;
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state){
+	public boolean isFullCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
 		return BlockFaceShape.UNDEFINED;
 	}
 }

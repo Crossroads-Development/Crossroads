@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 public interface INbtReceiver{
 	
-	public void receiveNBT(NBTTagCompound nbt);
+	public void receiveNBT(CompoundNBT nbt);
 
 }

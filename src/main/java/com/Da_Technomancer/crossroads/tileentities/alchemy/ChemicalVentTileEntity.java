@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.HashSet;
@@ -12,7 +12,7 @@ import java.util.HashSet;
 public class ChemicalVentTileEntity extends TileEntity{
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return true;
 		}
@@ -21,7 +21,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) handler;
 		}
@@ -33,12 +33,12 @@ public class ChemicalVentTileEntity extends TileEntity{
 	private class AlchHandler implements IChemicalHandler{
 
 		@Override
-		public EnumTransferMode getMode(EnumFacing side){
+		public EnumTransferMode getMode(Direction side){
 			return EnumTransferMode.INPUT;
 		}
 
 		@Override
-		public EnumContainerType getChannel(EnumFacing side){
+		public EnumContainerType getChannel(Direction side){
 			return EnumContainerType.NONE;
 		}
 
@@ -53,7 +53,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 		}
 
 		@Override
-		public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
+		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
 			double callerTemp = reag.getTempK();
 
 			ReagentMap toRelease = new ReagentMap();
@@ -64,7 +64,7 @@ public class ChemicalVentTileEntity extends TileEntity{
 				ReagentStack r = reag.getStack(type);
 				if(!r.isEmpty()){
 					EnumMatterPhase phase = type.getPhase(HeatUtil.toCelcius(callerTemp));
-					if(ignorePhase || (phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp()))){
+					if(ignorePhase || (phase.flows() && (side != Direction.UP || phase.flowsDown()) && (side != Direction.DOWN || phase.flowsUp()))){
 						validIds.add(type.getId());
 					}
 				}

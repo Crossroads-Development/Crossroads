@@ -1,17 +1,17 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 import com.Da_Technomancer.crossroads.API.alchemy.*;
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -31,13 +31,13 @@ public class AcidAlchemyEffect implements IAlchEffect{
 
 	@Override
 	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
-		for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1F, pos.getY() + 1F, pos.getZ() + 1F), EntitySelectors.IS_ALIVE)){
+		for(LivingEntity e : world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1F, pos.getY() + 1F, pos.getZ() + 1F), EntityPredicates.IS_ALIVE)){
 			e.attackEntityFrom(ACID_DAMAGE, getDamage());
 		}
 
-		IBlockState state = world.getBlockState(pos);
+		BlockState state = world.getBlockState(pos);
 		if(state.getBlock() == Blocks.BEDROCK && isRegia()){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ModConfig.getConfigBool(ModConfig.bedrockDust, false) ? new ItemStack(ModItems.bedrockDust, 1) : new ItemStack(Blocks.BEDROCK, 1));
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), CrossroadsConfig.bedrockDust.get() ? new ItemStack(CrossroadsItems.bedrockDust, 1) : new ItemStack(Blocks.BEDROCK, 1));
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			return;
 		}

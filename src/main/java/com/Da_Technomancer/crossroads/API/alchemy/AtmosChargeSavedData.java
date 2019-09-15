@@ -1,18 +1,19 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
-import net.minecraft.nbt.NBTTagCompound;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class AtmosChargeSavedData extends WorldSavedData{
 
-	public static final String ID = Main.MODID + "_atmos";
+	public static final String ID = Crossroads.MODID + "_atmos";
 
 	public static int getCapacity(){
-		return ModConfig.getConfigInt(ModConfig.atmosCap, true);
+		return ((ForgeConfigSpec.IntValue) CrossroadsConfig.atmosCap).get();
 	}
 
 	public AtmosChargeSavedData(){
@@ -41,7 +42,7 @@ public class AtmosChargeSavedData extends WorldSavedData{
 		try{
 			data = (AtmosChargeSavedData) storage.getOrLoadData(AtmosChargeSavedData.class, ID);
 		}catch(NullPointerException e){
-			Main.logger.error("Failed AtmosChargeSavedData get due to null MapStorage", e);
+			Crossroads.logger.error("Failed AtmosChargeSavedData get due to null MapStorage", e);
 			return new AtmosChargeSavedData();//Blank storage that prevents actual read/write, but avoids a crash
 		}
 		if (data == null) {
@@ -54,12 +55,12 @@ public class AtmosChargeSavedData extends WorldSavedData{
 	private int atmosCharge;
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		atmosCharge = nbt.getInteger("atmos_charge");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		nbt.setInteger("atmos_charge", atmosCharge);
 		return nbt;
 	}

@@ -1,21 +1,21 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
-public class DetailedCrafterGuiContainer extends GuiContainer{
+public class DetailedCrafterGuiContainer extends ContainerScreen{
 
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/detailed_crafter.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/detailed_crafter.png");
 
-	public DetailedCrafterGuiContainer(InventoryPlayer playerInv, BlockPos pos, boolean fake){
+	public DetailedCrafterGuiContainer(PlayerInventory playerInv, BlockPos pos, boolean fake){
 		super(new DetailedCrafterContainer(playerInv, pos, fake));
 
 		xSize = 176;

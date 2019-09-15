@@ -4,14 +4,14 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -35,16 +35,16 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		return 1_000;
 	}
 
-	public NBTTagCompound getContentNBT(){
+	public CompoundNBT getContentNBT(){
 		if(contents.getTotalQty() == 0){
 			return null;
 		}
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		writeToNBT(nbt);
 		return nbt;
 	}
 
-	public void writeContentNBT(NBTTagCompound nbt){
+	public void writeContentNBT(CompoundNBT nbt){
 		contents = ReagentMap.readFromNBT(nbt);
 		dirtyReag = true;
 	}
@@ -64,7 +64,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
-				EnumFacing side = EnumFacing.byIndex(i);
+				Direction side = Direction.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
 				if(contents.getTotalQty() <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
 					continue;
@@ -89,7 +89,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) handler;
 		}
@@ -215,7 +215,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 					}
 					return outStack;
 				}catch(NullPointerException e){
-					Main.logger.log(Level.FATAL, "Alchemy Item/Reagent map error. Slot: " + slot + ", Stack: " + fakeInventory[slot], e);
+					Crossroads.logger.log(Level.FATAL, "Alchemy Item/Reagent map error. Slot: " + slot + ", Stack: " + fakeInventory[slot], e);
 				}
 			}
 
@@ -233,7 +233,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	private void destroyChamber(){
 		if(!broken){
 			broken = true;
-			IBlockState state = world.getBlockState(pos);
+			BlockState state = world.getBlockState(pos);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
 			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());

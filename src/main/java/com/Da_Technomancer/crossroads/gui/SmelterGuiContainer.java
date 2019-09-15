@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.SmelterContainer;
 import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class SmelterGuiContainer extends MachineGUI{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID, "textures/gui/container/heating_chamber_gui.png");
+	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID, "textures/gui/container/heating_chamber_gui.png");
 
 	public SmelterGuiContainer(IInventory playerInv, SmelterTileEntity te){
 		super(new SmelterContainer(playerInv, te));

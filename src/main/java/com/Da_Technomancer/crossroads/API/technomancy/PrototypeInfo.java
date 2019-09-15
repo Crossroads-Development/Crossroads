@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
@@ -47,7 +47,7 @@ public class PrototypeInfo{
 		this.chunk = chunk;
 	}
 	
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		for(int i = 0; i < 6; i++){
 			if(ports[i] != null){
 				nbt.setString("port" + i, ports[i].name());
@@ -58,7 +58,7 @@ public class PrototypeInfo{
 		return nbt;
 	}
 	
-	public static PrototypeInfo readFromNBT(NBTTagCompound nbt){
+	public static PrototypeInfo readFromNBT(CompoundNBT nbt){
 		PrototypePortTypes[] ports = new PrototypePortTypes[6];
 		BlockPos[] portPos = new BlockPos[6];
 		for(int i = 0; i < 6; i++){

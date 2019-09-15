@@ -4,10 +4,10 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -24,7 +24,7 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Progress: " + (int) (progress) + "/" + (int) REQUIRED);
 		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 	}
@@ -129,11 +129,11 @@ public class MillstoneTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}
-		if(cap == Capabilities.AXLE_CAPABILITY && side == EnumFacing.UP){
+		if(cap == Capabilities.AXLE_CAPABILITY && side == Direction.UP){
 			return (T) axleHandler;
 		}
 
@@ -141,7 +141,7 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return index > 0 && index < 4;
 	}
 
@@ -178,14 +178,14 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setDouble("prog", progress);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		progress = nbt.getDouble("prog");
 	}

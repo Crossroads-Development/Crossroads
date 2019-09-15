@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.essentials.packets.Message;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -46,7 +46,7 @@ public class SendDoubleArrayToServer extends Message<SendDoubleArrayToServer>{
 		return null;
 	}
 
-	public void processMessage(World world, String context, double[] message, BlockPos pos, EntityPlayerMP sendingPlayer){
+	public void processMessage(World world, String context, double[] message, BlockPos pos, ServerPlayerEntity sendingPlayer){
 		TileEntity te = world.getTileEntity(pos);
 
 		if(te instanceof IDoubleArrayReceiver){

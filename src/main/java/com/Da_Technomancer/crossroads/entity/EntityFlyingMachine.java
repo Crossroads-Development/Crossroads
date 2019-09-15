@@ -3,20 +3,20 @@ package com.Da_Technomancer.crossroads.entity;
 import com.Da_Technomancer.crossroads.API.packets.INbtReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityServer;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.item.EntityBoat;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.item.BoatEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.IndirectEntityDamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -44,15 +44,15 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 		Entity controller = getControllingPassenger();
 
 		if(world.isRemote){
-			if(controller != null && controller == Minecraft.getMinecraft().player){
-				if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindForward)){
+			if(controller != null && controller == Minecraft.getInstance().player){
+				if(GameSettings.isKeyDown(Minecraft.getInstance().gameSettings.keyBindForward)){
 					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) - (float) Math.PI / 20F);
-					NBTTagCompound nbt = new NBTTagCompound();
+					CompoundNBT nbt = new CompoundNBT();
 					nbt.setFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
 					ModPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
-				}else if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindBack)){
+				}else if(GameSettings.isKeyDown(Minecraft.getInstance().gameSettings.keyBindBack)){
 					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) + (float) Math.PI / 20F);
-					NBTTagCompound nbt = new NBTTagCompound();
+					CompoundNBT nbt = new CompoundNBT();
 					nbt.setFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
 					ModPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
 				}
@@ -111,16 +111,16 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 		if(isEntityInvulnerable(source)){
 			return false;
 		}else if(!world.isRemote && !isDead){
-			if(source instanceof EntityDamageSourceIndirect && source.getTrueSource() != null && this.isPassenger(source.getTrueSource())){
+			if(source instanceof IndirectEntityDamageSource && source.getTrueSource() != null && this.isPassenger(source.getTrueSource())){
 				return false;
 			}else{
 				damage += amount * 10F;
 				markVelocityChanged();
-				boolean flag = source.getTrueSource() instanceof EntityPlayer && ((EntityPlayer) source.getTrueSource()).capabilities.isCreativeMode;
+				boolean flag = source.getTrueSource() instanceof PlayerEntity && ((PlayerEntity) source.getTrueSource()).capabilities.isCreativeMode;
 
 				if(flag || damage > 40){
 					if(!flag && world.getGameRules().getBoolean("doEntityDrops")){
-						dropItemWithOffset(ModItems.flyingMachine, 1, 0.0F);
+						dropItemWithOffset(CrossroadsItems.flyingMachine, 1, 0.0F);
 					}
 
 					setDead();
@@ -135,7 +135,7 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 		return false;
 	}
 
-	public boolean processInitialInteract(EntityPlayer player, EnumHand hand){
+	public boolean processInitialInteract(PlayerEntity player, Hand hand){
 		if(player.isSneaking()){
 			return false;
 		}else{
@@ -164,7 +164,7 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 
 	@Override
 	public void applyEntityCollision(Entity entityIn){
-		if(entityIn instanceof EntityBoat){
+		if(entityIn instanceof BoatEntity){
 			if(entityIn.getEntityBoundingBox().minY < getEntityBoundingBox().maxY){
 				super.applyEntityCollision(entityIn);
 			}
@@ -190,17 +190,17 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt){
+	protected void readEntityFromNBT(CompoundNBT nbt){
 		damage = nbt.getInteger("dam");
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt){
+	protected void writeEntityToNBT(CompoundNBT nbt){
 		nbt.setInteger("dam", damage);
 	}
 
 	@Override
-	public void receiveNBT(NBTTagCompound nbt){
+	public void receiveNBT(CompoundNBT nbt){
 		if(!world.isRemote){
 			dataManager.set(GRAV_PLATE_ANGLE, nbt.getFloat("ang"));
 		}

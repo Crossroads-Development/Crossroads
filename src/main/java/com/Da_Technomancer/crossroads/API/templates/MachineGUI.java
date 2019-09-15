@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.IInventory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public abstract class MachineGUI extends GuiContainer{
+public abstract class MachineGUI extends ContainerScreen{
 
 	protected InventoryTE te;
 	protected IInventory playerInv;

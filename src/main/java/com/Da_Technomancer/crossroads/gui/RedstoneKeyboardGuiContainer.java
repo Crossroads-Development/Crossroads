@@ -8,11 +8,10 @@ import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToServer;
 import com.Da_Technomancer.crossroads.gui.container.BlankContainer;
-import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 
-public class RedstoneKeyboardGuiContainer extends GuiContainer{
+public class RedstoneKeyboardGuiContainer extends ContainerScreen{
 
 	private final RedstoneKeyboardTileEntity te;
 	private TextBarGuiObject textBar;

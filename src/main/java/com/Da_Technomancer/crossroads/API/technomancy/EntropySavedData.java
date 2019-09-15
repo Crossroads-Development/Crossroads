@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.Main;
-import net.minecraft.nbt.NBTTagCompound;
+import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
@@ -14,7 +14,7 @@ import net.minecraft.world.storage.WorldSavedData;
  */
 public class EntropySavedData extends WorldSavedData{
 
-	public static final String ID = Main.MODID + "_flux";
+	public static final String ID = Crossroads.MODID + "_entropy";
 	public static final int MAX_VALUE = 100_000;
 	//Temporal Entropy is able to slightly go above the "official" maximum value for playability. The ability of entropy to go over the "maximum" is never displayed
 	private static final int OVERFLOW_MAX = (int) (MAX_VALUE * 1.05D);
@@ -86,7 +86,7 @@ public class EntropySavedData extends WorldSavedData{
 		try{
 			 data = (EntropySavedData) storage.getOrLoadData(EntropySavedData.class, ID);
 		}catch(NullPointerException e){
-			Main.logger.error("Failed EntropicSavedData get due to null MapStorage", e);
+			Crossroads.logger.error("Failed EntropicSavedData get due to null MapStorage", e);
 			return new EntropySavedData();//Blank storage that prevents actual read/write, but avoids a crash
 		}
 
@@ -100,12 +100,12 @@ public class EntropySavedData extends WorldSavedData{
 	private int temporalEntropy;
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		temporalEntropy = nbt.getInteger("flux");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		nbt.setInteger("flux", temporalEntropy);
 		return nbt;
 	}

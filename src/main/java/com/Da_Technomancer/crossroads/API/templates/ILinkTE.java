@@ -3,13 +3,13 @@ package com.Da_Technomancer.crossroads.API.templates;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
-import com.Da_Technomancer.crossroads.items.ModItems;
-import net.minecraft.entity.player.EntityPlayer;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public interface ILinkTE extends ILongReceiver{
 	public static final byte CLEAR_PACKET_ID = 9;
 
 	public static boolean isLinkTool(ItemStack stack){
-		return stack.getItem() == ModItems.linkingTool;
+		return stack.getItem() == CrossroadsItems.linkingTool;
 	}
 
 	/**
@@ -68,20 +68,20 @@ public interface ILinkTE extends ILongReceiver{
 	 * @param player The calling player, for sending chat messages
 	 * @return Whether the operation succeeded
 	 */
-	public default boolean link(ILinkTE endpoint, EntityPlayer player){
+	public default boolean link(ILinkTE endpoint, PlayerEntity player){
 		ArrayList<BlockPos> links = getLinks();
 		BlockPos linkPos = endpoint.getTE().getPos().subtract(getTE().getPos());
 		if(links.contains(linkPos)){
-			player.sendMessage(new TextComponentString("Device already linked; Canceling linking"));
+			player.sendMessage(new StringTextComponent("Device already linked; Canceling linking"));
 		}else if(links.size() < getMaxLinks()){
 			links.add(linkPos);
 			BlockPos tePos = getTE().getPos();
 			ModPackets.network.sendToAllAround(new SendLongToClient(LINK_PACKET_ID, linkPos.toLong(), tePos), new NetworkRegistry.TargetPoint(getTE().getWorld().provider.getDimension(), tePos.getX(), tePos.getY(), tePos.getZ(), 512));
 			getTE().markDirty();
-			player.sendMessage(new TextComponentString("Linked device at " + getTE().getPos() + " to send to " + endpoint.getTE().getPos()));
+			player.sendMessage(new StringTextComponent("Linked device at " + getTE().getPos() + " to send to " + endpoint.getTE().getPos()));
 			return true;
 		}else{
-			player.sendMessage(new TextComponentString("All " + getMaxLinks() + " links already occupied; Canceling linking"));
+			player.sendMessage(new StringTextComponent("All " + getMaxLinks() + " links already occupied; Canceling linking"));
 		}
 		return false;
 	}
@@ -92,9 +92,9 @@ public interface ILinkTE extends ILongReceiver{
 	 * @param player The current player   
 	 * @return The possibly modified wrench
 	 */
-	public default ItemStack wrench(ItemStack wrench, EntityPlayer player){
+	public default ItemStack wrench(ItemStack wrench, PlayerEntity player){
 		if(player.isSneaking()){
-			player.sendMessage(new TextComponentString("Clearing links"));
+			player.sendMessage(new StringTextComponent("Clearing links"));
 			clearLinks();
 		}else if(wrench.hasTagCompound() && wrench.getTagCompound().hasKey(POS_NBT) && wrench.getTagCompound().getInteger(DIM_NBT) == player.world.provider.getDimension()){
 			BlockPos prev = BlockPos.fromLong(wrench.getTagCompound().getLong(POS_NBT));
@@ -104,19 +104,19 @@ public interface ILinkTE extends ILongReceiver{
 				if(prev.distanceSq(getTE().getPos()) <= ((ILinkTE) te).getRange() * ((ILinkTE) te).getRange()){
 					((ILinkTE) te).link(this, player);
 				}else{
-					player.sendMessage(new TextComponentString("Out of range; Canceling linking"));
+					player.sendMessage(new StringTextComponent("Out of range; Canceling linking"));
 				}
 			}else{
-				player.sendMessage(new TextComponentString("Invalid pair; Canceling linking"));
+				player.sendMessage(new StringTextComponent("Invalid pair; Canceling linking"));
 			}
 		}else if(canBeginLinking()){
 			if(!wrench.hasTagCompound()){
-				wrench.setTagCompound(new NBTTagCompound());
+				wrench.setTagCompound(new CompoundNBT());
 			}
 
 			wrench.getTagCompound().setLong(POS_NBT, getTE().getPos().toLong());
 			wrench.getTagCompound().setInteger(DIM_NBT, getTE().getWorld().provider.getDimension());
-			player.sendMessage(new TextComponentString("Beginning linking"));
+			player.sendMessage(new StringTextComponent("Beginning linking"));
 			return wrench;
 		}
 

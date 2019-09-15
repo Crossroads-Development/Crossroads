@@ -5,12 +5,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.heat.CableThemes;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
@@ -30,8 +30,8 @@ public class ConduitModel implements IModel{
 		ArrayList<ResourceLocation> textures = new ArrayList<>();
 		for(HeatInsulators insul : HeatInsulators.values()){
 			for(CableThemes theme : CableThemes.values()){
-				textures.add(new ResourceLocation(Main.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + theme.name()));
-				textures.add(new ResourceLocation(Main.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + theme.name() + "-redstone"));
+				textures.add(new ResourceLocation(Crossroads.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + theme.name()));
+				textures.add(new ResourceLocation(Crossroads.MODID, "blocks/heatcable/" + insul.name().toLowerCase() + '-' + theme.name() + "-redstone"));
 			}
 		}
 		return ImmutableSet.copyOf(textures);

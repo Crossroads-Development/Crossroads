@@ -4,14 +4,14 @@ import com.Da_Technomancer.crossroads.API.templates.FluidGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.IGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
 public class FluidCoolerGuiContainer extends MachineGUI{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/container/fluid_cooler_gui.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/fluid_cooler_gui.png");
 
 	public FluidCoolerGuiContainer(IInventory playerInv, InventoryTE te){
 		super(new FluidCoolerContainer(playerInv, te));

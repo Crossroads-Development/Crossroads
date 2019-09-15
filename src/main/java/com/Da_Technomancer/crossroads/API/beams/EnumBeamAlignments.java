@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.effects.*;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
 
 import javax.annotation.Nullable;
 import java.awt.*;

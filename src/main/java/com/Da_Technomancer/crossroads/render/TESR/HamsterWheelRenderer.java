@@ -1,32 +1,32 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.awt.*;
 
-public class HamsterWheelRenderer extends TileEntitySpecialRenderer<HamsterWheelTileEntity>{
+public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEntity>{
 
-	private static final ResourceLocation textureHam = new ResourceLocation(Main.MODID, "textures/model/hamster.png");
+	private static final ResourceLocation textureHam = new ResourceLocation(Crossroads.MODID, "textures/model/hamster.png");
 
 	@Override
 	public void render(HamsterWheelTileEntity wheel, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		World world = wheel.getWorld();
 		BlockPos pos = wheel.getPos();
-		if(!world.isBlockLoaded(pos, false) || world.getBlockState(pos).getBlock() != ModBlocks.hamsterWheel){
+		if(!world.isBlockLoaded(pos, false) || world.getBlockState(pos).getBlock() != CrossroadsBlocks.hamsterWheel){
 			return;
 		}
-		EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
+		Direction facing = world.getBlockState(pos).get(Properties.HORIZ_FACING);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();

@@ -1,0 +1,5 @@
+This package (the com.Da_Technomancer.crossroads.python package) and its subdirectories are not included in the buildpath, and are not included in any compiled build
+
+This package is for storing helpful python scripts for development without directly impacting the compiled build.
+
+Do not reference any file in this package and its subdirectories outside this package.

@@ -9,25 +9,25 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.ITeleporter;
@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GatewayFrameTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class GatewayFrameTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE{
 
 	public static final int FLUX_MAINTAIN = 1;
 	public static final int FLUX_TRANSPORT = 16;
@@ -57,15 +57,15 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
-		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() == ModBlocks.gatewayFrame && state.getValue(EssentialsProperties.FACING).getAxis() == EnumFacing.Axis.Y){
+		BlockState state = world.getBlockState(pos);
+		if(state.getBlock() == CrossroadsBlocks.gatewayFrame && state.get(EssentialsProperties.FACING).getAxis() == Direction.Axis.Y){
 			BlockPos target = dialedCoord();
 			if(target != null){
 				chat.add("Dialed: " + target.getX() + ", " + target.getY() + ", " + target.getZ());
@@ -83,7 +83,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 				}
 
 				cacheValid = false;
-				if(world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
+				if(world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis() == Axis.Y){
 					if(owner != null && element != null && getAlignment() != null){
 						Integer dim = null;
 						switch(element){
@@ -104,11 +104,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 						}
 
 						if(dim != null){
-							world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.UP), 2);
+							world.setBlockState(pos, CrossroadsBlocks.gatewayFrame.getDefaultState().with(EssentialsProperties.FACING, Direction.UP), 2);
 
 							EntropySavedData.addEntropy(world, BeamManager.BEAM_TIME * FLUX_MAINTAIN);
 
-							List<Entity> toTransport = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() - 1, pos.getY() - 3, pos.getZ() - 1, pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1), EntitySelectors.IS_ALIVE);
+							List<Entity> toTransport = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() - 1, pos.getY() - 3, pos.getZ() - 1, pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1), EntityPredicates.IS_ALIVE);
 							if(!toTransport.isEmpty()){
 								int currentDim = world.provider.getDimension();
 
@@ -127,10 +127,10 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 											EntropySavedData.addEntropy(world, FLUX_TRANSPORT);
 
 
-											if(ent instanceof EntityPlayerMP){
-												playerList.transferPlayerToDimension((EntityPlayerMP) ent, dim, porter);
+											if(ent instanceof ServerPlayerEntity){
+												playerList.transferPlayerToDimension((ServerPlayerEntity) ent, dim, porter);
 											}else{
-												playerList.transferEntityToWorld(ent, currentDim, (WorldServer) world, DimensionManager.getWorld(dim), porter);
+												playerList.transferEntityToWorld(ent, currentDim, (ServerWorld) world, DimensionManager.getWorld(dim), porter);
 											}
 										}
 									}else{
@@ -143,10 +143,10 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 								}
 							}
 						}else{
-							world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.DOWN), 2);
+							world.setBlockState(pos, CrossroadsBlocks.gatewayFrame.getDefaultState().with(EssentialsProperties.FACING, Direction.DOWN), 2);
 						}
 					}else{
-						world.setBlockState(pos, ModBlocks.gatewayFrame.getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.DOWN), 2);
+						world.setBlockState(pos, CrossroadsBlocks.gatewayFrame.getDefaultState().with(EssentialsProperties.FACING, Direction.DOWN), 2);
 					}
 				}
 				element = null;
@@ -170,13 +170,13 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 			return cached;
 		}
 		cacheValid = true;
-		BlockPos midPos = pos.offset(EnumFacing.DOWN, 2);
-		IBlockState baseState = ModBlocks.gatewayFrame.getDefaultState();
-		if(world.getBlockState(midPos.offset(EnumFacing.EAST, 2)) == baseState.withProperty(EssentialsProperties.FACING, EnumFacing.WEST) && world.getBlockState(midPos.offset(EnumFacing.WEST, 2)) == baseState.withProperty(EssentialsProperties.FACING, EnumFacing.EAST)){
+		BlockPos midPos = pos.offset(Direction.DOWN, 2);
+		BlockState baseState = CrossroadsBlocks.gatewayFrame.getDefaultState();
+		if(world.getBlockState(midPos.offset(Direction.EAST, 2)) == baseState.with(EssentialsProperties.FACING, Direction.WEST) && world.getBlockState(midPos.offset(Direction.WEST, 2)) == baseState.with(EssentialsProperties.FACING, Direction.EAST)){
 			cached = Axis.X;
 			return Axis.X;
 		}
-		if(world.getBlockState(midPos.offset(EnumFacing.NORTH, 2)) == baseState.withProperty(EssentialsProperties.FACING, EnumFacing.SOUTH) && world.getBlockState(midPos.offset(EnumFacing.SOUTH, 2)) == baseState.withProperty(EssentialsProperties.FACING, EnumFacing.NORTH)){
+		if(world.getBlockState(midPos.offset(Direction.NORTH, 2)) == baseState.with(EssentialsProperties.FACING, Direction.SOUTH) && world.getBlockState(midPos.offset(Direction.SOUTH, 2)) == baseState.with(EssentialsProperties.FACING, Direction.NORTH)){
 			cached = Axis.Z;
 			return Axis.Z;
 		}
@@ -192,25 +192,25 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 			return null;
 		}
 		int[] coords = new int[3];
-		TileEntity te = world.getTileEntity(pos.offset(EnumFacing.DOWN, 2).offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align), 3));
-		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align))){
-			coords[0] = (int) Math.round(te.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align)).getMotionData()[0]);
+		TileEntity te = world.getTileEntity(pos.offset(Direction.DOWN, 2).offset(Direction.getFacingFromAxis(AxisDirection.NEGATIVE, align), 3));
+		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, Direction.getFacingFromAxis(AxisDirection.POSITIVE, align))){
+			coords[0] = (int) Math.round(te.getCapability(Capabilities.AXLE_CAPABILITY, Direction.getFacingFromAxis(AxisDirection.POSITIVE, align)).getMotionData()[0]);
 		}
-		te = world.getTileEntity(pos.offset(EnumFacing.DOWN, 2).offset(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, align), 3));
-		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align))){
-			coords[2] = (int) Math.round(te.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, align)).getMotionData()[0]);
+		te = world.getTileEntity(pos.offset(Direction.DOWN, 2).offset(Direction.getFacingFromAxis(AxisDirection.POSITIVE, align), 3));
+		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, Direction.getFacingFromAxis(AxisDirection.NEGATIVE, align))){
+			coords[2] = (int) Math.round(te.getCapability(Capabilities.AXLE_CAPABILITY, Direction.getFacingFromAxis(AxisDirection.NEGATIVE, align)).getMotionData()[0]);
 		}
-		te = world.getTileEntity(pos.offset(EnumFacing.UP));
-		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN)){
-			coords[1] = (int) Math.round(te.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN).getMotionData()[0]);
+		te = world.getTileEntity(pos.offset(Direction.UP));
+		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)){
+			coords[1] = (int) Math.round(te.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN).getMotionData()[0]);
 		}
 
 		return new BlockPos(coords[0], coords[1], coords[2]);
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
+	public boolean hasCapability(Capability<?> cap, Direction side){
+		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis() == Axis.Y){
 			return true;
 		}
 
@@ -219,8 +219,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis() == Axis.Y){
+	public <T> T getCapability(Capability<T> cap, Direction side){
+		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis() == Axis.Y){
 			return (T) magicHandler;
 		}
 
@@ -228,7 +228,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		if(owner != null){
 			owner.writeToNBT(nbt, "own");
@@ -243,7 +243,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		owner = FlexibleGameProfile.readFromNBT(nbt, "own", world.getMinecraftServer() == null ? null : world.getMinecraftServer().getPlayerProfileCache());
 		if(owner != null && owner.isNewlyCompleted()){
@@ -257,7 +257,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 		private final double coordY;
 		private final double coordZ;
 
-		public GatewayTeleporter(WorldServer worldIn, double coordXIn, double coordYIn, double coordZIn){
+		public GatewayTeleporter(ServerWorld worldIn, double coordXIn, double coordYIn, double coordZIn){
 			coordX = coordXIn;
 			coordY = coordYIn;
 			coordZ = coordZIn;
@@ -270,8 +270,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickable, IIn
 			entity.motionX = 0;
 			entity.motionY = 0;
 			entity.motionZ = 0;
-			if(entity instanceof EntityPlayer){
-				((EntityPlayer) entity).addExperienceLevel(0);
+			if(entity instanceof PlayerEntity){
+				((PlayerEntity) entity).addExperienceLevel(0);
 			}
 		}
 	}

@@ -2,11 +2,11 @@ package com.Da_Technomancer.crossroads.dimensions;
 
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.WorldServer;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.DimensionManager;
@@ -17,7 +17,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	//then if the folder for the prototype dimension is deleted, everything should work and all existing prototypes
 	//will cleanly self-destruct. 
 
-	public static final String PROTOTYPE_ID = Main.MODID + "_prototype";
+	public static final String PROTOTYPE_ID = Crossroads.MODID + "_prototype";
 	private static PrototypeWorldSavedData instance;
 
 	public PrototypeWorldSavedData(){
@@ -43,7 +43,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 			return instance;
 		}
 
-		WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+		ServerWorld world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		if(world == null){
 			DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 			world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
@@ -74,7 +74,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	public void markDirty(){
 		setDirty(true);
 
-		WorldServer world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+		ServerWorld world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		if(world == null){
 			DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 			world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
@@ -85,7 +85,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		int length = nbt.getInteger("length");
 		for(int i = 0; i < length; i++){
 			prototypes.add(nbt.hasKey("pro" + i) ? PrototypeInfo.readFromNBT(nbt.getCompoundTag("pro" + i)) : null);
@@ -93,12 +93,12 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		nbt.setInteger("length", prototypes.size());
 		int i = 0;
 		for(PrototypeInfo entry : prototypes){
 			if(entry != null){
-				nbt.setTag("pro" + i, entry.writeToNBT(new NBTTagCompound()));
+				nbt.setTag("pro" + i, entry.writeToNBT(new CompoundNBT()));
 			}
 			i++;
 		}

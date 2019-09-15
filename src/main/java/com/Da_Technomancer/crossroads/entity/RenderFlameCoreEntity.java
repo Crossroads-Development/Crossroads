@@ -1,22 +1,22 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class RenderFlameCoreEntity extends Render<EntityFlameCore>{
+public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/particles/flame.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/particles/flame.png");
 
-	protected RenderFlameCoreEntity(RenderManager renderManager){
+	protected RenderFlameCoreEntity(EntityRendererManager renderManager){
 		super(renderManager);
 	}
 

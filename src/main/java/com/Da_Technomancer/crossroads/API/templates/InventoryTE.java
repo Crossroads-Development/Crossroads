@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -29,11 +29,11 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(!inventory[i].isEmpty()){
-				NBTTagCompound stackTag = new NBTTagCompound();
+				CompoundNBT stackTag = new CompoundNBT();
 				inventory[i].writeToNBT(stackTag);
 				nbt.setTag("inv_" + i, stackTag);
 			}
@@ -42,7 +42,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(nbt.hasKey("inv_" + i)){
@@ -59,21 +59,21 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 	@Override
 	@Nonnull
 	public ITextComponent getDisplayName(){
-		return new TextComponentTranslation(getName());
+		return new TranslationTextComponent(getName());
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player){
+	public boolean isUsableByPlayer(PlayerEntity player){
 		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player){
+	public void openInventory(PlayerEntity player){
 
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player){
+	public void closeInventory(PlayerEntity player){
 
 	}
 
@@ -146,12 +146,12 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canInsertItem(int index, ItemStack stack, Direction direction){
 		return isItemValidForSlot(index, stack);
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side){
+	public int[] getSlotsForFace(Direction side){
 		int[] out = new int[inventory.length];
 		for(int i = 0; i < out.length; i++){
 			out[i] = i;
@@ -214,9 +214,9 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 		/**
 		 * A direction that this should act as internally. Does not need to match the side passed to the getCapability call
 		 */
-		private final EnumFacing dir;
+		private final Direction dir;
 
-		public ItemHandler(@Nullable EnumFacing dir){
+		public ItemHandler(@Nullable Direction dir){
 			this.dir = dir;
 		}
 

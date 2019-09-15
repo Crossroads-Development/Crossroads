@@ -7,13 +7,13 @@ import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -46,7 +46,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public void receiveString(String context, String message, EntityPlayerMP sender){
+	public void receiveString(String context, String message, ServerPlayerEntity sender){
 		if(world.isRemote){
 			if(context.equals("text")){
 				activeText = message;
@@ -84,14 +84,14 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 
 		if(world.getTotalWorldTime() % 2 == 0){
 			int fullness = Math.min(3, (int) Math.ceil(fluids[0] == null ? 0F : (float) fluids[0].amount * 3F / (float) fluidProps[0].getCapacity()));
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.heatingCrucible){
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.heatingCrucible){
 				invalidate();
 				return;
 			}
 
-			if(state.getValue(Properties.FULLNESS) != fullness){
-				world.setBlockState(pos, state.withProperty(Properties.FULLNESS, fullness), 18);
+			if(state.get(Properties.FULLNESS) != fullness){
+				world.setBlockState(pos, state.with(Properties.FULLNESS, fullness), 18);
 			}
 
 			if(fullness != 0 && fluids[0] != null && fluids[0].getFluid().getStill() != null){
@@ -138,7 +138,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		activeText = nbt.getString("act");
 		col = nbt.hasKey("col") ? nbt.getInteger("col") : null;
@@ -146,7 +146,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		if(activeText.length() != 0){
 			nbt.setString("act", activeText);
@@ -160,8 +160,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		if(activeText.length() != 0){
 			nbt.setString("act", activeText);
 			if(col != null){
@@ -176,12 +176,12 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.UP){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.UP){
 			return (T) fluidHandler;
 		}
 
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == EnumFacing.DOWN || facing == null)){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.DOWN || facing == null)){
 			return (T) heatHandler;
 		}
 
@@ -193,7 +193,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 

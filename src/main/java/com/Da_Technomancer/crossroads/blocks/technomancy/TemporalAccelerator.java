@@ -2,50 +2,49 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TemporalAccelerator extends BlockContainer{
+public class TemporalAccelerator extends ContainerBlock{
 
 	public TemporalAccelerator(){
 		super(Material.IRON);
 		String name = "temporal_accelerator";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, (placer == null) ? EnumFacing.NORTH : EnumFacing.getDirectionFromEntityLiving(pos, placer));
+	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
+		return getDefaultState().with(EssentialsProperties.FACING, (placer == null) ? Direction.NORTH : Direction.getDirectionFromEntityLiving(pos, placer));
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 		if(ILinkTE.isLinkTool(heldItem)){
 			TileEntity te = worldIn.getTileEntity(pos);
@@ -58,10 +57,10 @@ public class TemporalAccelerator extends BlockContainer{
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(playerIn.isSneaking()){
 					if(te instanceof TemporalAcceleratorTileEntity){
-						playerIn.sendMessage(new TextComponentString("Size set to " + ((TemporalAcceleratorTileEntity) te).adjustSize()));
+						playerIn.sendMessage(new StringTextComponent("Size set to " + ((TemporalAcceleratorTileEntity) te).adjustSize()));
 					}
 				}else{
-					worldIn.setBlockState(pos, state.cycleProperty(EssentialsProperties.FACING));
+					worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
 					if(te instanceof TemporalAcceleratorTileEntity){
 						((TemporalAcceleratorTileEntity) te).resetCache();
 					}
@@ -78,37 +77,37 @@ public class TemporalAccelerator extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta));
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(EssentialsProperties.FACING, Direction.byIndex(meta));
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(EssentialsProperties.FACING).getIndex();
+	public int getMetaFromState(BlockState state){
+		return state.get(EssentialsProperties.FACING).getIndex();
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new TemporalAcceleratorTileEntity();
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot){
-		return state.withProperty(EssentialsProperties.FACING, rot.rotate(state.getValue(EssentialsProperties.FACING)));
+	public BlockState rotate(BlockState state, Rotation rot){
+		return state.with(EssentialsProperties.FACING, rot.rotate(state.get(EssentialsProperties.FACING)));
 	}
 
 	@Override
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
-		return state.withRotation(mirrorIn.toRotation(state.getValue(EssentialsProperties.FACING)));
+	public BlockState mirror(BlockState state, Mirror mirrorIn){
+		return state.rotate(mirrorIn.toRotation(state.get(EssentialsProperties.FACING)));
 	}
 	
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 

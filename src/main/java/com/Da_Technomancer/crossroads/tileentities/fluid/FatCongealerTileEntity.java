@@ -5,12 +5,12 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
-import com.Da_Technomancer.crossroads.items.ModItems;
-import net.minecraft.entity.item.EntityItem;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -43,7 +43,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 		IAxleHandler topHandler;
 		IAxleHandler bottomHandler;
 
-		if((adjTE = world.getTileEntity(pos.offset(EnumFacing.UP))) != null && (topHandler = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN)) != null && (adjTE = world.getTileEntity(pos.down())) != null && (bottomHandler = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.UP)) != null){
+		if((adjTE = world.getTileEntity(pos.offset(Direction.UP))) != null && (topHandler = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)) != null && (adjTE = world.getTileEntity(pos.down())) != null && (bottomHandler = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.UP)) != null){
 			int hun = (int) Math.min(Math.abs(topHandler.getMotionData()[0]) * HUN_PER_SPD, 20);
 			int sat = (int) Math.min(Math.abs(bottomHandler.getMotionData()[0]) * SAT_PER_SPD, 20);
 			if(hun == 0 && sat == 0 || fluids[0] == null){
@@ -58,12 +58,12 @@ public class FatCongealerTileEntity extends InventoryTE{
 			if((fluids[0].amount -= fluidUse) <= 0){
 				fluids[0] = null;
 			}
-			ItemStack stack = new ItemStack(ModItems.edibleBlob, 1, 0);
-			NBTTagCompound nbt = new NBTTagCompound();
+			ItemStack stack = new ItemStack(CrossroadsItems.edibleBlob, 1, 0);
+			CompoundNBT nbt = new CompoundNBT();
 			nbt.setInteger("food", hun);
 			nbt.setInteger("sat", sat);
 			stack.setTagCompound(nbt);
-			EntityItem ent = new EntityItem(world, pos.getX() + .5D, pos.getY() + .5D, pos.getZ() + .5D, stack);
+			ItemEntity ent = new ItemEntity(world, pos.getX() + .5D, pos.getY() + .5D, pos.getZ() + .5D, stack);
 			ent.motionX = 2D * Math.random() - 1D;
 			ent.motionZ = 2D * Math.random() - 1D;
 			world.spawnEntity(ent);
@@ -75,8 +75,8 @@ public class FatCongealerTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.DOWN && facing != EnumFacing.UP){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.DOWN && facing != Direction.UP){
 			return (T) mainHandler;
 		}
 
@@ -84,7 +84,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 

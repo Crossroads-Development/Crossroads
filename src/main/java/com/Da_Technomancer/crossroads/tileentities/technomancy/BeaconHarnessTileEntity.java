@@ -8,10 +8,10 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import javax.annotation.Nullable;
@@ -27,7 +27,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 	private int cycles;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
 	}
 
@@ -51,7 +51,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 			}
 		}
 
-		return world.getBlockState(pos.offset(EnumFacing.DOWN, 2)).getBlock() != Blocks.BEACON || !world.isAirBlock(pos.offset(EnumFacing.DOWN, 1));
+		return world.getBlockState(pos.offset(Direction.DOWN, 2)).getBlock() != Blocks.BEACON || !world.isAirBlock(pos.offset(Direction.DOWN, 1));
 	}
 
 	public void trigger(){
@@ -62,14 +62,14 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		nbt.setBoolean("run", running);
 		return nbt;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("run", running);
 		nbt.setInteger("cycle", cycles);
@@ -77,7 +77,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInteger("cycle");

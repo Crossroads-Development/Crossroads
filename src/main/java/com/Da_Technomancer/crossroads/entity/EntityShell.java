@@ -2,16 +2,16 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public class EntityShell extends EntityThrowable{
+public class EntityShell extends ThrowableEntity{
 
 	private ReagentMap contents;
 	private double temp;
@@ -26,7 +26,7 @@ public class EntityShell extends EntityThrowable{
 		this.temp = temp;
 	}
 
-	public EntityShell(World worldIn, EntityLivingBase throwerIn, ReagentMap contents, double temp){
+	public EntityShell(World worldIn, LivingEntity throwerIn, ReagentMap contents, double temp){
 		super(worldIn, throwerIn);
 		this.contents = contents;
 		this.temp = temp;
@@ -45,7 +45,7 @@ public class EntityShell extends EntityThrowable{
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt){
+	public void readEntityFromNBT(CompoundNBT nbt){
 		super.readEntityFromNBT(nbt);
 		temp = nbt.getDouble("temp");
 
@@ -53,7 +53,7 @@ public class EntityShell extends EntityThrowable{
 	}
 
 	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt){
+	public void writeEntityToNBT(CompoundNBT nbt){
 		super.writeEntityToNBT(nbt);
 		nbt.setDouble("temp", temp);
 

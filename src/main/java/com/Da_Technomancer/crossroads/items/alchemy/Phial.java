@@ -2,11 +2,11 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.items.ModItems;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -21,9 +21,9 @@ public class Phial extends AbstractGlassware{
 		hasSubtypes = true;
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class Phial extends AbstractGlassware{
 	}
 
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public ActionResultType onItemUse(PlayerEntity playerIn, World worldIn, BlockPos pos, Hand hand, Direction side, BlockRayTraceResult hit){
 		ReagentMap contents = getReagants(playerIn.getHeldItem(hand));
 		if(contents.getTotalQty() != 0){
 			if(!worldIn.isRemote){
@@ -46,9 +46,9 @@ public class Phial extends AbstractGlassware{
 					setReagents(playerIn.getHeldItem(hand), new ReagentMap());
 				}
 			}
-			return EnumActionResult.SUCCESS;
+			return ActionResultType.SUCCESS;
 		}
 
-		return EnumActionResult.PASS;
+		return ActionResultType.PASS;
 	}
 }

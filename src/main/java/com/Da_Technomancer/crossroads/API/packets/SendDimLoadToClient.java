@@ -41,7 +41,7 @@ public class SendDimLoadToClient extends Message<SendDimLoadToClient>{
 			return null;
 		}
 
-		Minecraft minecraft = Minecraft.getMinecraft();
+		Minecraft minecraft = Minecraft.getInstance();
 		minecraft.addScheduledTask(new Runnable(){
 			public void run(){
 				if(wipePrevious){

@@ -1,20 +1,20 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public class EntityNitro extends EntityThrowable{
+public class EntityNitro extends ThrowableEntity{
 
 	public EntityNitro(World worldIn){
 		super(worldIn);
 	}
 
-	public EntityNitro(World worldIn, EntityLivingBase throwerIn){
+	public EntityNitro(World worldIn, LivingEntity throwerIn){
 		super(worldIn, throwerIn);
 	}
 

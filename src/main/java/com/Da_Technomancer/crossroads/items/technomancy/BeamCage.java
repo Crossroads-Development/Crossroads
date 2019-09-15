@@ -6,15 +6,14 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,13 +26,13 @@ public class BeamCage extends Item{
 		setTranslationKey(name);
 		setRegistryName(name);
 		maxStackSize = 1;
-		setCreativeTab(ModItems.TAB_CROSSROADS);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	public static BeamUnit getStored(ItemStack stack){
-		NBTTagCompound nbt = stack.getTagCompound();
+		CompoundNBT nbt = stack.getTagCompound();
 		if(nbt == null){
 			return null;
 		}
@@ -42,9 +41,9 @@ public class BeamCage extends Item{
 	}
 
 	public static void storeBeam(ItemStack stack, @Nullable BeamUnit toStore){
-		NBTTagCompound nbt = stack.getTagCompound();
+		CompoundNBT nbt = stack.getTagCompound();
 		if(nbt == null){
-			stack.setTagCompound(new NBTTagCompound());
+			stack.setTagCompound(new CompoundNBT());
 			nbt = stack.getTagCompound();
 		}
 		nbt.setInteger("stored_" + EnumBeamAlignments.ENERGY.name().toLowerCase(), toStore == null ? 0 : toStore.getEnergy());
@@ -54,8 +53,8 @@ public class BeamCage extends Item{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
+	@OnlyIn(Dist.CLIENT)
+	public void getSubItems(ItemGroup tab, NonNullList<ItemStack> list){
 		if(isInCreativeTab(tab)){
 			list.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
@@ -65,8 +64,8 @@ public class BeamCage extends Item{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		BeamUnit stored = getStored(stack);
 		tooltip.add("Energy stored: " + (stored == null ? 0 : stored.getEnergy()));
 		tooltip.add("Potential stored: " + (stored == null ? 0 : stored.getPotential()));

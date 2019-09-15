@@ -1,27 +1,27 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearIcositetragon;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 
-public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMasterTileEntity>{
+public class LargeGearRenderer extends TileEntityRenderer<LargeGearMasterTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/gear_24.png");
-	private static final ResourceLocation TEXTURE_RIM = new ResourceLocation(Main.MODID, "textures/model/gear_rim.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/model/gear_24.png");
+	private static final ResourceLocation TEXTURE_RIM = new ResourceLocation(Crossroads.MODID, "textures/model/gear_rim.png");
 	private static final ModelGearIcositetragon MODEL = new ModelGearIcositetragon();
 
 	@Override
 	public void render(LargeGearMasterTileEntity gear, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(gear.getWorld().getBlockState(gear.getPos()).getBlock() != ModBlocks.largeGearMaster || !gear.getWorld().isBlockLoaded(gear.getPos(), false)){
+		if(gear.getWorld().getBlockState(gear.getPos()).getBlock() != CrossroadsBlocks.largeGearMaster || !gear.getWorld().isBlockLoaded(gear.getPos(), false)){
 			return;
 		}
 
@@ -32,9 +32,9 @@ public class LargeGearRenderer extends TileEntitySpecialRenderer<LargeGearMaster
 
 		GlStateManager.translate(x + .5D, y + .5D, z + .5D);
 
-		EnumFacing facing = gear.getFacing();
+		Direction facing = gear.getFacing();
 		IAxleHandler handler = gear.getCapability(Capabilities.AXLE_CAPABILITY, facing);
-		float dirMult = facing.getAxisDirection() == EnumFacing.AxisDirection.POSITIVE ? -1 : 1;
+		float dirMult = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? -1 : 1;
 
 		switch(facing){
 			case DOWN:

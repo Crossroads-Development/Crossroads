@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -41,20 +41,20 @@ public class BasicFluidSplitterTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			if(side == null){
 				return (T) centerHandler;
 			}
 
-			return side.getAxis() != EnumFacing.Axis.Y ? (T) inHandler : side == EnumFacing.UP ? (T) upHandler : (T) downHandler;
+			return side.getAxis() != Direction.Axis.Y ? (T) inHandler : side == Direction.UP ? (T) upHandler : (T) downHandler;
 		}
 
 		return super.getCapability(cap, side);
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("mode", mode);
 		nbt.setInteger("transfered", transfered);
@@ -62,7 +62,7 @@ public class BasicFluidSplitterTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		mode = nbt.getInteger("mode");
 		transfered = nbt.getInteger("transfered");

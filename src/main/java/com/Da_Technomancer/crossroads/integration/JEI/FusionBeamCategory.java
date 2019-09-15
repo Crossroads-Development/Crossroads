@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.IGuiHelper;
@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class FusionBeamCategory implements IRecipeCategory<FusionBeamRecipe>{
 
-	public static final String ID = Main.MODID + ".fusion_beam";
+	public static final String ID = Crossroads.MODID + ".fusion_beam";
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawable arrowStatic;
@@ -59,9 +59,9 @@ public class FusionBeamCategory implements IRecipeCategory<FusionBeamRecipe>{
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, FusionBeamRecipe recipeWrapper, IIngredients ingredients){
 		recipeLayout.getItemStacks().init(0, true, 40, 40);
-		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
+		recipeLayout.getItemStacks().set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 		recipeLayout.getItemStacks().init(1, false, 120, 40);
-		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(ItemStack.class).get(0));
+		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
 	}
 
 	@Override
@@ -71,6 +71,6 @@ public class FusionBeamCategory implements IRecipeCategory<FusionBeamRecipe>{
 	
 	@Override
 	public String getModName(){
-		return Main.MODNAME;
+		return Crossroads.MODNAME;
 	}
 }

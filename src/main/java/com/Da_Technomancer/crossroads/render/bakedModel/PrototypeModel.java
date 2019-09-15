@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
@@ -30,7 +30,7 @@ public class PrototypeModel implements IModel{
 		for(PrototypePortTypes type : PrototypePortTypes.values()){
 			textures.add(type.getTexture());
 		}
-		textures.add(new ResourceLocation(Main.MODID, "blocks/prototype/blank"));
+		textures.add(new ResourceLocation(Crossroads.MODID, "blocks/prototype/blank"));
 		return ImmutableSet.copyOf(textures);
 	}
 

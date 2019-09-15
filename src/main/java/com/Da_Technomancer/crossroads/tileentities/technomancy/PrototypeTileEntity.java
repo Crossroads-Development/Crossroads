@@ -12,22 +12,22 @@ import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeOwner, IIntReceiver, ITickable{
+public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeOwner, IIntReceiver, ITickableTileEntity{
 
 	private int index = -1;
 	public String name = "";
@@ -62,8 +62,8 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		orient++;
 		orient %= 4;
 		world.markBlockRangeForRenderUpdate(pos, pos);
-		for(EnumFacing dir : EnumFacing.VALUES){
-			ModBlocks.prototype.neighborChanged(null, world, pos, ModBlocks.prototype, pos.offset(dir));
+		for(Direction dir : Direction.VALUES){
+			CrossroadsBlocks.prototype.neighborChanged(null, world, pos, CrossroadsBlocks.prototype, pos.offset(dir));
 		}
 		ModPackets.network.sendToAllAround(new SendIntToClient((byte) 6, orient, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		refresh();
@@ -86,9 +86,9 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	public void onLoad(){
 		if(!world.isRemote){
 			if(selfDestruct){
-				Main.logger.info("Removing an invalid Prototype at " + pos.toString() + ", with index: " + index + ", out of list size: " + PrototypeWorldSavedData.get(false).prototypes.size());
+				Crossroads.logger.info("Removing an invalid Prototype at " + pos.toString() + ", with index: " + index + ", out of list size: " + PrototypeWorldSavedData.get(false).prototypes.size());
 				index = -1;
-				world.scheduleUpdate(pos, ModBlocks.prototype, 1);
+				world.scheduleUpdate(pos, CrossroadsBlocks.prototype, 1);
 			}else if(index != -1){
 				ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(false).prototypes;
 				info.get(index).owner = new WeakReference<IPrototypeOwner>(this);
@@ -97,7 +97,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public PrototypePortTypes[] getTypes(){
 		if(orient == 0){
@@ -116,7 +116,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("index", index);
 		nbt.setString("name", name);
@@ -140,7 +140,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		orient = nbt.getInteger("orient");
 		if(!world.isRemote){
@@ -170,8 +170,8 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		if(index != -1){
 			nbt.setInteger("orient", orient);
 			PrototypePortTypes[] ports = PrototypeWorldSavedData.get(false).prototypes.get(index).ports;
@@ -185,11 +185,11 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		return nbt;
 	}
 
-	public EnumFacing adjustSide(EnumFacing dir, boolean reverse){
-		if(dir.getAxis() == EnumFacing.Axis.Y){
+	public Direction adjustSide(Direction dir, boolean reverse){
+		if(dir.getAxis() == Direction.Axis.Y){
 			return dir;
 		}
-		EnumFacing adj = dir;
+		Direction adj = dir;
 		for(int i = 0; i < orient; i++){
 			if(reverse){
 				adj = adj.rotateYCCW();
@@ -201,15 +201,15 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		//No capabilities are found on the render side because that would require the prototype dimension to be loaded on the render side, which it almost certainly won't be.
 		if(side != null && index != -1 && !world.isRemote){
-			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			ServerWorld worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			if(worldDim == null){
 				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 				worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			}
-			EnumFacing dir = adjustSide(side, true);
+			Direction dir = adjustSide(side, true);
 			PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(index);
 			if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()].getCapability() == cap && info.ports[dir.getIndex()].exposeExternal()){
 				BlockPos relPos = info.portPos[dir.getIndex()];
@@ -225,15 +225,15 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		//No capabilities are found on the render side because that would require the prototype dimension to be loaded on the render side, which it almost certainly won't be.
 		if(side != null && index != -1 && !world.isRemote){
-			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			ServerWorld worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			if(worldDim == null){
 				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 				worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			}
-			EnumFacing dir = adjustSide(side, true);
+			Direction dir = adjustSide(side, true);
 			PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(index);
 			if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()].getCapability() == cap && info.ports[dir.getIndex()].exposeExternal()){
 				BlockPos relPos = info.portPos[dir.getIndex()];
@@ -247,8 +247,8 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, EnumFacing side){
-		EnumFacing dir = adjustSide(side, false);
+	public boolean hasCap(Capability<?> cap, Direction side){
+		Direction dir = adjustSide(side, false);
 		if(cap == Capabilities.BEAM_CAPABILITY){
 			return true;
 		}
@@ -258,8 +258,8 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCap(Capability<T> cap, EnumFacing side) throws NullPointerException{
-		EnumFacing dir = adjustSide(side, false);
+	public <T> T getCap(Capability<T> cap, Direction side) throws NullPointerException{
+		Direction dir = adjustSide(side, false);
 		if(cap == Capabilities.BEAM_CAPABILITY){
 			return (T) getHandler(dir.getIndex(), true);
 		}
@@ -267,15 +267,15 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public void neighborChanged(EnumFacing fromSide, Block blockIn){
-		EnumFacing dir = adjustSide(fromSide, false);
+	public void neighborChanged(Direction fromSide, Block blockIn){
+		Direction dir = adjustSide(fromSide, false);
 		world.getBlockState(pos.offset(dir)).neighborChanged(world, pos.offset(dir), blockIn, pos);
 	}
 
 	private int[] beamPackets = new int[6];
 
 	@Override
-	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier < 6 && identifier >= 0){
 			beamPackets[identifier] = message;
 		}
@@ -333,7 +333,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		private final int side;
 
 		private MagHandler(int side){
-			beam = new BeamManager(EnumFacing.byIndex(side), pos);
+			beam = new BeamManager(Direction.byIndex(side), pos);
 			this.side = side;
 		}
 

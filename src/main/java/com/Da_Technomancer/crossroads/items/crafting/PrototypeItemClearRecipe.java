@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -21,7 +21,7 @@ public class PrototypeItemClearRecipe extends IForgeRegistryEntry.Impl<IRecipe> 
 	}
 
 	@Override
-	public boolean matches(InventoryCrafting inv, World worldIn){
+	public boolean matches(CraftingInventory inv, World worldIn){
 		boolean found = false;
 		for(int x = 0; x < inv.getWidth(); x++){
 			for(int y = 0; y < inv.getHeight(); y++){
@@ -43,7 +43,7 @@ public class PrototypeItemClearRecipe extends IForgeRegistryEntry.Impl<IRecipe> 
 	}
 
 	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inv){
+	public ItemStack getCraftingResult(CraftingInventory inv){
 		//Assumes matches would return true.
 		for(int x = 0; x < inv.getWidth(); x++){
 			for(int y = 0; y < inv.getHeight(); y++){
@@ -64,7 +64,7 @@ public class PrototypeItemClearRecipe extends IForgeRegistryEntry.Impl<IRecipe> 
 	}
 
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv){
+	public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv){
 		NonNullList<ItemStack> outList = NonNullList.withSize(9, ItemStack.EMPTY);
 		
 		//Assumes matches would return true.
@@ -72,7 +72,7 @@ public class PrototypeItemClearRecipe extends IForgeRegistryEntry.Impl<IRecipe> 
 			for(int y = 0; y < inv.getHeight(); y++){
 				ItemStack slot = inv.getStackInRowAndColumn(x, y);
 				if(slot.getItem() == toClear){
-					ItemStack outStack = new ItemStack(ModBlocks.prototype, 1);
+					ItemStack outStack = new ItemStack(CrossroadsBlocks.prototype, 1);
 					outStack.setTagCompound(slot.getTagCompound().getCompoundTag(nbtPath));
 					outList.set((y * 3) + x, outStack);
 					return outList;

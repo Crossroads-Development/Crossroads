@@ -4,14 +4,14 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -22,17 +22,17 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModuleGoggles extends ItemArmor{
+public class ModuleGoggles extends ArmorItem{
 
 	public ModuleGoggles(){
-		super(ModItems.TECHNOMANCY, 1, EntityEquipmentSlot.HEAD);
+		super(CrossroadsItems.TECHNOMANCY, 1, EquipmentSlotType.HEAD);
 		setMaxStackSize(1);
 		String name = "module_goggles";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class ModuleGoggles extends ItemArmor{
 	private static final int CHAT_ID = 718749;
 
 	@Override
-	public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
+	public void onArmorTick(World world, PlayerEntity player, ItemStack stack){
 		if(!world.isRemote && stack.hasTagCompound()){
 			ArrayList<String> chat = new ArrayList<>();
 			RayTraceResult ray = MiscUtil.rayTrace(player, 8);
@@ -58,14 +58,14 @@ public class ModuleGoggles extends ItemArmor{
 					}
 					out.append(line);
 				}
-				ModPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (EntityPlayerMP) player);
+				ModPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (ServerPlayerEntity) player);
 			}
 		}
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("Lenses:");
 		if(stack.hasTagCompound()){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
@@ -83,8 +83,8 @@ public class ModuleGoggles extends ItemArmor{
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
-		StringBuilder path = new StringBuilder(Main.MODID + ":textures/models/armor/goggles/goggle");
+	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type){
+		StringBuilder path = new StringBuilder(Crossroads.MODID + ":textures/models/armor/goggles/goggle");
 		if(stack.hasTagCompound()){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(stack.getTagCompound().hasKey(lens.name())){

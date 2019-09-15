@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.render;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -16,7 +16,7 @@ import java.util.function.Function;
 public class RenderUtil{
 
 	@SuppressWarnings("unchecked")
-	public static final Function<NBTTagCompound, IVisualEffect>[] visualFactories = (Function<NBTTagCompound, IVisualEffect>[]) new Function[2];
+	public static final Function<CompoundNBT, IVisualEffect>[] visualFactories = (Function<CompoundNBT, IVisualEffect>[]) new Function[2];
 
 	static{
 		visualFactories[0] = LooseBeamRenderable::readFromNBT;
@@ -24,7 +24,7 @@ public class RenderUtil{
 	}
 
 	public static void addBeam(int dimension, double x, double y, double z, double length, float angleX, float angleY, byte width, int color){
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		nbt.setInteger("id", 0);
 		nbt.setDouble("x", x);
 		nbt.setDouble("y", y);
@@ -49,7 +49,7 @@ public class RenderUtil{
 		World world = DimensionManager.getWorld(dimension);
 		world.playSound(null, xSt, ySt, zSt, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		nbt.setInteger("id", 1);
 		nbt.setFloat("x", xSt);
 		nbt.setFloat("y", ySt);

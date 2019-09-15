@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -17,14 +17,14 @@ public class LinkingTool extends Item{
 		String name = "linking_tool";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	@Override
-	public boolean doesSneakBypassUse(ItemStack stack, net.minecraft.world.IBlockAccess world, BlockPos pos, EntityPlayer player){
+	public boolean doesSneakBypassUse(ItemStack stack, net.minecraft.world.IBlockAccess world, BlockPos pos, PlayerEntity player){
 		return true;
 	}
 

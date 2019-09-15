@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Triple;
@@ -18,10 +18,10 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarnessTileEntity>{
+public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileEntity>{
 
-	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Main.MODID, "textures/blocks/block_copshowium.png");
-	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Main.MODID, "textures/blocks/block_pure_quartz.png");
+	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_copshowium.png");
+	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_pure_quartz.png");
 
 	@Override
 	public void render(BeaconHarnessTileEntity beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
@@ -46,7 +46,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 				GlStateManager.pushAttrib();
 				GlStateManager.translate(x, y, z);
 				GlStateManager.color(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
-				Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
+				Minecraft.getInstance().getTextureManager().bindTexture(BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 				
@@ -60,7 +60,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 						break;
 				}
 
-				if(ModConfig.rotateBeam.getBoolean()){
+				if(CrossroadsConfig.rotateBeam.getBoolean()){
 					GlStateManager.rotate(beam.getWorld().getTotalWorldTime() * 2, 0, 1, 0);
 				}
 
@@ -114,7 +114,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 
 		GlStateManager.rotate(beam.angle, 0, 1, 0);
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(INNER_TEXT);
+		Minecraft.getInstance().getTextureManager().bindTexture(INNER_TEXT);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		addRod(buf, smallOffset, smallOffset);
 		addRod(buf, smallOffset, -smallOffset);
@@ -124,7 +124,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 
 		GlStateManager.rotate(-2F * beam.angle, 0, 1, 0);
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(OUTER_TEXT);
+		Minecraft.getInstance().getTextureManager().bindTexture(OUTER_TEXT);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		addRod(buf, smallOffset, largeOffset);
 		addRod(buf, smallOffset, -largeOffset);
@@ -165,7 +165,7 @@ public class BeaconHarnessRenderer extends TileEntitySpecialRenderer<BeaconHarne
 
 		Color col = BeamManager.getTriple(packet[1]).getLeft();
 		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
+		Minecraft.getInstance().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);

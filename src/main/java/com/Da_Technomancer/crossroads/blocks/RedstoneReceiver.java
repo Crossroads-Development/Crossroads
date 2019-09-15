@@ -1,49 +1,52 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneReceiverTileEntity;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class RedstoneReceiver extends BlockContainer{
+public class RedstoneReceiver extends ContainerBlock{
 
 	protected RedstoneReceiver(){
 		super(Material.ROCK);
 		String name = "redstone_receiver";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setHardness(.5F);
 		setSoundType(SoundType.STONE);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().withProperty(Properties.COLOR, EnumDyeColor.WHITE));
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().with(Properties.COLOR, DyeColor.WHITE));
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(ILinkTE.isLinkTool(heldItem) && te instanceof RedstoneReceiverTileEntity){
@@ -53,7 +56,7 @@ public class RedstoneReceiver extends BlockContainer{
 			return true;
 		}else if(heldItem.getItem() == Items.DYE && te instanceof RedstoneReceiverTileEntity){
 			if(!worldIn.isRemote){
-				((RedstoneReceiverTileEntity) te).dye(EnumDyeColor.byDyeDamage(heldItem.getMetadata()));
+				((RedstoneReceiverTileEntity) te).dye(DyeColor.byDyeDamage(heldItem.getMetadata()));
 			}
 			return true;
 		}
@@ -61,8 +64,8 @@ public class RedstoneReceiver extends BlockContainer{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("Receives redstone signals wirelessly from a nearby linked Redstone Transmitter");
 		tooltip.add("Link to a Transmitter with a wrench. Use it on a Transmitter first then a Receiver");
 		tooltip.add("Can be color coded with dyes");
@@ -70,12 +73,12 @@ public class RedstoneReceiver extends BlockContainer{
 
 	@Nullable
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new RedstoneReceiverTileEntity();
 	}
 
 	@Override
-	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
+	public int getWeakPower(BlockState blockState, IBlockAccess blockAccess, BlockPos pos, Direction side){
 		TileEntity te = blockAccess.getTileEntity(pos);
 		if(te instanceof RedstoneReceiverTileEntity){
 			return (int) Math.round(((RedstoneReceiverTileEntity) te).getStrength());
@@ -85,13 +88,13 @@ public class RedstoneReceiver extends BlockContainer{
 	}
 
 	@Override
-	public boolean canProvidePower(IBlockState state){
+	public boolean canProvidePower(BlockState state){
 		return true;
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
@@ -100,12 +103,12 @@ public class RedstoneReceiver extends BlockContainer{
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.COLOR).getMetadata();
+	public int getMetaFromState(BlockState state){
+		return state.get(Properties.COLOR).getMetadata();
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.COLOR, EnumDyeColor.byMetadata(meta));
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(Properties.COLOR, DyeColor.byMetadata(meta));
 	}
 }

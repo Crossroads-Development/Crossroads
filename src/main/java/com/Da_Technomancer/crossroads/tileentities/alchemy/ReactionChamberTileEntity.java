@@ -4,14 +4,14 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -40,16 +40,16 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		}
 	}
 
-	public NBTTagCompound getContentNBT(){
+	public CompoundNBT getContentNBT(){
 		if(contents.getTotalQty() == 0){
 			return null;
 		}
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		writeToNBT(nbt);
 		return nbt;
 	}
 
-	public void writeContentNBT(NBTTagCompound nbt){
+	public void writeContentNBT(CompoundNBT nbt){
 		contents = ReagentMap.readFromNBT(nbt);
 		dirtyReag = true;
 	}
@@ -95,7 +95,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
-				EnumFacing side = EnumFacing.byIndex(i);
+				Direction side = Direction.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
 				if(contents.getTotalQty() <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
 					continue;
@@ -118,13 +118,13 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		energy = nbt.getInteger("ener");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("ener", energy);
 		return nbt;
@@ -132,7 +132,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) handler;
 		}
@@ -262,7 +262,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 					}
 					return outStack;
 				}catch(NullPointerException e){
-					Main.logger.log(Level.FATAL, "Alchemy Item/Reagent map error. Slot: " + slot + ", Stack: " + fakeInventory[slot], e);
+					Crossroads.logger.log(Level.FATAL, "Alchemy Item/Reagent map error. Slot: " + slot + ", Stack: " + fakeInventory[slot], e);
 				}
 			}
 

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.*;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
@@ -51,7 +51,7 @@ public class ModTileEntity{
 		register(BeamSiphonTileEntity.class, "beam_siphon");
 		register(BeamSplitterTileEntity.class, "beam_splitter");
 		register(CrystalMasterAxisTileEntity.class, "crystal_master_axis");
-		register(RatiatorTileEntity.class, "ratiator");
+//		register(RatiatorTileEntity.class, "ratiator");
 		register(BeaconHarnessTileEntity.class, "beacon_harness");
 		register(FatFeederTileEntity.class, "fat_feeder");
 		register(RedstoneAxisTileEntity.class, "redstone_axis");
@@ -62,7 +62,7 @@ public class ModTileEntity{
 		register(BasicFluidSplitterTileEntity.class, "basic_fluid_splitter");
 		register(CopshowiumCreationChamberTileEntity.class, "copshowium_creation_chamber");
 		register(GatewayFrameTileEntity.class, "gateway_frame");
-		register(RedstoneKeyboardTileEntity.class, "redstone_keyboard");
+//		register(RedstoneKeyboardTileEntity.class, "redstone_keyboard");
 		register(PrototypingTableTileEntity.class, "prototyping_table");
 		register(PrototypeTileEntity.class, "prototype");
 		register(PrototypePortTileEntity.class, "prototype_port");
@@ -117,6 +117,6 @@ public class ModTileEntity{
 	 * @param ID Must be lower-case.
 	 */
 	private static void register(Class<? extends TileEntity> clazz, String ID){
-		GameRegistry.registerTileEntity(clazz, new ResourceLocation(Main.MODID, ID));
+		GameRegistry.registerTileEntity(clazz, new ResourceLocation(Crossroads.MODID, ID));
 	}
 }

@@ -7,14 +7,14 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleArrayReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -27,12 +27,12 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	private int index = 0;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Current output: " + output[index] + "; Index: " + (index + 1));
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 	
@@ -52,7 +52,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	public void setIndex(int index){
 		this.index = Math.min(index, output.length - 1);
 		if(world != null && !world.isRemote){
-			world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneRegistry, false);
+			world.notifyNeighborsOfStateChange(pos, CrossroadsBlocks.redstoneRegistry, false);
 		}
 	}
 	
@@ -66,11 +66,11 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 //			index += floor;
 //			index %= output.length;
 //		}
-		world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneRegistry, false);
+		world.notifyNeighborsOfStateChange(pos, CrossroadsBlocks.redstoneRegistry, false);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		output = new double[nbt.getInteger("length")];
 		for(int i = 0; i < output.length; i++){
@@ -80,7 +80,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("index", index);
 		nbt.setInteger("length", output.length);
@@ -91,17 +91,17 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	}
 
 	@Override
-	public void receiveDoubles(String context, double[] message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveDoubles(String context, double[] message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(context.equals("output") || context.equals("newOutput")){
 			output = message == null ? new double[1] : message;
 			if(!world.isRemote){
-				world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneRegistry, false);
+				world.notifyNeighborsOfStateChange(pos, CrossroadsBlocks.redstoneRegistry, false);
 			}
 		}
 	}
 	
 	@Override
-	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == 0){
 			setIndex(message);
 		}
@@ -110,13 +110,13 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		return cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY || super.hasCapability(cap, side);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redstoneHandler;
 		}

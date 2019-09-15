@@ -4,8 +4,8 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -68,13 +68,13 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		storedHeat = nbt.getDouble("heat_stored");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setDouble("heat_stored", storedHeat);
 		return nbt;
@@ -85,12 +85,12 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) fluidHandler;
 		}
 
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.UP || facing == null)){
 			return (T) heatHandler;
 		}
 
@@ -102,7 +102,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return true;
 	}
 

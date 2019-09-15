@@ -5,16 +5,16 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.BlockRecipePredicate;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Biomes;
-import net.minecraft.init.Blocks;
+import net.minecraft.world.biome.Biomes;
+import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -25,10 +25,10 @@ import java.util.function.Predicate;
 
 public class AetherEffect implements IAlchEffect{
 
-	protected static final ArrayList<Predicate<IBlockState>> SOIL_GROUP = new ArrayList<>();
-	protected static final ArrayList<Predicate<IBlockState>> ROCK_GROUP = new ArrayList<>();
-	protected static final ArrayList<Predicate<IBlockState>> FLUD_GROUP = new ArrayList<>();//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
-	protected static final ArrayList<Predicate<IBlockState>> CRYS_GROUP = new ArrayList<>();
+	protected static final ArrayList<Predicate<BlockState>> SOIL_GROUP = new ArrayList<>();
+	protected static final ArrayList<Predicate<BlockState>> ROCK_GROUP = new ArrayList<>();
+	protected static final ArrayList<Predicate<BlockState>> FLUD_GROUP = new ArrayList<>();//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
+	protected static final ArrayList<Predicate<BlockState>> CRYS_GROUP = new ArrayList<>();
 
 	static{
 		SOIL_GROUP.add(new MaterialPredicate(Material.GROUND));
@@ -43,10 +43,10 @@ public class AetherEffect implements IAlchEffect{
 		FLUD_GROUP.add(new MaterialPredicate(Material.ICE));
 		FLUD_GROUP.add(new MaterialPredicate(Material.LAVA));
 		CRYS_GROUP.add(new MaterialPredicate(Material.GLASS));
-		CRYS_GROUP.add(new BlockRecipePredicate(ModBlocks.blockPureQuartz.getDefaultState(), false));
+		CRYS_GROUP.add(new BlockRecipePredicate(CrossroadsBlocks.blockPureQuartz.getDefaultState(), false));
 	}
 
-	private static void doTransmute(IBlockState oldState, World world, BlockPos pos){
+	private static void doTransmute(BlockState oldState, World world, BlockPos pos){
 		Chunk c = world.getChunk(pos);
 		if(world.getBiome(pos) != Biomes.PLAINS){
 			c.getBiomeArray()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = (byte) Biome.getIdForBiome(Biomes.PLAINS);
@@ -57,7 +57,7 @@ public class AetherEffect implements IAlchEffect{
 			return;
 		}
 
-		for(Predicate<IBlockState> pred : CRYS_GROUP){
+		for(Predicate<BlockState> pred : CRYS_GROUP){
 			if(pred.test(oldState)){
 				if(oldState != Blocks.GLASS.getDefaultState()){
 					world.setBlockState(pos, Blocks.GLASS.getDefaultState());
@@ -65,10 +65,10 @@ public class AetherEffect implements IAlchEffect{
 				return;
 			}
 		}
-		for(Predicate<IBlockState> pred : FLUD_GROUP){
+		for(Predicate<BlockState> pred : FLUD_GROUP){
 			if(pred.test(oldState)){
-				if(oldState != Blocks.WATER.getDefaultState() && oldState.getBlock() != ModBlocks.reactiveSpot){
-					world.setBlockState(pos, ModBlocks.reactiveSpot.getDefaultState());
+				if(oldState != Blocks.WATER.getDefaultState() && oldState.getBlock() != CrossroadsBlocks.reactiveSpot){
+					world.setBlockState(pos, CrossroadsBlocks.reactiveSpot.getDefaultState());
 					TileEntity te = world.getTileEntity(pos);
 					if(te instanceof ReactiveSpotTileEntity){
 						((ReactiveSpotTileEntity) te).setTarget(Blocks.WATER.getDefaultState());
@@ -77,7 +77,7 @@ public class AetherEffect implements IAlchEffect{
 				return;
 			}
 		}
-		for(Predicate<IBlockState> pred : ROCK_GROUP){
+		for(Predicate<BlockState> pred : ROCK_GROUP){
 			if(pred.test(oldState)){
 				if(oldState != Blocks.STONE.getDefaultState()){
 					world.setBlockState(pos, Blocks.STONE.getDefaultState());
@@ -85,10 +85,10 @@ public class AetherEffect implements IAlchEffect{
 				return;
 			}
 		}
-		for(Predicate<IBlockState> pred : SOIL_GROUP){
+		for(Predicate<BlockState> pred : SOIL_GROUP){
 			if(pred.test(oldState)){
-				IBlockState upState = world.getBlockState(pos.offset(EnumFacing.UP));
-				if(upState.getBlock().isAir(upState, world, pos.offset(EnumFacing.UP))){
+				BlockState upState = world.getBlockState(pos.offset(Direction.UP));
+				if(upState.getBlock().isAir(upState, world, pos.offset(Direction.UP))){
 					if(oldState != Blocks.GRASS.getDefaultState()){
 						world.setBlockState(pos, Blocks.GRASS.getDefaultState());
 					}
@@ -100,7 +100,7 @@ public class AetherEffect implements IAlchEffect{
 		}
 	}
 
-	protected static class MaterialPredicate implements Predicate<IBlockState>{
+	protected static class MaterialPredicate implements Predicate<BlockState>{
 
 		private final Material m;
 
@@ -109,14 +109,14 @@ public class AetherEffect implements IAlchEffect{
 		}
 
 		@Override
-		public boolean test(IBlockState toCheck){
+		public boolean test(BlockState toCheck){
 			return toCheck.getMaterial() == m && !(toCheck.getBlock() instanceof ITileEntityProvider);
 		}
 	}
 	
 	@Override
 	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap contents){
-		IBlockState oldState = world.getBlockState(pos);
+		BlockState oldState = world.getBlockState(pos);
 
 		//quicksilver makes it create a block instead of transmuting blocks
 		if(contents.getQty(EnumReagents.QUICKSILVER.id()) != 0 && oldState.getBlock().isAir(oldState, world, pos)){

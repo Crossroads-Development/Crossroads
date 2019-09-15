@@ -1,22 +1,22 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 
-public class RenderFlyingMachine extends Render<EntityFlyingMachine>{
+public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/entities/flying_machine.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/flying_machine.png");
 
-	protected RenderFlyingMachine(RenderManager renderManager){
+	protected RenderFlyingMachine(EntityRendererManager renderManager){
 		super(renderManager);
 	}
 

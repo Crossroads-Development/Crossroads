@@ -6,10 +6,10 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
-import com.Da_Technomancer.crossroads.items.ModItems;
-import net.minecraft.entity.player.EntityPlayer;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -41,7 +41,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
 		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 		chat.add(inventory[0].getCount() + "/64 salt");
 	}
@@ -81,7 +81,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 
 				if(salty){
 					if(inventory[0].isEmpty()){
-						inventory[0] = new ItemStack(ModItems.dustSalt, batches);
+						inventory[0] = new ItemStack(CrossroadsItems.dustSalt, batches);
 					}else{
 						inventory[0].grow(batches);
 					}
@@ -97,19 +97,19 @@ public class SteamBoilerTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			if(facing == null){
 				return (T) innerHandler;
 			}
-			if(facing == EnumFacing.UP){
+			if(facing == Direction.UP){
 				return (T) steamHandler;
 			}
 			return (T) waterHandler;
 		}
 
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing == Direction.DOWN)){
 			return (T) heatHandler;
 		}
 
@@ -117,7 +117,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return false;//Automation is not allowed to interact with the salt slot
 	}
 

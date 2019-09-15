@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
@@ -22,12 +22,12 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 
 	@Override
 	public Boolean[] getMatches(){
-		return world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL) ? super.getMatches() : new Boolean[] {false, false, false, false, false, false};
+		return world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL) ? super.getMatches() : new Boolean[] {false, false, false, false, false, false};
 	}
 
 	@Override
 	public void update(){
-		if(world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
+		if(world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL)){
 			super.update();
 		}
 	}
@@ -36,9 +36,9 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
-			if((facing == null || !locked[facing.getIndex()]) && world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL)){
+			if((facing == null || !locked[facing.getIndex()]) && world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL)){
 				return (T) heatHandler;
 			}else{
 				return null;
@@ -54,7 +54,7 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 
 		@Override
 		public double getOutput(boolean read){
-			if(!read || !world.getBlockState(pos).getValue(EssentialsProperties.REDSTONE_BOOL) || insulator == null){
+			if(!read || !world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL) || insulator == null){
 				return 0;
 			}
 			return 16D * HeatUtil.toKelvin(temp) / HeatUtil.toKelvin(insulator.getLimit());

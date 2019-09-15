@@ -9,14 +9,14 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -28,23 +28,23 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 
 	public BlockPos masterPos;//Defined relative to this block's position
 
-	private EnumFacing facing = null;
+	private Direction facing = null;
 
-	protected EnumFacing getFacing(){
+	protected Direction getFacing(){
 		if(facing == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.largeGearSlave){
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.largeGearSlave){
 				invalidate();
-				return EnumFacing.NORTH;
+				return Direction.NORTH;
 			}
-			facing = state.getValue(EssentialsProperties.FACING);
+			facing = state.get(EssentialsProperties.FACING);
 		}
 
 		return facing;
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		IAxleHandler axle = handler.getAxle();
 		if(axle == null){
 			return;
@@ -67,13 +67,13 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	}
 
 	@Override
-	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sendingPlayer){
 		//A BlockPos can be converted to and from a long, AKA 2 ints. The identifier is the first int, the message is the second.
 		long longPos = ((long) identifier << 32L) | (message & 0xFFFFFFFFL);
 		masterPos = BlockPos.fromLong(longPos);
 	}
 
-	public void passBreak(EnumFacing side, boolean drop){
+	public void passBreak(Direction side, boolean drop){
 		if(masterPos != null){
 			TileEntity te = world.getTileEntity(pos.add(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
@@ -87,8 +87,8 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		if(masterPos != null){
 			nbt.setLong("mast", masterPos.toLong());
 		}
@@ -96,13 +96,13 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		this.masterPos = BlockPos.fromLong(nbt.getLong("mast"));
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		if(masterPos != null){
 			nbt.setLong("mast", masterPos.toLong());
@@ -113,7 +113,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	private final ICogHandler handler = new CogHandler();
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
+	public boolean hasCapability(Capability<?> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && isEdge() && getFacing() == facing){
 			return true;
 		}else{
@@ -123,7 +123,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && isEdge() && getFacing() == facing){
 			return (T) handler;
 		}else{
@@ -134,8 +134,8 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	private class CogHandler implements ICogHandler{
 
 		@Override
-		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient, boolean renderOffset){
-			if(cogOrient == EnumFacing.getFacingFromVector(-masterPos.getX(), -masterPos.getY(), -masterPos.getZ())){
+		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, Direction cogOrient, boolean renderOffset){
+			if(cogOrient == Direction.getFacingFromVector(-masterPos.getX(), -masterPos.getY(), -masterPos.getZ())){
 				getAxle().propogate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);
 			}
 		}

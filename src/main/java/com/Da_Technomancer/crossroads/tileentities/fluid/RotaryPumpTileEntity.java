@@ -6,10 +6,10 @@ import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
@@ -56,12 +56,12 @@ public class RotaryPumpTileEntity extends ModuleTE{
 			return;
 		}
 
-		IBlockState fluidBlockstate = world.getBlockState(pos.offset(EnumFacing.DOWN));
+		BlockState fluidBlockstate = world.getBlockState(pos.offset(Direction.DOWN));
 		Block fluidBlock = fluidBlockstate.getBlock();
 		Fluid fl = FluidRegistry.lookupFluidForBlock(fluidBlock);
 		//If anyone knows a builtin way to simplify this if statement, be my guest. It's so long it scares me...
 		//2019-29-1: Looking back on this if statement 2 years later, this is a perfectly reasonable length and not at all scary. If anything, it's too short. If anyone can find a way to make it longer, that would be appreciated
-		if(fl != null && (fluidBlock instanceof BlockFluidClassic && ((BlockFluidClassic) fluidBlock).isSourceBlock(world, pos.offset(EnumFacing.DOWN)) || fluidBlockstate.getValue(BlockLiquid.LEVEL) == 0) && (fluids[0] == null || (CAPACITY - fluids[0].amount >= 1000 && fluids[0].getFluid() == fl))){
+		if(fl != null && (fluidBlock instanceof BlockFluidClassic && ((BlockFluidClassic) fluidBlock).isSourceBlock(world, pos.offset(Direction.DOWN)) || fluidBlockstate.get(BlockLiquid.LEVEL) == 0) && (fluids[0] == null || (CAPACITY - fluids[0].amount >= 1000 && fluids[0].getFluid() == fl))){
 			double holder = motData[1] < 0 ? 0 : Math.min(Math.min(MAX_POWER, motData[1]), REQUIRED - progress);
 			motData[1] -= holder;
 			progress += holder;
@@ -72,7 +72,7 @@ public class RotaryPumpTileEntity extends ModuleTE{
 		if(progress >= REQUIRED){
 			progress = 0;
 			fluids[0] = new FluidStack(fl, 1000 + (fluids[0] == null ? 0 : fluids[0].amount));
-			world.setBlockToAir(pos.offset(EnumFacing.DOWN));
+			world.setBlockToAir(pos.offset(Direction.DOWN));
 		}
 
 		if(lastProgress != (int) progress){
@@ -88,7 +88,7 @@ public class RotaryPumpTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, EntityPlayerMP player){
+	public void receiveLong(byte identifier, long message, ServerPlayerEntity player){
 		super.receiveLong(identifier, message, player);
 		if(identifier == 1){
 			progress = message;
@@ -96,13 +96,13 @@ public class RotaryPumpTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		progress = nbt.getDouble("prog");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setDouble("prog", progress);
 		return nbt;
@@ -112,11 +112,11 @@ public class RotaryPumpTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) fluidHandler;
 		}
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == Direction.UP || facing == null)){
 			return (T) axleHandler;
 		}
 

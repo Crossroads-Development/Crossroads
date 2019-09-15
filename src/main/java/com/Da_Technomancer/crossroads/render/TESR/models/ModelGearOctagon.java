@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR.models;
 
 import java.awt.Color;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ModelGearOctagon{
 
-	public static final ResourceLocation RESOURCE = new ResourceLocation(Main.MODID, "textures/model/gear_oct.png");
+	public static final ResourceLocation RESOURCE = new ResourceLocation(Crossroads.MODID, "textures/model/gear_oct.png");
 
 	//These contain sqrt, so I don't want to calculate them every frame.
 	private static final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));
@@ -33,7 +33,7 @@ public class ModelGearOctagon{
 		float topP = 0.0575F;//-.380F;
 		float bottomP = -0.0575F;//-.495F;
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(RESOURCE);
+		Minecraft.getInstance().renderEngine.bindTexture(RESOURCE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		GlStateManager.color(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);

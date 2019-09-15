@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
 
@@ -18,7 +18,7 @@ public interface ICogHandler{
 	 * @param cogOrient The orientation of the cogs in the plane (as opposed to the alignment of the plane, which is the capability side)
 	 * @param renderOffset Whether to render this block at an offset angle. This value should ONLY be used for rendering. Invert when connecting to other blocks before passing to the IAxleHandler (don't invert when connecting axially)
 	 */
-	public void connect(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient, boolean renderOffset);
+	public void connect(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, Direction cogOrient, boolean renderOffset);
 
 	public IAxleHandler getAxle();
 }

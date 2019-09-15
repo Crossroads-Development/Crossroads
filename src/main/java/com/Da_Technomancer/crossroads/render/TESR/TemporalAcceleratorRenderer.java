@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
@@ -11,21 +11,21 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class TemporalAcceleratorRenderer extends TileEntitySpecialRenderer<TemporalAcceleratorTileEntity>{
+public class TemporalAcceleratorRenderer extends TileEntityRenderer<TemporalAcceleratorTileEntity>{
 
 	private static final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));
 	private static final float sHalfT = .5F / (1F + (float) Math.sqrt(2F));
-	private static final ResourceLocation AREA = new ResourceLocation(Main.MODID, "textures/gui/field.png");
+	private static final ResourceLocation AREA = new ResourceLocation(Crossroads.MODID, "textures/gui/field.png");
 
 	@Override
 	public void render(TemporalAcceleratorTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
@@ -34,11 +34,11 @@ public class TemporalAcceleratorRenderer extends TileEntitySpecialRenderer<Tempo
 		}
 		super.render(te, x, y, z, partialTicks, destroyStage, alpha);
 
-		EnumFacing dir = te.getWorld().getBlockState(te.getPos()).getValue(EssentialsProperties.FACING);
+		Direction dir = te.getWorld().getBlockState(te.getPos()).get(EssentialsProperties.FACING);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		//Area of effect overlay when holding wrench
-		if(EssentialsConfig.isWrench(Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND), true) || EssentialsConfig.isWrench(Minecraft.getMinecraft().player.getHeldItem(EnumHand.OFF_HAND), true)){
+		if(EssentialsConfig.isWrench(Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND), true) || EssentialsConfig.isWrench(Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND), true)){
 			GlStateManager.pushMatrix();
 			GlStateManager.pushAttrib();
 			GlStateManager.enableBlend();
@@ -51,17 +51,17 @@ public class TemporalAcceleratorRenderer extends TileEntitySpecialRenderer<Tempo
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
 			GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
-			if(dir == EnumFacing.DOWN){
+			if(dir == Direction.DOWN){
 				GlStateManager.rotate(180, 1, 0, 0);
-			}else if(dir != EnumFacing.UP){
-				GlStateManager.rotate(dir.getAxisDirection() == EnumFacing.AxisDirection.POSITIVE ? 90 : -90, dir.getAxis() == Axis.Z ? 1 : 0, 0, dir.getAxis() == Axis.X ? -1 : 0);
+			}else if(dir != Direction.UP){
+				GlStateManager.rotate(dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 90 : -90, dir.getAxis() == Axis.Z ? 1 : 0, 0, dir.getAxis() == Axis.X ? -1 : 0);
 			}
 
 			float radius = te.getSize() / 2F + 0.01F;
 			GlStateManager.translate(0, radius + 0.5 - 0.001F, 0);
 
 
-			Minecraft.getMinecraft().renderEngine.bindTexture(AREA);
+			Minecraft.getInstance().renderEngine.bindTexture(AREA);
 
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(-radius, -radius, -radius).tex(0D, 0).endVertex();
@@ -110,10 +110,10 @@ public class TemporalAcceleratorRenderer extends TileEntitySpecialRenderer<Tempo
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
 
-		if(dir == EnumFacing.DOWN){
+		if(dir == Direction.DOWN){
 			GlStateManager.rotate(180, 1, 0, 0);
-		}else if(dir != EnumFacing.UP){
-			GlStateManager.rotate(dir.getAxisDirection() == EnumFacing.AxisDirection.POSITIVE ? 90 : -90, dir.getAxis() == Axis.Z ? 1 : 0, 0, dir.getAxis() == Axis.X ? -1 : 0);
+		}else if(dir != Direction.UP){
+			GlStateManager.rotate(dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 90 : -90, dir.getAxis() == Axis.Z ? 1 : 0, 0, dir.getAxis() == Axis.X ? -1 : 0);
 		}
 
 		float angle = te.getWorld().getTotalWorldTime() + partialTicks;
@@ -127,7 +127,7 @@ public class TemporalAcceleratorRenderer extends TileEntitySpecialRenderer<Tempo
 		float lHalfT = .5F;
 		float tHeight = 1F / 16F;
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(ModelGearOctagon.RESOURCE);
+		Minecraft.getInstance().renderEngine.bindTexture(ModelGearOctagon.RESOURCE);
 
 		for(int i = 0; i < 2; i++){
 			//i==0: Large gear; i==1: Small gear

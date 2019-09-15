@@ -1,23 +1,27 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.blocks.rotary.Mechanism;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
@@ -28,17 +32,17 @@ import java.util.List;
 public class Axle extends Item{
 
 	private final GearFactory.GearMaterial type;
-	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Main.MODID + ":axle", "inventory");
+	private static final ModelResourceLocation LOCAT = new ModelResourceLocation(Crossroads.MODID + ":axle", "inventory");
 
 	public Axle(GearFactory.GearMaterial typeIn){
 		String name = "axle_" + typeIn.toString().toLowerCase();
 		setTranslationKey("axle_metal");
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_GEAR);
+		setCreativeTab(CrossroadsItems.TAB_GEAR);
 		type = typeIn;
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
-		ModItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
+		CrossroadsItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
 		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"stick" + type.toString()}));
 	}
 
@@ -48,15 +52,15 @@ public class Axle extends Item{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("I: " + type.getDensity() / 32_000D);
 	}
 
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public ActionResultType onItemUse(PlayerEntity playerIn, World worldIn, BlockPos pos, Hand hand, Direction side, BlockRayTraceResult hit){
 		if(worldIn.isRemote){
-			return EnumActionResult.SUCCESS;
+			return ActionResultType.SUCCESS;
 		}
 
 		//Attempt to add this axle to a pre-existing mechanism
@@ -69,7 +73,7 @@ public class Axle extends Item{
 				if(!playerIn.capabilities.isCreativeMode){
 					playerIn.getHeldItem(hand).shrink(1);
 				}
-				return EnumActionResult.SUCCESS;
+				return ActionResultType.SUCCESS;
 			}
 		}
 
@@ -84,7 +88,7 @@ public class Axle extends Item{
 					playerIn.getHeldItem(hand).shrink(1);
 				}
 			}
-			return EnumActionResult.SUCCESS;
+			return ActionResultType.SUCCESS;
 		}
 
 		//Make a new mechanism block
@@ -93,7 +97,7 @@ public class Axle extends Item{
 				playerIn.getHeldItem(hand).shrink(1);
 			}
 
-			worldIn.setBlockState(pos.offset(side), ModBlocks.sextupleGear.getDefaultState(), 3);
+			worldIn.setBlockState(pos.offset(side), CrossroadsBlocks.sextupleGear.getDefaultState(), 3);
 			te = worldIn.getTileEntity(pos.offset(side));
 			if(te instanceof MechanismTileEntity){
 				RotaryUtil.increaseMasterKey(true);
@@ -101,6 +105,6 @@ public class Axle extends Item{
 			}
 		}
 
-		return EnumActionResult.SUCCESS;
+		return ActionResultType.SUCCESS;
 	}
 }

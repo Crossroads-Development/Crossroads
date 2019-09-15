@@ -1,28 +1,26 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import java.util.List;
-
-import com.Da_Technomancer.crossroads.Main;
-import com.google.common.collect.ImmutableList;
-
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
-import mezz.jei.api.gui.IDrawableStatic;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 
 public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipe>{
 
-	public static final String ID = Main.MODID + ".fluid_cooling";
+	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "fluid_cooling");
 	private final IDrawable back;
+	private final IDrawable icon;
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
 	private final IDrawableStatic arrowStatic;
@@ -30,20 +28,26 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipe>
 
 	protected FluidCoolingCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsBlocks.fluidCoolingChamber, 1));
 		slot = guiHelper.getSlotDrawable();
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
-		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, StartDirection.LEFT, false);
-		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Main.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64, 16, 64);
+		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
+		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64);
 	}
 
 	@Override
-	public String getUid(){
+	public ResourceLocation getUid(){
 		return ID;
 	}
 
 	@Override
+	public Class<? extends FluidCoolingRecipe> getRecipeClass(){
+		return FluidCoolingRecipe.class;
+	}
+
+	@Override
 	public String getTitle(){
-		return "Fluid Cooling";
+		return CrossroadsBlocks.fluidCoolingChamber.getNameTextComponent().getFormattedText();
 	}
 
 	@Override
@@ -52,36 +56,40 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRecipe>
 	}
 
 	@Override
-	public void drawExtras(Minecraft minecraft){
-		GlStateManager.enableAlpha();
-		GlStateManager.enableBlend();
-		slot.draw(minecraft, 80, 55);
-		arrowStatic.draw(minecraft, 45, 56);
-		arrow.draw(minecraft, 45, 56);
-		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
+	public void draw(FluidCoolingRecipe rec, double mouseX, double mouseY){
+		Minecraft.getInstance().fontRenderer.drawString("Maximum temp: " + rec.max + "°C", 10, 10, 4210752);
+		Minecraft.getInstance().fontRenderer.drawString("Heat Added: " + rec.add + "°C", 10, 20, 4210752);
+//		GlStateManager.enableAlpha();
+//		GlStateManager.enableBlend();
+		slot.draw(80, 55);
+		arrowStatic.draw(45, 56);
+		arrow.draw(45, 56);
+//		GlStateManager.disableBlend();
+//		GlStateManager.disableAlpha();
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, FluidCoolingRecipe recipeWrapper, IIngredients ingredients){
-		recipeLayout.getFluidStacks().init(0, true, 21, 30, 16, 64, 1000, true, fluidOverlay);
-		recipeLayout.getFluidStacks().set(0, ingredients.getInputs(FluidStack.class).get(0));
-		recipeLayout.getItemStacks().init(0, false, 80, 55);
-		recipeLayout.getItemStacks().set(0, ingredients.getOutputs(ItemStack.class).get(0));
+		IGuiItemStackGroup itemGroup = recipeLayout.getItemStacks();
+		IGuiFluidStackGroup fluidGroup = recipeLayout.getFluidStacks();
+
+		fluidGroup.init(0, true, 21, 30, 16, 64, 1000, true, fluidOverlay);
+		fluidGroup.set(0, recipeWrapper.fluid);
+		itemGroup.init(0, false, 80, 55);
+		itemGroup.set(0, recipeWrapper.stack);
+
+		itemGroup.set(ingredients);
+		fluidGroup.set(ingredients);
 	}
 
 	@Override
 	public IDrawable getIcon(){
-		return null;
+		return icon;
 	}
 
 	@Override
-	public List<String> getTooltipStrings(int mouseX, int mouseY){
-		return ImmutableList.of();
-	}
-
-	@Override
-	public String getModName(){
-		return Main.MODNAME;
+	public void setIngredients(FluidCoolingRecipe fluidCoolingRecipe, IIngredients ingredients){
+		ingredients.setInput(VanillaTypes.FLUID, fluidCoolingRecipe.fluid);
+		ingredients.setOutput(VanillaTypes.ITEM, fluidCoolingRecipe.stack);
 	}
 }

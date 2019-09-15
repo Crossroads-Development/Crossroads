@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.client.Minecraft;
@@ -8,20 +8,20 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GatewayFrameRenderer extends TileEntitySpecialRenderer<GatewayFrameTileEntity>{
+public class GatewayFrameRenderer extends TileEntityRenderer<GatewayFrameTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/gateway.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/model/gateway.png");
 
 	@Override
 	public void render(GatewayFrameTileEntity frame, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(frame == null || !frame.getWorld().isBlockLoaded(frame.getPos(), false) || frame.getWorld().getBlockState(frame.getPos()).getValue(EssentialsProperties.FACING) != EnumFacing.UP){
+		if(frame == null || !frame.getWorld().isBlockLoaded(frame.getPos(), false) || frame.getWorld().getBlockState(frame.getPos()).get(EssentialsProperties.FACING) != Direction.UP){
 			return;
 		}
 		super.render(frame, x, y, z, partialTicks, destroyStage, alpha);
@@ -40,7 +40,7 @@ public class GatewayFrameRenderer extends TileEntitySpecialRenderer<GatewayFrame
 		if(frame.getAlignment() == Axis.Z){
 			GlStateManager.rotate(90, 0, 1, 0);
 		}
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

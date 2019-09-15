@@ -2,11 +2,11 @@ package com.Da_Technomancer.crossroads.items.crafting;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 public class EdibleBlobRecipePredicate implements RecipePredicate<ItemStack>{
 
@@ -29,7 +29,7 @@ public class EdibleBlobRecipePredicate implements RecipePredicate<ItemStack>{
 			return false;
 		}
 
-		if(stack.getItem() == ModItems.edibleBlob && stack.hasTagCompound() && stack.getTagCompound().getInteger("food") == hunger && stack.getTagCompound().getInteger("sat") == saturation){
+		if(stack.getItem() == CrossroadsItems.edibleBlob && stack.hasTagCompound() && stack.getTagCompound().getInteger("food") == hunger && stack.getTagCompound().getInteger("sat") == saturation){
 			return true;
 		}
 
@@ -38,8 +38,8 @@ public class EdibleBlobRecipePredicate implements RecipePredicate<ItemStack>{
 
 	@Override
 	public List<ItemStack> getMatchingList(){
-		ItemStack out = new ItemStack(ModItems.edibleBlob, 1);
-		NBTTagCompound nbt = new NBTTagCompound();
+		ItemStack out = new ItemStack(CrossroadsItems.edibleBlob, 1);
+		CompoundNBT nbt = new CompoundNBT();
 		nbt.setInteger("food", hunger);
 		nbt.setInteger("sat", saturation);
 		out.setTagCompound(nbt);

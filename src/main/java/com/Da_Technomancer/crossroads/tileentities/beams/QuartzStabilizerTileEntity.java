@@ -4,12 +4,12 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -21,15 +21,15 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	private static final int[] RATES = new int[] {1, 2, 4, 8, 16, 32, 64};
 	private BeamUnitStorage storage = new BeamUnitStorage();
 
-	private EnumFacing dir = null;
+	private Direction dir = null;
 
-	private EnumFacing getDir(){
+	private Direction getDir(){
 		if(dir == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.quartzStabilizer){
-				return EnumFacing.NORTH;
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.quartzStabilizer){
+				return Direction.NORTH;
 			}
-			dir = state.getValue(EssentialsProperties.FACING);
+			dir = state.get(EssentialsProperties.FACING);
 		}
 		return dir;
 	}
@@ -48,7 +48,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("setting", setting);
 		storage.writeToNBT("stab_mag", nbt);
@@ -56,7 +56,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		setting = nbt.getInteger("setting");
 		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
@@ -73,7 +73,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 			}
 		}
 
-		EnumFacing dir = getDir();
+		Direction dir = getDir();
 
 		if(!storage.isEmpty()){
 			//As it would turn out, the problem of meeting a quota for the sum of values drawn from a limited source while also approximately maintaining the source ratio is quite messy when all values must be integers
@@ -136,7 +136,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Current maximum output: " + RATES[setting]);
 		chat.add("Stored: " + (storage.getPower() == 0 ? "Empty" : storage.getOutput().toString()));
 	}

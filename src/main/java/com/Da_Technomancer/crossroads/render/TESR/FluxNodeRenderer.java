@@ -1,20 +1,20 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class FluxNodeRenderer extends TileEntitySpecialRenderer<FluxNodeTileEntity>{
+public class FluxNodeRenderer extends TileEntityRenderer<FluxNodeTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/gimbal.png");
-	private static final ResourceLocation TEXTURE_COP = new ResourceLocation(Main.MODID, "textures/blocks/block_copshowium.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/model/gimbal.png");
+	private static final ResourceLocation TEXTURE_COP = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_copshowium.png");
 
 	@Override
 	public void render(FluxNodeTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
@@ -37,7 +37,7 @@ public class FluxNodeRenderer extends TileEntitySpecialRenderer<FluxNodeTileEnti
 		GlStateManager.rotate(angle, 0, 1, 0);
 
 		GlStateManager.color(1, 1, 1, 1);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
 		drawGimbal(tess, buf);
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.rotate(angle + 90, 0, 1, 0);
@@ -48,7 +48,7 @@ public class FluxNodeRenderer extends TileEntitySpecialRenderer<FluxNodeTileEnti
 		GlStateManager.scale(5F / 7F, 5F / 7F, 5F / 7F);
 		drawGimbal(tess, buf);
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE_COP);
+		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_COP);
 		GlStateManager.scale(7F / 8F * 5F / 7F, 7F / 8F * 5F / 7F, 7F / 8F * 5F / 7F);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		buf.pos(-0.5D, -0.5D, -0.5D).tex(0, 0).endVertex();

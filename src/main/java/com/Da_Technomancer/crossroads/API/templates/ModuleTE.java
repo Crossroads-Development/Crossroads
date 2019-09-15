@@ -7,13 +7,15 @@ import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -26,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE, ILongReceiver{
+public abstract class ModuleTE extends TileEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
 
 	//Rotary
 	protected final double[] motData = new double[4];
@@ -99,12 +101,12 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		if(useHeat()){
 			chat.add("Temp: " + MiscUtil.betterRound(temp, 3) + "°C");
 			chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
@@ -126,7 +128,7 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		for(int i = 0; i < 4; i++){
 			nbt.setDouble("mot_" + i, motData[i]);
@@ -141,7 +143,7 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 
 		for(int i = 0; i < fluids.length; i++){
 			if(fluids[i] != null){
-				NBTTagCompound fluidNBT = new NBTTagCompound();
+				CompoundNBT fluidNBT = new CompoundNBT();
 				fluids[i].writeToNBT(fluidNBT);
 				nbt.setTag("fluid_" + i, fluidNBT);
 			}
@@ -150,7 +152,7 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		for(int i = 0; i < 4; i++){
 			motData[i] = nbt.getDouble("mot_" + i);
@@ -171,8 +173,8 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		if(angleW != null){
 			nbt.setFloat("ang_w_0", angleW[0]);
 			nbt.setFloat("ang_w_1", angleW[1]);
@@ -181,7 +183,7 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == 0 && angleW != null){
 			float angle = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
 			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
@@ -190,7 +192,7 @@ public abstract class ModuleTE extends TileEntity implements ITickable, IInfoTE,
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		return getCapability(cap, side) != null || super.hasCapability(cap, side);
 	}
 

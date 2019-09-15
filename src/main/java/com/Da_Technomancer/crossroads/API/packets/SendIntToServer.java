@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.packets.Message;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -33,7 +33,7 @@ public class SendIntToServer extends Message<SendIntToServer>{
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.SERVER){
-			Main.logger.error("MessageToServer received on wrong side:" + context.side);
+			Crossroads.logger.error("MessageToServer received on wrong side:" + context.side);
 			return null;
 		}
 
@@ -47,7 +47,7 @@ public class SendIntToServer extends Message<SendIntToServer>{
 		return null;
 	}
 
-	public void processMessage(World world, byte identifier, int message, BlockPos pos, EntityPlayerMP sendingPlayer){
+	public void processMessage(World world, byte identifier, int message, BlockPos pos, ServerPlayerEntity sendingPlayer){
 		TileEntity te = world.getTileEntity(pos);
 
 		if(te instanceof IIntReceiver){

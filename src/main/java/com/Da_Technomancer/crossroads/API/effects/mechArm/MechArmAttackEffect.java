@@ -1,19 +1,19 @@
 package com.Da_Technomancer.crossroads.API.effects.mechArm;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
@@ -32,7 +32,7 @@ public class MechArmAttackEffect implements IMechArmEffect{
 	static{
 		Field holder = null;
 		try{
-			for(Field f : EntityLivingBase.class.getDeclaredFields()){
+			for(Field f : LivingEntity.class.getDeclaredFields()){
 				if("field_184617_aD".equals(f.getName()) || "ticksSinceLastSwing".equals(f.getName())){
 					holder = f;
 					holder.setAccessible(true);
@@ -40,27 +40,27 @@ public class MechArmAttackEffect implements IMechArmEffect{
 				}
 			}
 		}catch(Exception e){
-			Main.logger.error("Something went wrong getting the player cooldown field. Disabling relevant features (mechanical arm attacking)");
-			Main.logger.catching(e);
+			Crossroads.logger.error("Something went wrong getting the player cooldown field. Disabling relevant features (mechanical arm attacking)");
+			Crossroads.logger.catching(e);
 		}
 		lastSwingField = holder;
 	}
 
 	@Override
-	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, EnumFacing side, EntityArmRidable ent, MechanicalArmTileEntity te){
-		FakePlayer user = FakePlayerFactory.get((WorldServer) world, new GameProfile(new UUID(ID_GEN.nextLong(), ID_GEN.nextLong()), Main.MODID + "-arm_attack_effect-" + world.provider.getDimension()));
+	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, Direction side, EntityArmRidable ent, MechanicalArmTileEntity te){
+		FakePlayer user = FakePlayerFactory.get((ServerWorld) world, new GameProfile(new UUID(ID_GEN.nextLong(), ID_GEN.nextLong()), Crossroads.MODID + "-arm_attack_effect-" + world.provider.getDimension()));
 		user.setPositionAndRotation(posX, posY, posZ, side.getHorizontalAngle(), 0);
 		user.eyeHeight = 0;
 
-		EntityItem itemEnt = null;
-		if(!ent.getPassengers().isEmpty() && ent.getPassengers().get(0) instanceof EntityItem){
-			itemEnt = (EntityItem) ent.getPassengers().get(0);
-			user.setHeldItem(EnumHand.MAIN_HAND, itemEnt.getItem());
+		ItemEntity itemEnt = null;
+		if(!ent.getPassengers().isEmpty() && ent.getPassengers().get(0) instanceof ItemEntity){
+			itemEnt = (ItemEntity) ent.getPassengers().get(0);
+			user.setHeldItem(Hand.MAIN_HAND, itemEnt.getItem());
 		}
 
 		AxisAlignedBB targetBB;
 
-		if(side.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE){
+		if(side.getAxisDirection() == Direction.AxisDirection.NEGATIVE){
 			targetBB = new AxisAlignedBB(posX - 0.5D + ATTACK_RANGE * side.getXOffset(), posY - 0.5D + ATTACK_RANGE * side.getYOffset(), posZ - 0.5D + ATTACK_RANGE * side.getZOffset(), posX + 0.5D, posY + 0.5D, posZ + 0.5D);
 		}else{
 			targetBB = new AxisAlignedBB(posX - 0.5D, posY - 0.5D, posZ - 0.5D, posX + 0.5D + ATTACK_RANGE * side.getXOffset(), posY + 0.5D + ATTACK_RANGE * side.getYOffset(), posZ + 0.5D + ATTACK_RANGE * side.getZOffset());
@@ -73,18 +73,18 @@ public class MechArmAttackEffect implements IMechArmEffect{
 
 		if(!targets.isEmpty()){
 			if(itemEnt != null){
-				user.getAttributeMap().applyAttributeModifiers(itemEnt.getItem().getAttributeModifiers(EntityEquipmentSlot.MAINHAND));
+				user.getAttributeMap().applyAttributeModifiers(itemEnt.getItem().getAttributeModifiers(EquipmentSlotType.MAINHAND));
 				try{
 					if(lastSwingField != null){
 						lastSwingField.setInt(user, Integer.MAX_VALUE);//We need the attack cooldown to be full, as otherwise we deal 0 damage, and even when using FakePlayers there's no way to get at the field without reflection
 					}
 				}catch(IllegalAccessException e){
-					Main.logger.catching(e);
+					Crossroads.logger.catching(e);
 				}
 			}
 			user.attackTargetEntityWithCurrentItem(targets.get(0));
 			if(itemEnt != null){
-				itemEnt.setItem(user.getHeldItem(EnumHand.MAIN_HAND));
+				itemEnt.setItem(user.getHeldItem(Hand.MAIN_HAND));
 			}
 			return true;
 		}

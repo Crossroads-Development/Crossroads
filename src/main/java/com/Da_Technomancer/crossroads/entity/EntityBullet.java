@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public class EntityBullet extends EntityThrowable{
+public class EntityBullet extends ThrowableEntity{
 
 	private int damage;
 
@@ -15,7 +15,7 @@ public class EntityBullet extends EntityThrowable{
 		super(worldIn);
 	}
 
-	public EntityBullet(World worldIn, EntityLivingBase throwerIn, int damage){
+	public EntityBullet(World worldIn, LivingEntity throwerIn, int damage){
 		super(worldIn, throwerIn);
 		this.damage = damage;
 	}
@@ -32,13 +32,13 @@ public class EntityBullet extends EntityThrowable{
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt){
+	public void readEntityFromNBT(CompoundNBT nbt){
 		super.readEntityFromNBT(nbt);
 		damage = nbt.getInteger("damage");
 	}
 
 	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt){
+	public void writeEntityToNBT(CompoundNBT nbt){
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("damage", damage);
 	}

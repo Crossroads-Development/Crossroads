@@ -7,12 +7,12 @@ import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.ModConfig;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -58,7 +58,7 @@ public class HeatCableTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		super.receiveLong(identifier, message, sendingPlayer);
 		if(identifier == 1){
 			for(int i = 0; i < 6; i++){
@@ -92,7 +92,7 @@ public class HeatCableTileEntity extends ModuleTE{
 
 		//Heat transfer
 		ArrayList<IHeatHandler> heatHandlers = new ArrayList<>(6);
-		for(EnumFacing side : EnumFacing.values()){
+		for(Direction side : Direction.values()){
 			if(locked[side.getIndex()]){
 				continue;
 			}
@@ -132,7 +132,7 @@ public class HeatCableTileEntity extends ModuleTE{
 		}
 
 		if(temp > insulator.getLimit()){
-			if(ModConfig.heatEffects.getBoolean()){
+			if(CrossroadsConfig.heatEffects.getBoolean()){
 				insulator.getEffect().doEffect(world, pos, 1, null);
 			}else{
 				world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
@@ -141,7 +141,7 @@ public class HeatCableTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		insulator = nbt.hasKey("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
 		for(int i = 0; i < 6; i++){
@@ -151,7 +151,7 @@ public class HeatCableTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setString("insul", insulator.name());
 		for(int i = 0; i < 6; i++){
@@ -162,13 +162,13 @@ public class HeatCableTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
+	public CompoundNBT getUpdateTag(){
 		return writeToNBT(super.getUpdateTag());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || !locked[facing.getIndex()])){
 			return (T) heatHandler;
 		}

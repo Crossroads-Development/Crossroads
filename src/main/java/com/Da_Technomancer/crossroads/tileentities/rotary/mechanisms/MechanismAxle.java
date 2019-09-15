@@ -8,7 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,17 +27,17 @@ public class MechanismAxle implements IMechanism{
 	}
 
 	@Override
-	public double getInertia(GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	public double getInertia(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		return mat.getDensity() / 32_000D;
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(Capability<?> cap, Direction capSide, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
 		return cap == Capabilities.AXLE_CAPABILITY && side == null && capSide.getAxis() == axis;
 	}
 
 	@Override
-	public void propogate(GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+	public void propogate(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 		//This mechanism should always be in the axle slot
 		if(side != null){
 			return;
@@ -66,8 +66,8 @@ public class MechanismAxle implements IMechanism{
 
 		
 		
-		for(EnumFacing.AxisDirection direct : EnumFacing.AxisDirection.values()){
-			EnumFacing endDir = EnumFacing.getFacingFromAxis(direct, axis);
+		for(Direction.AxisDirection direct : Direction.AxisDirection.values()){
+			Direction endDir = Direction.getFacingFromAxis(direct, axis);
 			
 			if(te.members[endDir.getIndex()] != null){
 				//Do internal connection
@@ -77,7 +77,7 @@ public class MechanismAxle implements IMechanism{
 			}else{
 				//Connect externally
 				TileEntity endTE = te.getWorld().getTileEntity(te.getPos().offset(endDir));
-				EnumFacing oEndDir = endDir.getOpposite();
+				Direction oEndDir = endDir.getOpposite();
 				if(endTE != null){
 					if(endTE.hasCapability(Capabilities.AXIS_CAPABILITY, oEndDir)){
 						endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir).trigger(masterIn, key);
@@ -102,13 +102,13 @@ public class MechanismAxle implements IMechanism{
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(@Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	public AxisAlignedBB getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
 		return side != null || axis == null ? Block.NULL_AABB : BOUNDING_BOXES[axis.ordinal()];
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	@OnlyIn(Dist.CLIENT)
+	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(axis == null){
 			return;
 		}
@@ -116,7 +116,7 @@ public class MechanismAxle implements IMechanism{
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[6];
 
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(axis == EnumFacing.Axis.Y ? 0 : 90F, axis == EnumFacing.Axis.Z ? 1 : 0, 0, axis == EnumFacing.Axis.X ? -1 : 0);
+		GlStateManager.rotate(axis == Direction.Axis.Y ? 0 : 90F, axis == Direction.Axis.Z ? 1 : 0, 0, axis == Direction.Axis.X ? -1 : 0);
 		float angle = handler.getAngle(partialTicks);
 		GlStateManager.rotate(angle, 0F, 1F, 0F);
 		ModelAxle.render(mat.getColor());

@@ -2,23 +2,23 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.BasicItem;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.item.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -118,7 +118,7 @@ public final class OreSetup{
 			}
 
 			@Override
-			public Item getItemDropped(IBlockState state, Random rand, int fortune){
+			public Item getItemDropped(BlockState state, Random rand, int fortune){
 				return gemRuby;
 			}
 		};
@@ -143,13 +143,13 @@ public final class OreSetup{
 			}
 
 			@Override
-			public Item getItemDropped(IBlockState state, Random rand, int fortune){
+			public Item getItemDropped(BlockState state, Random rand, int fortune){
 				return voidCrystal;
 			}
 		};
 
 
-		String[] rawInput = ModConfig.getConfigStringList(ModConfig.processableOres, true);
+		String[] rawInput = CrossroadsConfig.getConfigStringList(CrossroadsConfig.processableOres, true);
 
 		//It's a HashMap instead of an ArrayList just in case a user decides to (incorrectly) list a metal twice
 		HashMap<String, Color> metals = new HashMap<>(rawInput.length);
@@ -185,9 +185,9 @@ public final class OreSetup{
 			metals.put(metal, col);
 		}
 
-		ModelResourceLocation dustModel = new ModelResourceLocation(Main.MODID + ":ore_dust", "inventory");
-		ModelResourceLocation gravelModel = new ModelResourceLocation(Main.MODID + ":ore_gravel", "inventory");
-		ModelResourceLocation clumpModel = new ModelResourceLocation(Main.MODID + ":ore_clump", "inventory");
+		ModelResourceLocation dustModel = new ModelResourceLocation(Crossroads.MODID + ":ore_dust", "inventory");
+		ModelResourceLocation gravelModel = new ModelResourceLocation(Crossroads.MODID + ":ore_gravel", "inventory");
+		ModelResourceLocation clumpModel = new ModelResourceLocation(Crossroads.MODID + ":ore_clump", "inventory");
 
 		for(Map.Entry<String, Color> type : metals.entrySet()){
 			String lowercaseMetal = type.getKey().toLowerCase();
@@ -199,43 +199,43 @@ public final class OreSetup{
 				public String getItemStackDisplayName(ItemStack stack){
 					return String.format(super.getItemStackDisplayName(stack), getMatName(type.getKey()));
 				}
-			}.setRegistryName(Main.MODID, "dust_" + lowercaseMetal).setCreativeTab(ModItems.TAB_CROSSROADS).setTranslationKey("dust_metal");
-			ModItems.toRegister.add(dust);
-			ModItems.toClientRegister.put(Pair.of(dust, 0), dustModel);
+			}.setRegistryName(Crossroads.MODID, "dust_" + lowercaseMetal).setCreativeTab(CrossroadsItems.TAB_CROSSROADS).setTranslationKey("dust_metal");
+			CrossroadsItems.toRegister.add(dust);
+			CrossroadsItems.toClientRegister.put(Pair.of(dust, 0), dustModel);
 			ModCrafting.toRegisterOreDict.add(Pair.of(dust, new String[] {"dust" + type.getKey()}));
 			Item gravel = new Item(){
 				@Override
 				public String getItemStackDisplayName(ItemStack stack){
 					return String.format(super.getItemStackDisplayName(stack), getMatName(type.getKey()));
 				}
-			}.setRegistryName(Main.MODID, "gravel_" + lowercaseMetal).setCreativeTab(ModItems.TAB_CROSSROADS).setTranslationKey("gravel_metal");
-			ModItems.toRegister.add(gravel);
-			ModItems.toClientRegister.put(Pair.of(gravel, 0), gravelModel);
+			}.setRegistryName(Crossroads.MODID, "gravel_" + lowercaseMetal).setCreativeTab(CrossroadsItems.TAB_CROSSROADS).setTranslationKey("gravel_metal");
+			CrossroadsItems.toRegister.add(gravel);
+			CrossroadsItems.toClientRegister.put(Pair.of(gravel, 0), gravelModel);
 			Item clump = new Item(){
 				@Override
 				public String getItemStackDisplayName(ItemStack stack){
 					return String.format(super.getItemStackDisplayName(stack), getMatName(type.getKey()));
 				}
-			}.setRegistryName(Main.MODID, "clump_" + lowercaseMetal).setCreativeTab(ModItems.TAB_CROSSROADS).setTranslationKey("clump_metal");
-			ModItems.toRegister.add(clump);
-			ModItems.toClientRegister.put(Pair.of(clump, 0), clumpModel);
+			}.setRegistryName(Crossroads.MODID, "clump_" + lowercaseMetal).setCreativeTab(CrossroadsItems.TAB_CROSSROADS).setTranslationKey("clump_metal");
+			CrossroadsItems.toRegister.add(clump);
+			CrossroadsItems.toClientRegister.put(Pair.of(clump, 0), clumpModel);
 
-			Fluid fluid = new Fluid(lowercaseMetal, new ResourceLocation(Main.MODID, "blocks/molten_metal_still"), new ResourceLocation(Main.MODID, "blocks/molten_metal_flow")){
+			Fluid fluid = new Fluid(lowercaseMetal, new ResourceLocation(Crossroads.MODID, "blocks/molten_metal_still"), new ResourceLocation(Crossroads.MODID, "blocks/molten_metal_flow")){
 				@Override
 				public String getLocalizedName(FluidStack stack){
 					return String.format(super.getLocalizedName(stack), getMatName(type.getKey()));
 				}
-			}.setDensity(3000).setTemperature(1500).setLuminosity(15).setViscosity(1300).setColor(type.getValue()).setUnlocalizedName("molten_metal");
+			}.setDensity(3000).setTemperature(1500).setLuminosity(15).setViscosity(1300).setColor(type.get()).setUnlocalizedName("molten_metal");
 			FluidRegistry.registerFluid(fluid);
 			BlockFluidClassic fluidBlock = (BlockFluidClassic) new BlockFluidClassic(fluid, Material.LAVA){
 				@Override
 				public String getLocalizedName(){
 					return String.format(super.getLocalizedName(), getMatName(type.getKey()));
 				}
-			}.setTranslationKey("molten_metal").setRegistryName(Main.MODID + ":molten_metal_" + lowercaseMetal);
+			}.setTranslationKey("molten_metal").setRegistryName(Crossroads.MODID + ":molten_metal_" + lowercaseMetal);
 			fluid.setBlock(fluidBlock);
 			FluidRegistry.addBucketForFluid(fluid);
-			ModBlocks.toRegister.add(fluidBlock);
+			CrossroadsBlocks.toRegister.add(fluidBlock);
 
 
 			RecipeHolder.millRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new ItemStack[] {new ItemStack(dust, 2), new ItemStack(Blocks.SAND, 1)});
@@ -249,7 +249,7 @@ public final class OreSetup{
 			RecipeHolder.blastFurnaceRecipes.put(new ItemRecipePredicate(gravel, 0), Pair.of(new FluidStack(fluid, EnergyConverters.INGOT_MB), 2));
 			RecipeHolder.blastFurnaceRecipes.put(new ItemRecipePredicate(clump, 0), Pair.of(new FluidStack(fluid, EnergyConverters.INGOT_MB), 1));
 
-			OreProfile profile = new OreProfile(dust, gravel, clump, fluid, fluidBlock, type.getValue());
+			OreProfile profile = new OreProfile(dust, gravel, clump, fluid, fluidBlock, type.get());
 			metalStages.put(type.getKey(), profile);
 		}
 	}
@@ -257,13 +257,13 @@ public final class OreSetup{
 	protected static void initCrafting(){
 		for(Map.Entry<String, OreProfile> ent : metalStages.entrySet()){
 			if(FMLCommonHandler.instance().getSide() == Side.CLIENT){
-				registerColor(ent.getValue());
+				registerColor(ent.get());
 			}
 
 			ItemStack ingot = MiscUtil.getOredictStack("ingot" + ent.getKey(), 1);
 			if(!ingot.isEmpty()){
-				GameRegistry.addSmelting(new ItemStack(ent.getValue().dust, 1), ingot, .7F);
-				RecipeHolder.fluidCoolingRecipes.put(ent.getValue().molten, Pair.of(EnergyConverters.INGOT_MB, Triple.of(ingot, 1500D, 250D)));
+				GameRegistry.addSmelting(new ItemStack(ent.get().dust, 1), ingot, .7F);
+				RecipeHolder.fluidCoolingRecipes.put(ent.get().molten, Pair.of(EnergyConverters.INGOT_MB, Triple.of(ingot, 1500D, 250D)));
 			}
 		}
 
@@ -282,10 +282,10 @@ public final class OreSetup{
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	private static void registerColor(OreProfile profile){
 		IItemColor itemColoring = (ItemStack stack, int tintIndex) -> tintIndex == 0 ? profile.col.getRGB() : -1;
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(itemColoring, profile.dust, profile.gravel, profile.clump);
+		Minecraft.getInstance().getItemColors().registerItemColorHandler(itemColoring, profile.dust, profile.gravel, profile.clump);
 	}
 
 	public static class OreProfile{

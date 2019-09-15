@@ -2,24 +2,24 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 
 public class BeamSplitterTileEntity extends BeamRenderTE{
 
 	private int redstone = 0;
-	private EnumFacing dir = null;
+	private Direction dir = null;
 
-	private EnumFacing getDir(){
+	private Direction getDir(){
 		if(dir == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.beamSplitter){
-				return EnumFacing.NORTH;
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.beamSplitter){
+				return Direction.NORTH;
 			}
-			dir = state.getValue(EssentialsProperties.FACING);
+			dir = state.get(EssentialsProperties.FACING);
 		}
 		return dir;
 	}
@@ -38,14 +38,14 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("reds", redstone);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		redstone = nbt.getInteger("reds");
 	}
@@ -55,7 +55,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 		//As it would turn out, the problem of meeting a quota for the sum of values drawn from a limited source while also approximately maintaining the source ratio is quite messy when all values must be integers
 		//This is about as clean an implementation as is possible
 		int toFill = out == null ? 0 : (int) Math.round(out.getPower() * Math.min(redstone, 12) / 12D);
-		EnumFacing facing = getDir();
+		Direction facing = getDir();
 		BeamUnit toDraw;
 		BeamUnit remain;
 
@@ -114,7 +114,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] inputSides(){
 		boolean[] input = new boolean[] {true, true, true, true, true, true};
-		EnumFacing facing = getDir();
+		Direction facing = getDir();
 		input[facing.getIndex()] = false;
 		input[facing.getOpposite().getIndex()] = false;
 		return input;
@@ -123,7 +123,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] output = new boolean[6];
-		EnumFacing facing = getDir();
+		Direction facing = getDir();
 		output[facing.getIndex()] = true;
 		output[facing.getOpposite().getIndex()] = true;
 		return output;

@@ -4,13 +4,13 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,14 +25,14 @@ public class CheatWandHeat extends Item{
 		String name = "cheat_wand_heat";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public ActionResultType onItemUse(PlayerEntity playerIn, World worldIn, BlockPos pos, Hand hand, Direction side, BlockRayTraceResult hit){
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te != null && te.hasCapability(Capabilities.HEAT_CAPABILITY, null)){
 			IHeatHandler cable = te.getCapability(Capabilities.HEAT_CAPABILITY, null);
@@ -41,14 +41,14 @@ public class CheatWandHeat extends Item{
 			}else{
 				cable.addHeat(100);
 			}
-			return EnumActionResult.SUCCESS;
+			return ActionResultType.SUCCESS;
 		}
-		return EnumActionResult.PASS;
+		return ActionResultType.PASS;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("Creative Mode Only");
 		tooltip.add("Adds 100°C when used on a cable");
 		tooltip.add("Shift clicking removes 100°C");

@@ -1,45 +1,45 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.beams.IBeamTransparent;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class LightEffect implements IEffect{
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
-		IBlockState state = worldIn.getBlockState(pos);
+	public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
+		BlockState state = worldIn.getBlockState(pos);
 		BlockPos offsetPos;
-		if(state.getBlock() == ModBlocks.blockPureQuartz && !(state.getBlock() instanceof IBeamTransparent)){
-			worldIn.setBlockState(pos, ModBlocks.blockLuminescentQuartz.getDefaultState());
-		}else if(state.getMaterial() == Material.ROCK && state.getBlock() != ModBlocks.blockLuminescentQuartz && !(state.getBlock() instanceof IBeamTransparent)){
+		if(state.getBlock() == CrossroadsBlocks.blockPureQuartz && !(state.getBlock() instanceof IBeamTransparent)){
+			worldIn.setBlockState(pos, CrossroadsBlocks.blockLuminescentQuartz.getDefaultState());
+		}else if(state.getMaterial() == Material.ROCK && state.getBlock() != CrossroadsBlocks.blockLuminescentQuartz && !(state.getBlock() instanceof IBeamTransparent)){
 			worldIn.setBlockState(pos, Blocks.GLOWSTONE.getDefaultState());
-		}else if(state.getMaterial() == Material.GLASS && state.getBlock() != Blocks.GLOWSTONE && state.getBlock() != ModBlocks.lightCluster && !(state.getBlock() instanceof IBeamTransparent)){
+		}else if(state.getMaterial() == Material.GLASS && state.getBlock() != Blocks.GLOWSTONE && state.getBlock() != CrossroadsBlocks.lightCluster && !(state.getBlock() instanceof IBeamTransparent)){
 			worldIn.setBlockState(pos, Blocks.SEA_LANTERN.getDefaultState());
 		}else if(state.getBlock().isAir(state, worldIn, pos)){
-			worldIn.setBlockState(pos, ModBlocks.lightCluster.getDefaultState());
-		}else if(dir != null && state.getBlock() != Blocks.GLOWSTONE && state.getBlock() != ModBlocks.blockLuminescentQuartz && state.getBlock() != Blocks.SEA_LANTERN && (state = worldIn.getBlockState(offsetPos = pos.offset(dir))).getBlock().isAir(state, worldIn, offsetPos)){
-			worldIn.setBlockState(offsetPos, ModBlocks.lightCluster.getDefaultState());
+			worldIn.setBlockState(pos, CrossroadsBlocks.lightCluster.getDefaultState());
+		}else if(dir != null && state.getBlock() != Blocks.GLOWSTONE && state.getBlock() != CrossroadsBlocks.blockLuminescentQuartz && state.getBlock() != Blocks.SEA_LANTERN && (state = worldIn.getBlockState(offsetPos = pos.offset(dir))).getBlock().isAir(state, worldIn, offsetPos)){
+			worldIn.setBlockState(offsetPos, CrossroadsBlocks.lightCluster.getDefaultState());
 		}
 	}
 
 	public static class VoidLightEffect implements IEffect{
 
 		@Override
-		public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
-			IBlockState state = worldIn.getBlockState(pos);
+		public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
+			BlockState state = worldIn.getBlockState(pos);
 			if(state.getBlock() == Blocks.GLOWSTONE){
 				worldIn.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
 			}else if(state.getBlock() == Blocks.SEA_LANTERN){
 				worldIn.setBlockState(pos, Blocks.GLASS.getDefaultState());
-			}else if(state.getBlock() == ModBlocks.blockLuminescentQuartz){
-				worldIn.setBlockState(pos, ModBlocks.blockPureQuartz.getDefaultState());
-			}else if(state.getBlock() == ModBlocks.lightCluster){
+			}else if(state.getBlock() == CrossroadsBlocks.blockLuminescentQuartz){
+				worldIn.setBlockState(pos, CrossroadsBlocks.blockPureQuartz.getDefaultState());
+			}else if(state.getBlock() == CrossroadsBlocks.lightCluster){
 				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 			}
 		}

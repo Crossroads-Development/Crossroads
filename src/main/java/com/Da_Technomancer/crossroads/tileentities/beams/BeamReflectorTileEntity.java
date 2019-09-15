@@ -27,7 +27,7 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] inputSides(){
 		if(facing == -1){
-			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex();
+			facing = world.getBlockState(pos).get(EssentialsProperties.FACING).getIndex();
 		}
 		boolean[] out = {true, true, true, true, true, true};
 		out[facing] = false;
@@ -37,7 +37,7 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] outputSides(){
 		if(facing == -1){
-			facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex();
+			facing = world.getBlockState(pos).get(EssentialsProperties.FACING).getIndex();
 		}
 		boolean[] out = {false, false, false, false, false, false};
 		out[facing] = true;

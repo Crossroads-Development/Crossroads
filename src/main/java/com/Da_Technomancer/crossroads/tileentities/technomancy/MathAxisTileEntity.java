@@ -4,14 +4,14 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.rotary.*;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -30,14 +30,14 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	private final ISlaveAxisHandler slaveHandler = new SlaveAxisHandler();
 
 	@Override
-	protected EnumFacing getFacing(){
+	protected Direction getFacing(){
 		if(facing == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.mathAxis){
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.mathAxis){
 				invalidate();
-				return EnumFacing.NORTH;
+				return Direction.NORTH;
 			}
-			facing = state.getValue(Properties.HORIZ_FACING);
+			facing = state.get(Properties.HORIZ_FACING);
 		}
 		return facing;
 	}
@@ -45,7 +45,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	public void setMode(Mode mode){
 		this.mode = mode;
 		if(!world.isRemote){
-			world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.ARRANGEMENT, mode.getFormat()), 2);
+			world.setBlockState(pos, world.getBlockState(pos).with(Properties.ARRANGEMENT, mode.getFormat()), 2);
 		}
 		markDirty();
 	}
@@ -60,14 +60,14 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	}
 
 	@Override
-	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == 0 && message >= 0 && message < Mode.values().length){
 			setMode(Mode.values()[message]);
 		}
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return newState.getBlock() != oldState.getBlock();
 	}
 
@@ -79,14 +79,14 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 
 	@Override
 	protected void runCalc(){
-		EnumFacing side1 = getFacing().getOpposite();
+		Direction side1 = getFacing().getOpposite();
 		TileEntity te1 = world.getTileEntity(pos.offset(side1));
 		double in1 = te1 != null && te1.hasCapability(Capabilities.AXLE_CAPABILITY, side1.getOpposite()) ? te1.getCapability(Capabilities.AXLE_CAPABILITY, side1.getOpposite()).getMotionData()[0] : 0;
 		double in2 = 0;
 
 		if(mode.format == Arrangement.DOUBLE){
-			TileEntity te2 = world.getTileEntity(pos.offset(EnumFacing.UP));
-			in2 = te2 != null && te2.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN) ? te2.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN).getMotionData()[0] : 0;
+			TileEntity te2 = world.getTileEntity(pos.offset(Direction.UP));
+			in2 = te2 != null && te2.hasCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN) ? te2.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN).getMotionData()[0] : 0;
 		}
 
 		double targetSpeed = mode.getFunction().applyAsDouble(in1, in2);
@@ -98,8 +98,8 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 		}
 
 		double cost = sumIRot * Math.pow(targetSpeed, 2) / 2D;
-		TileEntity batteryTE = world.getTileEntity(pos.offset(EnumFacing.DOWN));
-		IAxleHandler sourceAxle = batteryTE == null ? null : batteryTE.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.UP);
+		TileEntity batteryTE = world.getTileEntity(pos.offset(Direction.DOWN));
+		IAxleHandler sourceAxle = batteryTE == null ? null : batteryTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.UP);
 
 		double availableEnergy = Math.abs(sumEnergy);
 		if(sourceAxle != null){
@@ -136,13 +136,13 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		mode = Mode.values()[nbt.getInteger("mode")];
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("mode", mode.ordinal());
 		return nbt;
@@ -166,8 +166,8 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.SLAVE_AXIS_CAPABILITY && (side == getFacing().getOpposite() || (mode.format == Arrangement.DOUBLE && side == EnumFacing.UP))){
+	public boolean hasCapability(Capability<?> cap, Direction side){
+		if(cap == Capabilities.SLAVE_AXIS_CAPABILITY && (side == getFacing().getOpposite() || (mode.format == Arrangement.DOUBLE && side == Direction.UP))){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -175,11 +175,11 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return (T) mathAxisHandler;
 		}
-		if(cap == Capabilities.SLAVE_AXIS_CAPABILITY && (side == getFacing().getOpposite() || (mode.format == Arrangement.DOUBLE && side == EnumFacing.UP))){
+		if(cap == Capabilities.SLAVE_AXIS_CAPABILITY && (side == getFacing().getOpposite() || (mode.format == Arrangement.DOUBLE && side == Direction.UP))){
 			return (T) slaveHandler;
 		}
 
@@ -192,7 +192,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 		private boolean twoTrig = false;
 
 		@Override
-		public void trigger(EnumFacing side){
+		public void trigger(Direction side){
 			if(mode.format == Arrangement.SINGLE){
 				if(side == getFacing().getOpposite() && !locked && !rotaryMembers.isEmpty()){
 					runCalc();
@@ -224,7 +224,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 		@Override
 		public HashSet<ISlaveAxisHandler> getContainedAxes(){
 			HashSet<ISlaveAxisHandler> out = new HashSet<>();
-			for(Pair<ISlaveAxisHandler, EnumFacing> slave : slaves){
+			for(Pair<ISlaveAxisHandler, Direction> slave : slaves){
 				out.add(slave.getLeft());
 			}
 			return out;
@@ -238,7 +238,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	protected class AxisHandler extends MasterAxisTileEntity.AxisHandler{
 
 		@Override
-		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
+		public void addAxisToList(ISlaveAxisHandler handler, Direction side){
 			if(RotaryUtil.contains(slaveHandler, handler)){
 				world.destroyBlock(pos, true);
 				return;
@@ -259,22 +259,22 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 
 	public enum Mode{
 
-		SUM(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/sum.png"), (in1, in2) -> in1 + in2),
-		SUB(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/sub.png"), (in1, in2) -> in1 - in2),
-		MULT(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/mult.png"), (in1, in2) -> in1 * in2),
-		DIV(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/div.png"), (in1, in2) -> in2 == 0 ? 0 : in1 / in2),
-		POW(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/pow.png"), Math::pow),
-		SQRT(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/sqrt.png"), (in1, in2) -> in1 < 0 ? 0 : Math.sqrt(in1)),
-		SIN(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/sin.png"), (in1, in2) -> Math.sin(in1)),
-		COS(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/cos.png"), (in1, in2) -> Math.cos(in1)),
-		TAN(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/tan.png"), (in1, in2) -> Math.tan(in1)),
-		ASIN(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/asin.png"), (in1, in2) -> in1 * in1 > 1 ? 0 : Math.asin(in1)),
-		ACOS(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/acos.png"), (in1, in2) -> in1 * in1 > 1 ? 0 : Math.acos(in1)),
-		ATAN(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/atan.png"), (in1, in2) -> Math.atan(in1)),
-		LOG(Arrangement.SINGLE, new ResourceLocation(Main.MODID, "textures/gui/math/log.png"), (in1, in2) -> in1 <= 0 ? 0 : Math.log(in1)),//Base e
-		MOD(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/mod.png"), (in1, in2) -> in2 == 0 ? 0 : in1 % in2),
-		MIN(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/min.png"), Math::min),
-		MAX(Arrangement.DOUBLE, new ResourceLocation(Main.MODID, "textures/gui/math/max.png"), Math::max);
+		SUM(Arrangement.DOUBLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/sum.png"), (in1, in2) -> in1 + in2),
+		SUB(Arrangement.DOUBLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/sub.png"), (in1, in2) -> in1 - in2),
+		MULT(Arrangement.DOUBLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/mult.png"), (in1, in2) -> in1 * in2),
+		DIV(Arrangement.DOUBLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/div.png"), (in1, in2) -> in2 == 0 ? 0 : in1 / in2),
+		POW(Arrangement.DOUBLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/pow.png"), Math::pow),
+		SQRT(Arrangement.SINGLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/sqrt.png"), (in1, in2) -> in1 < 0 ? 0 : Math.sqrt(in1)),
+		SIN(Arrangement.SINGLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/sin.png"), (in1, in2) -> Math.sin(in1)),
+		COS(Arrangement.SINGLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/cos.png"), (in1, in2) -> Math.cos(in1)),
+		TAN(Arrangement.SINGLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/tan.png"), (in1, in2) -> Math.tan(in1)),
+		ASIN(Arrangement.SINGLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/asin.png"), (in1, in2) -> in1 * in1 > 1 ? 0 : Math.asin(in1)),
+		ACOS(Arrangement.SINGLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/acos.png"), (in1, in2) -> in1 * in1 > 1 ? 0 : Math.acos(in1)),
+		ATAN(Arrangement.SINGLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/atan.png"), (in1, in2) -> Math.atan(in1)),
+		LOG(Arrangement.SINGLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/log.png"), (in1, in2) -> in1 <= 0 ? 0 : Math.log(in1)),//Base e
+		MOD(Arrangement.DOUBLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/mod.png"), (in1, in2) -> in2 == 0 ? 0 : in1 % in2),
+		MIN(Arrangement.DOUBLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/min.png"), Math::min),
+		MAX(Arrangement.DOUBLE, new ResourceLocation(Crossroads.MODID, "textures/gui/math/max.png"), Math::max);
 
 		private final Arrangement format;
 		private final ResourceLocation sprite;

@@ -9,11 +9,12 @@ import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.gui.container.BlankContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MathAxisTileEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 
 import java.io.IOException;
 
-public class MathAxisGuiContainer extends GuiContainer{
+public class MathAxisGuiContainer extends ContainerScreen{
 
 	private final MathAxisTileEntity te;
 	private ToggleButtonGuiObject[] buttonArray = new ToggleButtonGuiObject[MathAxisTileEntity.Mode.values().length];

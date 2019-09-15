@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -17,13 +17,13 @@ public class PhilStone extends Item{
 		String name = pracStone ? "prac_stone" : "phil_stone";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	@Override
-	public boolean onEntityItemUpdate(EntityItem entityItem){
+	public boolean onEntityItemUpdate(ItemEntity entityItem){
 		if(entityItem.onGround){
 			AxisAlignedBB entityBox = entityItem.getEntityBoundingBox();
 			clearBlock(entityItem.world, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.maxZ));
@@ -35,7 +35,7 @@ public class PhilStone extends Item{
 	}
 
 	private static void clearBlock(World world, BlockPos pos){
-		IBlockState state = world.getBlockState(pos);
+		BlockState state = world.getBlockState(pos);
 		if(!state.getBlock().isAir(state, world, pos)){
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + world.rand.nextDouble(), pos.getY() + world.rand.nextDouble(), pos.getZ() + world.rand.nextDouble(), 0, 0, 0);

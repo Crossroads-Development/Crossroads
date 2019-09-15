@@ -6,14 +6,13 @@ import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ITransparentReaction;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.integration.JEI.*;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -22,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
+
+;
 
 public final class RecipeHolder{
 
@@ -80,12 +81,12 @@ public final class RecipeHolder{
 	/**
 	 * Stores the fusion beam conversion recipes. 
 	 */
-	public static final PredicateMap<IBlockState, BeamTransmute> fusionBeamRecipes = new PredicateMap<>();
+	public static final PredicateMap<BlockState, BeamTransmute> fusionBeamRecipes = new PredicateMap<>();
 
 	/**
 	 * Stores the void-fusion beam conversion recipes. 
 	 */
-	public static final PredicateMap<IBlockState, BeamTransmute> vFusionBeamRecipes = new PredicateMap<>();
+	public static final PredicateMap<BlockState, BeamTransmute> vFusionBeamRecipes = new PredicateMap<>();
 
 	/**
 	 * The recipes for the Detailed Crafter that require technomancy to be unlocked.
@@ -101,14 +102,14 @@ public final class RecipeHolder{
 	 */
 	public static final ArrayList<IRecipe> alchemyRecipes = new ArrayList<>();
 
-	public static final HashMap<String, ArrayList<IRecipeWrapper>> JEIWrappers = new HashMap<>();
+	public static final HashMap<ResourceLocation, ArrayList<Object>> JEIWrappers = new HashMap<>();
 
 	/**
 	 * Converts the versions of the recipes used internally into fake recipes
 	 * for JEI. Not called unless JEI is installed.
 	 */
 	public static void rebind(){
-		ArrayList<IRecipeWrapper> currentRecipes = new ArrayList<IRecipeWrapper>();
+		ArrayList<Object> currentRecipes = new ArrayList<>();
 
 		recipe: for(Entry<Predicate<ItemStack>, ItemStack[]> rec : millRecipes.entrySet()){
 			if(!(rec.getKey() instanceof RecipePredicate) || ((RecipePredicate) (rec.getKey())).getMatchingList().isEmpty()){
@@ -124,13 +125,13 @@ public final class RecipeHolder{
 		}
 		JEIWrappers.put(MillstoneCategory.ID, currentRecipes);
 
-		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes = new ArrayList<>();
 		for(Entry<Fluid, Pair<Integer, Triple<ItemStack, Double, Double>>> rec : fluidCoolingRecipes.entrySet()){
 			currentRecipes.add(new FluidCoolingRecipe(rec));
 		}
 		JEIWrappers.put(FluidCoolingCategory.ID, currentRecipes);
 
-		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes = new ArrayList<>();
 		for(IRecipe rec : technomancyRecipes){
 			currentRecipes.add(new DetailedCrafterRecipe(rec, 0));
 		}
@@ -139,7 +140,7 @@ public final class RecipeHolder{
 		}
 		JEIWrappers.put(DetailedCrafterCategory.ID, currentRecipes);
 
-		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes = new ArrayList<>();
 		for(Entry<Predicate<ItemStack>, FluidStack> rec : crucibleRecipes.entrySet()){
 			if(rec != null && rec.getKey() instanceof RecipePredicate){
 				currentRecipes.add(new HeatingCrucibleRecipe((RecipePredicate<ItemStack>) rec.getKey(), rec.getValue()));
@@ -147,22 +148,22 @@ public final class RecipeHolder{
 		}
 		JEIWrappers.put(HeatingCrucibleCategory.ID, currentRecipes);
 
-		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes = new ArrayList<>();
 		for(Entry<Item, BeamUnit> rec : beamExtractRecipes.entrySet()){
 			currentRecipes.add(new BeamExtractorRecipe(new ItemStack(rec.getKey(), 1, OreDictionary.WILDCARD_VALUE), rec.getValue()));
 		}
 		JEIWrappers.put(BeamExtractorCategory.ID, currentRecipes);
 
-		currentRecipes = new ArrayList<IRecipeWrapper>();
-		for(Map.Entry<Predicate<IBlockState>, BeamTransmute> rec : fusionBeamRecipes.entrySet()){
+		currentRecipes = new ArrayList<>();
+		for(Map.Entry<Predicate<BlockState>, BeamTransmute> rec : fusionBeamRecipes.entrySet()){
 			currentRecipes.add(new FusionBeamRecipe(rec.getKey(), rec.getValue().state, rec.getValue().minPower, false));
 		}
-		for(Map.Entry<Predicate<IBlockState>, BeamTransmute> rec : vFusionBeamRecipes.entrySet()){
+		for(Map.Entry<Predicate<BlockState>, BeamTransmute> rec : vFusionBeamRecipes.entrySet()){
 			currentRecipes.add(new FusionBeamRecipe(rec.getKey(), rec.getValue().state, rec.getValue().minPower, true));
 		}
 		JEIWrappers.put(FusionBeamCategory.ID, currentRecipes);
 
-		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes = new ArrayList<>();
 		for(IReaction react : AlchemyCore.REACTIONS){
 			if(react instanceof ITransparentReaction){
 				currentRecipes.add(new ReactionRecipe((ITransparentReaction) react));
@@ -170,7 +171,7 @@ public final class RecipeHolder{
 		}
 		JEIWrappers.put(ReactionCategory.ID, currentRecipes);
 
-		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes = new ArrayList<>();
 		for(IReagent reag : AlchemyCore.REAGENTS.values()){
 			if(reag != null){
 				currentRecipes.add(new ReagInfoRecipe(reag));
@@ -178,7 +179,7 @@ public final class RecipeHolder{
 		}
 		JEIWrappers.put(ReagInfoCategory.ID, currentRecipes);
 
-		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes = new ArrayList<>();
 		for(Entry<Predicate<ItemStack>, ItemStack> rec : stampMillRecipes.entrySet()){
 			if(!(rec.getKey() instanceof RecipePredicate) || ((RecipePredicate) (rec.getKey())).getMatchingList().isEmpty()){
 				continue;
@@ -187,7 +188,7 @@ public final class RecipeHolder{
 		}
 		JEIWrappers.put(StampMillCategory.ID, currentRecipes);
 
-		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes = new ArrayList<>();
 		for(Entry<Predicate<ItemStack>, ItemStack> rec : oreCleanserRecipes.entrySet()){
 			if(!(rec.getKey() instanceof RecipePredicate) || ((RecipePredicate) (rec.getKey())).getMatchingList().isEmpty()){
 				continue;
@@ -196,7 +197,7 @@ public final class RecipeHolder{
 		}
 		JEIWrappers.put(OreCleanserCategory.ID, currentRecipes);
 
-		currentRecipes = new ArrayList<IRecipeWrapper>();
+		currentRecipes = new ArrayList<>();
 		for(Entry<Predicate<ItemStack>, Pair<FluidStack, Integer>> rec : blastFurnaceRecipes.entrySet()){
 			if(!(rec.getKey() instanceof RecipePredicate) || ((RecipePredicate) (rec.getKey())).getMatchingList().isEmpty()){
 				continue;

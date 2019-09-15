@@ -5,26 +5,26 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
 	private static final double RATE = 0.25D;
 	private BeamUnitStorage storage = new BeamUnitStorage();
-	private EnumFacing dir = null;
+	private Direction dir = null;
 
-	private EnumFacing getDir(){
+	private Direction getDir(){
 		if(dir == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.clockworkStabilizer){
-				return EnumFacing.NORTH;
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.clockworkStabilizer){
+				return Direction.NORTH;
 			}
-			dir = state.getValue(EssentialsProperties.FACING);
+			dir = state.get(EssentialsProperties.FACING);
 		}
 		return dir;
 	}
@@ -36,14 +36,14 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		storage.writeToNBT("stab_mag", nbt);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
 	}
@@ -59,7 +59,7 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 			storage.addBeam(stored.mult((double) getLimit() / (double) stored.getPower(), true));
 		}
 
-		EnumFacing dir = getDir();
+		Direction dir = getDir();
 
 		if(!storage.isEmpty()){
 			BeamUnit mag = storage.getOutput().mult(RATE, true);
@@ -90,7 +90,7 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, EnumFacing dir){
+	public <T> T getCapability(Capability<T> cap, Direction dir){
 		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redsHandler;
 		}

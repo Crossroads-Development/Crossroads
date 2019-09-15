@@ -5,8 +5,8 @@ import com.Da_Technomancer.crossroads.fluids.BlockDirtyWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -103,13 +103,13 @@ public class OreCleanserTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		progress = nbt.getInteger("prog");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("prog", progress);
 		return nbt;
@@ -122,9 +122,9 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return (T) (facing == null ? innerFluidHandler : facing == EnumFacing.UP ? outFluidHandler : inFluidHandler);
+			return (T) (facing == null ? innerFluidHandler : facing == Direction.UP ? outFluidHandler : inFluidHandler);
 		}
 
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
@@ -135,7 +135,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return index == 1;
 	}
 

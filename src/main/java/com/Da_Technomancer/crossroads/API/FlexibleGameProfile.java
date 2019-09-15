@@ -4,10 +4,10 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.management.PlayerProfileCache;
 
 /**
@@ -56,7 +56,7 @@ public class FlexibleGameProfile extends GameProfile{
 		return ((name == null ? 0 : name.hashCode()) << 8) + ((id == null ? 0 : id.hashCode()) & 0xEE);
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt, String name){
+	public void writeToNBT(CompoundNBT nbt, String name){
 		String profName = getName();
 		UUID id = getId();
 		if(profName != null){
@@ -73,7 +73,7 @@ public class FlexibleGameProfile extends GameProfile{
 	 * Returns null if no profile was stored to nbt. 
 	 */
 	@Nullable
-	public static FlexibleGameProfile readFromNBT(NBTTagCompound nbt, String name, @Nullable PlayerProfileCache cache){
+	public static FlexibleGameProfile readFromNBT(CompoundNBT nbt, String name, @Nullable PlayerProfileCache cache){
 		String profName = nbt.getString(name + "_name");
 		if(profName.isEmpty()){
 			return null;
@@ -87,7 +87,7 @@ public class FlexibleGameProfile extends GameProfile{
 				id = search.getId();
 				loadedID = true;
 			}
-			Main.logger.info("Attempting to complete player profile for " + profName + (loadedID ? ". Failed (not severe). " : ". Succeeded. UUID is " + id.toString()));
+			Crossroads.logger.info("Attempting to complete player profile for " + profName + (loadedID ? ". Failed (not severe). " : ". Succeeded. UUID is " + id.toString()));
 		}
 		
 		FlexibleGameProfile out = new FlexibleGameProfile(id, profName);

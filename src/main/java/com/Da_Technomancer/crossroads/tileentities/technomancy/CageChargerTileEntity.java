@@ -6,15 +6,15 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		if(!cage.isEmpty()){
 			BeamUnit cageBeam = BeamCage.getStored(cage);
 			if(cageBeam == null){
@@ -42,7 +42,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	private ItemStack cage = ItemStack.EMPTY;
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 	
@@ -59,7 +59,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	private final ItemHandler itemHandler = new ItemHandler();
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY || cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return true;
 		}
@@ -69,7 +69,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY){
 			return (T) magicHandler;
 		}
@@ -84,16 +84,16 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		if(!cage.isEmpty()){
-			nbt.setTag("inv", cage.writeToNBT(new NBTTagCompound()));
+			nbt.setTag("inv", cage.writeToNBT(new CompoundNBT()));
 		}
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		cage = new ItemStack(nbt.getCompoundTag("inv"));
 	}
@@ -118,7 +118,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 				if(!simulate){
 					cage = stack;
 					markDirty();
-					world.setBlockState(pos, ModBlocks.cageCharger.getDefaultState().withProperty(Properties.ACTIVE, true));
+					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(Properties.ACTIVE, true));
 				}
 
 				return ItemStack.EMPTY;
@@ -137,7 +137,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 					ItemStack out = cage;
 					cage = ItemStack.EMPTY;
 					markDirty();
-					world.setBlockState(pos, ModBlocks.cageCharger.getDefaultState().withProperty(Properties.ACTIVE, false));
+					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(Properties.ACTIVE, false));
 					return out;
 				}
 
@@ -154,7 +154,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
-			return slot == 0 && stack.getItem() == ModItems.beamCage;
+			return slot == 0 && stack.getItem() == CrossroadsItems.beamCage;
 		}
 	}
 

@@ -8,29 +8,32 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.ArrayList;
 
-public class HeatLimiterBasicTileEntity extends TileEntity implements ITickable, IInfoTE, IDoubleReceiver{
+public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE, IDoubleReceiver{
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
 		chat.add("In-Temp: " + MiscUtil.betterRound(heatHandlerIn.getTemp(), 3) + "°C");
 		chat.add("Out-Temp: " + MiscUtil.betterRound(heatHandlerOut.getTemp(), 3) + "°C");
 		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
@@ -67,7 +70,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickable,
 		}
 
 		double goalTemp = HeatUtil.toCelcius(getSetting());
-		boolean blueMode = world.getBlockState(pos).getValue(Properties.ACTIVE);
+		boolean blueMode = world.getBlockState(pos).get(Properties.ACTIVE);
 
 		if(blueMode){
 			heatIn = -heatIn;
@@ -112,7 +115,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickable,
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("init_heat", init);
 		nbt.setDouble("heat_in", heatIn);
@@ -122,7 +125,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickable,
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		init = nbt.getBoolean("init_heat");
 		heatIn = nbt.getDouble("heat_in");
@@ -131,8 +134,8 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickable,
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
+	public boolean hasCapability(Capability<?> cap, Direction side){
+		Direction facing = world.getBlockState(pos).get(EssentialsProperties.FACING);
 		if(cap == Capabilities.HEAT_CAPABILITY && (side == null || side.getAxis() == facing.getAxis())){
 			return true;
 		}
@@ -141,8 +144,8 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickable,
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		EnumFacing facing = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
+	public <T> T getCapability(Capability<T> cap, Direction side){
+		Direction facing = world.getBlockState(pos).get(EssentialsProperties.FACING);
 		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == facing.getOpposite()){
 				return (T) heatHandlerIn;

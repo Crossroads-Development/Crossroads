@@ -2,10 +2,10 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.util.Direction;
 
-public class MechanismRenderer extends TileEntitySpecialRenderer<MechanismTileEntity>{
+public class MechanismRenderer extends TileEntityRenderer<MechanismTileEntity>{
 
 	@Override
 	public void render(MechanismTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
@@ -20,7 +20,7 @@ public class MechanismRenderer extends TileEntitySpecialRenderer<MechanismTileEn
 
 		for(int i = 0; i < 7; i++){
 			if(te.members[i] != null){
-				te.members[i].doRender(te, partialTicks, te.mats[i], i == 6 ? null : EnumFacing.byIndex(i), te.axleAxis);
+				te.members[i].doRender(te, partialTicks, te.mats[i], i == 6 ? null : Direction.byIndex(i), te.axleAxis);
 			}
 		}
 

@@ -3,10 +3,12 @@ package com.Da_Technomancer.crossroads.API.effects.mechArm;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
 
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -15,15 +17,15 @@ import net.minecraftforge.items.IItemHandler;
 public class MechArmPickupFromInvEffect implements IMechArmEffect{
 
 	@Override
-	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, EnumFacing side, EntityArmRidable ent, MechanicalArmTileEntity arm){
+	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, Direction side, EntityArmRidable ent, MechanicalArmTileEntity arm){
 		TileEntity te = world.getTileEntity(pos);
-		Boolean holdingStack = ent.getPassengers().isEmpty() ? Boolean.FALSE : (ent.getPassengers().get(0) instanceof EntityItem ? Boolean.TRUE : null);
+		Boolean holdingStack = ent.getPassengers().isEmpty() ? Boolean.FALSE : (ent.getPassengers().get(0) instanceof ItemEntity ? Boolean.TRUE : null);
 		if(te == null || holdingStack == null || !te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)){
 			return false;
 		}
 		IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 
-		ItemStack heldStack = holdingStack ? ((EntityItem) ent.getPassengers().get(0)).getItem().copy() : ItemStack.EMPTY;
+		ItemStack heldStack = holdingStack ? ((ItemEntity) ent.getPassengers().get(0)).getItem().copy() : ItemStack.EMPTY;
 		int startSize = heldStack.getCount();
 
 		for(int i = 0; i < handler.getSlots(); i++){
@@ -45,9 +47,9 @@ public class MechArmPickupFromInvEffect implements IMechArmEffect{
 		}
 		if(!heldStack.isEmpty()){
 			if(holdingStack){
-				((EntityItem) ent.getPassengers().get(0)).setItem(heldStack);
+				((ItemEntity) ent.getPassengers().get(0)).setItem(heldStack);
 			}else{
-				EntityItem heldItemEnt = new EntityItem(world, posX, posY, posZ, heldStack);
+				ItemEntity heldItemEnt = new ItemEntity(world, posX, posY, posZ, heldStack);
 				heldItemEnt.startRiding(ent, true);
 				world.spawnEntity(heldItemEnt);
 			}

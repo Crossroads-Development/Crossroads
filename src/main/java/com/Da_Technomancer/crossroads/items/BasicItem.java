@@ -26,10 +26,10 @@ public class BasicItem extends Item{
 		setTranslationKey(name);
 		setRegistryName(name);
 		if(tab){
-			setCreativeTab(ModItems.TAB_CROSSROADS);
+			setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		}
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 		if(oreDict != null){
 			ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {oreDict}));
 		}

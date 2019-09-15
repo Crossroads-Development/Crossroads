@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
 
@@ -38,7 +38,7 @@ public interface IChemicalHandler{
 	 * @param caller An IChemicalHandler calling this for transferring heat.
 	 * @return Whether anything in reag was changed. 
 	 */
-	public default boolean insertReagents(ReagentMap reag, EnumFacing side, @Nonnull IChemicalHandler caller){
+	public default boolean insertReagents(ReagentMap reag, Direction side, @Nonnull IChemicalHandler caller){
 		return insertReagents(reag, side, caller, false);
 	}
 	
@@ -49,12 +49,12 @@ public interface IChemicalHandler{
 	 * @param ignorePhase If true, ignore phase movement rules. 
 	 * @return Whether anything in reag was changed. 
 	 */
-	public boolean insertReagents(ReagentMap reag, EnumFacing side, @Nonnull IChemicalHandler caller, boolean ignorePhase);
+	public boolean insertReagents(ReagentMap reag, Direction side, @Nonnull IChemicalHandler caller, boolean ignorePhase);
 	
 	@Nonnull
-	public EnumTransferMode getMode(EnumFacing side);
+	public EnumTransferMode getMode(Direction side);
 	
 	@Nonnull
-	public EnumContainerType getChannel(EnumFacing side);
+	public EnumContainerType getChannel(Direction side);
 
 }

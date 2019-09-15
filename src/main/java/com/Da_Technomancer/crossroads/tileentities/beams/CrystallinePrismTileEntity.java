@@ -3,21 +3,21 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.Direction;
 
 public class CrystallinePrismTileEntity extends BeamRenderTE{
 
-	private EnumFacing dir = null;
+	private Direction dir = null;
 
-	private EnumFacing getDir(){
+	private Direction getDir(){
 		if(dir == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.crystallinePrism){
-				return EnumFacing.NORTH;
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.crystallinePrism){
+				return Direction.NORTH;
 			}
-			dir = state.getValue(Properties.HORIZ_FACING);
+			dir = state.get(Properties.HORIZ_FACING);
 		}
 		return dir;
 	}
@@ -30,7 +30,7 @@ public class CrystallinePrismTileEntity extends BeamRenderTE{
 
 	@Override
 	protected void doEmit(BeamUnit out){
-		EnumFacing dir = getDir();
+		Direction dir = getDir();
 		//Energy
 		if(beamer[dir.getIndex()].emit(out == null || out.getEnergy() == 0 ? null : out.mult(1, 0, 0, 0, false), world)){
 			refreshBeam(dir.getIndex());

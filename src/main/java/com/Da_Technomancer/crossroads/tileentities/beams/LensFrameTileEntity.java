@@ -11,17 +11,17 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -34,16 +34,16 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	private int packetNeg;
 	private int packetPos;
 	private int contents = 0;
-	private EnumFacing.Axis axis = null;
+	private Direction.Axis axis = null;
 	private BeamUnit prevMag = null;
 
-	private EnumFacing.Axis getAxis(){
+	private Direction.Axis getAxis(){
 		if(axis == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.lensFrame){
-				return EnumFacing.Axis.X;
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.lensFrame){
+				return Direction.Axis.X;
 			}
-			axis = state.getValue(EssentialsProperties.AXIS);
+			axis = state.get(EssentialsProperties.AXIS);
 		}
 
 		return axis;
@@ -58,9 +58,9 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 			case 3:
 				return new ItemStack(Items.DIAMOND, 1);
 			case 4:
-				return new ItemStack(ModItems.pureQuartz, 1);
+				return new ItemStack(CrossroadsItems.pureQuartz, 1);
 			case 5:
-				return new ItemStack(ModItems.luminescentQuartz, 1);
+				return new ItemStack(CrossroadsItems.luminescentQuartz, 1);
 			case 6:
 				return new ItemStack(OreSetup.voidCrystal, 1);
 			default:
@@ -78,10 +78,10 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		if(MiscUtil.hasOreDict(stack, "gemDiamond")){
 			return 3;
 		}
-		if(stack.getItem() == ModItems.pureQuartz){
+		if(stack.getItem() == CrossroadsItems.pureQuartz){
 			return 4;
 		}
-		if(stack.getItem() == ModItems.luminescentQuartz){
+		if(stack.getItem() == CrossroadsItems.luminescentQuartz){
 			return 5;
 		}
 		if(stack.getItem() == OreSetup.voidCrystal){
@@ -142,15 +142,15 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	@Override
 	public int[] getRenderedBeams(){
 		int[] out = new int[6];
-		out[EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, getAxis()).getIndex()] = packetPos;
-		out[EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, getAxis()).getIndex()] = packetNeg;
+		out[Direction.getFacingFromAxis(AxisDirection.POSITIVE, getAxis()).getIndex()] = packetPos;
+		out[Direction.getFacingFromAxis(AxisDirection.NEGATIVE, getAxis()).getIndex()] = packetNeg;
 		return out;
 	}
 
 	private BeamManager[] beamer = new BeamManager[2];//0: neg; 1: pos
 
 	@Override
-	public void receiveInt(byte identifier, int message, EntityPlayerMP player){
+	public void receiveInt(byte identifier, int message, ServerPlayerEntity player){
 		switch(identifier){
 			case 0:
 				packetNeg = message;
@@ -169,8 +169,8 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		nbt.setInteger("beam_neg", packetNeg);
 		nbt.setInteger("beam_pos", packetPos);
 		nbt.setInteger("contents", contents);
@@ -178,7 +178,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("beam_neg", packetNeg);
 		nbt.setInteger("beam_pos", packetPos);
@@ -188,7 +188,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		packetPos = nbt.getInteger("beam_pos");
 		packetNeg = nbt.getInteger("beam_neg");
@@ -202,7 +202,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || getAxis() == side.getAxis())){
 			return true;
 		}
@@ -216,7 +216,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || getAxis() == side.getAxis())){
 			return side == null || side.getAxisDirection() == AxisDirection.POSITIVE ? (T) magicHandler : (T) magicHandlerNeg;
 		}
@@ -249,8 +249,8 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		@Override
 		public void setMagic(BeamUnit mag){
 			if(beamer[0] == null || beamer[1] == null){
-				beamer[0] = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, getAxis()), pos);
-				beamer[1] = new BeamManager(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, getAxis()), pos);
+				beamer[0] = new BeamManager(Direction.getFacingFromAxis(AxisDirection.NEGATIVE, getAxis()), pos);
+				beamer[1] = new BeamManager(Direction.getFacingFromAxis(AxisDirection.POSITIVE, getAxis()), pos);
 			}
 
 			if(mag != null && mag.getVoid() != 0 && contents != 0 && contents != 6){

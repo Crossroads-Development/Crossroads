@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
-import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.gui.NewChatGui;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class SafeCallable{
 
 	public static final ArrayList<IVisualEffect> effectsToRender = new ArrayList<IVisualEffect>();
 	
-	protected static final Method printChatNoLog = MiscUtil.reflectMethod(GuiNewChat.class, "setChatLine", "func_146237_a");
+	protected static final Method printChatNoLog = MiscUtil.reflectMethod(NewChatGui.class, "setChatLine", "func_146237_a");
 	
 	public static int playerTickCount = 1;
 }

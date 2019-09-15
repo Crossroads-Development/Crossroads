@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
@@ -18,7 +18,7 @@ public class BeamManager{
 	public static int beamStage = 2;
 	public static long cycleNumber;
 
-	private final EnumFacing dir;
+	private final Direction dir;
 	private final BlockPos pos;
 
 	private int dist;
@@ -26,7 +26,7 @@ public class BeamManager{
 	public static final int MAX_DISTANCE = 16;
 	public static final int BEAM_TIME = 5;
 
-	public BeamManager(@Nonnull EnumFacing dir, @Nonnull BlockPos pos){
+	public BeamManager(@Nonnull Direction dir, @Nonnull BlockPos pos){
 		this.dir = dir;
 		this.pos = pos.toImmutable();
 	}
@@ -45,7 +45,7 @@ public class BeamManager{
 				}
 			}
 
-			IBlockState checkState = world.getBlockState(pos.offset(dir, i));
+			BlockState checkState = world.getBlockState(pos.offset(dir, i));
 			if(i == BeamManager.MAX_DISTANCE || solidToBeams(checkState, world, pos.offset(dir, i))){
 				if(mag != null){
 					IEffect e = EnumBeamAlignments.getAlignment(mag).getMixEffect(mag.getRGB());
@@ -65,7 +65,7 @@ public class BeamManager{
 		return false;
 	}
 
-	public static boolean solidToBeams(IBlockState state, World world, BlockPos pos){
+	public static boolean solidToBeams(BlockState state, World world, BlockPos pos){
 		return !state.getBlock().isAir(state, world, pos) && !(state.getBlock() instanceof IBeamTransparent);
 	}
 

@@ -8,16 +8,16 @@ import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 
-public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable, IIntReceiver{
+public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickableTileEntity, IIntReceiver{
 
 	protected int[] beamPackets = new int[6];
 	protected BeamManager[] beamer;
@@ -78,7 +78,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 				boolean[] outputs = outputSides();
 				for(int i = 0; i < 6; i++){
 					if(outputs[i]){
-						beamer[i] = new BeamManager(EnumFacing.byIndex(i), pos);
+						beamer[i] = new BeamManager(Direction.byIndex(i), pos);
 					}
 				}
 			}
@@ -109,7 +109,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	protected abstract void doEmit(@Nullable BeamUnit toEmit);
 
 	@Override
-	public void receiveInt(byte identifier, int message, EntityPlayerMP player){
+	public void receiveInt(byte identifier, int message, ServerPlayerEntity player){
 		if(identifier < 6 && identifier >= 0){
 			beamPackets[identifier] = message;
 		}
@@ -124,8 +124,8 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
 			if(beamPackets[i] != 0){
 				nbt.setInteger(i + "_beam_packet", beamPackets[i]);
@@ -135,7 +135,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 
 		queued[0].writeToNBT("queue0", nbt);
@@ -152,7 +152,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		queued[0] = BeamUnitStorage.readFromNBT("queue0", nbt);
 		queued[1] = BeamUnitStorage.readFromNBT("queue1", nbt);
@@ -164,14 +164,14 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		return getCapability(cap, side) != null || super.hasCapability(cap, side);
 	}
 
 	protected final BeamHandler handler = new BeamHandler();
 
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, EnumFacing dir){
+	public <T> T getCapability(Capability<T> cap, Direction dir){
 		if(cap == Capabilities.BEAM_CAPABILITY && (dir == null || inputSides()[dir.getIndex()])){
 			return (T) handler;
 		}

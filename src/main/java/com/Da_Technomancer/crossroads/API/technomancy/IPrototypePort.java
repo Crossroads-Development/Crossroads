@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
@@ -20,7 +20,7 @@ public interface IPrototypePort{
 	
 	public PrototypePortTypes getType();
 	
-	public EnumFacing getSide();
+	public Direction getSide();
 	
 	public void makeActive();
 	

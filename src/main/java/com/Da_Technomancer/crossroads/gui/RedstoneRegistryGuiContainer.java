@@ -7,10 +7,10 @@ import com.Da_Technomancer.crossroads.API.templates.ButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.OutputLogGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BlankContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -18,7 +18,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class RedstoneRegistryGuiContainer extends GuiContainer{
+public class RedstoneRegistryGuiContainer extends ContainerScreen{
 
 	private final RedstoneRegistryTileEntity te;
 	private TextBarGuiObject textBar;
@@ -98,7 +98,7 @@ public class RedstoneRegistryGuiContainer extends GuiContainer{
 		setOutput();
 	}
 
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/redstone_registry_gui.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/redstone_registry_gui.png");
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){

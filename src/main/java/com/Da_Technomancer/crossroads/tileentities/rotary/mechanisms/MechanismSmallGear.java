@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,19 +31,19 @@ public class MechanismSmallGear implements IMechanism{
 	}
 
 	@Override
-	public double getInertia(GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	public double getInertia(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		// assume each gear is 1/8 of a cubic meter and has a radius of 1/2 meter.
 		// mass is rounded to make things nicer for everyone
 		return 0.125D * MiscUtil.betterRound(mat.getDensity() / 8, 1);// .125 because r*r/2 so .5*.5/2
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, EnumFacing capSide, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(Capability<?> cap, Direction capSide, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
 		return (cap == Capabilities.COG_CAPABILITY || cap == Capabilities.AXLE_CAPABILITY) && side == capSide;
 	}
 
 	@Override
-	public void propogate(GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+	public void propogate(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 		//This mechanism should never be in the axle slot
 		if(side == null){
 			return;
@@ -71,15 +71,15 @@ public class MechanismSmallGear implements IMechanism{
 
 		//Other internal gears
 		for(int i = 0; i < 6; i++){
-			if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, EnumFacing.byIndex(i), te.mats[i], EnumFacing.byIndex(i), te.axleAxis, te)){
-				te.axleHandlers[i].propogate(masterIn, key, RotaryUtil.getDirSign(side, EnumFacing.byIndex(i)) * handler.rotRatio, .5D, !handler.renderOffset);
+			if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, Direction.byIndex(i), te.mats[i], Direction.byIndex(i), te.axleAxis, te)){
+				te.axleHandlers[i].propogate(masterIn, key, RotaryUtil.getDirSign(side, Direction.byIndex(i)) * handler.rotRatio, .5D, !handler.renderOffset);
 			}
 		}
 
 		TileEntity sideTE = te.getWorld().getTileEntity(te.getPos().offset(side));
 		for(int i = 0; i < 6; i++){
 			if(i != side.getIndex() && i != side.getOpposite().getIndex()){
-				EnumFacing facing = EnumFacing.byIndex(i);
+				Direction facing = Direction.byIndex(i);
 				// Adjacent gears
 				TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
 				if(adjTE != null){
@@ -134,13 +134,13 @@ public class MechanismSmallGear implements IMechanism{
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(@Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	public AxisAlignedBB getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
 		return side == null ? Block.NULL_AABB : BOUNDING_BOXES[side.getIndex()];
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable EnumFacing side, @Nullable EnumFacing.Axis axis){
+	@OnlyIn(Dist.CLIENT)
+	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(side == null){
 			return;
 		}
@@ -148,7 +148,7 @@ public class MechanismSmallGear implements IMechanism{
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[side.getIndex()];
 
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(side == EnumFacing.DOWN ? 0 : side == EnumFacing.UP ? 180F : side == EnumFacing.NORTH || side == EnumFacing.EAST ? 90F : -90F, side.getAxis() == EnumFacing.Axis.Z ? 1 : 0, 0, side.getAxis() == EnumFacing.Axis.Z ? 0 : 1);
+		GlStateManager.rotate(side == Direction.DOWN ? 0 : side == Direction.UP ? 180F : side == Direction.NORTH || side == Direction.EAST ? 90F : -90F, side.getAxis() == Direction.Axis.Z ? 1 : 0, 0, side.getAxis() == Direction.Axis.Z ? 0 : 1);
 		float angle = handler.getAngle(partialTicks);
 		GlStateManager.translate(0, -0.4375F, 0);
 		GlStateManager.rotate((float) -side.getAxisDirection().getOffset() * angle, 0F, 1F, 0F);

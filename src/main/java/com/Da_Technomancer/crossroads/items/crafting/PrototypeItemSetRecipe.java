@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -22,14 +22,14 @@ public class PrototypeItemSetRecipe extends IForgeRegistryEntry.Impl<IRecipe> im
 	}
 
 	@Override
-	public boolean matches(InventoryCrafting inv, World worldIn){
+	public boolean matches(CraftingInventory inv, World worldIn){
 		boolean found = false;
 		boolean protFound = false;
 		for(int x = 0; x < inv.getWidth(); x++){
 			for(int y = 0; y < inv.getHeight(); y++){
 				ItemStack slot = inv.getStackInRowAndColumn(x, y);
 				if(!found){
-					if(!slot.isEmpty() && slot.getItem() != Item.getItemFromBlock(ModBlocks.prototype)){
+					if(!slot.isEmpty() && slot.getItem() != Item.getItemFromBlock(CrossroadsBlocks.prototype)){
 						if(slot.getItem() == toSet && (!slot.hasTagCompound() || !slot.getTagCompound().hasKey(nbtPath))){
 							found = true;
 							continue;
@@ -40,7 +40,7 @@ public class PrototypeItemSetRecipe extends IForgeRegistryEntry.Impl<IRecipe> im
 				}
 				if(!protFound){
 					if(!slot.isEmpty()){
-						if(slot.getItem() == Item.getItemFromBlock(ModBlocks.prototype)){
+						if(slot.getItem() == Item.getItemFromBlock(CrossroadsBlocks.prototype)){
 							protFound = true;
 							continue;
 						}else{
@@ -57,7 +57,7 @@ public class PrototypeItemSetRecipe extends IForgeRegistryEntry.Impl<IRecipe> im
 	}
 
 	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inv){
+	public ItemStack getCraftingResult(CraftingInventory inv){
 		ItemStack prot = ItemStack.EMPTY;
 		ItemStack item = ItemStack.EMPTY;
 		//Assumes matches would return true.
@@ -71,7 +71,7 @@ public class PrototypeItemSetRecipe extends IForgeRegistryEntry.Impl<IRecipe> im
 							if(!prot.isEmpty()){
 								break;
 							}
-						}else if(slot.getItem() == Item.getItemFromBlock(ModBlocks.prototype)){
+						}else if(slot.getItem() == Item.getItemFromBlock(CrossroadsBlocks.prototype)){
 							prot = slot;
 							if(!item.isEmpty()){
 								break;
@@ -86,7 +86,7 @@ public class PrototypeItemSetRecipe extends IForgeRegistryEntry.Impl<IRecipe> im
 		
 		ItemStack out = item.copy();
 		if(!out.hasTagCompound()){
-			out.setTagCompound(new NBTTagCompound());
+			out.setTagCompound(new CompoundNBT());
 		}
 		if(prot.hasTagCompound()){
 			//If the prototype doesn't have a tag compound, it's invalid and will be destroyed on craft. 
@@ -101,7 +101,7 @@ public class PrototypeItemSetRecipe extends IForgeRegistryEntry.Impl<IRecipe> im
 	}
 
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv){
+	public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv){
 		return NonNullList.withSize(9, ItemStack.EMPTY);
 	}
 

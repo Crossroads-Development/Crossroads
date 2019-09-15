@@ -2,45 +2,45 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindTurbineTileEntity;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class WindTurbineRenderer extends TileEntitySpecialRenderer<WindTurbineTileEntity>{
+public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntity>{
 
-	private static final ResourceLocation TEXTURE_BLADE = new ResourceLocation(Main.MODID, "textures/model/wind_turbine_blade.png");
+	private static final ResourceLocation TEXTURE_BLADE = new ResourceLocation(Crossroads.MODID, "textures/model/wind_turbine_blade.png");
 
 	@Override
 	public void render(WindTurbineTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		if(!te.getWorld().isBlockLoaded(te.getPos(), false)){
 			return;
 		}
-		IBlockState state = te.getWorld().getBlockState(te.getPos());
+		BlockState state = te.getWorld().getBlockState(te.getPos());
 		IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
-		if(state.getBlock() != ModBlocks.windTurbine || axle == null){
+		if(state.getBlock() != CrossroadsBlocks.windTurbine || axle == null){
 			return;
 		}
 
-		EnumFacing facing = state.getValue(Properties.HORIZ_FACING);
+		Direction facing = state.get(Properties.HORIZ_FACING);
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5F, y + .5F, z + .5F);
 		GlStateManager.rotate(-facing.getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.rotate(facing.getAxisDirection().getOffset() * axle.getAngle(partialTicks), 0, 0, 1);
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_BLADE);
+		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE_BLADE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		//Center piece

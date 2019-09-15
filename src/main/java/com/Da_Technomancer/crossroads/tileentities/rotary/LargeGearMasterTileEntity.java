@@ -7,21 +7,21 @@ import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiver, ITickable, IInfoTE{
+public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiver, ITickableTileEntity, IInfoTE{
 	
 	private GearFactory.GearMaterial type;
 	private double[] motionData = new double[4];
@@ -39,15 +39,15 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	 * 0: angle, 1: clientW
 	 */
 	private float[] angleW = new float[2];
-	private EnumFacing facing = null;
+	private Direction facing = null;
 
-	public EnumFacing getFacing(){
+	public Direction getFacing(){
 		if(facing == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.largeGearMaster){
-				return EnumFacing.NORTH;
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.largeGearMaster){
+				return Direction.NORTH;
 			}
-			facing = state.getValue(EssentialsProperties.FACING);
+			facing = state.get(EssentialsProperties.FACING);
 		}
 		return facing;
 	}
@@ -57,7 +57,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Speed: " + MiscUtil.betterRound(motionData[0], 3));
 		chat.add("Energy: " + MiscUtil.betterRound(motionData[1], 3));
 		chat.add("Power: " + MiscUtil.betterRound(motionData[2], 3));
@@ -86,18 +86,18 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		return RENDER_BOX.offset(pos);
 	}
 
-	public void breakGroup(EnumFacing side, boolean drop){
+	public void breakGroup(Direction side, boolean drop){
 		if(borken){
 			return;
 		}
 		borken = true;
 		for(int i = -1; i < 2; ++i){
 			for(int j = -1; j < 2; ++j){
-				world.setBlockToAir(pos.offset(side.getAxis() == Axis.X ? EnumFacing.UP : EnumFacing.EAST, i).offset(side.getAxis() == Axis.Z ? EnumFacing.UP : EnumFacing.NORTH, j));
+				world.setBlockToAir(pos.offset(side.getAxis() == Axis.X ? Direction.UP : Direction.EAST, i).offset(side.getAxis() == Axis.Z ? Direction.UP : Direction.NORTH, j));
 			}
 		}
 		if(drop){
-			world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(GearFactory.gearTypes.get(type).getLargeGear(), 1)));
+			world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(GearFactory.gearTypes.get(type).getLargeGear(), 1)));
 		}
 	}
 
@@ -109,7 +109,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 
 		// motionData
@@ -126,7 +126,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 
 		// motionData
@@ -147,8 +147,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		if(type != null){
 			nbt.setInteger("type", type.getIndex());
 		}
@@ -159,7 +159,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == 0){
 			float angle = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
 			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
@@ -174,7 +174,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	private final AxleHandler handlerMain = new AxleHandler();
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
+	public boolean hasCapability(Capability<?> capability, @Nullable Direction facing){
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
 			return type != null;
 		}
@@ -183,7 +183,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
 			return (T) handlerMain;
 		}
@@ -232,11 +232,11 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 			updateKey = key;
 
-			EnumFacing side = getFacing();
+			Direction side = getFacing();
 			
 			for(int i = 0; i < 6; i++){
 				if(i != side.getIndex() && i != side.getOpposite().getIndex()){
-					EnumFacing facing = EnumFacing.byIndex(i);
+					Direction facing = Direction.byIndex(i);
 					// Adjacent gears
 					TileEntity adjTE = world.getTileEntity(pos.offset(facing, 2));
 					if(adjTE != null){
@@ -262,8 +262,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 				}
 			}
 
-			for(EnumFacing.AxisDirection dir : EnumFacing.AxisDirection.values()){
-				EnumFacing axleDir = dir == EnumFacing.AxisDirection.POSITIVE ? getFacing() : getFacing().getOpposite();
+			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
+				Direction axleDir = dir == Direction.AxisDirection.POSITIVE ? getFacing() : getFacing().getOpposite();
 				TileEntity connectTE = world.getTileEntity(pos.offset(axleDir));
 
 				if(connectTE != null){

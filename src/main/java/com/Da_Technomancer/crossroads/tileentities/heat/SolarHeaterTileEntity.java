@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class SolarHeaterTileEntity extends ModuleTE{
@@ -30,7 +30,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 		}
 
 		//This machine can share heat with other Solar Heaters in the same line, but only other Solar Heaters. Otherwise, a heat cable is needed like normal
-		TileEntity adjTE = world.getTileEntity(pos.offset(EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, world.getBlockState(pos).getValue(Properties.HORIZ_AXIS))));
+		TileEntity adjTE = world.getTileEntity(pos.offset(Direction.getFacingFromAxis(Direction.AxisDirection.NEGATIVE, world.getBlockState(pos).get(Properties.HORIZ_AXIS))));
 		if(adjTE instanceof SolarHeaterTileEntity){
 			SolarHeaterTileEntity otherTE = (SolarHeaterTileEntity) adjTE;
 			temp += otherTE.temp;
@@ -47,13 +47,13 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		running = nbt.getBoolean("running");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("running", running);
 		return nbt;
@@ -61,8 +61,8 @@ public class SolarHeaterTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_AXIS))){
+	public <T> T getCapability(Capability<T> capability, Direction facing){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == world.getBlockState(pos).get(Properties.HORIZ_AXIS))){
 			return (T) heatHandler;
 		}
 		return super.getCapability(capability, facing);

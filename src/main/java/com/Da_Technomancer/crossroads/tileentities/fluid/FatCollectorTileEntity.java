@@ -5,10 +5,10 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -63,11 +63,11 @@ public class FatCollectorTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != EnumFacing.DOWN && facing != EnumFacing.UP){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.DOWN && facing != Direction.UP){
 			return (T) mainHandler;
 		}
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing == Direction.DOWN)){
 			return (T) heatHandler;
 		}
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
@@ -78,13 +78,13 @@ public class FatCollectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return stack.getItem() instanceof ItemFood && stack.getItem() != ModItems.edibleBlob;
+		return stack.getItem() instanceof ItemFood && stack.getItem() != CrossroadsItems.edibleBlob;
 	}
 
 	@Override

@@ -5,16 +5,18 @@ import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.tileentities.beams.QuartzStabilizerTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,27 +32,27 @@ public class QuartzStabilizer extends BeamBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new QuartzStabilizerTileEntity();
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
 		return BlockFaceShape.UNDEFINED;
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(!playerIn.isSneaking()){
-					worldIn.setBlockState(pos, state.cycleProperty(EssentialsProperties.FACING));
+					worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
 					if(te instanceof BeamRenderTE){
 						((BeamRenderTE) te).resetBeamer();
 					}
 				}else if(te instanceof QuartzStabilizerTileEntity){
-					playerIn.sendMessage(new TextComponentString("Output is now capped at " + ((QuartzStabilizerTileEntity) te).adjustSetting() + " power/cycle"));
+					playerIn.sendMessage(new StringTextComponent("Output is now capped at " + ((QuartzStabilizerTileEntity) te).adjustSetting() + " power/cycle"));
 				}
 			}
 			return true;
@@ -60,8 +62,8 @@ public class QuartzStabilizer extends BeamBlock{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("Buffers beams and emits them with constant power");
 		tooltip.add("Configured via shift-right-clicking with a wrench");
 	}

@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -51,7 +51,7 @@ public class ItemRecipePredicate implements RecipePredicate<ItemStack>{
 			return ImmutableList.of(new ItemStack(item, 1, meta));
 		}
 		NonNullList<ItemStack> list = NonNullList.create();
-		item.getSubItems(CreativeTabs.SEARCH, list);
+		item.getSubItems(ItemGroup.SEARCH, list);
 		return list;
 	}
 	

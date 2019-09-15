@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ReagentFilterContainer extends Container{
@@ -27,7 +27,7 @@ public class ReagentFilterContainer extends Container{
 			addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 84 + 58));
 		}
 
-		//Main player inv
+		//Crossroads player inv
 		for(int y = 0; y < 3; ++y){
 			for(int x = 0; x < 9; ++x){
 				addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
@@ -36,7 +36,7 @@ public class ReagentFilterContainer extends Container{
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot){
+	public ItemStack transferStackInSlot(PlayerEntity playerIn, int fromSlot){
 		ItemStack previous = ItemStack.EMPTY;
 		Slot slot = inventorySlots.get(fromSlot);
 
@@ -65,7 +65,7 @@ public class ReagentFilterContainer extends Container{
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer playerIn){
+	public boolean canInteractWith(PlayerEntity playerIn){
 		return te.isUsableByPlayer(playerIn);
 	}
 }

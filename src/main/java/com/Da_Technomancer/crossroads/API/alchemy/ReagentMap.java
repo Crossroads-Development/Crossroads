@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import java.util.HashMap;
 
@@ -144,7 +144,7 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 		}
 	}
 
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		nbt.setDouble("he", heat);
 		for(IReagent key : keySet()){
 			int qty = get(key);
@@ -156,7 +156,7 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 		return nbt;
 	}
 
-	public static ReagentMap readFromNBT(NBTTagCompound nbt){
+	public static ReagentMap readFromNBT(CompoundNBT nbt){
 		ReagentMap map = new ReagentMap();
 		map.heat = nbt.getDouble("he");
 		for(String key : nbt.getKeySet()){

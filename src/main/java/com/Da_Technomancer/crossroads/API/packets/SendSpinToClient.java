@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -35,8 +35,8 @@ public class SendSpinToClient extends Message<SendSpinToClient>{
 			return null;
 		}
 
-		Minecraft minecraft = Minecraft.getMinecraft();
-		WorldClient worldClient = minecraft.world;
+		Minecraft minecraft = Minecraft.getInstance();
+		ClientWorld worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
 			@Override
 			public void run(){

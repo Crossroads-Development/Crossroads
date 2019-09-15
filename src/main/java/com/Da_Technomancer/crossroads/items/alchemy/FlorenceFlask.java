@@ -1,10 +1,6 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.items.ModItems;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import org.apache.commons.lang3.tuple.Pair;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 
 public class FlorenceFlask extends AbstractGlassware{
 
@@ -17,9 +13,9 @@ public class FlorenceFlask extends AbstractGlassware{
 		hasSubtypes = true;
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	@Override

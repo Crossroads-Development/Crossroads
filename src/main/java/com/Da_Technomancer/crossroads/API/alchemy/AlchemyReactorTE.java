@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 
 import java.util.ArrayList;
 
@@ -37,7 +37,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	public void addVisualEffect(EnumParticleTypes particleType, double speedX, double speedY, double speedZ, int... particleArgs){
 		if(!world.isRemote){
 			Vec3d particlePos = getParticlePos();
-			((WorldServer) world).spawnParticle(particleType, false, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F, particleArgs);
+			((ServerWorld) world).spawnParticle(particleType, false, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F, particleArgs);
 		}
 	}
 
@@ -47,7 +47,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	public void destroyChamber(float strength){
 		if(!broken){
 			broken = true;
-			IBlockState state = world.getBlockState(pos);
+			BlockState state = world.getBlockState(pos);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
 			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());

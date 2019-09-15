@@ -5,10 +5,11 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.ModConfig;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
@@ -36,7 +37,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	private boolean init = false;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 
 		chat.add("Side Temp: " + MiscUtil.betterRound(sideHeatHandler.getTemp(), 3) + "°C");
@@ -57,15 +58,15 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		tempSide -= 5D * level;
 		tempBottom += 5D * level;
 
-		if(axleHandler.axis != null && Math.signum(level) * motData[0] < ModConfig.getConfigDouble(ModConfig.stirlingSpeedLimit, false)){
-			motData[1] += ModConfig.getConfigDouble(ModConfig.stirlingMultiplier, false) * 5D * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
+		if(axleHandler.axis != null && Math.signum(level) * motData[0] < ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.stirlingSpeedLimit).get()){
+			motData[1] += ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.stirlingMultiplier).get() * 5D * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
 		}
 
 		markDirty();
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 
 		nbt.setBoolean("initHeat", init);
@@ -74,7 +75,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 
 		init = nbt.getBoolean("initHeat");
@@ -89,12 +90,12 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == EnumFacing.UP)){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == Direction.UP)){
 			return (T) axleHandler;
 		}
-		if(capability == Capabilities.HEAT_CAPABILITY && facing != EnumFacing.UP){
-			return facing == EnumFacing.DOWN ? (T) bottomHeatHandler : (T) sideHeatHandler;
+		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
+			return facing == Direction.DOWN ? (T) bottomHeatHandler : (T) sideHeatHandler;
 		}
 
 		return super.getCapability(capability, facing);

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.RedstoneTransmitterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
@@ -12,7 +12,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTi
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
@@ -22,9 +22,9 @@ public class AAModTESR{
 	public static void registerBlockRenderer(){
 
 		ClientRegistry.bindTileEntitySpecialRenderer(MechanismTileEntity.class, new MechanismRenderer());
-		reg(ModBlocks.rotaryPump);
+		reg(CrossroadsBlocks.rotaryPump);
 		ClientRegistry.bindTileEntitySpecialRenderer(RotaryPumpTileEntity.class, new RotaryPumpRenderer());
-		reg(ModBlocks.steamTurbine);
+		reg(CrossroadsBlocks.steamTurbine);
 		ClientRegistry.bindTileEntitySpecialRenderer(SteamTurbineTileEntity.class, new SteamTurbineRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(LargeGearMasterTileEntity.class, new LargeGearRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(RotaryDrillTileEntity.class, new RotaryDrillRenderer());
@@ -57,7 +57,6 @@ public class AAModTESR{
 	}
 
 	private static void reg(Block block){
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName().toString(), "inventory"));
+		Minecraft.getInstance().getItemRenderer().getItemModelMesher().register(Item.getItemFromBlock(block), new ModelResourceLocation(block.getRegistryName().toString(), "inventory"));
 	}
-
 }

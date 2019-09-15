@@ -5,13 +5,13 @@ import com.Da_Technomancer.crossroads.API.packets.ITaylorReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendTaylorToClient;
 import com.Da_Technomancer.crossroads.API.rotary.*;
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
-public class MasterAxisTileEntity extends TileEntity implements ITickable, ITaylorReceiver{
+public class MasterAxisTileEntity extends TileEntity implements ITickableTileEntity, ITaylorReceiver{
 
 	protected boolean locked = false;
 	protected double sumEnergy = 0;
@@ -30,12 +30,12 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 	protected byte key;
 	protected int lastKey = 0;
 	protected boolean forceUpdate;
-	protected EnumFacing facing;
+	protected Direction facing;
 
 	protected static final Random RAND = new Random();
 
 	protected ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
-	protected final HashSet<Pair<ISlaveAxisHandler, EnumFacing>> slaves = new HashSet<>();
+	protected final HashSet<Pair<ISlaveAxisHandler, Direction>> slaves = new HashSet<>();
 
 	/**
 	 * Now I know what you're thinking: "What the heck is this for?". Well it's quite simple- no it isn't that's a lie
@@ -52,22 +52,22 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 	 */
 	private float[] prevAngles = new float[4];
 
-	private static final float ANGLE_MARGIN = (float) ModConfig.speedPrecision.getDouble();
-	protected static final int UPDATE_TIME = ModConfig.gearResetTime.getInt();
+	private static final float ANGLE_MARGIN = (float) CrossroadsConfig.speedPrecision.getDouble();
+	protected static final int UPDATE_TIME = CrossroadsConfig.gearResetTime.getInt();
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return newState.getBlock() != oldState.getBlock();
 	}
 
-	protected EnumFacing getFacing(){
+	protected Direction getFacing(){
 		if(facing == null){
-			IBlockState state = world.getBlockState(pos);
+			BlockState state = world.getBlockState(pos);
 			if(!state.getPropertyKeys().contains(EssentialsProperties.FACING)){
 				invalidate();
-				return EnumFacing.DOWN;
+				return Direction.DOWN;
 			}
-			facing = state.getValue(EssentialsProperties.FACING);
+			facing = state.get(EssentialsProperties.FACING);
 		}
 
 		return facing;
@@ -217,8 +217,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 	}
 
 	protected void triggerSlaves(){
-		HashSet<Pair<ISlaveAxisHandler, EnumFacing>> toRemove = new HashSet<>();
-		for(Pair<ISlaveAxisHandler, EnumFacing> slave : slaves){
+		HashSet<Pair<ISlaveAxisHandler, Direction>> toRemove = new HashSet<>();
+		for(Pair<ISlaveAxisHandler, Direction> slave : slaves){
 			if(slave.getLeft().isInvalid()){
 				toRemove.add(slave);
 				continue;
@@ -229,7 +229,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		ticksExisted = nbt.getLong("life");
 		for(int i = 0; i < 4; i++){
@@ -240,7 +240,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setLong("life", ticksExisted);
 		for(int i = 0; i < 4; i++){
@@ -252,13 +252,13 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		return writeToNBT(nbt);
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return true;
 		}
@@ -273,7 +273,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return (T) handler;
 		}
@@ -293,13 +293,13 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 
 		@Override
 		public void requestUpdate(){
-			if(ModConfig.disableSlaves.getBoolean()){
+			if(CrossroadsConfig.disableSlaves.getBoolean()){
 				return;
 			}
 			memberCopy = new ArrayList<>(rotaryMembers);
 			rotaryMembers.clear();
 			locked = false;
-			EnumFacing dir = getFacing();
+			Direction dir = getFacing();
 			TileEntity te = world.getTileEntity(pos.offset(dir));
 			IAxleHandler axleHandler;
 			if(te != null && (axleHandler = te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())) != null){
@@ -353,7 +353,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickable, ITayl
 		}
 
 		@Override
-		public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
+		public void addAxisToList(ISlaveAxisHandler handler, Direction side){
 			slaves.add(Pair.of(handler, side));
 		}
 

@@ -1,14 +1,14 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.google.common.collect.Multimap;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -23,21 +23,21 @@ public class LiechWrench extends Item{
 		String name = "liech_wrench";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setHarvestLevel("pickaxe", 1);
 		setHarvestLevel("shovel", 1);
 		setHarvestLevel("axe", 1);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	@Override
-	public boolean doesSneakBypassUse(ItemStack stack, net.minecraft.world.IBlockAccess world, BlockPos pos, EntityPlayer player){
+	public boolean doesSneakBypassUse(ItemStack stack, net.minecraft.world.IBlockAccess world, BlockPos pos, PlayerEntity player){
 		return true;
 	}
 
 	@Override
-	public int getHarvestLevel(ItemStack stack, String toolClass, @Nullable EntityPlayer player, @Nullable IBlockState blockState){
+	public int getHarvestLevel(ItemStack stack, String toolClass, @Nullable PlayerEntity player, @Nullable BlockState blockState){
 		return 1;
 	}
 
@@ -47,7 +47,7 @@ public class LiechWrench extends Item{
 	}
 
 	@Override
-	public float getDestroySpeed(ItemStack stack, IBlockState state){
+	public float getDestroySpeed(ItemStack stack, BlockState state){
 		Material mat = state.getMaterial();
 		if(mat == Material.WOOD || mat == Material.PLANTS || mat == Material.VINE){
 			return 4F;
@@ -62,10 +62,10 @@ public class LiechWrench extends Item{
 	}
 
 	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack){
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
-		if (slot == EntityEquipmentSlot.MAINHAND){
+		if (slot == EquipmentSlotType.MAINHAND){
 			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 4, 0));
 			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4D, 0));
 		}

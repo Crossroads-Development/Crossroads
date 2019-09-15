@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.gui;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToServer;
 import com.Da_Technomancer.crossroads.API.templates.*;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.PrototypingTableContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class PrototypingTableGuiContainer extends MachineGUI implements OutputLogGuiObject.ILogUser{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID, "textures/gui/container/prototype_table_gui.png");
+	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID, "textures/gui/container/prototype_table_gui.png");
 	private TextBarGuiObject textBar;
 	private ButtonGuiObject button;
 	private ToggleButtonGuiObject disp;

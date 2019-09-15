@@ -1,19 +1,19 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -33,28 +33,28 @@ public class ColorChart extends Block{
 		String name = "color_chart";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setHardness(3);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
 	}
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
-			playerIn.openGui(Main.instance, GuiHandler.COLOR_CHART_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(Crossroads.instance, GuiHandler.COLOR_CHART_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}
 	
 	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
+	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
+		return getDefaultState().with(EssentialsProperties.FACING, (placer == null) ? Direction.NORTH : placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		switch(state.getValue(EssentialsProperties.FACING)){
+	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
+		switch(state.get(EssentialsProperties.FACING)){
 			case EAST:
 				return BBEAST;
 			case SOUTH:
@@ -67,12 +67,12 @@ public class ColorChart extends Block{
 	}
 	
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean thingamijiger){
+	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean thingamijiger){
 		addCollisionBoxToList(pos, mask, list, getBoundingBox(state, worldIn, pos));
 	}
 	
 	@Override
-	public int damageDropped(IBlockState state){
+	public int damageDropped(BlockState state){
 		return 0;
 	}
 
@@ -82,22 +82,22 @@ public class ColorChart extends Block{
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta == 0 || meta == 1 ? 2 : meta));
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(EssentialsProperties.FACING, Direction.byIndex(meta == 0 || meta == 1 ? 2 : meta));
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(EssentialsProperties.FACING).getIndex();
+	public int getMetaFromState(BlockState state){
+		return state.get(EssentialsProperties.FACING).getIndex();
 	}
 	
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 	
 	@Override
-	public boolean isFullCube(IBlockState state){
+	public boolean isFullCube(BlockState state){
 		return false;
 	}
 }

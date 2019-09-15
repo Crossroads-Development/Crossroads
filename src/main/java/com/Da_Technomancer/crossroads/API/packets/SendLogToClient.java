@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.packets;
 import com.Da_Technomancer.crossroads.API.templates.OutputLogGuiObject;
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -37,7 +37,7 @@ public class SendLogToClient extends Message<SendLogToClient>{
 			return null;
 		}
 
-		Minecraft minecraft = Minecraft.getMinecraft();
+		Minecraft minecraft = Minecraft.getInstance();
 		minecraft.addScheduledTask(new Runnable(){
 			public void run(){
 				processMessage(logName, text, col == -1 ? null : new Color(col), clear);
@@ -48,7 +48,7 @@ public class SendLogToClient extends Message<SendLogToClient>{
 	}
 
 	public void processMessage(String logName, String text, Color col, boolean clear){
-		GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+		Screen gui = Minecraft.getInstance().currentScreen;
 		if(gui instanceof OutputLogGuiObject.ILogUser){
 			OutputLogGuiObject log = ((OutputLogGuiObject.ILogUser) gui).getLog(logName);
 			if(log != null){

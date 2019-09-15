@@ -1,22 +1,22 @@
 package com.Da_Technomancer.crossroads.dimensions;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.init.Biomes;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.world.ServerWorld;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.ReportedException;
+import net.minecraft.util.ITickableTileEntity;
+import net.minecraft.crash.ReportedException;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraft.world.biome.BiomeProviderSingle;
+import net.minecraft.world.biome.provider.SingleBiomeProvider;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class PrototypeWorldProvider extends WorldProvider{
+public class PrototypeWorldProvider extends Dimension{
 
 	@Override
 	public void init(){
-		biomeProvider = new BiomeProviderSingle(Biomes.VOID);
+		biomeProvider = new SingleBiomeProvider(Biomes.VOID);
 		hasSkyLight = false;
 	}
 
@@ -46,7 +46,7 @@ public class PrototypeWorldProvider extends WorldProvider{
 	 * Call on the virtual server side only.
 	 */
 	public static void tickChunk(int chunkX, int chunkZ){
-		WorldServer protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+		ServerWorld protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		if(protWorld == null){
 			DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 			protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
@@ -76,14 +76,14 @@ public class PrototypeWorldProvider extends WorldProvider{
 //										{
 //											return String.valueOf(TileEntity.getKey(ticking.getClass()));
 //										});
-					((ITickable) ticking).update();
+					((ITickableTileEntity) ticking).update();
 					protWorld.profiler.endSection();
 				}catch(Throwable throwable){
 					CrashReport crash = CrashReport.makeCrashReport(throwable, "Ticking block entity");
 					CrashReportCategory crashCateg = crash.makeCategory("Block entity being ticked");
 					ticking.addInfoToCrashReport(crashCateg);
 					if(ForgeModContainer.removeErroringTileEntities){
-						Main.logger.error(crash.getCompleteReport());
+						Crossroads.logger.error(crash.getCompleteReport());
 						ticking.invalidate();
 						protWorld.removeTileEntity(ticking.getPos());
 					}else
@@ -108,7 +108,7 @@ public class PrototypeWorldProvider extends WorldProvider{
 
 	@Override
 	public void onWorldUpdateEntities(){
-		world.profiler.startSection(Main.MODNAME + "-Prototype TileEntity Sorting");
+		world.profiler.startSection(Crossroads.MODNAME + "-Prototype TileEntity Sorting");
 		tickingTE.addAll(world.tickableTileEntities);
 		world.tickableTileEntities.clear();
 		tickingTE.removeIf((TileEntity te) -> {
@@ -143,17 +143,17 @@ public class PrototypeWorldProvider extends WorldProvider{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public boolean isSkyColored(){
 		return false;
 	}
 
 	@Override
-	public IChunkGenerator createChunkGenerator(){
+	public ChunkGenerator createChunkGenerator(){
 		return new EmptyGenerator(world);
 	}
 
-	private static class EmptyGenerator implements IChunkGenerator{
+	private static class EmptyGenerator implements ChunkGenerator{
 
 		private final World world;
 
@@ -177,7 +177,7 @@ public class PrototypeWorldProvider extends WorldProvider{
 		}
 
 		@Override
-		public List<SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos){
+		public List<SpawnListEntry> getPossibleCreatures(EntityClassification creatureType, BlockPos pos){
 			return null;
 		}
 

@@ -2,26 +2,26 @@ package com.Da_Technomancer.crossroads.dimensions;
 
 import java.util.List;
 
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.init.Biomes;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
+import net.minecraft.world.biome.provider.SingleBiomeProvider;
+import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class WorkspaceWorldProvider extends WorldProvider{
+public class WorkspaceWorldProvider extends Dimension{
 
 	@Override
 	public void init(){
-		biomeProvider = new BiomeProviderSingle(Biomes.VOID);
+		biomeProvider = new SingleBiomeProvider(Biomes.VOID);
 		hasSkyLight = false;
 	}
 
@@ -56,17 +56,17 @@ public class WorkspaceWorldProvider extends WorldProvider{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public boolean isSkyColored(){
 		return false;
 	}
 
 	@Override
-	public IChunkGenerator createChunkGenerator(){
+	public ChunkGenerator createChunkGenerator(){
 		return new EmptyGenerator(world);
 	}
 
-	private static class EmptyGenerator implements IChunkGenerator{
+	private static class EmptyGenerator implements ChunkGenerator{
 
 		private final World world;
 
@@ -98,7 +98,7 @@ public class WorkspaceWorldProvider extends WorldProvider{
 		}
 
 		@Override
-		public List<SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos){
+		public List<SpawnListEntry> getPossibleCreatures(EntityClassification creatureType, BlockPos pos){
 			return null;
 		}
 

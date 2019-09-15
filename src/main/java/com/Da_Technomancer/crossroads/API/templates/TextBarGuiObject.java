@@ -6,17 +6,17 @@ import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class TextBarGuiObject implements IGuiObject{
 	
-	private static final ResourceLocation BAR = new ResourceLocation(Main.MODID, "textures/gui/container/search_bar.png");
+	private static final ResourceLocation BAR = new ResourceLocation(Crossroads.MODID, "textures/gui/container/search_bar.png");
 	private final int x;
 	private final int y;
 	private final int endX;
@@ -118,13 +118,13 @@ public class TextBarGuiObject implements IGuiObject{
 
 	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
-		Minecraft.getMinecraft().getTextureManager().bindTexture(BAR);
+		Minecraft.getInstance().getTextureManager().bindTexture(BAR);
 		if(selected){
 			GlStateManager.color(1, 1, 0);
 		}
-		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 2, 20, 300, 20);
-		Gui.drawModalRectWithCustomSizedTexture(x + 2, y, 2, 0, endX - x - 4, 20, 300, 20);
-		Gui.drawModalRectWithCustomSizedTexture(endX - 2, y, 298, 0, 2, 20, 300, 20);
+		AbstractGui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 2, 20, 300, 20);
+		AbstractGui.drawModalRectWithCustomSizedTexture(x + 2, y, 2, 0, endX - x - 4, 20, 300, 20);
+		AbstractGui.drawModalRectWithCustomSizedTexture(endX - 2, y, 298, 0, 2, 20, 300, 20);
 		GlStateManager.color(1, 1, 1);
 		
 		return true;

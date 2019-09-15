@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 
 public class BeamTransmute{
 	
-	public final IBlockState state;
+	public final BlockState state;
 	public final int minPower;
 	
-	public BeamTransmute(IBlockState state, int minPower){
+	public BeamTransmute(BlockState state, int minPower){
 		this.state = state;
 		this.minPower = minPower;
 	}

@@ -7,9 +7,9 @@ import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 import amerifrance.guideapi.page.PageTextImage;
+import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.entity.player.PlayerEntity;
 import org.apache.commons.lang3.tuple.Pair;
-
-import com.Da_Technomancer.crossroads.Main;
 
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.Book;
@@ -21,7 +21,6 @@ import amerifrance.guideapi.gui.GuiCategory;
 import amerifrance.guideapi.page.PageIRecipe;
 import amerifrance.guideapi.page.PageImage;
 import amerifrance.guideapi.page.PageText;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class SmartEntry extends EntryItemStack{
 
 	private final Object[] contents;
-	private final Predicate<EntityPlayer> canSee;
+	private final Predicate<PlayerEntity> canSee;
 
 	/**
 	 * @param unlocalizedName The unlocalized name of this entry.
@@ -54,14 +53,14 @@ public class SmartEntry extends EntryItemStack{
 	 * 
 	 * This updates its contents every time it is reopened. 
 	 */
-	public SmartEntry(String unlocalizedName, @Nullable Predicate<EntityPlayer> canSee, ItemStack icon, Object... contents){
+	public SmartEntry(String unlocalizedName, @Nullable Predicate<PlayerEntity> canSee, ItemStack icon, Object... contents){
 		super(new ArrayList<IPage>(), unlocalizedName, icon, true);
 		this.contents = contents;
 		this.canSee = canSee;
 	}
 
 	@Override
-	public boolean canSee(EntityPlayer player, ItemStack bookStack){
+	public boolean canSee(PlayerEntity player, ItemStack bookStack){
 		return canSee == null || canSee.test(player);
 	}
 
@@ -73,8 +72,8 @@ public class SmartEntry extends EntryItemStack{
 	private String active;
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void onInit(Book book, CategoryAbstract category, GuiCategory guiCategory, EntityPlayer player, ItemStack bookStack){
+	@OnlyIn(Dist.CLIENT)
+	public void onInit(Book book, CategoryAbstract category, GuiCategory guiCategory, PlayerEntity player, ItemStack bookStack){
 		pageList.clear();
 		active = "";
 		for(Object part : contents){
@@ -145,7 +144,7 @@ public class SmartEntry extends EntryItemStack{
 			return;
 		}
 
-		throw new IllegalArgumentException(Main.MODID + ": Unsupported object type passed to guide book. Type: " + input.getClass().getName());
+		throw new IllegalArgumentException(Crossroads.MODID + ": Unsupported object type passed to guide book. Type: " + input.getClass().getName());
 	}
 
 	/**

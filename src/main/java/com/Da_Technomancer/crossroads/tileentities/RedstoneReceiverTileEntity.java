@@ -5,15 +5,15 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.nbt.NBTTagCompound;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -26,17 +26,17 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 	private BlockPos src = null;
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		//No-Op, doesn't create links
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
 		if(src == null){
 			chat.add("No linked transmitter");
 		}else{
@@ -52,12 +52,12 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 	public void setSrc(BlockPos srcIn){
 		src = srcIn;
 		markDirty();
-		world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneReceiver, true);
+		world.notifyNeighborsOfStateChange(pos, CrossroadsBlocks.redstoneReceiver, true);
 	}
 
-	public void dye(EnumDyeColor color){
-		if(world.getBlockState(pos).getValue(Properties.COLOR) != color){
-			world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.COLOR, color));
+	public void dye(DyeColor color){
+		if(world.getBlockState(pos).get(Properties.COLOR) != color){
+			world.setBlockState(pos, world.getBlockState(pos).with(Properties.COLOR, color));
 			if(src != null){
 				BlockPos worldSrc = pos.add(src);
 				TileEntity srcTE = world.getTileEntity(worldSrc);
@@ -69,7 +69,7 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		if(nbt.hasKey("src")){
 			src = BlockPos.fromLong(nbt.getLong("src"));
@@ -77,7 +77,7 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 	}
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		if(src != null){
 			nbt.setLong("src", src.toLong());
@@ -96,7 +96,7 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
+	public boolean hasCapability(Capability<?> capability, @Nullable Direction facing){
 		return capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY || super.hasCapability(capability, facing);
 	}
 
@@ -105,7 +105,7 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 	@Nullable
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redsHandler;
 		}
@@ -134,7 +134,7 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 
 	@Override
 	public int getRange(){
-		return ModConfig.getConfigInt(ModConfig.redstoneTransmitterRange, false);
+		return CrossroadsConfig.redstoneTransmitterRange.get();
 	}
 
 	private class RedstoneHandler implements IAdvancedRedstoneHandler{

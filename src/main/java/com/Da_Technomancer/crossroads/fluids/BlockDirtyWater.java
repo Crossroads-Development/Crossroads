@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.fluids;
 
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -20,11 +20,11 @@ public class BlockDirtyWater extends BlockFluidClassic{
 		DIRTY_WATER.setBlock(this);
 		setTranslationKey("dirty_water");
 		setRegistryName("dirty_water");
-		ModBlocks.toRegister.add(this);
+		CrossroadsBlocks.toRegister.add(this);
 	}
 
 	@Override
-	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos){
+	public int getLightOpacity(BlockState state, IBlockAccess world, BlockPos pos){
 		return 12;
 	}
 
@@ -38,7 +38,7 @@ public class BlockDirtyWater extends BlockFluidClassic{
 	private static class FluidDirtyWater extends Fluid{
 
 		private FluidDirtyWater(){
-			super("dirty_water", new ResourceLocation(Main.MODID, "blocks/dirty_water_still"), new ResourceLocation(Main.MODID, "blocks/dirty_water_flow"));
+			super("dirty_water", new ResourceLocation(Crossroads.MODID, "blocks/dirty_water_still"), new ResourceLocation(Crossroads.MODID, "blocks/dirty_water_flow"));
 		}
 	}
 }

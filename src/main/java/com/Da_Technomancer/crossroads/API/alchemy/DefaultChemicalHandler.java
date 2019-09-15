@@ -1,17 +1,18 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
 
 public class DefaultChemicalHandler implements IChemicalHandler{
 
 	@Override
-	public EnumTransferMode getMode(EnumFacing side){
+	public EnumTransferMode getMode(Direction side){
 		return EnumTransferMode.NONE;
 	}
 
 	@Override
-	public EnumContainerType getChannel(EnumFacing side){
+	public EnumContainerType getChannel(Direction side){
 		return EnumContainerType.NONE;
 	}
 
@@ -31,7 +32,7 @@ public class DefaultChemicalHandler implements IChemicalHandler{
 	}
 
 	@Override
-	public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
+	public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
 		return false;
 	}
 }

@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.items;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.Effects;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,23 +16,23 @@ public class MagentaBread extends ItemFood{
 		String name = "magenta_bread";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public boolean hasEffect(ItemStack stack){
 		return true;
 	}
 
 	@Override
-	protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player){
+	protected void onFoodEaten(ItemStack stack, World worldIn, PlayerEntity player){
 		if(!worldIn.isRemote){
-			player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 3600, 20));
-			player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 3600, 100));
-			player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 3600, 10));
+			player.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 3600, 20));
+			player.addPotionEffect(new EffectInstance(Effects.SPEED, 3600, 100));
+			player.addPotionEffect(new EffectInstance(Effects.NAUSEA, 3600, 10));
 		}
 	}
 }

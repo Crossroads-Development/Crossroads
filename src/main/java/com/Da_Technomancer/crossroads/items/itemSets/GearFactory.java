@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,7 +26,7 @@ public class GearFactory{
 	public static final HashMap<GearMaterial, GearProfile> gearTypes = new HashMap<>();
 
 	protected static void init(){
-		String[] rawInput = ModConfig.getConfigStringList(ModConfig.gearTypes, true);
+		String[] rawInput = CrossroadsConfig.getConfigStringList(CrossroadsConfig.gearTypes, true);
 
 		Pattern pattern = Pattern.compile("\\w++ \\p{XDigit}{6}+ [+]?[0-9]*.?[0-9]+");
 
@@ -69,7 +69,7 @@ public class GearFactory{
 
 	public static void craftingInit(){
 		for(Map.Entry<GearMaterial, GearProfile> entry : gearTypes.entrySet()){
-			GearProfile prof = entry.getValue();
+			GearProfile prof = entry.get();
 			String metal = entry.getKey().getName();
 			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getSmallGear(), 9), " ? ", "?#?", " ? ", '#', "block" + metal, '?', "ingot" + metal));
 			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getSmallGear(), 1), " ? ", "?#?", " ? ", '#', "ingot" + metal, '?', "nugget" + metal));
@@ -84,9 +84,9 @@ public class GearFactory{
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	protected static void clientInit(){
-		ItemColors itemColor = Minecraft.getMinecraft().getItemColors();
+		ItemColors itemColor = Minecraft.getInstance().getItemColors();
 		for(GearMaterial typ : gearMats){
 			IItemColor itemColoring = (ItemStack stack, int tintIndex) -> tintIndex == 0 ? typ.getColor().getRGB() : -1;
 			GearProfile prof = gearTypes.get(typ);

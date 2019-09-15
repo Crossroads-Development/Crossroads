@@ -1,47 +1,46 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MathAxisTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class MathAxis extends BlockContainer{
+public class MathAxis extends ContainerBlock{
 	
 	public MathAxis(){
 		super(Material.IRON);
 		String name = "math_axis";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().withProperty(Properties.ARRANGEMENT, MathAxisTileEntity.Arrangement.DOUBLE));
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().with(Properties.ARRANGEMENT, MathAxisTileEntity.Arrangement.DOUBLE));
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, (placer == null) ? EnumFacing.NORTH : placer.getHorizontalFacing().getOpposite());
+	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
+		return getDefaultState().with(Properties.HORIZ_FACING, (placer == null) ? Direction.NORTH : placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
@@ -50,7 +49,7 @@ public class MathAxis extends BlockContainer{
 	}
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState blockstate){
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof MathAxisTileEntity){
 			((MathAxisTileEntity) te).disconnect();
@@ -59,18 +58,18 @@ public class MathAxis extends BlockContainer{
 	}
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof MathAxisTileEntity){
 				((MathAxisTileEntity) te).disconnect();
 			}
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_FACING));
+				worldIn.setBlockState(pos, state.cycle(Properties.HORIZ_FACING));
 			}
 		}else if(!worldIn.isRemote){
-			ModPackets.network.sendTo(new SendIntToClient((byte) 0, ((MathAxisTileEntity) worldIn.getTileEntity(pos)).getMode().ordinal(), pos), (EntityPlayerMP) playerIn);
-			playerIn.openGui(Main.instance, GuiHandler.MATH_AXIS_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			ModPackets.network.sendTo(new SendIntToClient((byte) 0, ((MathAxisTileEntity) worldIn.getTileEntity(pos)).getMode().ordinal(), pos), (ServerPlayerEntity) playerIn);
+			playerIn.openGui(Crossroads.instance, GuiHandler.MATH_AXIS_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 
 
@@ -78,23 +77,23 @@ public class MathAxis extends BlockContainer{
 	}
 	
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta & 3)).withProperty(Properties.ARRANGEMENT, MathAxisTileEntity.Arrangement.values()[meta >> 2]);
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(Properties.HORIZ_FACING, Direction.byHorizontalIndex(meta & 3)).with(Properties.ARRANGEMENT, MathAxisTileEntity.Arrangement.values()[meta >> 2]);
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex() | (state.getValue(Properties.ARRANGEMENT).ordinal() << 2);
+	public int getMetaFromState(BlockState state){
+		return state.get(Properties.HORIZ_FACING).getHorizontalIndex() | (state.get(Properties.ARRANGEMENT).ordinal() << 2);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new MathAxisTileEntity();
 
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 }

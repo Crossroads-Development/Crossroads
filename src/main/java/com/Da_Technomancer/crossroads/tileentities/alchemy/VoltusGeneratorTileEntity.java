@@ -4,12 +4,13 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.ModConfig;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -17,7 +18,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class VoltusGeneratorTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE{
 
 	private static final int VOLTUS_CAPACITY = 100;
 	private static final int FE_CAPACITY = 20_000;
@@ -25,7 +26,7 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickable, 
 	private int fe = 0;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add(voltusAmount + "/" + VOLTUS_CAPACITY + " Voltus");
 	}
 
@@ -35,15 +36,15 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickable, 
 			return;
 		}
 
-		int usedVoltus = Math.min(voltusAmount, (int) ((FE_CAPACITY - fe) * ModConfig.getConfigDouble(ModConfig.voltusUsage, false) / 1000D));
+		int usedVoltus = Math.min(voltusAmount, (int) ((FE_CAPACITY - fe) * ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.voltusUsage).get() / 1000D));
 
 		if(usedVoltus > 0){
 			voltusAmount -= usedVoltus;
-			fe += usedVoltus * 1000D / ModConfig.getConfigDouble(ModConfig.voltusUsage, false);
+			fe += usedVoltus * 1000D / ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.voltusUsage).get();
 			markDirty();
 		}
 
-		for(EnumFacing dir : EnumFacing.VALUES){
+		for(Direction dir : Direction.VALUES){
 			TileEntity te = world.getTileEntity(pos.offset(dir));
 			if(te != null && te.hasCapability(CapabilityEnergy.ENERGY, dir.getOpposite())){
 				IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite());
@@ -57,14 +58,14 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		voltusAmount = nbt.getInteger("voltus");
 		fe = nbt.getInteger("fe");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("voltus", voltusAmount);
 		nbt.setInteger("fe", fe);
@@ -75,13 +76,13 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickable, 
 	private ElecHandler feHandler = new ElecHandler();
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		return cap == Capabilities.CHEMICAL_CAPABILITY || cap == CapabilityEnergy.ENERGY || super.hasCapability(cap, side);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) handler;
 		}
@@ -133,12 +134,12 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickable, 
 	private class AlchHandler implements IChemicalHandler{
 
 		@Override
-		public EnumTransferMode getMode(EnumFacing side){
-			return side == EnumFacing.DOWN ? EnumTransferMode.INPUT : EnumTransferMode.NONE;
+		public EnumTransferMode getMode(Direction side){
+			return side == Direction.DOWN ? EnumTransferMode.INPUT : EnumTransferMode.NONE;
 		}
 
 		@Override
-		public EnumContainerType getChannel(EnumFacing side){
+		public EnumContainerType getChannel(Direction side){
 			return EnumContainerType.CRYSTAL;
 		}
 
@@ -153,7 +154,7 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
+		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
 			//Only allows insertion of voltus
 			if(voltusAmount >= VOLTUS_CAPACITY || reag.getQty(EnumReagents.ELEM_CHARGE.id()) == 0){
 				return false;

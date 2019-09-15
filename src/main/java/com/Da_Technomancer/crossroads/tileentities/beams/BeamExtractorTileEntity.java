@@ -2,17 +2,17 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -24,16 +24,16 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 	private ItemStack inv = ItemStack.EMPTY;
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		if(!inv.isEmpty()){
-			nbt.setTag("inv", inv.writeToNBT(new NBTTagCompound()));
+			nbt.setTag("inv", inv.writeToNBT(new CompoundNBT()));
 		}
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
 	}
@@ -42,8 +42,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).getValue(EssentialsProperties.FACING)){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).get(EssentialsProperties.FACING)){
 			return (T) itemHandler;
 		}
 
@@ -99,23 +99,23 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player){
+	public boolean isUsableByPlayer(PlayerEntity player){
 		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player){
+	public void openInventory(PlayerEntity player){
 
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player){
+	public void closeInventory(PlayerEntity player){
 
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && (RecipeHolder.beamExtractRecipes.containsKey(stack.getItem()) || stack.getItem() == ModItems.beamCage);
+		return index == 0 && (RecipeHolder.beamExtractRecipes.containsKey(stack.getItem()) || stack.getItem() == CrossroadsItems.beamCage);
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 	@Override
 	public ITextComponent getDisplayName(){
-		return new TextComponentTranslation(getName());
+		return new TranslationTextComponent(getName());
 	}
 
 	@Override
@@ -210,13 +210,13 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 	@Override
 	protected void doEmit(BeamUnit toEmit){
-		EnumFacing dir = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
+		Direction dir = world.getBlockState(pos).get(EssentialsProperties.FACING);
 		BeamUnit mag = null;
 		if(!inv.isEmpty()){
 			if(RecipeHolder.beamExtractRecipes.containsKey(inv.getItem())){
 				mag = RecipeHolder.beamExtractRecipes.get(inv.getItem());
 				inv.shrink(1);
-			}else if(inv.getItem() == ModItems.beamCage){
+			}else if(inv.getItem() == CrossroadsItems.beamCage){
 				mag = BeamCage.getStored(inv);
 				BeamCage.storeBeam(inv, null);
 			}
@@ -234,7 +234,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] out = new boolean[6];
-		out[world.getBlockState(pos).getValue(EssentialsProperties.FACING).getIndex()] = true;
+		out[world.getBlockState(pos).get(EssentialsProperties.FACING).getIndex()] = true;
 		return out;
 	}
 }

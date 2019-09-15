@@ -3,12 +3,14 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
+import mezz.jei.api.ingredients.IIngredientType;
 
 public class ReagIngr{
-	
+
+	public static final IIngredientType<ReagIngr> REAG = () -> ReagIngr.class;
 	public static final List<ReagIngr> REAG_TYPES = new ArrayList<>();
 	
 	private final IReagent reag;
@@ -19,7 +21,7 @@ public class ReagIngr{
 		this.parts = parts;
 		if(parts < 0){
 			IllegalArgumentException e = new IllegalArgumentException("ReagIngr constructed with invalid part count!");
-			Main.logger.throwing(e);
+			Crossroads.logger.throwing(e);
 			throw e;
 		}
 	}
@@ -32,7 +34,7 @@ public class ReagIngr{
 		return parts;
 	}
 	
-	public static void populate(){
+	protected static void populate(){
 		for(IReagent r : AlchemyCore.REAGENTS.values()){
 			if(r != null){
 				REAG_TYPES.add(new ReagIngr(r, 1));

@@ -5,10 +5,10 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.FlexibleGameProfile;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
@@ -16,7 +16,7 @@ import net.minecraft.world.storage.WorldSavedData;
 
 public class PlayerDimensionMapSavedData extends WorldSavedData{
 
-	public static final String PLAYER_DIM_ID = Main.MODID + "_player_dim";
+	public static final String PLAYER_DIM_ID = Crossroads.MODID + "_player_dim";
 
 	public PlayerDimensionMapSavedData(){
 		super(PLAYER_DIM_ID);
@@ -45,7 +45,7 @@ public class PlayerDimensionMapSavedData extends WorldSavedData{
 	protected final HashMap<FlexibleGameProfile, Integer> playerDim = new HashMap<FlexibleGameProfile, Integer>();
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		for(int i = 0; i < nbt.getInteger("length"); i++){
 			FlexibleGameProfile profile = FlexibleGameProfile.readFromNBT(nbt, "" + i, cache);
 			if(profile.isNewlyCompleted()){
@@ -56,12 +56,12 @@ public class PlayerDimensionMapSavedData extends WorldSavedData{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		int counter = 0;
 		nbt.setInteger("length", playerDim.size());
 		for(Entry<FlexibleGameProfile, Integer> dim : playerDim.entrySet()){
 			dim.getKey().writeToNBT(nbt, "" + counter);
-			nbt.setInteger(counter + "_dim", dim.getValue());
+			nbt.setInteger(counter + "_dim", dim.get());
 			counter++;
 		}
 		return nbt;

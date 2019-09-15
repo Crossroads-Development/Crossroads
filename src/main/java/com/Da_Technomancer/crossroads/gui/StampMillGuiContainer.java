@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
 import net.minecraft.inventory.IInventory;
@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class StampMillGuiContainer extends MachineGUI{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/container/stamp_mill_gui.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/stamp_mill_gui.png");
 
 	public StampMillGuiContainer(IInventory playerInv, StampMillTileEntity te){
 		super(new StampMillContainer(playerInv, te));

@@ -4,14 +4,14 @@ import com.Da_Technomancer.crossroads.API.templates.FluidGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.IGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
 public class RadiatorGuiContainer extends MachineGUI{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/container/radiator_gui.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/radiator_gui.png");
 
 	public RadiatorGuiContainer(IInventory playerInv, InventoryTE te){
 		super(new RadiatorContainer(playerInv, te));

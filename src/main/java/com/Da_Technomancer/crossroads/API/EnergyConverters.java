@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API;
 
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
 
 public final class EnergyConverters{
 
@@ -13,15 +13,15 @@ public final class EnergyConverters{
 	/**
 	 * @return The number of degrees one bucket of steam is worth
 	 */
-	public static double degPerSteamBucket(boolean client){
-		return ModConfig.getConfigDouble(ModConfig.steamWorth, client);
+	public static double degPerSteamBucket(){
+		return CrossroadsConfig.steamWorth.get();
 	}
 
 	/**
 	 * @return The numbers of degrees one Joule (Rotary energy) is worth
 	 */
-	public static double degPerJoule(boolean client){
-		return 1D / ModConfig.getConfigDouble(ModConfig.jouleWorth, client);
+	public static double degPerJoule(){
+		return 1D / (double) CrossroadsConfig.jouleWorth.get();
 	}
 
 	/**

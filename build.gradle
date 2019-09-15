@@ -1,60 +1,143 @@
 buildscript {
 	repositories {
-    	jcenter()
-    	maven { url = "http://files.minecraftforge.net/maven" }
+		maven { url = 'https://files.minecraftforge.net/maven' }
+		jcenter()
+		mavenCentral()
 	}
 	dependencies {
-    	classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
 	}
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-version = "1.13.0-2.0.0 BETA 50-Fire beam"
-group = "com.Da_Technomancer.crossroads"
+apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+version = "$mc_version-$mod_version"
+group = "mod.technomancer.crossroads"
 archivesBaseName = "crossroads"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
+//Exclude python scripts from the build
+sourceSets.main.java.exclude('**/python/**')
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
 minecraft {
-	version = "1.12.2-14.23.5.2768"
-	runDir = "run"
-		
-	mappings = "stable_39"
-		
-	replace 'gradVERSION', project.version
-	replaceIn 'Main.java'
+	mappings channel: 'snapshot', version: "$mcp_version"
+	
+//	replaceIn 'mods.toml'
+//	replace 'essentials_version', '$essentials_version'
+	
+	runs {
+		client {
+			workingDirectory project.file('run')
+
+			// Recommended logging data for a userdev environment
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+			// Recommended logging level for the console
+			property 'forge.logging.console.level', 'debug'
+
+			mods {
+				crossroads {
+					source sourceSets.main
+				}
+			}
+		}
+
+		server {
+			workingDirectory project.file('run')
+
+			// Recommended logging data for a userdev environment
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+			// Recommended logging level for the console
+			property 'forge.logging.console.level', 'debug'
+
+			mods {
+				crossroads {
+					source sourceSets.main
+				}
+			}
+		}
+	}
 }
 
 repositories {
-	maven { url 'http://tehnut.info/maven/' }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
-	maven { url "http://maven.blamejared.com/" }
 }
 
 dependencies {
-	deobfCompile "info.amerifrance.guideapi:Guide-API:1.12-2.1.5-60"
-	deobfCompile "mezz.jei:jei_1.12.2:4.9.1.168"
-	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.11.500"
-	deobfCompile "com.teamacronymcoders.base:base:1.12.2-3.11.0-SNAPSHOT.171"
-	deobfCompile "com.teamacronymcoders:ContentTweaker:1.12.2-4.8.0-Snapshot.9"
+	minecraft "net.minecraftforge:forge:$mc_version-$fg_version"
+	
+	//Compile against APIs
+	compileOnly fg.deobf("mezz.jei:jei-$mc_version:$jei_version:api")
+	//Run with the full versions
+	runtimeOnly fg.deobf("mezz.jei:jei-$mc_version:$jei_version")
+	//When setting up a dev environment for Crossroads, make sure to have an essentials jar in a folder called "libs", in the same parent folder as "src"
+	deobf fileTree(dir: 'libs', include: '*.jar')
+}
+
+// Example for how to get properties into the manifest for reading by the runtime..
+jar {
+	manifest {
+		attributes([
+				"Specification-Title": "crossroads",
+				"Specification-Vendor": "Da_Technomancer",
+				"Specification-Version": "1",
+				"Implementation-Title": project.name,
+				"Implementation-Version": "${version}",
+				"Implementation-Vendor" :"Da_Technomancer",
+				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+		])
+	}
+}
+
+// Example configuration to allow publishing using the maven-publish task
+// we define a custom artifact that is sourced from the reobfJar output task
+// and then declare that to be published
+// Note you'll need to add a repository here
+def reobfFile = file("$buildDir/reobfJar/output.jar")
+def reobfArtifact = artifacts.add('default', reobfFile) {
+	type 'jar'
+	builtBy 'reobfJar'
 }
 
 processResources {
-	inputs.property "version", project.version
-	inputs.property "mcversion", project.minecraft.version
+	// This will ensure that this task is redone when the versions change.
+	inputs.property 'version', project.version
 
+	// Replace stuff in mods.toml, nothing else
 	from(sourceSets.main.resources.srcDirs) {
-		include 'mcmod.info'
-		
-		expand 'version':project.version, 'mcversion':project.minecraft.version
+		include 'META-INF/mods.toml'
+
+		//Copy the Crossroads and essentials version into the toml file
+		expand 'version':project.version
+		expand 'essentials_version':"$essentials_version"
 	}
-	
+
+	// Copy everything else except the mods.toml
 	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
+		exclude 'META-INF/mods.toml'
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifact reobfArtifact
+		}
+	}
+	repositories {
+		maven {
+			url "file:///${project.projectDir}/mcmodsrepo"
+		}
 	}
 }

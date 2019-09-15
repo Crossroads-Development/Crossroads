@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.WorldServer;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.ServerWorld;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -20,10 +20,10 @@ public class NbtToEntityServer extends Message<NbtToEntityServer>{
 	}
 
 	public UUID entity;
-	public NBTTagCompound nbt;
+	public CompoundNBT nbt;
 	public int dim;
 
-	public NbtToEntityServer(UUID entity, int dim, NBTTagCompound nbt){
+	public NbtToEntityServer(UUID entity, int dim, CompoundNBT nbt){
 		this.entity = entity;
 		this.nbt = nbt;
 		this.dim = dim;
@@ -32,7 +32,7 @@ public class NbtToEntityServer extends Message<NbtToEntityServer>{
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.SERVER){
-			Main.logger.error("MessageToServer received on wrong side:" + context.side);
+			Crossroads.logger.error("MessageToServer received on wrong side:" + context.side);
 			return null;
 		}
 
@@ -46,7 +46,7 @@ public class NbtToEntityServer extends Message<NbtToEntityServer>{
 		return null;
 	}
 
-	public void processMessage(WorldServer world, UUID entity, NBTTagCompound nbt){
+	public void processMessage(ServerWorld world, UUID entity, CompoundNBT nbt){
 		if(world == null || entity == null){
 			return;
 		}

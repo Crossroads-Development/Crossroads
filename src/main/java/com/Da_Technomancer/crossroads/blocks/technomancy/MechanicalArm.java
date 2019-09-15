@@ -1,21 +1,19 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -23,28 +21,28 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MechanicalArm extends BlockContainer{
+public class MechanicalArm extends ContainerBlock{
 	
 	public MechanicalArm(){
 		super(Material.IRON);
 		String name = "mechanical_arm";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new MechanicalArmTileEntity();
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
@@ -60,34 +58,34 @@ public class MechanicalArm extends BlockContainer{
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		neighborChanged(state, world, pos, this, pos);
 	}
 	
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		 //Redstone controlled by north side.
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof MechanicalArmTileEntity){
-			((MechanicalArmTileEntity) te).setRedstone((int) Math.round(RedstoneUtil.getDirectPowerOnSide(worldIn, pos, EnumFacing.NORTH)));
+			((MechanicalArmTileEntity) te).setRedstone((int) Math.round((double) com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil.getRedstoneOnSide(worldIn, pos, Direction.NORTH)));
 		}
 	}
 
 	@Override
-	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side){
-		return side == EnumFacing.NORTH || side == EnumFacing.SOUTH;
+	public boolean canConnectRedstone(BlockState state, IBlockAccess world, BlockPos pos, @Nullable Direction side){
+		return side == Direction.NORTH || side == Direction.SOUTH;
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 	
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+	public void breakBlock(World worldIn, BlockPos pos, BlockState state){
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof MechanicalArmTileEntity){
-			((MechanicalArmTileEntity) te).ridable.setDead();
+			((MechanicalArmTileEntity) te).ridable.remove();
 		}
 		
 		super.breakBlock(worldIn, pos, state);

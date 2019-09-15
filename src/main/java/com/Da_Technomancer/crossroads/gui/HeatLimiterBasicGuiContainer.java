@@ -7,11 +7,11 @@ import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.gui.container.BlankContainer;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterBasicTileEntity;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 
 import java.io.IOException;
 
-public class HeatLimiterBasicGuiContainer extends GuiContainer{
+public class HeatLimiterBasicGuiContainer extends ContainerScreen{
 
 	private final HeatLimiterBasicTileEntity te;
 	private TextBarGuiObject textBar;

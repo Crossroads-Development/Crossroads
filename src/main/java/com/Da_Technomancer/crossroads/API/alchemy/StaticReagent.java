@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
@@ -37,7 +37,7 @@ public class StaticReagent implements IReagent{
 	public StaticReagent(String name, double meltingPoint, double boilingPoint, Function<EnumMatterPhase, Color> color, @Nullable Predicate<ItemStack> isSolid, @Nullable Supplier<ItemStack> solid, int containType, @Nullable IAlchEffect effect){
 		this.name = name;
 		if(boilingPoint <= meltingPoint){
-			throw Main.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));
+			throw Crossroads.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));
 		}
 		melting = meltingPoint;
 		boiling = boilingPoint;

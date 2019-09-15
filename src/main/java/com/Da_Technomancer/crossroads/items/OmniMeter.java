@@ -9,16 +9,16 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -35,10 +35,10 @@ public class OmniMeter extends Item{
 		String name = "omnimeter";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	private static final int CHAT_ID = 279478;//Value chosen at random
@@ -54,7 +54,7 @@ public class OmniMeter extends Item{
 	 * @param hitY The hitY
 	 * @param hitZ The hitZ
 	 */
-	public static void measure(ArrayList<String> chat, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ){
+	public static void measure(ArrayList<String> chat, PlayerEntity player, World world, BlockPos pos, Direction facing, BlockRayTraceResult hit){
 		TileEntity te = world.getTileEntity(pos);
 		if(te != null){
 			if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
@@ -78,9 +78,9 @@ public class OmniMeter extends Item{
 		if(te instanceof BeamRenderTEBase){
 			BeamUnit[] mag = ((BeamRenderTEBase) te).getLastSent();
 			if(mag != null){
-				NBTTagCompound nbt = MiscUtil.getPlayerTag(player);
+				CompoundNBT nbt = MiscUtil.getPlayerTag(player);
 				if(!nbt.hasKey("elements")){
-					nbt.setTag("elements", new NBTTagCompound());
+					nbt.setTag("elements", new CompoundNBT());
 				}
 				nbt = nbt.getCompoundTag("elements");
 				for(int i = 0; i < mag.length; i++){
@@ -89,10 +89,10 @@ public class OmniMeter extends Item{
 						if(!nbt.hasKey(EnumBeamAlignments.getAlignment(check).name())){
 							nbt.setBoolean(EnumBeamAlignments.getAlignment(check).name(), true);
 							//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
-							player.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumBeamAlignments.getAlignment(check).getLocalName(false) + TextFormatting.RESET.toString()));
-							StoreNBTToClient.syncNBTToClient((EntityPlayerMP) player, false);
+							player.sendMessage(new StringTextComponent(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumBeamAlignments.getAlignment(check).getLocalName(false) + TextFormatting.RESET.toString()));
+							StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player, false);
 						}
-						String dir = EnumFacing.byIndex(i).toString();
+						String dir = Direction.byIndex(i).toString();
 						dir = Character.toUpperCase(dir.charAt(0)) + dir.substring(1);
 						chat.add(dir + ": " + check.toString());
 					}
@@ -106,7 +106,7 @@ public class OmniMeter extends Item{
 	}
 
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+	public ActionResultType onItemUse(PlayerEntity playerIn, World worldIn, BlockPos pos, Hand hand, Direction facing, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
 
 			ArrayList<String> chat = new ArrayList<>();
@@ -121,10 +121,10 @@ public class OmniMeter extends Item{
 					}
 					out.append(line);
 				}
-				ModPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (EntityPlayerMP) playerIn);
+				ModPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (ServerPlayerEntity) playerIn);
 			}
 		}
 
-		return EnumActionResult.SUCCESS;
+		return ActionResultType.SUCCESS;
 	}
 }

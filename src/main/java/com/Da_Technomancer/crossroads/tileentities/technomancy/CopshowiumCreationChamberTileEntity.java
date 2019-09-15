@@ -8,11 +8,11 @@ import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.fluids.BlockMoltenCopshowium;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,12 +34,12 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 
 	public CopshowiumCreationChamberTileEntity(){
 		super(0);
-		fluidProps[0] = new TankProperty(0, CAPACITY, true, true, (Fluid f) -> f != null && (f.getName().equals(ModConfig.getConfigString(ModConfig.cccExpenLiquid, false)) || f.getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false))));//Input
+		fluidProps[0] = new TankProperty(0, CAPACITY, true, true, (Fluid f) -> f != null && (f.getName().equals(CrossroadsConfig.cccExpenLiquid.get()) || f.getName().equals(CrossroadsConfig.cccEntropLiquid.get())));//Input
 		fluidProps[1] = new TankProperty(1, CAPACITY, false, true);//Copshowium
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
 		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 	}
@@ -56,12 +56,12 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return facing == null ? (T) internalHandler : facing == EnumFacing.UP ? (T) inputHandler : facing == EnumFacing.DOWN ? (T) outputHandler : null;
+			return facing == null ? (T) internalHandler : facing == Direction.UP ? (T) inputHandler : facing == Direction.DOWN ? (T) outputHandler : null;
 		}
 
-		if(capability == Capabilities.BEAM_CAPABILITY && (facing == null || facing.getAxis() != EnumFacing.Axis.Y)){
+		if(capability == Capabilities.BEAM_CAPABILITY && (facing == null || facing.getAxis() != Direction.Axis.Y)){
 			return (T) magicHandler;
 		}
 
@@ -69,7 +69,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 
@@ -95,14 +95,14 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 				}
 
 
-				if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccExpenLiquid, false))){
+				if(fluids[0].getFluid().getName().equals(CrossroadsConfig.cccExpenLiquid.get())){
 					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), (int) (((double) fluids[0].amount) * COPSHOWIUM_PER_COPPER) + (fluids[1] == null ? 0 : fluids[1].amount));
 					fluids[0] = null;
 					markDirty();
 					if(fluids[1].amount > CAPACITY){
 						world.setBlockState(pos, BlockMoltenCopshowium.getMoltenCopshowium().getBlock().getDefaultState());
 					}
-				}else if(fluids[0].getFluid().getName().equals(ModConfig.getConfigString(ModConfig.cccFieldLiquid, false)) && EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.UNSTABLE.getRank()){
+				}else if(fluids[0].getFluid().getName().equals(CrossroadsConfig.cccEntropLiquid.get()) && EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.UNSTABLE.getRank()){
 					int created = (int) (((double) fluids[0].amount) * COPSHOWIUM_PER_COPPER);
 					fluids[1] = new FluidStack(BlockMoltenCopshowium.getMoltenCopshowium(), created + (fluids[1] == null ? 0 : fluids[1].amount));
 					fluids[0] = null;

@@ -1,18 +1,18 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.ITickableTileEntity;
 
-public class ReactiveSpotTileEntity extends TileEntity implements ITickable{
+public class ReactiveSpotTileEntity extends TileEntity implements ITickableTileEntity{
 
-	private IBlockState target;
+	private BlockState target;
 	private int lifespan = 0;
 
-	public void setTarget(IBlockState targetIn){
+	public void setTarget(BlockState targetIn){
 		this.target = targetIn;
 		markDirty();
 	}
@@ -30,7 +30,7 @@ public class ReactiveSpotTileEntity extends TileEntity implements ITickable{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		lifespan = nbt.getInteger("lif");
 		Block b = Block.getBlockFromName(nbt.getString("tar"));
@@ -42,7 +42,7 @@ public class ReactiveSpotTileEntity extends TileEntity implements ITickable{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("lif", lifespan);
 		if(target != null){

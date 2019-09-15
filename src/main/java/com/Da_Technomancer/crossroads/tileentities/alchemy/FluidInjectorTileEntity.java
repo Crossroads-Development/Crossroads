@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
@@ -24,12 +24,12 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == EnumFacing.DOWN)){
+	public <T> T getCapability(Capability<T> cap, Direction side){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == Direction.DOWN)){
 			return (T) handler;
 		}
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			if(side == null || side == EnumFacing.UP){
+			if(side == null || side == Direction.UP){
 				return (T) falseFluidHandler;
 			}
 		}

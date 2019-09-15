@@ -1,15 +1,12 @@
 package com.Da_Technomancer.crossroads.fluids;
 
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fluids.BlockFluidClassic;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.util.math.BlockPos;;
 
 public class BlockDistilledWater extends BlockFluidClassic{
 
@@ -20,11 +17,11 @@ public class BlockDistilledWater extends BlockFluidClassic{
 		DISTILLED_WATER.setBlock(this);
 		setTranslationKey("distilled_water");
 		setRegistryName("distilled_water");
-		ModBlocks.toRegister.add(this);
+		CrossroadsBlocks.toRegister.add(this);
 	}
 
 	@Override
-	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos){
+	public int getLightOpacity(BlockState state, IBlockAccess world, BlockPos pos){
 		return 2;
 	}
 
@@ -38,7 +35,7 @@ public class BlockDistilledWater extends BlockFluidClassic{
 	private static class FluidDistilledWater extends Fluid{
 
 		private FluidDistilledWater(){
-			super("distilled_water", new ResourceLocation(Main.MODID, "blocks/distilledwater_still"), new ResourceLocation(Main.MODID, "blocks/distilledwater_flow"));
+			super("distilled_water", new ResourceLocation(Crossroads.MODID, "blocks/distilledwater_still"), new ResourceLocation(Crossroads.MODID, "blocks/distilledwater_flow"));
 		}
 	}
 }

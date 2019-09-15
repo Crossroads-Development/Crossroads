@@ -4,8 +4,8 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class HeatReservoirTileEntity extends ModuleTE{
@@ -20,8 +20,8 @@ public class HeatReservoirTileEntity extends ModuleTE{
 		return new MassiveHeatHandler();
 	}
 
-	public NBTTagCompound getDropNBT(){
-		NBTTagCompound nbt = new NBTTagCompound();
+	public CompoundNBT getDropNBT(){
+		CompoundNBT nbt = new CompoundNBT();
 		heatHandler.init();
 		nbt.setDouble("temp", temp);
 		return nbt;
@@ -31,7 +31,7 @@ public class HeatReservoirTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
 			return (T) heatHandler;
 		}

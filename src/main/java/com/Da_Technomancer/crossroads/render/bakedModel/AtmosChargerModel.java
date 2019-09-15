@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.render.bakedModel;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +23,7 @@ public class AtmosChargerModel implements IModel{
 
 	@Override
 	public Collection<ResourceLocation> getTextures(){
-		return ImmutableSet.of(new ResourceLocation(Main.MODID, "blocks/block_cast_iron"), new ResourceLocation(Main.MODID, "blocks/tesla_out"), new ResourceLocation(Main.MODID, "blocks/tesla_in"));
+		return ImmutableSet.of(new ResourceLocation(Crossroads.MODID, "blocks/block_cast_iron"), new ResourceLocation(Crossroads.MODID, "blocks/tesla_out"), new ResourceLocation(Crossroads.MODID, "blocks/tesla_in"));
 	}
 
 	@Override

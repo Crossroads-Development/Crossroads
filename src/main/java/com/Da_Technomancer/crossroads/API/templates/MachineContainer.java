@@ -1,14 +1,14 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -35,7 +35,7 @@ public abstract class MachineContainer extends Container{
 			addSlotToContainer(new Slot(playerInv, x, invStart[0] + x * 18, invStart[1] + 58));
 		}
 
-		//Main player inv
+		//Crossroads player inv
 		for(int y = 0; y < 3; ++y){
 			for(int x = 0; x < 9; ++x){
 				addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, invStart[0] + x * 18, invStart[1] + y * 18));
@@ -58,7 +58,7 @@ public abstract class MachineContainer extends Container{
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot){
+	public ItemStack transferStackInSlot(PlayerEntity playerIn, int fromSlot){
 		ItemStack previous = ItemStack.EMPTY;
 		Slot slot = inventorySlots.get(fromSlot);
 
@@ -87,12 +87,12 @@ public abstract class MachineContainer extends Container{
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer playerIn){
+	public boolean canInteractWith(PlayerEntity playerIn){
 		return te.isUsableByPlayer(playerIn);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void updateProgressBar(int id, int data){
 		te.setField(id, data);
 	}
@@ -118,12 +118,12 @@ public abstract class MachineContainer extends Container{
 	}
 
 	@Override
-	public void onContainerClosed(EntityPlayer playerIn){
+	public void onContainerClosed(PlayerEntity playerIn){
 		super.onContainerClosed(playerIn);
 
 
 		if(!te.getWorld().isRemote){
-			if(playerIn.isEntityAlive() && !(playerIn instanceof EntityPlayerMP && ((EntityPlayerMP) playerIn).hasDisconnected())){
+			if(playerIn.isEntityAlive() && !(playerIn instanceof ServerPlayerEntity && ((ServerPlayerEntity) playerIn).hasDisconnected())){
 				for(Slot s : inventorySlots){
 					if(s instanceof TemporarySlot){
 						playerIn.inventory.placeItemBackInInventory(te.getWorld(), s.getStack());
@@ -197,7 +197,7 @@ public abstract class MachineContainer extends Container{
 				}
 
 				@Override
-				public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack){
+				public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack){
 					FluidSlot.this.onSlotChanged();
 					return stack;
 				}
@@ -316,17 +316,17 @@ public abstract class MachineContainer extends Container{
 			}
 
 			@Override
-			public boolean isUsableByPlayer(EntityPlayer player){
+			public boolean isUsableByPlayer(PlayerEntity player){
 				return true;
 			}
 
 			@Override
-			public void openInventory(EntityPlayer player){
+			public void openInventory(PlayerEntity player){
 
 			}
 
 			@Override
-			public void closeInventory(EntityPlayer player){
+			public void closeInventory(PlayerEntity player){
 
 			}
 
@@ -368,7 +368,7 @@ public abstract class MachineContainer extends Container{
 
 			@Override
 			public ITextComponent getDisplayName(){
-				return new TextComponentString("");
+				return new StringTextComponent("");
 			}
 		}
 	}

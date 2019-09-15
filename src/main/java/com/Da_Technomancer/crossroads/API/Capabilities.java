@@ -6,12 +6,10 @@ import com.Da_Technomancer.crossroads.API.beams.DefaultBeamHandler;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.heat.DefaultHeatHandler;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.redstone.DefaultAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.rotary.*;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -37,9 +35,6 @@ public class Capabilities{
 	@CapabilityInject(ISlaveAxisHandler.class)
 	public static Capability<ISlaveAxisHandler> SLAVE_AXIS_CAPABILITY = null;
 	
-	@CapabilityInject(IAdvancedRedstoneHandler.class)
-	public static Capability<IAdvancedRedstoneHandler> ADVANCED_REDSTONE_CAPABILITY = null;
-	
 	@CapabilityInject(IChemicalHandler.class)
 	public static Capability<IChemicalHandler> CHEMICAL_CAPABILITY = null;
 
@@ -50,7 +45,6 @@ public class Capabilities{
 		CapabilityManager.INSTANCE.register(IBeamHandler.class, new DefaultStorage<>(), DefaultBeamHandler::new);
 		CapabilityManager.INSTANCE.register(IAxisHandler.class, new DefaultStorage<>(), DefaultAxisHandler::new);
 		CapabilityManager.INSTANCE.register(ISlaveAxisHandler.class, new DefaultStorage<>(), DefaultSlaveAxisHandler::new);
-		CapabilityManager.INSTANCE.register(IAdvancedRedstoneHandler.class, new DefaultStorage<>(), DefaultAdvancedRedstoneHandler::new);
 		CapabilityManager.INSTANCE.register(IChemicalHandler.class, new DefaultStorage<>(), DefaultChemicalHandler::new);
 	}
 
@@ -62,17 +56,17 @@ public class Capabilities{
 	private static class DefaultStorage<T> implements Capability.IStorage<T>{
 
 		@Override
-		public NBTBase writeNBT(Capability<T> capability, T instance, EnumFacing side){
+		public INBT writeNBT(Capability<T> capability, T instance, Direction side){
 			if(instance instanceof INBTSerializable)
 				return ((INBTSerializable) instance).serializeNBT();
-			return new NBTTagCompound();
+			return new CompoundNBT();
 		}
 
 		@SuppressWarnings({"unchecked"})
 		@Override
-		public void readNBT(Capability<T> capability, T instance, EnumFacing side, NBTBase nbt){
+		public void readNBT(Capability<T> capability, T instance, Direction side, INBT nbt){
 			if(instance instanceof INBTSerializable){
-				Class<? extends NBTBase> nbtClass = ((INBTSerializable) instance).serializeNBT().getClass();
+				Class<? extends INBT> nbtClass = ((INBTSerializable) instance).serializeNBT().getClass();
 
 				if(nbtClass.isInstance(nbt)){
 					((INBTSerializable) instance).deserializeNBT(nbtClass.cast(nbt));

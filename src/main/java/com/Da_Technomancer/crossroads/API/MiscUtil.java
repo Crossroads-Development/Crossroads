@@ -1,17 +1,17 @@
 package com.Da_Technomancer.crossroads.API;
 
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
@@ -49,17 +49,17 @@ public final class MiscUtil{
 	 * @param playerIn The player whose tag is being retrieved.
 	 * @return The player's persistent NBT tag. Also sets a boolean for if this is multiplayer.
 	 */
-	public static NBTTagCompound getPlayerTag(EntityPlayer playerIn){
-		NBTTagCompound tag = playerIn.getEntityData();
-		if(!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)){
-			tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+	public static CompoundNBT getPlayerTag(PlayerEntity playerIn){
+		CompoundNBT tag = playerIn.getEntityData();
+		if(!tag.hasKey(PlayerEntity.PERSISTED_NBT_TAG)){
+			tag.setTag(PlayerEntity.PERSISTED_NBT_TAG, new CompoundNBT());
 		}
-		tag = tag.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+		tag = tag.getCompoundTag(PlayerEntity.PERSISTED_NBT_TAG);
 
-		if(!tag.hasKey(Main.MODID)){
-			tag.setTag(Main.MODID, new NBTTagCompound());
+		if(!tag.hasKey(Crossroads.MODID)){
+			tag.setTag(Crossroads.MODID, new CompoundNBT());
 		}
-		NBTTagCompound out = tag.getCompoundTag(Main.MODID);
+		CompoundNBT out = tag.getCompoundTag(Crossroads.MODID);
 		out.setBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the render side is to get it on server side and send it via packet. Feel free to replace this with a better way.
 		return out;
 	}
@@ -112,11 +112,11 @@ public final class MiscUtil{
 	}
 
 	public static String localize(String input){
-		return new TextComponentTranslation(input).getUnformattedComponentText();
+		return new TranslationTextComponent(input).getUnformattedComponentText();
 	}
 
-	public static boolean canBreak(IBlockState state, boolean client){
-		String[] bannedBlocks = ModConfig.getConfigStringList(ModConfig.destroyBlacklist, client);
+	public static boolean canBreak(BlockState state, boolean client){
+		String[] bannedBlocks = CrossroadsConfig.getConfigStringList(CrossroadsConfig.destroyBlacklist, client);
 		String id = state.getBlock().getRegistryName().toString();
 		for(String s : bannedBlocks){
 			if(s.equals(id)){
@@ -137,7 +137,7 @@ public final class MiscUtil{
 			}
 			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with the Forge method, so the above for loop is used instead.
 		}catch(Exception e){
-			Main.logger.catching(e);
+			Crossroads.logger.catching(e);
 		}
 		return null;
 	}

@@ -5,15 +5,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class FluxStabilizerRenderer extends TileEntitySpecialRenderer<AbstractStabilizerTileEntity>{
+public class FluxStabilizerRenderer extends TileEntityRenderer<AbstractStabilizerTileEntity>{
 
-	private static final ResourceLocation TEXTURE = TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM;
+	private static final ResourceLocation TEXTURE = BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM;
 
 	@Override
 	public void render(AbstractStabilizerTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
@@ -33,7 +33,7 @@ public class FluxStabilizerRenderer extends TileEntitySpecialRenderer<AbstractSt
 		GlStateManager.disableCull();
 		GlStateManager.color(1, 0.15F, 0, 1);
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
 
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder buf = tess.getBuffer();

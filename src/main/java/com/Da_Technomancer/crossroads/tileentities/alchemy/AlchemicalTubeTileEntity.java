@@ -8,10 +8,10 @@ import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -60,7 +60,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	}
 
 	@Override
-	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sender){
+	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sender){
 		if(identifier < 6){
 			init();
 			connectMode[identifier] = message;
@@ -82,7 +82,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	protected void performTransfer(){
 		init();
 		for(int i = 0; i < 6; i++){
-			EnumFacing side = EnumFacing.byIndex(i);
+			Direction side = Direction.byIndex(i);
 			TileEntity te;
 			
 			if(connectMode[i] != 0){
@@ -111,7 +111,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
 		for(int i = 0; i < 6; i++){
@@ -121,7 +121,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		if(connectMode != null){
 			for(int i = 0; i < 6; i++){
@@ -133,8 +133,8 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound out = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT out = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
 			out.setInteger("mode_" + i, hasMatch[i] ? connectMode[i] : 0);
 		}
@@ -142,7 +142,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		init();
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
 			return true;
@@ -152,7 +152,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		init();
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
 			return (T) handler;

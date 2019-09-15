@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.FluidGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.IGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
 import com.Da_Technomancer.crossroads.tileentities.rotary.BlastFurnaceTileEntity;
 import net.minecraft.inventory.IInventory;
@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class BlastFurnaceGuiContainer extends MachineGUI{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/container/blast_furnace_gui.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/blast_furnace_gui.png");
 
 	public BlastFurnaceGuiContainer(IInventory playerInv, InventoryTE te){
 		super(new BlastFurnaceContainer(playerInv, te));

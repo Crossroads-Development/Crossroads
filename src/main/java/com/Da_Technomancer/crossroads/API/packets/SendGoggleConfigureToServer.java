@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.essentials.packets.Message;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -34,7 +34,7 @@ public class SendGoggleConfigureToServer extends Message<SendGoggleConfigureToSe
 			System.err.println("MessageToServer received on wrong side:" + context.side);
 			return null;
 		}
-		EntityPlayerMP player = context.getServerHandler().player;
+		ServerPlayerEntity player = context.getServerHandler().player;
 		if(player == null){
 			System.err.println("Player was null on packet arrival");
 			return null;
@@ -49,14 +49,14 @@ public class SendGoggleConfigureToServer extends Message<SendGoggleConfigureToSe
 		return null;
 	}
 
-	public void processMessage(EntityPlayer player, String lens, boolean setting){
-		ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		if(stack.getItem() == ModItems.moduleGoggles && stack.hasTagCompound() && stack.getTagCompound().hasKey(lens)){
+	public void processMessage(PlayerEntity player, String lens, boolean setting){
+		ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+		if(stack.getItem() == CrossroadsItems.moduleGoggles && stack.hasTagCompound() && stack.getTagCompound().hasKey(lens)){
 			stack.getTagCompound().setBoolean(lens, setting);
 
 			if(EnumGoggleLenses.DIAMOND.name().equals(lens)){
-				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) player, false);
-				player.openGui(Main.instance, GuiHandler.FAKE_CRAFTER_GUI, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
+				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player, false);
+				player.openGui(Crossroads.instance, GuiHandler.FAKE_CRAFTER_GUI, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
 			}
 		}
 	}

@@ -5,24 +5,24 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.ArrayList;
 
-public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE{
 
 	private double tempUp = 0;
 	private double tempDown = 0;
 	private boolean init = false;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
 		chat.add("Upper Temp: " + MiscUtil.betterRound(tempUp, 3) + "°C");
 		chat.add("Lower Temp: " + MiscUtil.betterRound(tempDown, 3) + "°C");
 		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
@@ -48,10 +48,10 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 		}
 
 		for(int i = 0; i < 2; i++){
-			EnumFacing dir = EnumFacing.byIndex(i);
+			Direction dir = Direction.byIndex(i);
 
 			TileEntity te = world.getTileEntity(pos.offset(dir));
-			if(te != null && te.hasCapability(Capabilities.HEAT_CAPABILITY, EnumFacing.DOWN)){
+			if(te != null && te.hasCapability(Capabilities.HEAT_CAPABILITY, Direction.DOWN)){
 				double reservePool = i == 0 ? tempDown : tempUp;
 				if(i == 0){
 					tempDown -= reservePool;
@@ -60,7 +60,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 				}
 
 
-				IHeatHandler handler = te.getCapability(Capabilities.HEAT_CAPABILITY, EnumFacing.DOWN);
+				IHeatHandler handler = te.getCapability(Capabilities.HEAT_CAPABILITY, Direction.DOWN);
 				reservePool += handler.getTemp();
 				handler.addHeat(-handler.getTemp());
 				reservePool /= 2;
@@ -75,7 +75,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("initHeat", init);
 		nbt.setDouble("temp_u", tempUp);
@@ -84,7 +84,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		init = nbt.getBoolean("initHeat");
 		tempUp = nbt.getDouble("temp_u");
@@ -95,7 +95,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 	private final HeatHandler heatHandlerDown = new HeatHandler(false);
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		if(cap == Capabilities.HEAT_CAPABILITY && (side == null || side.getAxis() == Axis.Y)){
 			return true;
 		}
@@ -104,11 +104,11 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickable, IIn
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.HEAT_CAPABILITY){
-			if(side == null || side == EnumFacing.UP){
+			if(side == null || side == Direction.UP){
 				return (T) heatHandlerUp;
-			}else if(side == EnumFacing.DOWN){
+			}else if(side == Direction.DOWN){
 				return (T) heatHandlerDown;
 			}
 		}

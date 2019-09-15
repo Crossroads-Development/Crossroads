@@ -3,9 +3,12 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -16,7 +19,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 	private boolean locked = true;
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
@@ -45,21 +48,21 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		locked = nbt.getBoolean("lock");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("lock", locked);
 		return nbt;
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound out = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT out = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
 			out.setInteger("mode_" + i, !locked && hasMatch[i] ? connectMode[i] : 0);
 		}
@@ -68,7 +71,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
 			return !locked;//The locked check is deferred until the return to prevent calling super.hasCapability, which the normal alchemical tube would return true on
 		}
@@ -77,7 +80,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
 			return !locked ? (T) handler : null;
 		}

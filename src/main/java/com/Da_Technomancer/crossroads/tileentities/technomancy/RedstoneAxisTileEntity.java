@@ -7,13 +7,13 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
 	@Override
 	protected void runCalc(){
-		EnumFacing facing = getFacing();
+		Direction facing = getFacing();
 
 		double baseSpeed = RedstoneUtil.getPowerAtPos(world, pos);
 		double sumIRot = 0;

@@ -3,25 +3,25 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.util.Direction;
 
-public class DynamoRenderer extends TileEntitySpecialRenderer<DynamoTileEntity>{
+public class DynamoRenderer extends TileEntityRenderer<DynamoTileEntity>{
 
 	@Override
 	public void render(DynamoTileEntity dynamo, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(!dynamo.getWorld().isBlockLoaded(dynamo.getPos(), false) || dynamo.getWorld().getBlockState(dynamo.getPos()).getBlock() != ModBlocks.dynamo){
+		if(!dynamo.getWorld().isBlockLoaded(dynamo.getPos(), false) || dynamo.getWorld().getBlockState(dynamo.getPos()).getBlock() != CrossroadsBlocks.dynamo){
 			return;
 		}
 
 		IAxleHandler axle = dynamo.getCapability(Capabilities.AXLE_CAPABILITY, null);
-		EnumFacing facing = dynamo.getWorld().getBlockState(dynamo.getPos()).getValue(Properties.HORIZ_FACING);
+		Direction facing = dynamo.getWorld().getBlockState(dynamo.getPos()).get(Properties.HORIZ_FACING);
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5F, y + .5F, z + .5F);

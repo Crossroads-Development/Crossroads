@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.beams;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,7 +72,7 @@ public class BeamUnitStorage{
 		return isEmpty() ? null : new BeamUnit(stored[0], stored[1], stored[2], stored[3]);
 	}
 
-	public void writeToNBT(@Nonnull String key, NBTTagCompound nbt){
+	public void writeToNBT(@Nonnull String key, CompoundNBT nbt){
 		if(!isEmpty()){
 			nbt.setIntArray(key, stored);
 		}
@@ -94,20 +95,20 @@ public class BeamUnitStorage{
 		return Arrays.hashCode(stored);
 	}
 
-	public static void writeToNBT(@Nonnull String key, NBTTagCompound nbt, BeamUnit mag){
+	public static void writeToNBT(@Nonnull String key, CompoundNBT nbt, BeamUnit mag){
 		if(mag != null){
 			nbt.setIntArray(key, new int[] {mag.getEnergy(), mag.getPotential(), mag.getStability(), mag.getVoid()});
 		}
 	}
 
-	public static BeamUnit readUnitFromNBT(@Nonnull String key, NBTTagCompound nbt){
+	public static BeamUnit readUnitFromNBT(@Nonnull String key, CompoundNBT nbt){
 		if(nbt.hasKey(key)){
 			return new BeamUnit(nbt.getIntArray(key));
 		}
 		return null;
 	}
 
-	public static BeamUnitStorage readFromNBT(@Nonnull String key, NBTTagCompound nbt){
+	public static BeamUnitStorage readFromNBT(@Nonnull String key, CompoundNBT nbt){
 		BeamUnitStorage out = new BeamUnitStorage();
 		if(nbt.hasKey(key)){
 			out.stored = nbt.getIntArray(key);

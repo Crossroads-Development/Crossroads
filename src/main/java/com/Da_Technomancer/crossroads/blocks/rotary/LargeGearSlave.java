@@ -1,25 +1,23 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -30,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class LargeGearSlave extends BlockContainer{
+public class LargeGearSlave extends ContainerBlock{
 
 	private static final AxisAlignedBB[] BB = new AxisAlignedBB[] {new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D), new AxisAlignedBB(0D, 0.875D, 0D, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D), new AxisAlignedBB(0D, 0D, 0.875D, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D), new AxisAlignedBB(0.875D, 0D, 0D, 1D, 1D, 1D)};
 
@@ -39,10 +37,10 @@ public class LargeGearSlave extends BlockContainer{
 		String name = "large_gear_slave";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
-		ModBlocks.toRegister.add(this);
+		CrossroadsBlocks.toRegister.add(this);
 	}
 
 	@Override
@@ -51,43 +49,43 @@ public class LargeGearSlave extends BlockContainer{
 	}
 	
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(EssentialsProperties.FACING, EnumFacing.byIndex(meta));
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(EssentialsProperties.FACING, Direction.byIndex(meta));
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(EssentialsProperties.FACING).getIndex();
+	public int getMetaFromState(BlockState state){
+		return state.get(EssentialsProperties.FACING).getIndex();
 	}
 	
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return BB[state.getValue(EssentialsProperties.FACING).getIndex()];
+	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
+		return BB[state.get(EssentialsProperties.FACING).getIndex()];
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new LargeGearSlaveTileEntity();
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.INVISIBLE;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.INVISIBLE;
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		RotaryUtil.increaseMasterKey(true);
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
 		return BlockFaceShape.UNDEFINED;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
+	@OnlyIn(Dist.CLIENT)
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, World world, BlockPos pos, PlayerEntity player){
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof LargeGearSlaveTileEntity && ((LargeGearSlaveTileEntity) te).masterPos != null){
 			te = world.getTileEntity(pos.add(((LargeGearSlaveTileEntity) te).masterPos));
@@ -99,39 +97,39 @@ public class LargeGearSlave extends BlockContainer{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
+	@OnlyIn(Dist.CLIENT)
+	public boolean shouldSideBeRendered(BlockState blockState, IBlockAccess blockAccess, BlockPos pos, Direction side){
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state){
+	public boolean isFullCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public boolean removedByPlayer(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, boolean canHarvest){
+	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean canHarvest){
 		if(canHarvest && worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
-			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.getValue(EssentialsProperties.FACING), true);
+			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.get(EssentialsProperties.FACING), true);
 		}
 		return super.removedByPlayer(state, worldIn, pos, player, canHarvest);
 	}
 	
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+	public void breakBlock(World worldIn, BlockPos pos, BlockState state){
 		if(worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
-			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.getValue(EssentialsProperties.FACING), false);
+			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.get(EssentialsProperties.FACING), false);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}
 
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune){
+	public Item getItemDropped(BlockState state, Random rand, int fortune){
 		return null;
 	}
 }

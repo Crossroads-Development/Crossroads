@@ -1,19 +1,19 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 
 import java.awt.*;
 
-public class MechanicalArmRenderer extends TileEntitySpecialRenderer<MechanicalArmTileEntity>{
+public class MechanicalArmRenderer extends TileEntityRenderer<MechanicalArmTileEntity>{
 
 	@Override
 	public void render(MechanicalArmTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || te.getWorld().getBlockState(te.getPos()).getBlock() != ModBlocks.mechanicalArm){
+		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || te.getWorld().getBlockState(te.getPos()).getBlock() != CrossroadsBlocks.mechanicalArm){
 			return;
 		}
 

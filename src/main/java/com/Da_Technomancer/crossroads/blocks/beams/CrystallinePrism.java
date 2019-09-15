@@ -1,19 +1,18 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.tileentities.beams.CrystallinePrismTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -27,15 +26,15 @@ public class CrystallinePrism extends BeamBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new CrystallinePrismTileEntity();
 	}
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
-				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_FACING));
+				worldIn.setBlockState(pos, state.cycle(Properties.HORIZ_FACING));
 				if(te instanceof BeamRenderTE){
 					((BeamRenderTE) te).resetBeamer();
 				}
@@ -47,8 +46,8 @@ public class CrystallinePrism extends BeamBlock{
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, placer == null ? EnumFacing.NORTH : placer.getHorizontalFacing());
+	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
+		return getDefaultState().with(Properties.HORIZ_FACING, placer == null ? Direction.NORTH : placer.getHorizontalFacing());
 	}
 
 	@Override
@@ -57,13 +56,13 @@ public class CrystallinePrism extends BeamBlock{
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta));
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(Properties.HORIZ_FACING, Direction.byHorizontalIndex(meta));
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex();
+	public int getMetaFromState(BlockState state){
+		return state.get(Properties.HORIZ_FACING).getHorizontalIndex();
 	}
 
 	@Override

@@ -6,18 +6,22 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,7 +40,7 @@ import java.util.Map;
 /**
  * Implementations must implement hasCapability and getCapability directly. 
  */
-public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, IInfoTE{
+public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTileEntity, IInfoTE{
 
 	protected boolean init = false;
 	protected double cableTemp = 0;
@@ -49,7 +53,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
@@ -67,7 +71,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	 * @param side The viewed EnumFacing (only used by goggles).
 	 */
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		double temp = correctTemp();
 		if(contents.getTotalQty() != 0 || temp != HeatUtil.ABSOLUTE_ZERO){
 			chat.add("Temp: " + MiscUtil.betterRound(temp, 3) + "°C (" + MiscUtil.betterRound(HeatUtil.toKelvin(temp), 3) + "K)");
@@ -138,7 +142,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 
 	protected void spawnParticles(){
 		double temp = handler.getTemp();
-		WorldServer server = (WorldServer) world;
+		ServerWorld server = (ServerWorld) world;
 		float liqAmount = 0;
 		float[] liqCol = new float[4];
 		float gasAmount = 0;
@@ -206,7 +210,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	 * Helper method for moving reagents with glassware/solid items. Use is optional, and must be added in the block if used.
 	 */
 	@Nonnull
-	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, EntityPlayer player, EnumHand hand){
+	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, PlayerEntity player, Hand hand){
 		if(dirtyReag){
 			correctReag();
 		}
@@ -303,7 +307,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
-				EnumFacing side = EnumFacing.byIndex(i);
+				Direction side = Direction.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
 				IChemicalHandler otherHandler;
 				if(contents.getTotalQty() <= 0 || te == null || (otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())) == null){
@@ -324,7 +328,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		glass = nbt.getBoolean("glass");
 		contents = ReagentMap.readFromNBT(nbt);
@@ -335,7 +339,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("glass", glass);
 		contents.writeToNBT(nbt);
@@ -347,7 +351,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		return getCapability(cap, side) != null;
 	}
 
@@ -369,12 +373,12 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public EnumTransferMode getMode(EnumFacing side){
+		public EnumTransferMode getMode(Direction side){
 			return getModes()[side.getIndex()];
 		}
 
 		@Override
-		public EnumContainerType getChannel(EnumFacing side){
+		public EnumContainerType getChannel(Direction side){
 			return AlchemyCarrierTE.this.getChannel();
 		}
 
@@ -384,7 +388,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 		}
 
 		@Override
-		public boolean insertReagents(ReagentMap reag, EnumFacing side, IChemicalHandler caller, boolean ignorePhase){
+		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
 			if(getMode(side).isInput()){
 				int space = getTransferCapacity() - contents.getTotalQty();
 				if(space <= 0){
@@ -400,7 +404,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 					ReagentStack r = reag.getStack(type);
 					if(!r.isEmpty()){
 						EnumMatterPhase phase = type.getPhase(callerTemp);
-						if(ignorePhase || (phase.flows() && (side != EnumFacing.UP || phase.flowsDown()) && (side != EnumFacing.DOWN || phase.flowsUp()))){
+						if(ignorePhase || (phase.flows() && (side != Direction.UP || phase.flowsDown()) && (side != Direction.DOWN || phase.flowsUp()))){
 							validIds.add(type.getId());
 							totalValid += r.getAmount();
 						}
@@ -505,7 +509,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickable, 
 			//The Fluid-IReagentType BiMap is guaranteed to be equal in length to or shorter than REAGENT_COUNT (and in practice is substantially shorter),
 			//so it's more efficient to iterate over the BiMap and check each IReagentType's index than to iterate over the reagent array and check each reagent in the BiMap.
 			for(Map.Entry<Fluid, IReagent> entry : AlchemyCore.FLUID_TO_LIQREAGENT.entrySet()){
-				IReagent type = entry.getValue();
+				IReagent type = entry.get();
 				if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
 					int toDrain = Math.min(maxDrain, contents.getQty(type) * AlchemyUtil.MB_PER_REAG);
 					int reagToDrain = toDrain / AlchemyUtil.MB_PER_REAG;

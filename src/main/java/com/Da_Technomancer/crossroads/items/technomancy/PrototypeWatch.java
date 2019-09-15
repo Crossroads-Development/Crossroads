@@ -14,26 +14,26 @@ import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,21 +56,21 @@ public class PrototypeWatch extends BeamUsingItem{
 		String name = "prototype_watch";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
-		ModItems.toRegister.add(this);
+		CrossroadsItems.toRegister.add(this);
 		for(int i = 0; i < 8; i++){
-			ModItems.toClientRegister.put(Pair.of(this, i), new ModelResourceLocation(Main.MODID + ":watch_" + i));
+			CrossroadsItems.toClientRegister.put(Pair.of(this, i), new ModelResourceLocation(Crossroads.MODID + ":watch_" + i));
 		}
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		if(!stack.hasTagCompound()){
-			stack.setTagCompound(new NBTTagCompound());
+			stack.setTagCompound(new CompoundNBT());
 		}
-		NBTTagCompound prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
+		CompoundNBT prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
 		if(prototypeNBT.hasKey("name")){
 			tooltip.add("Name: " + prototypeNBT.getString("name"));
 		}
@@ -82,25 +82,25 @@ public class PrototypeWatch extends BeamUsingItem{
 	 * Activates redstone, controls strength based on sneaking.
 	 */
 	@Override
-	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
+	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
 		super.onUsingTick(stack, player, count);
-		if(!player.world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot") && player.getActiveHand() == EnumHand.MAIN_HAND){
-			NBTTagCompound prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
+		if(!player.world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot") && player.getActiveHand() == Hand.MAIN_HAND){
+			CompoundNBT prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
 			int index = prototypeNBT.getInteger("index");
 
-			NBTTagCompound playerNBT = player.getEntityData();
+			CompoundNBT playerNBT = player.getEntityData();
 			if(getMaxItemUseDuration(stack) == count || playerNBT.getBoolean("wasSneak") != player.isSneaking()){
 				if(watchMap.containsKey(index)){
 					watchMap.get(index).mouseActive = true;
 					playerNBT.setBoolean("wasSneak", player.isSneaking());
 
-					EnumFacing dir = EnumFacing.SOUTH;
+					Direction dir = Direction.SOUTH;
 					PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(index);
-					WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+					ServerWorld worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 					if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
 						BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
 						relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());
-						worldDim.getBlockState(relPos).neighborChanged(worldDim, relPos, ModBlocks.prototypePort, relPos.offset(dir.getOpposite()));
+						worldDim.getBlockState(relPos).neighborChanged(worldDim, relPos, CrossroadsBlocks.prototypePort, relPos.offset(dir.getOpposite()));
 					}
 				}
 			}
@@ -112,16 +112,16 @@ public class PrototypeWatch extends BeamUsingItem{
 	 * Calls onPlayerStoppedUsing.
 	 */
 	@Override
-	public void preChanged(ItemStack stack, EntityPlayer player){
+	public void preChanged(ItemStack stack, PlayerEntity player){
 		player.stopActiveHand();
 	}
 
 	@Nullable
 	public static double[] getValues(ItemStack watch){
-		if(watch.isEmpty() || watch.getItem() != ModItems.watch || !watch.hasTagCompound()){
+		if(watch.isEmpty() || watch.getItem() != CrossroadsItems.watch || !watch.hasTagCompound()){
 			return null;
 		}
-		NBTTagCompound nbt = watch.getTagCompound();
+		CompoundNBT nbt = watch.getTagCompound();
 		return new double[] {nbt.getDouble("v_0"), nbt.getDouble("v_1"), nbt.getDouble("v_2")};
 	}
 
@@ -134,7 +134,7 @@ public class PrototypeWatch extends BeamUsingItem{
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected){
 		if(isSelected && !worldIn.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot")){
-			NBTTagCompound prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
+			CompoundNBT prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
 			int index = prototypeNBT.getInteger("index");
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
 			if(!watchMap.containsKey(index)){
@@ -158,10 +158,10 @@ public class PrototypeWatch extends BeamUsingItem{
 					stack.getTagCompound().setDouble("v_" + i, newVal[i]);
 				}
 
-				if(entityIn instanceof EntityLivingBase && ((EntityLivingBase) entityIn).getActiveItemStack().isItemEqualIgnoreDurability(stack)){
+				if(entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getActiveItemStack().isItemEqualIgnoreDurability(stack)){
 					//The next 4 lines exist solely because vanilla's handling of item changes is terrible
-					EntityLivingBase entityLiving = ((EntityLivingBase) entityIn);
-					EnumHand hand = entityLiving.getActiveHand();
+					LivingEntity entityLiving = ((LivingEntity) entityIn);
+					Hand hand = entityLiving.getActiveHand();
 					entityLiving.resetActiveHand();
 					entityLiving.setActiveHand(hand);
 				}
@@ -169,15 +169,15 @@ public class PrototypeWatch extends BeamUsingItem{
 
 			PrototypeWorldProvider.tickChunk(((index % 100) * 2) - 99, (index / 50) - 99);
 
-			if(entityIn instanceof EntityPlayer && BeamManager.beamStage == 0 && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getItem() == ModItems.beamCage && ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).hasTagCompound()){
-				NBTTagCompound cageNbt = ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND).getTagCompound();
-				NBTTagCompound nbt = stack.getTagCompound();
+			if(entityIn instanceof PlayerEntity && BeamManager.beamStage == 0 && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getItem() == CrossroadsItems.beamCage && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).hasTagCompound()){
+				CompoundNBT cageNbt = ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getTagCompound();
+				CompoundNBT nbt = stack.getTagCompound();
 				PrototypeInfo info = data.prototypes.get(index);
 				BlockPos portPos = info.ports[5] == PrototypePortTypes.MAGIC_IN ? info.portPos[5] : null;
 				if(portPos == null){
 					return;
 				}
-				WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+				ServerWorld worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 				TileEntity te = worldDim.getTileEntity(info.chunk.getBlock(portPos.getX(), portPos.getY(), portPos.getZ()));
 				if(!(te instanceof IPrototypePort)){
 					return;
@@ -191,7 +191,7 @@ public class PrototypeWatch extends BeamUsingItem{
 				int potential = nbt.getInteger(EnumBeamAlignments.POTENTIAL.name());
 				int stability = nbt.getInteger(EnumBeamAlignments.STABILITY.name());
 				int voi = nbt.getInteger(EnumBeamAlignments.VOID.name());
-				ItemStack heldCage = ((EntityPlayer) entityIn).getHeldItem(EnumHand.OFF_HAND);
+				ItemStack heldCage = ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND);
 				BeamUnit cageBeam = BeamCage.getStored(heldCage);
 				int beamEn = cageBeam == null ? 0 : cageBeam.getEnergy();
 				int beamPo = cageBeam == null ? 0 : cageBeam.getPotential();
@@ -212,21 +212,21 @@ public class PrototypeWatch extends BeamUsingItem{
 	 * Disables any outputed redstone signal.
 	 */
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft){
+	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft){
 		if(!worldIn.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("prot")){
-			NBTTagCompound prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
+			CompoundNBT prototypeNBT = stack.getTagCompound().getCompoundTag("prot");
 			int index = prototypeNBT.getInteger("index");
 			if(watchMap.containsKey(index)){
 				watchMap.get(index).mouseActive = false;
 
 				//Disable redstone
-				EnumFacing dir = EnumFacing.SOUTH;
+				Direction dir = Direction.SOUTH;
 				PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(index);
-				WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+				ServerWorld worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 				if(info != null && info.ports[dir.getIndex()] != null && info.ports[dir.getIndex()] == PrototypePortTypes.REDSTONE_IN){
 					BlockPos relPos = info.portPos[dir.getIndex()].offset(dir);
 					relPos = info.chunk.getBlock(relPos.getX(), relPos.getY(), relPos.getZ());
-					worldDim.getBlockState(relPos).neighborChanged(worldDim, relPos, ModBlocks.prototypePort, relPos.offset(dir.getOpposite()));
+					worldDim.getBlockState(relPos).neighborChanged(worldDim, relPos, CrossroadsBlocks.prototypePort, relPos.offset(dir.getOpposite()));
 				}
 			}
 		}
@@ -250,17 +250,17 @@ public class PrototypeWatch extends BeamUsingItem{
 		private final BeamHandler magic = new BeamHandler();
 
 		@Override
-		public boolean hasCap(Capability<?> cap, EnumFacing side){
+		public boolean hasCap(Capability<?> cap, Direction side){
 			if(!active){
 				return false;
 			}
-			if(cap == Capabilities.AXLE_CAPABILITY && (side == EnumFacing.UP || side == EnumFacing.DOWN || side == EnumFacing.NORTH)){
+			if(cap == Capabilities.AXLE_CAPABILITY && (side == Direction.UP || side == Direction.DOWN || side == Direction.NORTH)){
 				return true;
 			}
-			if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && side == EnumFacing.SOUTH){
+			if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && side == Direction.SOUTH){
 				return true;
 			}
-			if(cap == Capabilities.BEAM_CAPABILITY && side == EnumFacing.WEST){
+			if(cap == Capabilities.BEAM_CAPABILITY && side == Direction.WEST){
 				return true;
 			}
 			return false;
@@ -268,7 +268,7 @@ public class PrototypeWatch extends BeamUsingItem{
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public <T> T getCap(Capability<T> cap, EnumFacing side){
+		public <T> T getCap(Capability<T> cap, Direction side){
 			if(!active){
 				return null;
 			}
@@ -287,11 +287,11 @@ public class PrototypeWatch extends BeamUsingItem{
 				}
 
 			}
-			if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && side == EnumFacing.SOUTH){
+			if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && side == Direction.SOUTH){
 				//Control
 				return (T) redstone;
 			}
-			if(cap == Capabilities.BEAM_CAPABILITY && side == EnumFacing.WEST){
+			if(cap == Capabilities.BEAM_CAPABILITY && side == Direction.WEST){
 				//Magic out
 				return (T) magic;
 			}
@@ -299,7 +299,7 @@ public class PrototypeWatch extends BeamUsingItem{
 		}
 
 		@Override
-		public void neighborChanged(EnumFacing fromSide, Block blockIn){
+		public void neighborChanged(Direction fromSide, Block blockIn){
 
 		}
 
@@ -323,10 +323,10 @@ public class PrototypeWatch extends BeamUsingItem{
 
 			@Override
 			public void setMagic(BeamUnit mag){
-				if(mag != null && user instanceof EntityLivingBase){
-					EntityLivingBase ent = (EntityLivingBase) user;
-					ItemStack offhand = ent.getHeldItem(EnumHand.OFF_HAND);
-					if(offhand.getItem() == ModItems.beamCage){
+				if(mag != null && user instanceof LivingEntity){
+					LivingEntity ent = (LivingEntity) user;
+					ItemStack offhand = ent.getHeldItem(Hand.OFF_HAND);
+					if(offhand.getItem() == CrossroadsItems.beamCage){
 						BeamUnit cageBeam = BeamCage.getStored(offhand);
 						if(cageBeam == null){
 							cageBeam = new BeamUnit(0, 0, 0, 0);

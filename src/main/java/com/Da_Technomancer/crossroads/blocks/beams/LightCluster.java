@@ -1,25 +1,21 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.beams.IBeamTransparent;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCarpet;
-import net.minecraft.block.BlockTorch;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.EnumPushReaction;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import net.minecraft.block.*;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -37,26 +33,26 @@ public class LightCluster extends Block implements IBeamTransparent{
 		setRegistryName(name);
 		setTranslationKey(name);
 		setHardness(0);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().withProperty(Properties.COLOR, EnumDyeColor.WHITE));
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().with(Properties.COLOR, DyeColor.WHITE));
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
 		return BlockFaceShape.UNDEFINED;
 	}
 
 	@Override
-	public EnumPushReaction getPushReaction(IBlockState state){
-		return EnumPushReaction.DESTROY;
+	public PushReaction getPushReaction(BlockState state){
+		return PushReaction.DESTROY;
 	}
 
 	@Override
@@ -65,17 +61,17 @@ public class LightCluster extends Block implements IBeamTransparent{
 	}
 
 	@Override
-	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, BlockState state, int fortune){
 
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state){
+	public boolean isFullCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos){
+	public int getLightValue(BlockState state, IBlockAccess world, BlockPos pos){
 		return 15;
 	}
 
@@ -87,14 +83,14 @@ public class LightCluster extends Block implements IBeamTransparent{
 
 	@Nullable
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos){
+	public AxisAlignedBB getCollisionBoundingBox(BlockState blockState, IBlockAccess worldIn, BlockPos pos){
 		return NULL_AABB;
 	}
 
 	private static final AxisAlignedBB BB = new AxisAlignedBB(0.4, 0.4, 0.4, 0.6, 0.6, 0.6);
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
 		return BB;
 	}
 
@@ -104,20 +100,20 @@ public class LightCluster extends Block implements IBeamTransparent{
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.COLOR).getMetadata();
+	public int getMetaFromState(BlockState state){
+		return state.get(Properties.COLOR).getMetadata();
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.COLOR, EnumDyeColor.byMetadata(meta));
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(Properties.COLOR, DyeColor.byMetadata(meta));
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 		if(heldItem.getItem() == Items.DYE){
-			worldIn.setBlockState(pos, state.withProperty(Properties.COLOR, EnumDyeColor.byDyeDamage(heldItem.getMetadata())),  2);
+			worldIn.setBlockState(pos, state.with(Properties.COLOR, DyeColor.byDyeDamage(heldItem.getMetadata())),  2);
 			return true;
 		}
 		return false;

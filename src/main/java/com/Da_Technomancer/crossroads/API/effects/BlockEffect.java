@@ -1,25 +1,24 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.ModConfig;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockEffect implements IEffect{
 
-	private final IBlockState block;
+	private final BlockState block;
 
-	public BlockEffect(IBlockState block){
+	public BlockEffect(BlockState block){
 		this.block = block;
 	}
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
-		IBlockState prev = worldIn.getBlockState(pos);
+	public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
+		BlockState prev = worldIn.getBlockState(pos);
 		if(prev == block){
 			return;
 		}

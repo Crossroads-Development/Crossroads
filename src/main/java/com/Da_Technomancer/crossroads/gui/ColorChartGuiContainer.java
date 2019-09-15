@@ -3,16 +3,16 @@ package com.Da_Technomancer.crossroads.gui;
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.block.Blocks;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -20,17 +20,17 @@ import net.minecraft.world.World;
 import java.awt.*;
 import java.io.IOException;
 
-public class ColorChartGuiContainer extends GuiContainer{
+public class ColorChartGuiContainer extends ContainerScreen{
 
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/color_chart_gui.png");
-	private static final ResourceLocation BACKGROUND_MONO = new ResourceLocation(Main.MODID, "textures/gui/container/color_chart_mono_gui.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/color_chart_gui.png");
+	private static final ResourceLocation BACKGROUND_MONO = new ResourceLocation(Crossroads.MODID, "textures/gui/container/color_chart_mono_gui.png");
 	private static final int xCENTER = 150;
 	private static final int yCENTER = 150;
 	private static final int RADIUS = 138;
 
 	private TextBarGuiObject searchBar;
 
-	public ColorChartGuiContainer(EntityPlayer player, World world, BlockPos pos){
+	public ColorChartGuiContainer(PlayerEntity player, World world, BlockPos pos){
 		super(new ColorChartContainer(player, world, pos));
 		xSize = 300;
 		ySize = 300;
@@ -54,7 +54,7 @@ public class ColorChartGuiContainer extends GuiContainer{
 		if(Math.pow(xCENTER - mouseX + guiLeft, 2) + Math.pow(yCENTER - mouseY + guiTop, 2) <= RADIUS * RADIUS){
 			Color col = getColor(mouseX - guiLeft, mouseY - guiTop);
 			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
-			NBTTagCompound elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
+			CompoundNBT elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
 			drawHoveringText(ImmutableList.of(elementTag.hasKey(elem.name()) ? elem.getLocalName(false) : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, fontRenderer);
 		}
 	}
@@ -84,7 +84,7 @@ public class ColorChartGuiContainer extends GuiContainer{
 				int yPos = spotLength * j + yCENTER - RADIUS;
 				if(Math.pow(RADIUS - (spotLength * i), 2) + Math.pow(RADIUS - (spotLength * j), 2) <= RADIUS * RADIUS){
 					EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(getColor(xPos, yPos));
-					NBTTagCompound elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
+					CompoundNBT elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
 					if(elementTag.hasKey(elem.name()) && (search.isEmpty() || elem.name().startsWith(search))){
 						drawModalRectWithCustomSizedTexture(xPos, yPos, xPos, yPos, spotLength, spotLength, 300, 300);
 					}

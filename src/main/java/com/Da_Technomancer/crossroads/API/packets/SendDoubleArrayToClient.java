@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -33,8 +33,8 @@ public class SendDoubleArrayToClient extends Message<SendDoubleArrayToClient>{
 			return null;
 		}
 
-		Minecraft minecraft = Minecraft.getMinecraft();
-		final WorldClient worldClient = minecraft.world;
+		Minecraft minecraft = Minecraft.getInstance();
+		final ClientWorld worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
 			@Override
 			public void run(){
@@ -45,7 +45,7 @@ public class SendDoubleArrayToClient extends Message<SendDoubleArrayToClient>{
 		return null;
 	}
 
-	public void processMessage(WorldClient worldClient, String context, double[] message, BlockPos pos){
+	public void processMessage(ClientWorld worldClient, String context, double[] message, BlockPos pos){
 		TileEntity te = worldClient.getTileEntity(pos);
 
 		if(te instanceof IDoubleArrayReceiver){

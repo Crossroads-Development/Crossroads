@@ -2,13 +2,13 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -37,7 +37,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Progress: " + progress + "/" + REQUIRED_PRG);
 		chat.add("Carbon: " + carbon);
 		super.addInfo(chat, player, side, hitX, hitY, hitZ);
@@ -75,7 +75,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 		Pair<FluidStack, Integer> recipe = RecipeHolder.blastFurnaceRecipes.get(inventory[0]);
 
-		if(recipe == null || carbon < recipe.getRight() || inventory[2].getCount() + recipe.getRight() > ModItems.slag.getItemStackLimit(inventory[2]) || (fluids[0] != null && (recipe.getLeft().getFluid() != fluids[0].getFluid() || fluidProps[0].getCapacity() < fluids[0].amount + recipe.getLeft().amount))){
+		if(recipe == null || carbon < recipe.getRight() || inventory[2].getCount() + recipe.getRight() > CrossroadsItems.slag.getItemStackLimit(inventory[2]) || (fluids[0] != null && (recipe.getLeft().getFluid() != fluids[0].getFluid() || fluidProps[0].getCapacity() < fluids[0].amount + recipe.getLeft().amount))){
 			progress = 0;
 			return;
 		}
@@ -90,7 +90,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 			inventory[0].shrink(1);
 			carbon -= recipe.getRight();
 			if(inventory[2].isEmpty()){
-				inventory[2] = new ItemStack(ModItems.slag, recipe.getRight());
+				inventory[2] = new ItemStack(CrossroadsItems.slag, recipe.getRight());
 			}else{
 				inventory[2].grow(recipe.getRight());
 			}
@@ -111,7 +111,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return index == 2;
 	}
 
@@ -150,7 +150,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("prog", progress);
 		nbt.setInteger("carbon", carbon);
@@ -158,7 +158,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		progress = nbt.getInteger("prog");
 		carbon = nbt.getInteger("carbon");
@@ -175,11 +175,11 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}
-		if(cap == Capabilities.AXLE_CAPABILITY && side == EnumFacing.UP){
+		if(cap == Capabilities.AXLE_CAPABILITY && side == Direction.UP){
 			return (T) axleHandler;
 		}
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){

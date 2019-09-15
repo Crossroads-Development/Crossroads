@@ -2,7 +2,8 @@ package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -32,8 +33,8 @@ public class SendStringToClient extends Message<SendStringToClient>{
 			return null;
 		}
 
-		Minecraft minecraft = Minecraft.getMinecraft();
-		final WorldClient worldClient = minecraft.world;
+		Minecraft minecraft = Minecraft.getInstance();
+		final ClientWorld worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
 			public void run(){
 				processMessage(worldClient, sContext, message, pos);
@@ -43,7 +44,7 @@ public class SendStringToClient extends Message<SendStringToClient>{
 		return null;
 	}
 
-	public void processMessage(WorldClient worldClient, String context, String message, BlockPos pos){
+	public void processMessage(ClientWorld worldClient, String context, String message, BlockPos pos){
 		TileEntity te = worldClient.getTileEntity(pos);
 		
 		if(te instanceof IStringReceiver){

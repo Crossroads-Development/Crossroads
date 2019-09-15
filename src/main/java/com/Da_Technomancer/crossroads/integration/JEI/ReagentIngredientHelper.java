@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import mezz.jei.api.ingredients.IIngredientHelper;
 import net.minecraft.item.ItemStack;
 
@@ -15,10 +15,10 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public ItemStack getCheatItemStack(ReagIngr ingredient){
-		ItemStack toGive = new ItemStack(ModItems.phialCrystal, 1);
+		ItemStack toGive = new ItemStack(CrossroadsItems.phialCrystal, 1);
 		ReagentMap reags = new ReagentMap();
-		reags.addReagent(ingredient.getReag(), ModItems.phialCrystal.getCapacity(), 50);
-		ModItems.phialCrystal.setReagents(toGive, reags);
+		reags.addReagent(ingredient.getReag(), CrossroadsItems.phialCrystal.getCapacity(), 50);
+		CrossroadsItems.phialCrystal.setReagents(toGive, reags);
 		return toGive;
 	}
 	
@@ -49,7 +49,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public String getUniqueId(ReagIngr ingredient){
-		return Main.MODID + ":" + ingredient.getReag().getId();
+		return Crossroads.MODID + ":" + ingredient.getReag().getId();
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public String getModId(ReagIngr ingredient){
-		return Main.MODID;
+		return Crossroads.MODID;
 	}
 
 	@Override

@@ -1,48 +1,55 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.google.common.collect.ImmutableList;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
-import mezz.jei.api.gui.IDrawableStatic;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
-
-import java.util.List;
 
 public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRecipe>{
 
-	public static final String ID = Main.MODID + ".blast_furnace";
+	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "blast_furnace");
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
 	private final IDrawableStatic arrowStatic;
 	private final IDrawable fluidOverlay;
+	private final IDrawable icon;
 
 	protected BlastFurnaceCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
-		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, StartDirection.LEFT, false);
-		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Main.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64, 16, 64);
+		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
+		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64);
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsBlocks.blastFurnace, 1));
 	}
 
 	@Override
-	public String getUid(){
+	public ResourceLocation getUid(){
 		return ID;
 	}
 
 	@Override
+	public Class<? extends BlastFurnaceRecipe> getRecipeClass(){
+		return BlastFurnaceRecipe.class;
+	}
+
+	@Override
 	public String getTitle(){
-		return "Blast Furnace";
+		return CrossroadsBlocks.blastFurnace.getNameTextComponent().getFormattedText();
 	}
 
 	@Override
@@ -51,39 +58,44 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRecipe>
 	}
 
 	@Override
-	public void drawExtras(Minecraft minecraft){
-		GlStateManager.enableAlpha();
-		GlStateManager.enableBlend();
-		slot.draw(minecraft, 54, 55);//Input
-		slot.draw(minecraft, 130, 55);//Slag
-		arrowStatic.draw(minecraft, 78, 55);
-		arrow.draw(minecraft, 78, 55);
-		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
+	public void draw(BlastFurnaceRecipe recipe, double mouseX, double mouseY){
+//		GlStateManager.enableAlpha();
+//		GlStateManager.enableBlend();
+		slot.draw(54, 55);//Input
+		slot.draw(130, 55);//Slag
+		arrowStatic.draw(78, 55);
+		arrow.draw(78, 55);
+//		GlStateManager.disableBlend();
+//		GlStateManager.disableAlpha();
+		//TODO localize
+		Minecraft.getInstance().fontRenderer.drawString("Consumed Carbon: " + recipe.slag, 10, 10, 0x404040);
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, BlastFurnaceRecipe recipeWrapper, IIngredients ingredients){
-		recipeLayout.getItemStacks().init(0, true, 54, 55);
-		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
-		recipeLayout.getItemStacks().init(1, false, 130, 55);
-		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(ItemStack.class).get(0));
-		recipeLayout.getFluidStacks().init(0, false, 110, 22, 16, 64, 1_000, true, fluidOverlay);
-		recipeLayout.getFluidStacks().set(0, ingredients.getOutputs(FluidStack.class).get(0));
+	public void setRecipe(IRecipeLayout layout, BlastFurnaceRecipe recipe, IIngredients ingredients){
+		IGuiItemStackGroup itemGroup = layout.getItemStacks();
+		IGuiFluidStackGroup fluidGroup = layout.getFluidStacks();
+
+		itemGroup.init(0, true, 54, 55);
+		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+		itemGroup.init(1, false, 130, 55);
+		itemGroup.set(1, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+		fluidGroup.init(0, false, 110, 22, 16, 64, 1_000, true, fluidOverlay);
+		fluidGroup.set(0, ingredients.getOutputs(VanillaTypes.FLUID).get(0));
+
+		itemGroup.set(ingredients);
+		fluidGroup.set(ingredients);
 	}
 
 	@Override
 	public IDrawable getIcon(){
-		return null;
+		return icon;
 	}
 
 	@Override
-	public List<String> getTooltipStrings(int mouseX, int mouseY){
-		return ImmutableList.of();
-	}
-
-	@Override
-	public String getModName(){
-		return Main.MODNAME;
+	public void setIngredients(BlastFurnaceRecipe recipe, IIngredients ingredients){
+		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.input));
+		ingredients.setOutput(VanillaTypes.FLUID, recipe.output);
+		ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(CrossroadsItems.slag, recipe.slag));
 	}
 }

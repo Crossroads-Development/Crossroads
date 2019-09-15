@@ -2,13 +2,12 @@ package com.Da_Technomancer.crossroads.API.rotary;
 
 import java.util.HashSet;
 
-import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 public class DefaultSlaveAxisHandler implements ISlaveAxisHandler{
 
 	@Override
-	public void trigger(EnumFacing side){
+	public void trigger(Direction side){
 		
 	}
 

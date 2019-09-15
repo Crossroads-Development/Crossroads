@@ -3,11 +3,11 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class WindTurbineTileEntity extends ModuleTE{
 
-	private EnumFacing facing = null;
+	private Direction facing = null;
 	public static final double MAX_SPEED = 2D;
 
 	public WindTurbineTileEntity(){
@@ -29,14 +29,14 @@ public class WindTurbineTileEntity extends ModuleTE{
 		this.newlyPlaced = newlyPlaced;
 	}
 
-	protected EnumFacing getFacing(){
+	protected Direction getFacing(){
 		if(facing == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.windTurbine){
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.windTurbine){
 				invalidate();
-				return EnumFacing.NORTH;
+				return Direction.NORTH;
 			}
-			facing = state.getValue(Properties.HORIZ_FACING);
+			facing = state.get(Properties.HORIZ_FACING);
 		}
 
 		return facing;
@@ -62,7 +62,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Power Gen: " + POWER_PER_LEVEL * (double) level + "J/t");
 		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 	}
@@ -80,7 +80,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 			if(newlyPlaced || world.getTotalWorldTime() % 600 == 0){
 				newlyPlaced = false;
 				running = false;
-				EnumFacing facing = getFacing();
+				Direction facing = getFacing();
 				BlockPos offsetPos = pos.offset(facing);
 				if(world.canSeeSky(offsetPos)){
 					running = true;
@@ -88,7 +88,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 					for(int i = -2; i <= 2; i++){
 						for(int j = -2; j <= 2; j++){
 							BlockPos checkPos = offsetPos.add(facing.getZOffset() * i, j, facing.getXOffset() * i);
-							IBlockState checkState = world.getBlockState(checkPos);
+							BlockState checkState = world.getBlockState(checkPos);
 							if(!checkState.getBlock().isAir(checkState, world, checkPos)){
 								running = false;
 								break outer;
@@ -107,7 +107,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 					//If the redstone output has changed, update the neighbors
 					if(level < 0 != prevLevel < 0){
-						world.notifyNeighborsOfStateChange(pos, ModBlocks.windTurbine, true);
+						world.notifyNeighborsOfStateChange(pos, CrossroadsBlocks.windTurbine, true);
 					}
 				}
 
@@ -119,14 +119,14 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		level = nbt.getInteger("level");
 		running = nbt.getBoolean("running");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("level", level);
 		nbt.setBoolean("running", running);
@@ -147,8 +147,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getOpposite())){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == world.getBlockState(pos).get(Properties.HORIZ_FACING).getOpposite())){
 			return (T) axleHandler;
 		}
 		return super.getCapability(capability, facing);

@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.render.bakedModel;
 
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.fml.relauncher.Side;
@@ -11,18 +11,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ModelUtil{
 
-	public static BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, EnumFacing side, TextureAtlasSprite sprite, VertexFormat vf){
+	public static BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, Direction side, TextureAtlasSprite sprite, VertexFormat vf){
 		return createQuad(v1, v2, v3, v4, side, 16, 16, sprite, vf);
 	}
 
-	public static BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, EnumFacing side, int u, int v, TextureAtlasSprite sprite, VertexFormat vf){
+	public static BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, Direction side, int u, int v, TextureAtlasSprite sprite, VertexFormat vf){
 		return createQuad(v1, v2, v3, v4, side, 0, 0, u, v, sprite, vf);
 	}
 
-	public static BakedQuad createQuad(Vec3d vertex0, Vec3d vertex1, Vec3d vertex2, Vec3d vertex3, @Nullable EnumFacing orient, int u, int v, int uEnd, int vEnd, TextureAtlasSprite sprite, VertexFormat vf){
+	public static BakedQuad createQuad(Vec3d vertex0, Vec3d vertex1, Vec3d vertex2, Vec3d vertex3, @Nullable Direction orient, int u, int v, int uEnd, int vEnd, TextureAtlasSprite sprite, VertexFormat vf){
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(vf);
 
 		if(orient != null){

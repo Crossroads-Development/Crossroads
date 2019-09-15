@@ -1,21 +1,21 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class PrototypingTableRenderer extends TileEntitySpecialRenderer<PrototypingTableTileEntity>{
+public class PrototypingTableRenderer extends TileEntityRenderer<PrototypingTableTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/field.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/field.png");
 
 	@Override
 	public void render(PrototypingTableTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
@@ -34,10 +34,10 @@ public class PrototypingTableRenderer extends TileEntitySpecialRenderer<Prototyp
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
 		GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-		GlStateManager.rotate(te.getWorld().getBlockState(te.getPos()).getValue(Properties.HORIZ_FACING).getHorizontalAngle(), 0, 1, 0);
+		GlStateManager.rotate(te.getWorld().getBlockState(te.getPos()).get(Properties.HORIZ_FACING).getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.translate(0.5D, 0.5D, 0.5D);
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

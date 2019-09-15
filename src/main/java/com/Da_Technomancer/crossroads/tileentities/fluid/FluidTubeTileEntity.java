@@ -3,11 +3,11 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 
-public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntReceiver{
+public class FluidTubeTileEntity extends TileEntity implements ITickableTileEntity, IIntReceiver{
 
 	protected static final int CAPACITY = 2000;
 
@@ -53,7 +53,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	}
 
 	@Override
-	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sender){
+	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sender){
 		if(identifier < 6){
 			init();
 			connectMode[identifier] = message;
@@ -78,7 +78,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 		IFluidHandler[] handlers = new IFluidHandler[6];
 		outHandlers = new IFluidHandler[6];
 
-		for(EnumFacing dir : EnumFacing.values()){
+		for(Direction dir : Direction.values()){
 			int ind = dir.getIndex();
 
 			if(connectMode[ind] != 0){
@@ -259,7 +259,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
 		connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
@@ -271,7 +271,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		if(content != null){
 			content.writeToNBT(nbt);
@@ -287,8 +287,8 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound out = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT out = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
 			out.setInteger("mode_" + i, hasMatch[i] != null && hasMatch[i] ? connectMode[i] : 0);
 		}
@@ -301,7 +301,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing side){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction side){
 		init();
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && connectMode != null && (side == null || connectMode[side.getIndex()] != 0)){
 			return side == null || connectMode[side.getIndex()] == 1 ? (T) mainHandler : connectMode[side.getIndex()] == 2 ? (T) outHandler : (T) inHandler;
@@ -311,7 +311,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickable, IIntRe
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side){
+	public boolean hasCapability(Capability<?> capability, @Nullable Direction side){
 		init();
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && connectMode != null && (side == null || connectMode[side.getIndex()] != 0)){
 			return true;

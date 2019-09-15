@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,9 +19,9 @@ public class NbtToEntityClient extends Message<NbtToEntityClient>{
 	}
 
 	public UUID entity;
-	public NBTTagCompound nbt;
+	public CompoundNBT nbt;
 
-	public NbtToEntityClient(UUID entity, NBTTagCompound nbt){
+	public NbtToEntityClient(UUID entity, CompoundNBT nbt){
 		this.entity = entity;
 		this.nbt = nbt;
 	}
@@ -33,8 +33,8 @@ public class NbtToEntityClient extends Message<NbtToEntityClient>{
 			return null;
 		}
 
-		Minecraft minecraft = Minecraft.getMinecraft();
-		final WorldClient worldClient = minecraft.world;
+		Minecraft minecraft = Minecraft.getInstance();
+		final ClientWorld worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
 			public void run(){
 				processMessage(worldClient, entity, nbt);
@@ -44,7 +44,7 @@ public class NbtToEntityClient extends Message<NbtToEntityClient>{
 		return null;
 	}
 
-	public void processMessage(WorldClient worldClient, UUID entity, NBTTagCompound nbt){
+	public void processMessage(ClientWorld worldClient, UUID entity, CompoundNBT nbt){
 		if(worldClient == null || entity == null){
 			return;
 		}

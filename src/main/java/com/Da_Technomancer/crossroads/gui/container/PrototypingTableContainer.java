@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
@@ -35,7 +35,7 @@ public class PrototypingTableContainer extends MachineContainer{
 	}
 
 	@Override
-	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player){
+	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player){
 		ItemStack out = super.slotClick(slotId, dragType, clickTypeIn, player);
 		detectAndSendChanges();
 		return out;

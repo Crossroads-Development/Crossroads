@@ -5,11 +5,11 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -17,7 +17,7 @@ import net.minecraftforge.common.capabilities.Capability;
 public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
@@ -33,7 +33,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		super(glass);
 	}
 
-	public void cycleLimit(EntityPlayerMP player){
+	public void cycleLimit(ServerPlayerEntity player){
 		limitIndex += 1;
 		limitIndex %= LIMITS.length;
 		markDirty();
@@ -42,7 +42,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	protected void performTransfer(){
-		EnumFacing side = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
+		Direction side = world.getBlockState(pos).get(EssentialsProperties.FACING);
 		TileEntity te = world.getTileEntity(pos.offset(side));
 		if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
 			return;
@@ -80,28 +80,28 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		EnumFacing outSide = world.getBlockState(pos).getValue(EssentialsProperties.FACING);
+		Direction outSide = world.getBlockState(pos).get(EssentialsProperties.FACING);
 		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
 		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
 		return output;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		limitIndex = Math.min(nbt.getInteger("limit"), LIMITS.length - 1);
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("limit", limitIndex);
 		return nbt;
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis())){
+	public boolean hasCapability(Capability<?> cap, Direction side){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -109,8 +109,8 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(EssentialsProperties.FACING).getAxis())){
+	public <T> T getCapability(Capability<T> cap, Direction side){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis())){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);

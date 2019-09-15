@@ -2,13 +2,13 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Items;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.Items;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemEnchantedBook;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -22,11 +22,11 @@ public class EnchantEffect implements IEffect{
 	private static final Random RAND = new Random();
 	
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
+	public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 		int range = Math.min(mult, 8);
-		ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-range, -range, -range), pos.add(range, range, range)), EntitySelectors.IS_ALIVE);
+		ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-range, -range, -range), pos.add(range, range, range)), EntityPredicates.IS_ALIVE);
 		if(items.size() != 0){
-			for(EntityItem ent : items){
+			for(ItemEntity ent : items){
 				ItemStack stack = ent.getItem();
 
 				if(stack.isItemEnchanted()){
@@ -56,14 +56,14 @@ public class EnchantEffect implements IEffect{
 
 					for(EnchantmentData datum : ench){
 						if(created.getItem() == Items.ENCHANTED_BOOK){
-							ItemEnchantedBook.addEnchantment(created, datum);
+							EnchantedBookItem.addEnchantment(created, datum);
 						}else{
 							created.addEnchantment(datum.enchantment, datum.enchantmentLevel);
 						}
 					}
 
 					InventoryHelper.spawnItemStack(worldIn, ent.posX, ent.posY, ent.posZ, created);
-					ent.setDead();
+					ent.remove();
 				}
 			}
 		}
@@ -72,11 +72,11 @@ public class EnchantEffect implements IEffect{
 	public static class DisenchantEffect implements IEffect{
 
 		@Override
-		public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
+		public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 			mult = Math.min(mult, 8);
-			ArrayList<EntityItem> items = (ArrayList<EntityItem>) worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntitySelectors.IS_ALIVE);
+			ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntityPredicates.IS_ALIVE);
 			if(items.size() != 0){
-				for(EntityItem ent : items){
+				for(ItemEntity ent : items){
 					if(ent.getItem().getTagCompound() != null && ent.getItem().getTagCompound().hasKey("ench")){
 						if(ent.getItem().getItem() == Items.ENCHANTED_BOOK){
 							ent.setItem(new ItemStack(Items.BOOK, ent.getItem().getCount()));

@@ -1,52 +1,51 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-public final class ModItems{
+public final class CrossroadsItems{
 
-	public static final CreativeTabs TAB_CROSSROADS = new CreativeTabs(Main.MODID){
+	public static final ItemGroup TAB_CROSSROADS = new ItemGroup(Crossroads.MODID){
 		@Override
 		public ItemStack createIcon(){
 			return new ItemStack(omnimeter, 1);
 		}
 	};
 
-	public static final CreativeTabs TAB_HEAT_CABLE = new CreativeTabs("heat_cable"){
+	public static final ItemGroup TAB_HEAT_CABLE = new ItemGroup("heat_cable"){
 		@Override
 		public ItemStack createIcon(){
 			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 1);
 		}
 	};
 
-	public static final CreativeTabs TAB_GEAR = new CreativeTabs("gear"){
+	public static final ItemGroup TAB_GEAR = new ItemGroup("gear"){
 		@Override
 		public ItemStack createIcon(){
 			return new ItemStack(GearFactory.gearTypes.get(GearFactory.findMaterial("Copper")).getSmallGear(), 1);
 		}
 	};
 
-	public static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Main.MODID + ":bobo", 0, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F);
+	public static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Crossroads.MODID + ":bobo", 0, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F);
 	public static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[4], 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
 
 	public static CheatWandRotary debugGearWriter;
@@ -111,7 +110,7 @@ public final class ModItems{
 	/**
 	 * Registers the model location for items. Item: item; Integer: the meta value to register for; ModelResourceLocation: The location to map to. 
 	 */
-	public static final HashMap<Pair<Item, Integer>, ModelResourceLocation> toClientRegister = new HashMap<Pair<Item, Integer>, ModelResourceLocation>();
+	public static final HashMap<Pair<Item, Integer>, ModelResourceLocation> toClientRegister = new HashMap<>();
 	public static final ArrayList<Item> toRegister = new ArrayList<>();
 
 	/**
@@ -185,16 +184,16 @@ public final class ModItems{
 		dampingPowder = new DampingPowder();
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void initModels(){
 		for(Entry<Pair<Item, Integer>, ModelResourceLocation> modeling : toClientRegister.entrySet()){
-			ModelLoader.setCustomModelResourceLocation(modeling.getKey().getLeft(), modeling.getKey().getRight(), modeling.getValue());
+			ModelLoader.setCustomModelResourceLocation(modeling.getKey().getLeft(), modeling.getKey().getRight(), modeling.get());
 		}
 		toClientRegister.clear();
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phialGlass, florenceFlaskGlass, shellGlass, phialCrystal, florenceFlaskCrystal, shellCrystal);
+		Minecraft.getInstance().getItemColors().register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phialGlass, florenceFlaskGlass, shellGlass, phialCrystal, florenceFlaskCrystal, shellCrystal);
 	}
 }

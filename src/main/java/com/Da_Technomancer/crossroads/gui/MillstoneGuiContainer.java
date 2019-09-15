@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.MillstoneContainer;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 
@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class MillstoneGuiContainer extends MachineGUI{
 
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/millstone_gui.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/millstone_gui.png");
 
 	public MillstoneGuiContainer(IInventory playerInv, MillstoneTileEntity te){
 		super(new MillstoneContainer(playerInv, te));

@@ -6,19 +6,19 @@ import java.util.ArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.client.gui.AbstractGui;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class OutputLogGuiObject implements IGuiObject{
 	
-	private static final ResourceLocation BAR = new ResourceLocation(Main.MODID, "textures/gui/container/log_back.png");
+	private static final ResourceLocation BAR = new ResourceLocation(Crossroads.MODID, "textures/gui/container/log_back.png");
 	private final int x;
 	private final int y;
 	private final int endX;
@@ -67,12 +67,12 @@ public class OutputLogGuiObject implements IGuiObject{
 
 	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
-		Minecraft.getMinecraft().getTextureManager().bindTexture(BAR);
-		Gui.drawScaledCustomSizeModalRect(x, y, 0, 0, 300, 2, 2, endY - y, 300, 20);//left side (top to bottom)
-		Gui.drawScaledCustomSizeModalRect(x + 2, y + 2, 2, 2, 296, 16, endX - x - 4, endY - y - 4, 300, 20);//middle
-		Gui.drawScaledCustomSizeModalRect(endX - 2, y, 298, 0, 2, 20, 2, endY - y, 300, 20);//right side (top to bottom)
-		Gui.drawScaledCustomSizeModalRect(x + 2, y, 2, 0, 296, 2, endX - x - 4, 2, 300, 20);//top (offset left to offset right)
-		Gui.drawScaledCustomSizeModalRect(x + 2, endY - 2, 2, 18, 296, 2, endX - x - 4, 2, 300, 20);//bottom (offset left to offset right)
+		Minecraft.getInstance().getTextureManager().bindTexture(BAR);
+		AbstractGui.drawScaledCustomSizeModalRect(x, y, 0, 0, 300, 2, 2, endY - y, 300, 20);//left side (top to bottom)
+		AbstractGui.drawScaledCustomSizeModalRect(x + 2, y + 2, 2, 2, 296, 16, endX - x - 4, endY - y - 4, 300, 20);//middle
+		AbstractGui.drawScaledCustomSizeModalRect(endX - 2, y, 298, 0, 2, 20, 2, endY - y, 300, 20);//right side (top to bottom)
+		AbstractGui.drawScaledCustomSizeModalRect(x + 2, y, 2, 0, 296, 2, endX - x - 4, 2, 300, 20);//top (offset left to offset right)
+		AbstractGui.drawScaledCustomSizeModalRect(x + 2, endY - 2, 2, 18, 296, 2, endX - x - 4, 2, 300, 20);//bottom (offset left to offset right)
 		return true;
 	}
 

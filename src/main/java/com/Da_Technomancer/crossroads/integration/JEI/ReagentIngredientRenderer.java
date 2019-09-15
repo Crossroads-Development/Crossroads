@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import java.awt.Color;
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import org.lwjgl.opengl.GL11;
 
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.google.common.collect.ImmutableList;
 
@@ -21,8 +21,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 
-	private static final ResourceLocation PHIAL_TEXTURE = new ResourceLocation(Main.MODID, "textures/items/phial_crystal.png");
-	private static final ResourceLocation INNER_TEXTURE = new ResourceLocation(Main.MODID, "textures/items/phial_inner.png");
+	private static final ResourceLocation PHIAL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/items/phial_crystal.png");
+	private static final ResourceLocation INNER_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/items/phial_inner.png");
 	protected static final ReagentIngredientRenderer RENDERER = new ReagentIngredientRenderer();
 	
 	@Override

@@ -1,28 +1,28 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
-public class LinkLineRenderer<T extends TileEntity & ILinkTE> extends TileEntitySpecialRenderer<T>{
+public class LinkLineRenderer<T extends TileEntity & ILinkTE> extends TileEntityRenderer<T>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/link_line.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/model/link_line.png");
 
 	@Override
 	public void render(T te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false) || !ILinkTE.isLinkTool(Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND)) && !ILinkTE.isLinkTool(Minecraft.getMinecraft().player.getHeldItem(EnumHand.OFF_HAND))){
+		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false) || !ILinkTE.isLinkTool(Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND)) && !ILinkTE.isLinkTool(Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND))){
 			return;
 		}
 
@@ -36,7 +36,7 @@ public class LinkLineRenderer<T extends TileEntity & ILinkTE> extends TileEntity
 		float brightX = OpenGlHelper.lastBrightnessX;
 		float brightY = OpenGlHelper.lastBrightnessY;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE);
 
 		x += 0.5D;
 		y += 0.5D;
@@ -44,7 +44,7 @@ public class LinkLineRenderer<T extends TileEntity & ILinkTE> extends TileEntity
 
 		GlStateManager.translate(x, y, z);
 
-		y -= Minecraft.getMinecraft().player.eyeHeight;
+		y -= Minecraft.getInstance().player.eyeHeight;
 
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

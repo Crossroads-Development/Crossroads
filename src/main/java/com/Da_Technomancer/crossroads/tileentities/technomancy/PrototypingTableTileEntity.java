@@ -9,25 +9,25 @@ import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
@@ -62,7 +62,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 						copyTo.getWorld().setBlockState(newPos, fromWorld.getBlockState(oldPos), 16);
 						TileEntity oldTe = fromWorld.getTileEntity(oldPos);
 						if(oldTe != null){
-							NBTTagCompound nbt = new NBTTagCompound();
+							CompoundNBT nbt = new CompoundNBT();
 							nbt = oldTe.writeToNBT(nbt).copy(); //Copied to prevent tile entities sharing instances of NBTTagCompound (can happen if nested).
 							nbt.setInteger("x", newPos.getX());
 							nbt.setInteger("y", newPos.getY());
@@ -78,8 +78,8 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 							fromWorld.setBlockState(oldPos, Blocks.AIR.getDefaultState());
 						}
 					}catch(Exception e){
-						Main.logger.error("Something went wrong while setting up a prototype. Error cloning block at " + oldPos.toString() + " in dimension " + fromWorld.provider.getDimension() + ". Errored prototype invalidated. Report to mod author, and disable prototyping that block type in the config. This errored gracefully.");
-						Main.logger.catching(e);
+						Crossroads.logger.error("Something went wrong while setting up a prototype. Error cloning block at " + oldPos.toString() + " in dimension " + fromWorld.provider.getDimension() + ". Errored prototype invalidated. Report to mod author, and disable prototyping that block type in the config. This errored gracefully.");
+						Crossroads.logger.catching(e);
 						return true;
 					}
 				}
@@ -93,12 +93,12 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 	}
 
 	@Override
-	public void receiveString(String context, String message, EntityPlayerMP player){
+	public void receiveString(String context, String message, ServerPlayerEntity player){
 		if(player == null || !context.equals("create") || message == null){
 			return;
 		}
 
-		if(ModConfig.allowPrototype.getInt() == -1){
+		if(CrossroadsConfig.allowPrototype.getInt() == -1){
 			ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototyping disabled in config.", Color.YELLOW, false), player);
 			return;
 		}
@@ -114,18 +114,18 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 		//Copy or new prototype?
 		if(!inventory[1].isEmpty()){
 			//Sanity checks
-			if(!(inventory[1].getItem() instanceof ItemBlock) || ((ItemBlock) inventory[1].getItem()).getBlock() != ModBlocks.prototype){
+			if(!(inventory[1].getItem() instanceof BlockItem) || ((BlockItem) inventory[1].getItem()).getBlock() != CrossroadsBlocks.prototype){
 				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Invalid inventory[1] item.", Color.YELLOW, false), player);
 				return;
 			}
-			if(ModConfig.allowPrototype.getInt() == 1){
+			if(CrossroadsConfig.allowPrototype.getInt() == 1){
 				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Copying disabled in config.", Color.YELLOW, false), player);
 				return;
 			}
 
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
 			ArrayList<PrototypeInfo> infoList = data.prototypes;
-			WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			ServerWorld dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			int index = inventory[1].getTagCompound().getInteger("index");
 			//Sanity check
 			if(infoList.size() < index + 1){
@@ -146,7 +146,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 
 
 
-			List<String> blackList = Arrays.asList(ModConfig.blockedPrototype.getStringList());
+			List<String> blackList = Arrays.asList(CrossroadsConfig.blockedPrototype.getStringList());
 			@SuppressWarnings("unchecked")
 			List<Pair<PrototypePortTypes, BlockPos>>[] ports = new List[] {new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()};
 			ArrayList<TemplateError> errors = new ArrayList<>();
@@ -175,7 +175,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			for(int i = 0; i < 6; i++){
 				if(ports[i].size() > 1){
 					for(Pair<PrototypePortTypes, BlockPos> port : ports[i]){
-						errors.add(new TemplateError(2, "Duplicate port: " + EnumFacing.byIndex(i), port.getRight()));
+						errors.add(new TemplateError(2, "Duplicate port: " + Direction.byIndex(i), port.getRight()));
 					}
 				}else if(ports[i].size() == 1){
 					portArray[i] = ports[i].get(0).getLeft();
@@ -186,7 +186,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			//Even though regionValid should pass as the original already passed to be created, it should be checked again as the config may change.
 			if(!errors.isEmpty()){
 				for(TemplateError err : errors){
-					Main.logger.info(err.err + " at " + err.pos);
+					Crossroads.logger.info(err.err + " at " + err.pos);
 				}
 				infoList.set(index, null);
 				data.markDirty();
@@ -216,7 +216,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
 			}
 		}else{
-			List<String> blackList = Arrays.asList(ModConfig.blockedPrototype.getStringList());
+			List<String> blackList = Arrays.asList(CrossroadsConfig.blockedPrototype.getStringList());
 			@SuppressWarnings("unchecked")
 			List<Pair<PrototypePortTypes, BlockPos>>[] ports = new List[] {new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()};
 			ArrayList<TemplateError> errors = new ArrayList<>();
@@ -225,7 +225,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			int startY = pos.getY() + 1;
 			int startZ = pos.getZ();
 
-			switch(world.getBlockState(pos).getValue(Properties.HORIZ_FACING)){
+			switch(world.getBlockState(pos).get(Properties.HORIZ_FACING)){
 				case NORTH:
 					startX -= 16;
 					startZ -= 16;
@@ -276,7 +276,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			for(int i = 0; i < 6; i++){
 				if(ports[i].size() > 1){
 					for(Pair<PrototypePortTypes, BlockPos> port : ports[i]){
-						errors.add(new TemplateError(2, "Duplicate port: " + EnumFacing.byIndex(i), port.getRight()));
+						errors.add(new TemplateError(2, "Duplicate port: " + Direction.byIndex(i), port.getRight()));
 					}
 				}else if(ports[i].size() == 1){
 					portArray[i] = ports[i].get(0).getLeft();
@@ -295,20 +295,20 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
 			ArrayList<PrototypeInfo> infoList = data.prototypes;
-			WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			ServerWorld dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 
 			int newChunk = ModDimensions.nextFreePrototypeChunk(portArray, posArray);
 			if(newChunk != -1){
 				ChunkPos chunkPos = infoList.get(newChunk).chunk;
-				if(setChunk(dimWorld.getChunk(chunkPos.x, chunkPos.z), world, new BlockPos(startX, startY, startZ), newChunk, ModConfig.allowPrototype.getInt() == 1)){
+				if(setChunk(dimWorld.getChunk(chunkPos.x, chunkPos.z), world, new BlockPos(startX, startY, startZ), newChunk, CrossroadsConfig.allowPrototype.getInt() == 1)){
 					infoList.set(newChunk, null);
 					data.markDirty();
 					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View server logs for info.", Color.RED, false), player);
 					return;
 				}
 				inventory[0].shrink(3);
-				inventory[2] = new ItemStack(ModBlocks.prototype, 1);
-				inventory[2].setTagCompound(new NBTTagCompound());
+				inventory[2] = new ItemStack(CrossroadsBlocks.prototype, 1);
+				inventory[2].setTagCompound(new CompoundNBT());
 				inventory[2].getTagCompound().setInteger("index", newChunk);
 				inventory[2].getTagCompound().setString("name", message);
 				for(int i = 0; i < 6; i++){
@@ -333,7 +333,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, Direction facing){
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}
@@ -346,7 +346,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 		if(index >= 0 && index < 3){
 			inventory[index] = stack;
 			markDirty();
-		}else if(index == 3 && stack.getItem() == Item.getItemFromBlock(ModBlocks.prototype)){
+		}else if(index == 3 && stack.getItem() == Item.getItemFromBlock(CrossroadsBlocks.prototype)){
 			markDirty();
 			int ind = stack.getTagCompound().hasKey("index") ? stack.getTagCompound().getInteger("index") : -1;
 			if(ind == -1){
@@ -370,12 +370,12 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && MiscUtil.hasOreDict(stack, "ingotCopshowium") || (index == 1 || index == 3) && stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() == ModBlocks.prototype;
+		return index == 0 && MiscUtil.hasOreDict(stack, "ingotCopshowium") || (index == 1 || index == 3) && stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() == CrossroadsBlocks.prototype;
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
-		return index == 2 && stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() == ModBlocks.prototype;
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+		return index == 2 && stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() == CrossroadsBlocks.prototype;
 	}
 
 	@Override

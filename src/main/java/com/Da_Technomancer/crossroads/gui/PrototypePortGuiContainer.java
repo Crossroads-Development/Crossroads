@@ -7,20 +7,20 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToServer;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.PrototypePortContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 
-public class PrototypePortGuiContainer extends GuiContainer{
+public class PrototypePortGuiContainer extends ContainerScreen{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Main.MODID, "textures/gui/container/prototype_port_gui.png");
+	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID, "textures/gui/container/prototype_port_gui.png");
 	private PrototypePortTileEntity te;
 	
 	private RadioButtonGuiObject types;
@@ -62,7 +62,7 @@ public class PrototypePortGuiContainer extends GuiContainer{
 	@Override
 	public void onGuiClosed(){
 		super.onGuiClosed();
-		te.setSide(EnumFacing.byIndex(side.getPressed()));
+		te.setSide(Direction.byIndex(side.getPressed()));
 		int typeIndex = types.getPressed();
 		PrototypePortTypes type = typeIndex == 0 ? (in_out.getPressed() == 0 ? PrototypePortTypes.REDSTONE_IN : PrototypePortTypes.REDSTONE_OUT) : typeIndex == 1 ? PrototypePortTypes.ROTARY : typeIndex == 2 ? (in_out.getPressed() == 0 ? PrototypePortTypes.MAGIC_IN : PrototypePortTypes.MAGIC_OUT) : PrototypePortTypes.HEAT;
 		te.setType(type);

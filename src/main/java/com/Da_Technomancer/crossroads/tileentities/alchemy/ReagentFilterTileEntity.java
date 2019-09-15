@@ -5,15 +5,20 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentFilter;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
@@ -21,7 +26,7 @@ import javax.annotation.Nullable;
 
 public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInventory{
 
-	private EnumFacing facing = null;
+	private Direction facing = null;
 	private ItemStack inventory = ItemStack.EMPTY;
 
 	public ReagentFilterTileEntity(){
@@ -32,16 +37,16 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 		super(!crystal);
 	}
 
-	private EnumFacing getFacing(){
+	private Direction getFacing(){
 		if(world == null){
-			return EnumFacing.NORTH;
+			return Direction.NORTH;
 		}
 		if(facing == null){
-			IBlockState state = world.getBlockState(pos);
+			BlockState state = world.getBlockState(pos);
 			if(!(state.getBlock() instanceof ReagentFilter)){
-				return EnumFacing.NORTH;
+				return Direction.NORTH;
 			}
-			facing = state.getValue(Properties.HORIZ_FACING);
+			facing = state.get(Properties.HORIZ_FACING);
 		}
 		return facing;
 	}
@@ -51,16 +56,16 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		inventory = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		if(!inventory.isEmpty()){
-			nbt.setTag("inv", inventory.writeToNBT(new NBTTagCompound()));
+			nbt.setTag("inv", inventory.writeToNBT(new CompoundNBT()));
 		}
 		return nbt;
 	}
@@ -81,7 +86,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 		}
 
 		//Transfer reagents
-		boolean transfered = transfer(contents, EnumFacing.DOWN);
+		boolean transfered = transfer(contents, Direction.DOWN);
 		transfered = transfer(filterMap, getFacing()) || transfered;
 
 		if(!filterMap.isEmpty()){
@@ -97,7 +102,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 		dirtyReag |= transfered;
 	}
 
-	private boolean transfer(ReagentMap toTrans, EnumFacing side){
+	private boolean transfer(ReagentMap toTrans, Direction side){
 		TileEntity te = world.getTileEntity(pos.offset(side));
 		IChemicalHandler otherHandler;
 		if(toTrans.getTotalQty() <= 0 || te == null || (otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())) == null){
@@ -113,8 +118,8 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 	@Nullable
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
-		if(facing == getFacing() || facing != null && facing.getAxis() == EnumFacing.Axis.Y){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+		if(facing == getFacing() || facing != null && facing.getAxis() == Direction.Axis.Y){
 			return (T) handler;
 		}
 		return super.getCapability(capability, facing);
@@ -178,17 +183,17 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player){
+	public boolean isUsableByPlayer(PlayerEntity player){
 		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player){
+	public void openInventory(PlayerEntity player){
 
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player){
+	public void closeInventory(PlayerEntity player){
 
 	}
 
@@ -225,7 +230,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 
 	@Override
 	public ITextComponent getDisplayName(){
-		return new TextComponentTranslation(getName());
+		return new TranslationTextComponent(getName());
 	}
 
 	@Override

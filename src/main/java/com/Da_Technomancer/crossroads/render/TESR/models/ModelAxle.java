@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR.models;
 
 import java.awt.Color;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -15,8 +15,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 public class ModelAxle {
 
 	private static final ModelAxle INSTANCE = new ModelAxle();
-	private static final ResourceLocation RESOURCE_ENDS = new ResourceLocation(Main.MODID, "textures/model/axle_end.png");
-	private static final ResourceLocation RESOURCE_SIDE = new ResourceLocation(Main.MODID, "textures/model/axle.png");
+	private static final ResourceLocation RESOURCE_ENDS = new ResourceLocation(Crossroads.MODID, "textures/model/axle_end.png");
+	private static final ResourceLocation RESOURCE_SIDE = new ResourceLocation(Crossroads.MODID, "textures/model/axle.png");
 
 	public static void render(Color c){
 		render(RESOURCE_SIDE, RESOURCE_ENDS, c);
@@ -37,7 +37,7 @@ public class ModelAxle {
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(ends);
+		Minecraft.getInstance().renderEngine.bindTexture(ends);
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-radius, -.4999F, -radius).tex(0, 0).endVertex();
 		vb.pos(radius, -.4999F, -radius).tex(1, 0).endVertex();
@@ -50,7 +50,7 @@ public class ModelAxle {
 		vb.pos(-radius, .4999F, -radius).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(side);
+		Minecraft.getInstance().renderEngine.bindTexture(side);
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-radius, .4999F, -radius).tex(0, 1).endVertex();
 		vb.pos(radius, .4999F, -radius).tex(0.125D, 1).endVertex();

@@ -6,11 +6,11 @@ import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class DiscoverElementCommand extends CommandBase{
@@ -27,25 +27,25 @@ public class DiscoverElementCommand extends CommandBase{
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
-		if(args == null || args.length != 1 || !(sender instanceof EntityPlayerMP)){
-			sender.sendMessage(new TextComponentString("Incorrect # of arguments!"));
+		if(args == null || args.length != 1 || !(sender instanceof ServerPlayerEntity)){
+			sender.sendMessage(new StringTextComponent("Incorrect # of arguments!"));
 			return;
 		}
 
 		if(args[0].toUpperCase().equals("ALL")){
-			NBTTagCompound nbt = MiscUtil.getPlayerTag((EntityPlayer) sender);
+			CompoundNBT nbt = MiscUtil.getPlayerTag((PlayerEntity) sender);
 			if(!nbt.hasKey("elements")){
-				nbt.setTag("elements", new NBTTagCompound());
+				nbt.setTag("elements", new CompoundNBT());
 			}
 			nbt = nbt.getCompoundTag("elements");
 
 			for(EnumBeamAlignments element : EnumBeamAlignments.values()){
 				if(!nbt.hasKey(element.name()) && element != EnumBeamAlignments.NO_MATCH){
 					nbt.setBoolean(element.name(), true);
-					sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.getLocalName(false)));
+					sender.sendMessage(new StringTextComponent(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.getLocalName(false)));
 				}
 			}
-			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) sender, false);
+			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) sender, false);
 			return;
 		}
 
@@ -54,20 +54,20 @@ public class DiscoverElementCommand extends CommandBase{
 		try{
 			element = EnumBeamAlignments.valueOf(args[0].toUpperCase());
 		}catch(IllegalArgumentException | NullPointerException e){
-			sender.sendMessage(new TextComponentString("That element does not exist!"));
+			sender.sendMessage(new StringTextComponent("That element does not exist!"));
 			return;
 		}
 
-		NBTTagCompound nbt = MiscUtil.getPlayerTag((EntityPlayer) sender);
+		CompoundNBT nbt = MiscUtil.getPlayerTag((PlayerEntity) sender);
 		if(!nbt.hasKey("elements")){
-			nbt.setTag("elements", new NBTTagCompound());
+			nbt.setTag("elements", new CompoundNBT());
 		}
 		nbt = nbt.getCompoundTag("elements");
 
 		if(!nbt.hasKey(element.name())){
 			nbt.setBoolean(element.name(), true);
-			sender.sendMessage(new TextComponentString(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.getLocalName(false)));
-			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) sender, false);
+			sender.sendMessage(new StringTextComponent(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.getLocalName(false)));
+			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) sender, false);
 		}
 	}
 

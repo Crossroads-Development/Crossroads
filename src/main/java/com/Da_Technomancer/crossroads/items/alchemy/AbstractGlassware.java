@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -75,18 +75,18 @@ public abstract class AbstractGlassware extends Item{
 	 */
 	public void setReagents(ItemStack stack, ReagentMap reagents){
 		if(!stack.hasTagCompound()){
-			stack.setTagCompound(new NBTTagCompound());
+			stack.setTagCompound(new CompoundNBT());
 		}
 
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		stack.getTagCompound().setTag(TAG_NAME, nbt);
 
 		reagents.writeToNBT(nbt);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		if(!stack.hasTagCompound()){
 			return;
 		}

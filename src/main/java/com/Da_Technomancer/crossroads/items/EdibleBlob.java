@@ -5,14 +5,14 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
@@ -26,15 +26,15 @@ public class EdibleBlob extends ItemFood{
 		String name = "edible_blob";
 		setTranslationKey(name);
 		setRegistryName(name);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
 	}
 
 	/**
 	 * This is not in a creative tab due to creative giving a version that has no NBT
 	 */
 	@Override
-	protected boolean isInCreativeTab(CreativeTabs targetTab){
+	protected boolean isInCreativeTab(ItemGroup targetTab){
 		return false;
 	}
 
@@ -63,18 +63,18 @@ public class EdibleBlob extends ItemFood{
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving){
-		if(entityLiving instanceof EntityPlayer){
-			EntityPlayer entityplayer = (EntityPlayer) entityLiving;
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving){
+		if(entityLiving instanceof PlayerEntity){
+			PlayerEntity entityplayer = (PlayerEntity) entityLiving;
 			FoodStats food = entityplayer.getFoodStats();
 			// The way saturation is coded is weird, and the best way to do this is through nbt.
-			NBTTagCompound nbt = new NBTTagCompound();
+			CompoundNBT nbt = new CompoundNBT();
 			food.writeNBT(nbt);
 			nbt.setInteger("foodLevel", Math.min(getHealAmount(stack) + food.getFoodLevel(), 20));
 			nbt.setFloat("foodSaturationLevel", Math.min(20F, food.getSaturationLevel() + getTrueSat(stack)));
 			food.readNBT(nbt);
 			worldIn.playSound(null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-			entityplayer.addStat(StatList.getObjectUseStats(this));
+			entityplayer.addStat(Stats.getObjectUseStats(this));
 		}
 
 		stack.shrink(1);
@@ -82,8 +82,8 @@ public class EdibleBlob extends ItemFood{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		if(stack.hasTagCompound()){
 			tooltip.add("Food value: " + getHealAmount(stack));
 			tooltip.add("Saturation value: " + getTrueSat(stack));

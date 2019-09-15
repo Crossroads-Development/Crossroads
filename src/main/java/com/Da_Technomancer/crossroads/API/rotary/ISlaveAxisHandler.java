@@ -2,7 +2,8 @@ package com.Da_Technomancer.crossroads.API.rotary;
 
 import java.util.HashSet;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
 /**
  * 
  * A slave axis is one which is incapable of running calculations and adjusting gears without first being triggered by one or more other axes. 
@@ -15,7 +16,7 @@ public interface ISlaveAxisHandler{
 	 * Yes, the side parameter is intentional and should be supplied even though this is a capability. 
 	 * @param side The side of the axis triggered. 
 	 */
-	public void trigger(EnumFacing side);
+	public void trigger(Direction side);
 	
 	/**
 	 * @return Any ISlaveAxisHandlers controlled by this axis. 

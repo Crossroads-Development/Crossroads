@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -14,7 +14,7 @@ public class EntityGhostMarker extends Entity{
 	private long time;
 	private int lifespan;
 	private EnumMarkerType type;
-	public NBTTagCompound data;
+	public CompoundNBT data;
 
 	public EntityGhostMarker(World worldIn){
 		super(worldIn);
@@ -44,7 +44,7 @@ public class EntityGhostMarker extends Entity{
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt){
+	protected void readEntityFromNBT(CompoundNBT nbt){
 		nbt.setString("type", type.name());
 		nbt.setInteger("life", lifespan);
 		nbt.setLong("time", time);
@@ -59,11 +59,11 @@ public class EntityGhostMarker extends Entity{
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt){
+	protected void writeEntityToNBT(CompoundNBT nbt){
 		try{
 			type = EnumMarkerType.valueOf(nbt.getString("type"));
 		}catch(IllegalArgumentException | NullPointerException e){
-			Main.logger.error("Failed to load EntityGhostMarker at " + getPosition().toString() + "; dim: " + world.provider.getDimension() + "; with type: " + nbt.getString("type") + ". Removing.");
+			Crossroads.logger.error("Failed to load EntityGhostMarker at " + getPosition().toString() + "; dim: " + world.provider.getDimension() + "; with type: " + nbt.getString("type") + ". Removing.");
 			setDead();
 		}
 		lifespan = nbt.getInteger("life");

@@ -1,14 +1,14 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.entity.EntityNitro;
-import com.Da_Technomancer.crossroads.items.ModItems;
-import net.minecraft.block.BlockDispenser;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
-import net.minecraft.dispenser.IBehaviorDispenseItem;
+import net.minecraft.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
@@ -21,14 +21,14 @@ import java.util.List;
 
 public class Nitroglycerin extends Item{
 
-	private static final IBehaviorDispenseItem NITRO_DISPENSER_BEHAVIOR = new BehaviorDefaultDispenseItem(){
+	private static final IDispenseItemBehavior NITRO_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){
 
 		/**
 		 * Dispense the specified stack, play the dispense sound and spawn particles.
 		 */
 		@Override
 		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
-			EnumFacing dir = (EnumFacing) source.getBlockState().getValue(BlockDispenser.FACING);
+			Direction dir = (Direction) source.getBlockState().get(DispenserBlock.FACING);
 			World world = source.getWorld();
 			EntityNitro entitysnowball = new EntityNitro(world);
 			entitysnowball.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
@@ -51,31 +51,31 @@ public class Nitroglycerin extends Item{
 		String name = "nitroglycerin";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
-		ModItems.toRegister.add(this);
-		ModItems.itemAddQue(this);
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, NITRO_DISPENSER_BEHAVIOR);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		CrossroadsItems.toRegister.add(this);
+		CrossroadsItems.itemAddQue(this);
+		DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, NITRO_DISPENSER_BEHAVIOR);
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn){
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
 		ItemStack held = playerIn.getHeldItem(handIn);
 		if(!playerIn.capabilities.isCreativeMode){
 			held.shrink(1);
 		}
 
-		worldIn.playSound((EntityPlayer) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+		worldIn.playSound((PlayerEntity) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 		if(!worldIn.isRemote){
 			EntityNitro entitysnowball = new EntityNitro(worldIn, playerIn);
 			entitysnowball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
 			worldIn.spawnEntity(entitysnowball);
 		}
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, held);
+		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, held);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("Handle with care!");
 	}
 }

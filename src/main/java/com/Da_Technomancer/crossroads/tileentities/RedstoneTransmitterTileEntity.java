@@ -5,17 +5,17 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.nbt.NBTTagCompound;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -28,12 +28,12 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 	private double output;
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
 		if(linked.isEmpty()){
 			chat.add("No linked receivers");
 		}else{
@@ -48,15 +48,15 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 		return true;
 	}
 
-	public void dye(EnumDyeColor color){
-		if(world.getBlockState(pos).getValue(Properties.COLOR) != color){
-			world.setBlockState(pos, world.getBlockState(pos).withProperty(Properties.COLOR, color));
+	public void dye(DyeColor color){
+		if(world.getBlockState(pos).get(Properties.COLOR) != color){
+			world.setBlockState(pos, world.getBlockState(pos).with(Properties.COLOR, color));
 
 			for(BlockPos link : linked){
 				BlockPos worldLink = pos.add(link);
-				IBlockState linkState = world.getBlockState(worldLink);
-				if(linkState.getBlock() == ModBlocks.redstoneReceiver){
-					world.setBlockState(worldLink, linkState.withProperty(Properties.COLOR, color));
+				BlockState linkState = world.getBlockState(worldLink);
+				if(linkState.getBlock() == CrossroadsBlocks.redstoneReceiver){
+					world.setBlockState(worldLink, linkState.with(Properties.COLOR, color));
 				}
 			}
 		}
@@ -83,15 +83,15 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 		if(output != outputIn){
 			output = outputIn;
 			for(BlockPos link : linked){
-				world.notifyNeighborsOfStateChange(pos.add(link), ModBlocks.redstoneTransmitter, true);
+				world.notifyNeighborsOfStateChange(pos.add(link), CrossroadsBlocks.redstoneTransmitter, true);
 			}
 			markDirty();
 		}
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		for(int i = 0; i < linked.size(); i++){
 			nbt.setLong("link" + i, linked.get(i).toLong());
 		}
@@ -99,7 +99,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		output = nbt.getDouble("out");
 		int i = 0;
@@ -110,7 +110,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setDouble("out", output);
 		for(int i = 0; i < linked.size(); i++){
@@ -136,7 +136,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 
 	@Override
 	public int getRange(){
-		return ModConfig.getConfigInt(ModConfig.redstoneTransmitterRange, false);
+		return CrossroadsConfig.redstoneTransmitterRange.get();
 	}
 
 	@Override
@@ -145,28 +145,28 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 	}
 
 	@Override
-	public boolean link(ILinkTE endpoint, EntityPlayer player){
+	public boolean link(ILinkTE endpoint, PlayerEntity player){
 		BlockPos linkPos = endpoint.getTE().getPos().subtract(pos);
 		if(linked.contains(linkPos)){
-			player.sendMessage(new TextComponentString("Device already linked; Canceling linking"));
+			player.sendMessage(new StringTextComponent("Device already linked; Canceling linking"));
 		}else if(linked.size() < getMaxLinks()){
 			linked.add(linkPos);
 			ModPackets.network.sendToAllAround(new SendLongToClient(LINK_PACKET_ID, linkPos.toLong(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			getTE().markDirty();
 			((RedstoneReceiverTileEntity) endpoint).setSrc(pos.subtract(((RedstoneReceiverTileEntity) endpoint).getPos()));
-			((RedstoneReceiverTileEntity) endpoint).dye(world.getBlockState(pos).getValue(Properties.COLOR));
+			((RedstoneReceiverTileEntity) endpoint).dye(world.getBlockState(pos).get(Properties.COLOR));
 
-			world.neighborChanged(linkPos, ModBlocks.redstoneTransmitter, linkPos);
-			player.sendMessage(new TextComponentString("Linked device at " + getTE().getPos() + " to send to " + endpoint.getTE().getPos()));
+			world.neighborChanged(linkPos, CrossroadsBlocks.redstoneTransmitter, linkPos);
+			player.sendMessage(new StringTextComponent("Linked device at " + getTE().getPos() + " to send to " + endpoint.getTE().getPos()));
 			return true;
 		}else{
-			player.sendMessage(new TextComponentString("All " + getMaxLinks() + " links already occupied; Canceling linking"));
+			player.sendMessage(new StringTextComponent("All " + getMaxLinks() + " links already occupied; Canceling linking"));
 		}
 		return false;
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == LINK_PACKET_ID){
 			linked.add(BlockPos.fromLong(message));
 		}else if(identifier == CLEAR_PACKET_ID){

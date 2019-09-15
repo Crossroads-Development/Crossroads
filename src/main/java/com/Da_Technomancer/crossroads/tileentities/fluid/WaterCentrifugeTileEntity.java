@@ -8,8 +8,8 @@ import com.Da_Technomancer.crossroads.fluids.BlockDirtyWater;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -82,7 +82,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("neg", neg);
 
@@ -90,7 +90,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		neg = nbt.getBoolean("neg");
 	}
@@ -102,20 +102,20 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing facing){
+	public <T> T getCapability(Capability<T> cap, Direction facing){
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == null){
 			return (T) masterHandler;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() != world.getBlockState(pos).getValue(Properties.HORIZ_AXIS)){
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() != world.getBlockState(pos).get(Properties.HORIZ_AXIS)){
 			return (T) waterHandler;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_AXIS)){
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() == world.getBlockState(pos).get(Properties.HORIZ_AXIS)){
 			return (T) dWaterHandler;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) saltHandler;
 		}
-		if(cap == Capabilities.AXLE_CAPABILITY && facing == EnumFacing.UP){
+		if(cap == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
 			return (T) axleHandler;
 		}
 
@@ -128,7 +128,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return index == 0;
 	}
 

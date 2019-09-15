@@ -1,30 +1,30 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
+import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import org.lwjgl.opengl.GL11;
 
-import com.Da_Technomancer.crossroads.Main;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelPump;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidBlock;
 
-public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTileEntity>{
+public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/model/pump.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/model/pump.png");
 	private static final ModelPump MODEL = new ModelPump();
 
 	@Override
@@ -39,13 +39,13 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 		GlStateManager.translate(0.5F, 0F, .5F);
 		GlStateManager.rotate(pump.getCompletion() * 360F, 0F, 1F, 0F);
 		
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE);
 		MODEL.renderScrew();
 		
 		GlStateManager.popMatrix();
 		
 		if(pump.getCompletion() != 0){
-			IBlockState state = pump.getWorld().getBlockState(pump.getPos().offset(EnumFacing.DOWN));
+			BlockState state = pump.getWorld().getBlockState(pump.getPos().offset(Direction.DOWN));
 			TextureAtlasSprite lText = null;
 
 			if(state == null){
@@ -53,9 +53,9 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 			}
 
 			if(state.getBlock() instanceof IFluidBlock){
-				lText = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(((IFluidBlock) state.getBlock()).getFluid().getStill().toString());
+				lText = Minecraft.getInstance().getTextureMapBlocks().getTextureExtry(((IFluidBlock) state.getBlock()).getFluid().getStill().toString());
 			}else if(state.getBlock() instanceof BlockLiquid){
-				lText = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry((state.getMaterial() == Material.LAVA ? FluidRegistry.LAVA.getStill() : FluidRegistry.WATER.getStill()).toString());
+				lText = Minecraft.getInstance().getTextureMapBlocks().getTextureExtry((state.getMaterial() == Material.LAVA ? FluidRegistry.LAVA.getStill() : FluidRegistry.WATER.getStill()).toString());
 			}else{
 				return;
 			}
@@ -63,7 +63,7 @@ public class RotaryPumpRenderer extends TileEntitySpecialRenderer<RotaryPumpTile
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x, y, z);
 
-			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			Minecraft.getInstance().renderEngine.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 			BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 			float xSt = 3F / 16F;

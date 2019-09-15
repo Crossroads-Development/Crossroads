@@ -5,16 +5,15 @@ import com.Da_Technomancer.crossroads.API.effects.mechArm.*;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
-import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +22,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.UUID;
 
-public class MechanicalArmTileEntity extends TileEntity implements ITickable, IDoubleReceiver{
+public class MechanicalArmTileEntity extends TileEntity implements ITickableTileEntity, IDoubleReceiver{
 
 	public static final double BASE_HEIGHT = 4;
 	public static final double BASE_LENGTH = 4;
@@ -48,7 +47,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	private UUID ridableID;
 
 	private static final double PHYS_DATA = 0;
-	private static final float CLIENT_SPEED_MARGIN = (float) ModConfig.speedPrecision.getDouble();
+	private static final float CLIENT_SPEED_MARGIN = (float) CrossroadsConfig.speedPrecision.getDouble();
 
 	private static double[] getAnglesFromSpeeds(double speedDown, double speedEast, double speedWest){
 		return new double[] {-speedDown, Math.max(Math.min(BASE_HEIGHT + speedEast, MAX_HEIGHT), 0), Math.max(Math.min(BASE_LENGTH + speedWest, MAX_LENGTH), 0)};
@@ -97,7 +96,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 				if(redstone > 0){
 					IMechArmEffect effect = EFFECTS[(redstone - 1) % EFFECTS.length];
 					if(effect.useSideModifier()){
-						EnumFacing side = EnumFacing.byIndex(((int) Math.round(RedstoneUtil.getDirectPowerOnSide(world, pos, EnumFacing.SOUTH))) % 6);
+						Direction side = Direction.byIndex(((int) Math.round((double) com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil.getRedstoneOnSide(world, pos, Direction.SOUTH))) % 6);
 						effect.onTriggered(world, endPos, posX, posY, posZ, side, ridable, this);
 					}else{
 						//While there's no reason we need to pass null if useSideModifier is false, it's inefficient to get the side modifier if it won't be used
@@ -139,8 +138,8 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		nbt.setDouble("speed0", motionData[0][0]);
 		nbt.setDouble("speed1", motionData[1][0]);
 		nbt.setDouble("speed2", motionData[2][0]);
@@ -151,7 +150,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setDouble("speed0", motionData[0][0]);
 		nbt.setDouble("speed1", motionData[1][0]);
@@ -174,7 +173,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		motionData[0][0] = nbt.getDouble("speed0");
 		motionData[1][0] = nbt.getDouble("speed1");
@@ -201,9 +200,9 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 	private final AxleHandler[] axles = {new AxleHandler(0), new AxleHandler(1), new AxleHandler(2)};
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		if(cap == Capabilities.AXLE_CAPABILITY){
-			if(side == EnumFacing.DOWN || side == EnumFacing.EAST || side == EnumFacing.WEST){
+			if(side == Direction.DOWN || side == Direction.EAST || side == Direction.WEST){
 				return true;
 			}
 		}
@@ -212,13 +211,13 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickable, ID
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXLE_CAPABILITY){
-			if(side == EnumFacing.DOWN){
+			if(side == Direction.DOWN){
 				return (T) axles[0];
-			}else if(side == EnumFacing.EAST){
+			}else if(side == Direction.EAST){
 				return (T) axles[1];
-			}else if(side == EnumFacing.WEST){
+			}else if(side == Direction.WEST){
 				return (T) axles[2];
 			}
 		}

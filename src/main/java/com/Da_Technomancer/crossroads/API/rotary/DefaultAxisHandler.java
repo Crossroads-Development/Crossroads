@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 public class DefaultAxisHandler implements IAxisHandler{
 
@@ -30,7 +30,7 @@ public class DefaultAxisHandler implements IAxisHandler{
 	}
 
 	@Override
-	public void addAxisToList(ISlaveAxisHandler handler, EnumFacing side){
+	public void addAxisToList(ISlaveAxisHandler handler, Direction side){
 		
 	}
 

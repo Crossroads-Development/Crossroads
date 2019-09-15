@@ -5,11 +5,11 @@ import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.API.packets.INbtReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityClient;
-import com.Da_Technomancer.crossroads.ModConfig;
-import net.minecraft.block.state.IBlockState;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -57,13 +57,13 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public boolean isInRangeToRender3d(double x, double y, double z){
 		return true;
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt){
+	public void readEntityFromNBT(CompoundNBT nbt){
 		reags = new ReagentMap();
 		maxRadius = nbt.getInteger("rad");
 		reags = ReagentMap.readFromNBT(nbt);
@@ -72,7 +72,7 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 	}
 
 	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt){
+	public void writeEntityToNBT(CompoundNBT nbt){
 		if(reags != null){
 			reags.writeToNBT(nbt);
 		}
@@ -121,7 +121,7 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 				return;
 			}
 
-			NBTTagCompound nbt = new NBTTagCompound();
+			CompoundNBT nbt = new CompoundNBT();
 			col = new Color(r / amount, g / amount, b / amount, a / amount);
 			nbt.setInteger("col", col.getRGB());
 			nbt.setInteger("life", ticksExisted);
@@ -176,9 +176,9 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 	private static void act(ArrayList<ReagentStack> reagList, ReagentMap reags, double temp, World world, BlockPos pos, boolean lastAction){
 		//Block destruction is disabled by alchemical salt
 		if(reags.getQty(EnumReagents.ALCHEMICAL_SALT.id()) == 0){
-			IBlockState state = world.getBlockState(pos);
+			BlockState state = world.getBlockState(pos);
 
-			if(!ModConfig.isProtected(world, pos, state) && state.getBlockHardness(world, pos) >= 0){
+			if(!CrossroadsConfig.isProtected(world, pos, state) && state.getBlockHardness(world, pos) >= 0){
 				world.setBlockState(pos, lastAction && Math.random() > 0.75D && Blocks.FIRE.canPlaceBlockAt(world, pos) ? Blocks.FIRE.getDefaultState() : Blocks.AIR.getDefaultState(), lastAction ? 3 : 18);
 			}
 		}
@@ -198,7 +198,7 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 	}
 
 	@Override
-	public void receiveNBT(NBTTagCompound nbt){
+	public void receiveNBT(CompoundNBT nbt){
 		int colorCode = nbt.getInteger("col");
 		col = Color.decode(Integer.toString(colorCode & 0xFFFFFF));
 		col = new Color(col.getRed(), col.getGreen(), col.getBlue(), colorCode >>> 24);

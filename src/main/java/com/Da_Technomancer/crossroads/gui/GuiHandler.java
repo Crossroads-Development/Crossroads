@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.gui.container.*;
-import com.Da_Technomancer.crossroads.tileentities.RedstoneKeyboardTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterBasicTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
@@ -14,7 +13,7 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.MathAxisTileEntit
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -52,7 +51,7 @@ public class GuiHandler implements IGuiHandler{
 	public static final int REAGENT_FILTER_GUI = 27;
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
+	public Object getServerGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z){
 		switch(ID){
 			case MILLSTONE_GUI:
 				return new MillstoneContainer(player.inventory, ((MillstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
@@ -112,7 +111,7 @@ public class GuiHandler implements IGuiHandler{
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
+	public Object getClientGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z){
 		switch(ID){
 			case MILLSTONE_GUI:
 				return new MillstoneGuiContainer(player.inventory, ((MillstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));

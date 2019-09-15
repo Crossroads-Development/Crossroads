@@ -3,11 +3,11 @@ package com.Da_Technomancer.crossroads.API.templates;
 import java.awt.Color;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvents;
 
 public class ButtonGuiObject implements IGuiObject{
 
@@ -60,7 +60,7 @@ public class ButtonGuiObject implements IGuiObject{
 	@Override
 	public boolean mouseClicked(int x, int y, int button){
 		if(mouseOver(x, y)){
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+			Minecraft.getInstance().getSoundHandler().playSound(SimpleSound.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			return true;
 		}
 		return false;
@@ -73,7 +73,7 @@ public class ButtonGuiObject implements IGuiObject{
 
 	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
-		Gui.drawRect(x, y, endX, endY, mouseX >= x && mouseX <= endX && mouseY >= y && mouseY <= endY ? Color.DARK_GRAY.getRGB() : Color.GRAY.getRGB());
+		AbstractGui.drawRect(x, y, endX, endY, mouseX >= x && mouseX <= endX && mouseY >= y && mouseY <= endY ? Color.DARK_GRAY.getRGB() : Color.GRAY.getRGB());
 		GlStateManager.color(1, 1, 1);
 		return true;
 	}

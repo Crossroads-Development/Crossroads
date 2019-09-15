@@ -1,23 +1,22 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -28,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class HamsterWheel extends BlockContainer{
+public class HamsterWheel extends ContainerBlock{
 
 	private static final AxisAlignedBB[] BB = new AxisAlignedBB[]{new AxisAlignedBB(0, 0, .5D, 1, 1, 1), new AxisAlignedBB(0, 0, 0, .5D, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 1, .5D), new AxisAlignedBB(.5D, 0, 0, 1, 1, 1)};
 
@@ -38,21 +37,21 @@ public class HamsterWheel extends BlockContainer{
 		setTranslationKey(name);
 		setHardness(2);
 		setRegistryName(name);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new HamsterWheelTileEntity();
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.withProperty(Properties.HORIZ_FACING, state.getValue(Properties.HORIZ_FACING).rotateY()));
+				worldIn.setBlockState(pos, state.with(Properties.HORIZ_FACING, state.get(Properties.HORIZ_FACING).rotateY()));
 			}
 			return true;
 		}
@@ -60,18 +59,18 @@ public class HamsterWheel extends BlockContainer{
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return BB[Math.max(state.getValue(Properties.HORIZ_FACING).getHorizontalIndex(), 0)];
+	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
+		return BB[Math.max(state.get(Properties.HORIZ_FACING).getHorizontalIndex(), 0)];
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, placer.getHorizontalFacing());
+	public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, BlockRayTraceResult hit, int meta, LivingEntity placer, Hand hand){
+		return getDefaultState().with(Properties.HORIZ_FACING, placer.getHorizontalFacing());
 	}
 
 	@Override
@@ -80,38 +79,38 @@ public class HamsterWheel extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byIndex(meta));
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(Properties.HORIZ_FACING, Direction.byIndex(meta));
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZ_FACING).getIndex();
+	public int getMetaFromState(BlockState state){
+		return state.get(Properties.HORIZ_FACING).getIndex();
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> list, @Nullable Entity entityIn, boolean p_185477_7_){
-		addCollisionBoxToList(pos, entityBox, list, BB[Math.max(state.getValue(Properties.HORIZ_FACING).getHorizontalIndex(), 0)]);
+	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> list, @Nullable Entity entityIn, boolean p_185477_7_){
+		addCollisionBoxToList(pos, entityBox, list, BB[Math.max(state.get(Properties.HORIZ_FACING).getHorizontalIndex(), 0)]);
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state){
+	public boolean isFullCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
-		return side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
+	public boolean isSideSolid(BlockState base_state, IBlockAccess world, BlockPos pos, Direction side){
+		return side == world.getBlockState(pos).get(Properties.HORIZ_FACING);
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("Produces: 2J/t");
 		tooltip.add("Does it need batteries?");
 	}

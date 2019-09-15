@@ -1,26 +1,24 @@
 package com.Da_Technomancer.crossroads.blocks.electric;
 
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -28,7 +26,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TeslaCoil extends BlockContainer{
+public class TeslaCoil extends ContainerBlock{
 
 	public TeslaCoil(){
 		super(Material.IRON);
@@ -36,45 +34,45 @@ public class TeslaCoil extends BlockContainer{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setSoundType(SoundType.METAL);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().withProperty(Properties.ACTIVE, false));
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().with(Properties.ACTIVE, false));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new TeslaCoilTileEntity();
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state){
+	public boolean isFullCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, placer == null ? EnumFacing.EAST : placer.getHorizontalFacing().getOpposite()).withProperty(Properties.ACTIVE, false);
+	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
+		return getDefaultState().with(Properties.HORIZ_FACING, placer == null ? Direction.EAST : placer.getHorizontalFacing().getOpposite()).with(Properties.ACTIVE, false);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		neighborChanged(state, world, pos, this, pos);
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos prevPos){
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos prevPos){
 		if(worldIn.isRemote){
 			return;
 		}
@@ -96,35 +94,35 @@ public class TeslaCoil extends BlockContainer{
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 
 		if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_FACING));
+				worldIn.setBlockState(pos, state.cycle(Properties.HORIZ_FACING));
 			}
 			return true;
 		}
 
-		if(heldItem.getItem() == ModItems.leydenJar){
-			if(!state.getValue(Properties.ACTIVE)){
+		if(heldItem.getItem() == CrossroadsItems.leydenJar){
+			if(!state.get(Properties.ACTIVE)){
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof TeslaCoilTileEntity){
 					if(!worldIn.isRemote){
 						((TeslaCoilTileEntity) te).addJar(heldItem);
 						playerIn.setHeldItem(hand, ItemStack.EMPTY);
-						worldIn.setBlockState(pos, state.withProperty(Properties.ACTIVE, true));
+						worldIn.setBlockState(pos, state.with(Properties.ACTIVE, true));
 					}
 					return true;
 				}
 			}
 		}else if(heldItem.isEmpty()){
-			if(state.getValue(Properties.ACTIVE)){
+			if(state.get(Properties.ACTIVE)){
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof TeslaCoilTileEntity){
 					if(!worldIn.isRemote){
 						playerIn.setHeldItem(hand, ((TeslaCoilTileEntity) te).removeJar());
-						worldIn.setBlockState(pos, state.withProperty(Properties.ACTIVE, false));
+						worldIn.setBlockState(pos, state.with(Properties.ACTIVE, false));
 					}
 					return true;
 				}
@@ -134,8 +132,8 @@ public class TeslaCoil extends BlockContainer{
 	}
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state){
-		if(state.getValue(Properties.ACTIVE)){
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+		if(state.get(Properties.ACTIVE)){
 			TileEntity te = world.getTileEntity(pos);
 			if(te instanceof TeslaCoilTileEntity){
 				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((TeslaCoilTileEntity) te).removeJar());
@@ -150,18 +148,18 @@ public class TeslaCoil extends BlockContainer{
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_FACING, EnumFacing.byHorizontalIndex(meta & 3)).withProperty(Properties.ACTIVE, (meta & 4) != 0);
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(Properties.HORIZ_FACING, Direction.byHorizontalIndex(meta & 3)).with(Properties.ACTIVE, (meta & 4) != 0);
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZ_FACING).getHorizontalIndex() + (state.getValue(Properties.ACTIVE) ? 4 : 0);
+	public int getMetaFromState(BlockState state){
+		return state.get(Properties.HORIZ_FACING).getHorizontalIndex() + (state.get(Properties.ACTIVE) ? 4 : 0);
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
-		return face.getAxis() == EnumFacing.Axis.Y ? BlockFaceShape.SOLID : BlockFaceShape.CENTER_BIG;
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
+		return face.getAxis() == Direction.Axis.Y ? BlockFaceShape.SOLID : BlockFaceShape.CENTER_BIG;
 	}
 
 	@Override

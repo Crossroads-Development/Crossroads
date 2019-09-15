@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -28,12 +28,12 @@ public class SendLongToClient extends Message<SendLongToClient>{
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.CLIENT){
-			Main.logger.error("MessageToClient received on wrong side:" + context.side);
+			Crossroads.logger.error("MessageToClient received on wrong side:" + context.side);
 			return null;
 		}
 
-		Minecraft minecraft = Minecraft.getMinecraft();
-		final WorldClient worldClient = minecraft.world;
+		Minecraft minecraft = Minecraft.getInstance();
+		final ClientWorld worldClient = minecraft.world;
 		minecraft.addScheduledTask(new Runnable(){
 			@Override
 			public void run(){
@@ -44,7 +44,7 @@ public class SendLongToClient extends Message<SendLongToClient>{
 		return null;
 	}
 
-	public void processMessage(WorldClient worldClient, byte identifier, long message, BlockPos pos){
+	public void processMessage(ClientWorld worldClient, byte identifier, long message, BlockPos pos){
 		if(worldClient == null){
 			return;
 		}

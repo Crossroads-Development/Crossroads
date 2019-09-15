@@ -48,7 +48,7 @@ public class PredicateMap<T, V>{
 	public V get(T target){
 		for(Map.Entry<Predicate<T>, V> ent : entries.entrySet()){
 			if(ent.getKey().test(target)){
-				return ent.getValue();
+				return ent.get();
 			}
 		}
 

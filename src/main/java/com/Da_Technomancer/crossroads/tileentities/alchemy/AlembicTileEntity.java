@@ -7,9 +7,9 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
@@ -55,7 +55,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 		}
 
 		ReagentMap toInsert = new ReagentMap();
-		EnumFacing dir = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
+		Direction dir = world.getBlockState(pos).get(Properties.HORIZ_FACING);
 
 		double ambientTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
 		for(IReagent type : contents.keySet()){
@@ -66,9 +66,9 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 
 				Color c = type.getColor(type.getPhase(ambientTemp));
 				if(type.getPhase(ambientTemp).flowsDown()){
-					((WorldServer) world).spawnParticle(ModParticles.COLOR_LIQUID, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * 0.05D) - 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+					((ServerWorld) world).spawnParticle(ModParticles.COLOR_LIQUID, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * 0.05D) - 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 				}else{
-					((WorldServer) world).spawnParticle(ModParticles.COLOR_GAS, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * -0.05D) + 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+					((ServerWorld) world).spawnParticle(ModParticles.COLOR_GAS, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * -0.05D) + 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 				}
 			}
 		}
@@ -77,9 +77,9 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 
 		TileEntity te = world.getTileEntity(pos.offset(dir));
 		if(te != null){
-			IChemicalHandler handler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, EnumFacing.UP);
+			IChemicalHandler handler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, Direction.UP);
 			if(handler != null){
-				handler.insertReagents(toInsert, EnumFacing.UP, new PsuedoChemHandler(toInsert));
+				handler.insertReagents(toInsert, Direction.UP, new PsuedoChemHandler(toInsert));
 			}
 		}
 	}
@@ -108,19 +108,19 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 		}
 
 		@Override
-		public boolean insertReagents(ReagentMap reag, EnumFacing side, @Nonnull IChemicalHandler caller, boolean ignorePhase){
+		public boolean insertReagents(ReagentMap reag, Direction side, @Nonnull IChemicalHandler caller, boolean ignorePhase){
 			return false;
 		}
 
 		@Nonnull
 		@Override
-		public EnumTransferMode getMode(EnumFacing side){
+		public EnumTransferMode getMode(Direction side){
 			return EnumTransferMode.OUTPUT;
 		}
 
 		@Nonnull
 		@Override
-		public EnumContainerType getChannel(EnumFacing side){
+		public EnumContainerType getChannel(Direction side){
 			return EnumContainerType.NONE;
 		}
 	}
@@ -129,8 +129,8 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if((side == null || side == EnumFacing.DOWN) && cap == Capabilities.HEAT_CAPABILITY){
+	public <T> T getCapability(Capability<T> cap, Direction side){
+		if((side == null || side == Direction.DOWN) && cap == Capabilities.HEAT_CAPABILITY){
 			return (T) heatHandler;
 		}
 		return super.getCapability(cap, side);

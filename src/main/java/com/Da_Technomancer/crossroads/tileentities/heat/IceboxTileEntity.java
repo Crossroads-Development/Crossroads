@@ -3,12 +3,12 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -36,7 +36,7 @@ public class IceboxTileEntity extends InventoryTE{
 		if(burnTime != 0 && temp > -20){
 			temp = Math.max(-20, temp - 10);
 			if(--burnTime == 0){
-				world.setBlockState(pos, ModBlocks.icebox.getDefaultState().withProperty(Properties.ACTIVE, false), 18);
+				world.setBlockState(pos, CrossroadsBlocks.icebox.getDefaultState().with(Properties.ACTIVE, false), 18);
 			}
 			markDirty();
 		}
@@ -49,20 +49,20 @@ public class IceboxTileEntity extends InventoryTE{
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
 				inventory[0] = item.getContainerItem(inventory[0]);
 			}
-			world.setBlockState(pos, ModBlocks.icebox.getDefaultState().withProperty(Properties.ACTIVE, true), 18);
+			world.setBlockState(pos, CrossroadsBlocks.icebox.getDefaultState().with(Properties.ACTIVE, true), 18);
 			markDirty();
 		}
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		burnTime = nbt.getInteger("burn");
 		maxBurnTime = nbt.getInteger("max_burn");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("burn", burnTime);
 		nbt.setInteger("max_burn", maxBurnTime);
@@ -73,8 +73,8 @@ public class IceboxTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == EnumFacing.UP || facing == null)){
+	public <T> T getCapability(Capability<T> capability, Direction facing){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.UP || facing == null)){
 			return (T) heatHandler;
 		}
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
@@ -112,7 +112,7 @@ public class IceboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 

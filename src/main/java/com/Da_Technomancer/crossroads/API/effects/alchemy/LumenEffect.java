@@ -5,12 +5,12 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Biomes;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -23,7 +23,7 @@ public class LumenEffect implements IAlchEffect{
 
 	@Override
 	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
-		IBlockState oldState = world.getBlockState(pos);
+		BlockState oldState = world.getBlockState(pos);
 
 		//quicksilver makes it create a block instead of transmuting blocks
 		if(reags != null && reags.getQty(EnumReagents.QUICKSILVER.id()) > 0 && oldState.getBlock().isAir(oldState, world, pos)){
@@ -41,7 +41,7 @@ public class LumenEffect implements IAlchEffect{
 			return;
 		}
 
-		for(Predicate<IBlockState> pred : AetherEffect.CRYS_GROUP){
+		for(Predicate<BlockState> pred : AetherEffect.CRYS_GROUP){
 			if(pred.test(oldState)){
 				if(oldState != Blocks.SEA_LANTERN.getDefaultState()){
 					world.setBlockState(pos, Blocks.SEA_LANTERN.getDefaultState());
@@ -49,10 +49,10 @@ public class LumenEffect implements IAlchEffect{
 				return;
 			}
 		}
-		for(Predicate<IBlockState> pred : AetherEffect.FLUD_GROUP){
+		for(Predicate<BlockState> pred : AetherEffect.FLUD_GROUP){
 			if(pred.test(oldState)){
-				if(oldState != BlockDistilledWater.getDistilledWater().getBlock().getDefaultState() && oldState.getBlock() != ModBlocks.reactiveSpot){
-					world.setBlockState(pos, ModBlocks.reactiveSpot.getDefaultState());
+				if(oldState != BlockDistilledWater.getDistilledWater().getBlock().getDefaultState() && oldState.getBlock() != CrossroadsBlocks.reactiveSpot){
+					world.setBlockState(pos, CrossroadsBlocks.reactiveSpot.getDefaultState());
 					TileEntity te = world.getTileEntity(pos);
 					if(te instanceof ReactiveSpotTileEntity){
 						((ReactiveSpotTileEntity) te).setTarget(BlockDistilledWater.getDistilledWater().getBlock().getDefaultState());
@@ -61,7 +61,7 @@ public class LumenEffect implements IAlchEffect{
 				return;
 			}
 		}
-		for(Predicate<IBlockState> pred : AetherEffect.ROCK_GROUP){
+		for(Predicate<BlockState> pred : AetherEffect.ROCK_GROUP){
 			if(pred.test(oldState)){
 				if(oldState != Blocks.PRISMARINE.getDefaultState()){
 					world.setBlockState(pos, Blocks.PRISMARINE.getDefaultState());
@@ -69,7 +69,7 @@ public class LumenEffect implements IAlchEffect{
 				return;
 			}
 		}
-		for(Predicate<IBlockState> pred : AetherEffect.SOIL_GROUP){
+		for(Predicate<BlockState> pred : AetherEffect.SOIL_GROUP){
 			if(pred.test(oldState)){
 				if(oldState != Blocks.CLAY.getDefaultState()){
 					world.setBlockState(pos, Blocks.CLAY.getDefaultState());

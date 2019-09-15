@@ -12,12 +12,16 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -25,7 +29,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class MechanismTileEntity extends TileEntity implements ITickable, ILongReceiver, IInfoTE{
+public class MechanismTileEntity extends TileEntity implements ITickableTileEntity, ILongReceiver, IInfoTE{
 
 	public static final ArrayList<IMechanism> MECHANISMS = new ArrayList<>(4);//This is a list instead of an array to allow expansion by addons
 
@@ -40,7 +44,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		int hit = -1;
 		for(int i = 0; i < 7; i++){
 			if(boundingBoxes[i] != null && boundingBoxes[i].minX <= hitX && boundingBoxes[i].maxX >= hitX && boundingBoxes[i].minY <= hitY && boundingBoxes[i].maxY >= hitY && boundingBoxes[i].minZ <= hitZ && boundingBoxes[i].maxZ >= hitZ){
@@ -75,7 +79,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 
 	private boolean updateMembers = false;
 	//Public for read-only, use setMechanism
-	public EnumFacing.Axis axleAxis;
+	public Direction.Axis axleAxis;
 	//Public for read-only
 	public double redstoneIn = 0;
 
@@ -87,7 +91,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	 * @param axis The new axle orientation, if index = 6. Should be null otherwise.
 	 * @param newTE Whether this TE is newly created this tick
 	 */
-	public void setMechanism(int index, @Nullable IMechanism mechanism, @Nullable GearFactory.GearMaterial mat, @Nullable EnumFacing.Axis axis, boolean newTE){
+	public void setMechanism(int index, @Nullable IMechanism mechanism, @Nullable GearFactory.GearMaterial mat, @Nullable Direction.Axis axis, boolean newTE){
 		members[index] = mechanism;
 		mats[index] = mat;
 
@@ -108,7 +112,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 
 		// motionData
@@ -140,8 +144,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.setInteger("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
@@ -161,11 +165,11 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 
 		if(nbt.hasKey("[6]memb") && nbt.hasKey("[6]mat")){
-			axleAxis = EnumFacing.Axis.values()[nbt.getInteger("axis")];
+			axleAxis = Direction.Axis.values()[nbt.getInteger("axis")];
 		}
 
 		for(int i = 0; i < 7; i++){
@@ -193,7 +197,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		/*if(identifier >= 0 && identifier < 7){
 			float angleIn = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
 			angle[identifier] = Math.abs(angleIn - angle[identifier]) > 15F ? angleIn : angle[identifier];
@@ -208,7 +212,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 			}
 			axleHandlers[identifier - 7].updateStates(false);
 		}else if(identifier == 14){
-			axleAxis = message == -1 ? null : EnumFacing.Axis.values()[(int) message];
+			axleAxis = message == -1 ? null : Direction.Axis.values()[(int) message];
 			axleHandlers[6].updateStates(false);
 		}else if(identifier == 15){
 			redstoneIn = Double.longBitsToDouble(message);
@@ -241,7 +245,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 			markDirty();
 			for(int i = 0; i < 7; i++){
 				if(members[i] != null){
-					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : EnumFacing.byIndex(i), axleAxis, motionData[i], this);
+					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : Direction.byIndex(i), axleAxis, motionData[i], this);
 				}
 			}
 			redstoneIn = reds;
@@ -258,7 +262,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 	private final IAdvancedRedstoneHandler redsHandler = new AdvRedstoneHandler();
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing){
+	public boolean hasCapability(Capability<?> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && facing != null){
 			return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this);
 		}
@@ -271,7 +275,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && facing != null){
 			return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this) ? (T) cogHandlers[facing.getIndex()] : null;
 		}
@@ -305,7 +309,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 		}
 
 		@Override
-		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, EnumFacing cogOrient, boolean renderOffset){
+		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, Direction cogOrient, boolean renderOffset){
 			axleHandlers[side].propogate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);
 		}
 
@@ -340,7 +344,7 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 			if(members[side] != null){
 				this.renderOffset = renderOffset;
 				axis = masterIn;
-				members[side].propogate(mats[side], side == 6 ? null : EnumFacing.byIndex(side), axleAxis, MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
+				members[side].propogate(mats[side], side == 6 ? null : Direction.byIndex(side), axleAxis, MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
 			}
 		}
 
@@ -367,8 +371,8 @@ public class MechanismTileEntity extends TileEntity implements ITickable, ILongR
 				motionData[side][3] = 0;
 				boundingBoxes[side] = null;
 			}else{
-				inertia[side] = members[side].getInertia(mats[side], side == 6 ? null : EnumFacing.byIndex(side), axleAxis);
-				boundingBoxes[side] = members[side].getBoundingBox(side == 6 ? null : EnumFacing.byIndex(side), axleAxis);
+				inertia[side] = members[side].getInertia(mats[side], side == 6 ? null : Direction.byIndex(side), axleAxis);
+				boundingBoxes[side] = members[side].getBoundingBox(side == 6 ? null : Direction.byIndex(side), axleAxis);
 			}
 
 			if(sendPacket && !world.isRemote){

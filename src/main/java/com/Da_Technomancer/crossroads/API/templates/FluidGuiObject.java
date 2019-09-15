@@ -1,14 +1,14 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -59,7 +59,7 @@ public class FluidGuiObject implements IGuiObject{
 
 
 	private static final int MAX_HEIGHT = 48;
-	private static final ResourceLocation OVERLAY = new ResourceLocation(Main.MODID, "textures/gui/rectangle_fluid_overlay.png");
+	private static final ResourceLocation OVERLAY = new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png");
 	private final MachineGUI gui;
 	private final int fieldIndex0;
 	private final int fieldIndex1;
@@ -98,8 +98,8 @@ public class FluidGuiObject implements IGuiObject{
 
 	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		Gui.drawRect(x + windowX, y + windowY - MAX_HEIGHT, x + windowX + 16, y + windowY, 0xFF959595);
+		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		AbstractGui.drawRect(x + windowX, y + windowY - MAX_HEIGHT, x + windowX + 16, y + windowY, 0xFF959595);
 		GlStateManager.color(1, 1, 1, 1);
 
 		FluidStack fluid = packetToFluid((short) gui.te.getField(fieldIndex0), (short) gui.te.getField(fieldIndex1));
@@ -107,11 +107,11 @@ public class FluidGuiObject implements IGuiObject{
 			return true;
 		}
 
-		TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(fluid.getFluid().getStill().toString());
+		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureMapBlocks().getTextureExtry(fluid.getFluid().getStill().toString());
 		if(sprite == null){
-			sprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+			sprite = Minecraft.getInstance().getTextureMapBlocks().getMissingSprite();
 		}
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
 		int col = fluid.getFluid().getColor(fluid);
 		int height = (int) (MAX_HEIGHT * (float) fluid.amount / (float) capacity);
@@ -123,8 +123,8 @@ public class FluidGuiObject implements IGuiObject{
 
 	@Override
 	public boolean drawFore(int mouseX, int mouseY, FontRenderer fontRenderer){
-		Minecraft.getMinecraft().getTextureManager().bindTexture(OVERLAY);
-		Gui.drawModalRectWithCustomSizedTexture(x, y - MAX_HEIGHT, 0, 0, 16, MAX_HEIGHT, 16, MAX_HEIGHT);
+		Minecraft.getInstance().getTextureManager().bindTexture(OVERLAY);
+		AbstractGui.drawModalRectWithCustomSizedTexture(x, y - MAX_HEIGHT, 0, 0, 16, MAX_HEIGHT, 16, MAX_HEIGHT);
 
 		if(mouseX >= x + windowX && mouseX <= x + windowX + 16 && mouseY >= y + windowY - MAX_HEIGHT && mouseY <= y + windowY){
 			FluidStack fluid = packetToFluid((short) gui.te.getField(fieldIndex0), (short) gui.te.getField(fieldIndex1));

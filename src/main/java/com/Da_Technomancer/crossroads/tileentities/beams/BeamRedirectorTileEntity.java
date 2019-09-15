@@ -2,24 +2,24 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 
 public class BeamRedirectorTileEntity extends BeamRenderTE{
 
 	private boolean redstone;
-	private EnumFacing dir = null;
+	private Direction dir = null;
 
-	private EnumFacing getDir(){
+	private Direction getDir(){
 		if(dir == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.beamRedirector){
-				return EnumFacing.NORTH;
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.beamRedirector){
+				return Direction.NORTH;
 			}
-			dir = state.getValue(EssentialsProperties.FACING);
+			dir = state.get(EssentialsProperties.FACING);
 		}
 		return dir;
 	}
@@ -38,21 +38,21 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("reds", redstone);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		redstone = nbt.getBoolean("reds");
 	}
 
 	@Override
 	protected void doEmit(BeamUnit out){
-		EnumFacing facing = getDir();
+		Direction facing = getDir();
 		if(beamer[facing.getIndex()].emit(redstone ? out : null, world)){
 			refreshBeam(facing.getIndex());
 		}
@@ -64,7 +64,7 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] inputSides(){
 		boolean[] input = new boolean[] {true, true, true, true, true, true};
-		EnumFacing facing = getDir();
+		Direction facing = getDir();
 		input[facing.getIndex()] = false;
 		input[facing.getOpposite().getIndex()] = false;
 		return input;
@@ -73,7 +73,7 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] output = new boolean[6];
-		EnumFacing facing = getDir();
+		Direction facing = getDir();
 		output[facing.getIndex()] = true;
 		output[facing.getOpposite().getIndex()] = true;
 		return output;

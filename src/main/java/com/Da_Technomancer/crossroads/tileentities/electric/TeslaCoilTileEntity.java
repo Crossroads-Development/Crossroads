@@ -4,17 +4,17 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,10 +25,10 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TeslaCoilTileEntity extends TileEntity implements ITickable, IIntReceiver{
+public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEntity, IIntReceiver{
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
@@ -60,7 +60,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable, IIntRe
 	}
 
 	@Override
-	public void receiveInt(byte identifier, int message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == 0){
 			redstone = (message & 1) == 1;
 			stored = message >>> 1;
@@ -69,12 +69,12 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable, IIntRe
 
 	private boolean hasJar(){
 		if(hasJar == null){
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.teslaCoil){
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.teslaCoil){
 				invalidate();
 				return false;
 			}
-			hasJar = world.getBlockState(pos).getValue(Properties.ACTIVE);
+			hasJar = world.getBlockState(pos).get(Properties.ACTIVE);
 		}
 		return hasJar;
 	}
@@ -93,7 +93,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable, IIntRe
 		}
 
 		if(!redstone && stored > 0){
-			EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
+			Direction facing = world.getBlockState(pos).get(Properties.HORIZ_FACING);
 			TileEntity te = world.getTileEntity(pos.offset(facing));
 			if(te != null && te.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())){
 				IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
@@ -113,7 +113,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable, IIntRe
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("stored", stored);
 		nbt.setBoolean("reds", redstone);
@@ -121,15 +121,15 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable, IIntRe
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		stored = nbt.getInteger("stored");
 		redstone = nbt.getBoolean("reds");
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		nbt.setInteger("stored", stored);
 		nbt.setBoolean("reds", redstone);
 		return nbt;
@@ -137,7 +137,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable, IIntRe
 
 	@Nonnull
 	public ItemStack removeJar(){
-		ItemStack out = new ItemStack(ModItems.leydenJar, 1);
+		ItemStack out = new ItemStack(CrossroadsItems.leydenJar, 1);
 		LeydenJar.setCharge(out, Math.min(stored, LeydenJar.MAX_CHARGE));
 		setStored(stored - Math.min(stored, LeydenJar.MAX_CHARGE));
 		hasJar = false;
@@ -148,7 +148,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable, IIntRe
 	protected final EnergyHandlerIn handlerIn = new EnergyHandlerIn();
 	private final EnergyHandlerOut handlerOut = new EnergyHandlerOut();
 
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY){
 			return true;
 		}
@@ -156,9 +156,9 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickable, IIntRe
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY){
-			return (T) (side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING) ? handlerOut : handlerIn);
+			return (T) (side == world.getBlockState(pos).get(Properties.HORIZ_FACING) ? handlerOut : handlerIn);
 		}
 		return super.getCapability(cap, side);
 	}

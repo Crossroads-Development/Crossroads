@@ -5,8 +5,9 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -77,13 +78,13 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		progress = nbt.getInteger("prog");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("prog", progress);
 		return nbt;
@@ -92,11 +93,11 @@ public class SmelterTileEntity extends InventoryTE{
 	private ItemHandler itemHandler = new ItemHandler(null);
 
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.HEAT_CAPABILITY && (side == EnumFacing.UP || side == null)){
+	public <T> T getCapability(Capability<T> cap, Direction side){
+		if(cap == Capabilities.HEAT_CAPABILITY && (side == Direction.UP || side == null)){
 			return (T) heatHandler;
 		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != EnumFacing.UP){
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != Direction.UP){
 			return (T) itemHandler;
 		}
 
@@ -137,7 +138,7 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return index == 1;
 	}
 }

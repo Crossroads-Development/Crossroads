@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -29,13 +29,13 @@ public class StabilizerElectricTileEntity extends AbstractStabilizerTileEntity{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("fe", fe);
 		return nbt;
 	}
 
-	@Override public void readFromNBT(NBTTagCompound nbt){
+	@Override public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		fe = nbt.getInteger("fe");
 	}
@@ -43,7 +43,7 @@ public class StabilizerElectricTileEntity extends AbstractStabilizerTileEntity{
 	@Nullable
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityEnergy.ENERGY){
 			return (T) feHandler;
 		}

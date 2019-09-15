@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 
 import net.minecraft.util.ResourceLocation;
@@ -8,12 +8,12 @@ import net.minecraftforge.common.capabilities.Capability;
 
 public enum PrototypePortTypes{
 	
-	HEAT(Capabilities.HEAT_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/heat"), true, true, true, true),
-	ROTARY(Capabilities.AXLE_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/rotary"), true, true, true, true),
-	MAGIC_IN(Capabilities.BEAM_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/magic_in"), true, false, true, false),
-	MAGIC_OUT(Capabilities.BEAM_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/magic_out"), false, true, false, true),
-	REDSTONE_IN(Capabilities.ADVANCED_REDSTONE_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/redstone_in"), true, false, false, true),
-	REDSTONE_OUT(Capabilities.ADVANCED_REDSTONE_CAPABILITY, new ResourceLocation(Main.MODID, "blocks/prototype/redstone_out"), false, true, true, false);
+	HEAT(Capabilities.HEAT_CAPABILITY, new ResourceLocation(Crossroads.MODID, "blocks/prototype/heat"), true, true, true, true),
+	ROTARY(Capabilities.AXLE_CAPABILITY, new ResourceLocation(Crossroads.MODID, "blocks/prototype/rotary"), true, true, true, true),
+	MAGIC_IN(Capabilities.BEAM_CAPABILITY, new ResourceLocation(Crossroads.MODID, "blocks/prototype/magic_in"), true, false, true, false),
+	MAGIC_OUT(Capabilities.BEAM_CAPABILITY, new ResourceLocation(Crossroads.MODID, "blocks/prototype/magic_out"), false, true, false, true),
+	REDSTONE_IN(Capabilities.ADVANCED_REDSTONE_CAPABILITY, new ResourceLocation(Crossroads.MODID, "blocks/prototype/redstone_in"), true, false, false, true),
+	REDSTONE_OUT(Capabilities.ADVANCED_REDSTONE_CAPABILITY, new ResourceLocation(Crossroads.MODID, "blocks/prototype/redstone_out"), false, true, true, false);
 
 	private final Capability<?> cap;
 	private final ResourceLocation text;

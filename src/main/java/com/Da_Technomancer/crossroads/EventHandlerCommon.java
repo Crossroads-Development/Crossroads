@@ -11,20 +11,20 @@ import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.passive.EntitySkeletonHorse;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
@@ -32,7 +32,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -68,8 +68,8 @@ public final class EventHandlerCommon{
 		}
 
 
-		if(e.getEntity() instanceof EntityCreeper && (float) AtmosChargeSavedData.getCharge(e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F && (ModConfig.getConfigInt(ModConfig.atmosEffect, false) & 2) == 2){
-			NBTTagCompound nbt = new NBTTagCompound();
+		if(e.getEntity() instanceof CreeperEntity && (float) AtmosChargeSavedData.getCharge(e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F && (CrossroadsConfig.atmosEffect.get() & 2) == 2){
+			CompoundNBT nbt = new CompoundNBT();
 			e.getEntityLiving().writeEntityToNBT(nbt);
 			nbt.setBoolean("powered", true);
 			e.getEntityLiving().readEntityFromNBT(nbt);
@@ -103,12 +103,12 @@ public final class EventHandlerCommon{
 			if(toLoad.isEmpty()){
 				loadingTicket = null;
 			}else{
-				WorldServer protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+				ServerWorld protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 				if(protWorld == null){
 					DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 					protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 				}
-				loadingTicket = ForgeChunkManager.requestTicket(Main.instance, protWorld, ForgeChunkManager.Type.NORMAL);
+				loadingTicket = ForgeChunkManager.requestTicket(Crossroads.instance, protWorld, ForgeChunkManager.Type.NORMAL);
 			}
 
 			for(ChunkPos chunk : toLoad){
@@ -133,7 +133,7 @@ public final class EventHandlerCommon{
 		//Prototype chunk loading
 		//Only should be called on the server side.
 		if(!e.world.isRemote && e.phase == Phase.START && e.world.provider.getDimension() == 0){
-			e.world.profiler.startSection(Main.MODNAME + "-Prototype Loading Control");
+			e.world.profiler.startSection(Crossroads.MODNAME + "-Prototype Loading Control");
 			if(e.world.getTotalWorldTime() % 20 == 0){
 				updateLoadedPrototypeChunks();
 			}
@@ -147,7 +147,7 @@ public final class EventHandlerCommon{
 
 		//Time Dilation
 		if(!e.world.isRemote && e.phase == Phase.START){
-			e.world.profiler.startSection(Main.MODNAME + ": Entity Time Dilation");
+			e.world.profiler.startSection(Crossroads.MODNAME + ": Entity Time Dilation");
 			ArrayList<TemporalAcceleratorTileEntity.Region> timeStoppers = new ArrayList<>();
 			for(TileEntity te : e.world.tickableTileEntities){
 				if(te instanceof TemporalAcceleratorTileEntity && ((TemporalAcceleratorTileEntity) te).stoppingTime()){
@@ -156,7 +156,7 @@ public final class EventHandlerCommon{
 			}
 
 			for(Entity ent : e.world.loadedEntityList){
-				NBTTagCompound entNBT = ent.getEntityData();
+				CompoundNBT entNBT = ent.getEntityData();
 				if(entNBT.getBoolean(MAIN_KEY)){
 					if(!entNBT.getBoolean(SUB_KEY)){
 						ent.updateBlocked = false;
@@ -173,8 +173,8 @@ public final class EventHandlerCommon{
 						}else{
 							ent.updateBlocked = true;
 						}
-						if(ent instanceof EntityPlayerMP){
-							ModPackets.network.sendTo(new SendPlayerTickCountToClient(0), (EntityPlayerMP) ent);
+						if(ent instanceof ServerPlayerEntity){
+							ModPackets.network.sendTo(new SendPlayerTickCountToClient(0), (ServerPlayerEntity) ent);
 						}
 						break;
 					}
@@ -185,16 +185,16 @@ public final class EventHandlerCommon{
 
 		//Temporal Entropy decay
 		if(!e.world.isRemote && e.phase == Phase.START){
-			EntropySavedData.addEntropy(e.world, -ModConfig.getConfigInt(ModConfig.entropyDecayRate, false));
+			EntropySavedData.addEntropy(e.world, -CrossroadsConfig.entropyDecayRate.get());
 		}
 
 
 		//Atmospheric overcharge effect
-		if(!e.world.isRemote && (ModConfig.getConfigInt(ModConfig.atmosEffect, false) & 1) == 1){
-			e.world.profiler.startSection(Main.MODNAME + ": Overcharge lightning effects");
+		if(!e.world.isRemote && (CrossroadsConfig.atmosEffect.get() & 1) == 1){
+			e.world.profiler.startSection(Crossroads.MODNAME + ": Overcharge lightning effects");
 			float chargeLevel = (float) AtmosChargeSavedData.getCharge(e.world) / (float) AtmosChargeSavedData.getCapacity();
 			if(chargeLevel > 0.5F){
-				Iterator<Chunk> iterator = e.world.getPersistentChunkIterable(((WorldServer) (e.world)).getPlayerChunkMap().getChunkIterator());
+				Iterator<Chunk> iterator = e.world.getPersistentChunkIterable(((ServerWorld) (e.world)).getPlayerChunkMap().getChunkIterator());
 				while(iterator.hasNext()){
 					Chunk chunk = iterator.next();
 					int j = chunk.x * 16;
@@ -211,9 +211,9 @@ public final class EventHandlerCommon{
 
 						//Lightning bolts are attracted by nearby entities
 						//Uses a slightly different formula from vanilla for reasons of efficiency
-						ArrayList<EntityLivingBase> ents = new ArrayList<>();
-						chunk.getEntitiesOfTypeWithinAABB(EntityLivingBase.class, new AxisAlignedBB(tarX - 3, tarY - 3, tarZ - 3, tarX + 3, e.world.getHeight() + 3, tarZ + 3), ents, new Predicate<EntityLivingBase>(){
-							public boolean apply(@Nullable EntityLivingBase ent){
+						ArrayList<LivingEntity> ents = new ArrayList<>();
+						chunk.getEntitiesOfTypeWithinAABB(LivingEntity.class, new AxisAlignedBB(tarX - 3, tarY - 3, tarZ - 3, tarX + 3, e.world.getHeight() + 3, tarZ + 3), ents, new Predicate<LivingEntity>(){
+							public boolean apply(@Nullable LivingEntity ent){
 								return ent != null && ent.isEntityAlive() && e.world.canSeeSky(ent.getPosition());
 							}
 						});
@@ -230,14 +230,14 @@ public final class EventHandlerCommon{
 
 
 						if(e.world.getGameRules().getBoolean("doMobSpawning") && e.world.rand.nextDouble() < e.world.getDifficultyForLocation(tarPos).getAdditionalDifficulty() * 0.01D){
-							EntitySkeletonHorse entityskeletonhorse = new EntitySkeletonHorse(e.world);
+							SkeletonHorseEntity entityskeletonhorse = new SkeletonHorseEntity(e.world);
 							entityskeletonhorse.setTrap(true);
 							entityskeletonhorse.setGrowingAge(0);
 							entityskeletonhorse.setPosition(tarX, tarY, tarZ);
 							e.world.spawnEntity(entityskeletonhorse);
-							e.world.addWeatherEffect(new EntityLightningBolt(e.world, tarX, tarY, tarZ, true));
+							e.world.addWeatherEffect(new LightningBoltEntity(e.world, tarX, tarY, tarZ, true));
 						}else{
-							e.world.addWeatherEffect(new EntityLightningBolt(e.world, tarX, tarY, tarZ, false));
+							e.world.addWeatherEffect(new LightningBoltEntity(e.world, tarX, tarY, tarZ, false));
 						}
 					}
 				}
@@ -248,12 +248,12 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	public void buildRetrogenList(ChunkDataEvent.Load e) {
-		if (!ModConfig.retrogen.getString().isEmpty()) {
-			NBTTagCompound tag = e.getData().getCompoundTag(Main.MODID);
-			e.getData().setTag(Main.MODID, tag);
+		if (!CrossroadsConfig.retrogen.getString().isEmpty()) {
+			CompoundNBT tag = e.getData().getCompoundTag(Crossroads.MODID);
+			e.getData().setTag(Crossroads.MODID, tag);
 
-			if (!tag.hasKey(ModConfig.retrogen.getString())) {
-				tag.setBoolean(ModConfig.retrogen.getString(), true);
+			if (!tag.hasKey(CrossroadsConfig.retrogen.getString())) {
+				tag.setBoolean(CrossroadsConfig.retrogen.getString(), true);
 				TO_RETROGEN.add(e.getChunk());
 			}
 		}
@@ -261,12 +261,12 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	public void craftGoggles(AnvilUpdateEvent e){
-		if(e.getLeft().getItem() == ModItems.moduleGoggles){
+		if(e.getLeft().getItem() == CrossroadsItems.moduleGoggles){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(lens.matchesRecipe(e.getRight()) && (!e.getLeft().hasTagCompound() || !e.getLeft().getTagCompound().hasKey(lens.name()))){
 					ItemStack out = e.getLeft().copy();
 					if(!out.hasTagCompound()){
-						out.setTagCompound(new NBTTagCompound());
+						out.setTagCompound(new CompoundNBT());
 					}
 					e.setCost((int) Math.pow(2, out.getTagCompound().getSize()));
 					out.getTagCompound().setBoolean(lens.name(), true);
@@ -282,26 +282,26 @@ public final class EventHandlerCommon{
 	public void syncPlayerTagToClient(EntityJoinWorldEvent e){
 		//The down-side of using this event is that every time the player switches dimension, the update data has to be resent.
 
-		if(e.getEntity() instanceof EntityPlayerMP){
-			StoreNBTToClient.syncNBTToClient((EntityPlayerMP) e.getEntity(), false);
+		if(e.getEntity() instanceof ServerPlayerEntity){
+			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) e.getEntity(), false);
 		}
 	}
 
 	@SubscribeEvent
 	public void damageTaken(LivingHurtEvent e){
 		if(e.getSource() == DamageSource.FALL){
-			EntityLivingBase ent = e.getEntityLiving();
+			LivingEntity ent = e.getEntityLiving();
 
-			ItemStack boots = ent.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-			if(boots.getItem() == ModItems.chickenBoots){
+			ItemStack boots = ent.getItemStackFromSlot(EquipmentSlotType.FEET);
+			if(boots.getItem() == CrossroadsItems.chickenBoots){
 				e.setCanceled(true);
 				ent.getEntityWorld().playSound(null, ent.posX, ent.posY, ent.posZ, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 				return;
 			}
 
-			if(ent instanceof EntityPlayer){
-				EntityPlayer player = (EntityPlayer) ent;
-				if(player.inventory.clearMatchingItems(ModItems.nitroglycerin, -1, -1, null) > 0){
+			if(ent instanceof PlayerEntity){
+				PlayerEntity player = (PlayerEntity) ent;
+				if(player.inventory.clearMatchingItems(CrossroadsItems.nitroglycerin, -1, -1, null) > 0){
 					player.world.createExplosion(null, player.posX, player.posY, player.posZ, 5F, true);
 				}
 			}
@@ -327,15 +327,15 @@ public final class EventHandlerCommon{
 			}
 			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with the forge method, so the above for loop is used instead.
 		}catch(Exception e){
-			Main.logger.catching(e);
+			Crossroads.logger.catching(e);
 		}
 		explosionPower = holderPower;
 		explosionSmoking = holderSmoking;
 		if(explosionPower == null){
-			Main.logger.error("Reflection to get explosionPower failed. Disabling relevant feature(s).");
+			Crossroads.logger.error("Reflection to get explosionPower failed. Disabling relevant feature(s).");
 		}
 		if(explosionSmoking == null){
-			Main.logger.error("Reflection to get explosionSmoking failed. Disabling relevant feature(s).");
+			Crossroads.logger.error("Reflection to get explosionSmoking failed. Disabling relevant feature(s).");
 		}
 	}
 
@@ -358,12 +358,12 @@ public final class EventHandlerCommon{
 		if(perpetuate && explosionPower != null && explosionSmoking != null){
 			EntityGhostMarker marker = new EntityGhostMarker(e.getWorld(), EntityGhostMarker.EnumMarkerType.DELAYED_EXPLOSION, 5);
 			marker.setPosition(e.getExplosion().getPosition().x, e.getExplosion().getPosition().y, e.getExplosion().getPosition().z);
-			NBTTagCompound data = new NBTTagCompound();
+			CompoundNBT data = new CompoundNBT();
 			try{
 				data.setFloat("power", explosionPower.getFloat(e.getExplosion()));
 				data.setBoolean("smoking", explosionSmoking.getBoolean(e.getExplosion()));
 			}catch(IllegalAccessException ex){
-				Main.logger.error("Failed to perpetuate explosion. Dim: " + e.getWorld().provider.getDimension() + "; Pos: " + e.getExplosion().getPosition());
+				Crossroads.logger.error("Failed to perpetuate explosion. Dim: " + e.getWorld().provider.getDimension() + "; Pos: " + e.getExplosion().getPosition());
 			}
 			marker.data = data;
 			e.getWorld().spawnEntity(marker);

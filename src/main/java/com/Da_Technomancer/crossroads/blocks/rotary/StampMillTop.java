@@ -1,23 +1,22 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.EnumPushReaction;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -36,64 +35,64 @@ public class StampMillTop extends Block{
 		setRegistryName(name);
 		setHardness(1);
 		setSoundType(SoundType.METAL);
-		ModBlocks.toRegister.add(this);
+		CrossroadsBlocks.toRegister.add(this);
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycleProperty(Properties.HORIZ_AXIS));
-				IBlockState lowerState = worldIn.getBlockState(pos.down());
-				if(lowerState.getBlock() == ModBlocks.stampMill){
-					worldIn.setBlockState(pos, state.withProperty(Properties.HORIZ_AXIS, worldIn.getBlockState(pos).getValue(Properties.HORIZ_AXIS)));
+				worldIn.setBlockState(pos, state.cycle(Properties.HORIZ_AXIS));
+				BlockState lowerState = worldIn.getBlockState(pos.down());
+				if(lowerState.getBlock() == CrossroadsBlocks.stampMill){
+					worldIn.setBlockState(pos, state.with(Properties.HORIZ_AXIS, worldIn.getBlockState(pos).get(Properties.HORIZ_AXIS)));
 				}
 			}
 			return true;
 		}
 
-		if(!worldIn.isRemote && worldIn.getBlockState(pos.down()).getBlock() == ModBlocks.stampMill){
-			playerIn.openGui(Main.instance, GuiHandler.STAMP_MILL_GUI, worldIn, pos.getX(), pos.getY() - 1, pos.getZ());
+		if(!worldIn.isRemote && worldIn.getBlockState(pos.down()).getBlock() == CrossroadsBlocks.stampMill){
+			playerIn.openGui(Crossroads.instance, GuiHandler.STAMP_MILL_GUI, worldIn, pos.getX(), pos.getY() - 1, pos.getZ());
 		}
 		return true;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player){
-		return new ItemStack(ModBlocks.stampMill, 1);
+	@OnlyIn(Dist.CLIENT)
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, World world, BlockPos pos, PlayerEntity player){
+		return new ItemStack(CrossroadsBlocks.stampMill, 1);
 	}
 
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune){
+	public Item getItemDropped(BlockState state, Random rand, int fortune){
 		return null;
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
 		return BlockFaceShape.UNDEFINED;
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		if(!(worldIn.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof StampMill)){
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+		if(!(worldIn.getBlockState(pos.offset(Direction.DOWN)).getBlock() instanceof StampMill)){
 			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 		}
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state){
+	public boolean isFullCube(BlockState state){
 		return false;
 	}
 	
 	@Override
-	public EnumPushReaction getPushReaction(IBlockState state){
-		return EnumPushReaction.BLOCK;
+	public PushReaction getPushReaction(BlockState state){
+		return PushReaction.BLOCK;
 	}
 
 	@Override
@@ -102,12 +101,12 @@ public class StampMillTop extends Block{
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.HORIZ_AXIS, meta == 0 ? EnumFacing.Axis.X : EnumFacing.Axis.Z);
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(Properties.HORIZ_AXIS, meta == 0 ? Direction.Axis.X : Direction.Axis.Z);
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.HORIZ_AXIS) == EnumFacing.Axis.X ? 0 : 1;
+	public int getMetaFromState(BlockState state){
+		return state.get(Properties.HORIZ_AXIS) == Direction.Axis.X ? 0 : 1;
 	}
 }

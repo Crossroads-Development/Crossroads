@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.fluids;
 
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -21,11 +21,11 @@ public class BlockSteam extends BlockFluidClassic{
 		STEAM.setBlock(this);
 		setTranslationKey("steam");
 		setRegistryName("steam");
-		ModBlocks.toRegister.add(this);
+		CrossroadsBlocks.toRegister.add(this);
 	}
 
 	@Override
-	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos){
+	public int getLightOpacity(BlockState state, IBlockAccess world, BlockPos pos){
 		return 2;
 	}
 
@@ -39,7 +39,7 @@ public class BlockSteam extends BlockFluidClassic{
 	private static class FluidSteam extends Fluid{
 
 		private FluidSteam(){
-			super("steam", new ResourceLocation(Main.MODID + ":blocks/steam_still"), new ResourceLocation(Main.MODID + ":blocks/steam_flow"));
+			super("steam", new ResourceLocation(Crossroads.MODID + ":blocks/steam_still"), new ResourceLocation(Crossroads.MODID + ":blocks/steam_flow"));
 
 			setDensity(-5);
 			setTemperature(473); // 200C

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -16,6 +16,6 @@ public interface IEffect{
 	 *
 	 * This should only ever be called on the server side.
 	 */
-	public void doEffect(World worldIn, BlockPos pos, int mult, @Nullable EnumFacing dir);
+	public void doEffect(World worldIn, BlockPos pos, int mult, @Nullable Direction dir);
 
 }

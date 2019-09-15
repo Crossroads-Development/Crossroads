@@ -2,11 +2,11 @@ package com.Da_Technomancer.crossroads.API.rotary;
 
 import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMasterKeyToClient;
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -27,7 +27,7 @@ public class RotaryUtil{
 	 * or there is a different infinite loop that should have been prevented at an earlier point. The disableSlaves config can be used to rescue a world in either of these cases.
 	 */
 	public static boolean contains(ISlaveAxisHandler axis, ISlaveAxisHandler toAdd){
-		if(ModConfig.disableSlaves.getBoolean() || toAdd == axis){
+		if(CrossroadsConfig.disableSlaves.getBoolean() || toAdd == axis){
 			return true;
 		}
 		if(toAdd.getContainedAxes().isEmpty()){
@@ -41,7 +41,7 @@ public class RotaryUtil{
 		return false;
 	}
 
-	public static double getDirSign(EnumFacing oldGearFacing, EnumFacing newGearFacing){
+	public static double getDirSign(Direction oldGearFacing, Direction newGearFacing){
 		return -oldGearFacing.getAxisDirection().getOffset() * newGearFacing.getAxisDirection().getOffset();
 	}
 
@@ -73,7 +73,7 @@ public class RotaryUtil{
 			sumIW += axle.getMoInertia() * Math.abs(axle.getMotionData()[0]);
 		}
 
-		sumEnergy = Math.signum(sumEnergy) * Math.max(0, Math.abs(sumEnergy) - ModConfig.getConfigDouble(ModConfig.rotaryLoss, false) * Math.pow(sumIW / sumInertia, 2));
+		sumEnergy = Math.signum(sumEnergy) * Math.max(0, Math.abs(sumEnergy) - CrossroadsConfig.rotaryLoss.get() * Math.pow(sumIW / sumInertia, 2));
 		return sumEnergy;
 	}
 
@@ -85,9 +85,9 @@ public class RotaryUtil{
 	 * @param toDir The direction from pos that the end point of the connection is located.
 	 * @return Whether a connection is allowed. Does not verify that the start/endpoints are valid.
 	 */
-	public static boolean canConnectThrough(World world, BlockPos pos, EnumFacing fromDir, EnumFacing toDir){
-		IBlockState state = world.getBlockState(pos);
-		return !state.getBlock().isNormalCube(state, world, pos) && state.getBlock() != ModBlocks.largeGearSlave && state.getBlock() != ModBlocks.largeGearMaster;
+	public static boolean canConnectThrough(World world, BlockPos pos, Direction fromDir, Direction toDir){
+		BlockState state = world.getBlockState(pos);
+		return !state.getBlock().isNormalCube(state, world, pos) && state.getBlock() != CrossroadsBlocks.largeGearSlave && state.getBlock() != CrossroadsBlocks.largeGearMaster;
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class RotaryUtil{
 	 * @param side The side the gear will be placed against
 	 * @return Whether it should be solid to small gears
 	 */
-	public static boolean solidToGears(World world, BlockPos pos, EnumFacing side){
+	public static boolean solidToGears(World world, BlockPos pos, Direction side){
 		BlockFaceShape shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
 		return world.isSideSolid(pos, side, false) || shape == BlockFaceShape.SOLID || shape == BlockFaceShape.CENTER || shape == BlockFaceShape.CENTER_BIG || shape == BlockFaceShape.CENTER_SMALL;
 	}

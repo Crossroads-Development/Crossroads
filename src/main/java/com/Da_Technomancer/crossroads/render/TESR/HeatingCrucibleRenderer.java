@@ -10,25 +10,25 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import java.awt.*;
 
-public class HeatingCrucibleRenderer extends TileEntitySpecialRenderer<HeatingCrucibleTileEntity>{
+public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleTileEntity>{
 
 	@Override
 	public void render(HeatingCrucibleTileEntity te, double x, double y, double z, float partialTicks, int destroheightage, float alpha){
 		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false) || te.getActiveTexture().isEmpty()){
 			return;
 		}
-		int fullness = te.getWorld().getBlockState(te.getPos()).getValue(Properties.FULLNESS);
+		int fullness = te.getWorld().getBlockState(te.getPos()).get(Properties.FULLNESS);
 		if(fullness == 0){
 			return;
 		}
 
-		TextureAtlasSprite text = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(te.getActiveTexture());
+		TextureAtlasSprite text = Minecraft.getInstance().getTextureMapBlocks().getTextureExtry(te.getActiveTexture());
 		if(text == null){
 			return;
 		}
@@ -39,7 +39,7 @@ public class HeatingCrucibleRenderer extends TileEntitySpecialRenderer<HeatingCr
 		Color col = te.getCol();
 		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, 1);
 		GlStateManager.translate(x, y, z);
-		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		Minecraft.getInstance().renderEngine.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 		
 		float xzStart = 2F / 16F;

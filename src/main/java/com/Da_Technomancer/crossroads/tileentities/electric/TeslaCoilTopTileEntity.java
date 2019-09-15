@@ -4,15 +4,15 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -33,7 +33,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 
 	private TeslaCoilTop.TeslaCoilVariants getVariant(){
 		if(variant == null){
-			IBlockState state = world.getBlockState(pos);
+			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() instanceof TeslaCoilTop){
 				variant = ((TeslaCoilTop) state.getBlock()).variant;
 			}else{
@@ -45,7 +45,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == LINK_PACKET_ID){
 			linked.add(BlockPos.fromLong(message));
 		}else if(identifier == CLEAR_PACKET_ID){
@@ -64,15 +64,15 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 			}
 
 			//ATTACK
-			List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
+			List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntityPredicates.IS_ALIVE);
 
 			if(!ents.isEmpty() && coilTE.getStored() >= joltQty){
-				EntityLivingBase ent = ents.get(world.rand.nextInt(ents.size()));
+				LivingEntity ent = ents.get(world.rand.nextInt(ents.size()));
 				coilTE.setStored(coilTE.getStored() - joltQty);
 				markDirty();
 
 				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, ATTACK_COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
-				ent.onStruckByLightning(new EntityLightningBolt(world, ent.posX, ent.posY, ent.posZ, true));
+				ent.onStruckByLightning(new LightningBoltEntity(world, ent.posX, ent.posY, ent.posZ, true));
 			}
 		}else if(variant == TeslaCoilTop.TeslaCoilVariants.DECORATIVE){
 			if(coilTE.getStored() >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt){
@@ -114,15 +114,15 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
 		for(BlockPos link : linked){
 			chat.add("Linked Position: X=" + (pos.getX() + link.getX()) + " Y=" + (pos.getY() + link.getY()) + " Z=" + (pos.getZ() + link.getZ()));
 		}
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		for(int i = 0; i < linked.size(); i++){
 			nbt.setLong("link" + i, linked.get(i).toLong());
 		}
@@ -130,7 +130,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		for(int i = 0; i < 3; i++){
 			if(nbt.hasKey("link" + i)){
@@ -140,7 +140,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		for(int i = 0; i < linked.size(); i++){
 			nbt.setLong("link" + i, linked.get(i).toLong());

@@ -9,11 +9,12 @@ import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
@@ -24,7 +25,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	private double lastSumEnergy;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Element: " + (currentElement == null ? "NONE" : currentElement.getLocalName(time < 0) + ", Time: " + time));
 	}
 
@@ -58,9 +59,9 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 		}else{
 			sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
 			if(currentElement == EnumBeamAlignments.ENERGY){
-				sumEnergy += ModConfig.getConfigDouble(ModConfig.crystalAxisMult, false) * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
+				sumEnergy += ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.crystalAxisMult).get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
 			}else if(currentElement == EnumBeamAlignments.CHARGE){
-				sumEnergy += ModConfig.getConfigDouble(ModConfig.crystalAxisMult, false);
+				sumEnergy += ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.crystalAxisMult).get();
 			}else if(currentElement == EnumBeamAlignments.EQUALIBRIUM){
 				sumEnergy = (sumEnergy + 3D * lastSumEnergy) / 4D;
 			}
@@ -88,7 +89,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("time", time);
 		if(currentElement != null){
@@ -98,7 +99,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		time = nbt.getInteger("time");
 		currentElement = nbt.hasKey("elem") ? EnumBeamAlignments.valueOf(nbt.getString("elem")) : null;
@@ -118,7 +119,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	private final RedstoneHandler redsHandler = new RedstoneHandler();
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && side != getFacing()){
 			return true;
 		}
@@ -134,7 +135,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && side != getFacing()){
 			return (T) magicHandler;
 		}

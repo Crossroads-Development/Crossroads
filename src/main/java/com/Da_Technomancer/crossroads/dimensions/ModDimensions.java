@@ -5,15 +5,15 @@ import com.Da_Technomancer.crossroads.API.packets.ModPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDimLoadToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.ModConfig;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.DimensionType;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
@@ -31,10 +31,10 @@ public class ModDimensions{
 	public static final int PROTOTYPE_LIMIT = 500;
 
 	public static void init(){
-		workspaceDimType = DimensionType.register(Main.MODID, "_workspace", 567, WorkspaceWorldProvider.class, false);
-		prototypeDimType = DimensionType.register(Main.MODID, "_prototype", 568, PrototypeWorldProvider.class, false);
+		workspaceDimType = DimensionType.register(Crossroads.MODID, "_workspace", 567, WorkspaceWorldProvider.class, false);
+		prototypeDimType = DimensionType.register(Crossroads.MODID, "_prototype", 568, PrototypeWorldProvider.class, false);
 		DimensionManager.registerDimension(PROTOTYPE_DIM_ID, prototypeDimType);
-		ForgeChunkManager.setForcedChunkLoadingCallback(Main.instance, new LoadingCallback(){
+		ForgeChunkManager.setForcedChunkLoadingCallback(Crossroads.instance, new LoadingCallback(){
 
 			@Override
 			public void ticketsLoaded(List<Ticket> tickets, World world){
@@ -57,14 +57,14 @@ public class ModDimensions{
 			}
 			ModPackets.network.sendToAll(new SendDimLoadToClient(playerDim.values().toArray(new Integer[0])));
 		}catch(Exception ex){
-			if(ModConfig.wipeInvalidMappings.getBoolean()){
+			if(CrossroadsConfig.wipeInvalidMappings.getBoolean()){
 				if(playerDim != null){
 					playerDim.clear();
 					data.markDirty();
 				}
-				Main.logger.fatal("Something went wrong while loading the player dimension mappings. Attempting to wipe the mappings. Shutting down. It should work if you restart now.", ex);
+				Crossroads.logger.fatal("Something went wrong while loading the player dimension mappings. Attempting to wipe the mappings. Shutting down. It should work if you restart now.", ex);
 			}else{
-				Main.logger.fatal("Something went wrong while loading the player dimension mappings. Shutting down. If you would like to wipe the mappings completely, there is a config option.", ex);
+				Crossroads.logger.fatal("Something went wrong while loading the player dimension mappings. Shutting down. If you would like to wipe the mappings completely, there is a config option.", ex);
 			}
 			throw ex;
 		}
@@ -72,7 +72,7 @@ public class ModDimensions{
 
 	/** This does not initialize the dimension. If needed, run
 	 * {@link DimensionManager#initDimension(int)} on the dimension if {@link DimensionManager#getWorld(int)} returns null for that dimension. */
-	public static int getDimForPlayer(EntityPlayerMP play){
+	public static int getDimForPlayer(ServerPlayerEntity play){
 		return getDimForPlayer(new FlexibleGameProfile(play.getGameProfile()));
 	}
 
@@ -126,7 +126,7 @@ public class ModDimensions{
 			int z = (used / 50) - 99;
 
 			//TODO This part will redundantly block already blocked chunks. This is a possible optimization point if it ends up mattering.
-			WorldServer worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
+			ServerWorld worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
 
 			blockChunk(new ChunkPos(x - 1, z - 1), worldDim);
 			blockChunk(new ChunkPos(x - 1, z), worldDim);
@@ -141,7 +141,7 @@ public class ModDimensions{
 		}
 	}
 
-	private static void blockChunk(ChunkPos pos, WorldServer dimWorld){
+	private static void blockChunk(ChunkPos pos, ServerWorld dimWorld){
 		for(int x = pos.getXStart(); x <= pos.getXEnd(); x++){
 			for(int z = pos.getZStart(); z <= pos.getZEnd(); z++){
 				for(int y = 0; y < 256; y++){

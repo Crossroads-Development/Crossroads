@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.integration.GuideAPI;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 
 import amerifrance.guideapi.api.impl.Book;
 import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
@@ -30,13 +30,13 @@ public class PageDetailedRecipe extends PageIRecipe{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
 		super.draw(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
 		int iconX = 94 + (guiLeft + guiBase.xSize / 7);
         int iconY = 57 + (guiTop + guiBase.xSize / 5) + 1;
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(Main.MODID, "textures/gui/container/detailed_crafter.png"));
+		Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation(Crossroads.MODID, "textures/gui/container/detailed_crafter.png"));
 		if(type == 0){
 			guiBase.drawTexturedModalRect(iconX, iconY, 176, 0, 16, 16);
 		}else if(type == 1){

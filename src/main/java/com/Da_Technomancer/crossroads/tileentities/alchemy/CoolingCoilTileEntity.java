@@ -5,9 +5,12 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -16,7 +19,7 @@ import net.minecraftforge.common.capabilities.Capability;
 public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
@@ -51,14 +54,14 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		ambientTemp = nbt.getDouble("temp");
 		init = nbt.getBoolean("initHeat");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setDouble("temp", ambientTemp);
 		nbt.setBoolean("initHeat", init);
@@ -66,8 +69,8 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getAxis())){
+	public boolean hasCapability(Capability<?> cap, Direction side){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(Properties.HORIZ_FACING).getAxis())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -75,8 +78,8 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getAxis())){
+	public <T> T getCapability(Capability<T> cap, Direction side){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(Properties.HORIZ_FACING).getAxis())){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);
@@ -85,7 +88,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		EnumFacing outSide = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
+		Direction outSide = world.getBlockState(pos).get(Properties.HORIZ_FACING);
 		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
 		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
 		return output;

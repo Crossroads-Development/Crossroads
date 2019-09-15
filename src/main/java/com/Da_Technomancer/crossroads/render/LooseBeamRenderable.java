@@ -4,9 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
+import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
@@ -37,7 +37,7 @@ public class LooseBeamRenderable implements IVisualEffect{
 		this.color = color;
 	}
 	
-	public static LooseBeamRenderable readFromNBT(NBTTagCompound nbt){
+	public static LooseBeamRenderable readFromNBT(CompoundNBT nbt){
 		return new LooseBeamRenderable(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getDouble("length"), nbt.getFloat("angle_x"), nbt.getFloat("angle_y"), nbt.getByte("width"), nbt.getInteger("color"));
 	}
 
@@ -50,7 +50,7 @@ public class LooseBeamRenderable implements IVisualEffect{
 		GlStateManager.rotate(angleX + 90F, 1, 0, 0);
 
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
+		Minecraft.getInstance().getTextureManager().bindTexture(BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM);
 
 		final double small = -(width / 16D);
 		final double big = (width / 16D);

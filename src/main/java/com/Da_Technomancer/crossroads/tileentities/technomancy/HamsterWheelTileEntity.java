@@ -4,17 +4,17 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 
-public class HamsterWheelTileEntity extends TileEntity implements ITickable{
+public class HamsterWheelTileEntity extends TileEntity implements ITickableTileEntity{
 
 	public float angle = 0;
 	public float nextAngle = 0;
 
 	@Override
 	public void update(){
-		EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
+		Direction facing = world.getBlockState(pos).get(Properties.HORIZ_FACING);
 		TileEntity te = world.getTileEntity(pos.offset(facing));
 		if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite())){
 			IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite());

@@ -1,17 +1,17 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -20,12 +20,12 @@ public class LensFrameRenderer extends BeamRenderer{
 	private static final ResourceLocation[] textures = new ResourceLocation[6];
 
 	static{
-		textures[0] = new ResourceLocation(Main.MODID, "textures/items/gem_ruby.png");
+		textures[0] = new ResourceLocation(Crossroads.MODID, "textures/items/gem_ruby.png");
 		textures[1] = new ResourceLocation("textures/items/emerald.png");
 		textures[2] = new ResourceLocation("textures/items/diamond.png");
-		textures[3] = new ResourceLocation(Main.MODID, "textures/items/pure_quartz.png");
-		textures[4] = new ResourceLocation(Main.MODID, "textures/items/glow_quartz.png");
-		textures[5] = new ResourceLocation(Main.MODID, "textures/items/void_crystal.png");
+		textures[3] = new ResourceLocation(Crossroads.MODID, "textures/items/pure_quartz.png");
+		textures[4] = new ResourceLocation(Crossroads.MODID, "textures/items/glow_quartz.png");
+		textures[5] = new ResourceLocation(Crossroads.MODID, "textures/items/void_crystal.png");
 	}
 
 	@Override
@@ -33,22 +33,22 @@ public class LensFrameRenderer extends BeamRenderer{
 		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false)){
 			return;
 		}
-		IBlockState state = beam.getWorld().getBlockState(beam.getPos());
+		BlockState state = beam.getWorld().getBlockState(beam.getPos());
 		super.render(beam, x, y, z, partialTicks, destroyStage, alpha);
 		int content = ((LensFrameTileEntity) beam).getContents();
-		if(content != 0 && state.getBlock() == ModBlocks.lensFrame){
-			EnumFacing.Axis axis = state.getValue(EssentialsProperties.AXIS);
+		if(content != 0 && state.getBlock() == CrossroadsBlocks.lensFrame){
+			Direction.Axis axis = state.get(EssentialsProperties.AXIS);
 			GlStateManager.pushMatrix();
 			GlStateManager.disableLighting();
 			GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
-			if(axis == EnumFacing.Axis.X){
+			if(axis == Direction.Axis.X){
 				GlStateManager.rotate(90, 0, 1, 0);
 			}
-			if(axis != EnumFacing.Axis.Y){
+			if(axis != Direction.Axis.Y){
 				GlStateManager.rotate(90, 1, 0, 0);
 			}
 
-			Minecraft.getMinecraft().getTextureManager().bindTexture(textures[content - 1]);
+			Minecraft.getInstance().getTextureManager().bindTexture(textures[content - 1]);
 
 			BufferBuilder buf = Tessellator.getInstance().getBuffer();
 			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

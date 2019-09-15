@@ -3,23 +3,25 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.ComponentCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.common.collect.Lists;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -31,14 +33,14 @@ import java.util.function.Predicate;
 
 public class DetailedCrafterContainer extends Container{
 
-	private InventoryCrafting inInv = new InventoryCrafting(this, 3, 3);
-	private InventoryCraftResult outInv = new InventoryCraftResult();
-	private InventoryPlayer playerInv;
+	private CraftingInventory inInv = new CraftingInventory(this, 3, 3);
+	private CraftResultInventory outInv = new CraftResultInventory();
+	private PlayerInventory playerInv;
 	private final World world;
 	private final BlockPos pos;
 	private final boolean fake;
 
-	public DetailedCrafterContainer(InventoryPlayer playerInv, BlockPos pos, boolean fake){
+	public DetailedCrafterContainer(PlayerInventory playerInv, BlockPos pos, boolean fake){
 		this.world = playerInv.player.world;
 		this.pos = pos;
 		this.playerInv = playerInv;
@@ -68,18 +70,18 @@ public class DetailedCrafterContainer extends Container{
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer playerIn){
-		return fake || world.getBlockState(pos).getBlock() == ModBlocks.detailedCrafter && playerIn.getDistanceSq((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
+	public boolean canInteractWith(PlayerEntity playerIn){
+		return fake || world.getBlockState(pos).getBlock() == CrossroadsBlocks.detailedCrafter && playerIn.getDistanceSq((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
 	}
 
 	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn){
 		ItemStack out;
-		NBTTagCompound nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscUtil.getPlayerTag(playerInv.player);
+		CompoundNBT nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscUtil.getPlayerTag(playerInv.player);
 		if(!world.isRemote && !nbt.hasKey("path")){
-			nbt.setTag("path", new NBTTagCompound());
+			nbt.setTag("path", new CompoundNBT());
 		}
-		
+
 		if(nbt.getCompoundTag("path").getBoolean("technomancy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.technomancyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
@@ -87,10 +89,10 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(passesTechnomancyCriteria(nbt.getCompoundTag("elements"), inInv) && ModConfig.getConfigBool(ModConfig.technomancy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("alchemy"))){
+		}else if(passesTechnomancyCriteria(nbt.getCompoundTag("elements"), inInv) && CrossroadsConfig.technomancy.get() && (nbt.getBoolean("multiplayer") ? CrossroadsConfig.allowAllServer.get() || !nbt.getCompoundTag("path").getBoolean("alchemy") : CrossroadsConfig.allowAllSingle.get() || !nbt.getCompoundTag("path").getBoolean("alchemy"))){
 			nbt.getCompoundTag("path").setBoolean("technomancy", true);
 			if(!world.isRemote){
-				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
+				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerInv.player, false);
 			}else{
 				playUnlockSound();
 			}
@@ -99,7 +101,7 @@ public class DetailedCrafterContainer extends Container{
 				inInv.decrStackSize(i, 1);
 			}
 		}
-		
+
 		if(nbt.getCompoundTag("path").getBoolean("alchemy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.alchemyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
@@ -107,10 +109,10 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(passesAlchemyCriteria(nbt.getCompoundTag("elements"), inInv) && ModConfig.getConfigBool(ModConfig.alchemy, world.isRemote) && (nbt.getBoolean("multiplayer") ? ModConfig.getConfigBool(ModConfig.allowAllServer, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("technomancy") : ModConfig.getConfigBool(ModConfig.allowAllSingle, world.isRemote) || !nbt.getCompoundTag("path").getBoolean("technomancy"))){
+		}else if(passesAlchemyCriteria(nbt.getCompoundTag("elements"), inInv) && CrossroadsConfig.alchemy.get() && (nbt.getBoolean("multiplayer") ? CrossroadsConfig.allowAllServer.get() || !nbt.getCompoundTag("path").getBoolean("technomancy") : CrossroadsConfig.allowAllSingle.get() || !nbt.getCompoundTag("path").getBoolean("technomancy"))){
 			nbt.getCompoundTag("path").setBoolean("alchemy", true);
 			if(!world.isRemote){
-				StoreNBTToClient.syncNBTToClient((EntityPlayerMP) playerInv.player, false);
+				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerInv.player, false);
 			}else{
 				playUnlockSound();
 			}
@@ -132,7 +134,7 @@ public class DetailedCrafterContainer extends Container{
 	private static final Predicate<ItemStack> technomancyKey = new ComponentCraftingStack("gear");
 	private static final Predicate<ItemStack> alchemyKey = new ItemRecipePredicate(Items.GLASS_BOTTLE, 0);
 
-	private static boolean passesTechnomancyCriteria(NBTTagCompound elementTag, InventoryCrafting craftingInv){
+	private static boolean passesTechnomancyCriteria(CompoundNBT elementTag, CraftingInventory craftingInv){
 		//In order to unlock technomancy, the player needs to have discovered time
 		if(elementTag.hasKey(EnumBeamAlignments.TIME.name())){
 			for(int i = 0; i < 3; i++){
@@ -148,7 +150,7 @@ public class DetailedCrafterContainer extends Container{
 		return false;
 	}
 
-	private static boolean passesAlchemyCriteria(NBTTagCompound elementTag, InventoryCrafting craftingInv){
+	private static boolean passesAlchemyCriteria(CompoundNBT elementTag, CraftingInventory craftingInv){
 		//In order to unlock alchemy, the player needs to have discovered all elements other than void and time. (Discovering void and/or time doesn't hurt)
 		for(EnumBeamAlignments element : EnumBeamAlignments.values()){
 			if(element != EnumBeamAlignments.TIME && element != EnumBeamAlignments.VOID && element != EnumBeamAlignments.NO_MATCH && !elementTag.getBoolean(element.name())){
@@ -167,7 +169,7 @@ public class DetailedCrafterContainer extends Container{
 	}
 	
 	@Nullable
-	private static IRecipe findMatchingSpecialRecipe(InventoryCrafting craftInv, World world, ArrayList<IRecipe> recipes){
+	private static IRecipe findMatchingSpecialRecipe(CraftingInventory craftInv, World world, ArrayList<IRecipe> recipes){
 		for(IRecipe recipe : recipes){
 			if(recipe.matches(craftInv, world)){
 				return recipe;
@@ -177,7 +179,7 @@ public class DetailedCrafterContainer extends Container{
 	}
 
 	@Override
-	public void onContainerClosed(EntityPlayer playerIn){
+	public void onContainerClosed(PlayerEntity playerIn){
 		super.onContainerClosed(playerIn);
 
 
@@ -188,7 +190,7 @@ public class DetailedCrafterContainer extends Container{
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index){
+	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index){
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = inventorySlots.get(index);
 
@@ -243,13 +245,13 @@ public class DetailedCrafterContainer extends Container{
 
 	private static class SlotCraftingFlexible extends Slot{
 		/** The craft matrix inventory linked to this result slot. */
-		private final InventoryCrafting craftMatrix;
+		private final CraftingInventory craftMatrix;
 		/** The player that is using the GUI where this slot resides. */
-		private final EntityPlayer player;
+		private final PlayerEntity player;
 		/** The number of items that have been crafted so far. Gets passed to ItemStack.onCrafting before being reset. */
 		private int amountCrafted;
 
-		public SlotCraftingFlexible(EntityPlayer player, InventoryCrafting craftingInventory, IInventory inventoryIn, int slotIndex, int xPosition, int yPosition)
+		public SlotCraftingFlexible(PlayerEntity player, CraftingInventory craftingInventory, IInventory inventoryIn, int slotIndex, int xPosition, int yPosition)
 		{
 			super(inventoryIn, slotIndex, xPosition, yPosition);
 			this.player = player;
@@ -296,7 +298,7 @@ public class DetailedCrafterContainer extends Container{
 
 			amountCrafted = 0;
 
-			InventoryCraftResult inventorycraftresult = (InventoryCraftResult)this.inventory;
+			CraftResultInventory inventorycraftresult = (CraftResultInventory)this.inventory;
 			IRecipe irecipe = inventorycraftresult.getRecipeUsed();
 
 			if (irecipe != null && !irecipe.isDynamic()){
@@ -306,12 +308,12 @@ public class DetailedCrafterContainer extends Container{
 		}
 
 		@Override
-		public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack){
+		public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack){
 			onCrafting(stack);
 			if(!player.world.isRemote && !MiscUtil.getPlayerTag(player).hasKey("path")){
-				MiscUtil.getPlayerTag(player).setTag("path", new NBTTagCompound());
+				MiscUtil.getPlayerTag(player).setTag("path", new CompoundNBT());
 			}
-			NBTTagCompound nbt = player.world.isRemote ? StoreNBTToClient.clientPlayerTag.getCompoundTag("path") : MiscUtil.getPlayerTag(player).getCompoundTag("path");
+			CompoundNBT nbt = player.world.isRemote ? StoreNBTToClient.clientPlayerTag.getCompoundTag("path") : MiscUtil.getPlayerTag(player).getCompoundTag("path");
 			IRecipe recipe = null;
 			if(nbt.getBoolean("technomancy")){
 				recipe = findMatchingSpecialRecipe(craftMatrix, player.world, RecipeHolder.technomancyRecipes);

@@ -3,10 +3,11 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import java.awt.Color;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
-import com.Da_Technomancer.crossroads.ModConfig;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
 
 import net.minecraft.client.Minecraft;
@@ -14,14 +15,13 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 /** 
  * All blocks using BeamRenderer MUST return false to isOpaqueCube 
  */
-public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
+public class BeamRenderer extends TileEntityRenderer<BeamRenderTEBase>{
 
 	@Override
 	public void render(BeamRenderTEBase beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
@@ -41,7 +41,7 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 				GlStateManager.pushAttrib();
 				GlStateManager.translate(x, y, z);
 				GlStateManager.color(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
-				Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntityBeaconRenderer.TEXTURE_BEACON_BEAM);
+				Minecraft.getInstance().getTextureManager().bindTexture(BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 				
@@ -71,7 +71,7 @@ public class BeamRenderer extends TileEntitySpecialRenderer<BeamRenderTEBase>{
 						break;
 				}
 
-				if(ModConfig.rotateBeam.getBoolean()){
+				if(CrossroadsConfig.rotateBeam.getBoolean()){
 					GlStateManager.rotate((partialTicks + (float) beam.getWorld().getTotalWorldTime()) * 2F, 0, 1, 0);
 				}
 				Tessellator tes = Tessellator.getInstance();

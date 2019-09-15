@@ -9,13 +9,16 @@ import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,7 +29,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class AtmosChargerTileEntity extends TileEntity implements ITickable, IInfoTE{
+public class AtmosChargerTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE{
 
 	private static final int FE_CAPACITY = 20_000;
 	private int fe = 0;
@@ -35,24 +38,24 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	private double lastRedstone = 0;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		int charge = AtmosChargeSavedData.getCharge(world);
 		chat.add(charge + "/" + AtmosChargeSavedData.getCapacity() + "FE in atmosphere (" + MiscUtil.betterRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1) + "%)");
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
 		return oldState.getBlock() != newState.getBlock();
 	}
 
 	@Override
 	public void update(){
-		IBlockState state = world.getBlockState(pos);
+		BlockState state = world.getBlockState(pos);
 		if(world.isRemote || !(state.getBlock() instanceof AtmosCharger)){
 			return;
 		}
 		renderTimer--;
-		extractMode = state.getValue(Properties.ACTIVE);
+		extractMode = state.get(Properties.ACTIVE);
 
 		double newReds = (double) AtmosChargeSavedData.getCharge(world) / (double) AtmosChargeSavedData.getCapacity();
 		if(Math.abs(lastRedstone - newReds) >= 0.05D){
@@ -62,7 +65,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 
 		if(extractMode){
 			if(fe > 0){
-				for(EnumFacing side : EnumFacing.HORIZONTALS){
+				for(Direction side : Direction.HORIZONTALS){
 					TileEntity te = world.getTileEntity(pos.offset(side));
 					if(te != null && te.hasCapability(CapabilityEnergy.ENERGY, side.getOpposite())){
 						IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, side.getOpposite());
@@ -112,14 +115,14 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		fe = nbt.getInteger("fe");
 		lastRedstone = nbt.getDouble("reds");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("fe", fe);
 		nbt.setDouble("reds", lastRedstone);
@@ -130,17 +133,17 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickable, IIn
 	private final IAdvancedRedstoneHandler redsHandler = (boolean measure) -> measure ? 15D * lastRedstone : 0;
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
-		return (cap == CapabilityEnergy.ENERGY && side != EnumFacing.UP) || (cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && (side == null || side.getAxis() != EnumFacing.Axis.Y)) || super.hasCapability(cap, side);
+	public boolean hasCapability(Capability<?> cap, Direction side){
+		return (cap == CapabilityEnergy.ENERGY && side != Direction.UP) || (cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && (side == null || side.getAxis() != Direction.Axis.Y)) || super.hasCapability(cap, side);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == CapabilityEnergy.ENERGY && side != EnumFacing.UP){
+	public <T> T getCapability(Capability<T> cap, Direction side){
+		if(cap == CapabilityEnergy.ENERGY && side != Direction.UP){
 			return (T) feHandler;
 		}
-		if((cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && (side == null || side.getAxis() != EnumFacing.Axis.Y))){
+		if((cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && (side == null || side.getAxis() != Direction.Axis.Y))){
 			return (T) redsHandler;
 		}
 		return super.getCapability(cap, side);

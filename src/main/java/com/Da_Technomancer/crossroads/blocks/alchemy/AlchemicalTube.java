@@ -1,28 +1,27 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.AdvConduitBakedModel;
 import com.Da_Technomancer.crossroads.render.bakedModel.IAdvConduitModel;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -43,7 +42,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
+public class AlchemicalTube extends ContainerBlock implements IAdvConduitModel{
 
 	private static final double SIZE = 5D / 16D;
 	private static final AxisAlignedBB BB = new AxisAlignedBB(SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
@@ -63,30 +62,30 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
-		setCreativeTab(ModItems.TAB_CROSSROADS);
+		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this);
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new AlchemicalTubeTileEntity(!crystal);
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
 			if(!worldIn.isRemote){
 				int face;
@@ -130,15 +129,15 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 		return false;
 	}
 
-	private static final ResourceLocation GLASS_CAP = new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_cap");
-	private static final ResourceLocation GLASS_OUT = new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_out");
-	private static final ResourceLocation GLASS_IN = new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_in");
-	private static final ResourceLocation CRYST_CAP = new ResourceLocation(Main.MODID, "blocks/alch_tube/cryst_tube_cap");
-	private static final ResourceLocation CRYST_OUT = new ResourceLocation(Main.MODID, "blocks/alch_tube/cryst_tube_out");
-	private static final ResourceLocation CRYST_IN = new ResourceLocation(Main.MODID, "blocks/alch_tube/cryst_tube_in");
+	private static final ResourceLocation GLASS_CAP = new ResourceLocation(Crossroads.MODID, "blocks/alch_tube/glass_tube_cap");
+	private static final ResourceLocation GLASS_OUT = new ResourceLocation(Crossroads.MODID, "blocks/alch_tube/glass_tube_out");
+	private static final ResourceLocation GLASS_IN = new ResourceLocation(Crossroads.MODID, "blocks/alch_tube/glass_tube_in");
+	private static final ResourceLocation CRYST_CAP = new ResourceLocation(Crossroads.MODID, "blocks/alch_tube/cryst_tube_cap");
+	private static final ResourceLocation CRYST_OUT = new ResourceLocation(Crossroads.MODID, "blocks/alch_tube/cryst_tube_out");
+	private static final ResourceLocation CRYST_IN = new ResourceLocation(Crossroads.MODID, "blocks/alch_tube/cryst_tube_in");
 
 	@Override
-	public ResourceLocation getTexture(IBlockState state, int mode){
+	public ResourceLocation getTexture(BlockState state, int mode){
 		return crystal ? mode == 0 ? CRYST_CAP : mode == 1 ? CRYST_OUT : CRYST_IN : mode == 0 ? GLASS_CAP : mode == 1 ? GLASS_OUT : GLASS_IN;
 	}
 
@@ -147,11 +146,11 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 		return SIZE;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void initModel(){
 		StateMapperBase ignoreState = new StateMapperBase(){
 			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState IBlockState){
+			protected ModelResourceLocation getModelResourceLocation(BlockState IBlockState){
 				return AdvConduitBakedModel.BAKED_MODEL;
 			}
 		};
@@ -159,7 +158,7 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		world.markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
 	}
 
@@ -169,23 +168,23 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 	}
 
 	@Override
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
+	public BlockState getExtendedState(BlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		TileEntity te = world.getTileEntity(pos);
-		return extendedBlockState.withProperty(Properties.CONNECT_MODE, te instanceof AlchemicalTubeTileEntity ? ((AlchemicalTubeTileEntity) te).getConnectMode(true) : new Integer[] {0, 0, 0, 0, 0, 0});
+		return extendedBlockState.with(Properties.CONNECT_MODE, te instanceof AlchemicalTubeTileEntity ? ((AlchemicalTubeTileEntity) te).getConnectMode(true) : new Integer[] {0, 0, 0, 0, 0, 0});
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World source, BlockPos pos){
+	@OnlyIn(Dist.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(BlockState state, World source, BlockPos pos){
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, source, pos);
 		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		Integer[] connectMode = exState.getValue(Properties.CONNECT_MODE);
+		Integer[] connectMode = exState.get(Properties.CONNECT_MODE);
 		if(connectMode[0] != 0){
 			list.add(DOWN);
 		}
@@ -204,8 +203,8 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 		if(connectMode[5] != 0){
 			list.add(EAST);
 		}
-		EntityPlayer play = Minecraft.getMinecraft().player;
-		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
+		PlayerEntity play = Minecraft.getInstance().player;
+		float reDist = Minecraft.getInstance().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.add(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
 		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
@@ -214,11 +213,11 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 
 	@Override
 	@Nullable
-	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
+	public RayTraceResult collisionRayTrace(BlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
 		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
 		list.add(BB);
-		Integer[] connectMode = exState.getValue(Properties.CONNECT_MODE);
+		Integer[] connectMode = exState.get(Properties.CONNECT_MODE);
 		if(connectMode[0] != 0){
 			list.add(DOWN);
 		}
@@ -250,11 +249,11 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean nobodyKnows){
+	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean nobodyKnows){
 		addCollisionBoxToList(pos, mask, list, BB);
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
 
-		Integer[] connectMode = exState.getValue(Properties.CONNECT_MODE);
+		Integer[] connectMode = exState.get(Properties.CONNECT_MODE);
 		if(connectMode[0] != 0){
 			addCollisionBoxToList(pos, mask, list, DOWN);
 		}
@@ -276,12 +275,12 @@ public class AlchemicalTube extends BlockContainer implements IAdvConduitModel{
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state){
+	public boolean isFullCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
 		return BlockFaceShape.UNDEFINED;
 	}
 }

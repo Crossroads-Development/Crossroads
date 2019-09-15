@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockState;
 
-public class BlockRecipePredicate implements RecipePredicate<IBlockState>{
+public class BlockRecipePredicate implements RecipePredicate<BlockState>{
 
-	private final IBlockState state;
+	private final BlockState state;
 	private final boolean ignoreMeta;
 	
 	/**
@@ -16,13 +17,13 @@ public class BlockRecipePredicate implements RecipePredicate<IBlockState>{
 	 * @param state
 	 * @param ignoreMeta If true, ignore all properties and only focus on blocktype
 	 */
-	public BlockRecipePredicate(IBlockState state, boolean ignoreMeta){
+	public BlockRecipePredicate(BlockState state, boolean ignoreMeta){
 		this.state = state;
 		this.ignoreMeta = ignoreMeta;
 	}
 
 	@Override
-	public boolean test(IBlockState state){
+	public boolean test(BlockState state){
 		if(ignoreMeta){
 			return state.getBlock() == this.state.getBlock();
 		}
@@ -30,7 +31,7 @@ public class BlockRecipePredicate implements RecipePredicate<IBlockState>{
 	}
 
 	@Override
-	public List<IBlockState> getMatchingList(){
+	public List<BlockState> getMatchingList(){
 		if(ignoreMeta){
 			return state.getBlock().getBlockState().getValidStates();
 		}

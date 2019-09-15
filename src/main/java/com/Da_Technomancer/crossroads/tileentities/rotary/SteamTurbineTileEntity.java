@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -49,9 +49,9 @@ public class SteamTurbineTileEntity extends ModuleTE{
 		
 		if(world.isRemote){
 			IAxleHandler gear = null;
-			TileEntity te = world.getTileEntity(pos.offset(EnumFacing.UP));
-			if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN)){
-				gear = te.getCapability(Capabilities.AXLE_CAPABILITY, EnumFacing.DOWN);
+			TileEntity te = world.getTileEntity(pos.offset(Direction.UP));
+			if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)){
+				gear = te.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN);
 			}
 			completion = (float) (gear == null ? 0 : gear.getAngle(0));
 			return;
@@ -79,7 +79,7 @@ public class SteamTurbineTileEntity extends ModuleTE{
 	/**
 	 * This uses the angle of the attached gear instead of calculating its own for a few reasons. It will always be attached when it should spin, and should always have the same angle as the attached gear (no point calculating).
 	 */
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public float getCompletion(){
 		return completion;
 	}
@@ -90,19 +90,19 @@ public class SteamTurbineTileEntity extends ModuleTE{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			if(facing == null){
 				return (T) innerHandler;
 			}
 
-			if(facing == EnumFacing.DOWN){
+			if(facing == Direction.DOWN){
 				return (T) steamHandler;
-			}else if(facing != EnumFacing.UP){
+			}else if(facing != Direction.UP){
 				return (T) waterHandler;
 			}
 		}
-		if(capability == Capabilities.AXLE_CAPABILITY && facing == EnumFacing.UP){
+		if(capability == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
 			return (T) axleHandler;
 		}
 

@@ -1,34 +1,33 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.CableThemes;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.ConduitBakedModel;
 import com.Da_Technomancer.crossroads.render.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -49,7 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class HeatCable extends BlockContainer implements IConduitModel{
+public class HeatCable extends ContainerBlock implements IConduitModel{
 
 	public static final HashMap<String, CableThemes> OREDICT_TO_THEME = new HashMap<String, CableThemes>();
 
@@ -70,16 +69,16 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(1);
-		setCreativeTab(ModItems.TAB_HEAT_CABLE);
-		ModBlocks.toRegister.add(this);
-		ModBlocks.blockAddQue(this, false);	
+		setCreativeTab(CrossroadsItems.TAB_HEAT_CABLE);
+		CrossroadsBlocks.toRegister.add(this);
+		CrossroadsBlocks.blockAddQue(this, false);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void initModel(){
 		StateMapperBase ignoreState = new StateMapperBase(){
 			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState IBlockState){
+			protected ModelResourceLocation getModelResourceLocation(BlockState IBlockState){
 				return ConduitBakedModel.BAKED_MODEL;
 			}
 		};
@@ -87,47 +86,47 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face){
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
 		return BlockFaceShape.UNDEFINED;
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean pleaseDontBeRelevantToAnythingOrIWillBeSad){
+	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean pleaseDontBeRelevantToAnythingOrIWillBeSad){
 		addCollisionBoxToList(pos, mask, list, BB);
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
 
-		if(exState.getValue(Properties.CONNECT)[0]){
+		if(exState.get(Properties.CONNECT)[0]){
 			addCollisionBoxToList(pos, mask, list, DOWN);
 		}
-		if(exState.getValue(Properties.CONNECT)[1]){
+		if(exState.get(Properties.CONNECT)[1]){
 			addCollisionBoxToList(pos, mask, list, UP);
 		}
-		if(exState.getValue(Properties.CONNECT)[2]){
+		if(exState.get(Properties.CONNECT)[2]){
 			addCollisionBoxToList(pos, mask, list, NORTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[3]){
+		if(exState.get(Properties.CONNECT)[3]){
 			addCollisionBoxToList(pos, mask, list, SOUTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[4]){
+		if(exState.get(Properties.CONNECT)[4]){
 			addCollisionBoxToList(pos, mask, list, WEST);
 		}
-		if(exState.getValue(Properties.CONNECT)[5]){
+		if(exState.get(Properties.CONNECT)[5]){
 			addCollisionBoxToList(pos, mask, list, EAST);
 		}
 	}
 
 	@Override
 	public ResourceLocation getTexture(){
-		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + "-copper");
+		return new ResourceLocation(Crossroads.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + "-copper");
 	}
 
 	@Override
-	public ResourceLocation getTexture(IBlockState state){
-		return new ResourceLocation(Main.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + '-' + CableThemes.values()[state.getValue(Properties.TEXTURE_4)].toString());
+	public ResourceLocation getTexture(BlockState state){
+		return new ResourceLocation(Crossroads.MODID, "blocks/heatcable/" + insulator.name().toLowerCase() + '-' + CableThemes.values()[state.get(Properties.TEXTURE_4)].toString());
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(playerIn != null && hand != null){
 			ItemStack held = playerIn.getHeldItem(hand);
 			if(held.isEmpty()){
@@ -161,9 +160,9 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 			for(int oreDict : OreDictionary.getOreIDs(held)){
 				CableThemes match = OREDICT_TO_THEME.get(OreDictionary.getOreName(oreDict));
-				if(match != null && state.getValue(Properties.TEXTURE_4) != match.ordinal()){
+				if(match != null && state.get(Properties.TEXTURE_4) != match.ordinal()){
 					if(!worldIn.isRemote){
-						worldIn.setBlockState(pos, state.withProperty(Properties.TEXTURE_4, match.ordinal()));
+						worldIn.setBlockState(pos, state.with(Properties.TEXTURE_4, match.ordinal()));
 					}
 					worldIn.markBlockRangeForRenderUpdate(pos, pos);
 					return true;
@@ -174,22 +173,22 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand){
-		return getDefaultState().withProperty(Properties.TEXTURE_4, 0);
+	public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, BlockRayTraceResult hit, int meta, LivingEntity placer, Hand hand){
+		return getDefaultState().with(Properties.TEXTURE_4, 0);
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta){
-		return getDefaultState().withProperty(Properties.TEXTURE_4, meta);
+	public BlockState getStateFromMeta(int meta){
+		return getDefaultState().with(Properties.TEXTURE_4, meta);
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state){
-		return state.getValue(Properties.TEXTURE_4);
+	public int getMetaFromState(BlockState state){
+		return state.get(Properties.TEXTURE_4);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		world.markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
 	}
 
@@ -199,7 +198,7 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	}
 
 	@Override
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos){
+	public BlockState getExtendedState(BlockState state, IBlockAccess world, BlockPos pos){
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		TileEntity te = world.getTileEntity(pos);
 
@@ -211,28 +210,28 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 //			connect[direction.getIndex()] = sideTe != null && ((sideTe instanceof IPrototypePort && ((IPrototypePort) sideTe).getType() == PrototypePortTypes.HEAT && ((IPrototypePort) sideTe).getSide() == direction.getOpposite()) || (sideTe instanceof IPrototypeOwner && ((IPrototypeOwner) sideTe).getTypes()[direction.getOpposite().getIndex()] == PrototypePortTypes.HEAT) || sideTe.hasCapability(Capabilities.HEAT_CAPABILITY, direction.getOpposite()));
 //		}
 
-		extendedBlockState = extendedBlockState.withProperty(Properties.CONNECT, connect);
+		extendedBlockState = extendedBlockState.with(Properties.CONNECT, connect);
 
 		return extendedBlockState;
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta){
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new HeatCableTileEntity(insulator);
 	}
 
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state){
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced){
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("Loss Rate: -" + insulator.getRate() + "°C/t");
 		tooltip.add("Melting Point: " + insulator.getLimit() + "°C");
 	}
@@ -243,35 +242,35 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state){
+	public boolean isFullCube(BlockState state){
 		return false;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World source, BlockPos pos){
+	@OnlyIn(Dist.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(BlockState state, World source, BlockPos pos){
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, source, pos);
 		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		if(exState.getValue(Properties.CONNECT)[0]){
+		if(exState.get(Properties.CONNECT)[0]){
 			list.add(DOWN);
 		}
-		if(exState.getValue(Properties.CONNECT)[1]){
+		if(exState.get(Properties.CONNECT)[1]){
 			list.add(UP);
 		}
-		if(exState.getValue(Properties.CONNECT)[2]){
+		if(exState.get(Properties.CONNECT)[2]){
 			list.add(NORTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[3]){
+		if(exState.get(Properties.CONNECT)[3]){
 			list.add(SOUTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[4]){
+		if(exState.get(Properties.CONNECT)[4]){
 			list.add(WEST);
 		}
-		if(exState.getValue(Properties.CONNECT)[5]){
+		if(exState.get(Properties.CONNECT)[5]){
 			list.add(EAST);
 		}
-		EntityPlayer play = Minecraft.getMinecraft().player;
-		float reDist = Minecraft.getMinecraft().playerController.getBlockReachDistance();
+		PlayerEntity play = Minecraft.getInstance().player;
+		float reDist = Minecraft.getInstance().playerController.getBlockReachDistance();
 		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.add(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
 		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
@@ -280,26 +279,26 @@ public class HeatCable extends BlockContainer implements IConduitModel{
 
 	@Override
 	@Nullable
-	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
+	public RayTraceResult collisionRayTrace(BlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
 		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
 		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
 		list.add(BB);
-		if(exState.getValue(Properties.CONNECT)[0]){
+		if(exState.get(Properties.CONNECT)[0]){
 			list.add(DOWN);
 		}
-		if(exState.getValue(Properties.CONNECT)[1]){
+		if(exState.get(Properties.CONNECT)[1]){
 			list.add(UP);
 		}
-		if(exState.getValue(Properties.CONNECT)[2]){
+		if(exState.get(Properties.CONNECT)[2]){
 			list.add(NORTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[3]){
+		if(exState.get(Properties.CONNECT)[3]){
 			list.add(SOUTH);
 		}
-		if(exState.getValue(Properties.CONNECT)[4]){
+		if(exState.get(Properties.CONNECT)[4]){
 			list.add(WEST);
 		}
-		if(exState.getValue(Properties.CONNECT)[5]){
+		if(exState.get(Properties.CONNECT)[5]){
 			list.add(EAST);
 		}
 

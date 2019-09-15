@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -30,8 +30,8 @@ public class TexturedToggleButtonGuiObject extends ToggleButtonGuiObject{
 	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
 		super.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-		Gui.drawScaledCustomSizeModalRect(x, y, u, v, uEnd - u, vEnd - v, endX - x, endY - y, textureWidth, textureHeight);
+		Minecraft.getInstance().getTextureManager().bindTexture(texture);
+		AbstractGui.drawScaledCustomSizeModalRect(x, y, u, v, uEnd - u, vEnd - v, endX - x, endY - y, textureWidth, textureHeight);
 		GlStateManager.color(1, 1, 1);
 		return true;
 	}

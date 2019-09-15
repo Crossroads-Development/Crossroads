@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.render.bakedModel;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
@@ -25,12 +25,12 @@ public class ReagentPumpModel implements IModel{
 	@Override
 	public Collection<ResourceLocation> getTextures(){
 		ArrayList<ResourceLocation> textures = new ArrayList<>(6);
-		textures.add(new ResourceLocation(Main.MODID, "blocks/alch_tube/cryst_tube_out"));
-		textures.add(new ResourceLocation(Main.MODID, "blocks/alch_tube/cryst_tube_in"));
-		textures.add(new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_out"));
-		textures.add(new ResourceLocation(Main.MODID, "blocks/alch_tube/glass_tube_in"));
-		textures.add(new ResourceLocation(Main.MODID, "blocks/block_bronze"));
-		textures.add(new ResourceLocation(Main.MODID, "blocks/reag_pump_middle"));
+		textures.add(new ResourceLocation(Crossroads.MODID, "blocks/alch_tube/cryst_tube_out"));
+		textures.add(new ResourceLocation(Crossroads.MODID, "blocks/alch_tube/cryst_tube_in"));
+		textures.add(new ResourceLocation(Crossroads.MODID, "blocks/alch_tube/glass_tube_out"));
+		textures.add(new ResourceLocation(Crossroads.MODID, "blocks/alch_tube/glass_tube_in"));
+		textures.add(new ResourceLocation(Crossroads.MODID, "blocks/block_bronze"));
+		textures.add(new ResourceLocation(Crossroads.MODID, "blocks/reag_pump_middle"));
 		return ImmutableSet.copyOf(textures);
 	}
 

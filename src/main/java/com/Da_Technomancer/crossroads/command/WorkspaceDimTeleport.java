@@ -4,8 +4,8 @@ import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -28,9 +28,9 @@ public class WorkspaceDimTeleport extends CommandBase{
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args){
-		if(sender instanceof EntityPlayerMP){
-			int dimId = ModDimensions.getDimForPlayer((EntityPlayerMP) sender);
-			server.getPlayerList().transferPlayerToDimension((EntityPlayerMP) sender, dimId, new NoPortalTeleporter());
+		if(sender instanceof ServerPlayerEntity){
+			int dimId = ModDimensions.getDimForPlayer((ServerPlayerEntity) sender);
+			server.getPlayerList().transferPlayerToDimension((ServerPlayerEntity) sender, dimId, new NoPortalTeleporter());
 		}
 	}
 
@@ -49,8 +49,8 @@ public class WorkspaceDimTeleport extends CommandBase{
 			entity.motionY = 0;
 			entity.motionZ = 0;
 
-			if(entity instanceof EntityPlayer){
-				((EntityPlayer) entity).addExperienceLevel(0);
+			if(entity instanceof PlayerEntity){
+				((PlayerEntity) entity).addExperienceLevel(0);
 			}
 		}
 	}

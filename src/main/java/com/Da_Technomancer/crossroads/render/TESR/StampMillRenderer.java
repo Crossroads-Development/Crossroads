@@ -1,32 +1,32 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEntity>{
+public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 
-	private static final ResourceLocation METAL_TEXTURE = new ResourceLocation(Main.MODID, "textures/blocks/block_cast_iron.png");
+	private static final ResourceLocation METAL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_cast_iron.png");
 
 	@Override
 	public void render(StampMillTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		IBlockState state = te.getWorld().getBlockState(te.getPos());
-		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || state.getBlock() != ModBlocks.stampMill){
+		BlockState state = te.getWorld().getBlockState(te.getPos());
+		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || state.getBlock() != CrossroadsBlocks.stampMill){
 			return;
 		}
 		
@@ -36,7 +36,7 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5D, y + 1.5F, z + .5D);
-		if(state.getValue(Properties.HORIZ_AXIS) == EnumFacing.Axis.Z){
+		if(state.get(Properties.HORIZ_AXIS) == Direction.Axis.Z){
 			GlStateManager.rotate(90, 0, 1, 0);
 		}
 
@@ -61,7 +61,7 @@ public class StampMillRenderer extends TileEntitySpecialRenderer<StampMillTileEn
 		GlStateManager.color(1, 1, 1);
 		GlStateManager.popMatrix();
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(METAL_TEXTURE);
+		Minecraft.getInstance().getTextureManager().bindTexture(METAL_TEXTURE);
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
 		double offset0 = (Math.sin(2D * Math.toRadians(prog)) + 1D) / 2D * 9D / 32D;

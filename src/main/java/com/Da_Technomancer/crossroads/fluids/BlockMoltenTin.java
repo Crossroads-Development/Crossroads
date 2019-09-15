@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.fluids;
 
-import com.Da_Technomancer.crossroads.Main;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -22,11 +22,11 @@ public class BlockMoltenTin extends BlockFluidClassic{
 		String name = "molten_tin";
 		setTranslationKey(name);
 		setRegistryName(name);
-		ModBlocks.toRegister.add(this);
+		CrossroadsBlocks.toRegister.add(this);
 	}
 
 	@Override
-	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos){
+	public int getLightValue(BlockState state, IBlockAccess world, BlockPos pos){
 		return 15;
 	}
 
@@ -40,7 +40,7 @@ public class BlockMoltenTin extends BlockFluidClassic{
 	private static class FluidMoltenTin extends Fluid{
 
 		private FluidMoltenTin(){
-			super("tin", new ResourceLocation(Main.MODID + ":blocks/moltentin_still"), new ResourceLocation(Main.MODID + ":blocks/moltentin_flow"));
+			super("tin", new ResourceLocation(Crossroads.MODID + ":blocks/moltentin_still"), new ResourceLocation(Crossroads.MODID + ":blocks/moltentin_flow"));
 			setDensity(3000);
 			setTemperature(600);
 			setViscosity(1300);

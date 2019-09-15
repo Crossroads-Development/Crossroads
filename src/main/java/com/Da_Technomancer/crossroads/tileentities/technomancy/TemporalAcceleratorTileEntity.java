@@ -13,14 +13,14 @@ import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAccelerator;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -32,12 +32,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class TemporalAcceleratorTileEntity extends TileEntity implements ITickable, IInfoTE, ILongReceiver{
+public class TemporalAcceleratorTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
 
 	public static final int FLUX_MULT = 1;
 	private static final Random RAND = new Random();
 	private final IBeamHandler magicHandler = new BeamHandler();
-	private EnumFacing facing;
+	private Direction facing;
 	private int intensity = 0;
 	private int size = 1;
 	private Region region;
@@ -51,7 +51,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
 		chat.add("Size: " + size);
 		chat.add("Applied Boost: " + (intensity < 0 ? Math.max(intensity, -16) + "/16" : "+" + (int) (Math.pow(2, intensity / 4D) - 1)));
@@ -66,13 +66,13 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == 4){
 			size = (int) message;
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public int getSize(){
 		return size;
 	}
@@ -92,14 +92,14 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		return size;
 	}
 
-	private EnumFacing getFacing(){
+	private Direction getFacing(){
 		if(facing == null){
-			IBlockState state = world.getBlockState(pos);
+			BlockState state = world.getBlockState(pos);
 			if(!(state.getBlock() instanceof TemporalAccelerator)){
 				invalidate();
-				return EnumFacing.DOWN;
+				return Direction.DOWN;
 			}
-			facing = state.getValue(EssentialsProperties.FACING);
+			facing = state.get(EssentialsProperties.FACING);
 		}
 
 		return facing;
@@ -123,8 +123,8 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 					if(ent.updateBlocked){
 						continue;
 					}
-					if(ent instanceof EntityPlayerMP){
-						ModPackets.network.sendTo(new SendPlayerTickCountToClient(extraTicks + 1), (EntityPlayerMP) ent);
+					if(ent instanceof ServerPlayerEntity){
+						ModPackets.network.sendTo(new SendPlayerTickCountToClient(extraTicks + 1), (ServerPlayerEntity) ent);
 					}
 					for(int i = 0; i < extraTicks; i++){
 						ent.onUpdate();
@@ -138,11 +138,11 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 					for(int y = (int) bb.minY; y < (int) bb.maxY; y++){
 						for(int z = (int) bb.minZ; z < (int) bb.maxZ; z++){
 							BlockPos effectPos = new BlockPos(x, y, z);
-							IBlockState state = world.getBlockState(effectPos);
+							BlockState state = world.getBlockState(effectPos);
 							TileEntity te = world.getTileEntity(effectPos);
-							if(te instanceof ITickable){
+							if(te instanceof ITickableTileEntity){
 								for(int run = 0; run < extraTicks; run++){
-									((ITickable) te).update();
+									((ITickableTileEntity) te).update();
 								}
 							}
 							//Blocks have a 16^3/randomTickSpeed chance of a random tick each game tick in vanilla
@@ -179,7 +179,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+	public boolean hasCapability(Capability<?> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || side == getFacing().getOpposite())){
 			return true;
 		}
@@ -189,7 +189,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || side == getFacing().getOpposite())){
 			return (T) magicHandler;
 		}
@@ -198,7 +198,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("intensity", intensity);
 		nbt.setInteger("size", size);
@@ -209,7 +209,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		intensity = nbt.getInteger("intensity");
 		size = nbt.getInteger("size");
@@ -218,8 +218,8 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		nbt.setInteger("size", size);
 		return nbt;
 	}
@@ -245,7 +245,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		private final BlockPos center;
 		private final AxisAlignedBB bb;
 
-		public Region(int size, BlockPos pos, EnumFacing dir){
+		public Region(int size, BlockPos pos, Direction dir){
 			center = pos.offset(dir, size / 2 + 1);
 			range = size / 2;
 			bb = new AxisAlignedBB(center.add(-range, -range, -range), center.add(range + 1, range + 1, range + 1));

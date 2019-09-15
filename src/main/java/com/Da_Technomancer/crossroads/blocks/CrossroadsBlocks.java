@@ -9,25 +9,25 @@ import com.Da_Technomancer.crossroads.blocks.fluid.*;
 import com.Da_Technomancer.crossroads.blocks.heat.*;
 import com.Da_Technomancer.crossroads.blocks.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.technomancy.*;
-import com.Da_Technomancer.crossroads.items.ModItems;
+import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModBlocks{
+public class CrossroadsBlocks{
 
 	public static Mechanism sextupleGear;
 	public static MasterAxis masterAxis;
@@ -148,6 +148,7 @@ public class ModBlocks{
 	public static FluxStabilizerElectric fluxStabilizerElectric;
 	public static FluxStabilizerElectric fluxStabilizerCrystalElectric;
 
+	public static final Item.Properties itemBlockProp = new Item.Properties().group(CrossroadsItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
 	
 	/**
@@ -166,10 +167,10 @@ public class ModBlocks{
 	 * @return The passed block for convenience. 
 	 */
 	public static <T extends Block> T blockAddQue(T block, boolean registerModel){
-		Item item = new ItemBlock(block).setRegistryName(block.getRegistryName());
-		ModItems.toRegister.add(item);
+		Item item = new BlockItem(block, itemBlockProp).setRegistryName(block.getRegistryName());
+		CrossroadsItems.toRegister.add(item);
 		if(registerModel){
-			ModItems.itemAddQue(item);
+			CrossroadsItems.itemAddQue(item);
 		}
 		return block;
 	}
@@ -182,9 +183,9 @@ public class ModBlocks{
 	 * @return The block for convenience. 
 	 */
 	public static <T extends Block> T blockAddQue(T block, int meta, ModelResourceLocation location){
-		Item item = new ItemBlock(block).setRegistryName(block.getRegistryName());
-		ModItems.toRegister.add(item);
-		ModItems.toClientRegister.put(Pair.of(item, meta), location);
+		Item item = new BlockItem(block, itemBlockProp).setRegistryName(block.getRegistryName());
+		CrossroadsItems.toRegister.add(item);
+		CrossroadsItems.toClientRegister.put(Pair.of(item, meta), location);
 		return block;
 	}
 
@@ -281,6 +282,7 @@ public class ModBlocks{
 		densusPlate = new DensusPlate(false);
 		antiDensusPlate = new DensusPlate(true);
 		cavorite = new BasicBlock("block_cavorite", Material.ROCK, 3){
+
 			@Override
 			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
 				tooltip.add("Blocks gravity from gravity plates");
@@ -315,7 +317,7 @@ public class ModBlocks{
 		fluxStabilizerCrystalElectric = new FluxStabilizerElectric(true);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void initModels(){
 		for(HeatCable cable : HeatCableFactory.HEAT_CABLES.values()){
 			cable.initModel();

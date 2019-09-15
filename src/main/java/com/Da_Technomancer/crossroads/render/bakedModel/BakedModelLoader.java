@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.bakedModel;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
@@ -32,7 +32,7 @@ public class BakedModelLoader implements ICustomModelLoader{
 		}
 
 		//The molten metals for ore processing are special-cased to re-route to a dynamic forge fluid model
-		return modelLocation.getNamespace().equals(Main.MODID) && modelLocation.getPath().startsWith("fluids#molten_metal_");
+		return modelLocation.getNamespace().equals(Crossroads.MODID) && modelLocation.getPath().startsWith("fluids#molten_metal_");
 	}
 
 	@Override

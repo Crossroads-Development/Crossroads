@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import com.Da_Technomancer.crossroads.ModConfig;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.IGrowable;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,23 +17,23 @@ import java.util.List;
 public class GrowEffect implements IEffect{
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
+	public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 		double range = Math.sqrt(mult);
-		List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelectors.IS_ALIVE);
-		for(EntityLivingBase ent : ents){
+		List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntityPredicates.IS_ALIVE);
+		for(LivingEntity ent : ents){
 			ent.heal((float) (mult / 2D));
 		}
 
 		for(int i = 0; i < mult; i++){
 			//The state must be quarried every loop because some plants could break themselves upon growing
-			IBlockState state = worldIn.getBlockState(pos);
+			BlockState state = worldIn.getBlockState(pos);
 			if(!(state.getBlock() instanceof IGrowable)){
 				return;
 			}
 			
 			String stateName = state.getBlock().getRegistryName().toString();
 
-			for(String blockedID : ModConfig.getConfigStringList(ModConfig.growBlacklist, false)){
+			for(String blockedID : CrossroadsConfig.getConfigStringList(CrossroadsConfig.growBlacklist, false)){
 				if(blockedID.equals(stateName)){
 					return;
 				}
@@ -50,8 +50,8 @@ public class GrowEffect implements IEffect{
 		private static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagicDamage().setDamageBypassesArmor();
 
 		@Override
-		public void doEffect(World worldIn, BlockPos pos, int mult, EnumFacing dir){
-			IBlockState state = worldIn.getBlockState(pos);
+		public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
+			BlockState state = worldIn.getBlockState(pos);
 			if(state.getBlock() instanceof IGrowable && state.getBlock() != Blocks.DEADBUSH){
 				if(state.getBlock() == Blocks.GRASS){
 					worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
@@ -60,8 +60,8 @@ public class GrowEffect implements IEffect{
 				}
 			}
 			double range = Math.sqrt(mult);
-			List<EntityLivingBase> ents = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntitySelectors.IS_ALIVE);
-			for(EntityLivingBase ent : ents){
+			List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntityPredicates.IS_ALIVE);
+			for(LivingEntity ent : ents){
 				ent.attackEntityFrom(POTENTIAL_VOID, (float) mult * 3F / 4F);
 			}
 		}

@@ -8,10 +8,10 @@ import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -23,7 +23,7 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 	public static final int DRAIN_CAP = 8;
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
 		chat.add("Temporal Entropy Stabilization: -" + MiscUtil.betterRound(EntropySavedData.getPercentage(drained), 3) + "%");
 		chat.add("Efficiency: " + MiscUtil.betterRound(getEfficiency(runTicks) * 100D, 3) + "%");
@@ -87,7 +87,7 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 	protected abstract int drainFuel();
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		crystal = nbt.getBoolean("crystal");
 		clientRunning = nbt.getBoolean("client_running");
@@ -95,7 +95,7 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setBoolean("crystal", crystal);
 		nbt.setBoolean("client_running", clientRunning);
@@ -104,14 +104,14 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag(){
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
 		nbt.setBoolean("client_running", clientRunning);
 		return nbt;
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable EntityPlayerMP sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == 4){
 			clientRunning = message == 1L;
 		}
@@ -123,7 +123,7 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 	@Nullable
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, @Nullable EnumFacing facing){
+	public <T> T getCapability(Capability<T> cap, @Nullable Direction facing){
 		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redsHandler;
 		}

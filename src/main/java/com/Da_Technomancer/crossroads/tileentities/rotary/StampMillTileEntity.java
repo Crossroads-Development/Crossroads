@@ -3,16 +3,16 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.ModConfig;
-import com.Da_Technomancer.crossroads.blocks.ModBlocks;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -49,7 +49,7 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, EntityPlayer player, @Nullable EnumFacing side, float hitX, float hitY, float hitZ){
+	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Progress: " + (int) (progress) + "/" + (int) REQUIRED);
 		super.addInfo(chat, player, side, hitX, hitY, hitZ);
 	}
@@ -58,9 +58,9 @@ public class StampMillTileEntity extends InventoryTE{
 	public void update(){
 		super.update();
 		if(!world.isRemote){
-			IBlockState state = world.getBlockState(pos);
+			BlockState state = world.getBlockState(pos);
 
-			if(state.getBlock() != ModBlocks.stampMill){
+			if(state.getBlock() != CrossroadsBlocks.stampMill){
 				return;
 			}
 
@@ -84,7 +84,7 @@ public class StampMillTileEntity extends InventoryTE{
 						inventory[1] = produced;
 					}else{
 						inventory[1] = inventory[0].splitStack(1);
-						progress -= REQUIRED * ModConfig.getConfigInt(ModConfig.stampMillDamping, false) / 100;
+						progress -= REQUIRED * CrossroadsConfig.stampMillDamping.get() / 100;
 						if(progress < 0){
 							progress = 0;
 						}
@@ -96,7 +96,7 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setDouble("prog", progress);
 		nbt.setInteger("timer", timer);
@@ -104,7 +104,7 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		progress = nbt.getDouble("prog");
 		timer = nbt.getInteger("timer");
@@ -114,13 +114,13 @@ public class StampMillTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}
 
-		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() == ModBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.getValue(Properties.HORIZ_AXIS))){
+		BlockState state = world.getBlockState(pos);
+		if(state.getBlock() == CrossroadsBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.get(Properties.HORIZ_AXIS))){
 			return (T) axleHandler;
 		}
 
@@ -140,13 +140,13 @@ public class StampMillTileEntity extends InventoryTE{
 			updateKey = key;
 			axis = masterIn;
 
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() != ModBlocks.stampMill){
+			BlockState state = world.getBlockState(pos);
+			if(state.getBlock() != CrossroadsBlocks.stampMill){
 				return;
 			}
-			EnumFacing.Axis ax = state.getValue(Properties.HORIZ_AXIS);
-			for(EnumFacing.AxisDirection dir : EnumFacing.AxisDirection.values()){
-				EnumFacing side = EnumFacing.getFacingFromAxis(dir, ax);
+			Direction.Axis ax = state.get(Properties.HORIZ_AXIS);
+			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
+				Direction side = Direction.getFacingFromAxis(dir, ax);
 				TileEntity te = world.getTileEntity(pos.offset(side));
 				if(te != null){
 					if(te.hasCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite())){
@@ -164,7 +164,7 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return index == 1;
 	}
 

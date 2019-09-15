@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.Main;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.essentials.packets.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -16,20 +16,20 @@ public class AddVisualToClient extends Message<AddVisualToClient>{
 		
 	}
 	
-	public NBTTagCompound nbt;
+	public CompoundNBT nbt;
 
-	public AddVisualToClient(NBTTagCompound nbt){
+	public AddVisualToClient(CompoundNBT nbt){
 		this.nbt = nbt;
 	}
 
 	@Override
 	public IMessage handleMessage(MessageContext context){
 		if(context.side != Side.CLIENT){
-			Main.logger.error("MessageToClient received on wrong side:" + context.side);
+			Crossroads.logger.error("MessageToClient received on wrong side:" + context.side);
 			return null;
 		}
 
-		Minecraft minecraft = Minecraft.getMinecraft();
+		Minecraft minecraft = Minecraft.getInstance();
 		minecraft.addScheduledTask(new Runnable(){
 			@Override
 			public void run(){

@@ -3,10 +3,10 @@ package com.Da_Technomancer.crossroads.tileentities.electric;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.ModConfig;
-import net.minecraft.nbt.NBTTagCompound;
+import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
@@ -33,7 +33,7 @@ public class DynamoTileEntity extends ModuleTE{
 		super.update();
 
 		if(efficiency < 0){
-			efficiency = ModConfig.getConfigInt(ModConfig.electPerJoule, false);
+			efficiency = CrossroadsConfig.electPerJoule.get();
 		}
 
 		int operations = (int) Math.abs(motData[1]);
@@ -43,7 +43,7 @@ public class DynamoTileEntity extends ModuleTE{
 			markDirty();
 		}
 
-		EnumFacing facing = world.getBlockState(pos).getValue(Properties.HORIZ_FACING);
+		Direction facing = world.getBlockState(pos).get(Properties.HORIZ_FACING);
 		TileEntity neighbor = world.getTileEntity(pos.offset(facing.getOpposite()));
 		IEnergyStorage handler;
 		if(neighbor != null && (handler = neighbor.getCapability(CapabilityEnergy.ENERGY, facing)) != null){
@@ -60,13 +60,13 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt){
+	public void readFromNBT(CompoundNBT nbt){
 		super.readFromNBT(nbt);
 		energyHandler.setEnergy(nbt.getInteger("charge"));
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public CompoundNBT writeToNBT(CompoundNBT nbt){
 		super.writeToNBT(nbt);
 		nbt.setInteger("charge", energyHandler.getEnergyStored());
 
@@ -75,11 +75,11 @@ public class DynamoTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
-		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING))){
+	public <T> T getCapability(Capability<T> cap, Direction side){
+		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == world.getBlockState(pos).get(Properties.HORIZ_FACING))){
 			return (T) axleHandler;
 		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).getValue(Properties.HORIZ_FACING).getOpposite())){
+		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).get(Properties.HORIZ_FACING).getOpposite())){
 			return (T) energyHandler;
 		}
 		return super.getCapability(cap, side);

@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ParticleSplashColor extends Particle{
 
 	protected ParticleSplashColor(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn){
@@ -38,7 +38,7 @@ public class ParticleSplashColor extends Particle{
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ){
 		Tessellator.getInstance().draw();
 		buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-		Minecraft.getMinecraft().renderEngine.bindTexture(ModParticles.PARTICLE_1_TEXTURE);
+		Minecraft.getInstance().renderEngine.bindTexture(ModParticles.PARTICLE_1_TEXTURE);
 		
 		float f = (float) this.particleTextureIndexX / 16.0F;
 		float f1 = f + 0.0624375F;
@@ -75,7 +75,7 @@ public class ParticleSplashColor extends Particle{
 		
 		Tessellator.getInstance().draw();
 		buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-		Minecraft.getMinecraft().renderEngine.bindTexture(ModParticles.BASE_PARTICLE_TEXTURE);
+		Minecraft.getInstance().renderEngine.bindTexture(ModParticles.BASE_PARTICLE_TEXTURE);
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class ParticleSplashColor extends Particle{
 		super.onUpdate();
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static class Factory implements IParticleFactory{
 		public Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_){
 			return new ParticleSplashColor(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);

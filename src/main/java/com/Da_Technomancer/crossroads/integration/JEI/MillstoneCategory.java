@@ -1,45 +1,50 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import javax.annotation.Nonnull;
-
-import com.Da_Technomancer.crossroads.Main;
-
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
-import mezz.jei.api.gui.IDrawableStatic;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.google.common.collect.ImmutableList;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class MillstoneCategory implements IRecipeCategory<MillstoneRecipe>{
 
-	public static final String ID = Main.MODID + ".millstone";
+	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, ".millstone");
 	private final IDrawable back;
 	private final IDrawable slot;
+	private final IDrawable icon;
 	private final IDrawableAnimated arrow;
 	private final IDrawableStatic arrowStatic;
 
 	protected MillstoneCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
-		arrowStatic = guiHelper.createDrawable(new ResourceLocation(Main.MODID, "textures/gui/container/millstone_gui.png"), 66, 35, 44, 17);
-		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation(Main.MODID, "textures/gui/container/millstone_gui.png"), 176, 0, 44, 17), 40, StartDirection.TOP, false);
+		arrowStatic = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/container/millstone_gui.png"), 66, 35, 44, 17);
+		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/container/millstone_gui.png"), 176, 0, 44, 17), 40, IDrawableAnimated.StartDirection.TOP, false);
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsBlocks.millstone, 1));
 	}
 
 	@Override
-	public String getUid(){
+	public ResourceLocation getUid(){
 		return ID;
 	}
 
 	@Override
+	public Class<? extends MillstoneRecipe> getRecipeClass(){
+		return MillstoneRecipe.class;
+	}
+
+	@Override
 	public String getTitle(){
-		return "Millstone";
+		return CrossroadsBlocks.millstone.getNameTextComponent().getFormattedText();
 	}
 
 	@Override
@@ -48,39 +53,43 @@ public class MillstoneCategory implements IRecipeCategory<MillstoneRecipe>{
 	}
 
 	@Override
-	public void drawExtras(@Nonnull Minecraft minecraft){
-		GlStateManager.enableAlpha();
-		GlStateManager.enableBlend();
-		slot.draw(minecraft, 79, 16);
-		slot.draw(minecraft, 61, 52);
-		slot.draw(minecraft, 79, 52);
-		slot.draw(minecraft, 97, 52);
-		arrowStatic.draw(minecraft, 66, 35);
-		arrow.draw(minecraft, 66, 35);
-		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
+	public IDrawable getIcon(){
+		return icon;
+	}
+
+	@Override
+	public void setIngredients(MillstoneRecipe millstoneRecipe, IIngredients ingredients){
+		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(millstoneRecipe.inputs));
+		ingredients.setOutputs(VanillaTypes.ITEM, millstoneRecipe.outputs);
+	}
+
+	@Override
+	public void draw(MillstoneRecipe recipe, double mouseX, double mouseY){
+//		GlStateManager.enableAlpha();
+//		GlStateManager.enableBlend();
+		slot.draw(79, 16);
+		slot.draw(61, 52);
+		slot.draw(79, 52);
+		slot.draw(97, 52);
+		arrowStatic.draw(66, 35);
+		arrow.draw(66, 35);
+//		GlStateManager.disableBlend();
+//		GlStateManager.disableAlpha();
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, MillstoneRecipe recipeWrapper, IIngredients ingredients){
-		if(ingredients.getInputs(ItemStack.class).get(0).isEmpty()){
-			// Might happen if CraftTweaker added an invalid recipe
-			return;
-		}
+		IGuiItemStackGroup itemStackGroup = recipeLayout.getItemStacks();
+		itemStackGroup.init(0, true, 79, 16);
+		itemStackGroup.set(0, recipeWrapper.inputs);
 
-		recipeLayout.getItemStacks().init(0, true, 79, 16);
-		recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
+		itemStackGroup.init(1, false, 61, 52);
+		itemStackGroup.init(2, false, 79, 52);
+		itemStackGroup.init(3, false, 97, 52);
+		itemStackGroup.set(1, recipeWrapper.outputs.size() >= 1 ? recipeWrapper.outputs.get(0) : null);
+		itemStackGroup.set(2, recipeWrapper.outputs.size() >= 2 ? recipeWrapper.outputs.get(1) : null);
+		itemStackGroup.set(3, recipeWrapper.outputs.size() == 3 ? recipeWrapper.outputs.get(2) : null);
 
-		recipeLayout.getItemStacks().init(1, false, 61, 52);
-		recipeLayout.getItemStacks().init(2, false, 79, 52);
-		recipeLayout.getItemStacks().init(3, false, 97, 52);
-		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(ItemStack.class).size() >= 1 ? ingredients.getOutputs(ItemStack.class).get(0) : null);
-		recipeLayout.getItemStacks().set(2, ingredients.getOutputs(ItemStack.class).size() >= 2 ? ingredients.getOutputs(ItemStack.class).get(1) : null);
-		recipeLayout.getItemStacks().set(3, ingredients.getOutputs(ItemStack.class).size() == 3 ? ingredients.getOutputs(ItemStack.class).get(2) : null);
-	}
-
-	@Override
-	public String getModName(){
-		return Main.MODNAME;
+		itemStackGroup.set(ingredients);
 	}
 }

@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
 import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -51,23 +51,23 @@ public class RadiatorTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+	public <T> T getCapability(Capability<T> cap, Direction side){
 
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			if(side == null){
 				return (T) innerHandler;
 			}
 
-			if(side == EnumFacing.UP){
+			if(side == Direction.UP){
 				return (T) waterHandler;
 			}
 
-			if(side == EnumFacing.DOWN){
+			if(side == Direction.DOWN){
 				return (T) steamHandler;
 			}
 		}
 
-		if(cap == Capabilities.HEAT_CAPABILITY && side != EnumFacing.UP && side != EnumFacing.DOWN){
+		if(cap == Capabilities.HEAT_CAPABILITY && side != Direction.UP && side != Direction.DOWN){
 			return (T) heatHandler;
 		}
 
@@ -75,7 +75,7 @@ public class RadiatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction){
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 
