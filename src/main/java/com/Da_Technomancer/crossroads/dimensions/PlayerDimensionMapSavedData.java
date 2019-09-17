@@ -45,23 +45,23 @@ public class PlayerDimensionMapSavedData extends WorldSavedData{
 	protected final HashMap<FlexibleGameProfile, Integer> playerDim = new HashMap<FlexibleGameProfile, Integer>();
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		for(int i = 0; i < nbt.getInteger("length"); i++){
+	public void read(CompoundNBT nbt){
+		for(int i = 0; i < nbt.getInt("length"); i++){
 			FlexibleGameProfile profile = FlexibleGameProfile.readFromNBT(nbt, "" + i, cache);
 			if(profile.isNewlyCompleted()){
 				markDirty();
 			}
-			playerDim.put(profile, nbt.getInteger(i + "_dim"));
+			playerDim.put(profile, nbt.getInt(i + "_dim"));
 		}
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
+	public CompoundNBT write(CompoundNBT nbt){
 		int counter = 0;
-		nbt.setInteger("length", playerDim.size());
+		nbt.putInt("length", playerDim.size());
 		for(Entry<FlexibleGameProfile, Integer> dim : playerDim.entrySet()){
 			dim.getKey().writeToNBT(nbt, "" + counter);
-			nbt.setInteger(counter + "_dim", dim.get());
+			nbt.putInt(counter + "_dim", dim.get());
 			counter++;
 		}
 		return nbt;

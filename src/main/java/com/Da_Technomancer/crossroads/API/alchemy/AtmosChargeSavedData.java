@@ -55,13 +55,13 @@ public class AtmosChargeSavedData extends WorldSavedData{
 	private int atmosCharge;
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		atmosCharge = nbt.getInteger("atmos_charge");
+	public void read(CompoundNBT nbt){
+		atmosCharge = nbt.getInt("atmos_charge");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		nbt.setInteger("atmos_charge", atmosCharge);
+	public CompoundNBT write(CompoundNBT nbt){
+		nbt.putInt("atmos_charge", atmosCharge);
 		return nbt;
 	}
 }

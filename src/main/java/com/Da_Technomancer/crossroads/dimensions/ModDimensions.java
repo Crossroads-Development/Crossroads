@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.dimensions;
 
 import com.Da_Technomancer.crossroads.API.FlexibleGameProfile;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDimLoadToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
@@ -55,7 +55,7 @@ public class ModDimensions{
 			for(int id : playerDim.values()){
 				DimensionManager.registerDimension(id, workspaceDimType);
 			}
-			ModPackets.network.sendToAll(new SendDimLoadToClient(playerDim.values().toArray(new Integer[0])));
+			CrossroadsPackets.network.sendToAll(new SendDimLoadToClient(playerDim.values().toArray(new Integer[0])));
 		}catch(Exception ex){
 			if(CrossroadsConfig.wipeInvalidMappings.getBoolean()){
 				if(playerDim != null){
@@ -90,7 +90,7 @@ public class ModDimensions{
 		DimensionManager.registerDimension(dim, workspaceDimType);
 		playerDim.put(play, dim);
 		data.markDirty();
-		ModPackets.network.sendToAll(new SendDimLoadToClient(new int[] {dim}));
+		CrossroadsPackets.network.sendToAll(new SendDimLoadToClient(new int[] {dim}));
 		return dim;
 	}
 

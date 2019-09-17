@@ -178,15 +178,15 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setDouble("prog", progress);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putDouble("prog", progress);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		progress = nbt.getDouble("prog");
 	}
 

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.electric;
 
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
@@ -43,7 +43,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 			message |= 1;
 		}
 		message |= stored << 1;
-		ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, message, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 0, message, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	public void setStored(int storedIn){
@@ -113,25 +113,25 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("stored", stored);
-		nbt.setBoolean("reds", redstone);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("stored", stored);
+		nbt.putBoolean("reds", redstone);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		stored = nbt.getInteger("stored");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		stored = nbt.getInt("stored");
 		redstone = nbt.getBoolean("reds");
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.setInteger("stored", stored);
-		nbt.setBoolean("reds", redstone);
+		nbt.putInt("stored", stored);
+		nbt.putBoolean("reds", redstone);
 		return nbt;
 	}
 

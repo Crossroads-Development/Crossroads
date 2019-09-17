@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleArrayToServer;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;
 import com.Da_Technomancer.crossroads.API.templates.ButtonGuiObject;
@@ -388,11 +388,11 @@ public class RedstoneRegistryGuiContainer extends ContainerScreen{
 	private void setOutput(){
 		if(!Arrays.equals(output, te.getOutput())){
 			te.setOutput(output);
-			ModPackets.network.sendToServer(new SendDoubleArrayToServer("newOutput", output, te.getPos(), te.getWorld().provider.getDimension()));
+			CrossroadsPackets.network.sendToServer(new SendDoubleArrayToServer("newOutput", output, te.getPos(), te.getWorld().provider.getDimension()));
 		}
 		if(index != te.getIndex()){
 			te.setIndex(index);
-			ModPackets.network.sendToServer(new SendIntToServer((byte) 0, index, te.getPos(), te.getWorld().provider.getDimension()));
+			CrossroadsPackets.network.sendToServer(new SendIntToServer((byte) 0, index, te.getPos(), te.getWorld().provider.getDimension()));
 		}
 	}
 }

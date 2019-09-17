@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
@@ -63,7 +63,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 		masterPos = masPos;
 		long longPos = masterPos.toLong();
 		SendIntToClient msg = new SendIntToClient((byte) (int) (longPos >> 32), (int) longPos, pos);
-		ModPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	@Override
@@ -96,14 +96,14 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		this.masterPos = BlockPos.fromLong(nbt.getLong("mast"));
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		if(masterPos != null){
 			nbt.setLong("mast", masterPos.toLong());
 		}

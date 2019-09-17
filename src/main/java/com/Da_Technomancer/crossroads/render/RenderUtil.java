@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import net.minecraft.nbt.CompoundNBT;
@@ -25,16 +25,16 @@ public class RenderUtil{
 
 	public static void addBeam(int dimension, double x, double y, double z, double length, float angleX, float angleY, byte width, int color){
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.setInteger("id", 0);
-		nbt.setDouble("x", x);
-		nbt.setDouble("y", y);
-		nbt.setDouble("z", z);
-		nbt.setDouble("length", length);
-		nbt.setFloat("angle_x", angleX);
-		nbt.setFloat("angle_y", angleY);
+		nbt.putInt("id", 0);
+		nbt.putDouble("x", x);
+		nbt.putDouble("y", y);
+		nbt.putDouble("z", z);
+		nbt.putDouble("length", length);
+		nbt.putFloat("angle_x", angleX);
+		nbt.putFloat("angle_y", angleY);
 		nbt.setByte("width", width);
-		nbt.setInteger("color", color);
-		ModPackets.network.sendToAllAround(new AddVisualToClient(nbt), new NetworkRegistry.TargetPoint(dimension, x, y, z, 512));
+		nbt.putInt("color", color);
+		CrossroadsPackets.network.sendToAllAround(new AddVisualToClient(nbt), new NetworkRegistry.TargetPoint(dimension, x, y, z, 512));
 	}
 
 	public static void addArc(int dimension, Vec3d start, Vec3d end, int count, float diffusionRate, int color){
@@ -50,25 +50,25 @@ public class RenderUtil{
 		world.playSound(null, xSt, ySt, zSt, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.setInteger("id", 1);
-		nbt.setFloat("x", xSt);
-		nbt.setFloat("y", ySt);
-		nbt.setFloat("z", zSt);
-		nbt.setFloat("x_e", xEn);
-		nbt.setFloat("y_e", yEn);
-		nbt.setFloat("z_e", zEn);
-		nbt.setFloat("x_f", xStFin);
-		nbt.setFloat("y_f", yStFin);
-		nbt.setFloat("z_f", zStFin);
-		nbt.setInteger("count", count);
-		nbt.setFloat("diffu", diffusionRate);
-		nbt.setInteger("color", color);
+		nbt.putInt("id", 1);
+		nbt.putFloat("x", xSt);
+		nbt.putFloat("y", ySt);
+		nbt.putFloat("z", zSt);
+		nbt.putFloat("x_e", xEn);
+		nbt.putFloat("y_e", yEn);
+		nbt.putFloat("z_e", zEn);
+		nbt.putFloat("x_f", xStFin);
+		nbt.putFloat("y_f", yStFin);
+		nbt.putFloat("z_f", zStFin);
+		nbt.putInt("count", count);
+		nbt.putFloat("diffu", diffusionRate);
+		nbt.putInt("color", color);
 		nbt.setByte("lif", lifespan);
 
 		if(world.isRemote){
 			SafeCallable.effectsToRender.add(visualFactories[1].apply(nbt));
 		}else{
-			ModPackets.network.sendToAllAround(new AddVisualToClient(nbt), new NetworkRegistry.TargetPoint(dimension, xSt, ySt, zSt, 512));
+			CrossroadsPackets.network.sendToAllAround(new AddVisualToClient(nbt), new NetworkRegistry.TargetPoint(dimension, xSt, ySt, zSt, 512));
 		}
 	}
 }

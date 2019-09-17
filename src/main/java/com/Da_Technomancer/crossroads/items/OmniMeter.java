@@ -5,9 +5,8 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -79,15 +78,15 @@ public class OmniMeter extends Item{
 			BeamUnit[] mag = ((BeamRenderTEBase) te).getLastSent();
 			if(mag != null){
 				CompoundNBT nbt = MiscUtil.getPlayerTag(player);
-				if(!nbt.hasKey("elements")){
-					nbt.setTag("elements", new CompoundNBT());
+				if(!nbt.contains("elements")){
+					nbt.put("elements", new CompoundNBT());
 				}
-				nbt = nbt.getCompoundTag("elements");
+				nbt = nbt.getCompound("elements");
 				for(int i = 0; i < mag.length; i++){
 					BeamUnit check = mag[i];
 					if(check != null){
-						if(!nbt.hasKey(EnumBeamAlignments.getAlignment(check).name())){
-							nbt.setBoolean(EnumBeamAlignments.getAlignment(check).name(), true);
+						if(!nbt.contains(EnumBeamAlignments.getAlignment(check).name())){
+							nbt.putBoolean(EnumBeamAlignments.getAlignment(check).name(), true);
 							//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
 							player.sendMessage(new StringTextComponent(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumBeamAlignments.getAlignment(check).getLocalName(false) + TextFormatting.RESET.toString()));
 							StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player, false);
@@ -121,7 +120,7 @@ public class OmniMeter extends Item{
 					}
 					out.append(line);
 				}
-				ModPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (ServerPlayerEntity) playerIn);
+				CrossroadsPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (ServerPlayerEntity) playerIn);
 			}
 		}
 

@@ -29,15 +29,16 @@ public class StabilizerElectricTileEntity extends AbstractStabilizerTileEntity{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("fe", fe);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("fe", fe);
 		return nbt;
 	}
 
-	@Override public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		fe = nbt.getInteger("fe");
+	@Override
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		fe = nbt.getInt("fe");
 	}
 
 	@Nullable

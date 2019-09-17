@@ -1,62 +1,54 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.essentials.packets.Message;
+import com.Da_Technomancer.essentials.packets.ClientPacket;
+import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 import java.util.UUID;
 
-@SuppressWarnings("serial")
-public class NbtToEntityClient extends Message<NbtToEntityClient>{
-
-	public NbtToEntityClient(){
-		
-	}
+public class NbtToEntityClient extends ClientPacket{
 
 	public UUID entity;
 	public CompoundNBT nbt;
+
+	private static final Field[] FIELDS = fetchFields(NbtToEntityClient.class, "entity", "nbt");
+
+	@SuppressWarnings("unused")
+	public NbtToEntityClient(){
+		
+	}
 
 	public NbtToEntityClient(UUID entity, CompoundNBT nbt){
 		this.entity = entity;
 		this.nbt = nbt;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
-			return null;
-		}
-
-		Minecraft minecraft = Minecraft.getInstance();
-		final ClientWorld worldClient = minecraft.world;
-		minecraft.addScheduledTask(new Runnable(){
-			public void run(){
-				processMessage(worldClient, entity, nbt);
-			}
-		});
-
-		return null;
+	protected Field[] getFields(){
+		return FIELDS;
 	}
 
-	public void processMessage(ClientWorld worldClient, UUID entity, CompoundNBT nbt){
+	@Override
+	protected void run(){
+		ClientWorld worldClient = Minecraft.getInstance().world;
 		if(worldClient == null || entity == null){
 			return;
 		}
 		Entity ent = null;
-		for(Entity loadedEnt : worldClient.getLoadedEntityList()){
+		for(Entity loadedEnt : worldClient.getAllEntities()){
 			if(entity.equals(loadedEnt.getUniqueID())){
 				ent = loadedEnt;
 				break;
 			}
 		}
-		if(ent instanceof INbtReceiver){
-			((INbtReceiver) ent).receiveNBT(nbt);
+		if(ent instanceof INBTReceiver){
+			((INBTReceiver) ent).receiveNBT(nbt, null);
 		}
 	}
 }

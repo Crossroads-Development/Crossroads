@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
@@ -35,7 +35,7 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 		float entropy = (float) EntropySavedData.getEntropy(world);
 		if(clientEntropy == 0 ^ entropy == 0 || Math.abs(clientEntropy - entropy) >= .005F){
 			clientEntropy = entropy;
-			ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, Float.floatToIntBits(clientEntropy), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 0, Float.floatToIntBits(clientEntropy), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			world.updateComparatorOutputLevel(pos, CrossroadsBlocks.fluxNode);
 		}
 	}
@@ -54,24 +54,24 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setFloat("angle", angle);
-		nbt.setFloat("entropy", clientEntropy);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putFloat("angle", angle);
+		nbt.putFloat("entropy", clientEntropy);
 		return nbt;
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.setFloat("entropy", clientEntropy);
-		nbt.setFloat("angle", angle);
+		nbt.putFloat("entropy", clientEntropy);
+		nbt.putFloat("angle", angle);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		angle = nbt.getFloat("angle");
 		clientEntropy = nbt.getFloat("entropy");
 	}

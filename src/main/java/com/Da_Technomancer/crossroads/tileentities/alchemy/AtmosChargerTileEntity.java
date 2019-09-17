@@ -115,17 +115,17 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		fe = nbt.getInteger("fe");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		fe = nbt.getInt("fe");
 		lastRedstone = nbt.getDouble("reds");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("fe", fe);
-		nbt.setDouble("reds", lastRedstone);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("fe", fe);
+		nbt.putDouble("reds", lastRedstone);
 		return nbt;
 	}
 

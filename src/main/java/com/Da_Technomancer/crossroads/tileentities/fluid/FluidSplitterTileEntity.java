@@ -12,16 +12,16 @@ public class FluidSplitterTileEntity extends BasicFluidSplitterTileEntity{
 	public int redstone;
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("reds", redstone);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("reds", redstone);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		redstone = nbt.getInteger("reds");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		redstone = nbt.getInt("reds");
 	}
 
 	@Override

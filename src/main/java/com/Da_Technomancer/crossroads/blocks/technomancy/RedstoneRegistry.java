@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleArrayToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
@@ -45,8 +45,8 @@ public class RedstoneRegistry extends ContainerBlock{
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
-			ModPackets.network.sendTo(new SendDoubleArrayToClient("output", ((RedstoneRegistryTileEntity) worldIn.getTileEntity(pos)).getOutput(), pos), (ServerPlayerEntity) playerIn);
-			ModPackets.network.sendTo(new SendIntToClient((byte) 0, ((RedstoneRegistryTileEntity) worldIn.getTileEntity(pos)).getIndex(), pos), (ServerPlayerEntity) playerIn);
+			CrossroadsPackets.network.sendTo(new SendDoubleArrayToClient("output", ((RedstoneRegistryTileEntity) worldIn.getTileEntity(pos)).getOutput(), pos), (ServerPlayerEntity) playerIn);
+			CrossroadsPackets.network.sendTo(new SendIntToClient((byte) 0, ((RedstoneRegistryTileEntity) worldIn.getTileEntity(pos)).getIndex(), pos), (ServerPlayerEntity) playerIn);
 			playerIn.openGui(Crossroads.instance, GuiHandler.REDSTONE_REGISTRY_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;

@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -56,7 +56,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	public void markSideChanged(int index){
 		init();
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendIntToClient((byte) index, hasMatch[index] ? connectMode[index] : 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) index, hasMatch[index] ? connectMode[index] : 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	@Override
@@ -111,22 +111,22 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
 		for(int i = 0; i < 6; i++){
-			connectMode[i] = Math.max(0, nbt.getInteger("mode_" + i));
+			connectMode[i] = Math.max(0, nbt.getInt("mode_" + i));
 			hasMatch[i] = nbt.getBoolean("match_" + i);
 		}
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		if(connectMode != null){
 			for(int i = 0; i < 6; i++){
-				nbt.setInteger("mode_" + i, connectMode[i]);
-				nbt.setBoolean("match_" + i, hasMatch[i]);
+				nbt.putInt("mode_" + i, connectMode[i]);
+				nbt.putBoolean("match_" + i, hasMatch[i]);
 			}
 		}
 		return nbt;

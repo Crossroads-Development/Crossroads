@@ -68,15 +68,15 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		storedHeat = nbt.getDouble("heat_stored");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setDouble("heat_stored", storedHeat);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putDouble("heat_stored", storedHeat);
 		return nbt;
 	}
 

@@ -130,18 +130,18 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		for(int i = 0; i < 3; i++){
-			if(nbt.hasKey("link" + i)){
+			if(nbt.contains("link" + i)){
 				linked.add(BlockPos.fromLong(nbt.getLong("link" + i)));
 			}
 		}
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		for(int i = 0; i < linked.size(); i++){
 			nbt.setLong("link" + i, linked.get(i).toLong());
 		}

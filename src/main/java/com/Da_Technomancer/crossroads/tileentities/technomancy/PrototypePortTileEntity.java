@@ -30,23 +30,23 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	private int index = -1;
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		nbt.setString("side", side.name());
 		nbt.setString("type", type.name());
-		nbt.setBoolean("act", active);
-		nbt.setInteger("index", index);
+		nbt.putBoolean("act", active);
+		nbt.putInt("index", index);
 		nbt.setString("desc", desc);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		side = nbt.hasKey("side") ? Direction.valueOf(nbt.getString("side")) : Direction.DOWN;
-		type = nbt.hasKey("type") ? PrototypePortTypes.valueOf(nbt.getString("type")) : PrototypePortTypes.HEAT;
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		side = nbt.contains("side") ? Direction.valueOf(nbt.getString("side")) : Direction.DOWN;
+		type = nbt.contains("type") ? PrototypePortTypes.valueOf(nbt.getString("type")) : PrototypePortTypes.HEAT;
 		active = nbt.getBoolean("act");
-		index = nbt.getInteger("index");
+		index = nbt.getInt("index");
 		desc = nbt.getString("desc");
 	}
 

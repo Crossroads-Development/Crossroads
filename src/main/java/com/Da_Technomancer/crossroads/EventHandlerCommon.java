@@ -2,9 +2,8 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
@@ -60,7 +59,7 @@ public final class EventHandlerCommon{
 		for(Entity ent : e.getWorld().loadedEntityList){
 			if(ent instanceof EntityGhostMarker){
 				EntityGhostMarker mark = (EntityGhostMarker) ent;
-				if(mark.getType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVector().subtract(e.getEntity().getPositionVector()).length() <= mark.data.getInteger("range")){
+				if(mark.getType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVector().subtract(e.getEntity().getPositionVector()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);
 					return;
 				}
@@ -71,7 +70,7 @@ public final class EventHandlerCommon{
 		if(e.getEntity() instanceof CreeperEntity && (float) AtmosChargeSavedData.getCharge(e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F && (CrossroadsConfig.atmosEffect.get() & 2) == 2){
 			CompoundNBT nbt = new CompoundNBT();
 			e.getEntityLiving().writeEntityToNBT(nbt);
-			nbt.setBoolean("powered", true);
+			nbt.putBoolean("powered", true);
 			e.getEntityLiving().readEntityFromNBT(nbt);
 		}
 	}
@@ -174,7 +173,7 @@ public final class EventHandlerCommon{
 							ent.updateBlocked = true;
 						}
 						if(ent instanceof ServerPlayerEntity){
-							ModPackets.network.sendTo(new SendPlayerTickCountToClient(0), (ServerPlayerEntity) ent);
+							CrossroadsPackets.network.sendTo(new SendPlayerTickCountToClient(0), (ServerPlayerEntity) ent);
 						}
 						break;
 					}
@@ -263,13 +262,13 @@ public final class EventHandlerCommon{
 	public void craftGoggles(AnvilUpdateEvent e){
 		if(e.getLeft().getItem() == CrossroadsItems.moduleGoggles){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(lens.matchesRecipe(e.getRight()) && (!e.getLeft().hasTagCompound() || !e.getLeft().getTagCompound().hasKey(lens.name()))){
+				if(lens.matchesRecipe(e.getRight()) && (!e.getLeft().hasTagCompound() || !e.getLeft().getTag().hasKey(lens.name()))){
 					ItemStack out = e.getLeft().copy();
 					if(!out.hasTagCompound()){
-						out.setTagCompound(new CompoundNBT());
+						out.setTag(new CompoundNBT());
 					}
-					e.setCost((int) Math.pow(2, out.getTagCompound().getSize()));
-					out.getTagCompound().setBoolean(lens.name(), true);
+					e.setCost((int) Math.pow(2, out.getTag().getSize()));
+					out.getTag().setBoolean(lens.name(), true);
 					e.setOutput(out);
 					e.setMaterialCost(1);
 					break;
@@ -346,10 +345,10 @@ public final class EventHandlerCommon{
 		for(Entity ent : e.getWorld().loadedEntityList){
 			if(ent instanceof EntityGhostMarker){
 				EntityGhostMarker mark = (EntityGhostMarker) ent;
-				if(mark.getType() == EntityGhostMarker.EnumMarkerType.EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInteger("range")){
+				if(mark.getType() == EntityGhostMarker.EnumMarkerType.EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);
 					return;
-				}else if(mark.getType() == EntityGhostMarker.EnumMarkerType.VOID_EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInteger("range")){
+				}else if(mark.getType() == EntityGhostMarker.EnumMarkerType.VOID_EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					perpetuate = true;
 				}
 			}

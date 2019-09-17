@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
@@ -66,7 +66,7 @@ public class PrototypePort extends ContainerBlock{
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		PrototypePortTileEntity te = ((PrototypePortTileEntity) worldIn.getTileEntity(pos));
 		if(!worldIn.isRemote && !te.isActive()){
-			ModPackets.network.sendTo(new SendIntToClient((byte) 0, te.getSide().getIndex() + (te.getType().ordinal() << 3), pos), (ServerPlayerEntity) playerIn);
+			CrossroadsPackets.network.sendTo(new SendIntToClient((byte) 0, te.getSide().getIndex() + (te.getType().ordinal() << 3), pos), (ServerPlayerEntity) playerIn);
 			playerIn.openGui(Crossroads.instance, GuiHandler.PROTOTYPE_PORT_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
@@ -98,7 +98,7 @@ public class PrototypePort extends ContainerBlock{
 		if(!worldIn.isRemote){
 			PrototypePortTileEntity te = ((PrototypePortTileEntity) worldIn.getTileEntity(pos));
 			if(!te.isActive()){
-				ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, te.getSide().getIndex() + (te.getType().ordinal() << 3), pos), new TargetPoint(worldIn.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 0, te.getSide().getIndex() + (te.getType().ordinal() << 3), pos), new TargetPoint(worldIn.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 	}

@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.ComponentCraftingStack;
@@ -78,19 +77,19 @@ public class DetailedCrafterContainer extends Container{
 	public void onCraftMatrixChanged(IInventory inventoryIn){
 		ItemStack out;
 		CompoundNBT nbt = world.isRemote ? StoreNBTToClient.clientPlayerTag : MiscUtil.getPlayerTag(playerInv.player);
-		if(!world.isRemote && !nbt.hasKey("path")){
-			nbt.setTag("path", new CompoundNBT());
+		if(!world.isRemote && !nbt.contains("path")){
+			nbt.put("path", new CompoundNBT());
 		}
 
-		if(nbt.getCompoundTag("path").getBoolean("technomancy")){
+		if(nbt.getCompound("path").getBoolean("technomancy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.technomancyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
 			if(out != ItemStack.EMPTY){
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(passesTechnomancyCriteria(nbt.getCompoundTag("elements"), inInv) && CrossroadsConfig.technomancy.get() && (nbt.getBoolean("multiplayer") ? CrossroadsConfig.allowAllServer.get() || !nbt.getCompoundTag("path").getBoolean("alchemy") : CrossroadsConfig.allowAllSingle.get() || !nbt.getCompoundTag("path").getBoolean("alchemy"))){
-			nbt.getCompoundTag("path").setBoolean("technomancy", true);
+		}else if(passesTechnomancyCriteria(nbt.getCompound("elements"), inInv) && CrossroadsConfig.technomancy.get() && (nbt.getBoolean("multiplayer") ? CrossroadsConfig.allowAllServer.get() || !nbt.getCompound("path").getBoolean("alchemy") : CrossroadsConfig.allowAllSingle.get() || !nbt.getCompound("path").getBoolean("alchemy"))){
+			nbt.getCompound("path").setBoolean("technomancy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerInv.player, false);
 			}else{
@@ -102,15 +101,15 @@ public class DetailedCrafterContainer extends Container{
 			}
 		}
 
-		if(nbt.getCompoundTag("path").getBoolean("alchemy")){
+		if(nbt.getCompound("path").getBoolean("alchemy")){
 			IRecipe recipe = findMatchingSpecialRecipe(inInv, world, RecipeHolder.alchemyRecipes);
 			out = recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(inInv);
 			if(out != ItemStack.EMPTY){
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(passesAlchemyCriteria(nbt.getCompoundTag("elements"), inInv) && CrossroadsConfig.alchemy.get() && (nbt.getBoolean("multiplayer") ? CrossroadsConfig.allowAllServer.get() || !nbt.getCompoundTag("path").getBoolean("technomancy") : CrossroadsConfig.allowAllSingle.get() || !nbt.getCompoundTag("path").getBoolean("technomancy"))){
-			nbt.getCompoundTag("path").setBoolean("alchemy", true);
+		}else if(passesAlchemyCriteria(nbt.getCompound("elements"), inInv) && CrossroadsConfig.alchemy.get() && (nbt.getBoolean("multiplayer") ? CrossroadsConfig.allowAllServer.get() || !nbt.getCompound("path").getBoolean("technomancy") : CrossroadsConfig.allowAllSingle.get() || !nbt.getCompound("path").getBoolean("technomancy"))){
+			nbt.getCompound("path").setBoolean("alchemy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerInv.player, false);
 			}else{

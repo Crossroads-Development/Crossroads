@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
@@ -79,7 +79,7 @@ public class ChronoHarnessTileEntity extends ModuleTE{
 
 			if(shouldRun ^ running){
 				running = shouldRun;
-				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 4, running ? 1 : 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 4, running ? 1 : 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 
@@ -115,19 +115,19 @@ public class ChronoHarnessTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("fe", fe);
-		nbt.setFloat("partial_flux", partialFlux);
-		nbt.setBoolean("running", running);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("fe", fe);
+		nbt.putFloat("partial_flux", partialFlux);
+		nbt.putBoolean("running", running);
 
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		fe = nbt.getInteger("fe");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		fe = nbt.getInt("fe");
 		partialFlux = nbt.getFloat("partial_flux");
 		running = nbt.getBoolean("running");
 	}
@@ -135,7 +135,7 @@ public class ChronoHarnessTileEntity extends ModuleTE{
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.setBoolean("running", running);
+		nbt.putBoolean("running", running);
 		return nbt;
 	}
 

@@ -78,7 +78,7 @@ public class FlexibleGameProfile extends GameProfile{
 		if(profName.isEmpty()){
 			return null;
 		}
-		UUID id = nbt.hasKey(name + "_idMost") ? nbt.getUniqueId(name + "_id") : null;
+		UUID id = nbt.contains(name + "_idMost") ? nbt.getUniqueId(name + "_id") : null;
 		boolean loadedID = false;
 		
 		if(id == null && cache != null){

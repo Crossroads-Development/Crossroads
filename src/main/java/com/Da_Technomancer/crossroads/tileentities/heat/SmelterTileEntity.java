@@ -78,15 +78,15 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		progress = nbt.getInteger("prog");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		progress = nbt.getInt("prog");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("prog", progress);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("prog", progress);
 		return nbt;
 	}
 

@@ -50,8 +50,8 @@ public class FluidTank extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("FluidName")){
-			tooltip.add("Contains: " + FluidStack.loadFluidStackFromNBT(stack.getTagCompound()).amount + "mB of " + FluidStack.loadFluidStackFromNBT(stack.getTagCompound()).getLocalizedName());
+		if(stack.hasTagCompound() && stack.getTag().hasKey("FluidName")){
+			tooltip.add("Contains: " + FluidStack.loadFluidStackFromNBT(stack.getTag()).amount + "mB of " + FluidStack.loadFluidStackFromNBT(stack.getTag()).getLocalizedName());
 		}
 	}
 
@@ -62,7 +62,7 @@ public class FluidTank extends ContainerBlock{
 		}else{
 			player.addExhaustion(0.005F);
 			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
-			stack.setTagCompound(te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents().writeToNBT(new CompoundNBT()));
+			stack.setTag(te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents().writeToNBT(new CompoundNBT()));
 			spawnAsEntity(worldIn, pos, stack);
 		}
 	}
@@ -71,7 +71,7 @@ public class FluidTank extends ContainerBlock{
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTagCompound()){
 			FluidTankTileEntity te = (FluidTankTileEntity) world.getTileEntity(pos);
-			te.setContent(FluidStack.loadFluidStackFromNBT(stack.getTagCompound()));
+			te.setContent(FluidStack.loadFluidStackFromNBT(stack.getTag()));
 		}
 	}
 

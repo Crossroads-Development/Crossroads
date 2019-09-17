@@ -24,18 +24,18 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 	private ItemStack inv = ItemStack.EMPTY;
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		if(!inv.isEmpty()){
-			nbt.setTag("inv", inv.writeToNBT(new CompoundNBT()));
+			nbt.put("inv", inv.writeToNBT(new CompoundNBT()));
 		}
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		inv = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		inv = nbt.contains("inv") ? new ItemStack(nbt.getCompound("inv")) : ItemStack.EMPTY;
 	}
 
 	private final IItemHandler itemHandler = new ItemHandler();

@@ -77,11 +77,11 @@ public class EnchantEffect implements IEffect{
 			ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-mult, -mult, -mult), pos.add(mult, mult, mult)), EntityPredicates.IS_ALIVE);
 			if(items.size() != 0){
 				for(ItemEntity ent : items){
-					if(ent.getItem().getTagCompound() != null && ent.getItem().getTagCompound().hasKey("ench")){
+					if(ent.getItem().getTag() != null && ent.getItem().getTag().hasKey("ench")){
 						if(ent.getItem().getItem() == Items.ENCHANTED_BOOK){
 							ent.setItem(new ItemStack(Items.BOOK, ent.getItem().getCount()));
 						}else{
-							ent.getItem().getTagCompound().removeTag("ench");
+							ent.getItem().getTag().removeTag("ench");
 						}
 					}
 				}

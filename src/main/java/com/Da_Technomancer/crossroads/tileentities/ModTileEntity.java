@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.*;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
@@ -11,112 +12,123 @@ import com.Da_Technomancer.crossroads.tileentities.heat.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
+import com.mojang.datafixers.DSL;
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.Collection;
+import java.util.function.Supplier;
+
+import static com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks.*;
 
 public class ModTileEntity{
 
-	public static void init(){
-		register(HeatCableTileEntity.class, "heat_cable");
-		register(MechanismTileEntity.class, "mechanism");
-		register(MasterAxisTileEntity.class, "master_axis");
-		register(MillstoneTileEntity.class, "millstone");
-		register(HeatingCrucibleTileEntity.class, "crucible");
-		register(FluidTubeTileEntity.class, "fluid_tube");
-		register(SteamBoilerTileEntity.class, "steam_boiler");
-		register(RotaryPumpTileEntity.class, "rotary_pump");
-		register(SteamTurbineTileEntity.class, "steam_turbine");
-		register(FluidVoidTileEntity.class, "fluid_void");
-		register(HeatSinkTileEntity.class, "heat_sink");
-		register(FluidTankTileEntity.class, "fluid_tank");
-		register(FireboxTileEntity.class, "firebox");
-		register(SmelterTileEntity.class, "smelter");
-		register(SaltReactorTileEntity.class, "salt_reactor");
-		register(FluidCoolingChamberTileEntity.class, "fluid_cooling_chamber");
-		register(LargeGearSlaveTileEntity.class, "large_gear_slave");
-		register(LargeGearMasterTileEntity.class, "large_gear_master");
-		register(RadiatorTileEntity.class, "radiator");
-		register(RotaryDrillTileEntity.class, "rotary_drill");
-		register(FatCollectorTileEntity.class, "fat_collector");
-		register(FatCongealerTileEntity.class, "fat_congealer");
-		register(RedstoneHeatCableTileEntity.class, "redstone_heat_cable");
-		register(RedstoneFluidTubeTileEntity.class, "redstone_fluid_tube");
-		register(WaterCentrifugeTileEntity.class, "water_centrifuge");
-		register(BeamExtractorTileEntity.class, "beam_extractor");
-		register(QuartzStabilizerTileEntity.class, "quartz_stabilizer");
-		register(CrystallinePrismTileEntity.class, "crystal_prism");
-		register(BeamReflectorTileEntity.class, "beam_reflector");
-		register(LensFrameTileEntity.class, "lens_frame");
-		register(BeamSiphonTileEntity.class, "beam_siphon");
-		register(BeamSplitterTileEntity.class, "beam_splitter");
-		register(CrystalMasterAxisTileEntity.class, "crystal_master_axis");
-//		register(RatiatorTileEntity.class, "ratiator");
-		register(BeaconHarnessTileEntity.class, "beacon_harness");
-		register(FatFeederTileEntity.class, "fat_feeder");
-		register(RedstoneAxisTileEntity.class, "redstone_axis");
-		register(MathAxisTileEntity.class, "math_axis");
-		register(CageChargerTileEntity.class, "cage_charger");
-		register(HamsterWheelTileEntity.class, "hamster_wheel");
-		register(FluidSplitterTileEntity.class, "fluid_splitter");
-		register(BasicFluidSplitterTileEntity.class, "basic_fluid_splitter");
-		register(CopshowiumCreationChamberTileEntity.class, "copshowium_creation_chamber");
-		register(GatewayFrameTileEntity.class, "gateway_frame");
-//		register(RedstoneKeyboardTileEntity.class, "redstone_keyboard");
-		register(PrototypingTableTileEntity.class, "prototyping_table");
-		register(PrototypeTileEntity.class, "prototype");
-		register(PrototypePortTileEntity.class, "prototype_port");
-		register(MechanicalArmTileEntity.class, "mechanical_arm");
-		register(RedstoneRegistryTileEntity.class, "redstone_registry");
-		register(AlchemicalTubeTileEntity.class, "alchemical_tube");
-		register(FluidInjectorTileEntity.class, "fluid_injector");
-		register(FlowLimiterTileEntity.class, "flow_limiter");
-		register(HeatedTubeTileEntity.class, "heated_tube");
-		register(CoolingCoilTileEntity.class, "cooling_coil");
-		register(ChemicalVentTileEntity.class, "chemical_vent");
-		register(ReactionChamberTileEntity.class, "reaction_chamber");
-		register(HeatLimiterBasicTileEntity.class, "heat_limiter_basic");
-		register(HeatLimiterRedstoneTileEntity.class, "heat_limiter");
-		register(DynamoTileEntity.class, "dynamo");
-		register(TeslaCoilTileEntity.class, "tesla_coil");
-		register(ReagentTankTileEntity.class, "reagent_tank");
-		register(ReagentPumpTileEntity.class, "reagent_pump");
-		register(MaxwellDemonTileEntity.class, "maxwell_demon");
-		register(GlasswareHolderTileEntity.class, "glassware_holder");
-		register(RedsAlchemicalTubeTileEntity.class, "reds_alchemical_tube");
-		register(AlembicTileEntity.class, "alembic");
-		register(DensusPlateTileEntity.class, "densus_plate");
-		register(ChargingStandTileEntity.class, "charging_stand");
-		register(AtmosChargerTileEntity.class, "atmos_charger");
-		register(VoltusGeneratorTileEntity.class, "voltus_generator");
-		register(ReactiveSpotTileEntity.class, "reactive_spot");
-		register(ClockworkStabilizerTileEntity.class, "clock_stab");
-		register(WindTurbineTileEntity.class, "wind_turbine");
-		register(SolarHeaterTileEntity.class, "solar_heater");
-		register(HeatReservoirTileEntity.class, "heat_reservoir");
-		register(StirlingEngineTileEntity.class, "stirling_engine");
-		register(StampMillTileEntity.class, "stamp_mill");
-		register(IceboxTileEntity.class, "icebox");
-		register(OreCleanserTileEntity.class, "ore_cleanser");
-		register(BlastFurnaceTileEntity.class, "blast_furnace");
-		register(BeamRedirectorTileEntity.class, "beam_redirector");
-		register(RedstoneTransmitterTileEntity.class, "redstone_transmitter");
-		register(RedstoneReceiverTileEntity.class, "redstone_receiver");
-		register(TeslaCoilTopTileEntity.class, "tesla_coil_top");
-		register(FluxNodeTileEntity.class, "flux_node");
-		register(AbstractStabilizerTileEntity.class, "flux_void");
-		register(TemporalAcceleratorTileEntity.class, "temporal_accelerator");
-		register(ChronoHarnessTileEntity.class, "chrono_harness");
-		register(StabilizerBeamTileEntity.class, "flux_stabilizer_beam");
-		register(StabilizerElectricTileEntity.class, "flux_stabilizer_electric");
-		register(ReagentFilterTileEntity.class, "reagent_filter");
+	public static void init(IForgeRegistry<TileEntityType<?>> reg){
+		register(HeatCableTileEntity::new, "heat_cable", reg, HeatCableFactory.HEAT_CABLES.values());
+		register(MechanismTileEntity::new, "mechanism", reg, sextupleGear);
+		register(MasterAxisTileEntity::new, "master_axis", reg, masterAxis);
+		register(MillstoneTileEntity::new, "millstone", reg, millstone);
+		register(HeatingCrucibleTileEntity::new, "crucible", reg, heatingCrucible);
+		register(FluidTubeTileEntity::new, "fluid_tube", reg, fluidTube);
+		register(SteamBoilerTileEntity::new, "steam_boiler", reg, steamBoiler);
+		register(RotaryPumpTileEntity::new, "rotary_pump", reg, rotaryPump);
+		register(SteamTurbineTileEntity::new, "steam_turbine", reg, steamTurbine);
+		register(FluidVoidTileEntity::new, "fluid_void", reg, fluidVoid);
+		register(HeatSinkTileEntity::new, "heat_sink", reg, heatSink);
+		register(FluidTankTileEntity::new, "fluid_tank", reg, fluidTank);
+		register(FireboxTileEntity::new, "firebox", reg, firebox);
+		register(SmelterTileEntity::new, "smelter", reg, smelter);
+		register(SaltReactorTileEntity::new, "salt_reactor", reg, saltReactor);
+		register(FluidCoolingChamberTileEntity::new, "fluid_cooling_chamber", reg, fluidCoolingChamber);
+		register(LargeGearSlaveTileEntity::new, "large_gear_slave", reg, largeGearSlave);
+		register(LargeGearMasterTileEntity::new, "large_gear_master", reg, largeGearMaster);
+		register(RadiatorTileEntity::new, "radiator", reg, radiator);
+		register(RotaryDrillTileEntity::new, "rotary_drill", reg, rotaryDrill, rotaryDrillGold);
+		register(FatCollectorTileEntity::new, "fat_collector", reg, fatCollector);
+		register(FatCongealerTileEntity::new, "fat_congealer", reg, fatCongealer);
+		register(RedstoneHeatCableTileEntity::new, "redstone_heat_cable", reg, HeatCableFactory.REDSTONE_HEAT_CABLES.values());
+		register(RedstoneFluidTubeTileEntity::new, "redstone_fluid_tube", reg, redstoneFluidTube);
+		register(WaterCentrifugeTileEntity::new, "water_centrifuge", reg, waterCentrifuge);
+		register(BeamExtractorTileEntity::new, "beam_extractor", reg, beamExtractor);
+		register(QuartzStabilizerTileEntity::new, "quartz_stabilizer", reg, quartzStabilizer);
+		register(CrystallinePrismTileEntity::new, "crystal_prism", reg, crystallinePrism);
+		register(BeamReflectorTileEntity::new, "beam_reflector", reg, beamReflector);
+		register(LensFrameTileEntity::new, "lens_frame", reg, lensFrame);
+		register(BeamSiphonTileEntity::new, "beam_siphon", reg, beamSiphon);
+		register(BeamSplitterTileEntity::new, "beam_splitter", reg, beamSplitter);
+		register(CrystalMasterAxisTileEntity::new, "crystal_master_axis", reg, crystalMasterAxis);
+//		register(RatiatorTileEntity::new, "ratiator", reg, raitator);
+		register(BeaconHarnessTileEntity::new, "beacon_harness", reg, beaconHarness);
+		register(FatFeederTileEntity::new, "fat_feeder", reg, fatFeeder);
+		register(RedstoneAxisTileEntity::new, "redstone_axis", reg, redstoneAxis);
+//		register(MathAxisTileEntity::new, "math_axis", reg, mathAxis);
+		register(CageChargerTileEntity::new, "cage_charger", reg, cageCharger);
+		register(HamsterWheelTileEntity::new, "hamster_wheel", reg, hamsterWheel);
+		register(FluidSplitterTileEntity::new, "fluid_splitter", reg, fluidSplitter);
+		register(BasicFluidSplitterTileEntity::new, "basic_fluid_splitter", reg, basicFluidSplitter);
+		register(CopshowiumCreationChamberTileEntity::new, "copshowium_creation_chamber", reg, copshowiumCreationChamber);
+		register(GatewayFrameTileEntity::new, "gateway_frame", reg, gatewayFrame);
+//		register(RedstoneKeyboardTileEntity::new, "redstone_keyboard", reg, redstoneKeyboard);
+//		register(PrototypingTableTileEntity::new, "prototyping_table", reg, prototypingTable);
+//		register(PrototypeTileEntity::new, "prototype", reg, prototype);
+//		register(PrototypePortTileEntity::new, "prototype_port", reg, prototypePort);
+		register(MechanicalArmTileEntity::new, "mechanical_arm", reg, mechanicalArm);
+		register(RedstoneRegistryTileEntity::new, "redstone_registry", reg, redstoneRegistry);
+		register(AlchemicalTubeTileEntity::new, "alchemical_tube", reg, alchemicalTubeCrystal, alchemicalTubeGlass);
+		register(FluidInjectorTileEntity::new, "fluid_injector", reg, fluidInjectorGlass, fluidInjectorCrystal);
+		register(FlowLimiterTileEntity::new, "flow_limiter", reg, flowLimiterCrystal, flowLimiterGlass);
+		register(HeatedTubeTileEntity::new, "heated_tube", reg, heatedTubeCrystal, heatedTubeGlass);
+		register(CoolingCoilTileEntity::new, "cooling_coil", reg, coolingCoilCrystal, coolingCoilGlass);
+		register(ChemicalVentTileEntity::new, "chemical_vent", reg, chemicalVent);
+		register(ReactionChamberTileEntity::new, "reaction_chamber", reg, reactionChamberCrystal, reactionChamberGlass);
+		register(HeatLimiterBasicTileEntity::new, "heat_limiter_basic", reg, heatLimiterBasic);
+		register(HeatLimiterRedstoneTileEntity::new, "heat_limiter", reg, heatLimiterRedstone);
+		register(DynamoTileEntity::new, "dynamo", reg, dynamo);
+		register(TeslaCoilTileEntity::new, "tesla_coil", reg, teslaCoil);
+		register(ReagentTankTileEntity::new, "reagent_tank", reg, reagentTankCrystal, reagentTankGlass);
+		register(ReagentPumpTileEntity::new, "reagent_pump", reg, reagentPumpGlass, reagentPumpCrystal);
+		register(MaxwellDemonTileEntity::new, "maxwell_demon", reg, maxwellDemon);
+		register(GlasswareHolderTileEntity::new, "glassware_holder", reg, glasswareHolder);
+		register(RedsAlchemicalTubeTileEntity::new, "reds_alchemical_tube", reg, redsAlchemicalTubeCrystal, redsAlchemicalTubeGlass);
+		register(AlembicTileEntity::new, "alembic", reg, alembic);
+		register(DensusPlateTileEntity::new, "densus_plate", reg, densusPlate, antiDensusPlate);
+		register(ChargingStandTileEntity::new, "charging_stand", reg, chargingStand);
+		register(AtmosChargerTileEntity::new, "atmos_charger", reg, atmosCharger);
+		register(VoltusGeneratorTileEntity::new, "voltus_generator", reg, voltusGenerator);
+		register(ReactiveSpotTileEntity::new, "reactive_spot", reg, reactiveSpot);
+		register(ClockworkStabilizerTileEntity::new, "clock_stab", reg, clockworkStabilizer);
+		register(WindTurbineTileEntity::new, "wind_turbine", reg, windTurbine);
+		register(SolarHeaterTileEntity::new, "solar_heater", reg, solarHeater);
+		register(HeatReservoirTileEntity::new, "heat_reservoir", reg, heatReservoir);
+		register(StirlingEngineTileEntity::new, "stirling_engine", reg, stirlingEngine);
+		register(StampMillTileEntity::new, "stamp_mill", reg, stampMill);
+		register(IceboxTileEntity::new, "icebox", reg, icebox);
+		register(OreCleanserTileEntity::new, "ore_cleanser", reg, oreCleanser);
+		register(BlastFurnaceTileEntity::new, "blast_furnace", reg, blastFurnace);
+		register(BeamRedirectorTileEntity::new, "beam_redirector", reg, beamRedirector);
+		register(RedstoneTransmitterTileEntity::new, "redstone_transmitter", reg, redstoneTransmitter);
+		register(RedstoneReceiverTileEntity::new, "redstone_receiver", reg, redstoneReceiver);
+		register(TeslaCoilTopTileEntity::new, "tesla_coil_top", reg, teslaCoilTopAttack, teslaCoilTopDecorative, teslaCoilTopDistance, teslaCoilTopEfficiency, teslaCoilTopIntensity, teslaCoilTopNormal);
+		register(FluxNodeTileEntity::new, "flux_node", reg, fluxNode);
+//		register(AbstractStabilizerTileEntity::new, "flux_void", reg, fluxStabilizerBeam, fluxStabilizerCrystalBeam, fluxStabilizerCrystalElectric, fluxStabilizerElectric);
+		register(TemporalAcceleratorTileEntity::new, "temporal_accelerator", reg, temporalAccelerator);
+		register(ChronoHarnessTileEntity::new, "chrono_harness", reg, chronoHarness);
+		register(StabilizerBeamTileEntity::new, "flux_stabilizer_beam", reg, fluxStabilizerBeam, fluxStabilizerCrystalBeam);
+		register(StabilizerElectricTileEntity::new, "flux_stabilizer_electric", reg, fluxStabilizerCrystalElectric, fluxStabilizerElectric);
+		register(ReagentFilterTileEntity::new, "reagent_filter", reg, reagentFilterCrystal, reagentFilterGlass);
 	}
 
-	/**
-	 * @param clazz The class of the TileEntity being registered. 
-	 * @param ID Must be lower-case.
-	 */
-	private static void register(Class<? extends TileEntity> clazz, String ID){
-		GameRegistry.registerTileEntity(clazz, new ResourceLocation(Crossroads.MODID, ID));
+	@SuppressWarnings("unchecked")
+	private static <T extends Block> void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Collection<T> blocks){
+		register(cons, id, reg, (T[]) blocks.toArray());
+	}
+	
+	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){
+		TileEntityType teType = TileEntityType.Builder.create(cons, blocks).build(DSL.nilType());
+		teType.setRegistryName(new ResourceLocation(Crossroads.MODID, id));
+		reg.register(teType);
 	}
 }

@@ -82,16 +82,16 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setBoolean("neg", neg);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putBoolean("neg", neg);
 
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		neg = nbt.getBoolean("neg");
 	}
 

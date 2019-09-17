@@ -66,17 +66,17 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 
-		nbt.setBoolean("initHeat", init);
-		nbt.setDouble("temp_side", tempSide);
-		nbt.setDouble("temp_bottom", tempBottom);
+		nbt.putBoolean("initHeat", init);
+		nbt.putDouble("temp_side", tempSide);
+		nbt.putDouble("temp_bottom", tempBottom);
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 
 		init = nbt.getBoolean("initHeat");
 		tempSide = nbt.getDouble("temp_side");

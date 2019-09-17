@@ -47,15 +47,15 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		running = nbt.getBoolean("running");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setBoolean("running", running);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putBoolean("running", running);
 		return nbt;
 	}
 

@@ -55,17 +55,17 @@ public class FireboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		burnTime = nbt.getInteger("burn");
-		maxBurnTime = nbt.getInteger("max_burn");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		burnTime = nbt.getInt("burn");
+		maxBurnTime = nbt.getInt("max_burn");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("burn", burnTime);
-		nbt.setInteger("max_burn", maxBurnTime);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("burn", burnTime);
+		nbt.putInt("max_burn", maxBurnTime);
 		return nbt;
 	}
 

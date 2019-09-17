@@ -51,15 +51,15 @@ public class HeatSinkTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		mode = nbt.getInteger("mode");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		mode = nbt.getInt("mode");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("mode", mode);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("mode", mode);
 		return nbt;
 	}
 

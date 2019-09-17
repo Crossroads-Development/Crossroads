@@ -84,18 +84,18 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		if(!cage.isEmpty()){
-			nbt.setTag("inv", cage.writeToNBT(new CompoundNBT()));
+			nbt.put("inv", cage.writeToNBT(new CompoundNBT()));
 		}
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		cage = new ItemStack(nbt.getCompoundTag("inv"));
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		cage = new ItemStack(nbt.getCompound("inv"));
 	}
 
 	private class ItemHandler implements IItemHandler{

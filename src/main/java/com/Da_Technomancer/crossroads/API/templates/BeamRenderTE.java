@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -55,7 +55,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	protected void refreshBeam(int index){
 		int packet = beamer == null || beamer[index] == null ? 0 : beamer[index].genPacket();
 		beamPackets[index] = packet;
-		ModPackets.network.sendToAllAround(new SendIntToClient((byte) index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		if(beamer != null && beamer[index] != null && beamer[index].getLastSent() != null){
 			prevMag[index] = beamer[index].getLastSent();
 		}
@@ -128,15 +128,15 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		CompoundNBT nbt = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
 			if(beamPackets[i] != 0){
-				nbt.setInteger(i + "_beam_packet", beamPackets[i]);
+				nbt.putInt(i + "_beam_packet", beamPackets[i]);
 			}
 		}
 		return nbt;
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 
 		queued[0].writeToNBT("queue0", nbt);
 		queued[1].writeToNBT("queue1", nbt);
@@ -144,7 +144,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 		if(beamer != null){
 			for(int i = 0; i < 6; i++){
-				nbt.setInteger(i + "_beam_packet", beamPackets[i]);
+				nbt.putInt(i + "_beam_packet", beamPackets[i]);
 			}
 		}
 
@@ -152,14 +152,14 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		queued[0] = BeamUnitStorage.readFromNBT("queue0", nbt);
 		queued[1] = BeamUnitStorage.readFromNBT("queue1", nbt);
 		activeCycle = nbt.getLong("cyc");
 
 		for(int i = 0; i < 6; i++){
-			beamPackets[i] = nbt.getInteger(i + "_beam_packet");
+			beamPackets[i] = nbt.getInt(i + "_beam_packet");
 		}
 	}
 

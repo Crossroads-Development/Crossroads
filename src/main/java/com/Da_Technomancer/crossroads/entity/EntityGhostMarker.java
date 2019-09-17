@@ -46,10 +46,10 @@ public class EntityGhostMarker extends Entity{
 	@Override
 	protected void readEntityFromNBT(CompoundNBT nbt){
 		nbt.setString("type", type.name());
-		nbt.setInteger("life", lifespan);
+		nbt.putInt("life", lifespan);
 		nbt.setLong("time", time);
 		if(data != null){
-			nbt.setTag("data", data);
+			nbt.put("data", data);
 		}
 	}
 
@@ -66,10 +66,10 @@ public class EntityGhostMarker extends Entity{
 			Crossroads.logger.error("Failed to load EntityGhostMarker at " + getPosition().toString() + "; dim: " + world.provider.getDimension() + "; with type: " + nbt.getString("type") + ". Removing.");
 			setDead();
 		}
-		lifespan = nbt.getInteger("life");
+		lifespan = nbt.getInt("life");
 		time = nbt.getLong("time");
-		if(nbt.hasKey("data")){
-			data = nbt.getCompoundTag("data");
+		if(nbt.contains("data")){
+			data = nbt.getCompound("data");
 		}
 	}
 

@@ -54,11 +54,11 @@ public class StaffTechnomancy extends BeamUsingItem{
 				return;
 			}
 
-			CompoundNBT nbt = stack.getTagCompound();
-			int energy = nbt.getInteger(EnumBeamAlignments.ENERGY.name());
-			int potential = nbt.getInteger(EnumBeamAlignments.POTENTIAL.name());
-			int stability = nbt.getInteger(EnumBeamAlignments.STABILITY.name());
-			int voi = nbt.getInteger(EnumBeamAlignments.VOID.name());
+			CompoundNBT nbt = stack.getTag();
+			int energy = nbt.getInt(EnumBeamAlignments.ENERGY.name());
+			int potential = nbt.getInt(EnumBeamAlignments.POTENTIAL.name());
+			int stability = nbt.getInt(EnumBeamAlignments.STABILITY.name());
+			int voi = nbt.getInt(EnumBeamAlignments.VOID.name());
 
 			BeamUnit cageBeam = BeamCage.getStored(cage);
 			int beamEn = cageBeam == null ? 0 : cageBeam.getEnergy();

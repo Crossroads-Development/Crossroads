@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
@@ -88,7 +88,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		}
 		region = null;
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendLongToClient((byte) 4, size, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 4, size, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		return size;
 	}
 
@@ -124,7 +124,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 						continue;
 					}
 					if(ent instanceof ServerPlayerEntity){
-						ModPackets.network.sendTo(new SendPlayerTickCountToClient(extraTicks + 1), (ServerPlayerEntity) ent);
+						CrossroadsPackets.network.sendTo(new SendPlayerTickCountToClient(extraTicks + 1), (ServerPlayerEntity) ent);
 					}
 					for(int i = 0; i < extraTicks; i++){
 						ent.onUpdate();
@@ -198,29 +198,29 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("intensity", intensity);
-		nbt.setInteger("size", size);
-		nbt.setInteger("duration", duration);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("intensity", intensity);
+		nbt.putInt("size", size);
+		nbt.putInt("duration", duration);
 		nbt.setLong("last_run", lastRunTick);
 
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		intensity = nbt.getInteger("intensity");
-		size = nbt.getInteger("size");
-		duration = nbt.getInteger("duration");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		intensity = nbt.getInt("intensity");
+		size = nbt.getInt("size");
+		duration = nbt.getInt("duration");
 		lastRunTick = nbt.getLong("last_run");
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.setInteger("size", size);
+		nbt.putInt("size", size);
 		return nbt;
 	}
 

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
@@ -74,7 +74,7 @@ public class HeatLimiterBasic extends ContainerBlock{
 					worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
 				}
 			}else{
-				ModPackets.network.sendTo(new SendDoubleToClient("new_setting", ((HeatLimiterBasicTileEntity) worldIn.getTileEntity(pos)).getSetting(), pos), (ServerPlayerEntity) playerIn);
+				CrossroadsPackets.network.sendTo(new SendDoubleToClient("new_setting", ((HeatLimiterBasicTileEntity) worldIn.getTileEntity(pos)).getSetting(), pos), (ServerPlayerEntity) playerIn);
 				playerIn.openGui(Crossroads.instance, GuiHandler.HEAT_LIMITER_BASIC_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 			}
 		}

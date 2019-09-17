@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
@@ -57,30 +57,30 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 	public void trigger(){
 		if(!running && !invalid(null, true, null)){
 			running = true;
-			ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, BeamManager.toPacket(new BeamUnit(1, 1, 1, 0), 2), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 0, BeamManager.toPacket(new BeamUnit(1, 1, 1, 0), 2), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.setBoolean("run", running);
+		nbt.putBoolean("run", running);
 		return nbt;
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setBoolean("run", running);
-		nbt.setInteger("cycle", cycles);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putBoolean("run", running);
+		nbt.putInt("cycle", cycles);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		running = nbt.getBoolean("run");
-		cycles = nbt.getInteger("cycle");
+		cycles = nbt.getInt("cycle");
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 			Color col = Color.getHSBColor(((float) cycles) / 120F, 1, 1);
 			if(invalid(col, cycles < 0 || cycles % 40 < 8, toEmit)){
 				running = false;
-				ModPackets.network.sendToAllAround(new SendIntToClient((byte) 0, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 0, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				cycles = -9;
 
 				if(beamer[1].emit(null, world)){

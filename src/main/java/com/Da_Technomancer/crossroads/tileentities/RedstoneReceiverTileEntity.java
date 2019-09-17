@@ -69,16 +69,16 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 	}
 	
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		if(nbt.hasKey("src")){
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		if(nbt.contains("src")){
 			src = BlockPos.fromLong(nbt.getLong("src"));
 		}
 	}
 	
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		if(src != null){
 			nbt.setLong("src", src.toLong());
 		}

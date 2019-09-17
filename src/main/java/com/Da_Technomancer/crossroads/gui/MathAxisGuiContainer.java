@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;
 import com.Da_Technomancer.crossroads.API.templates.RadioButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.TexturedToggleButtonGuiObject;
@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
 import com.Da_Technomancer.crossroads.gui.container.BlankContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MathAxisTileEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 
 import java.io.IOException;
@@ -99,7 +98,7 @@ public class MathAxisGuiContainer extends ContainerScreen{
 		int mode = buttons.getPressed();
 		if(mode != te.getMode().ordinal()){
 			te.setMode(MathAxisTileEntity.Mode.values()[mode]);
-			ModPackets.network.sendToServer(new SendIntToServer((byte) 0, mode, te.getPos(), te.getWorld().provider.getDimension()));
+			CrossroadsPackets.network.sendToServer(new SendIntToServer((byte) 0, mode, te.getPos(), te.getWorld().provider.getDimension()));
 		}
 	}
 }

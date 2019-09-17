@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;

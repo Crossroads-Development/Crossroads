@@ -34,12 +34,12 @@ public class EntityBullet extends ThrowableEntity{
 	@Override
 	public void readEntityFromNBT(CompoundNBT nbt){
 		super.readEntityFromNBT(nbt);
-		damage = nbt.getInteger("damage");
+		damage = nbt.getInt("damage");
 	}
 
 	@Override
 	public void writeEntityToNBT(CompoundNBT nbt){
 		super.writeEntityToNBT(nbt);
-		nbt.setInteger("damage", damage);
+		nbt.putInt("damage", damage);
 	}
 }

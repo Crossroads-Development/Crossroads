@@ -1,23 +1,26 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.packets.Message;
+import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.world.World;
 
-public class SendIntToClient extends Message<SendIntToClient>{
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 
-	public SendIntToClient(){
-	}
+public class SendIntToClient extends ClientPacket{
 
 	public byte identifier;
 	public int message;
 	public BlockPos pos;
+
+	private static final Field[] FIELDS = fetchFields(SendIntToClient.class, "identifier", "message", "pos");
+
+	@SuppressWarnings("unused")
+	public SendIntToClient(){
+
+	}
 
 	public SendIntToClient(byte identifier, int message, BlockPos pos){
 		this.identifier = identifier;
@@ -25,25 +28,15 @@ public class SendIntToClient extends Message<SendIntToClient>{
 		this.pos = pos;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.CLIENT){
-			Crossroads.logger.error("MessageToClient received on wrong side:" + context.side);
-			return null;
-		}
-
-		Minecraft minecraft = Minecraft.getInstance();
-		final ClientWorld worldClient = minecraft.world;
-		minecraft.addScheduledTask(new Runnable(){
-			public void run(){
-				processMessage(worldClient, identifier, message, pos);
-			}
-		});
-
-		return null;
+	protected Field[] getFields(){
+		return FIELDS;
 	}
 
-	public void processMessage(ClientWorld worldClient, byte identifier, int message, BlockPos pos){
+	@Override
+	protected void run(){
+		World worldClient = Minecraft.getInstance().world;
 		if(worldClient == null){
 			return;
 		}

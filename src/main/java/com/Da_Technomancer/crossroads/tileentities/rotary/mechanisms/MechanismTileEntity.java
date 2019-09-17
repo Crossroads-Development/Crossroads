@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
@@ -14,12 +14,8 @@ import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -98,7 +94,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		if(index == 6 && axleAxis != axis){
 			axleAxis = axis;
 			if(!newTE){
-				ModPackets.network.sendToAllAround(new SendLongToClient((byte) 14, axis == null ? -1 : axis.ordinal(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 14, axis == null ? -1 : axis.ordinal(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 
@@ -112,16 +108,16 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 
 		// motionData
 		for(int i = 0; i < 7; i++){
-//			nbt.setFloat("[" + i + "]cl_w", clientW[i]);
-//			nbt.setFloat("[" + i + "]ang", angle[i]);
+//			nbt.putFloat("[" + i + "]cl_w", clientW[i]);
+//			nbt.putFloat("[" + i + "]ang", angle[i]);
 			for(int j = 0; j < 4; j++){
 				if(motionData[i][j] != 0){
-					nbt.setDouble("[" + i + "," + j + "]mot", motionData[i][j]);
+					nbt.putDouble("[" + i + "," + j + "]mot", motionData[i][j]);
 				}
 			}
 		}
@@ -129,16 +125,16 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		// members
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
-				nbt.setInteger("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
-				nbt.setInteger("[" + i + "]mat", mats[i].getIndex());
+				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
+				nbt.putInt("[" + i + "]mat", mats[i].getIndex());
 			}
 		}
 
 		if(members[6] != null && mats[6] != null && axleAxis != null){
-			nbt.setInteger("axis", axleAxis.ordinal());
+			nbt.putInt("axis", axleAxis.ordinal());
 		}
 
-		nbt.setDouble("reds", redstoneIn);
+		nbt.putDouble("reds", redstoneIn);
 
 		return nbt;
 	}
@@ -148,39 +144,39 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		CompoundNBT nbt = super.getUpdateTag();
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
-				nbt.setInteger("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
-				nbt.setInteger("[" + i + "]mat", mats[i].getIndex());
+				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
+				nbt.putInt("[" + i + "]mat", mats[i].getIndex());
 
-//				nbt.setFloat("[" + i + "]cl_w", clientW[i]);
-//				nbt.setFloat("[" + i + "]ang", angle[i]);
+//				nbt.putFloat("[" + i + "]cl_w", clientW[i]);
+//				nbt.putFloat("[" + i + "]ang", angle[i]);
 			}
 		}
 
 		if(members[6] != null && mats[6] != null && axleAxis != null){
-			nbt.setInteger("axis", axleAxis.ordinal());
+			nbt.putInt("axis", axleAxis.ordinal());
 		}
-		nbt.setDouble("reds", redstoneIn);
+		nbt.putDouble("reds", redstoneIn);
 
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 
-		if(nbt.hasKey("[6]memb") && nbt.hasKey("[6]mat")){
-			axleAxis = Direction.Axis.values()[nbt.getInteger("axis")];
+		if(nbt.contains("[6]memb") && nbt.contains("[6]mat")){
+			axleAxis = Direction.Axis.values()[nbt.getInt("axis")];
 		}
 
 		for(int i = 0; i < 7; i++){
-			if(nbt.hasKey("[" + i + "]memb") && nbt.hasKey("[" + i + "]mat")){
+			if(nbt.contains("[" + i + "]memb") && nbt.contains("[" + i + "]mat")){
 				// members
-				members[i] = MECHANISMS.get(nbt.getInteger("[" + i + "]memb"));
+				members[i] = MECHANISMS.get(nbt.getInt("[" + i + "]memb"));
 				if(members[i] == null){
 					continue;//Sanity check in case a mechanism type gets removed in the future
 				}
 
-				mats[i] = GearFactory.gearMats.get(nbt.getInteger("[" + i + "]mat"));
+				mats[i] = GearFactory.gearMats.get(nbt.getInt("[" + i + "]mat"));
 
 				// motionData
 //				clientW[i] = nbt.getFloat("[" + i + "]cl_w");
@@ -231,7 +227,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		//TODO see if it's possible to make this not a ticking tile entity
 
 		if(updateMembers && !world.isRemote){
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 14, axleAxis == null ? -1 : axleAxis.ordinal(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 14, axleAxis == null ? -1 : axleAxis.ordinal(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			for(int i = 0; i < 7; i++){
 				axleHandlers[i].updateStates(true);
 			}
@@ -249,7 +245,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 				}
 			}
 			redstoneIn = reds;
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 15, Double.doubleToLongBits(redstoneIn), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 15, Double.doubleToLongBits(redstoneIn), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 
@@ -376,7 +372,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			}
 
 			if(sendPacket && !world.isRemote){
-				ModPackets.network.sendToAllAround(new SendLongToClient((byte) (side + 7), members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].getIndex()) << 32L, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) (side + 7), members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].getIndex()) << 32L, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 

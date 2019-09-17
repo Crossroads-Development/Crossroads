@@ -38,15 +38,15 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setBoolean("reds", redstone);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putBoolean("reds", redstone);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		redstone = nbt.getBoolean("reds");
 	}
 

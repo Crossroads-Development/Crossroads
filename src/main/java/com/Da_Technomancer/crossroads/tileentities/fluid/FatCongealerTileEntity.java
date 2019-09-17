@@ -60,9 +60,9 @@ public class FatCongealerTileEntity extends InventoryTE{
 			}
 			ItemStack stack = new ItemStack(CrossroadsItems.edibleBlob, 1, 0);
 			CompoundNBT nbt = new CompoundNBT();
-			nbt.setInteger("food", hun);
-			nbt.setInteger("sat", sat);
-			stack.setTagCompound(nbt);
+			nbt.putInt("food", hun);
+			nbt.putInt("sat", sat);
+			stack.setTag(nbt);
 			ItemEntity ent = new ItemEntity(world, pos.getX() + .5D, pos.getY() + .5D, pos.getZ() + .5D, stack);
 			ent.motionX = 2D * Math.random() - 1D;
 			ent.motionZ = 2D * Math.random() - 1D;

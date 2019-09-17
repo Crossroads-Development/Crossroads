@@ -54,8 +54,8 @@ public class HeatReservoir extends ContainerBlock{
 		tooltip.add("Acts as a buffer to slow down temperature change");
 		tooltip.add("Comparators measure the temperature in Kelvin");
 
-		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("temp")){
-			tooltip.add(MiscUtil.betterRound(stack.getTagCompound().getDouble("temp"), 3) + "°C");
+		if(stack.hasTagCompound() && stack.getTag().hasKey("temp")){
+			tooltip.add(MiscUtil.betterRound(stack.getTag().getDouble("temp"), 3) + "°C");
 		}
 	}
 
@@ -66,7 +66,7 @@ public class HeatReservoir extends ContainerBlock{
 		}else{
 			player.addExhaustion(0.005F);
 			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
-			stack.setTagCompound(((HeatReservoirTileEntity) te).getDropNBT());
+			stack.setTag(((HeatReservoirTileEntity) te).getDropNBT());
 			spawnAsEntity(worldIn, pos, stack);
 		}
 	}
@@ -75,7 +75,7 @@ public class HeatReservoir extends ContainerBlock{
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTagCompound()){
 			HeatReservoirTileEntity te = (HeatReservoirTileEntity) world.getTileEntity(pos);
-			te.getCapability(Capabilities.HEAT_CAPABILITY, null).setTemp(stack.getTagCompound().getDouble("temp"));
+			te.getCapability(Capabilities.HEAT_CAPABILITY, null).setTemp(stack.getTag().getDouble("temp"));
 		}
 	}
 

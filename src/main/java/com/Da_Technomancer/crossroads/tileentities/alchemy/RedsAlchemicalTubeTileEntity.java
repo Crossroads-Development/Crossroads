@@ -1,13 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,7 +33,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 		locked = lockIn;
 		markDirty();
 		for(int i = 0; i < 6; i++){
-			ModPackets.network.sendToAllAround(new SendIntToClient((byte) i, locked || !hasMatch[i] ? 0 : connectMode[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) i, locked || !hasMatch[i] ? 0 : connectMode[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 	}
 
@@ -48,15 +45,15 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		locked = nbt.getBoolean("lock");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setBoolean("lock", locked);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putBoolean("lock", locked);
 		return nbt;
 	}
 

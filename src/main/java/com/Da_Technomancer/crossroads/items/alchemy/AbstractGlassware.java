@@ -65,7 +65,7 @@ public abstract class AbstractGlassware extends Item{
 	 */
 	@Nonnull
 	public ReagentMap getReagants(ItemStack stack){
-		return stack.hasTagCompound() ? ReagentMap.readFromNBT(stack.getTagCompound().getCompoundTag(TAG_NAME)) : new ReagentMap();
+		return stack.hasTagCompound() ? ReagentMap.readFromNBT(stack.getTag().getCompoundTag(TAG_NAME)) : new ReagentMap();
 	}
 
 	/**
@@ -75,11 +75,11 @@ public abstract class AbstractGlassware extends Item{
 	 */
 	public void setReagents(ItemStack stack, ReagentMap reagents){
 		if(!stack.hasTagCompound()){
-			stack.setTagCompound(new CompoundNBT());
+			stack.setTag(new CompoundNBT());
 		}
 
 		CompoundNBT nbt = new CompoundNBT();
-		stack.getTagCompound().setTag(TAG_NAME, nbt);
+		stack.getTag().setTag(TAG_NAME, nbt);
 
 		reagents.writeToNBT(nbt);
 	}

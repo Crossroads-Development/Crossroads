@@ -40,7 +40,7 @@ public class EdibleBlob extends ItemFood{
 
 	@Override
 	public int getHealAmount(ItemStack stack){
-		return stack.hasTagCompound() ? stack.getTagCompound().getInteger("food") : 0;
+		return stack.hasTagCompound() ? stack.getTag().getInt("food") : 0;
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class EdibleBlob extends ItemFood{
 	 * @return The actual saturation restored
 	 */
 	private int getTrueSat(ItemStack stack){
-		return stack.hasTagCompound() ? stack.getTagCompound().getInteger("sat") : 0;
+		return stack.hasTagCompound() ? stack.getTag().getInt("sat") : 0;
 	}
 
 	@Override
@@ -70,8 +70,8 @@ public class EdibleBlob extends ItemFood{
 			// The way saturation is coded is weird, and the best way to do this is through nbt.
 			CompoundNBT nbt = new CompoundNBT();
 			food.writeNBT(nbt);
-			nbt.setInteger("foodLevel", Math.min(getHealAmount(stack) + food.getFoodLevel(), 20));
-			nbt.setFloat("foodSaturationLevel", Math.min(20F, food.getSaturationLevel() + getTrueSat(stack)));
+			nbt.putInt("foodLevel", Math.min(getHealAmount(stack) + food.getFoodLevel(), 20));
+			nbt.putFloat("foodSaturationLevel", Math.min(20F, food.getSaturationLevel() + getTrueSat(stack)));
 			food.readNBT(nbt);
 			worldIn.playSound(null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
 			entityplayer.addStat(Stats.getObjectUseStats(this));

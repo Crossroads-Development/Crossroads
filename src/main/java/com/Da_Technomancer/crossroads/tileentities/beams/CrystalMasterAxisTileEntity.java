@@ -89,9 +89,9 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("time", time);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("time", time);
 		if(currentElement != null){
 			nbt.setString("elem", currentElement.name());
 		}
@@ -99,10 +99,10 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		time = nbt.getInteger("time");
-		currentElement = nbt.hasKey("elem") ? EnumBeamAlignments.valueOf(nbt.getString("elem")) : null;
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		time = nbt.getInt("time");
+		currentElement = nbt.contains("elem") ? EnumBeamAlignments.valueOf(nbt.getString("elem")) : null;
 	}
 
 	@Override

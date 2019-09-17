@@ -118,15 +118,15 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		energy = nbt.getInteger("ener");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		energy = nbt.getInt("ener");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("ener", energy);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("ener", energy);
 		return nbt;
 	}
 

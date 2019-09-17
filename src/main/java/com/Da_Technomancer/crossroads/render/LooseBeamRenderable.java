@@ -38,7 +38,7 @@ public class LooseBeamRenderable implements IVisualEffect{
 	}
 	
 	public static LooseBeamRenderable readFromNBT(CompoundNBT nbt){
-		return new LooseBeamRenderable(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getDouble("length"), nbt.getFloat("angle_x"), nbt.getFloat("angle_y"), nbt.getByte("width"), nbt.getInteger("color"));
+		return new LooseBeamRenderable(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getDouble("length"), nbt.getFloat("angle_x"), nbt.getFloat("angle_y"), nbt.getByte("width"), nbt.getInt("color"));
 	}
 
 	@Override

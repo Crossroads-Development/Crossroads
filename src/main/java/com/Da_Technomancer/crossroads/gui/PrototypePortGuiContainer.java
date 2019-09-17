@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.gui;
 import com.Da_Technomancer.crossroads.API.templates.RadioButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToServer;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToServer;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
@@ -67,8 +67,8 @@ public class PrototypePortGuiContainer extends ContainerScreen{
 		PrototypePortTypes type = typeIndex == 0 ? (in_out.getPressed() == 0 ? PrototypePortTypes.REDSTONE_IN : PrototypePortTypes.REDSTONE_OUT) : typeIndex == 1 ? PrototypePortTypes.ROTARY : typeIndex == 2 ? (in_out.getPressed() == 0 ? PrototypePortTypes.MAGIC_IN : PrototypePortTypes.MAGIC_OUT) : PrototypePortTypes.HEAT;
 		te.setType(type);
 		te.desc = descBar.getText();
-		ModPackets.network.sendToServer(new SendIntToServer((byte) 0, side.getPressed() + (type.ordinal() << 3), te.getPos(), te.getWorld().provider.getDimension()));
-		ModPackets.network.sendToServer(new SendStringToServer("desc", descBar.getText(), te.getPos(), te.getWorld().provider.getDimension()));
+		CrossroadsPackets.network.sendToServer(new SendIntToServer((byte) 0, side.getPressed() + (type.ordinal() << 3), te.getPos(), te.getWorld().provider.getDimension()));
+		CrossroadsPackets.network.sendToServer(new SendStringToServer("desc", descBar.getText(), te.getPos(), te.getWorld().provider.getDimension()));
 		te.getWorld().markBlockRangeForRenderUpdate(te.getPos(), te.getPos());
 	}
 	

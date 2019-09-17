@@ -8,26 +8,32 @@ import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
+/**
+ * Most Crossroads machines extend this class, which provides boilerplate for simple rotary, heat, and fluid support that can be enabled via overriding a few methods and setting a few fields
+ */
 public abstract class ModuleTE extends TileEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
 
 	//Rotary
@@ -73,8 +79,8 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		return new HeatHandler();
 	}
 
-	public ModuleTE(){
-		super();
+	public ModuleTE(TileEntityType<? extends ModuleTE> type){
+		super(type);
 		if(useHeat()){
 			heatHandler = createHeatHandler();
 		}else{
@@ -107,6 +113,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 	@Override
 	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
+		ITextComponent comp = new TranslationTextComponent("");
 		if(useHeat()){
 			chat.add("Temp: " + MiscUtil.betterRound(temp, 3) + "°C");
 			chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
@@ -128,32 +135,32 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		for(int i = 0; i < 4; i++){
-			nbt.setDouble("mot_" + i, motData[i]);
+			nbt.putDouble("mot_" + i, motData[i]);
 		}
 		if(angleW != null){
-			nbt.setFloat("ang_w_0", angleW[0]);
-			nbt.setFloat("ang_w_1", angleW[1]);
+			nbt.putFloat("ang_w_0", angleW[0]);
+			nbt.putFloat("ang_w_1", angleW[1]);
 		}
 
-		nbt.setBoolean("init_heat", initHeat);
-		nbt.setDouble("temp", temp);
+		nbt.putBoolean("init_heat", initHeat);
+		nbt.putDouble("temp", temp);
 
 		for(int i = 0; i < fluids.length; i++){
 			if(fluids[i] != null){
 				CompoundNBT fluidNBT = new CompoundNBT();
 				fluids[i].writeToNBT(fluidNBT);
-				nbt.setTag("fluid_" + i, fluidNBT);
+				nbt.put("fluid_" + i, fluidNBT);
 			}
 		}
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		for(int i = 0; i < 4; i++){
 			motData[i] = nbt.getDouble("mot_" + i);
 		}
@@ -166,8 +173,8 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		temp = nbt.getDouble("temp");
 
 		for(int i = 0; i < fluids.length; i++){
-			if(nbt.hasKey("fluid_" + i)){
-				fluids[i] = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_" + i));
+			if(nbt.contains("fluid_" + i)){
+				fluids[i] = FluidStack.loadFluidStackFromNBT(nbt.getCompound("fluid_" + i));
 			}
 		}
 	}
@@ -176,8 +183,8 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		if(angleW != null){
-			nbt.setFloat("ang_w_0", angleW[0]);
-			nbt.setFloat("ang_w_1", angleW[1]);
+			nbt.putFloat("ang_w_0", angleW[0]);
+			nbt.putFloat("ang_w_1", angleW[1]);
 		}
 		return nbt;
 	}

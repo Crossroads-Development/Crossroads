@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToServer;
 import com.Da_Technomancer.crossroads.API.templates.ButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
@@ -238,7 +238,7 @@ public class HeatLimiterBasicGuiContainer extends ContainerScreen{
 		out = Math.abs(out);
 		if(changed && out != te.getSetting()){
 			te.set(out);
-			ModPackets.network.sendToServer(new SendDoubleToServer("new_setting", out, te.getPos(), te.getWorld().provider.getDimension()));
+			CrossroadsPackets.network.sendToServer(new SendDoubleToServer("new_setting", out, te.getPos(), te.getWorld().provider.getDimension()));
 		}
 	}
 }

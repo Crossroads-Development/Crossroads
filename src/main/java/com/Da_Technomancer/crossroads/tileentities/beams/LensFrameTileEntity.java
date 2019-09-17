@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
@@ -93,7 +93,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	public void setContents(int id){
 		contents = id;
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendIntToClient((byte) 2, contents, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 2, contents, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	public int getContents(){
@@ -110,7 +110,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 			refreshBeam(false);
 		}
 		axis = null;
-		ModPackets.network.sendToAllAround(new SendIntToClient((byte) 3, 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 3, 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	private void refreshBeam(boolean positive){
@@ -121,7 +121,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		}else{
 			packetNeg = packet;
 		}
-		ModPackets.network.sendToAllAround(new SendIntToClient((byte) index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		if(beamer[index].getLastSent() != null){
 			prevMag = beamer[index].getLastSent();
 		}
@@ -171,29 +171,29 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.setInteger("beam_neg", packetNeg);
-		nbt.setInteger("beam_pos", packetPos);
-		nbt.setInteger("contents", contents);
+		nbt.putInt("beam_neg", packetNeg);
+		nbt.putInt("beam_pos", packetPos);
+		nbt.putInt("contents", contents);
 		return nbt;
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("beam_neg", packetNeg);
-		nbt.setInteger("beam_pos", packetPos);
-		nbt.setDouble("reds", lastRedstone);
-		nbt.setInteger("contents", contents);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("beam_neg", packetNeg);
+		nbt.putInt("beam_pos", packetPos);
+		nbt.putDouble("reds", lastRedstone);
+		nbt.putInt("contents", contents);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		packetPos = nbt.getInteger("beam_pos");
-		packetNeg = nbt.getInteger("beam_neg");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		packetPos = nbt.getInt("beam_pos");
+		packetNeg = nbt.getInt("beam_neg");
 		lastRedstone = nbt.getDouble("reds");
-		contents = nbt.getInteger("contents");
+		contents = nbt.getInt("contents");
 	}
 
 	private final IBeamHandler magicHandler = new BeamHandler(AxisDirection.NEGATIVE);

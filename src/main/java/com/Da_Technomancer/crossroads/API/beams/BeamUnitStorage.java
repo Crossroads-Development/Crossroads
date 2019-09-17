@@ -102,7 +102,7 @@ public class BeamUnitStorage{
 	}
 
 	public static BeamUnit readUnitFromNBT(@Nonnull String key, CompoundNBT nbt){
-		if(nbt.hasKey(key)){
+		if(nbt.contains(key)){
 			return new BeamUnit(nbt.getIntArray(key));
 		}
 		return null;
@@ -110,7 +110,7 @@ public class BeamUnitStorage{
 
 	public static BeamUnitStorage readFromNBT(@Nonnull String key, CompoundNBT nbt){
 		BeamUnitStorage out = new BeamUnitStorage();
-		if(nbt.hasKey(key)){
+		if(nbt.contains(key)){
 			out.stored = nbt.getIntArray(key);
 		}
 		return out;

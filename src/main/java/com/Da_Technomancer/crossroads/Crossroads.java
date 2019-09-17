@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.entity.ModEntities;
@@ -13,7 +13,6 @@ import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
 import com.Da_Technomancer.crossroads.render.bakedModel.BakedModelLoader;
 import com.Da_Technomancer.crossroads.tileentities.ModTileEntity;
 import com.Da_Technomancer.crossroads.world.ModWorldGen;
-import com.mojang.datafixers.DSL;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -22,7 +21,6 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -44,8 +42,6 @@ import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.function.Supplier;
 
 import static com.Da_Technomancer.crossroads.Crossroads.MODID;
 
@@ -75,10 +71,10 @@ public final class Crossroads{
 
 	private void commonInit(@SuppressWarnings("unused") FMLCommonSetupEvent e){
 		//Pre
-		ModPackets.preInit();
+		CrossroadsPackets.preInit();
 		Capabilities.register();
-		ModTileEntity.init();
-		ModPackets.preInit();
+//		ModTileEntity.init();
+		CrossroadsPackets.preInit();
 		ModDimensions.init();
 		ModEntities.init();
 		//Main
@@ -149,13 +145,8 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> e){
 		IForgeRegistry<TileEntityType<?>> reg = e.getRegistry();
+		ModTileEntity.init(reg);
 		//TODO register TEs
-	}
-
-	private static void registerTE(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){
-		TileEntityType teType = TileEntityType.Builder.create(cons, blocks).build(DSL.nilType());
-		teType.setRegistryName(new ResourceLocation(MODID, id));
-		reg.register(teType);
 	}
 
 	@SubscribeEvent

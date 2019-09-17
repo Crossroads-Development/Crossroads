@@ -2,8 +2,7 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
-import com.Da_Technomancer.crossroads.API.packets.INbtReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityClient;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import net.minecraft.block.BlockState;
@@ -65,9 +64,9 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 	@Override
 	public void readEntityFromNBT(CompoundNBT nbt){
 		reags = new ReagentMap();
-		maxRadius = nbt.getInteger("rad");
+		maxRadius = nbt.getInt("rad");
 		reags = ReagentMap.readFromNBT(nbt);
-		ticksExisted = nbt.getInteger("life");
+		ticksExisted = nbt.getInt("life");
 		setInitialValues(reags, maxRadius);
 	}
 
@@ -77,8 +76,8 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 			reags.writeToNBT(nbt);
 		}
 
-		nbt.setInteger("rad", maxRadius);
-		nbt.setInteger("life", ticksExisted);
+		nbt.putInt("rad", maxRadius);
+		nbt.putInt("life", ticksExisted);
 	}
 
 	protected int ticksExisted = -1;
@@ -123,9 +122,9 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 
 			CompoundNBT nbt = new CompoundNBT();
 			col = new Color(r / amount, g / amount, b / amount, a / amount);
-			nbt.setInteger("col", col.getRGB());
-			nbt.setInteger("life", ticksExisted);
-			ModPackets.network.sendToAllAround(new NbtToEntityClient(getUniqueID(), nbt), new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 512));
+			nbt.putInt("col", col.getRGB());
+			nbt.putInt("life", ticksExisted);
+			CrossroadsPackets.network.sendToAllAround(new NbtToEntityClient(getUniqueID(), nbt), new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 512));
 		}
 
 		if(ticksExisted % 8 == 0){
@@ -199,9 +198,9 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 
 	@Override
 	public void receiveNBT(CompoundNBT nbt){
-		int colorCode = nbt.getInteger("col");
+		int colorCode = nbt.getInt("col");
 		col = Color.decode(Integer.toString(colorCode & 0xFFFFFF));
 		col = new Color(col.getRed(), col.getGreen(), col.getBlue(), colorCode >>> 24);
-		ticksExisted = nbt.getInteger("life");
+		ticksExisted = nbt.getInt("life");
 	}
 }

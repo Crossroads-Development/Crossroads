@@ -70,22 +70,22 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		output = new double[nbt.getInteger("length")];
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		output = new double[nbt.getInt("length")];
 		for(int i = 0; i < output.length; i++){
 			output[i] = nbt.getDouble("output_" + i);
 		}
-		index = Math.min(nbt.getInteger("index"), output.length - 1);
+		index = Math.min(nbt.getInt("index"), output.length - 1);
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("index", index);
-		nbt.setInteger("length", output.length);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("index", index);
+		nbt.putInt("length", output.length);
 		for(int i = 0; i < output.length; i++){
-			nbt.setDouble("output_" + i, output[i]);
+			nbt.putDouble("output_" + i, output[i]);
 		}
 		return nbt;
 	}

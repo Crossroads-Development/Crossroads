@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
@@ -37,7 +37,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		limitIndex += 1;
 		limitIndex %= LIMITS.length;
 		markDirty();
-		ModPackets.network.sendTo(new SendChatToClient("Reagent movement limit configured to: " + LIMITS[limitIndex], 25856), player);//CHAT_ID chosen at random
+		CrossroadsPackets.network.sendTo(new SendChatToClient("Reagent movement limit configured to: " + LIMITS[limitIndex], 25856), player);//CHAT_ID chosen at random
 	}
 
 	@Override
@@ -87,15 +87,15 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		limitIndex = Math.min(nbt.getInteger("limit"), LIMITS.length - 1);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		limitIndex = Math.min(nbt.getInt("limit"), LIMITS.length - 1);
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("limit", limitIndex);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("limit", limitIndex);
 		return nbt;
 	}
 

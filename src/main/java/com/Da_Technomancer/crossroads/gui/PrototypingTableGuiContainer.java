@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToServer;
 import com.Da_Technomancer.crossroads.API.templates.*;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -73,7 +73,7 @@ public class PrototypingTableGuiContainer extends MachineGUI implements OutputLo
 		if(this.button.mouseClicked(x, y, button) && !inventorySlots.getSlot(2).getHasStack()){
 			if(inventorySlots.getSlot(0).getHasStack()){
 				if(!textBar.getText().isEmpty()){
-					ModPackets.network.sendToServer(new SendStringToServer("create", textBar.getText(), te.getPos(), te.getWorld().provider.getDimension()));
+					CrossroadsPackets.network.sendToServer(new SendStringToServer("create", textBar.getText(), te.getPos(), te.getWorld().provider.getDimension()));
 				}else{
 					log.addText("Name required.", null);
 				}

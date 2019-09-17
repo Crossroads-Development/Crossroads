@@ -6,14 +6,12 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.Keys;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBeamItemToServer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.*;
 import net.minecraft.item.Item;
@@ -42,7 +40,7 @@ public abstract class BeamUsingItem extends Item{
 			}
 			if(elemChanged != null && player instanceof PlayerEntity){
 				player.world.playSound((PlayerEntity) player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 5, (float) Math.random());
-				ModPackets.network.sendToServer(new SendBeamItemToServer(elemChanged.name(), player.isSneaking()));
+				CrossroadsPackets.network.sendToServer(new SendBeamItemToServer(elemChanged.name(), player.isSneaking()));
 			}
 		}
 	}
@@ -56,14 +54,14 @@ public abstract class BeamUsingItem extends Item{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		CompoundNBT nbt = stack.getTagCompound();
+		CompoundNBT nbt = stack.getTag();
 		if(nbt == null){
 			nbt = new CompoundNBT();
 		}
-		tooltip.add("Energy usage: " + nbt.getInteger(EnumBeamAlignments.ENERGY.name()));
-		tooltip.add("Potential usage: " + nbt.getInteger(EnumBeamAlignments.POTENTIAL.name()));
-		tooltip.add("Stability usage: " + nbt.getInteger(EnumBeamAlignments.STABILITY.name()));
-		tooltip.add("Void usage: " + nbt.getInteger(EnumBeamAlignments.VOID.name()));
+		tooltip.add("Energy usage: " + nbt.getInt(EnumBeamAlignments.ENERGY.name()));
+		tooltip.add("Potential usage: " + nbt.getInt(EnumBeamAlignments.POTENTIAL.name()));
+		tooltip.add("Stability usage: " + nbt.getInt(EnumBeamAlignments.STABILITY.name()));
+		tooltip.add("Void usage: " + nbt.getInt(EnumBeamAlignments.VOID.name()));
 	}
 	
 	@Override

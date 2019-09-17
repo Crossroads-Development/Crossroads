@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.Properties;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
@@ -76,7 +76,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 			}
 			markDirty();
 		}
-		ModPackets.network.sendToAllAround(new SendLongToClient(CLEAR_PACKET_ID, 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendLongToClient(CLEAR_PACKET_ID, 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	public void setOutput(double outputIn){
@@ -99,20 +99,20 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		output = nbt.getDouble("out");
 		int i = 0;
-		while(nbt.hasKey("link_" + i)){
+		while(nbt.contains("link_" + i)){
 			linked.add(BlockPos.fromLong(nbt.getLong("link_" + i)));
 			i++;
 		}
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setDouble("out", output);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putDouble("out", output);
 		for(int i = 0; i < linked.size(); i++){
 			nbt.setLong("link_" + i, linked.get(i).toLong());
 		}
@@ -151,7 +151,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 			player.sendMessage(new StringTextComponent("Device already linked; Canceling linking"));
 		}else if(linked.size() < getMaxLinks()){
 			linked.add(linkPos);
-			ModPackets.network.sendToAllAround(new SendLongToClient(LINK_PACKET_ID, linkPos.toLong(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.network.sendToAllAround(new SendLongToClient(LINK_PACKET_ID, linkPos.toLong(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			getTE().markDirty();
 			((RedstoneReceiverTileEntity) endpoint).setSrc(pos.subtract(((RedstoneReceiverTileEntity) endpoint).getPos()));
 			((RedstoneReceiverTileEntity) endpoint).dye(world.getBlockState(pos).get(Properties.COLOR));

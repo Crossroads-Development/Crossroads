@@ -28,7 +28,7 @@ public class PrototypeItemClearRecipe extends IForgeRegistryEntry.Impl<IRecipe> 
 				if(!found){
 					ItemStack slot = inv.getStackInRowAndColumn(x, y);
 					if(!slot.isEmpty()){
-						if(slot.getItem() == toClear && slot.hasTagCompound() && slot.getTagCompound().hasKey(nbtPath)){
+						if(slot.getItem() == toClear && slot.hasTagCompound() && slot.getTag().hasKey(nbtPath)){
 							found = true;
 						}else{
 							return false;
@@ -50,7 +50,7 @@ public class PrototypeItemClearRecipe extends IForgeRegistryEntry.Impl<IRecipe> 
 				ItemStack slot = inv.getStackInRowAndColumn(x, y);
 				if(!slot.isEmpty()){
 					slot = slot.copy();
-					slot.getTagCompound().removeTag(nbtPath);
+					slot.getTag().removeTag(nbtPath);
 					return slot;
 				}
 			}
@@ -73,7 +73,7 @@ public class PrototypeItemClearRecipe extends IForgeRegistryEntry.Impl<IRecipe> 
 				ItemStack slot = inv.getStackInRowAndColumn(x, y);
 				if(slot.getItem() == toClear){
 					ItemStack outStack = new ItemStack(CrossroadsBlocks.prototype, 1);
-					outStack.setTagCompound(slot.getTagCompound().getCompoundTag(nbtPath));
+					outStack.setTag(slot.getTag().getCompoundTag(nbtPath));
 					outList.set((y * 3) + x, outStack);
 					return outList;
 				}

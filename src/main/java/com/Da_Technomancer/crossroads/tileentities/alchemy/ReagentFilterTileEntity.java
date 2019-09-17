@@ -56,16 +56,16 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		inventory = nbt.hasKey("inv") ? new ItemStack(nbt.getCompoundTag("inv")) : ItemStack.EMPTY;
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		inventory = nbt.contains("inv") ? new ItemStack(nbt.getCompound("inv")) : ItemStack.EMPTY;
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		if(!inventory.isEmpty()){
-			nbt.setTag("inv", inventory.writeToNBT(new CompoundNBT()));
+			nbt.put("inv", inventory.writeToNBT(new CompoundNBT()));
 		}
 		return nbt;
 	}

@@ -328,8 +328,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		glass = nbt.getBoolean("glass");
 		contents = ReagentMap.readFromNBT(nbt);
 		cableTemp = nbt.getDouble("temp");
@@ -339,12 +339,12 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setBoolean("glass", glass);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putBoolean("glass", glass);
 		contents.writeToNBT(nbt);
-		nbt.setDouble("temp", cableTemp);
-		nbt.setBoolean("initHeat", init);
+		nbt.putDouble("temp", cableTemp);
+		nbt.putBoolean("initHeat", init);
 
 		return nbt;
 	}

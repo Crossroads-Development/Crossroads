@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.Da_Technomancer.crossroads.API.templates.ButtonGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.API.templates.ToggleButtonGuiObject;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToServer;
 import com.Da_Technomancer.crossroads.gui.container.BlankContainer;
 
@@ -238,7 +238,7 @@ public class RedstoneKeyboardGuiContainer extends ContainerScreen{
 		out = Math.abs(out);
 		if(changed && out != te.output){
 			te.output = out;
-			ModPackets.network.sendToServer(new SendDoubleToServer("newOutput", out, te.getPos(), te.getWorld().provider.getDimension()));
+			CrossroadsPackets.network.sendToServer(new SendDoubleToServer("newOutput", out, te.getPos(), te.getWorld().provider.getDimension()));
 		}
 	}
 }

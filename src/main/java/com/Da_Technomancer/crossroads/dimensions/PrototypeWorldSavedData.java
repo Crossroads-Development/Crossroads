@@ -85,20 +85,20 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		int length = nbt.getInteger("length");
+	public void read(CompoundNBT nbt){
+		int length = nbt.getInt("length");
 		for(int i = 0; i < length; i++){
-			prototypes.add(nbt.hasKey("pro" + i) ? PrototypeInfo.readFromNBT(nbt.getCompoundTag("pro" + i)) : null);
+			prototypes.add(nbt.contains("pro" + i) ? PrototypeInfo.readFromNBT(nbt.getCompound("pro" + i)) : null);
 		}
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		nbt.setInteger("length", prototypes.size());
+	public CompoundNBT write(CompoundNBT nbt){
+		nbt.putInt("length", prototypes.size());
 		int i = 0;
 		for(PrototypeInfo entry : prototypes){
 			if(entry != null){
-				nbt.setTag("pro" + i, entry.writeToNBT(new CompoundNBT()));
+				nbt.put("pro" + i, entry.writeToNBT(new CompoundNBT()));
 			}
 			i++;
 		}

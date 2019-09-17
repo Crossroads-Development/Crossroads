@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -37,7 +37,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	public void markSideChanged(int index){
 		init();
 		markDirty();
-		ModPackets.network.sendToAllAround(new SendIntToClient((byte) index, hasMatch[index] != null && hasMatch[index] ? connectMode[index] : 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) index, hasMatch[index] != null && hasMatch[index] ? connectMode[index] : 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	public Integer[] getConnectMode(boolean forRender){
@@ -259,26 +259,26 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
 		connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
 		for(int i = 0; i < 6; i++){
-			connectMode[i] = Math.max(0, nbt.hasKey("mode_" + i) ? nbt.getInteger("mode_" + i) : 1);
+			connectMode[i] = Math.max(0, nbt.contains("mode_" + i) ? nbt.getInt("mode_" + i) : 1);
 			byte match = nbt.getByte("match_" + i);
 			hasMatch[i] = match == 0 ? null : match != 1;
 		}
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		if(content != null){
 			content.writeToNBT(nbt);
 		}
 		if(connectMode != null){
 			for(int i = 0; i < 6; i++){
-				nbt.setInteger("mode_" + i, connectMode[i]);
+				nbt.putInt("mode_" + i, connectMode[i]);
 				nbt.setByte("match_" + i, hasMatch[i] == null ? 0 : hasMatch[i] ? (byte) 2 : (byte) 1);
 			}
 		}

@@ -1,54 +1,50 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.essentials.packets.Message;
+import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 
 @SuppressWarnings("serial")
-public class SendStringToClient extends Message<SendStringToClient>{
+public class SendStringToClient extends ClientPacket{
 
-	public SendStringToClient(){
-	}
-
-	public String sContext;
+	public byte sContext;
 	public String message;
 	public BlockPos pos;
 
-	public SendStringToClient(String context, String message, BlockPos pos){
+	private static final Field[] FIELDS = fetchFields(SendStringToClient.class, "context", "message", "pos");
+
+	@SuppressWarnings("unused")
+	public SendStringToClient(){
+
+	}
+
+	public SendStringToClient(byte context, String message, BlockPos pos){
 		this.sContext = context;
 		this.message = message;
 		this.pos = pos;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
-			return null;
-		}
-
-		Minecraft minecraft = Minecraft.getInstance();
-		final ClientWorld worldClient = minecraft.world;
-		minecraft.addScheduledTask(new Runnable(){
-			public void run(){
-				processMessage(worldClient, sContext, message, pos);
-			}
-		});
-
-		return null;
+	protected Field[] getFields(){
+		return FIELDS;
 	}
 
-	public void processMessage(ClientWorld worldClient, String context, String message, BlockPos pos){
-		TileEntity te = worldClient.getTileEntity(pos);
-		
+	@Override
+	protected void run(){
+		World w = Minecraft.getInstance().world;
+		if(w == null){
+			return;
+		}
+		TileEntity te = w.getTileEntity(pos);
+
 		if(te instanceof IStringReceiver){
-			((IStringReceiver) te).receiveString(context, message, null);
+			((IStringReceiver) te).receiveString(sContext, message, null);
 		}
 	}
 }

@@ -228,8 +228,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		if(owner != null){
 			owner.writeToNBT(nbt, "own");
 		}
@@ -243,8 +243,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		owner = FlexibleGameProfile.readFromNBT(nbt, "own", world.getMinecraftServer() == null ? null : world.getMinecraftServer().getPlayerProfileCache());
 		if(owner != null && owner.isNewlyCompleted()){
 			markDirty();

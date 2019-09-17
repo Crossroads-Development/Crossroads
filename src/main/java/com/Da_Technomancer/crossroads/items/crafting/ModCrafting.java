@@ -500,7 +500,7 @@ public final class ModCrafting{
 		nbttagcompound.setByte("Slot", (byte) 0);
 		new ItemStack(CrossroadsItems.vacuum).writeToNBT(nbttagcompound);
 		nbttag.appendTag(nbttagcompound);
-		nbt.setTag("Items", nbttag);
+		nbt.put("Items", nbttag);
 		stack.setTagInfo("BlockEntityTag", nbt);
 
 		CompoundNBT nbttagcompound1 = new CompoundNBT();

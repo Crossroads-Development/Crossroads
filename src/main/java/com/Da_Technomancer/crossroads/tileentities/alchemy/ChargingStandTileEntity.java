@@ -140,19 +140,19 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		occupied = nbt.getBoolean("occupied");
 		florence = occupied && nbt.getBoolean("florence");
-		fe = nbt.getInteger("fe");
+		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setBoolean("occupied", occupied);
-		nbt.setBoolean("florence", florence);
-		nbt.setInteger("fe", fe);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putBoolean("occupied", occupied);
+		nbt.putBoolean("florence", florence);
+		nbt.putInt("fe", fe);
 		return nbt;
 	}
 

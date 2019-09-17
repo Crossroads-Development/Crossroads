@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
@@ -68,7 +68,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		type = typ;
 
 		if(!world.isRemote){
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 1, type == null ? -1 : type.getIndex(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 1, type == null ? -1 : type.getIndex(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		}
 
 		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
@@ -109,15 +109,15 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 
 		// motionData
 		for(int j = 0; j < 4; j++){
 			motionData[j] = nbt.getDouble("[" + j + "]mot");
 		}
 		// member
-		type = nbt.getInteger("type") < GearFactory.gearMats.size() ? GearFactory.gearMats.get(nbt.getInteger("type")) : GearFactory.gearMats.get(0);
+		type = nbt.getInt("type") < GearFactory.gearMats.size() ? GearFactory.gearMats.get(nbt.getInt("type")) : GearFactory.gearMats.get(0);
 		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);
 		//1.125 because r*r/2 so 1.5*1.5/2
 
@@ -126,23 +126,23 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 
 		// motionData
 		for(int j = 0; j < 3; j++){
 			if(motionData[j] != 0)
-				nbt.setDouble("[" + j + "]mot", motionData[j]);
+				nbt.putDouble("[" + j + "]mot", motionData[j]);
 		}
 
 		// member
 		if(type != null){
-			nbt.setInteger("type", type.getIndex());
+			nbt.putInt("type", type.getIndex());
 		}
 
-		nbt.setBoolean("new", true);
-		nbt.setFloat("angle", angleW[0]);
-		nbt.setFloat("cl_w", angleW[1]);
+		nbt.putBoolean("new", true);
+		nbt.putFloat("angle", angleW[0]);
+		nbt.putFloat("cl_w", angleW[1]);
 		return nbt;
 	}
 
@@ -150,11 +150,11 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		if(type != null){
-			nbt.setInteger("type", type.getIndex());
+			nbt.putInt("type", type.getIndex());
 		}
-		nbt.setBoolean("new", true);
-		nbt.setFloat("angle", angleW[0]);
-		nbt.setFloat("cl_w", angleW[1]);
+		nbt.putBoolean("new", true);
+		nbt.putFloat("angle", angleW[0]);
+		nbt.putFloat("cl_w", angleW[1]);
 		return nbt;
 	}
 

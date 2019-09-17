@@ -55,7 +55,7 @@ public class EntityShell extends ThrowableEntity{
 	@Override
 	public void writeEntityToNBT(CompoundNBT nbt){
 		super.writeEntityToNBT(nbt);
-		nbt.setDouble("temp", temp);
+		nbt.putDouble("temp", temp);
 
 		if(contents != null){
 			contents.writeToNBT(nbt);

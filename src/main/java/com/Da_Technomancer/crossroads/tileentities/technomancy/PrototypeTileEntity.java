@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
@@ -65,7 +65,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		for(Direction dir : Direction.VALUES){
 			CrossroadsBlocks.prototype.neighborChanged(null, world, pos, CrossroadsBlocks.prototype, pos.offset(dir));
 		}
-		ModPackets.network.sendToAllAround(new SendIntToClient((byte) 6, orient, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 6, orient, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 		refresh();
 		markDirty();
 	}
@@ -116,9 +116,9 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("index", index);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("index", index);
 		nbt.setString("name", name);
 		for(int i = 0; i < 6; i++){
 			if(tooltips[i] != null){
@@ -126,11 +126,11 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 			}
 			MagHandler h = getHandler(i, false);
 			if(h != null){
-				nbt.setInteger(i + "_beam", beamPackets[i]);
+				nbt.putInt(i + "_beam", beamPackets[i]);
 			}
 		}
 
-		nbt.setInteger("orient", orient);
+		nbt.putInt("orient", orient);
 		return nbt;
 	}
 
@@ -140,22 +140,22 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		orient = nbt.getInteger("orient");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		orient = nbt.getInt("orient");
 		if(!world.isRemote){
 			for(int i = 0; i < 6; i++){
-				if(nbt.hasKey("ttip" + i)){
+				if(nbt.contains("ttip" + i)){
 					tooltips[i] = nbt.getString("ttip" + i);
 				}
 			}
-			index = nbt.getInteger("index");
+			index = nbt.getInt("index");
 			name = nbt.getString("name");
 			ArrayList<PrototypeInfo> info = PrototypeWorldSavedData.get(false).prototypes;
 			selfDestruct = index == -1 || info.size() < index + 1 || info.get(index) == null;//In this case, the prototype info is missing and this should self-destruct.
 		}else{
 			for(int i = 0; i < 6; i++){
-				if(nbt.hasKey("port" + i)){
+				if(nbt.contains("port" + i)){
 					ports[i] = PrototypePortTypes.valueOf(nbt.getString("port" + i));
 				}
 			}
@@ -163,8 +163,8 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		}
 
 		for(int i = 0; i < 6; i++){
-			if(nbt.hasKey(i + "_beam")){
-				beamPackets[i] = nbt.getInteger(i + "_beam");
+			if(nbt.contains(i + "_beam")){
+				beamPackets[i] = nbt.getInt(i + "_beam");
 			}
 		}
 	}
@@ -173,10 +173,10 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		if(index != -1){
-			nbt.setInteger("orient", orient);
+			nbt.putInt("orient", orient);
 			PrototypePortTypes[] ports = PrototypeWorldSavedData.get(false).prototypes.get(index).ports;
 			for(int i = 0; i < 6; i++){
-				nbt.setInteger(i + "_beam", beamPackets[i]);
+				nbt.putInt(i + "_beam", beamPackets[i]);
 				if(ports[i] != null){
 					nbt.setString("port" + i, ports[i].name());
 				}
@@ -341,7 +341,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 		public void setMagic(@Nullable BeamUnit mag){
 			if(beam.emit(mag, world)){
 				beamPackets[side] = beam.genPacket();
-				ModPackets.network.sendToAllAround(new SendIntToClient((byte) index, beam.genPacket(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) index, beam.genPacket(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				if(beam.getLastSent() != null){
 					prevMag = beam.getLastSent();
 				}

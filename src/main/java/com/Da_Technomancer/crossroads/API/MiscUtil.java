@@ -128,6 +128,7 @@ public final class MiscUtil{
 
 	@Nullable
 	public static Method reflectMethod(Class clazz, String textName, String rawName){
+		//TODO Change the names used by basically everything that calls this
 		try{
 			for(Method m : clazz.getDeclaredMethods()){
 				if(textName.equals(m.getName()) || rawName.equals(m.getName())){

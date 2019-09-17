@@ -32,24 +32,24 @@ public class BeamCage extends Item{
 	}
 
 	public static BeamUnit getStored(ItemStack stack){
-		CompoundNBT nbt = stack.getTagCompound();
+		CompoundNBT nbt = stack.getTag();
 		if(nbt == null){
 			return null;
 		}
-		BeamUnit stored = new BeamUnit(nbt.getInteger("stored_" + EnumBeamAlignments.ENERGY.name().toLowerCase()), nbt.getInteger("stored_" + EnumBeamAlignments.POTENTIAL.name().toLowerCase()), nbt.getInteger("stored_" + EnumBeamAlignments.STABILITY.name().toLowerCase()), nbt.getInteger("stored_" + EnumBeamAlignments.VOID.name().toLowerCase()));
+		BeamUnit stored = new BeamUnit(nbt.getInt("stored_" + EnumBeamAlignments.ENERGY.name().toLowerCase()), nbt.getInt("stored_" + EnumBeamAlignments.POTENTIAL.name().toLowerCase()), nbt.getInt("stored_" + EnumBeamAlignments.STABILITY.name().toLowerCase()), nbt.getInt("stored_" + EnumBeamAlignments.VOID.name().toLowerCase()));
 		return stored.getPower() == 0 ? null : stored;
 	}
 
 	public static void storeBeam(ItemStack stack, @Nullable BeamUnit toStore){
-		CompoundNBT nbt = stack.getTagCompound();
+		CompoundNBT nbt = stack.getTag();
 		if(nbt == null){
-			stack.setTagCompound(new CompoundNBT());
-			nbt = stack.getTagCompound();
+			stack.setTag(new CompoundNBT());
+			nbt = stack.getTag();
 		}
-		nbt.setInteger("stored_" + EnumBeamAlignments.ENERGY.name().toLowerCase(), toStore == null ? 0 : toStore.getEnergy());
-		nbt.setInteger("stored_" + EnumBeamAlignments.POTENTIAL.name().toLowerCase(), toStore == null ? 0 : toStore.getPotential());
-		nbt.setInteger("stored_" + EnumBeamAlignments.STABILITY.name().toLowerCase(), toStore == null ? 0 : toStore.getStability());
-		nbt.setInteger("stored_" + EnumBeamAlignments.VOID.name().toLowerCase(), toStore == null ? 0 : toStore.getVoid());
+		nbt.putInt("stored_" + EnumBeamAlignments.ENERGY.name().toLowerCase(), toStore == null ? 0 : toStore.getEnergy());
+		nbt.putInt("stored_" + EnumBeamAlignments.POTENTIAL.name().toLowerCase(), toStore == null ? 0 : toStore.getPotential());
+		nbt.putInt("stored_" + EnumBeamAlignments.STABILITY.name().toLowerCase(), toStore == null ? 0 : toStore.getStability());
+		nbt.putInt("stored_" + EnumBeamAlignments.VOID.name().toLowerCase(), toStore == null ? 0 : toStore.getVoid());
 	}
 
 	@Override

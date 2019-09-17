@@ -23,7 +23,7 @@ public class HeatReservoirTileEntity extends ModuleTE{
 	public CompoundNBT getDropNBT(){
 		CompoundNBT nbt = new CompoundNBT();
 		heatHandler.init();
-		nbt.setDouble("temp", temp);
+		nbt.putDouble("temp", temp);
 		return nbt;
 	}
 

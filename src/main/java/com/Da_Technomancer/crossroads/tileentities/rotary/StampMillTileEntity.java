@@ -96,18 +96,18 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setDouble("prog", progress);
-		nbt.setInteger("timer", timer);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putDouble("prog", progress);
+		nbt.putInt("timer", timer);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		progress = nbt.getDouble("prog");
-		timer = nbt.getInteger("timer");
+		timer = nbt.getInt("timer");
 	}
 
 	private final ItemHandler itemHandler = new ItemHandler(null);

@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
@@ -99,12 +99,12 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 				if(!goal.equals(activeText)){
 					activeText = goal;
 					col = fluids[0].getFluid().getColor(fluids[0]);
-					ModPackets.network.sendToAllAround(new SendStringToClient("text", activeText, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					ModPackets.network.sendToAllAround(new SendStringToClient("col", Integer.toString(col), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					CrossroadsPackets.network.sendToAllAround(new SendStringToClient("text", activeText, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					CrossroadsPackets.network.sendToAllAround(new SendStringToClient("col", Integer.toString(col), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				}
 			}else if(!activeText.isEmpty()){
 				activeText = "";
-				ModPackets.network.sendToAllAround(new SendStringToClient("text", activeText, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.network.sendToAllAround(new SendStringToClient("text", activeText, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 
@@ -138,23 +138,23 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		activeText = nbt.getString("act");
-		col = nbt.hasKey("col") ? nbt.getInteger("col") : null;
-		progress = nbt.getInteger("prog");
+		col = nbt.contains("col") ? nbt.getInt("col") : null;
+		progress = nbt.getInt("prog");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		if(activeText.length() != 0){
 			nbt.setString("act", activeText);
 			if(col != null){
-				nbt.setInteger("col", col);
+				nbt.putInt("col", col);
 			}
 		}
-		nbt.setInteger("prog", progress);
+		nbt.putInt("prog", progress);
 
 		return nbt;
 	}
@@ -165,7 +165,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		if(activeText.length() != 0){
 			nbt.setString("act", activeText);
 			if(col != null){
-				nbt.setInteger("col", col);
+				nbt.putInt("col", col);
 			}
 		}
 		return nbt;

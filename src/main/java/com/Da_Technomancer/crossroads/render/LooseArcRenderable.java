@@ -51,7 +51,7 @@ public class LooseArcRenderable implements IVisualEffect{
 	}
 
 	public static LooseArcRenderable readFromNBT(CompoundNBT nbt){
-		return new LooseArcRenderable(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getFloat("x_e"), nbt.getFloat("y_e"), nbt.getFloat("z_e"), nbt.getFloat("x_f"), nbt.getFloat("y_f"), nbt.getFloat("z_f"), nbt.getInteger("count"), nbt.getFloat("diffu"), nbt.getByte("lif"), nbt.getInteger("color"));
+		return new LooseArcRenderable(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getFloat("x_e"), nbt.getFloat("y_e"), nbt.getFloat("z_e"), nbt.getFloat("x_f"), nbt.getFloat("y_f"), nbt.getFloat("z_f"), nbt.getInt("count"), nbt.getFloat("diffu"), nbt.getByte("lif"), nbt.getInt("color"));
 	}
 
 	@Override

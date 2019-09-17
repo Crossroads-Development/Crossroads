@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
@@ -54,7 +54,7 @@ public class HeatCableTileEntity extends ModuleTE{
 				message |= 1 << i;
 			}
 		}
-		ModPackets.network.sendToAllAround(new SendLongToClient((byte) 1, message, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 1, message, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	@Override
@@ -141,9 +141,9 @@ public class HeatCableTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		insulator = nbt.hasKey("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		insulator = nbt.contains("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
 		for(int i = 0; i < 6; i++){
 			locked[i] = nbt.getBoolean("lock_" + i);
 			hasMatch[i] = nbt.getBoolean("match_" + i);
@@ -151,12 +151,12 @@ public class HeatCableTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		nbt.setString("insul", insulator.name());
 		for(int i = 0; i < 6; i++){
-			nbt.setBoolean("lock_" + i, locked[i]);
-			nbt.setBoolean("match_" + i, hasMatch[i]);
+			nbt.putBoolean("lock_" + i, locked[i]);
+			nbt.putBoolean("match_" + i, hasMatch[i]);
 		}
 		return nbt;
 	}

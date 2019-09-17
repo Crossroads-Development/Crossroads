@@ -100,13 +100,13 @@ public class EntropySavedData extends WorldSavedData{
 	private int temporalEntropy;
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		temporalEntropy = nbt.getInteger("flux");
+	public void read(CompoundNBT nbt){
+		temporalEntropy = nbt.getInt("flux");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		nbt.setInteger("flux", temporalEntropy);
+	public CompoundNBT write(CompoundNBT nbt){
+		nbt.putInt("flux", temporalEntropy);
 		return nbt;
 	}
 

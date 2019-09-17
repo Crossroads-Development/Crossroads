@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */	
 public class SafeCallable{
 
-	public static final ArrayList<IVisualEffect> effectsToRender = new ArrayList<IVisualEffect>();
+	public static final ArrayList<IVisualEffect> effectsToRender = new ArrayList<>();
 	
 	protected static final Method printChatNoLog = MiscUtil.reflectMethod(NewChatGui.class, "setChatLine", "func_146237_a");
 	

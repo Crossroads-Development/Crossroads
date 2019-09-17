@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.ITaylorReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendTaylorToClient;
 import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
@@ -169,7 +169,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 				taylorSeries[0] = prevAngles[3] - offset;
 
 				//Sync the series to the client
-				ModPackets.network.sendToAllAround(new SendTaylorToClient(seriesTimestamp, taylorSeries, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.network.sendToAllAround(new SendTaylorToClient(seriesTimestamp, taylorSeries, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			}
 		}
 	}
@@ -229,8 +229,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		ticksExisted = nbt.getLong("life");
 		for(int i = 0; i < 4; i++){
 			prevAngles[i] = nbt.getFloat("prev_" + i);
@@ -240,12 +240,12 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		nbt.setLong("life", ticksExisted);
 		for(int i = 0; i < 4; i++){
-			nbt.setFloat("prev_" + i, prevAngles[i]);
-			nbt.setFloat("taylor_" + i, taylorSeries[i]);
+			nbt.putFloat("prev_" + i, prevAngles[i]);
+			nbt.putFloat("taylor_" + i, taylorSeries[i]);
 		}
 		nbt.setLong("timestamp", seriesTimestamp);
 		return nbt;

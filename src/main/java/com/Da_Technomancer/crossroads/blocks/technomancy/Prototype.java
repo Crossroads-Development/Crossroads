@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
@@ -126,14 +126,14 @@ public class Prototype extends ContainerBlock{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		if(stack.hasTagCompound()){
-			tooltip.add("Name: " + stack.getTagCompound().getString("name"));
+			tooltip.add("Name: " + stack.getTag().getString("name"));
 			for(int i = 0; i < 6; i++){
-				if(stack.getTagCompound().hasKey("ttip" + i)){
-					tooltip.add(Direction.byIndex(i).name().charAt(0) + Direction.byIndex(i).toString().substring(1) + ": " + stack.getTagCompound().getString("ttip" + i));
+				if(stack.getTag().hasKey("ttip" + i)){
+					tooltip.add(Direction.byIndex(i).name().charAt(0) + Direction.byIndex(i).toString().substring(1) + ": " + stack.getTag().getString("ttip" + i));
 				}
 			}
 			if(advanced == ITooltipFlag.TooltipFlags.ADVANCED){
-				tooltip.add("Index: " + stack.getTagCompound().getInteger("index"));
+				tooltip.add("Index: " + stack.getTag().getInt("index"));
 			}
 		}
 	}
@@ -160,14 +160,14 @@ public class Prototype extends ContainerBlock{
 		if(te instanceof PrototypeTileEntity){
 			ItemStack drop = new ItemStack(Item.getItemFromBlock(this), 1, 0);
 			CompoundNBT nbt = new CompoundNBT();
-			nbt.setInteger("index", ((PrototypeTileEntity) te).getIndex());
+			nbt.putInt("index", ((PrototypeTileEntity) te).getIndex());
 			nbt.setString("name", ((PrototypeTileEntity) te).name);
 			for(int i = 0; i < 6; i++){
 				if(((PrototypeTileEntity) te).tooltips[i] != null){
 					nbt.setString("ttip" + i, ((PrototypeTileEntity) te).tooltips[i]);
 				}
 			}
-			drop.setTagCompound(nbt);
+			drop.setTag(nbt);
 			drops.add(drop);
 		}
 		return drops;
@@ -189,18 +189,18 @@ public class Prototype extends ContainerBlock{
 		if(!world.isRemote){
 			if(stack.hasTagCompound()){
 				PrototypeTileEntity te = (PrototypeTileEntity) world.getTileEntity(pos);
-				if(PrototypeWorldSavedData.get(false).prototypes.size() > stack.getTagCompound().getInteger("index")){
-					te.setIndex(stack.getTagCompound().getInteger("index"));
-					te.name = stack.getTagCompound().getString("name");
+				if(PrototypeWorldSavedData.get(false).prototypes.size() > stack.getTag().getInt("index")){
+					te.setIndex(stack.getTag().getInt("index"));
+					te.name = stack.getTag().getString("name");
 					for(int i = 0; i < 6; i++){
-						if(stack.getTagCompound().hasKey("ttip" + i)){
-							te.tooltips[i] = stack.getTagCompound().getString("ttip" + i);
+						if(stack.getTag().hasKey("ttip" + i)){
+							te.tooltips[i] = stack.getTag().getString("ttip" + i);
 						}
 					}
 					//onLoad is normally called before onBlockPlacedBy, AKA before the index is set. It gets called again here so it can run with the index.
 					te.onLoad();
 					te.markDirty();
-					ModPackets.network.sendToAllAround(new SendNBTToClient(te.getUpdateTag(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					CrossroadsPackets.network.sendToAllAround(new SendNBTToClient(te.getUpdateTag(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 
 					for(Direction side : Direction.HORIZONTALS){
 						onNeighborChange(world, pos, pos.offset(side));//Updates the redstone-in ports with initial values. 

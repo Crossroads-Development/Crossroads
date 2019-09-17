@@ -60,15 +60,15 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		energyHandler.setEnergy(nbt.getInteger("charge"));
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		energyHandler.setEnergy(nbt.getInt("charge"));
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("charge", energyHandler.getEnergyStored());
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("charge", energyHandler.getEnergyStored());
 
 		return nbt;
 	}

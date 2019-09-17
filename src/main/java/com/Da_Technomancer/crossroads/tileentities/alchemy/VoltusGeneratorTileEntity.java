@@ -58,17 +58,17 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		voltusAmount = nbt.getInteger("voltus");
-		fe = nbt.getInteger("fe");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		voltusAmount = nbt.getInt("voltus");
+		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("voltus", voltusAmount);
-		nbt.setInteger("fe", fe);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("voltus", voltusAmount);
+		nbt.putInt("fe", fe);
 		return nbt;
 	}
 

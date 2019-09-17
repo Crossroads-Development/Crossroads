@@ -1,59 +1,45 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
-
-import com.Da_Technomancer.essentials.packets.Message;
-import net.minecraft.entity.player.PlayerEntity;
+import com.Da_Technomancer.essentials.packets.ServerPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
 
-@SuppressWarnings("serial")
-public class SendBeamItemToServer extends Message<SendBeamItemToServer>{
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 
-	public SendBeamItemToServer(){
-		
-	}
-	
+public class SendBeamItemToServer extends ServerPacket{
+
 	public String element;
 	public boolean decrease;
+
+	private static final Field[] FIELDS = fetchFields(SendBeamItemToServer.class, "element", "decrease");
+
+	@SuppressWarnings("unused")
+	public SendBeamItemToServer(){
+
+	}
 
 	public SendBeamItemToServer(String element, boolean decrease){
 		this.element = element;
 		this.decrease = decrease;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.SERVER){
-			Crossroads.logger.error("MessageToServer received on wrong side:" + context.side);
-			return null;
-		}
-		ServerPlayerEntity player = context.getServerHandler().player;
-		if(player == null){
-			Crossroads.logger.error("Player was null on packet arrival");
-			return null;
-		}
-		player.getServerWorld().addScheduledTask(new Runnable(){
-			@Override
-			public void run(){
-				processMessage(player, element, decrease);
-			}
-		});
-
-		return null;
+	protected Field[] getFields(){
+		return FIELDS;
 	}
-	
-	public void processMessage(PlayerEntity player, String element, boolean decrease){
+
+	@Override
+	protected void run(@Nullable ServerPlayerEntity player){
 		Hand hand = null;
-		if(player.getHeldItemMainhand().getItem() instanceof BeamUsingItem){
+		if(player != null && player.getHeldItemMainhand().getItem() instanceof BeamUsingItem){
 			hand = Hand.MAIN_HAND;
-		}else if(player.getHeldItemOffhand().getItem() instanceof BeamUsingItem){
+		}else if(player != null && player.getHeldItemOffhand().getItem() instanceof BeamUsingItem){
 			hand = Hand.OFF_HAND;
 		}
 		if(hand == null){
@@ -61,14 +47,14 @@ public class SendBeamItemToServer extends Message<SendBeamItemToServer>{
 		}
 		ItemStack stack = player.getHeldItem(hand);
 		((BeamUsingItem) stack.getItem()).preChanged(stack, player);
-		if(stack.getTagCompound() == null){
-			stack.setTagCompound(new CompoundNBT());
+		if(stack.getTag() == null){
+			stack.setTag(new CompoundNBT());
 		}
-		CompoundNBT nbt = stack.getTagCompound();
-		int i = nbt.getInteger(element);
+		CompoundNBT nbt = stack.getTag();
+		int i = nbt.getInt(element);
 		i += decrease ? -1 : 1;
 		i = Math.min(8, Math.max(i, 0));
-		nbt.setInteger(element, i);
+		nbt.putInt(element, i);
 		player.resetActiveHand();
 	}
 }

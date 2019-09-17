@@ -30,24 +30,24 @@ public class ReactiveSpotTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		lifespan = nbt.getInteger("lif");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		lifespan = nbt.getInt("lif");
 		Block b = Block.getBlockFromName(nbt.getString("tar"));
 		if(b == null){
 			target = Blocks.AIR.getDefaultState();
 		}else{
-			target = b.getStateFromMeta(nbt.getInteger("met"));
+			target = b.getStateFromMeta(nbt.getInt("met"));
 		}
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("lif", lifespan);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("lif", lifespan);
 		if(target != null){
 			nbt.setString("tar", target.getBlock().getRegistryName().toString());
-			nbt.setInteger("met", target.getBlock().getMetaFromState(target));
+			nbt.putInt("met", target.getBlock().getMetaFromState(target));
 		}
 		return nbt;
 	}

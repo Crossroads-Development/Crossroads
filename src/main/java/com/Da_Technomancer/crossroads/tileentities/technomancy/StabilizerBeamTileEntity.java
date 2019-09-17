@@ -30,16 +30,16 @@ public class StabilizerBeamTileEntity extends AbstractStabilizerTileEntity{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("stability", stability);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("stability", stability);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		stability = nbt.getInteger("stability");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		stability = nbt.getInt("stability");
 	}
 
 	@Nullable

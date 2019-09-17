@@ -29,24 +29,24 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(!inventory[i].isEmpty()){
 				CompoundNBT stackTag = new CompoundNBT();
 				inventory[i].writeToNBT(stackTag);
-				nbt.setTag("inv_" + i, stackTag);
+				nbt.put("inv_" + i, stackTag);
 			}
 		}
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		for(int i = 0; i < inventory.length; i++){
-			if(nbt.hasKey("inv_" + i)){
-				inventory[i] = new ItemStack(nbt.getCompoundTag("inv_" + i));
+			if(nbt.contains("inv_" + i)){
+				inventory[i] = new ItemStack(nbt.getCompound("inv_" + i));
 			}
 		}
 	}

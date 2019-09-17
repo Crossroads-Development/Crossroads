@@ -29,9 +29,9 @@ public class LeydenJar extends Item{
 	}
 	
 	public static int getCharge(ItemStack stack){
-		CompoundNBT nbt = stack.getTagCompound();
+		CompoundNBT nbt = stack.getTag();
 		if(stack.getItem() == CrossroadsItems.leydenJar && nbt != null){
-			return nbt.getInteger("charge");
+			return nbt.getInt("charge");
 		}else{
 			return 0;
 		}
@@ -39,11 +39,11 @@ public class LeydenJar extends Item{
 	
 	public static void setCharge(ItemStack stack, int chargeIn){
 		if(stack.hasTagCompound()){
-			stack.getTagCompound().setInteger("charge", Math.min(chargeIn, MAX_CHARGE));
+			stack.getTag().setInteger("charge", Math.min(chargeIn, MAX_CHARGE));
 		}else{
 			CompoundNBT nbt = new CompoundNBT();
-			nbt.setInteger("charge", Math.min(chargeIn, MAX_CHARGE));
-			stack.setTagCompound(nbt);
+			nbt.putInt("charge", Math.min(chargeIn, MAX_CHARGE));
+			stack.setTag(nbt);
 		}
 	}
 	

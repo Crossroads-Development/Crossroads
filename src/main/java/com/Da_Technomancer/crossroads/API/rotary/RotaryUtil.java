@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
@@ -109,7 +109,7 @@ public class RotaryUtil{
 	public static void increaseMasterKey(boolean sendPacket){
 		masterKey++;
 		if(sendPacket){
-			ModPackets.network.sendToAll(new SendMasterKeyToClient(masterKey));
+			CrossroadsPackets.network.sendToAll(new SendMasterKeyToClient(masterKey));
 		}
 	}
 

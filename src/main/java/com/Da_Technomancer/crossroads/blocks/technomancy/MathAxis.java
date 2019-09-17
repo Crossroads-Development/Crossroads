@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
@@ -68,7 +68,7 @@ public class MathAxis extends ContainerBlock{
 				worldIn.setBlockState(pos, state.cycle(Properties.HORIZ_FACING));
 			}
 		}else if(!worldIn.isRemote){
-			ModPackets.network.sendTo(new SendIntToClient((byte) 0, ((MathAxisTileEntity) worldIn.getTileEntity(pos)).getMode().ordinal(), pos), (ServerPlayerEntity) playerIn);
+			CrossroadsPackets.network.sendTo(new SendIntToClient((byte) 0, ((MathAxisTileEntity) worldIn.getTileEntity(pos)).getMode().ordinal(), pos), (ServerPlayerEntity) playerIn);
 			playerIn.openGui(Crossroads.instance, GuiHandler.MATH_AXIS_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 

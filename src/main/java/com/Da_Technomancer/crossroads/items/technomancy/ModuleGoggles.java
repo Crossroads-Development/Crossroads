@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -46,7 +46,7 @@ public class ModuleGoggles extends ArmorItem{
 			ArrayList<String> chat = new ArrayList<>();
 			RayTraceResult ray = MiscUtil.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(stack.getTagCompound().getBoolean(lens.name())){
+				if(stack.getTag().getBoolean(lens.name())){
 					lens.doEffect(world, player, chat, ray);
 				}
 			}
@@ -58,7 +58,7 @@ public class ModuleGoggles extends ArmorItem{
 					}
 					out.append(line);
 				}
-				ModPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (ServerPlayerEntity) player);
+				CrossroadsPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (ServerPlayerEntity) player);
 			}
 		}
 	}
@@ -69,9 +69,9 @@ public class ModuleGoggles extends ArmorItem{
 		tooltip.add("Lenses:");
 		if(stack.hasTagCompound()){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(stack.getTagCompound().hasKey(lens.name())){
+				if(stack.getTag().hasKey(lens.name())){
 					if(lens.shouldShowState()){
-						tooltip.add('-' + lens.name() + "-" + (stack.getTagCompound().getBoolean(lens.name()) ? "ENABLED" : "DISABLED"));
+						tooltip.add('-' + lens.name() + "-" + (stack.getTag().getBoolean(lens.name()) ? "ENABLED" : "DISABLED"));
 					}else{
 						tooltip.add('-' + lens.name());
 					}
@@ -87,7 +87,7 @@ public class ModuleGoggles extends ArmorItem{
 		StringBuilder path = new StringBuilder(Crossroads.MODID + ":textures/models/armor/goggles/goggle");
 		if(stack.hasTagCompound()){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(stack.getTagCompound().hasKey(lens.name())){
+				if(stack.getTag().hasKey(lens.name())){
 					path.append(lens.getTexturePath());
 				}
 			}

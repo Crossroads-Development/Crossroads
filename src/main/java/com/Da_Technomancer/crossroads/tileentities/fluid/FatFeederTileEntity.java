@@ -57,8 +57,8 @@ public class FatFeederTileEntity extends InventoryTE{
 				//The way saturation is coded is weird (defined relative to hunger), and the best way to do this is through nbt.
 				CompoundNBT nbt = new CompoundNBT();
 				food.writeNBT(nbt);
-				nbt.setInteger("foodLevel", hungerAdded + food.getFoodLevel());
-				nbt.setFloat("foodSaturationLevel", Math.min(20F - food.getSaturationLevel(), added - hungerAdded) + food.getSaturationLevel());
+				nbt.putInt("foodLevel", hungerAdded + food.getFoodLevel());
+				nbt.putFloat("foodSaturationLevel", Math.min(20F - food.getSaturationLevel(), added - hungerAdded) + food.getSaturationLevel());
 				food.readNBT(nbt);
 				markDirty();
 				if(fluids[0].amount <= 0){

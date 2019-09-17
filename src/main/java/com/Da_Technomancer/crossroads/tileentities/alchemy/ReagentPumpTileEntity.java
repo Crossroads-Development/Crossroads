@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.teamacronymcoders.base.nbt.NBT;
 import net.minecraft.block.BlockState;
@@ -50,7 +50,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE implements IIntRecei
 				message |= 1 << i;
 			}
 		}
-		ModPackets.network.sendToAllAround(new SendIntToClient((byte) 1, message, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 1, message, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 	}
 
 	@Override
@@ -106,18 +106,18 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE implements IIntRecei
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		for(int i = 0; i < 6; i++){
 			hasMatch[i] = nbt.getBoolean("match_" + i);
 		}
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
 		for(int i = 0; i < 6; i++){
-			nbt.setBoolean("match_" + i, hasMatch[i]);
+			nbt.putBoolean("match_" + i, hasMatch[i]);
 		}
 		return nbt;
 	}
@@ -126,7 +126,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE implements IIntRecei
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
-			nbt.setBoolean("match_" + i, hasMatch[i]);
+			nbt.putBoolean("match_" + i, hasMatch[i]);
 		}
 		return nbt;
 	}

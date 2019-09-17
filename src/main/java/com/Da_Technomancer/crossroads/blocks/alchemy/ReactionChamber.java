@@ -59,7 +59,7 @@ public class ReactionChamber extends ContainerBlock{
 		}else{
 			player.addExhaustion(0.005F);
 			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
-			stack.setTagCompound(((ReactionChamberTileEntity) te).getContentNBT());
+			stack.setTag(((ReactionChamberTileEntity) te).getContentNBT());
 			spawnAsEntity(worldIn, pos, stack);
 		}
 	}
@@ -68,7 +68,7 @@ public class ReactionChamber extends ContainerBlock{
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTagCompound()){
 			ReactionChamberTileEntity te = (ReactionChamberTileEntity) world.getTileEntity(pos);
-			te.writeContentNBT(stack.getTagCompound());
+			te.writeContentNBT(stack.getTag());
 		}
 	}
 
@@ -105,16 +105,16 @@ public class ReactionChamber extends ContainerBlock{
 		if(stack.hasTagCompound()){
 			double am = 0;
 
-			for(String key : stack.getTagCompound().getKeySet()){
+			for(String key : stack.getTag().getKeySet()){
 				if(!key.startsWith("qty_")){
 					continue;
 				}
-				int qty = stack.getTagCompound().getInteger(key);
+				int qty = stack.getTag().getInt(key);
 				am += qty;
 				tooltip.add(new ReagentStack(AlchemyCore.REAGENTS.get(key.substring(4)), qty).toString());
 			}
 
-			tooltip.add("Temp: " + MiscUtil.betterRound(HeatUtil.toCelcius(stack.getTagCompound().getDouble("heat") / am), 3));
+			tooltip.add("Temp: " + MiscUtil.betterRound(HeatUtil.toCelcius(stack.getTag().getDouble("heat") / am), 3));
 		}
 		tooltip.add("Consumes: -10FE/t (Optional)");
 	}

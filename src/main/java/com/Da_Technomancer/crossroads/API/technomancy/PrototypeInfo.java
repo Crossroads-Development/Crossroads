@@ -47,7 +47,7 @@ public class PrototypeInfo{
 		this.chunk = chunk;
 	}
 	
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
+	public CompoundNBT write(CompoundNBT nbt){
 		for(int i = 0; i < 6; i++){
 			if(ports[i] != null){
 				nbt.setString("port" + i, ports[i].name());
@@ -62,8 +62,8 @@ public class PrototypeInfo{
 		PrototypePortTypes[] ports = new PrototypePortTypes[6];
 		BlockPos[] portPos = new BlockPos[6];
 		for(int i = 0; i < 6; i++){
-			ports[i] = nbt.hasKey("port" + i) ? PrototypePortTypes.valueOf(nbt.getString("port" + i)) : null;
-			portPos[i] = nbt.hasKey("pos" + i) ? BlockPos.fromLong(nbt.getLong("pos" + i)) : null;
+			ports[i] = nbt.contains("port" + i) ? PrototypePortTypes.valueOf(nbt.getString("port" + i)) : null;
+			portPos[i] = nbt.contains("pos" + i) ? BlockPos.fromLong(nbt.getLong("pos" + i)) : null;
 		}
 		return new PrototypeInfo(ports, portPos, MiscUtil.getChunkPosFromLong(nbt.getLong("chunk")));
 	}

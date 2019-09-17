@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
@@ -64,7 +64,7 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 
 		if(drain != 0 ^ clientRunning){
 			clientRunning = !clientRunning;
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 4, clientRunning ? 1L : 0L, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 4, clientRunning ? 1L : 0L, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			markDirty();
 		}
 
@@ -87,26 +87,26 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 	protected abstract int drainFuel();
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		crystal = nbt.getBoolean("crystal");
 		clientRunning = nbt.getBoolean("client_running");
-		runTicks = nbt.getInteger("runtime");
+		runTicks = nbt.getInt("runtime");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setBoolean("crystal", crystal);
-		nbt.setBoolean("client_running", clientRunning);
-		nbt.setInteger("runtime", runTicks);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putBoolean("crystal", crystal);
+		nbt.putBoolean("client_running", clientRunning);
+		nbt.putInt("runtime", runTicks);
 		return nbt;
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.setBoolean("client_running", clientRunning);
+		nbt.putBoolean("client_running", clientRunning);
 		return nbt;
 	}
 

@@ -144,12 +144,12 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 		}
 	}
 
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		nbt.setDouble("he", heat);
+	public CompoundNBT write(CompoundNBT nbt){
+		nbt.putDouble("he", heat);
 		for(IReagent key : keySet()){
 			int qty = get(key);
 			if(qty > 0){
-				nbt.setInteger("qty_" + key.getId(), qty);
+				nbt.putInt("qty_" + key.getId(), qty);
 			}
 		}
 
@@ -163,7 +163,7 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 			if(!key.startsWith("qty_")){
 				continue;
 			}
-			map.put(AlchemyCore.REAGENTS.get(key.substring(4)), nbt.getInteger(key));
+			map.put(AlchemyCore.REAGENTS.get(key.substring(4)), nbt.getInt(key));
 		}
 
 		return map;

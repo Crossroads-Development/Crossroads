@@ -54,18 +54,18 @@ public class BasicFluidSplitterTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("mode", mode);
-		nbt.setInteger("transfered", transfered);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("mode", mode);
+		nbt.putInt("transfered", transfered);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		mode = nbt.getInteger("mode");
-		transfered = nbt.getInteger("transfered");
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		mode = nbt.getInt("mode");
+		transfered = nbt.getInt("transfered");
 	}
 
 	protected int getPortion(){

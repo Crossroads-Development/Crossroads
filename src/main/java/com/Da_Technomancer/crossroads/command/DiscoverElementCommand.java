@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.command;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -34,14 +33,14 @@ public class DiscoverElementCommand extends CommandBase{
 
 		if(args[0].toUpperCase().equals("ALL")){
 			CompoundNBT nbt = MiscUtil.getPlayerTag((PlayerEntity) sender);
-			if(!nbt.hasKey("elements")){
-				nbt.setTag("elements", new CompoundNBT());
+			if(!nbt.contains("elements")){
+				nbt.put("elements", new CompoundNBT());
 			}
-			nbt = nbt.getCompoundTag("elements");
+			nbt = nbt.getCompound("elements");
 
 			for(EnumBeamAlignments element : EnumBeamAlignments.values()){
-				if(!nbt.hasKey(element.name()) && element != EnumBeamAlignments.NO_MATCH){
-					nbt.setBoolean(element.name(), true);
+				if(!nbt.contains(element.name()) && element != EnumBeamAlignments.NO_MATCH){
+					nbt.putBoolean(element.name(), true);
 					sender.sendMessage(new StringTextComponent(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.getLocalName(false)));
 				}
 			}
@@ -59,13 +58,13 @@ public class DiscoverElementCommand extends CommandBase{
 		}
 
 		CompoundNBT nbt = MiscUtil.getPlayerTag((PlayerEntity) sender);
-		if(!nbt.hasKey("elements")){
-			nbt.setTag("elements", new CompoundNBT());
+		if(!nbt.contains("elements")){
+			nbt.put("elements", new CompoundNBT());
 		}
-		nbt = nbt.getCompoundTag("elements");
+		nbt = nbt.getCompound("elements");
 
-		if(!nbt.hasKey(element.name())){
-			nbt.setBoolean(element.name(), true);
+		if(!nbt.contains(element.name())){
+			nbt.putBoolean(element.name(), true);
 			sender.sendMessage(new StringTextComponent(TextFormatting.BOLD.toString() + "New Element Discovered: " + element.getLocalName(false)));
 			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) sender, false);
 		}

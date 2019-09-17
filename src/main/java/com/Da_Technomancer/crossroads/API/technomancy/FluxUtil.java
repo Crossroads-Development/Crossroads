@@ -93,9 +93,9 @@ public class FluxUtil{
 					if(oldTe != null){
 						CompoundNBT nbt = new CompoundNBT();
 						oldTe.writeToNBT(nbt);
-						nbt.setInteger("x", newPos.getX());
-						nbt.setInteger("y", newPos.getY());
-						nbt.setInteger("z", newPos.getZ());
+						nbt.putInt("x", newPos.getX());
+						nbt.putInt("y", newPos.getY());
+						nbt.putInt("z", newPos.getZ());
 						TileEntity newTe = tarWorld.getTileEntity(newPos);
 						if(newTe != null){
 							newTe.readFromNBT(nbt);

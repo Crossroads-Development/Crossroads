@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects.alchemy;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
@@ -34,7 +34,7 @@ public class LumenEffect implements IAlchEffect{
 		Chunk c = world.getChunk(pos);
 		if(world.getBiome(pos) != Biomes.DEEP_OCEAN){
 			c.getBiomeArray()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = (byte) Biome.getIdForBiome(Biomes.DEEP_OCEAN);
-			ModPackets.network.sendToDimension(new SendBiomeUpdateToClient(pos, (byte) Biome.getIdForBiome(Biomes.DEEP_OCEAN)), world.provider.getDimension());
+			CrossroadsPackets.network.sendToDimension(new SendBiomeUpdateToClient(pos, (byte) Biome.getIdForBiome(Biomes.DEEP_OCEAN)), world.provider.getDimension());
 		}
 
 		if(oldState.getBlock().isAir(oldState, world, pos) || oldState.getBlockHardness(world, pos) < 0){

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLogToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
@@ -64,9 +64,9 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 						if(oldTe != null){
 							CompoundNBT nbt = new CompoundNBT();
 							nbt = oldTe.writeToNBT(nbt).copy(); //Copied to prevent tile entities sharing instances of NBTTagCompound (can happen if nested).
-							nbt.setInteger("x", newPos.getX());
-							nbt.setInteger("y", newPos.getY());
-							nbt.setInteger("z", newPos.getZ());
+							nbt.putInt("x", newPos.getX());
+							nbt.putInt("y", newPos.getY());
+							nbt.putInt("z", newPos.getZ());
 							TileEntity newTe = copyTo.getWorld().getTileEntity(newPos);
 							newTe.readFromNBT(nbt);
 							if(newTe instanceof IPrototypePort){
@@ -99,15 +99,15 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 		}
 
 		if(CrossroadsConfig.allowPrototype.getInt() == -1){
-			ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototyping disabled in config.", Color.YELLOW, false), player);
+			CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototyping disabled in config.", Color.YELLOW, false), player);
 			return;
 		}
 		if(inventory[0].isEmpty() || inventory[0].getCount() < 3){
-			ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Insufficient inventory[0].", Color.YELLOW, false), player);
+			CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Insufficient inventory[0].", Color.YELLOW, false), player);
 			return;
 		}
 		if(!inventory[2].isEmpty()){
-			ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Full inventory[2] slot.", Color.YELLOW, false), player);
+			CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Full inventory[2] slot.", Color.YELLOW, false), player);
 			return;
 		}
 
@@ -115,23 +115,23 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 		if(!inventory[1].isEmpty()){
 			//Sanity checks
 			if(!(inventory[1].getItem() instanceof BlockItem) || ((BlockItem) inventory[1].getItem()).getBlock() != CrossroadsBlocks.prototype){
-				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Invalid inventory[1] item.", Color.YELLOW, false), player);
+				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Invalid inventory[1] item.", Color.YELLOW, false), player);
 				return;
 			}
 			if(CrossroadsConfig.allowPrototype.getInt() == 1){
-				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Copying disabled in config.", Color.YELLOW, false), player);
+				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Copying disabled in config.", Color.YELLOW, false), player);
 				return;
 			}
 
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
 			ArrayList<PrototypeInfo> infoList = data.prototypes;
 			ServerWorld dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-			int index = inventory[1].getTagCompound().getInteger("index");
+			int index = inventory[1].getTag().getInt("index");
 			//Sanity check
 			if(infoList.size() < index + 1){
 				inventory[1] = ItemStack.EMPTY;
 				markDirty();
-				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID/BUGGED TEMPLATE! Removing.", Color.RED, false), player);
+				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID/BUGGED TEMPLATE! Removing.", Color.RED, false), player);
 				return;
 			}
 			PrototypeInfo info = infoList.get(index);
@@ -139,7 +139,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			if(info == null){
 				inventory[1] = ItemStack.EMPTY;
 				markDirty();
-				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID/BUGGED TEMPLATE! Removing.", Color.RED, false), player);
+				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID/BUGGED TEMPLATE! Removing.", Color.RED, false), player);
 
 				return;
 			}
@@ -192,7 +192,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 				data.markDirty();
 				inventory[1] = ItemStack.EMPTY;
 				markDirty();
-				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID TEMPLATE! Removing.", Color.RED, false), player);
+				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "INVALID TEMPLATE! Removing.", Color.RED, false), player);
 				return;
 			}
 
@@ -202,18 +202,18 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 				if(setChunk(dimWorld.getChunk(chunkPos.x, chunkPos.z), dimWorld, info.chunk.getBlock(0, 16, 0), newChunk, false)){
 					infoList.set(newChunk, null);
 					data.markDirty();
-					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View logs for info.", Color.RED, false), player);
+					CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View logs for info.", Color.RED, false), player);
 					return;
 				}
 				inventory[0].shrink(3);
 				inventory[2] = inventory[1].copy();
-				inventory[2].getTagCompound().setInteger("index", newChunk);
-				inventory[2].getTagCompound().setString("name", message);
+				inventory[2].getTag().setInteger("index", newChunk);
+				inventory[2].getTag().setString("name", message);
 				markDirty();
-				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype copied." , Color.WHITE, false), player);
+				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype copied." , Color.WHITE, false), player);
 
 			}else{
-				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
+				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
 			}
 		}else{
 			List<String> blackList = Arrays.asList(CrossroadsConfig.blockedPrototype.getStringList());
@@ -287,8 +287,8 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			if(!errors.isEmpty()){
 				for(TemplateError err : errors){
 					err.trigger(world);
-					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", err.err + " at ", err.sev == 1 ? Color.YELLOW : Color.RED, false), player);
-					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "{x: " + err.pos.getX() + ", Y: " + err.pos.getY() + ", Z: " + err.pos.getZ() + "}", err.sev == 1 ? Color.YELLOW : Color.RED, false), player);
+					CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", err.err + " at ", err.sev == 1 ? Color.YELLOW : Color.RED, false), player);
+					CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "{x: " + err.pos.getX() + ", Y: " + err.pos.getY() + ", Z: " + err.pos.getZ() + "}", err.sev == 1 ? Color.YELLOW : Color.RED, false), player);
 				}
 				return;
 			}
@@ -303,23 +303,23 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 				if(setChunk(dimWorld.getChunk(chunkPos.x, chunkPos.z), world, new BlockPos(startX, startY, startZ), newChunk, CrossroadsConfig.allowPrototype.getInt() == 1)){
 					infoList.set(newChunk, null);
 					data.markDirty();
-					ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View server logs for info.", Color.RED, false), player);
+					CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View server logs for info.", Color.RED, false), player);
 					return;
 				}
 				inventory[0].shrink(3);
 				inventory[2] = new ItemStack(CrossroadsBlocks.prototype, 1);
-				inventory[2].setTagCompound(new CompoundNBT());
-				inventory[2].getTagCompound().setInteger("index", newChunk);
-				inventory[2].getTagCompound().setString("name", message);
+				inventory[2].setTag(new CompoundNBT());
+				inventory[2].getTag().setInteger("index", newChunk);
+				inventory[2].getTag().setString("name", message);
 				for(int i = 0; i < 6; i++){
 					if(descArray[i] != null && !descArray[i].isEmpty()){
-						inventory[2].getTagCompound().setString("ttip" + i, descArray[i]);
+						inventory[2].getTag().setString("ttip" + i, descArray[i]);
 					}
 				}
 				markDirty();
-				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype created." , Color.WHITE, false), player);
+				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype created." , Color.WHITE, false), player);
 			}else{
-				ModPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
+				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
 			}
 		}
 	}
@@ -348,7 +348,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			markDirty();
 		}else if(index == 3 && stack.getItem() == Item.getItemFromBlock(CrossroadsBlocks.prototype)){
 			markDirty();
-			int ind = stack.getTagCompound().hasKey("index") ? stack.getTagCompound().getInteger("index") : -1;
+			int ind = stack.getTag().hasKey("index") ? stack.getTag().getInt("index") : -1;
 			if(ind == -1){
 				inventory[0] = new ItemStack(OreSetup.ingotCopshowium, Math.min(inventory[0].getCount() + 3, 64));
 				return;

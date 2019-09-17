@@ -1,27 +1,28 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.API.templates.OutputLogGuiObject;
-import com.Da_Technomancer.essentials.packets.Message;
+import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.lang.reflect.Field;
 
-@SuppressWarnings("serial")
-public class SendLogToClient extends Message<SendLogToClient>{
-
-	public SendLogToClient(){
-		
-	}
+public class SendLogToClient extends ClientPacket{
 
 	public String logName;
 	public String text;
 	public int col;
 	public boolean clear;
+
+	private static final Field[] FIELDS = fetchFields(SendLogToClient.class, "logName", "text", "col", "clear");
+
+	@SuppressWarnings("unused")
+	public SendLogToClient(){
+
+	}
 
 	public SendLogToClient(String logName, String text, @Nullable Color color, boolean clear){
 		this.logName = logName;
@@ -30,24 +31,14 @@ public class SendLogToClient extends Message<SendLogToClient>{
 		this.clear = clear;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
-			return null;
-		}
-
-		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.addScheduledTask(new Runnable(){
-			public void run(){
-				processMessage(logName, text, col == -1 ? null : new Color(col), clear);
-			}
-		});
-
-		return null;
+	protected Field[] getFields(){
+		return FIELDS;
 	}
 
-	public void processMessage(String logName, String text, Color col, boolean clear){
+	@Override
+	protected void run(){
 		Screen gui = Minecraft.getInstance().currentScreen;
 		if(gui instanceof OutputLogGuiObject.ILogUser){
 			OutputLogGuiObject log = ((OutputLogGuiObject.ILogUser) gui).getLog(logName);
@@ -55,7 +46,7 @@ public class SendLogToClient extends Message<SendLogToClient>{
 				if(clear){
 					log.clearLog();
 				}
-				log.addText(text, col);
+				log.addText(text, col == -1 ? null : new Color(col));
 			}
 		}
 	}

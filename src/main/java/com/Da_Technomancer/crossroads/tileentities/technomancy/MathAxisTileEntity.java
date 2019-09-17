@@ -136,15 +136,15 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
-		mode = Mode.values()[nbt.getInteger("mode")];
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		mode = Mode.values()[nbt.getInt("mode")];
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setInteger("mode", mode.ordinal());
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("mode", mode.ordinal());
 		return nbt;
 	}
 

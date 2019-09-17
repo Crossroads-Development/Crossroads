@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.*;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
@@ -64,7 +64,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 				for(int i = 0; i < 3; i++){
 					if(Math.abs(angle[i] - lastSentAngle[i]) >= CLIENT_SPEED_MARGIN){
 						lastSentAngle[i] = angle[i];
-						ModPackets.network.sendToAllAround(new SendDoubleToClient(Integer.toString(i), (float) angle[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+						CrossroadsPackets.network.sendToAllAround(new SendDoubleToClient(Integer.toString(i), (float) angle[i], pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 					}
 				}
 
@@ -140,30 +140,30 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.setDouble("speed0", motionData[0][0]);
-		nbt.setDouble("speed1", motionData[1][0]);
-		nbt.setDouble("speed2", motionData[2][0]);
-		nbt.setDouble("angle0", angle[0]);
-		nbt.setDouble("angle1", angle[1]);
-		nbt.setDouble("angle2", angle[2]);
+		nbt.putDouble("speed0", motionData[0][0]);
+		nbt.putDouble("speed1", motionData[1][0]);
+		nbt.putDouble("speed2", motionData[2][0]);
+		nbt.putDouble("angle0", angle[0]);
+		nbt.putDouble("angle1", angle[1]);
+		nbt.putDouble("angle2", angle[2]);
 		return nbt;
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setDouble("speed0", motionData[0][0]);
-		nbt.setDouble("speed1", motionData[1][0]);
-		nbt.setDouble("speed2", motionData[2][0]);
-		nbt.setDouble("angle0", angle[0]);
-		nbt.setDouble("angle1", angle[1]);
-		nbt.setDouble("angle2", angle[2]);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putDouble("speed0", motionData[0][0]);
+		nbt.putDouble("speed1", motionData[1][0]);
+		nbt.putDouble("speed2", motionData[2][0]);
+		nbt.putDouble("angle0", angle[0]);
+		nbt.putDouble("angle1", angle[1]);
+		nbt.putDouble("angle2", angle[2]);
 
-		nbt.setDouble("l_angle0", angleRecord[0]);
-		nbt.setDouble("l_angle1", angleRecord[1]);
-		nbt.setDouble("l_angle2", angleRecord[2]);
+		nbt.putDouble("l_angle0", angleRecord[0]);
+		nbt.putDouble("l_angle1", angleRecord[1]);
+		nbt.putDouble("l_angle2", angleRecord[2]);
 
-		nbt.setInteger("redstone", redstone);
+		nbt.putInt("redstone", redstone);
 
 		if(ridableID != null){
 			nbt.setLong("id_greater", ridableID.getMostSignificantBits());
@@ -173,8 +173,8 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		motionData[0][0] = nbt.getDouble("speed0");
 		motionData[1][0] = nbt.getDouble("speed1");
 		motionData[2][0] = nbt.getDouble("speed2");
@@ -186,9 +186,9 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 		angleRecord[1] = nbt.getDouble("l_angle1");
 		angleRecord[2] = nbt.getDouble("l_angle2");
 
-		redstone = nbt.getInteger("redstone");
+		redstone = nbt.getInt("redstone");
 
-		ridableID = nbt.hasKey("id_lesser") ? new UUID(nbt.getLong("id_greater"), nbt.getLong("id_lesser")) : null;
+		ridableID = nbt.contains("id_lesser") ? new UUID(nbt.getLong("id_greater"), nbt.getLong("id_lesser")) : null;
 	}
 
 	@Override

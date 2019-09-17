@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import net.minecraft.block.Block;
@@ -76,7 +76,7 @@ public class RotaryPumpTileEntity extends ModuleTE{
 		}
 
 		if(lastProgress != (int) progress){
-			ModPackets.network.sendToAllAround(new SendLongToClient((byte) 1, (int) progress, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 1, (int) progress, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			lastProgress = (int) progress;
 		}
 	}
@@ -96,15 +96,15 @@ public class RotaryPumpTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT nbt){
-		super.readFromNBT(nbt);
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
 		progress = nbt.getDouble("prog");
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt){
-		super.writeToNBT(nbt);
-		nbt.setDouble("prog", progress);
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putDouble("prog", progress);
 		return nbt;
 	}
 

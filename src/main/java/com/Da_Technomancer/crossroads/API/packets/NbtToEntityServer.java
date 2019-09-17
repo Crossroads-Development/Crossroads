@@ -1,27 +1,30 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.packets.Message;
+import com.Da_Technomancer.essentials.packets.INBTReceiver;
+import com.Da_Technomancer.essentials.packets.ServerPacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.ServerWorld;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.UUID;
 
-@SuppressWarnings("serial")
-public class NbtToEntityServer extends Message<NbtToEntityServer>{
-
-	public NbtToEntityServer(){
-
-	}
+public class NbtToEntityServer extends ServerPacket{
 
 	public UUID entity;
 	public CompoundNBT nbt;
 	public int dim;
+
+	private static final Field[] FIELDS = fetchFields(NbtToEntityServer.class, "entity", "nbt", "dim");
+
+	@SuppressWarnings("unused")
+	public NbtToEntityServer(){
+
+	}
 
 	public NbtToEntityServer(UUID entity, int dim, CompoundNBT nbt){
 		this.entity = entity;
@@ -29,37 +32,28 @@ public class NbtToEntityServer extends Message<NbtToEntityServer>{
 		this.dim = dim;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.SERVER){
-			Crossroads.logger.error("MessageToServer received on wrong side:" + context.side);
-			return null;
-		}
-
-		DimensionManager.getWorld(dim).addScheduledTask(new Runnable(){
-			@Override
-			public void run(){
-				processMessage(DimensionManager.getWorld(dim), entity, nbt);
-			}
-		});
-
-		return null;
+	protected Field[] getFields(){
+		return FIELDS;
 	}
 
-	public void processMessage(ServerWorld world, UUID entity, CompoundNBT nbt){
+	@Override
+	protected void run(@Nullable ServerPlayerEntity serverPlayerEntity){
+		ClientWorld world = Minecraft.getInstance().world;
 		if(world == null || entity == null){
 			return;
 		}
 		Entity ent = null;
 
-		for(Entity loadedEnt : world.loadedEntityList){
+		for(Entity loadedEnt : world.getAllEntities()){
 			if(entity.equals(loadedEnt.getUniqueID())){
 				ent = loadedEnt;
 				break;
 			}
 		}
-		if(ent instanceof INbtReceiver){
-			((INbtReceiver) ent).receiveNBT(nbt);
+		if(ent instanceof INBTReceiver){
+			((INBTReceiver) ent).receiveNBT(nbt, serverPlayerEntity);
 		}
 	}
 }

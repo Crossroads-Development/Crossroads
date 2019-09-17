@@ -1,22 +1,21 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
+import com.Da_Technomancer.essentials.packets.ClientPacket;
 
-import com.Da_Technomancer.essentials.packets.Message;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 
-@SuppressWarnings("serial")
-public class SendDimLoadToClient extends Message<SendDimLoadToClient>{
-
-	public SendDimLoadToClient(){
-	}
+public class SendDimLoadToClient extends ClientPacket{
 
 	public int[] dims;
 	public boolean wipePrevious = false;
+
+	private static final Field[] FIELDS = fetchFields(SendDimLoadToClient.class, "dims", "wipePrevious");
+
+	@SuppressWarnings("unused")
+	public SendDimLoadToClient(){
+
+	}
 
 	public SendDimLoadToClient(int[] dims){
 		this.dims = dims;
@@ -34,29 +33,24 @@ public class SendDimLoadToClient extends Message<SendDimLoadToClient>{
 		this.wipePrevious = wipePrevious;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context != null && context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
-			return null;
+	protected Field[] getFields(){
+		return FIELDS;
+	}
+
+	@Override
+	protected void run(){
+		if(wipePrevious){
+			//TODO
+//			for(int i : DimensionManager.getDimensions(ModDimensions.workspaceDimType)){
+//				DimensionManager.unregisterDimension(i);
+//			}
 		}
-
-		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.addScheduledTask(new Runnable(){
-			public void run(){
-				if(wipePrevious){
-					for(int i : DimensionManager.getDimensions(ModDimensions.workspaceDimType)){
-						DimensionManager.unregisterDimension(i);
-					}
-				}
-				for(int i : dims){
-					if(!DimensionManager.isDimensionRegistered(i)){
-						DimensionManager.registerDimension(i, ModDimensions.workspaceDimType);
-					}
-				}
-			}
-		});
-
-		return null;
+		for(int i : dims){
+//			if(!DimensionManager.isDimensionRegistered(i)){
+//				DimensionManager.registerDimension(i, ModDimensions.workspaceDimType);
+//			}
+		}
 	}
 }

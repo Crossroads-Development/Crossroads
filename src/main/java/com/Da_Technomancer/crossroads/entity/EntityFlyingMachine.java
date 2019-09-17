@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.API.packets.INbtReceiver;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityServer;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import net.minecraft.client.Minecraft;
@@ -48,13 +47,13 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 				if(GameSettings.isKeyDown(Minecraft.getInstance().gameSettings.keyBindForward)){
 					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) - (float) Math.PI / 20F);
 					CompoundNBT nbt = new CompoundNBT();
-					nbt.setFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
-					ModPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
+					nbt.putFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
+					CrossroadsPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
 				}else if(GameSettings.isKeyDown(Minecraft.getInstance().gameSettings.keyBindBack)){
 					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) + (float) Math.PI / 20F);
 					CompoundNBT nbt = new CompoundNBT();
-					nbt.setFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
-					ModPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
+					nbt.putFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
+					CrossroadsPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
 				}
 			}
 		}
@@ -191,12 +190,12 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 
 	@Override
 	protected void readEntityFromNBT(CompoundNBT nbt){
-		damage = nbt.getInteger("dam");
+		damage = nbt.getInt("dam");
 	}
 
 	@Override
 	protected void writeEntityToNBT(CompoundNBT nbt){
-		nbt.setInteger("dam", damage);
+		nbt.putInt("dam", damage);
 	}
 
 	@Override

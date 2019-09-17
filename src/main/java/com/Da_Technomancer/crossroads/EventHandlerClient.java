@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.packets.ModPackets;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.API.packets.SendGoggleConfigureToServer;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
@@ -49,7 +49,7 @@ public final class EventHandlerClient{
 
 		//Goggle entity glowing
 		if(game.world.getTotalWorldTime() % 5 == 0){
-			boolean glow = helmet.getItem() == CrossroadsItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTagCompound().getBoolean(EnumGoggleLenses.VOID.name());
+			boolean glow = helmet.getItem() == CrossroadsItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.name());
 			for(Entity ent : game.world.getLoadedEntityList()){
 				CompoundNBT entNBT = ent.getEntityData();
 				if(entNBT == null){
@@ -164,7 +164,7 @@ public final class EventHandlerClient{
 			}
 			ItemStack mainStack = player.getHeldItem(Hand.MAIN_HAND);
 			if(mainStack.getItem() instanceof BeamUsingItem){
-				CompoundNBT nbt = mainStack.hasTagCompound() ? mainStack.getTagCompound() : new CompoundNBT();
+				CompoundNBT nbt = mainStack.hasTagCompound() ? mainStack.getTag() : new CompoundNBT();
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
 				GlStateManager.enableBlend();
@@ -181,7 +181,7 @@ public final class EventHandlerClient{
 				Minecraft.getInstance().getTextureManager().bindTexture(COLOR_SHEET);
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 				for(int i = 0; i < 4; i++){
-					int extension = 9 * nbt.getInteger(i == 0 ? "ENERGY" : i == 1 ? "POTENTIAL" : i == 2 ? "STABILITY" : "VOID");
+					int extension = 9 * nbt.getInt(i == 0 ? "ENERGY" : i == 1 ? "POTENTIAL" : i == 2 ? "STABILITY" : "VOID");
 					buf.pos(24, 24 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), .0625F).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
 					buf.pos(24 + extension, 24 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), .0625F).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
 					buf.pos(24 + extension, 18 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), 0).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
@@ -279,11 +279,11 @@ public final class EventHandlerClient{
 		PlayerEntity play = Minecraft.getInstance().player;
 		ItemStack helmet = play.getItemStackFromSlot(EquipmentSlotType.HEAD);
 		if(play.getHeldItemMainhand().isEmpty() && helmet.getItem() == CrossroadsItems.moduleGoggles && helmet.hasTagCompound()){
-			CompoundNBT nbt = helmet.getTagCompound();
+			CompoundNBT nbt = helmet.getTag();
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				KeyBinding key = lens.getKey();
-				if(key != null && key.isPressed() && key.isKeyDown() && nbt.hasKey(lens.name())){
-					ModPackets.network.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.name())));
+				if(key != null && key.isPressed() && key.isKeyDown() && nbt.contains(lens.name())){
+					CrossroadsPackets.network.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.name())));
 					break;
 				}
 			}

@@ -51,8 +51,8 @@ public class SendGoggleConfigureToServer extends Message<SendGoggleConfigureToSe
 
 	public void processMessage(PlayerEntity player, String lens, boolean setting){
 		ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-		if(stack.getItem() == CrossroadsItems.moduleGoggles && stack.hasTagCompound() && stack.getTagCompound().hasKey(lens)){
-			stack.getTagCompound().setBoolean(lens, setting);
+		if(stack.getItem() == CrossroadsItems.moduleGoggles && stack.hasTagCompound() && stack.getTag().hasKey(lens)){
+			stack.getTag().setBoolean(lens, setting);
 
 			if(EnumGoggleLenses.DIAMOND.name().equals(lens)){
 				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player, false);
