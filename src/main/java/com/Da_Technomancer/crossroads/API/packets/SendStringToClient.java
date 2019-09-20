@@ -9,7 +9,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 
-@SuppressWarnings("serial")
 public class SendStringToClient extends ClientPacket{
 
 	public byte sContext;

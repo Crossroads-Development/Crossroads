@@ -67,11 +67,11 @@ public class PrototypeWatch extends BeamUsingItem{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(!stack.hasTagCompound()){
-			stack.setTag(new CompoundNBT());
+		if(!stack.hasTag()){
+			stack.put(new CompoundNBT());
 		}
-		CompoundNBT prototypeNBT = stack.getTag().getCompoundTag("prot");
-		if(prototypeNBT.hasKey("name")){
+		CompoundNBT prototypeNBT = stack.getTag().getCompound("prot");
+		if(prototypeNBT.contains("name")){
 			tooltip.add("Name: " + prototypeNBT.getString("name"));
 		}
 		super.addInformation(stack, world, tooltip, advanced);
@@ -84,15 +84,15 @@ public class PrototypeWatch extends BeamUsingItem{
 	@Override
 	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
 		super.onUsingTick(stack, player, count);
-		if(!player.world.isRemote && stack.hasTagCompound() && stack.getTag().hasKey("prot") && player.getActiveHand() == Hand.MAIN_HAND){
-			CompoundNBT prototypeNBT = stack.getTag().getCompoundTag("prot");
+		if(!player.world.isRemote && stack.hasTag() && stack.getTag().contains("prot") && player.getActiveHand() == Hand.MAIN_HAND){
+			CompoundNBT prototypeNBT = stack.getTag().getCompound("prot");
 			int index = prototypeNBT.getInt("index");
 
 			CompoundNBT playerNBT = player.getEntityData();
 			if(getMaxItemUseDuration(stack) == count || playerNBT.getBoolean("wasSneak") != player.isSneaking()){
 				if(watchMap.containsKey(index)){
 					watchMap.get(index).mouseActive = true;
-					playerNBT.setBoolean("wasSneak", player.isSneaking());
+					playerNBT.putBoolean("wasSneak", player.isSneaking());
 
 					Direction dir = Direction.SOUTH;
 					PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(index);
@@ -118,7 +118,7 @@ public class PrototypeWatch extends BeamUsingItem{
 
 	@Nullable
 	public static double[] getValues(ItemStack watch){
-		if(watch.isEmpty() || watch.getItem() != CrossroadsItems.watch || !watch.hasTagCompound()){
+		if(watch.isEmpty() || watch.getItem() != CrossroadsItems.watch || !watch.hasTag()){
 			return null;
 		}
 		CompoundNBT nbt = watch.getTag();
@@ -133,13 +133,13 @@ public class PrototypeWatch extends BeamUsingItem{
 	 */
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected){
-		if(isSelected && !worldIn.isRemote && stack.hasTagCompound() && stack.getTag().hasKey("prot")){
-			CompoundNBT prototypeNBT = stack.getTag().getCompoundTag("prot");
+		if(isSelected && !worldIn.isRemote && stack.hasTag() && stack.getTag().contains("prot")){
+			CompoundNBT prototypeNBT = stack.getTag().getCompound("prot");
 			int index = prototypeNBT.getInt("index");
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
 			if(!watchMap.containsKey(index)){
 				if(data.prototypes.size() <= index || data.prototypes.get(index) == null){
-					stack.getTag().removeTag("prot");
+					stack.getTag().remove("prot");
 					return;
 				}
 				WatchPrototypeOwner owner = new WatchPrototypeOwner(index, entityIn);
@@ -169,7 +169,7 @@ public class PrototypeWatch extends BeamUsingItem{
 
 			PrototypeWorldProvider.tickChunk(((index % 100) * 2) - 99, (index / 50) - 99);
 
-			if(entityIn instanceof PlayerEntity && BeamManager.beamStage == 0 && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getItem() == CrossroadsItems.beamCage && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).hasTagCompound()){
+			if(entityIn instanceof PlayerEntity && BeamManager.beamStage == 0 && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getItem() == CrossroadsItems.beamCage && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).hasTag()){
 				CompoundNBT cageNbt = ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getTag();
 				CompoundNBT nbt = stack.getTag();
 				PrototypeInfo info = data.prototypes.get(index);
@@ -213,8 +213,8 @@ public class PrototypeWatch extends BeamUsingItem{
 	 */
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft){
-		if(!worldIn.isRemote && stack.hasTagCompound() && stack.getTag().hasKey("prot")){
-			CompoundNBT prototypeNBT = stack.getTag().getCompoundTag("prot");
+		if(!worldIn.isRemote && stack.hasTag() && stack.getTag().contains("prot")){
+			CompoundNBT prototypeNBT = stack.getTag().getCompound("prot");
 			int index = prototypeNBT.getInt("index");
 			if(watchMap.containsKey(index)){
 				watchMap.get(index).mouseActive = false;

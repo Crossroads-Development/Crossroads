@@ -59,14 +59,14 @@ public class ReactionChamber extends ContainerBlock{
 		}else{
 			player.addExhaustion(0.005F);
 			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
-			stack.setTag(((ReactionChamberTileEntity) te).getContentNBT());
+			stack.put(((ReactionChamberTileEntity) te).getContentNBT());
 			spawnAsEntity(worldIn, pos, stack);
 		}
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		if(stack.hasTagCompound()){
+		if(stack.hasTag()){
 			ReactionChamberTileEntity te = (ReactionChamberTileEntity) world.getTileEntity(pos);
 			te.writeContentNBT(stack.getTag());
 		}
@@ -102,7 +102,7 @@ public class ReactionChamber extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(stack.hasTagCompound()){
+		if(stack.hasTag()){
 			double am = 0;
 
 			for(String key : stack.getTag().getKeySet()){

@@ -61,7 +61,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 				}
 
 				if(CrossroadsConfig.rotateBeam.getBoolean()){
-					GlStateManager.rotate(beam.getWorld().getTotalWorldTime() * 2, 0, 1, 0);
+					GlStateManager.rotate(beam.getWorld().getGameTime() * 2, 0, 1, 0);
 				}
 
 				final double rad = trip.getRight().doubleValue() / 16D / Math.sqrt(2D);
@@ -146,7 +146,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 		/* Old "colored starburst" renderer
 
 
-		float ticks = beam.getWorld().getTotalWorldTime() % 20 + partialTicks;
+		float ticks = beam.getWorld().getGameTime() % 20 + partialTicks;
 		
 		if(ticks < 1F && !beam.renderSet){
 			beam.renderSet = true;
@@ -170,7 +170,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 		GlStateManager.disableCull();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
-		float height = 0.2F * (float) Math.sin(0.05F * beam.getWorld().getTotalWorldTime());
+		float height = 0.2F * (float) Math.sin(0.05F * beam.getWorld().getGameTime());
 		float change = ticks / 20F;
 
 		buf.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);

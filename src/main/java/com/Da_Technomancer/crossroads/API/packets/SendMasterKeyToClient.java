@@ -1,43 +1,37 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.packets.Message;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import com.Da_Technomancer.essentials.packets.ClientPacket;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 
 /**
  * Sends a Taylor series to the client. Used by Master Axes to reduce packet overhead
  */
-public class SendMasterKeyToClient extends Message<SendMasterKeyToClient>{
-
-	public SendMasterKeyToClient(){
-	}
+public class SendMasterKeyToClient extends ClientPacket{
 
 	public int newKey;
+
+	private static final Field[] FIELDS = fetchFields(SendMasterKeyToClient.class, "newKey");
+
+	@SuppressWarnings("unused")
+	public SendMasterKeyToClient(){
+
+	}
 
 	public SendMasterKeyToClient(int newMasterKey){
 		newKey = newMasterKey;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.CLIENT){
-			Crossroads.logger.error("MessageToClient received on wrong side:" + context.side);
-			return null;
-		}
+	protected Field[] getFields(){
+		return FIELDS;
+	}
 
-		Minecraft minecraft = Minecraft.getInstance();
-		final ClientWorld worldClient = minecraft.world;
-		minecraft.addScheduledTask(new Runnable(){
-			public void run(){
-				RotaryUtil.setMasterKey(newKey);
-			}
-		});
-
-		return null;
+	@Override
+	protected void run(){
+		RotaryUtil.setMasterKey(newKey);
 	}
 }

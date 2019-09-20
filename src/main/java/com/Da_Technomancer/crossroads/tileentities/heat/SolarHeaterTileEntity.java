@@ -25,7 +25,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 		}
 
 		//Every 30 seconds, check if we still have sky view and cache the result
-		if(world.getTotalWorldTime() % 600 == 0){
+		if(world.getGameTime() % 600 == 0){
 			running = world.canSeeSky(pos);
 		}
 

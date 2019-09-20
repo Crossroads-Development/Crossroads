@@ -43,7 +43,7 @@ public class HeatSinkTileEntity extends ModuleTE{
 		}
 
 		double prevTemp = temp;
-		double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
 		temp += Math.min(MODES[mode], Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 		if(temp != prevTemp){
 			markDirty();

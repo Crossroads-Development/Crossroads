@@ -4,11 +4,17 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class BeamRenderTEBase extends TileEntity{
+
+
+	public BeamRenderTEBase(TileEntityType<?> type){
+		super(type);
+	}
 
 	/**
 	 *
@@ -18,17 +24,12 @@ public abstract class BeamRenderTEBase extends TileEntity{
 
 	/**
 	 * For informational displays.
-	 * May contain null elements
+//	 * Must not contain null elements
 	 */
 	public abstract BeamUnit[] getLastSent();
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		return INFINITE_EXTENT_AABB;
-	}
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
-		return oldState.getBlock() != newState.getBlock();
 	}
 }

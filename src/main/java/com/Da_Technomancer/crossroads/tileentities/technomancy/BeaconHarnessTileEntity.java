@@ -35,7 +35,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 	public void update(){
 		super.update();
 
-		if(world.isRemote || world.getTotalWorldTime() % BeamManager.BEAM_TIME != 0){
+		if(world.isRemote || world.getGameTime() % BeamManager.BEAM_TIME != 0){
 			return;
 		}
 

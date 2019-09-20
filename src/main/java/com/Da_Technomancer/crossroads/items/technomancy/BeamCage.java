@@ -43,7 +43,7 @@ public class BeamCage extends Item{
 	public static void storeBeam(ItemStack stack, @Nullable BeamUnit toStore){
 		CompoundNBT nbt = stack.getTag();
 		if(nbt == null){
-			stack.setTag(new CompoundNBT());
+			stack.put(new CompoundNBT());
 			nbt = stack.getTag();
 		}
 		nbt.putInt("stored_" + EnumBeamAlignments.ENERGY.name().toLowerCase(), toStore == null ? 0 : toStore.getEnergy());

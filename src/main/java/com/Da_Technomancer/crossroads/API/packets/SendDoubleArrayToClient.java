@@ -1,55 +1,46 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.essentials.packets.Message;
+import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.world.World;
 
-@SuppressWarnings("serial")
-public class SendDoubleArrayToClient extends Message<SendDoubleArrayToClient>{
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 
-	public SendDoubleArrayToClient(){
-		
-	}
+public class SendDoubleArrayToClient extends ClientPacket{
 
-	public String sContext;
+	public byte id;
 	public double[] message;
 	public BlockPos pos;
 
-	public SendDoubleArrayToClient(String context, double[] message, BlockPos pos){
-		this.sContext = context;
+	private static final Field[] FIELDS = fetchFields(SendDoubleArrayToClient.class, "id", "message", "pos");
+
+	@SuppressWarnings("unused")
+	public SendDoubleArrayToClient(){
+
+	}
+
+	public SendDoubleArrayToClient(byte context, double[] message, BlockPos pos){
+		this.id = context;
 		this.message = message;
 		this.pos = pos;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
-			return null;
-		}
-
-		Minecraft minecraft = Minecraft.getInstance();
-		final ClientWorld worldClient = minecraft.world;
-		minecraft.addScheduledTask(new Runnable(){
-			@Override
-			public void run(){
-				processMessage(worldClient, sContext, message, pos);
-			}
-		});
-
-		return null;
+	protected Field[] getFields(){
+		return FIELDS;
 	}
 
-	public void processMessage(ClientWorld worldClient, String context, double[] message, BlockPos pos){
+	@Override
+	protected void run(){
+		World worldClient = Minecraft.getInstance().world;
 		TileEntity te = worldClient.getTileEntity(pos);
 
 		if(te instanceof IDoubleArrayReceiver){
-			((IDoubleArrayReceiver) te).receiveDoubles(context, message, null);
+			((IDoubleArrayReceiver) te).receiveDoubles(id, message, null);
 		}
 	}
 }

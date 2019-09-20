@@ -34,7 +34,7 @@ public class ResetPathCommand extends CommandBase{
 		ServerPlayerEntity target = args.length == 1 ? server.getPlayerList().getPlayerByUsername(args[0]) : sender instanceof ServerPlayerEntity ? ((ServerPlayerEntity) sender) : null;
 		
 		if(target != null){
-			MiscUtil.getPlayerTag(target).removeTag("path");
+			MiscUtil.getPlayerTag(target).remove("path");
 			StoreNBTToClient.syncNBTToClient(target, false);
 			target.sendMessage(new StringTextComponent("Your path has been reset."));
 		}else{

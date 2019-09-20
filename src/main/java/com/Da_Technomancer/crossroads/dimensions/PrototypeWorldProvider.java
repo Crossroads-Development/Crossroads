@@ -70,14 +70,14 @@ public class PrototypeWorldProvider extends Dimension{
 				}
 
 				try{
-					protWorld.profiler.startSection(ticking.getClass());
+					protWorld.getProfiler().startSection(ticking.getClass());
 //					Swap over to the commented out method once the deprecated one is removed. The deprecated one is still used here for backward compatability. 
-//										protWorld.profiler.func_194340_a(() ->
+//										protWorld.getProfiler().func_194340_a(() ->
 //										{
 //											return String.valueOf(TileEntity.getKey(ticking.getClass()));
 //										});
 					((ITickableTileEntity) ticking).update();
-					protWorld.profiler.endSection();
+					protWorld.getProfiler().endSection();
 				}catch(Throwable throwable){
 					CrashReport crash = CrashReport.makeCrashReport(throwable, "Ticking block entity");
 					CrashReportCategory crashCateg = crash.makeCategory("Block entity being ticked");
@@ -108,13 +108,13 @@ public class PrototypeWorldProvider extends Dimension{
 
 	@Override
 	public void onWorldUpdateEntities(){
-		world.profiler.startSection(Crossroads.MODNAME + "-Prototype TileEntity Sorting");
+		world.getProfiler().startSection(Crossroads.MODNAME + "-Prototype TileEntity Sorting");
 		tickingTE.addAll(world.tickableTileEntities);
 		world.tickableTileEntities.clear();
 		tickingTE.removeIf((TileEntity te) -> {
 			return !world.loadedTileEntityList.contains(te);
 		});
-		world.profiler.endSection();
+		world.getProfiler().endSection();
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
 		chat.add("In-Temp: " + MiscUtil.betterRound(heatHandlerIn.getTemp(), 3) + "°C");
 		chat.add("Out-Temp: " + MiscUtil.betterRound(heatHandlerOut.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world, pos) + "°C");
 	}
 
 	@Override
@@ -170,8 +170,8 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		private void init(){
 			if(!init){
 				init = true;
-				heatIn = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
-				heatOut = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				heatIn = HeatUtil.convertBiomeTemp(world, pos);
+				heatOut = HeatUtil.convertBiomeTemp(world, pos);
 				markDirty();
 			}
 		}

@@ -48,7 +48,7 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 	public void update(){
 		if(world.isRemote){
 			angle += clientEntropy * 3.6D / 20F;
-		}else if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
+		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
 			syncFlux();
 		}
 	}

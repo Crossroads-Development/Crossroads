@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -20,8 +21,8 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 	 */
 	protected final short[][] clientFluids = new short[fluidTanks()][2];
 
-	public InventoryTE(int invSize){
-		super();
+	public InventoryTE(TileEntityType<? extends InventoryTE> type, int invSize){
+		super(type);
 		inventory = new ItemStack[invSize];
 		for(int i = 0; i < invSize; i++){
 			inventory[i] = ItemStack.EMPTY;
@@ -103,7 +104,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 			return ItemStack.EMPTY;
 		}
 		markDirty();
-		return inventory[index].splitStack(count);
+		return inventory[index].split(count);
 	}
 
 	@Override
@@ -263,7 +264,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 				return new ItemStack(inventory[slot].getItem(), moved, inventory[slot].getMetadata());
 			}
 			markDirty();
-			return inventory[slot].splitStack(moved);
+			return inventory[slot].split(moved);
 		}
 
 		@Override

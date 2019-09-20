@@ -45,11 +45,11 @@ public class StaffTechnomancy extends BeamUsingItem{
 	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
 		super.onUsingTick(stack, player, count);
 		if(!player.world.isRemote && !player.isDead && (getMaxItemUseDuration(stack) - count) % 5 == 0){
-			if(!stack.hasTagCompound()){
+			if(!stack.hasTag()){
 				return;
 			}
 			ItemStack cage = player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
-			if(cage.getItem() != CrossroadsItems.beamCage || !cage.hasTagCompound()){
+			if(cage.getItem() != CrossroadsItems.beamCage || !cage.hasTag()){
 				player.resetActiveHand();
 				return;
 			}

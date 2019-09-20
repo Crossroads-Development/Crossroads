@@ -82,7 +82,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 			return;
 		}
 
-		if(world.getTotalWorldTime() % 2 == 0){
+		if(world.getGameTime() % 2 == 0){
 			int fullness = Math.min(3, (int) Math.ceil(fluids[0] == null ? 0F : (float) fluids[0].amount * 3F / (float) fluidProps[0].getCapacity()));
 			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() != CrossroadsBlocks.heatingCrucible){
@@ -149,7 +149,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		if(activeText.length() != 0){
-			nbt.setString("act", activeText);
+			nbt.putString("act", activeText);
 			if(col != null){
 				nbt.putInt("col", col);
 			}
@@ -163,7 +163,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		if(activeText.length() != 0){
-			nbt.setString("act", activeText);
+			nbt.putString("act", activeText);
 			if(col != null){
 				nbt.putInt("col", col);
 			}

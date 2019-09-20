@@ -5,16 +5,18 @@ import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
-import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ITickableTileEntity;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.common.util.LazyOptional;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickableTileEntity, IIntReceiver{
@@ -23,7 +25,11 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	protected BeamManager[] beamer;
 	protected BeamUnitStorage[] queued = {new BeamUnitStorage(), new BeamUnitStorage()};
 	protected long activeCycle;
-	protected BeamUnit[] prevMag = new BeamUnit[6];//Stores the last non-null beams sent for information readouts
+	protected BeamUnit[] prevMag = new BeamUnit[] {BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY};//Stores the last non-null beams sent for information readouts
+
+	public BeamRenderTE(TileEntityType<?> type){
+		super(type);
+	}
 
 	/**
 	 * @return A size 6 boolean[] where each boolean corresponds to the index of an EnumFacing.
@@ -50,13 +56,15 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 			prevMag[i] = null;
 			refreshBeam(i);
 		}
+		lazyOptional.invalidate();
+		lazyOptional = LazyOptional.of(BeamHandler::new);
 	}
 
 	protected void refreshBeam(int index){
 		int packet = beamer == null || beamer[index] == null ? 0 : beamer[index].genPacket();
 		beamPackets[index] = packet;
-		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		if(beamer != null && beamer[index] != null && beamer[index].getLastSent() != null){
+		CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) index, packet, pos));
+		if(beamer != null && beamer[index] != null && !beamer[index].getLastSent().isEmpty()){
 			prevMag[index] = beamer[index].getLastSent();
 		}
 	}
@@ -67,7 +75,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.isRemote){
 			return;
 		}
@@ -85,7 +93,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 			BeamUnit out = shiftStorage();
 			activeCycle = BeamManager.cycleNumber;
-			if(out != null && out.getPower() > getLimit()){
+			if(out.getPower() > getLimit()){
 				out = out.mult((float) getLimit() / (float) out.getPower(), true);
 			}
 			doEmit(out);
@@ -96,7 +104,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	 * Moves over the beams in queued from index 1 to 0.
 	 * @return The beams previously stored in queued[0].
 	 */
-	@Nullable
+	@Nonnull
 	protected BeamUnit shiftStorage(){
 		BeamUnit out = queued[0].getOutput();
 		queued[0].clear();
@@ -140,7 +148,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 
 		queued[0].writeToNBT("queue0", nbt);
 		queued[1].writeToNBT("queue1", nbt);
-		nbt.setLong("cyc", activeCycle);
+		nbt.putLong("cyc", activeCycle);
 
 		if(beamer != null){
 			for(int i = 0; i < 6; i++){
@@ -163,17 +171,20 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		}
 	}
 
+	protected LazyOptional<IBeamHandler> lazyOptional = LazyOptional.of(BeamHandler::new);
+
 	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		return getCapability(cap, side) != null || super.hasCapability(cap, side);
+	public void remove(){
+		super.remove();
+		lazyOptional.invalidate();
 	}
 
-	protected final BeamHandler handler = new BeamHandler();
+//	protected final BeamHandler handler = new BeamHandler();
 
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction dir){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction dir){
 		if(cap == Capabilities.BEAM_CAPABILITY && (dir == null || inputSides()[dir.getIndex()])){
-			return (T) handler;
+			return (LazyOptional<T>) lazyOptional;
 		}
 		return super.getCapability(cap, dir);
 	}

@@ -184,7 +184,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 					testStack.setCount(1);
 					int trans = Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty());
 					if(!simulate){
-						double itemTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						double itemTemp = HeatUtil.convertBiomeTemp(world, pos);
 						if(itemTemp >= reag.getMeltingPoint()){
 							itemTemp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint() - 100D);
 						}

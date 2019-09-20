@@ -48,7 +48,7 @@ public class SendBeamItemToServer extends ServerPacket{
 		ItemStack stack = player.getHeldItem(hand);
 		((BeamUsingItem) stack.getItem()).preChanged(stack, player);
 		if(stack.getTag() == null){
-			stack.setTag(new CompoundNBT());
+			stack.put(new CompoundNBT());
 		}
 		CompoundNBT nbt = stack.getTag();
 		int i = nbt.getInt(element);

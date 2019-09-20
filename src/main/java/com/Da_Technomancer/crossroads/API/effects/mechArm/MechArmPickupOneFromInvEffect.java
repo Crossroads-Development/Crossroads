@@ -56,7 +56,7 @@ public class MechArmPickupOneFromInvEffect implements IMechArmEffect{
 			}else{
 				ItemEntity heldItemEnt = new ItemEntity(world, posX, posY, posZ, heldStack);
 				heldItemEnt.startRiding(ent, true);
-				world.spawnEntity(heldItemEnt);
+				world.addEntity(heldItemEnt);
 			}
 		}
 

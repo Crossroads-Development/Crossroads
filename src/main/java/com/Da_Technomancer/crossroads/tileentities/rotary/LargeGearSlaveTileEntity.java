@@ -90,7 +90,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		if(masterPos != null){
-			nbt.setLong("mast", masterPos.toLong());
+			nbt.putLong("mast", masterPos.toLong());
 		}
 		return nbt;
 	}
@@ -105,7 +105,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		if(masterPos != null){
-			nbt.setLong("mast", masterPos.toLong());
+			nbt.putLong("mast", masterPos.toLong());
 		}
 		return nbt;
 	}

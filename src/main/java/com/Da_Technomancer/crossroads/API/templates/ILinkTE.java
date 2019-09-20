@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.ArrayList;
 
@@ -76,7 +75,7 @@ public interface ILinkTE extends ILongReceiver{
 		}else if(links.size() < getMaxLinks()){
 			links.add(linkPos);
 			BlockPos tePos = getTE().getPos();
-			CrossroadsPackets.network.sendToAllAround(new SendLongToClient(LINK_PACKET_ID, linkPos.toLong(), tePos), new NetworkRegistry.TargetPoint(getTE().getWorld().provider.getDimension(), tePos.getX(), tePos.getY(), tePos.getZ(), 512));
+			CrossroadsPackets.sendPacketAround(getTE().getWorld(), tePos, new SendLongToClient(LINK_PACKET_ID, linkPos.toLong(), tePos));
 			getTE().markDirty();
 			player.sendMessage(new StringTextComponent("Linked device at " + getTE().getPos() + " to send to " + endpoint.getTE().getPos()));
 			return true;
@@ -96,7 +95,7 @@ public interface ILinkTE extends ILongReceiver{
 		if(player.isSneaking()){
 			player.sendMessage(new StringTextComponent("Clearing links"));
 			clearLinks();
-		}else if(wrench.hasTagCompound() && wrench.getTag().hasKey(POS_NBT) && wrench.getTag().getInt(DIM_NBT) == player.world.provider.getDimension()){
+		}else if(wrench.hasTag() && wrench.getTag().contains(POS_NBT) && wrench.getTag().getInt(DIM_NBT) == player.world.provider.getDimension()){
 			BlockPos prev = BlockPos.fromLong(wrench.getTag().getLong(POS_NBT));
 
 			TileEntity te = player.world.getTileEntity(prev);
@@ -110,19 +109,19 @@ public interface ILinkTE extends ILongReceiver{
 				player.sendMessage(new StringTextComponent("Invalid pair; Canceling linking"));
 			}
 		}else if(canBeginLinking()){
-			if(!wrench.hasTagCompound()){
+			if(!wrench.hasTag()){
 				wrench.setTag(new CompoundNBT());
 			}
 
-			wrench.getTag().setLong(POS_NBT, getTE().getPos().toLong());
-			wrench.getTag().setInteger(DIM_NBT, getTE().getWorld().provider.getDimension());
+			wrench.getTag().putLong(POS_NBT, getTE().getPos().toLong());
+			wrench.getTag().putInt(DIM_NBT, getTE().getWorld().provider.getDimension());
 			player.sendMessage(new StringTextComponent("Beginning linking"));
 			return wrench;
 		}
 
-		if(wrench.hasTagCompound()){
-			wrench.getTag().removeTag(POS_NBT);
-			wrench.getTag().removeTag(DIM_NBT);
+		if(wrench.hasTag()){
+			wrench.getTag().remove(POS_NBT);
+			wrench.getTag().remove(DIM_NBT);
 		}
 		return wrench;
 	}
@@ -130,6 +129,6 @@ public interface ILinkTE extends ILongReceiver{
 	public default void clearLinks(){
 		getLinks().clear();
 		BlockPos tePos = getTE().getPos();
-		CrossroadsPackets.network.sendToAllAround(new SendLongToClient(CLEAR_PACKET_ID, 0, tePos), new NetworkRegistry.TargetPoint(getTE().getWorld().provider.getDimension(), tePos.getX(), tePos.getY(), tePos.getZ(), 512));
+		CrossroadsPackets.sendPacketAround(getTE().getWorld(), tePos, new SendLongToClient(CLEAR_PACKET_ID, 0, tePos));
 	}
 }

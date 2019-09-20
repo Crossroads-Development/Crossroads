@@ -30,7 +30,7 @@ public class LinkingTool extends Item{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		if(stack.hasTagCompound() && stack.getTag().hasKey(ILinkTE.POS_NBT)){
+		if(stack.hasTag() && stack.getTag().contains(ILinkTE.POS_NBT)){
 			BlockPos linked = BlockPos.fromLong(stack.getTag().getLong(ILinkTE.POS_NBT));
 			int dim = stack.getTag().getInt(ILinkTE.DIM_NBT);
 			tooltip.add("Linking from (" + linked.getX() + ", " + linked.getY() + ", " + linked.getZ() + "); Dim " + dim);

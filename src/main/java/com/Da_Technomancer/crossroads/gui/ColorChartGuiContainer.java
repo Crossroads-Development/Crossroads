@@ -53,8 +53,8 @@ public class ColorChartGuiContainer extends ContainerScreen{
 		if(Math.pow(xCENTER - mouseX + guiLeft, 2) + Math.pow(yCENTER - mouseY + guiTop, 2) <= RADIUS * RADIUS){
 			Color col = getColor(mouseX - guiLeft, mouseY - guiTop);
 			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
-			CompoundNBT elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
-			drawHoveringText(ImmutableList.of(elementTag.hasKey(elem.name()) ? elem.getLocalName(false) : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, fontRenderer);
+			CompoundNBT elementTag = StoreNBTToClient.clientPlayerTag.getCompound("elements");
+			drawHoveringText(ImmutableList.of(elementTag.contains(elem.name()) ? elem.getLocalName(false) : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, fontRenderer);
 		}
 	}
 	
@@ -83,8 +83,8 @@ public class ColorChartGuiContainer extends ContainerScreen{
 				int yPos = spotLength * j + yCENTER - RADIUS;
 				if(Math.pow(RADIUS - (spotLength * i), 2) + Math.pow(RADIUS - (spotLength * j), 2) <= RADIUS * RADIUS){
 					EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(getColor(xPos, yPos));
-					CompoundNBT elementTag = StoreNBTToClient.clientPlayerTag.getCompoundTag("elements");
-					if(elementTag.hasKey(elem.name()) && (search.isEmpty() || elem.name().startsWith(search))){
+					CompoundNBT elementTag = StoreNBTToClient.clientPlayerTag.getCompound("elements");
+					if(elementTag.contains(elem.name()) && (search.isEmpty() || elem.name().startsWith(search))){
 						drawModalRectWithCustomSizedTexture(xPos, yPos, xPos, yPos, spotLength, spotLength, 300, 300);
 					}
 				}

@@ -62,11 +62,11 @@ public class FatCongealerTileEntity extends InventoryTE{
 			CompoundNBT nbt = new CompoundNBT();
 			nbt.putInt("food", hun);
 			nbt.putInt("sat", sat);
-			stack.setTag(nbt);
+			stack.put(nbt);
 			ItemEntity ent = new ItemEntity(world, pos.getX() + .5D, pos.getY() + .5D, pos.getZ() + .5D, stack);
 			ent.motionX = 2D * Math.random() - 1D;
 			ent.motionZ = 2D * Math.random() - 1D;
-			world.spawnEntity(ent);
+			world.addEntity(ent);
 			markDirty();
 		}
 	}

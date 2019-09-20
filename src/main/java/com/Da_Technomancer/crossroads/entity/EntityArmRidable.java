@@ -39,7 +39,7 @@ public class EntityArmRidable extends Entity{
 	@Override
 	public void writeEntityToNBT(CompoundNBT nbt){
 		if(ownerPos != null){
-			nbt.setLong("owner_pos", ownerPos.toLong());
+			nbt.putLong("owner_pos", ownerPos.toLong());
 		}
 	}
 

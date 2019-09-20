@@ -1,19 +1,20 @@
 package com.Da_Technomancer.crossroads.API.effects.goggles;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public interface IGoggleEffect{
 	
-	/**Called every tick on the server side while goggles with the correct lens are worn.
+	/**
+	 * Called every tick on the server side while goggles with the correct lens are worn.
 	 * Instead of printing chat directly (except in special cases like element discovery),
 	 * each line of chat should be added to the List separately. 
 	 */
-	public void armorTick(World world, PlayerEntity player, ArrayList<String> chat, @Nullable RayTraceResult ray);
+	public void armorTick(World world, PlayerEntity player, ArrayList<ITextComponent> chat, @Nullable RayTraceResult ray);
 	
 }

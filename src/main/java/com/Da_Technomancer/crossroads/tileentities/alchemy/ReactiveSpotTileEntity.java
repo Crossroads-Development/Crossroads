@@ -46,7 +46,7 @@ public class ReactiveSpotTileEntity extends TileEntity implements ITickableTileE
 		super.write(nbt);
 		nbt.putInt("lif", lifespan);
 		if(target != null){
-			nbt.setString("tar", target.getBlock().getRegistryName().toString());
+			nbt.putString("tar", target.getBlock().getRegistryName().toString());
 			nbt.putInt("met", target.getBlock().getMetaFromState(target));
 		}
 		return nbt;

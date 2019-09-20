@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
@@ -80,7 +81,7 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		if(src != null){
-			nbt.setLong("src", src.toLong());
+			nbt.putLong("src", src.toLong());
 		}
 		return nbt;
 	}

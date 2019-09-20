@@ -25,7 +25,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
 		chat.add("Upper Temp: " + MiscUtil.betterRound(tempUp, 3) + "°C");
 		chat.add("Lower Temp: " + MiscUtil.betterRound(tempDown, 3) + "°C");
-		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world, pos) + "°C");
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 
 		private void init(){
 			if(!init){
-				tempUp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				tempUp = HeatUtil.convertBiomeTemp(world, pos);
 				tempDown = tempUp;
 				init = true;
 			}

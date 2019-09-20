@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.effects.goggles.*;
 import com.Da_Technomancer.crossroads.Keys;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
-import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.TagCraftingStack;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,9 +19,9 @@ import java.util.function.Predicate;
 public enum EnumGoggleLenses{
 	
 	//Don't reorder these unless you want to rename all the goggle texture files.
-	RUBY(new OreDictCraftingStack("gemRuby"), "_ruby", new RubyGoggleEffect(), Keys.controlEnergy, true),
-	EMERALD(new OreDictCraftingStack("gemEmerald"), "_emerald", new EmeraldGoggleEffect(), Keys.controlPotential, true),
-	DIAMOND(new OreDictCraftingStack("gemDiamond"), "_diamond", new DiamondGoggleEffect(), Keys.controlStability, false),
+	RUBY(new TagCraftingStack("gemRuby"), "_ruby", new RubyGoggleEffect(), Keys.controlEnergy, true),
+	EMERALD(new TagCraftingStack("gemEmerald"), "_emerald", new EmeraldGoggleEffect(), Keys.controlPotential, true),
+	DIAMOND(new TagCraftingStack("gemDiamond"), "_diamond", new DiamondGoggleEffect(), Keys.controlStability, false),
 	QUARTZ(new ItemRecipePredicate(CrossroadsItems.pureQuartz, 0), "_quartz", new QuartzGoggleEffect(), null, false),
 	VOID(new ItemRecipePredicate(OreSetup.voidCrystal, 0), "", new VoidGoggleEffect(), Keys.controlVoid, true);
 	

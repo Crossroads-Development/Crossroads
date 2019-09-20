@@ -33,7 +33,7 @@ public class Nitroglycerin extends Item{
 			EntityNitro entitysnowball = new EntityNitro(world);
 			entitysnowball.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
 			entitysnowball.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
-			world.spawnEntity(entitysnowball);
+			world.addEntity(entitysnowball);
 			stack.shrink(1);
 			return stack;
 		}
@@ -68,7 +68,7 @@ public class Nitroglycerin extends Item{
 		if(!worldIn.isRemote){
 			EntityNitro entitysnowball = new EntityNitro(worldIn, playerIn);
 			entitysnowball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-			worldIn.spawnEntity(entitysnowball);
+			worldIn.addEntity(entitysnowball);
 		}
 		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, held);
 	}

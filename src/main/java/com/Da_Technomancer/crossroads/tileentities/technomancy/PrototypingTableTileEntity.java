@@ -208,7 +208,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 				inventory[0].shrink(3);
 				inventory[2] = inventory[1].copy();
 				inventory[2].getTag().setInteger("index", newChunk);
-				inventory[2].getTag().setString("name", message);
+				inventory[2].getTag().putString("name", message);
 				markDirty();
 				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype copied." , Color.WHITE, false), player);
 
@@ -308,12 +308,12 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 				}
 				inventory[0].shrink(3);
 				inventory[2] = new ItemStack(CrossroadsBlocks.prototype, 1);
-				inventory[2].setTag(new CompoundNBT());
+				inventory[2].put(new CompoundNBT());
 				inventory[2].getTag().setInteger("index", newChunk);
-				inventory[2].getTag().setString("name", message);
+				inventory[2].getTag().putString("name", message);
 				for(int i = 0; i < 6; i++){
 					if(descArray[i] != null && !descArray[i].isEmpty()){
-						inventory[2].getTag().setString("ttip" + i, descArray[i]);
+						inventory[2].getTag().putString("ttip" + i, descArray[i]);
 					}
 				}
 				markDirty();
@@ -348,7 +348,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			markDirty();
 		}else if(index == 3 && stack.getItem() == Item.getItemFromBlock(CrossroadsBlocks.prototype)){
 			markDirty();
-			int ind = stack.getTag().hasKey("index") ? stack.getTag().getInt("index") : -1;
+			int ind = stack.getTag().contains("index") ? stack.getTag().getInt("index") : -1;
 			if(ind == -1){
 				inventory[0] = new ItemStack(OreSetup.ingotCopshowium, Math.min(inventory[0].getCount() + 3, 64));
 				return;

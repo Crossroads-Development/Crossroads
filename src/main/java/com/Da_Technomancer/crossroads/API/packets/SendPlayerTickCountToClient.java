@@ -1,43 +1,37 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.packets.Message;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import com.Da_Technomancer.essentials.packets.ClientPacket;
 
-@SuppressWarnings("serial")
-public class SendPlayerTickCountToClient extends Message<SendPlayerTickCountToClient>{
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 
-	public SendPlayerTickCountToClient(){
-		
-	}
+public class SendPlayerTickCountToClient extends ClientPacket{
 
 	public int tickCount;
+
+	private static final Field[] FIELDS = fetchFields(SendPlayerTickCountToClient.class, "tickCount");
+
+	@SuppressWarnings("unused")
+	public SendPlayerTickCountToClient(){
+
+	}
 
 	public SendPlayerTickCountToClient(int tickCount){
 		this.tickCount = tickCount;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.CLIENT){
-			Crossroads.logger.error("MessageToClient received on wrong side:" + context.side);
-			return null;
+	protected Field[] getFields(){
+		return FIELDS;
+	}
+
+	@Override
+	protected void run(){
+		if(tickCount > 0){
+			SafeCallable.playerTickCount += tickCount - 1;
+		}else{
+			SafeCallable.playerTickCount = 0;
 		}
-
-		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.addScheduledTask(new Runnable(){
-			public void run(){
-				if(tickCount > 0){
-					SafeCallable.playerTickCount += tickCount - 1;
-				}else{
-					SafeCallable.playerTickCount = 0;
-				}
-			}
-		});
-
-		return null;
 	}
 }

@@ -40,7 +40,7 @@ public class EdibleBlob extends ItemFood{
 
 	@Override
 	public int getHealAmount(ItemStack stack){
-		return stack.hasTagCompound() ? stack.getTag().getInt("food") : 0;
+		return stack.hasTag() ? stack.getTag().getInt("food") : 0;
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class EdibleBlob extends ItemFood{
 	 * @return The actual saturation restored
 	 */
 	private int getTrueSat(ItemStack stack){
-		return stack.hasTagCompound() ? stack.getTag().getInt("sat") : 0;
+		return stack.hasTag() ? stack.getTag().getInt("sat") : 0;
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class EdibleBlob extends ItemFood{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(stack.hasTagCompound()){
+		if(stack.hasTag()){
 			tooltip.add("Food value: " + getHealAmount(stack));
 			tooltip.add("Saturation value: " + getTrueSat(stack));
 		}else{

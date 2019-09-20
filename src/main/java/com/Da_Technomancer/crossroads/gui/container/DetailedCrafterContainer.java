@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.ComponentCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
-import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.TagCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.PlayerInventory;
@@ -89,7 +89,7 @@ public class DetailedCrafterContainer extends Container{
 				return;
 			}
 		}else if(passesTechnomancyCriteria(nbt.getCompound("elements"), inInv) && CrossroadsConfig.technomancy.get() && (nbt.getBoolean("multiplayer") ? CrossroadsConfig.allowAllServer.get() || !nbt.getCompound("path").getBoolean("alchemy") : CrossroadsConfig.allowAllSingle.get() || !nbt.getCompound("path").getBoolean("alchemy"))){
-			nbt.getCompound("path").setBoolean("technomancy", true);
+			nbt.getCompound("path").putBoolean("technomancy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerInv.player, false);
 			}else{
@@ -109,7 +109,7 @@ public class DetailedCrafterContainer extends Container{
 				return;
 			}
 		}else if(passesAlchemyCriteria(nbt.getCompound("elements"), inInv) && CrossroadsConfig.alchemy.get() && (nbt.getBoolean("multiplayer") ? CrossroadsConfig.allowAllServer.get() || !nbt.getCompound("path").getBoolean("technomancy") : CrossroadsConfig.allowAllSingle.get() || !nbt.getCompound("path").getBoolean("technomancy"))){
-			nbt.getCompound("path").setBoolean("alchemy", true);
+			nbt.getCompound("path").putBoolean("alchemy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerInv.player, false);
 			}else{
@@ -129,13 +129,13 @@ public class DetailedCrafterContainer extends Container{
 		world.playSound(playerInv.player, pos, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2, 0);
 	}
 
-	private static final Predicate<ItemStack> fillerMats = new OreDictCraftingStack("gemDiamond");
+	private static final Predicate<ItemStack> fillerMats = new TagCraftingStack("gemDiamond");
 	private static final Predicate<ItemStack> technomancyKey = new ComponentCraftingStack("gear");
 	private static final Predicate<ItemStack> alchemyKey = new ItemRecipePredicate(Items.GLASS_BOTTLE, 0);
 
 	private static boolean passesTechnomancyCriteria(CompoundNBT elementTag, CraftingInventory craftingInv){
 		//In order to unlock technomancy, the player needs to have discovered time
-		if(elementTag.hasKey(EnumBeamAlignments.TIME.name())){
+		if(elementTag.contains(EnumBeamAlignments.TIME.name())){
 			for(int i = 0; i < 3; i++){
 				for(int j = 0; j < 3; j++){
 					if(i != 1 && j != 1 && !fillerMats.test(craftingInv.getStackInRowAndColumn(i, j))){
@@ -309,10 +309,10 @@ public class DetailedCrafterContainer extends Container{
 		@Override
 		public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack){
 			onCrafting(stack);
-			if(!player.world.isRemote && !MiscUtil.getPlayerTag(player).hasKey("path")){
-				MiscUtil.getPlayerTag(player).setTag("path", new CompoundNBT());
+			if(!player.world.isRemote && !MiscUtil.getPlayerTag(player).contains("path")){
+				MiscUtil.getPlayerTag(player).put("path", new CompoundNBT());
 			}
-			CompoundNBT nbt = player.world.isRemote ? StoreNBTToClient.clientPlayerTag.getCompoundTag("path") : MiscUtil.getPlayerTag(player).getCompoundTag("path");
+			CompoundNBT nbt = player.world.isRemote ? StoreNBTToClient.clientPlayerTag.getCompound("path") : MiscUtil.getPlayerTag(player).getCompound("path");
 			IRecipe recipe = null;
 			if(nbt.getBoolean("technomancy")){
 				recipe = findMatchingSpecialRecipe(craftMatrix, player.world, RecipeHolder.technomancyRecipes);

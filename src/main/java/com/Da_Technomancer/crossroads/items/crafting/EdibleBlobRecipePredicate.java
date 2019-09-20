@@ -29,7 +29,7 @@ public class EdibleBlobRecipePredicate implements RecipePredicate<ItemStack>{
 			return false;
 		}
 
-		if(stack.getItem() == CrossroadsItems.edibleBlob && stack.hasTagCompound() && stack.getTag().getInt("food") == hunger && stack.getTag().getInt("sat") == saturation){
+		if(stack.getItem() == CrossroadsItems.edibleBlob && stack.hasTag() && stack.getTag().getInt("food") == hunger && stack.getTag().getInt("sat") == saturation){
 			return true;
 		}
 
@@ -42,7 +42,7 @@ public class EdibleBlobRecipePredicate implements RecipePredicate<ItemStack>{
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("food", hunger);
 		nbt.putInt("sat", saturation);
-		out.setTag(nbt);
+		out.put(nbt);
 		return ImmutableList.of(out);
 	}
 	

@@ -72,7 +72,7 @@ public class BeamRenderer extends TileEntityRenderer<BeamRenderTEBase>{
 				}
 
 				if(CrossroadsConfig.rotateBeam.getBoolean()){
-					GlStateManager.rotate((partialTicks + (float) beam.getWorld().getTotalWorldTime()) * 2F, 0, 1, 0);
+					GlStateManager.rotate((partialTicks + (float) beam.getWorld().getGameTime()) * 2F, 0, 1, 0);
 				}
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();

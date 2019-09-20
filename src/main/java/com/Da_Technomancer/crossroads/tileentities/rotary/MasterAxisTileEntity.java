@@ -242,12 +242,12 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.setLong("life", ticksExisted);
+		nbt.putLong("life", ticksExisted);
 		for(int i = 0; i < 4; i++){
 			nbt.putFloat("prev_" + i, prevAngles[i]);
 			nbt.putFloat("taylor_" + i, taylorSeries[i]);
 		}
-		nbt.setLong("timestamp", seriesTimestamp);
+		nbt.putLong("timestamp", seriesTimestamp);
 		return nbt;
 	}
 

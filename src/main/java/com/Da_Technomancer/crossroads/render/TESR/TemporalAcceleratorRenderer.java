@@ -116,7 +116,7 @@ public class TemporalAcceleratorRenderer extends TileEntityRenderer<TemporalAcce
 			GlStateManager.rotate(dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 90 : -90, dir.getAxis() == Axis.Z ? 1 : 0, 0, dir.getAxis() == Axis.X ? -1 : 0);
 		}
 
-		float angle = te.getWorld().getTotalWorldTime() + partialTicks;
+		float angle = te.getWorld().getGameTime() + partialTicks;
 
 		GlStateManager.rotate(angle, 0, 1, 0);
 		GlStateManager.translate(0, 5F / 16F, 0);

@@ -31,7 +31,7 @@ public class Shell extends AbstractGlassware{
 				EntityShell entitysnowball = new EntityShell(world, contents, contents.getTempC());
 				entitysnowball.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
 				entitysnowball.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
-				world.spawnEntity(entitysnowball);
+				world.addEntity(entitysnowball);
 				stack.shrink(1);
 				return stack;
 			}else{
@@ -85,7 +85,7 @@ public class Shell extends AbstractGlassware{
 			if(!worldIn.isRemote){
 				EntityShell entitysnowball = new EntityShell(worldIn, playerIn, contents, contents.getTempC());
 				entitysnowball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-				worldIn.spawnEntity(entitysnowball);
+				worldIn.addEntity(entitysnowball);
 			}
 			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, held);
 		}

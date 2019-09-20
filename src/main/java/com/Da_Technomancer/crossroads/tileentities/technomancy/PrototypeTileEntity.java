@@ -119,10 +119,10 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putInt("index", index);
-		nbt.setString("name", name);
+		nbt.putString("name", name);
 		for(int i = 0; i < 6; i++){
 			if(tooltips[i] != null){
-				nbt.setString("ttip" + i, tooltips[i]);
+				nbt.putString("ttip" + i, tooltips[i]);
 			}
 			MagHandler h = getHandler(i, false);
 			if(h != null){
@@ -178,7 +178,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 			for(int i = 0; i < 6; i++){
 				nbt.putInt(i + "_beam", beamPackets[i]);
 				if(ports[i] != null){
-					nbt.setString("port" + i, ports[i].name());
+					nbt.putString("port" + i, ports[i].name());
 				}
 			}
 		}

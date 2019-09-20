@@ -2,9 +2,10 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
+import net.minecraft.block.BlockState;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -18,15 +19,17 @@ public class TimeEffect implements IEffect{
 
 				//Don't do extra ticks to beam blocks
 				for(Direction side : Direction.values()){
-					if(te.hasCapability(Capabilities.BEAM_CAPABILITY, side)){
+					if(te.getCapability(Capabilities.BEAM_CAPABILITY, side).isPresent()){
 						return;
 					}
 				}
-				((ITickableTileEntity) te).update();
+				((ITickableTileEntity) te).tick();
 			}
 
-			if(worldIn.getBlockState(pos).getBlock().getTickRandomly()){
-				worldIn.getBlockState(pos).getBlock().randomTick(worldIn, pos, worldIn.getBlockState(pos), worldIn.rand);
+			BlockState state = worldIn.getBlockState(pos);
+
+			if(state.getBlock().ticksRandomly(state)){
+				state.getBlock().randomTick(state, worldIn, pos, worldIn.rand);
 			}
 		}
 	}

@@ -18,7 +18,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -50,7 +54,7 @@ public class FluidTank extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(stack.hasTagCompound() && stack.getTag().hasKey("FluidName")){
+		if(stack.hasTag() && stack.getTag().contains("FluidName")){
 			tooltip.add("Contains: " + FluidStack.loadFluidStackFromNBT(stack.getTag()).amount + "mB of " + FluidStack.loadFluidStackFromNBT(stack.getTag()).getLocalizedName());
 		}
 	}
@@ -62,14 +66,14 @@ public class FluidTank extends ContainerBlock{
 		}else{
 			player.addExhaustion(0.005F);
 			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
-			stack.setTag(te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents().writeToNBT(new CompoundNBT()));
+			stack.put(te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents().writeToNBT(new CompoundNBT()));
 			spawnAsEntity(worldIn, pos, stack);
 		}
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		if(stack.hasTagCompound()){
+		if(stack.hasTag()){
 			FluidTankTileEntity te = (FluidTankTileEntity) world.getTileEntity(pos);
 			te.setContent(FluidStack.loadFluidStackFromNBT(stack.getTag()));
 		}

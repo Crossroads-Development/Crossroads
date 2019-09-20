@@ -83,7 +83,7 @@ public class StampMillTileEntity extends InventoryTE{
 						inventory[0].shrink(1);
 						inventory[1] = produced;
 					}else{
-						inventory[1] = inventory[0].splitStack(1);
+						inventory[1] = inventory[0].split(1);
 						progress -= REQUIRED * CrossroadsConfig.stampMillDamping.get() / 100;
 						if(progress < 0){
 							progress = 0;

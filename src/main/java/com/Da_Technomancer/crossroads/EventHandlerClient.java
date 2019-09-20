@@ -11,9 +11,9 @@ import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.technomancy.PrototypeWatch;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -25,10 +25,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -48,22 +50,22 @@ public final class EventHandlerClient{
 		ItemStack helmet = Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD);
 
 		//Goggle entity glowing
-		if(game.world.getTotalWorldTime() % 5 == 0){
-			boolean glow = helmet.getItem() == CrossroadsItems.moduleGoggles && helmet.hasTagCompound() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.name());
-			for(Entity ent : game.world.getLoadedEntityList()){
+		if(game.world.getGameTime() % 5 == 0){
+			boolean glow = helmet.getItem() == CrossroadsItems.moduleGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.name());
+			for(Entity ent : game.world.getAllEntities()){
 				CompoundNBT entNBT = ent.getEntityData();
 				if(entNBT == null){
 					continue;//Should never be null, but some mods override the entNBT method to return null for some reason
 				}
-				if(!entNBT.hasKey("glow")){
+				if(!entNBT.contains("glow")){
 					ent.setGlowing(false);
 				}else{
-					entNBT.removeTag("glow");
+					entNBT.remove("glow");
 				}
 
 				if(glow){
 					if(ent.isGlowing()){
-						entNBT.setBoolean("glow", true);
+						entNBT.putBoolean("glow", true);
 					}else{
 						ent.setGlowing(true);
 					}
@@ -73,7 +75,7 @@ public final class EventHandlerClient{
 
 		//IVisualEffects
 		if(!SafeCallable.effectsToRender.isEmpty()){
-			game.profiler.startSection(Crossroads.MODNAME + ": Visual Effects Draw");
+			game.getProfiler().startSection(Crossroads.MODNAME + ": Visual Effects Draw");
 
 			GlStateManager.disableLighting();
 			GlStateManager.disableCull();
@@ -86,7 +88,7 @@ public final class EventHandlerClient{
 			ArrayList<IVisualEffect> toRemove = new ArrayList<>();
 			Tessellator tes = Tessellator.getInstance();
 			BufferBuilder buf = tes.getBuffer();
-			long worldTime = game.world.getTotalWorldTime();
+			long worldTime = game.world.getGameTime();
 
 			for(IVisualEffect effect : SafeCallable.effectsToRender){
 				GlStateManager.pushMatrix();
@@ -107,7 +109,7 @@ public final class EventHandlerClient{
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
 
-			game.profiler.endSection();
+			game.getProfiler().endSection();
 		}
 	}
 
@@ -157,14 +159,14 @@ public final class EventHandlerClient{
 
 				Minecraft.getInstance().fontRenderer.drawString(offStack.getDisplayName(), 16, 65, Color.DARK_GRAY.getRGB());
 				GlStateManager.disableAlpha();
-				GlStateManager.color(1, 1, 1);
+				GlStateManager.color3f(1, 1, 1);
 				GlStateManager.disableBlend();
 				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();
 			}
 			ItemStack mainStack = player.getHeldItem(Hand.MAIN_HAND);
 			if(mainStack.getItem() instanceof BeamUsingItem){
-				CompoundNBT nbt = mainStack.hasTagCompound() ? mainStack.getTag() : new CompoundNBT();
+				CompoundNBT nbt = mainStack.hasTag() ? mainStack.getTag() : new CompoundNBT();
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
 				GlStateManager.enableBlend();
@@ -231,8 +233,8 @@ public final class EventHandlerClient{
 	}
 
 	@SubscribeEvent
-	public void dilatePlayerTime(ClientTickEvent e){
-		if(e.phase == Phase.END){
+	public void dilatePlayerTime(TickEvent.ClientTickEvent e){
+		if(e.phase == TickEvent.Phase.END){
 			PlayerEntity player = Minecraft.getInstance().player;
 			if(player == null){
 				return;
@@ -243,23 +245,23 @@ public final class EventHandlerClient{
 				if(!entNBT.getBoolean(EventHandlerCommon.SUB_KEY)){
 					player.updateBlocked = false;
 				}
-				entNBT.setBoolean(EventHandlerCommon.MAIN_KEY, false);
-				entNBT.setBoolean(EventHandlerCommon.SUB_KEY, false);
+				entNBT.putBoolean(EventHandlerCommon.MAIN_KEY, false);
+				entNBT.putBoolean(EventHandlerCommon.SUB_KEY, false);
 			}
 
 
 			if(SafeCallable.playerTickCount == 0){
-				entNBT.setBoolean(EventHandlerCommon.MAIN_KEY, true);
+				entNBT.putBoolean(EventHandlerCommon.MAIN_KEY, true);
 				if(player.updateBlocked){
-					entNBT.setBoolean(EventHandlerCommon.SUB_KEY, true);
+					entNBT.putBoolean(EventHandlerCommon.SUB_KEY, true);
 				}else{
-					player.updateBlocked = true;
+ 					player.updateBlocked = true;
 				}
 			}
 
 			if(SafeCallable.playerTickCount == 0){
 				if(player.updateBlocked){
-					entNBT.setBoolean("fStop", true);
+					entNBT.putBoolean("fStop", true);
 				}else{
 					player.updateBlocked = true;
 				}
@@ -278,12 +280,12 @@ public final class EventHandlerClient{
 	public void toggleGoggles(InputEvent.KeyInputEvent e){
 		PlayerEntity play = Minecraft.getInstance().player;
 		ItemStack helmet = play.getItemStackFromSlot(EquipmentSlotType.HEAD);
-		if(play.getHeldItemMainhand().isEmpty() && helmet.getItem() == CrossroadsItems.moduleGoggles && helmet.hasTagCompound()){
+		if(play.getHeldItemMainhand().isEmpty() && helmet.getItem() == CrossroadsItems.moduleGoggles && helmet.hasTag()){
 			CompoundNBT nbt = helmet.getTag();
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				KeyBinding key = lens.getKey();
 				if(key != null && key.isPressed() && key.isKeyDown() && nbt.contains(lens.name())){
-					CrossroadsPackets.network.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.name())));
+					CrossroadsPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.name())));
 					break;
 				}
 			}

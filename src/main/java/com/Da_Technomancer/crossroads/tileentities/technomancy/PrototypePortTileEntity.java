@@ -32,11 +32,11 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.setString("side", side.name());
-		nbt.setString("type", type.name());
+		nbt.putString("side", side.name());
+		nbt.putString("type", type.name());
 		nbt.putBoolean("act", active);
 		nbt.putInt("index", index);
-		nbt.setString("desc", desc);
+		nbt.putString("desc", desc);
 		return nbt;
 	}
 
@@ -53,9 +53,9 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.setString("side", side.name());
-		nbt.setString("type", type.name());
-		nbt.setString("desc", desc);
+		nbt.putString("side", side.name());
+		nbt.putString("type", type.name());
+		nbt.putString("desc", desc);
 		return nbt;
 	}
 

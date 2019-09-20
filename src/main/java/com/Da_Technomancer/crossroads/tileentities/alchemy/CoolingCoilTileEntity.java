@@ -47,7 +47,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 			return;
 		}
 		if(!init){
-			ambientTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			ambientTemp = HeatUtil.convertBiomeTemp(world, pos);
 			init = true;
 		}
 		super.update();

@@ -36,7 +36,7 @@ public class RiftEffect implements IEffect{
 			ShulkerEntity shulker = new ShulkerEntity(worldIn);
 			shulker.setAttachmentPos(pos);
 			shulker.setPosition(pos.getX(), pos.getY(), pos.getZ());
-			worldIn.spawnEntity(shulker);
+			worldIn.addEntity(shulker);
 			return;
 		}
 
@@ -68,7 +68,7 @@ public class RiftEffect implements IEffect{
 					Event.Result r = ForgeEventFactory.canEntitySpawn(ent, worldServ, pos.getX(), pos.getY(), pos.getZ(), null);
 					if(r == Event.Result.ALLOW || r == Event.Result.DEFAULT){
 						ent.onInitialSpawn(worldServ.getDifficultyForLocation(pos), null);//Gives mobs weapons/armor, makes slimes not have glitched health, and other essential things
-						worldServ.spawnEntity(ent);
+						worldServ.addEntity(ent);
 					}
 				}catch(Exception e){
 					e.printStackTrace();
@@ -86,7 +86,7 @@ public class RiftEffect implements IEffect{
 			CompoundNBT rangeData = new CompoundNBT();
 			rangeData.setInteger("range", mult);
 			marker.data = rangeData;
-			worldIn.spawnEntity(marker);
+			worldIn.addEntity(marker);
 		}
 	}
 }

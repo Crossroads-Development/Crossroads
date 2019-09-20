@@ -76,7 +76,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 		ReagentMap filterMap = new ReagentMap();
 
 		//Separate reagents to be filtered
-		if(!contents.isEmpty() && !inventory.isEmpty() && inventory.getItem() instanceof AbstractGlassware && inventory.hasTagCompound()){
+		if(!contents.isEmpty() && !inventory.isEmpty() && inventory.getItem() instanceof AbstractGlassware && inventory.hasTag()){
 			ReagentMap filtered = ((AbstractGlassware) inventory.getItem()).getReagants(inventory);
 			for(IReagent filtReag : filtered.keySet()){
 				if(filtered.getQty(filtReag) != 0){

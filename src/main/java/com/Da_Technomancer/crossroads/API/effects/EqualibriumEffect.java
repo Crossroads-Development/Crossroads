@@ -15,7 +15,7 @@ public class EqualibriumEffect implements IEffect{
 		CompoundNBT rangeData = new CompoundNBT();
 		rangeData.setInteger("range", (int) mult);
 		marker.data = rangeData;
-		worldIn.spawnEntity(marker);
+		worldIn.addEntity(marker);
 
 		//Effect in crystal master axis
 	}
@@ -29,7 +29,7 @@ public class EqualibriumEffect implements IEffect{
 			CompoundNBT rangeData = new CompoundNBT();
 			rangeData.setInteger("range", (int) mult);
 			marker.data = rangeData;
-			worldIn.spawnEntity(marker);
+			worldIn.addEntity(marker);
 
 			//Effect in crystal master axis.
 		}

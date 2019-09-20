@@ -42,7 +42,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 
 		chat.add("Side Temp: " + MiscUtil.betterRound(sideHeatHandler.getTemp(), 3) + "°C");
 		chat.add("Bottom Temp: " + MiscUtil.betterRound(bottomHeatHandler.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world, pos) + "°C");
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 
 	private void init(){
 		if(!init){
-			tempSide = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			tempSide = HeatUtil.convertBiomeTemp(world, pos);
 			tempBottom = tempSide;
 			init = true;
 		}

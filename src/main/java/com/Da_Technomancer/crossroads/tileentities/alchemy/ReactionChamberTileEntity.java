@@ -36,7 +36,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	protected void initHeat(){
 		if(!init){
 			init = true;
-			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			cableTemp = HeatUtil.convertBiomeTemp(world, pos);
 		}
 	}
 
@@ -62,8 +62,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 		if(energy >= 10){
 			energy -= 10;
-			if(world.getTotalWorldTime() % 10 == 0){
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
+			if(world.getGameTime() % 10 == 0){
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
 		}
 
@@ -231,7 +231,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 					testStack.setCount(1);
 					int trans = Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty());
 					if(!simulate){
-						double itemTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						double itemTemp = HeatUtil.convertBiomeTemp(world, pos);
 						if(itemTemp >= reag.getMeltingPoint()){
 							itemTemp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint() - 100D);
 						}

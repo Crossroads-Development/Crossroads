@@ -40,7 +40,7 @@ public class FluxStabilizerRenderer extends TileEntityRenderer<AbstractStabilize
 
 
 		final double hLen = 6D / 16D;
-		double prog = (getWorld().getTotalWorldTime() + partialTicks) / 20D;
+		double prog = (getWorld().getGameTime() + partialTicks) / 20D;
 		prog %= 1D;
 		prog -= 0.5D;
 		prog *= hLen * 2D;

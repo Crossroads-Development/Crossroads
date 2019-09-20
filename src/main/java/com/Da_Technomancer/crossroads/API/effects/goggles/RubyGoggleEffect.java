@@ -20,7 +20,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 
 	@Override
 	public void armorTick(World world, PlayerEntity player, ArrayList<String> chat, RayTraceResult ray){
-		if(world.getTotalWorldTime() % 5 == 0){
+		if(world.getGameTime() % 5 == 0){
 			Entity entHit = null;
 			Vec3d start = new Vec3d(player.posX - Math.cos(Math.toRadians(player.getRotationYawHead())) * 0.18D, player.posY + player.getEyeHeight() + 0.03D, player.posZ - Math.sin(Math.toRadians(player.getRotationYawHead())) * 0.18D);
 			Vec3d end = start;

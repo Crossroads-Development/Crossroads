@@ -59,19 +59,19 @@ public final class ModCrafting{
 		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Blocks.PUMPKIN, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
 		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Items.MELON, 0), new ItemStack[] {new ItemStack(Items.MELON_SEEDS, 3)});
 		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Items.BONE, 0), new ItemStack[] {new ItemStack(Items.DYE, 5, DyeColor.WHITE.getDyeDamage())});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("blockCoal"), new ItemStack[] {new ItemStack(Items.GUNPOWDER, 1)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("blockCoal"), new ItemStack[] {new ItemStack(Items.GUNPOWDER, 1)});
 		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Blocks.NETHER_WART_BLOCK, 0), new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("cropPotato"), new ItemStack[] {new ItemStack(CrossroadsItems.mashedPotato, 1)});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("gravel"), new ItemStack[] {new ItemStack(Items.FLINT)});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("blockRedstone"), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("cobblestone"), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("stone"),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreQuartz"),  new ItemStack[] {new ItemStack(Items.QUARTZ, 2)});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreDiamond"),  new ItemStack[] {new ItemStack(Items.DIAMOND, 2)});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreCoal"),  new ItemStack[] {new ItemStack(Items.COAL, 2)});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreRedstone"),  new ItemStack[] {new ItemStack(Items.REDSTONE, 10)});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("oreLapis"),  new ItemStack[] {new ItemStack(Items.DYE, 10, DyeColor.BLUE.getDyeDamage())});
-		RecipeHolder.millRecipes.put(new OreDictCraftingStack("blockQuartz"),  new ItemStack[] {new ItemStack(Items.QUARTZ, 4)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("cropPotato"), new ItemStack[] {new ItemStack(CrossroadsItems.mashedPotato, 1)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("gravel"), new ItemStack[] {new ItemStack(Items.FLINT)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("blockRedstone"), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("cobblestone"), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("stone"),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("oreQuartz"),  new ItemStack[] {new ItemStack(Items.QUARTZ, 2)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("oreDiamond"),  new ItemStack[] {new ItemStack(Items.DIAMOND, 2)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("oreCoal"),  new ItemStack[] {new ItemStack(Items.COAL, 2)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("oreRedstone"),  new ItemStack[] {new ItemStack(Items.REDSTONE, 10)});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("oreLapis"),  new ItemStack[] {new ItemStack(Items.DYE, 10, DyeColor.BLUE.getDyeDamage())});
+		RecipeHolder.millRecipes.put(new TagCraftingStack("blockQuartz"),  new ItemStack[] {new ItemStack(Items.QUARTZ, 4)});
 
 		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Items.GUNPOWDER)));
 		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Items.DYE, 1, DyeColor.WHITE.getDyeDamage())));
@@ -84,8 +84,8 @@ public final class ModCrafting{
 			RecipeHolder.dirtyWaterWeights += ent.getLeft();
 		}
 
-		RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("cobblestone"), new FluidStack(FluidRegistry.LAVA, 200));
-		RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("obsidian"), new FluidStack(FluidRegistry.LAVA, 1_000));
+		RecipeHolder.crucibleRecipes.put(new TagCraftingStack("cobblestone"), new FluidStack(FluidRegistry.LAVA, 200));
+		RecipeHolder.crucibleRecipes.put(new TagCraftingStack("obsidian"), new FluidStack(FluidRegistry.LAVA, 1_000));
 
 		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Items.SNOWBALL, 0), 100);
 		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Blocks.SNOW, 0), 400);
@@ -99,19 +99,19 @@ public final class ModCrafting{
 		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopshowium.getMoltenCopshowium(), Pair.of(EnergyConverters.INGOT_MB, Triple.of(new ItemStack(OreSetup.ingotCopshowium, 1), 1500D, 100D)));
 
 		if(CrossroadsConfig.addBoboRecipes.getBoolean()){
-			registerBoboItem(getFilledHopper(), "Vacuum Hopper", new ItemRecipePredicate(Blocks.HOPPER, 0), new OreDictCraftingStack("wool"), new ItemRecipePredicate(CrossroadsBlocks.fluidTube, 0));
-			registerBoboItem(CrossroadsItems.magentaBread, "Magenta Bread", new ItemRecipePredicate(Items.BREAD, 0), new OreDictCraftingStack("dyeMagenta"), new OreDictCraftingStack("dustGlowstone"));
-			registerBoboItem(CrossroadsItems.rainIdol, "Rain Idol", new OreDictCraftingStack("gemLapis"), new OreDictCraftingStack("cobblestone"), new OreDictCraftingStack("nuggetGold"));
-			registerBoboItem(CrossroadsItems.squidHelmet, "Squid Helmet", new ItemRecipePredicate(Items.DYE, DyeColor.BLACK.getDyeDamage()), new ItemRecipePredicate(Items.FISH, 3), new OreDictCraftingStack("leather"));
-			registerBoboItem(CrossroadsItems.pigZombieChestplate, "Zombie Pigman Chestplate", new ItemRecipePredicate(Items.BLAZE_POWDER, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.PORKCHOP, 0));
-			registerBoboItem(CrossroadsItems.cowLeggings, "Cow Leggings", new ItemRecipePredicate(Items.MILK_BUCKET, 0), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Items.BEEF, 0));
-			registerBoboItem(CrossroadsItems.chickenBoots, "Chicken Boots", new OreDictCraftingStack("feather"), new OreDictCraftingStack("leather"), new ItemRecipePredicate(Blocks.WATERLILY, 0));
+			registerBoboItem(getFilledHopper(), "Vacuum Hopper", new ItemRecipePredicate(Blocks.HOPPER, 0), new TagCraftingStack("wool"), new ItemRecipePredicate(CrossroadsBlocks.fluidTube, 0));
+			registerBoboItem(CrossroadsItems.magentaBread, "Magenta Bread", new ItemRecipePredicate(Items.BREAD, 0), new TagCraftingStack("dyeMagenta"), new TagCraftingStack("dustGlowstone"));
+			registerBoboItem(CrossroadsItems.rainIdol, "Rain Idol", new TagCraftingStack("gemLapis"), new TagCraftingStack("cobblestone"), new TagCraftingStack("nuggetGold"));
+			registerBoboItem(CrossroadsItems.squidHelmet, "Squid Helmet", new ItemRecipePredicate(Items.DYE, DyeColor.BLACK.getDyeDamage()), new ItemRecipePredicate(Items.FISH, 3), new TagCraftingStack("leather"));
+			registerBoboItem(CrossroadsItems.pigZombieChestplate, "Zombie Pigman Chestplate", new ItemRecipePredicate(Items.BLAZE_POWDER, 0), new TagCraftingStack("leather"), new ItemRecipePredicate(Items.PORKCHOP, 0));
+			registerBoboItem(CrossroadsItems.cowLeggings, "Cow Leggings", new ItemRecipePredicate(Items.MILK_BUCKET, 0), new TagCraftingStack("leather"), new ItemRecipePredicate(Items.BEEF, 0));
+			registerBoboItem(CrossroadsItems.chickenBoots, "Chicken Boots", new TagCraftingStack("feather"), new TagCraftingStack("leather"), new ItemRecipePredicate(Blocks.WATERLILY, 0));
 			registerBoboItem(CrossroadsItems.chaosRod, "Rod of Discord", new ItemRecipePredicate(Items.BLAZE_ROD, 0), new ItemRecipePredicate(Items.DRAGON_BREATH, 0), new ItemRecipePredicate(Items.GOLDEN_APPLE, -1));
 			registerBoboItem(new ItemStack(CrossroadsBlocks.fluidVoid, 1), "Fluid Void", new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(CrossroadsBlocks.fluidTube, 0), new ItemRecipePredicate(OreSetup.voidCrystal, 0));
-			registerBoboItem(new ItemStack(CrossroadsBlocks.hamsterWheel, 1), "Hamster Wheel", new EdibleBlobRecipePredicate(4, 2), new ComponentCraftingStack("stick"), new OreDictCraftingStack("nuggetCopshowium"));
+			registerBoboItem(new ItemStack(CrossroadsBlocks.hamsterWheel, 1), "Hamster Wheel", new EdibleBlobRecipePredicate(4, 2), new ComponentCraftingStack("stick"), new TagCraftingStack("nuggetCopshowium"));
 			registerBoboItem(CrossroadsItems.liechWrench, "Liechtensteinian Navy Wrench", (ItemStack s) -> EssentialsConfig.isWrench(s, false), new ItemRecipePredicate(CrossroadsItems.handCrank, 0), new ItemRecipePredicate(CrossroadsItems.staffTechnomancy, 0));
-			registerBoboItem(new ItemStack(CrossroadsBlocks.maxwellDemon, 1), "Maxwell's Demon", new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 4), new OreDictCraftingStack("ingotCopper"));
-			registerBoboItem(new ItemStack(CrossroadsItems.nitroglycerin, 8), "Nitroglycerin", new OreDictCraftingStack("meatRaw"), new OreDictCraftingStack("gunpowder"), (Predicate<ItemStack>) (ItemStack stack) -> {
+			registerBoboItem(new ItemStack(CrossroadsBlocks.maxwellDemon, 1), "Maxwell's Demon", new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 4), new TagCraftingStack("ingotCopper"));
+			registerBoboItem(new ItemStack(CrossroadsItems.nitroglycerin, 8), "Nitroglycerin", new TagCraftingStack("meatRaw"), new TagCraftingStack("gunpowder"), (Predicate<ItemStack>) (ItemStack stack) -> {
 				if(stack.getItem() instanceof Phial){
 					return CrossroadsItems.phialGlass.getReagants(stack).getQty(EnumReagents.NITRIC_ACID.id()) != 0;
 				}
@@ -506,7 +506,7 @@ public final class ModCrafting{
 		CompoundNBT nbttagcompound1 = new CompoundNBT();
 		ListNBT nbttaglist = new ListNBT();
 		nbttaglist.appendTag(new StringNBT("(+NBT)"));
-		nbttagcompound1.setTag("Lore", nbttaglist);
+		nbttagcompound1.put("Lore", nbttaglist);
 		stack.setTagInfo("display", nbttagcompound1);
 		stack.setStackDisplayName("Vacuum Hopper");
 		return stack;

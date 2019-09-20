@@ -17,7 +17,7 @@ public class MechanicalArmRenderer extends TileEntityRenderer<MechanicalArmTileE
 			return;
 		}
 
-		float partialCycle = partialTicks + (float) (te.getWorld().getTotalWorldTime() % 2);//Based on a two tick cycle (to sync with redstone)
+		float partialCycle = partialTicks + (float) (te.getWorld().getGameTime() % 2);//Based on a two tick cycle (to sync with redstone)
 		partialCycle /= 2F;
 		Color ironColor = GearFactory.findMaterial("Iron").getColor();
 

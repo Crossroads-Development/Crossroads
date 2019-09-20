@@ -43,7 +43,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	protected void initHeat(){
 		if(!init){
 			init = true;
-			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			cableTemp = HeatUtil.convertBiomeTemp(world, pos);
 		}
 	}
 

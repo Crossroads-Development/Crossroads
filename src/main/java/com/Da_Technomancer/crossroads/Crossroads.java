@@ -11,13 +11,14 @@ import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
 import com.Da_Technomancer.crossroads.render.bakedModel.BakedModelLoader;
-import com.Da_Technomancer.crossroads.tileentities.ModTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.CrossroadsTileEntity;
 import com.Da_Technomancer.crossroads.world.ModWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
@@ -73,7 +74,7 @@ public final class Crossroads{
 		//Pre
 		CrossroadsPackets.preInit();
 		Capabilities.register();
-//		ModTileEntity.init();
+//		CrossroadsTileEntity.init();
 		CrossroadsPackets.preInit();
 		ModDimensions.init();
 		ModEntities.init();
@@ -145,7 +146,7 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> e){
 		IForgeRegistry<TileEntityType<?>> reg = e.getRegistry();
-		ModTileEntity.init(reg);
+		CrossroadsTileEntity.init(reg);
 		//TODO register TEs
 	}
 

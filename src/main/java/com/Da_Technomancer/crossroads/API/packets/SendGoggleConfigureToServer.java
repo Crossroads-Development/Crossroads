@@ -1,62 +1,49 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.gui.GuiHandler;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
-import com.Da_Technomancer.essentials.packets.Message;
-import net.minecraft.entity.player.PlayerEntity;
+import com.Da_Technomancer.essentials.packets.ServerPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
 
-@SuppressWarnings("serial")
-public class SendGoggleConfigureToServer extends Message<SendGoggleConfigureToServer>{
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+
+public class SendGoggleConfigureToServer extends ServerPacket{
+
+	public String lensName;
+	public boolean newSetting;
+
+	private static final Field[] FIELDS = fetchFields(SendGoggleConfigureToServer.class, "lensName", "newSetting");
 
 	public SendGoggleConfigureToServer(){
 
 	}
-
-	public String lensName;
-	public boolean newSetting;
 
 	public SendGoggleConfigureToServer(EnumGoggleLenses lens, boolean setting){
 		this.lensName = lens.name();
 		this.newSetting = setting;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.SERVER){
-			System.err.println("MessageToServer received on wrong side:" + context.side);
-			return null;
-		}
-		ServerPlayerEntity player = context.getServerHandler().player;
-		if(player == null){
-			System.err.println("Player was null on packet arrival");
-			return null;
-		}
-		player.getServerWorld().addScheduledTask(new Runnable(){
-			@Override
-			public void run(){
-				processMessage(player, lensName, newSetting);
-			}
-		});
-
-		return null;
+	protected Field[] getFields(){
+		return FIELDS;
 	}
 
-	public void processMessage(PlayerEntity player, String lens, boolean setting){
-		ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-		if(stack.getItem() == CrossroadsItems.moduleGoggles && stack.hasTagCompound() && stack.getTag().hasKey(lens)){
-			stack.getTag().setBoolean(lens, setting);
+	@Override
+	protected void run(@Nullable ServerPlayerEntity player){
+		if(player != null){
+			ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+			if(stack.getItem() == CrossroadsItems.moduleGoggles && stack.hasTag() && stack.getTag().contains(lensName)){
+				stack.getTag().putBoolean(lensName, newSetting);
 
-			if(EnumGoggleLenses.DIAMOND.name().equals(lens)){
-				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player, false);
-				player.openGui(Crossroads.instance, GuiHandler.FAKE_CRAFTER_GUI, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
+				if(EnumGoggleLenses.DIAMOND.name().equals(lensName)){
+					StoreNBTToClient.syncNBTToClient(player);
+					//TODO player.openGui(Crossroads.instance, GuiHandler.FAKE_CRAFTER_GUI, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
+				}
 			}
 		}
 	}

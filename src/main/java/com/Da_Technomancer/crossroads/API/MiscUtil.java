@@ -2,25 +2,24 @@ package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
-import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.fml.loading.FMLCommonLaunchHandler;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.LogMarkers;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.function.Predicate;
 
 public final class MiscUtil{
 
@@ -50,28 +49,27 @@ public final class MiscUtil{
 	 * @return The player's persistent NBT tag. Also sets a boolean for if this is multiplayer.
 	 */
 	public static CompoundNBT getPlayerTag(PlayerEntity playerIn){
-		CompoundNBT tag = playerIn.getEntityData();
-		if(!tag.hasKey(PlayerEntity.PERSISTED_NBT_TAG)){
-			tag.setTag(PlayerEntity.PERSISTED_NBT_TAG, new CompoundNBT());
+		CompoundNBT tag = playerIn.getPersistantData();
+		if(!tag.contains(PlayerEntity.PERSISTED_NBT_TAG)){
+			tag.put(PlayerEntity.PERSISTED_NBT_TAG, new CompoundNBT());
 		}
-		tag = tag.getCompoundTag(PlayerEntity.PERSISTED_NBT_TAG);
+		tag = tag.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
 
-		if(!tag.hasKey(Crossroads.MODID)){
-			tag.setTag(Crossroads.MODID, new CompoundNBT());
+		if(!tag.contains(Crossroads.MODID)){
+			tag.put(Crossroads.MODID, new CompoundNBT());
 		}
-		CompoundNBT out = tag.getCompoundTag(Crossroads.MODID);
-		out.setBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the render side is to get it on server side and send it via packet. Feel free to replace this with a better way.
+		CompoundNBT out = tag.getCompound(Crossroads.MODID);
+		out.putBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the render side is to get it on server side and send it via packet. Feel free to replace this with a better way.
 		return out;
 	}
 
 	/**
-	 * A server-side friendly version of {@link Entity#rayTrace(double, float)}
+	 * A server-side friendly version of Entity.class' raytrace (currently called Entity#func_213324_a(double, float, boolean))
 	 */
-	@Nullable
 	public static RayTraceResult rayTrace(Entity ent, double blockReachDistance){
 		Vec3d vec3d = ent.getPositionVector().add(0, ent.getEyeHeight(), 0);
 		Vec3d vec3d2 = vec3d.add(ent.getLook(1F).scale(blockReachDistance));
-		return ent.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+		return ent.world.rayTraceBlocks(new RayTraceContext(vec3d, vec3d2, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, ent));
 	}
 
 	public static ChunkPos getChunkPosFromLong(long combinedCoord){
@@ -86,31 +84,21 @@ public final class MiscUtil{
 		return (((long) pos.x << 32) | (pos.z & 0xffffffffL));
 	}
 
-	public static ItemStack getOredictStack(String oreDict, int count){
-		List<ItemStack> matches = OreDictionary.getOres(oreDict);
-		ItemStack out = matches.isEmpty() ? ItemStack.EMPTY : matches.get(0).copy();
-		out.setCount(count);
-		return out;
+	/**
+	 * Returns an entry from the Tag
+	 * @param tag The Tag to return an entry from
+	 * @param <T> The type of the tag. Normally Block or Item
+	 * @return An entry in the tag. If the Tag is set to preserve order, it will reliably return the first entry. Otherwise, any item could be returned.
+	 */
+	public static <T> T getTagEntry(Tag<T> tag){
+		return tag.getAllElements().iterator().next();
 	}
 
-	public static boolean hasOreDict(ItemStack stack, String oreDict){
-		if(stack.isEmpty()){
-			return false;
-		}
-
-		int goalID = OreDictionary.getOreID(oreDict);
-		for(int id : OreDictionary.getOreIDs(stack)){
-			if(id == goalID){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static Predicate<ItemStack> oreDictPred(String oreDict){
-		return new OreDictCraftingStack(oreDict);
-	}
-
+	/**
+	 * Localizes the input. Do not trust the result if called on the physical server
+	 * @param input The string to localize
+	 * @return The localized string
+	 */
 	public static String localize(String input){
 		return new TranslationTextComponent(input).getUnformattedComponentText();
 	}
@@ -139,6 +127,23 @@ public final class MiscUtil{
 			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with the Forge method, so the above for loop is used instead.
 		}catch(Exception e){
 			Crossroads.logger.catching(e);
+		}
+		return null;
+	}
+
+	@Nullable
+	public static Field reflectField(Class clazz, String textName, String rawName){
+		//TODO Change the names used by basically everything that calls this
+		try{
+			for(Field f : clazz.getDeclaredFields()){
+				if(textName.equals(f.getName()) || rawName.equals(f.getName())){
+					f.setAccessible(true);
+					return f;
+				}
+			}
+			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with the Forge method, so the above for loop is used instead.
+		}catch(Exception e){
+			Crossroads.logger.error(LogMarkers.LOADING, "Failed to reflect method: " + textName + "; Disabling relevant feature(s). Report to mod author", e);
 		}
 		return null;
 	}

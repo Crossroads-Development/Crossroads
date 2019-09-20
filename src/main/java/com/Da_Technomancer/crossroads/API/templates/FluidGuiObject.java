@@ -9,23 +9,33 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 
 public class FluidGuiObject implements IGuiObject{
 
-	private static BiMap<Fluid, Integer> fluidKeys;
+	private static BiMap<ResourceLocation, Short> fluidKeys;
+
+	private static BiMap<ResourceLocation, Short> getFluidKeys(){
+		if(fluidKeys == null){
+			fluidKeys = HashBiMap.create();
+			ForgeRegistries.FLUIDS.getKeys().stream().sorted(ResourceLocation::compareTo).forEach(key -> fluidKeys.put(key, (short) fluidKeys.size()));
+		}
+		return fluidKeys;
+	}
+
 
 	/**
 	 * Encodes a fluid stack into two shorts for syncing via fields
 	 * @param stack The fluidstack to be encoded in two shorts
 	 * @return A size two array containing the type short and the amount short in that order
 	 */
-	public static short[] fluidToPacket(@Nullable  FluidStack stack){
+	public static short[] fluidToPacket(@Nullable FluidStack stack){
 		if(fluidKeys == null || fluidKeys.size() != FluidRegistry.getMaxID()){
 			fluidKeys = HashBiMap.create(FluidRegistry.getRegisteredFluidIDs());//Ok, so getRegisteredFluidIDs may possibly be kinda deprecated, but let's be honest here: It's never going to be removed. Also this is more efficient/easier than string ids for syncing
 		}

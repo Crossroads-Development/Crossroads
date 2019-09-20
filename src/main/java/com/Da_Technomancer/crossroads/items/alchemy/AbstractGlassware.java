@@ -65,7 +65,7 @@ public abstract class AbstractGlassware extends Item{
 	 */
 	@Nonnull
 	public ReagentMap getReagants(ItemStack stack){
-		return stack.hasTagCompound() ? ReagentMap.readFromNBT(stack.getTag().getCompoundTag(TAG_NAME)) : new ReagentMap();
+		return stack.hasTag() ? ReagentMap.readFromNBT(stack.getTag().getCompound(TAG_NAME)) : new ReagentMap();
 	}
 
 	/**
@@ -74,12 +74,12 @@ public abstract class AbstractGlassware extends Item{
 	 * @param reagents The reagents to store
 	 */
 	public void setReagents(ItemStack stack, ReagentMap reagents){
-		if(!stack.hasTagCompound()){
-			stack.setTag(new CompoundNBT());
+		if(!stack.hasTag()){
+			stack.put(new CompoundNBT());
 		}
 
 		CompoundNBT nbt = new CompoundNBT();
-		stack.getTag().setTag(TAG_NAME, nbt);
+		stack.getTag().put(TAG_NAME, nbt);
 
 		reagents.writeToNBT(nbt);
 	}
@@ -87,7 +87,7 @@ public abstract class AbstractGlassware extends Item{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(!stack.hasTagCompound()){
+		if(!stack.hasTag()){
 			return;
 		}
 		ReagentMap stored = getReagants(stack);

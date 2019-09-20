@@ -50,11 +50,11 @@ public class PrototypeInfo{
 	public CompoundNBT write(CompoundNBT nbt){
 		for(int i = 0; i < 6; i++){
 			if(ports[i] != null){
-				nbt.setString("port" + i, ports[i].name());
-				nbt.setLong("pos" + i, portPos[i].toLong());
+				nbt.putString("port" + i, ports[i].name());
+				nbt.putLong("pos" + i, portPos[i].toLong());
 			}
 		}
-		nbt.setLong("chunk", MiscUtil.getLongFromChunkPos(chunk));
+		nbt.putLong("chunk", MiscUtil.getLongFromChunkPos(chunk));
 		return nbt;
 	}
 	

@@ -81,7 +81,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 
 	@Override
 	public void update(){
-		if(!redstone && world.getTotalWorldTime() % 10 == 0 && stored > 0){
+		if(!redstone && world.getGameTime() % 10 == 0 && stored > 0){
 			TileEntity topTE = world.getTileEntity(pos.up());
 			if(topTE instanceof TeslaCoilTopTileEntity){
 				((TeslaCoilTopTileEntity) topTE).jolt(this);

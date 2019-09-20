@@ -1,9 +1,11 @@
 package com.Da_Technomancer.crossroads;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
+import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
@@ -21,12 +23,12 @@ import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -37,14 +39,13 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -85,7 +86,7 @@ public final class EventHandlerCommon{
 	public static void updateLoadedPrototypeChunks(){
 		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(false);
 
-		ArrayList<ChunkPos> toLoad = new ArrayList<ChunkPos>();
+		ArrayList<ChunkPos> toLoad = new ArrayList<>();
 		for(PrototypeInfo info : data.prototypes){
 			if(info != null && info.owner != null && info.owner.get() != null){
 				info.owner.get().loadTick();
@@ -121,7 +122,7 @@ public final class EventHandlerCommon{
 	protected static final String SUB_KEY = "cr_pause_prior";
 
 	@SubscribeEvent
-	public void worldTick(WorldTickEvent e){
+	public void worldTick(TickEvent.WorldTickEvent e){
 		//Retrogen
 		if(TO_RETROGEN.size() != 0){
 			Chunk chunk = TO_RETROGEN.get(0);
@@ -131,22 +132,22 @@ public final class EventHandlerCommon{
 
 		//Prototype chunk loading
 		//Only should be called on the server side.
-		if(!e.world.isRemote && e.phase == Phase.START && e.world.provider.getDimension() == 0){
-			e.world.profiler.startSection(Crossroads.MODNAME + "-Prototype Loading Control");
-			if(e.world.getTotalWorldTime() % 20 == 0){
+		if(!e.world.isRemote && e.phase == TickEvent.Phase.START && e.world.provider.getDimension() == 0){
+			e.world.getProfiler().startSection(Crossroads.MODNAME + "-Prototype Loading Control");
+			if(e.world.getGameTime() % 20 == 0){
 				updateLoadedPrototypeChunks();
 			}
-			e.world.profiler.endSection();
+			e.world.getProfiler().endSection();
 
-			BeamManager.beamStage = (int) (e.world.getTotalWorldTime() % BeamManager.BEAM_TIME);
-			//BeamManager.resetVisual = e.world.getTotalWorldTime() % (20 * BeamManager.BEAM_TIME) < BeamManager.BEAM_TIME;
-			BeamManager.cycleNumber = e.world.getTotalWorldTime() / BeamManager.BEAM_TIME;
+			BeamManager.beamStage = (int) (e.world.getGameTime() % BeamManager.BEAM_TIME);
+			//BeamManager.resetVisual = e.world.getGameTime() % (20 * BeamManager.BEAM_TIME) < BeamManager.BEAM_TIME;
+			BeamManager.cycleNumber = e.world.getGameTime() / BeamManager.BEAM_TIME;
 		}
 
 
 		//Time Dilation
-		if(!e.world.isRemote && e.phase == Phase.START){
-			e.world.profiler.startSection(Crossroads.MODNAME + ": Entity Time Dilation");
+		if(!e.world.isRemote && e.phase == TickEvent.Phase.START){
+			e.world.getProfiler().startSection(Crossroads.MODNAME + ": Entity Time Dilation");
 			ArrayList<TemporalAcceleratorTileEntity.Region> timeStoppers = new ArrayList<>();
 			for(TileEntity te : e.world.tickableTileEntities){
 				if(te instanceof TemporalAcceleratorTileEntity && ((TemporalAcceleratorTileEntity) te).stoppingTime()){
@@ -160,15 +161,15 @@ public final class EventHandlerCommon{
 					if(!entNBT.getBoolean(SUB_KEY)){
 						ent.updateBlocked = false;
 					}
-					entNBT.setBoolean(MAIN_KEY, false);
-					entNBT.setBoolean(SUB_KEY, false);
+					entNBT.putBoolean(MAIN_KEY, false);
+					entNBT.putBoolean(SUB_KEY, false);
 				}
 
 				for(TemporalAcceleratorTileEntity.Region region : timeStoppers){
 					if(region.inRegion(ent.getPosition())){
-						entNBT.setBoolean(MAIN_KEY, true);
+						entNBT.putBoolean(MAIN_KEY, true);
 						if(ent.updateBlocked){
-							entNBT.setBoolean(SUB_KEY, true);
+							entNBT.putBoolean(SUB_KEY, true);
 						}else{
 							ent.updateBlocked = true;
 						}
@@ -179,18 +180,18 @@ public final class EventHandlerCommon{
 					}
 				}
 			}
-			e.world.profiler.endSection();
+			e.world.getProfiler().endSection();
 		}
 
 		//Temporal Entropy decay
-		if(!e.world.isRemote && e.phase == Phase.START){
+		if(!e.world.isRemote && e.phase == TickEvent.Phase.START){
 			EntropySavedData.addEntropy(e.world, -CrossroadsConfig.entropyDecayRate.get());
 		}
 
 
 		//Atmospheric overcharge effect
 		if(!e.world.isRemote && (CrossroadsConfig.atmosEffect.get() & 1) == 1){
-			e.world.profiler.startSection(Crossroads.MODNAME + ": Overcharge lightning effects");
+			e.world.getProfiler().startSection(Crossroads.MODNAME + ": Overcharge lightning effects");
 			float chargeLevel = (float) AtmosChargeSavedData.getCharge(e.world) / (float) AtmosChargeSavedData.getCapacity();
 			if(chargeLevel > 0.5F){
 				Iterator<Chunk> iterator = e.world.getPersistentChunkIterable(((ServerWorld) (e.world)).getPlayerChunkMap().getChunkIterator());
@@ -233,7 +234,7 @@ public final class EventHandlerCommon{
 							entityskeletonhorse.setTrap(true);
 							entityskeletonhorse.setGrowingAge(0);
 							entityskeletonhorse.setPosition(tarX, tarY, tarZ);
-							e.world.spawnEntity(entityskeletonhorse);
+							e.world.addEntity(entityskeletonhorse);
 							e.world.addWeatherEffect(new LightningBoltEntity(e.world, tarX, tarY, tarZ, true));
 						}else{
 							e.world.addWeatherEffect(new LightningBoltEntity(e.world, tarX, tarY, tarZ, false));
@@ -241,18 +242,18 @@ public final class EventHandlerCommon{
 					}
 				}
 			}
-			e.world.profiler.endSection();
+			e.world.getProfiler().endSection();
 		}
 	}
 
 	@SubscribeEvent
 	public void buildRetrogenList(ChunkDataEvent.Load e) {
 		if (!CrossroadsConfig.retrogen.getString().isEmpty()) {
-			CompoundNBT tag = e.getData().getCompoundTag(Crossroads.MODID);
-			e.getData().setTag(Crossroads.MODID, tag);
+			CompoundNBT tag = e.getData().getCompound(Crossroads.MODID);
+			e.getData().put(Crossroads.MODID, tag);
 
-			if (!tag.hasKey(CrossroadsConfig.retrogen.getString())) {
-				tag.setBoolean(CrossroadsConfig.retrogen.getString(), true);
+			if (!tag.contains(CrossroadsConfig.retrogen.getString())) {
+				tag.putBoolean(CrossroadsConfig.retrogen.getString(), true);
 				TO_RETROGEN.add(e.getChunk());
 			}
 		}
@@ -262,13 +263,13 @@ public final class EventHandlerCommon{
 	public void craftGoggles(AnvilUpdateEvent e){
 		if(e.getLeft().getItem() == CrossroadsItems.moduleGoggles){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(lens.matchesRecipe(e.getRight()) && (!e.getLeft().hasTagCompound() || !e.getLeft().getTag().hasKey(lens.name()))){
+				if(lens.matchesRecipe(e.getRight()) && (!e.getLeft().hasTag() || !e.getLeft().getTag().contains(lens.name()))){
 					ItemStack out = e.getLeft().copy();
-					if(!out.hasTagCompound()){
-						out.setTag(new CompoundNBT());
+					if(!out.hasTag()){
+						out.put(new CompoundNBT());
 					}
 					e.setCost((int) Math.pow(2, out.getTag().getSize()));
-					out.getTag().setBoolean(lens.name(), true);
+					out.getTag().putBoolean(lens.name(), true);
 					e.setOutput(out);
 					e.setMaterialCost(1);
 					break;
@@ -282,7 +283,7 @@ public final class EventHandlerCommon{
 		//The down-side of using this event is that every time the player switches dimension, the update data has to be resent.
 
 		if(e.getEntity() instanceof ServerPlayerEntity){
-			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) e.getEntity(), false);
+			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) e.getEntity());
 		}
 	}
 
@@ -300,44 +301,16 @@ public final class EventHandlerCommon{
 
 			if(ent instanceof PlayerEntity){
 				PlayerEntity player = (PlayerEntity) ent;
-				if(player.inventory.clearMatchingItems(CrossroadsItems.nitroglycerin, -1, -1, null) > 0){
-					player.world.createExplosion(null, player.posX, player.posY, player.posZ, 5F, true);
+				if(player.inventory.clearMatchingItems(s -> s.getItem() == CrossroadsItems.nitroglycerin, -1) > 0){
+					player.world.createExplosion(null, player.posX, player.posY, player.posZ, 5F, Explosion.Mode.BREAK);
 				}
 			}
 		}
 	}
 
 
-	private static final Field explosionPower;
-	private static final Field explosionSmoking;
-
-	static{
-		Field holderPower = null;
-		Field holderSmoking = null;
-		try{
-			for(Field f : Explosion.class.getDeclaredFields()){
-				if("field_77280_f".equals(f.getName()) || "size".equals(f.getName())){
-					holderPower = f;
-					holderPower.setAccessible(true);
-				}else if("field_82755_b".equals(f.getName()) || "damagesTerrain".equals(f.getName())){
-					holderSmoking = f;
-					holderSmoking.setAccessible(true);
-				}
-			}
-			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with the forge method, so the above for loop is used instead.
-		}catch(Exception e){
-			Crossroads.logger.catching(e);
-		}
-		explosionPower = holderPower;
-		explosionSmoking = holderSmoking;
-		if(explosionPower == null){
-			Crossroads.logger.error("Reflection to get explosionPower failed. Disabling relevant feature(s).");
-		}
-		if(explosionSmoking == null){
-			Crossroads.logger.error("Reflection to get explosionSmoking failed. Disabling relevant feature(s).");
-		}
-	}
-
+	private static final Field explosionPower = MiscUtil.reflectField(Explosion.class, "size", "field_77280_f");
+	private static final Field explosionSmoking = MiscUtil.reflectField(Explosion.class, "damagesTerrain", "field_82755_b");
 
 	@SubscribeEvent
 	public void modifyExplosion(ExplosionEvent.Start e){
@@ -359,13 +332,13 @@ public final class EventHandlerCommon{
 			marker.setPosition(e.getExplosion().getPosition().x, e.getExplosion().getPosition().y, e.getExplosion().getPosition().z);
 			CompoundNBT data = new CompoundNBT();
 			try{
-				data.setFloat("power", explosionPower.getFloat(e.getExplosion()));
-				data.setBoolean("smoking", explosionSmoking.getBoolean(e.getExplosion()));
+				data.putFloat("power", explosionPower.getFloat(e.getExplosion()));
+				data.putBoolean("smoking", explosionSmoking.getBoolean(e.getExplosion()));
 			}catch(IllegalAccessException ex){
 				Crossroads.logger.error("Failed to perpetuate explosion. Dim: " + e.getWorld().provider.getDimension() + "; Pos: " + e.getExplosion().getPosition());
 			}
 			marker.data = data;
-			e.getWorld().spawnEntity(marker);
+			e.getWorld().addEntity(marker);
 		}
 	}
 }

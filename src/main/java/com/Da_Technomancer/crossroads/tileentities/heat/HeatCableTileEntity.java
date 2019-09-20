@@ -124,7 +124,7 @@ public class HeatCableTileEntity extends ModuleTE{
 		}
 
 		//Energy loss
-		double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
 		temp += Math.min(insulator.getRate(), Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 
 		if(temp != prevTemp){
@@ -153,7 +153,7 @@ public class HeatCableTileEntity extends ModuleTE{
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.setString("insul", insulator.name());
+		nbt.putString("insul", insulator.name());
 		for(int i = 0; i < 6; i++){
 			nbt.putBoolean("lock_" + i, locked[i]);
 			nbt.putBoolean("match_" + i, hasMatch[i]);
@@ -183,7 +183,7 @@ public class HeatCableTileEntity extends ModuleTE{
 				if(insulator == HeatInsulators.ICE){
 					temp = -10;
 				}else{
-					temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+					temp = HeatUtil.convertBiomeTemp(world, pos);
 				}
 				initHeat = true;
 				markDirty();

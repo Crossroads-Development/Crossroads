@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.API.beams;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 public class DefaultBeamHandler implements IBeamHandler{
 
 	@Override
-	public void setMagic(@Nullable BeamUnit mag){
+	public void setMagic(@Nonnull BeamUnit mag){
 		
 	}
 }

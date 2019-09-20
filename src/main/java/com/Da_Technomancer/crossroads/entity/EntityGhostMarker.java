@@ -31,7 +31,7 @@ public class EntityGhostMarker extends Entity{
 		super(worldIn);
 		this.type = type;
 		this.lifespan = lifespan;
-		time = worldIn.getTotalWorldTime();
+		time = worldIn.getGameTime();
 
 		setSize(1F, 1F);
 		setNoGravity(true);
@@ -45,9 +45,9 @@ public class EntityGhostMarker extends Entity{
 
 	@Override
 	protected void readEntityFromNBT(CompoundNBT nbt){
-		nbt.setString("type", type.name());
+		nbt.putString("type", type.name());
 		nbt.putInt("life", lifespan);
-		nbt.setLong("time", time);
+		nbt.putLong("time", time);
 		if(data != null){
 			nbt.put("data", data);
 		}
@@ -76,8 +76,8 @@ public class EntityGhostMarker extends Entity{
 	@Override
 	public void onUpdate(){
 		super.onUpdate();
-		if(!world.isRemote && lifespan >= 0 && time != world.getTotalWorldTime()){
-			time = world.getTotalWorldTime();
+		if(!world.isRemote && lifespan >= 0 && time != world.getGameTime()){
+			time = world.getGameTime();
 			if(--lifespan == 0){
 				if(type != null && type.expireEffect != null){
 					type.expireEffect.accept(this);
@@ -91,7 +91,7 @@ public class EntityGhostMarker extends Entity{
 
 		EQUALIBRIUM(5, null),
 		VOID_EQUALIBRIUM(5, null),
-		DELAYED_EXPLOSION(5, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.hasKey("power")) marker.world.createExplosion(marker, marker.posX, marker.posY, marker.posZ, marker.data.getFloat("power"), marker.data.getBoolean("smoking"));}),
+		DELAYED_EXPLOSION(5, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.world.createExplosion(marker, marker.posX, marker.posY, marker.posZ, marker.data.getFloat("power"), marker.data.getBoolean("smoking"));}),
 		BLOCK_SPAWNING(5, null);
 
 		private final int defaultLifespan;

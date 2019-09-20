@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import java.awt.Color;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.SoundEvents;
+
+import java.awt.*;
 
 public class ButtonGuiObject implements IGuiObject{
 

@@ -6,6 +6,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 
 public interface IDoubleArrayReceiver{
 
-	public void receiveDoubles(byte context, double message[], @Nullable ServerPlayerEntity sendingPlayer);
+	public void receiveDoubles(byte context, double[] message, @Nullable ServerPlayerEntity sendingPlayer);
 
 }

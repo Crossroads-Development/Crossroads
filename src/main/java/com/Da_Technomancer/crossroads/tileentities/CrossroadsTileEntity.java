@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 import static com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks.*;
 
-public class ModTileEntity{
+public class CrossroadsTileEntity{
 
 	public static void init(IForgeRegistry<TileEntityType<?>> reg){
 		register(HeatCableTileEntity::new, "heat_cable", reg, HeatCableFactory.HEAT_CABLES.values());

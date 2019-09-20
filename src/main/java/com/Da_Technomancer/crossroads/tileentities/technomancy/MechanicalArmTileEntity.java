@@ -55,7 +55,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 
 	@Override
 	public void update(){
-		if(world.getTotalWorldTime() % 2 == 0){
+		if(world.getGameTime() % 2 == 0){
 			System.arraycopy(angle, 0, angleRecord, 0, 3);
 
 			if(!world.isRemote){
@@ -82,7 +82,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 						ridableID = ridable.getUniqueID();
 						ridable.setOwnerPos(pos);
 						ridable.setPosition(.5D + (double) pos.getX(), 1D + (double) pos.getY(), .5D + (double) pos.getZ());
-						world.spawnEntity(ridable);
+						world.addEntity(ridable);
 					}
 				}
 
@@ -166,8 +166,8 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 		nbt.putInt("redstone", redstone);
 
 		if(ridableID != null){
-			nbt.setLong("id_greater", ridableID.getMostSignificantBits());
-			nbt.setLong("id_lesser", ridableID.getLeastSignificantBits());
+			nbt.putLong("id_greater", ridableID.getMostSignificantBits());
+			nbt.putLong("id_lesser", ridableID.getLeastSignificantBits());
 		}		
 		return nbt;
 	}

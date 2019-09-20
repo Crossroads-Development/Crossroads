@@ -35,7 +35,7 @@ public class FlyingMachine extends Item{
 			EntityFlyingMachine mach = new EntityFlyingMachine(worldIn);
 			mach.setPosition(ray.hitVec.x, ray.hitVec.y, ray.hitVec.z);
 			if(!worldIn.isRemote){
-				worldIn.spawnEntity(mach);
+				worldIn.addEntity(mach);
 			}
 
 			if(!playerIn.capabilities.isCreativeMode){

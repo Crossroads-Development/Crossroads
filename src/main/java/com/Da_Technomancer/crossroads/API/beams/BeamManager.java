@@ -7,10 +7,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.*;
 
 public class BeamManager{
@@ -22,7 +22,8 @@ public class BeamManager{
 	private final BlockPos pos;
 
 	private int dist;
-	private BeamUnit lastSent;
+	@Nonnull
+	private BeamUnit lastSent = BeamUnit.EMPTY;
 	public static final int MAX_DISTANCE = 16;
 	public static final int BEAM_TIME = 5;
 
@@ -31,12 +32,13 @@ public class BeamManager{
 		this.pos = pos.toImmutable();
 	}
 
-	public boolean emit(@Nullable BeamUnit mag, World world){
+	public boolean emit(@Nonnull BeamUnit mag, World world){
 		for(int i = 1; i <= BeamManager.MAX_DISTANCE; i++){
 			TileEntity checkTE = world.getTileEntity(pos.offset(dir, i));
-			if(checkTE != null && checkTE.hasCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())){
-				checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite()).setMagic(mag);
-				if(dist != i * i || (mag == null ? lastSent != null : !mag.equals(lastSent))){
+			LazyOptional<IBeamHandler> opt;
+			if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
+				opt.orElseThrow(NullPointerException::new).setMagic(mag);
+				if(dist != i * i || !mag.equals(lastSent)){
 					dist = i;
 					lastSent = mag;
 					return true;
@@ -47,13 +49,13 @@ public class BeamManager{
 
 			BlockState checkState = world.getBlockState(pos.offset(dir, i));
 			if(i == BeamManager.MAX_DISTANCE || solidToBeams(checkState, world, pos.offset(dir, i))){
-				if(mag != null){
+				if(!mag.isEmpty()){
 					IEffect e = EnumBeamAlignments.getAlignment(mag).getMixEffect(mag.getRGB());
 					if(e != null){
 						e.doEffect(world, pos.offset(dir, i), Math.min(64, mag.getPower()), dir.getOpposite());
 					}
 				}
-				if(dist != i || (mag == null ? lastSent != null : !mag.equals(lastSent))){
+				if(dist != i || !mag.equals(lastSent)){
 					dist = i;
 					lastSent = mag;
 					return true;
@@ -84,7 +86,7 @@ public class BeamManager{
 		return packet == 0 ? Triple.of(Color.BLACK, 0, 0) : Triple.of(Color.decode(Integer.toString(packet & 0xFFFFFF)), ((packet >> 24) & 15) + 1, (packet >> 28) + 1);
 	}
 
-	@Nullable
+	@Nonnull
 	public BeamUnit getLastSent(){
 		return lastSent;
 	}

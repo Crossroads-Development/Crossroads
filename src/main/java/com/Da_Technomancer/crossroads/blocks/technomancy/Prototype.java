@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
@@ -125,10 +124,10 @@ public class Prototype extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(stack.hasTagCompound()){
+		if(stack.hasTag()){
 			tooltip.add("Name: " + stack.getTag().getString("name"));
 			for(int i = 0; i < 6; i++){
-				if(stack.getTag().hasKey("ttip" + i)){
+				if(stack.getTag().contains("ttip" + i)){
 					tooltip.add(Direction.byIndex(i).name().charAt(0) + Direction.byIndex(i).toString().substring(1) + ": " + stack.getTag().getString("ttip" + i));
 				}
 			}
@@ -161,13 +160,13 @@ public class Prototype extends ContainerBlock{
 			ItemStack drop = new ItemStack(Item.getItemFromBlock(this), 1, 0);
 			CompoundNBT nbt = new CompoundNBT();
 			nbt.putInt("index", ((PrototypeTileEntity) te).getIndex());
-			nbt.setString("name", ((PrototypeTileEntity) te).name);
+			nbt.putString("name", ((PrototypeTileEntity) te).name);
 			for(int i = 0; i < 6; i++){
 				if(((PrototypeTileEntity) te).tooltips[i] != null){
-					nbt.setString("ttip" + i, ((PrototypeTileEntity) te).tooltips[i]);
+					nbt.putString("ttip" + i, ((PrototypeTileEntity) te).tooltips[i]);
 				}
 			}
-			drop.setTag(nbt);
+			drop.put(nbt);
 			drops.add(drop);
 		}
 		return drops;
@@ -187,13 +186,13 @@ public class Prototype extends ContainerBlock{
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(!world.isRemote){
-			if(stack.hasTagCompound()){
+			if(stack.hasTag()){
 				PrototypeTileEntity te = (PrototypeTileEntity) world.getTileEntity(pos);
 				if(PrototypeWorldSavedData.get(false).prototypes.size() > stack.getTag().getInt("index")){
 					te.setIndex(stack.getTag().getInt("index"));
 					te.name = stack.getTag().getString("name");
 					for(int i = 0; i < 6; i++){
-						if(stack.getTag().hasKey("ttip" + i)){
+						if(stack.getTag().contains("ttip" + i)){
 							te.tooltips[i] = stack.getTag().getString("ttip" + i);
 						}
 					}

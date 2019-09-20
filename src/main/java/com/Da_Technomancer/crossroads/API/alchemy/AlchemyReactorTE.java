@@ -94,7 +94,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			correctReag();
 		}
 
-		if(world.getTotalWorldTime() % AlchemyUtil.ALCHEMY_TIME == 0){
+		if(world.getGameTime() % AlchemyUtil.ALCHEMY_TIME == 0){
 			spawnParticles();
 			performReaction();
 			performTransfer();

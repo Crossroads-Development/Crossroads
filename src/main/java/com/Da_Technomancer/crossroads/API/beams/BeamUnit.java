@@ -7,7 +7,9 @@ import java.util.Arrays;
 
 public class BeamUnit{
 
-	private final int contents[] = new int[4];//0: Energy, 1: Potential, 2: stability, 3: Void
+	public static final BeamUnit EMPTY = new BeamUnit(0, 0, 0, 0);
+
+	private final int[] contents = new int[4];//0: Energy, 1: Potential, 2: stability, 3: Void
 
 	public BeamUnit(int[] magic){
 		this(magic[0], magic[1], magic[2], magic[3]);
@@ -42,6 +44,10 @@ public class BeamUnit{
 
 	public int getPower(){
 		return contents[0] + contents[1] + contents[2] + contents[3];
+	}
+
+	public boolean isEmpty(){
+		return contents[0] == 0 && contents[1] == 0 && contents[2] == 0 && contents[3] == 0;
 	}
 
 	/**
@@ -89,11 +95,15 @@ public class BeamUnit{
 
 	@Override
 	public boolean equals(Object other){
-		return other == this || (other instanceof BeamUnit && ((BeamUnit) other).getEnergy() == contents[0] && ((BeamUnit) other).getStability() == contents[2] && ((BeamUnit) other).getPotential() == contents[1] && ((BeamUnit) other).getVoid() == contents[3]);
+		if(other instanceof BeamUnit){
+			BeamUnit o = (BeamUnit) other;
+			return o == this || o.contents[0] == contents[0] && o.contents[1] == contents[1] && o.contents[2] == contents[2] && o.contents[3] == contents[3];
+		}
+		return false;
 	}
 	
 	@Override
 	public int hashCode(){
-		return (contents[0] << 12) + ((contents[1] & 0xE) << 8) + ((contents[2] & 0xE) << 4) + (contents[3] & 0xE);
+		return ((contents[0] & 0xFF) << 24) + ((contents[1] & 0xFF) << 16) + ((contents[2] & 0xFF) << 8) + (contents[3] & 0xFF);
 	}
 }

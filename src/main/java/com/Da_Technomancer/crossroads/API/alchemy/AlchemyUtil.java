@@ -60,7 +60,7 @@ public class AlchemyUtil{
 				EntityFlameCore coreFlame = new EntityFlameCore(world);
 				coreFlame.setPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 				coreFlame.setInitialValues(reags, flameRange);
-				world.spawnEntity(coreFlame);
+				world.addEntity(coreFlame);
 			}else{
 				//If flame effect is disabled in the config, just spawn a single small fire
 				BlockState prev = world.getBlockState(pos);

@@ -107,13 +107,13 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 
 	@Override
 	public void update(){
-		if(!world.isRemote && world.getTotalWorldTime() != lastRunTick){
+		if(!world.isRemote && world.getGameTime() != lastRunTick){
 			if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){
 				FluxUtil.overloadFlux(world, pos);
 				return;
 			}
 
-			lastRunTick = world.getTotalWorldTime();
+			lastRunTick = world.getGameTime();
 			int extraTicks = (int) Math.pow(2, intensity / 4D) - 1;
 			if(extraTicks > 0){
 				//Perform entity effect
@@ -155,7 +155,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 			}
 
 			//Create flux
-			if(world.getTotalWorldTime() % FluxUtil.FLUX_TIME == 0){
+			if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
 				if(intensity < 0){
 					//Stopped time
 					if(intensity <= -16){
@@ -203,7 +203,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		nbt.putInt("intensity", intensity);
 		nbt.putInt("size", size);
 		nbt.putInt("duration", duration);
-		nbt.setLong("last_run", lastRunTick);
+		nbt.putLong("last_run", lastRunTick);
 
 		return nbt;
 	}

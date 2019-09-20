@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -15,19 +14,13 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
@@ -45,31 +38,27 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	protected boolean initHeat = false;
 	protected double temp;
 	protected final FluidStack[] fluids = new FluidStack[fluidTanks()];
-	/**
-	 * Machines overriding the fluidTanks() method should set each tank capacity in the constructor. DO NOT LEAVE THEM AS NULL
-	 */
-	protected final IFluidTankProperties[] fluidProps = new IFluidTankProperties[fluidTanks()];
-
-	/**
-	 * @return How many fluid tanks this machine has. Should not change at runtime, cannot be negative
-	 */
-	protected int fluidTanks(){
-		return 0;
-	}
+	protected final TankProperty[] fluidProps = new TankProperty[fluidTanks()];
 
 	/**
 	 * @return Whether to enable the default heat helpers. Should not change at runtime
 	 */
-	protected boolean useHeat(){
-		return false;
-	}
+	protected abstract boolean useHeat();
 
 	/**
 	 * @return Whether to enable the default rotary helpers. Should not change at runtime
 	 */
-	protected boolean useRotary(){
-		return false;
-	}
+	protected abstract boolean useRotary();
+
+	/**
+	 * @return How many fluid tanks this machine has. Should not change at runtime, cannot be negative
+	 */
+	protected abstract int fluidTanks();
+
+	/**
+	 * @return An array of length fluidTanks() defining properties for each tank
+	 */
+	protected abstract TankProperty[] createFluidTanks();
 
 	protected AxleHandler createAxleHandler(){
 		return new AxleHandler();
@@ -91,10 +80,13 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		}else{
 			axleHandler = null;
 		}
+		for(int i = 0; i < fluids.length; i++){
+			fluids[i] = FluidStack.EMPTY;
+		}
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.isRemote){
 			if(useRotary() && angleW != null){
 				angleW[0] += angleW[1] * 9D / Math.PI;
@@ -107,16 +99,10 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
-
-	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		ITextComponent comp = new TranslationTextComponent("");
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		if(useHeat()){
 			chat.add("Temp: " + MiscUtil.betterRound(temp, 3) + "°C");
-			chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos)) + "°C");
+			chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world, pos) + "°C");
 		}
 		if(useRotary()){
 			chat.add("Speed: " + MiscUtil.betterRound(motData[0], 3));
@@ -198,11 +184,6 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		}
 	}
 
-	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		return getCapability(cap, side) != null || super.hasCapability(cap, side);
-	}
-
 	protected final HeatHandler heatHandler;
 	protected final AxleHandler axleHandler;
 
@@ -218,38 +199,28 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		}
 
 		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			if(tank < 0){
-				return fluidProps;
-			}
-
-			return new IFluidTankProperties[] {fluidProps[tank]};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill){
+		public int fill(FluidStack resource, FluidAction action){
 			if(tank < 0){
 				//Try each tank, stop when reaching the first one that allows this fluid
 				for(int i = 0; i < fluids.length; i++){
-					if(resource != null && fluidProps[i].canFillFluidType(resource) && (fluids[i] == null || fluids[i].isFluidEqual(resource))){
-						int change = Math.min(fluidProps[i].getCapacity() - (fluids[i] == null ? 0 : fluids[i].amount), resource.amount);
-						if(doFill){
-							int prevAmount = fluids[i] == null ? 0 : fluids[i].amount;
+					if(!resource.isEmpty() && isFluidValid(i, resource) && (fluids[i].isEmpty() || fluids[i].isFluidEqual(resource))){
+						int change = Math.min(fluidProps[i].capacity - fluids[i].getAmount(), resource.getAmount());
+						if(action == FluidAction.EXECUTE){
+							int prevAmount = fluids[i].getAmount();
 							fluids[i] = resource.copy();
-							fluids[i].amount = prevAmount + change;
+							fluids[i].setAmount(prevAmount + change);
 							markDirty();
 						}
 						return change;
 					}
 				}
-
 			}else{
-				if(resource != null && fluidProps[tank].canFillFluidType(resource) && (fluids[tank] == null || fluids[tank].isFluidEqual(resource))){
-					int change = Math.min(fluidProps[tank].getCapacity() - (fluids[tank] == null ? 0 : fluids[tank].amount), resource.amount);
-					if(doFill){
-						int prevAmount = fluids[tank] == null ? 0 : fluids[tank].amount;
+				if(!resource.isEmpty() && isFluidValid(tank, resource) && (fluids[tank].isEmpty() || fluids[tank].isFluidEqual(resource))){
+					int change = Math.min(fluidProps[tank].capacity - fluids[tank].getAmount(), resource.getAmount());
+					if(action == FluidAction.EXECUTE){
+						int prevAmount = fluids[tank].getAmount();
 						fluids[tank] = resource.copy();
-						fluids[tank].amount = prevAmount + change;
+						fluids[tank].setAmount(prevAmount + change);
 						markDirty();
 					}
 					return change;
@@ -259,71 +230,62 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 			return 0;
 		}
 
-		@Nullable
+		@Nonnull
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource == null){
-				return null;
+		public FluidStack drain(FluidStack resource, FluidAction action){
+			if(resource.isEmpty()){
+				return FluidStack.EMPTY;
 			}
 
 			if(tank < 0){
 				//Try each tank, stop when reaching the first one that allows this fluid
 				for(int i = 0; i < fluids.length; i++){
-					if(fluidProps[i].canDrain() && resource.isFluidEqual(fluids[i])){
-						int change = Math.min(fluids[i].amount, resource.amount);
+					if(fluidProps[i].canDrain && resource.isFluidEqual(fluids[i])){
+						int change = Math.min(fluids[i].getAmount(), resource.getAmount());
 
-						if(doDrain){
-							fluids[i].amount -= change;
-							if(fluids[i].amount == 0){
-								fluids[i] = null;
-							}
+						if(action == FluidAction.EXECUTE){
+							fluids[i].shrink(change);
 							markDirty();
 						}
 						FluidStack out = resource.copy();
-						out.amount = change;
+						out.setAmount(change);
 						return out;
 					}
 				}
 
-				return null;
-			}else if(fluidProps[tank].canDrain() && resource.isFluidEqual(fluids[tank])){
-				int change = Math.min(fluids[tank].amount, resource.amount);
+				return FluidStack.EMPTY;
+			}else if(fluidProps[tank].canDrain && resource.isFluidEqual(fluids[tank])){
+				int change = Math.min(fluids[tank].getAmount(), resource.getAmount());
 
-				if(doDrain){
-					fluids[tank].amount -= change;
-					if(fluids[tank].amount == 0){
-						fluids[tank] = null;
-					}
+				if(action == FluidAction.EXECUTE){
+					fluids[tank].shrink(change);
 					markDirty();
 				}
 				FluidStack out = resource.copy();
-				out.amount = change;
+				out.setAmount(change);
 				return out;
 			}
 
-			return null;
+			return FluidStack.EMPTY;
 		}
 
-		@Nullable
+		@Nonnull
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
+		public FluidStack drain(int maxDrain, FluidAction action){
 			if(maxDrain == 0){
-				return null;
+				return FluidStack.EMPTY;
 			}
 
 			if(tank < 0){
 				//Try each tank, stop when reaching the first one that allows this fluid
 				for(int i = 0; i < fluids.length; i++){
-					if(fluidProps[i].canDrain() && fluids[i] != null){
-						int change = Math.min(fluids[i].amount, maxDrain);
+					if(fluidProps[i].canDrain && !fluids[i].isEmpty()){
+						int change = Math.min(fluids[i].getAmount(), maxDrain);
 						FluidStack content = fluids[i].copy();
-						content.amount = change;
+						content.setAmount(change);
 
-						if(doDrain){
-							fluids[i].amount -= change;
-							if(fluids[i].amount == 0){
-								fluids[i] = null;
-							}
+						if(action == FluidAction.EXECUTE){
+							fluids[i].shrink(change);
 							markDirty();
 						}
 
@@ -331,89 +293,72 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 					}
 				}
 
-				return null;
-			}else if(fluidProps[tank].canDrain() && fluids[tank] != null){
-				int change = Math.min(fluids[tank].amount, maxDrain);
+				return FluidStack.EMPTY;
+			}else if(fluidProps[tank].canDrain && !fluids[tank].isEmpty()){
+				int change = Math.min(fluids[tank].getAmount(), maxDrain);
 				FluidStack content = fluids[tank].copy();
-				content.amount = change;
+				content.setAmount(change);
 
-				if(doDrain){
-					fluids[tank].amount -= change;
-					if(fluids[tank].amount == 0){
-						fluids[tank] = null;
-					}
+				if(action == FluidAction.EXECUTE){
+					fluids[tank].shrink(change);
 					markDirty();
 				}
 
 				return content;
 			}
 
-			return null;
+			return FluidStack.EMPTY;
+		}
+
+		@Override
+		public int getTanks(){
+			return fluids.length;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack getFluidInTank(int tank){
+			return fluids[tank];
+		}
+
+		@Override
+		public int getTankCapacity(int tank){
+			return fluidProps[tank].capacity;
+		}
+
+		@Override
+		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
+			return fluidProps[tank].canFill && fluidProps[tank].canAccept.test(stack.getFluid());
 		}
 	}
 
-	protected class TankProperty implements IFluidTankProperties{
+	protected static class TankProperty{
 
-		protected final int tank;
 		protected final int capacity;
 		protected final boolean canFill;
 		protected final boolean canDrain;
 		protected final Predicate<Fluid> canAccept;
 
 		/**
-		 * @param tank The index of the fluidstack this relates to in the fluids array
 		 * @param capacity The capacity of this tank
 		 * @param canFill Whether this tank can be filled by pipes
 		 * @param canDrain Whether this tank can be drained by pipes
 		 */
-		public TankProperty(int tank, int capacity, boolean canFill, boolean canDrain){
-			this(tank, capacity, canFill, canDrain, null);
+		public TankProperty(int capacity, boolean canFill, boolean canDrain){
+			this(capacity, canFill, canDrain, f -> true);
 		}
 
 		/**
-		 * @param tank The index of the fluidstack this relates to in the fluids array
 		 * @param capacity The capacity of this tank
 		 * @param canFill Whether this tank can be filled by pipes
 		 * @param canDrain Whether this tank can be drained by pipes
-		 * @param canAccept A predicate controlling whether a fluid can be inserted into this tank. Ignored if canFill is false or if null
+		 * @param canAccept A predicate controlling whether a fluid can be inserted into this tank
 		 */
-		public TankProperty(int tank, int capacity, boolean canFill, boolean canDrain, @Nullable Predicate<Fluid> canAccept){
-			this.tank = tank;
+		public TankProperty(int capacity, boolean canFill, boolean canDrain, @Nonnull Predicate<Fluid> canAccept){
 			this.capacity = capacity;
 			this.canFill = canFill;
 			this.canDrain = canDrain;
 			this.canAccept = canAccept;
-		}
-
-		@Nullable
-		@Override
-		public FluidStack getContents(){
-			return fluids[tank];
-		}
-
-		@Override
-		public int getCapacity(){
-			return capacity;
-		}
-
-		@Override
-		public boolean canFill(){
-			return canFill;
-		}
-
-		@Override
-		public boolean canDrain(){
-			return canDrain;
-		}
-
-		@Override
-		public boolean canFillFluidType(FluidStack fluidStack){
-			return canFill && (fluidStack == null || canAccept == null || canAccept.test(fluidStack.getFluid()));
-		}
-
-		@Override
-		public boolean canDrainFluidType(FluidStack fluidStack){
-			return canDrain;
 		}
 	}
 
@@ -421,7 +366,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 		public void init(){
 			if(!initHeat){
-				temp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				temp = HeatUtil.convertBiomeTemp(world, pos);
 				initHeat = true;
 				markDirty();
 			}

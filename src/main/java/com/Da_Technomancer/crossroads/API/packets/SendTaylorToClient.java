@@ -1,22 +1,18 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.packets.Message;
+import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 
 /**
  * Sends a Taylor series to the client. Used by Master Axes to reduce packet overhead
  */
-public class SendTaylorToClient extends Message<SendTaylorToClient>{
-
-	public SendTaylorToClient(){
-	}
+public class SendTaylorToClient extends ClientPacket{
 
 	public long timestamp;
 	public float term0;
@@ -24,6 +20,13 @@ public class SendTaylorToClient extends Message<SendTaylorToClient>{
 	public float term2;
 	public float term3;
 	public BlockPos pos;
+
+	private static final Field[] FIELDS = fetchFields(SendTaylorToClient.class, "timestamp", "term0", "term1", "term2", "term3", "pos");
+
+	@SuppressWarnings("unused")
+	public SendTaylorToClient(){
+
+	}
 
 	public SendTaylorToClient(long timestamp, float[] terms, BlockPos pos){
 		this.timestamp = timestamp;
@@ -34,28 +37,22 @@ public class SendTaylorToClient extends Message<SendTaylorToClient>{
 		this.pos = pos;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.CLIENT){
-			Crossroads.logger.error("MessageToClient received on wrong side:" + context.side);
-			return null;
+	protected Field[] getFields(){
+		return FIELDS;
+	}
+
+	@Override
+	protected void run(){
+		World worldClient = Minecraft.getInstance().world;
+		if(worldClient == null){
+			return;
 		}
+		TileEntity te = worldClient.getTileEntity(pos);
 
-		Minecraft minecraft = Minecraft.getInstance();
-		final ClientWorld worldClient = minecraft.world;
-		minecraft.addScheduledTask(new Runnable(){
-			public void run(){
-				if(worldClient == null){
-					return;
-				}
-				TileEntity te = worldClient.getTileEntity(pos);
-
-				if(te instanceof ITaylorReceiver){
-					((ITaylorReceiver) te).receiveSeries(timestamp, new float[] {term0, term1, term2, term3});
-				}
-			}
-		});
-
-		return null;
+		if(te instanceof ITaylorReceiver){
+			((ITaylorReceiver) te).receiveSeries(timestamp, new float[] {term0, term1, term2, term3});
+		}
 	}
 }

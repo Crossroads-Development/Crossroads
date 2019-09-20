@@ -26,7 +26,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 	protected void initHeat(){
 		if(!init){
 			init = true;
-			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			cableTemp = HeatUtil.convertBiomeTemp(world, pos);
 		}
 	}
 
@@ -57,7 +57,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 		ReagentMap toInsert = new ReagentMap();
 		Direction dir = world.getBlockState(pos).get(Properties.HORIZ_FACING);
 
-		double ambientTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+		double ambientTemp = HeatUtil.convertBiomeTemp(world, pos);
 		for(IReagent type : contents.keySet()){
 			//Movement of upwards-flowing phases from alembic to phial
 			if(type.getPhase(cableTemp).flowsUp()){

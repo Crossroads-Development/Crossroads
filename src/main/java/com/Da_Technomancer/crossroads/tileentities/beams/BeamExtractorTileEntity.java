@@ -69,7 +69,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 	public ItemStack decrStackSize(int index, int count){
 		if(index == 0){
 			markDirty();
-			return inv.splitStack(count);
+			return inv.split(count);
 		}
 		return ItemStack.EMPTY;
 	}
@@ -197,7 +197,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 					return out;
 				}
 				markDirty();
-				return inv.splitStack(moved);
+				return inv.split(moved);
 			}
 			return ItemStack.EMPTY;
 		}

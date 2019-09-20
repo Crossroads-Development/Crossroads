@@ -31,7 +31,7 @@ public class GatewayFrameRenderer extends TileEntityRenderer<GatewayFrameTileEnt
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.color(1, 1, 1, (float) Math.sin((frame.getWorld().getTotalWorldTime() + partialTicks) / 10D) / 6F + 5F / 6F);
+		GlStateManager.color(1, 1, 1, (float) Math.sin((frame.getWorld().getGameTime() + partialTicks) / 10D) / 6F + 5F / 6F);
 		float brightX = OpenGlHelper.lastBrightnessX;
 		float brightY = OpenGlHelper.lastBrightnessY;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);

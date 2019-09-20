@@ -1,21 +1,15 @@
 package com.Da_Technomancer.crossroads.API.beams;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class BeamUnitStorage{
 
 	private int[] stored = new int[4];
 
-	public void addBeam(@Nullable BeamUnit mag){
-		if(mag == null){
-			return;
-		}
-
+	public void addBeam(@Nonnull BeamUnit mag){
 		stored[0] += mag.getEnergy();
 		stored[1] += mag.getPotential();
 		stored[2] += mag.getStability();
@@ -28,11 +22,7 @@ public class BeamUnitStorage{
 		}
 	}
 
-	public void subtractBeam(@Nullable BeamUnit mag){
-		if(mag == null){
-			return;
-		}
-
+	public void subtractBeam(@Nonnull BeamUnit mag){
 		stored[0] -= mag.getEnergy();
 		stored[1] -= mag.getPotential();
 		stored[2] -= mag.getStability();
@@ -67,14 +57,14 @@ public class BeamUnitStorage{
 		stored[3] = 0;
 	}
 
-	@Nullable
+	@Nonnull
 	public BeamUnit getOutput(){
-		return isEmpty() ? null : new BeamUnit(stored[0], stored[1], stored[2], stored[3]);
+		return isEmpty() ? BeamUnit.EMPTY : new BeamUnit(stored[0], stored[1], stored[2], stored[3]);
 	}
 
 	public void writeToNBT(@Nonnull String key, CompoundNBT nbt){
 		if(!isEmpty()){
-			nbt.setIntArray(key, stored);
+			nbt.putIntArray(key, stored);
 		}
 	}
 
@@ -97,7 +87,7 @@ public class BeamUnitStorage{
 
 	public static void writeToNBT(@Nonnull String key, CompoundNBT nbt, BeamUnit mag){
 		if(mag != null){
-			nbt.setIntArray(key, new int[] {mag.getEnergy(), mag.getPotential(), mag.getStability(), mag.getVoid()});
+			nbt.putIntArray(key, new int[] {mag.getEnergy(), mag.getPotential(), mag.getStability(), mag.getVoid()});
 		}
 	}
 
@@ -105,7 +95,7 @@ public class BeamUnitStorage{
 		if(nbt.contains(key)){
 			return new BeamUnit(nbt.getIntArray(key));
 		}
-		return null;
+		return BeamUnit.EMPTY;
 	}
 
 	public static BeamUnitStorage readFromNBT(@Nonnull String key, CompoundNBT nbt){

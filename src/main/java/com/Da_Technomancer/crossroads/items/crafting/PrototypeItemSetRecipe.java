@@ -30,7 +30,7 @@ public class PrototypeItemSetRecipe extends IForgeRegistryEntry.Impl<IRecipe> im
 				ItemStack slot = inv.getStackInRowAndColumn(x, y);
 				if(!found){
 					if(!slot.isEmpty() && slot.getItem() != Item.getItemFromBlock(CrossroadsBlocks.prototype)){
-						if(slot.getItem() == toSet && (!slot.hasTagCompound() || !slot.getTag().hasKey(nbtPath))){
+						if(slot.getItem() == toSet && (!slot.hasTag() || !slot.getTag().contains(nbtPath))){
 							found = true;
 							continue;
 						}else{
@@ -85,12 +85,12 @@ public class PrototypeItemSetRecipe extends IForgeRegistryEntry.Impl<IRecipe> im
 		}
 		
 		ItemStack out = item.copy();
-		if(!out.hasTagCompound()){
-			out.setTag(new CompoundNBT());
+		if(!out.hasTag()){
+			out.put(new CompoundNBT());
 		}
-		if(prot.hasTagCompound()){
+		if(prot.hasTag()){
 			//If the prototype doesn't have a tag compound, it's invalid and will be destroyed on craft. 
-			out.getTag().setTag(nbtPath, prot.getTag());
+			out.getTag().put(nbtPath, prot.getTag());
 		}
 		return out;
 	}

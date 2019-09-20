@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.items.BasicItem;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
-import com.Da_Technomancer.crossroads.items.crafting.OreDictCraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.TagCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -238,13 +238,13 @@ public final class OreSetup{
 			CrossroadsBlocks.toRegister.add(fluidBlock);
 
 
-			RecipeHolder.millRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new ItemStack[] {new ItemStack(dust, 2), new ItemStack(Blocks.SAND, 1)});
-			RecipeHolder.millRecipes.put(new OreDictCraftingStack("ingot" + type.getKey()), new ItemStack[] {new ItemStack(dust, 1)});
-			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("ingot" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB));
-			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("nugget" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB / 9));
-			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("dust" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB));
-			RecipeHolder.crucibleRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new FluidStack(fluid, 2 * EnergyConverters.INGOT_MB));
-			RecipeHolder.stampMillRecipes.put(new OreDictCraftingStack("ore" + type.getKey()), new ItemStack(gravel, 3));
+			RecipeHolder.millRecipes.put(new TagCraftingStack("ore" + type.getKey()), new ItemStack[] {new ItemStack(dust, 2), new ItemStack(Blocks.SAND, 1)});
+			RecipeHolder.millRecipes.put(new TagCraftingStack("ingot" + type.getKey()), new ItemStack[] {new ItemStack(dust, 1)});
+			RecipeHolder.crucibleRecipes.put(new TagCraftingStack("ingot" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB));
+			RecipeHolder.crucibleRecipes.put(new TagCraftingStack("nugget" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB / 9));
+			RecipeHolder.crucibleRecipes.put(new TagCraftingStack("dust" + type.getKey()), new FluidStack(fluid, EnergyConverters.INGOT_MB));
+			RecipeHolder.crucibleRecipes.put(new TagCraftingStack("ore" + type.getKey()), new FluidStack(fluid, 2 * EnergyConverters.INGOT_MB));
+			RecipeHolder.stampMillRecipes.put(new TagCraftingStack("ore" + type.getKey()), new ItemStack(gravel, 3));
 			RecipeHolder.oreCleanserRecipes.put(new ItemRecipePredicate(gravel, 0), new ItemStack(clump, 1));
 			RecipeHolder.blastFurnaceRecipes.put(new ItemRecipePredicate(gravel, 0), Pair.of(new FluidStack(fluid, EnergyConverters.INGOT_MB), 2));
 			RecipeHolder.blastFurnaceRecipes.put(new ItemRecipePredicate(clump, 0), Pair.of(new FluidStack(fluid, EnergyConverters.INGOT_MB), 1));

@@ -71,7 +71,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 				coilTE.setStored(coilTE.getStored() - joltQty);
 				markDirty();
 
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, ATTACK_COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
+				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, ATTACK_COLOR_CODES[(int) (world.getGameTime() % 3)]);
 				ent.onStruckByLightning(new LightningBoltEntity(world, ent.posX, ent.posY, ent.posZ, true));
 			}
 		}else if(variant == TeslaCoilTop.TeslaCoilVariants.DECORATIVE){
@@ -104,7 +104,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 							coilTE.setStored(coilTE.getStored() - joltQty);
 							markDirty();
 
-							RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getTotalWorldTime() % 3)]);
+							RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
 							break;
 						}
 					}
@@ -124,7 +124,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		for(int i = 0; i < linked.size(); i++){
-			nbt.setLong("link" + i, linked.get(i).toLong());
+			nbt.putLong("link" + i, linked.get(i).toLong());
 		}
 		return nbt;
 	}
@@ -143,7 +143,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		for(int i = 0; i < linked.size(); i++){
-			nbt.setLong("link" + i, linked.get(i).toLong());
+			nbt.putLong("link" + i, linked.get(i).toLong());
 		}
 		return nbt;
 	}

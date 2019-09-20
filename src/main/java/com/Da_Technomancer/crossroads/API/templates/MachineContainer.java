@@ -9,6 +9,8 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -290,7 +292,7 @@ public abstract class MachineContainer extends Container{
 
 			@Override
 			public ItemStack decrStackSize(int index, int count){
-				return stacks[index].splitStack(count);
+				return stacks[index].split(count);
 			}
 
 			@Override

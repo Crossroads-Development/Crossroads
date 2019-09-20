@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -12,10 +13,10 @@ public class SlimeEffect implements IEffect{
 		if(worldIn.isRemote){
 			return;
 		}
-		worldIn.setBlockToAir(pos);
+		worldIn.destroyBlock(pos, false);
 
-		SlimeEntity slime = new SlimeEntity(worldIn);
+		SlimeEntity slime = new SlimeEntity(EntityType.SLIME, worldIn);
 		slime.setPosition(pos.getX(), pos.getY(), pos.getZ());
-		worldIn.spawnEntity(slime);
+		worldIn.addEntity(slime);
 	}
 }

@@ -66,12 +66,12 @@ public class PrototypePistol extends BeamUsingItem{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(!stack.hasTagCompound()){
-			stack.setTag(new CompoundNBT());
+		if(!stack.hasTag()){
+			stack.put(new CompoundNBT());
 		}
 		tooltip.add("Ammo: " + stack.getTag().getInt("ammo") + "/" + MAG_SIZE);
-		CompoundNBT prototypeNBT = stack.getTag().getCompoundTag("prot");
-		if(prototypeNBT.hasKey("name")){
+		CompoundNBT prototypeNBT = stack.getTag().getCompound("prot");
+		if(prototypeNBT.contains("name")){
 			tooltip.add("Name: " + prototypeNBT.getString("name"));
 		}
 		super.addInformation(stack, world, tooltip, advanced);
@@ -79,7 +79,7 @@ public class PrototypePistol extends BeamUsingItem{
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
-		if(!worldIn.isRemote && hand == Hand.MAIN_HAND && playerIn.getHeldItem(hand).hasTagCompound()){
+		if(!worldIn.isRemote && hand == Hand.MAIN_HAND && playerIn.getHeldItem(hand).hasTag()){
 			CompoundNBT nbt = playerIn.getHeldItem(hand).getTag();
 			int index = nbt.getCompound("prot").getInt("index");
 			if(playerIn.isSneaking()){
@@ -101,7 +101,7 @@ public class PrototypePistol extends BeamUsingItem{
 					bullet.setPosition(playerIn.posX, playerIn.posY + playerIn.getEyeHeight(), playerIn.posZ);
 					bullet.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0, getBulletSpeed(owner.axle.getMotionData()[0]) /*In blocks/tick*/, 0);
 					bullet.ignoreEntity = playerIn;
-					playerIn.world.spawnEntity(bullet);
+					playerIn.world.addEntity(bullet);
 					nbt.putInt("ammo", nbt.getInt("ammo") - 1);
 					playerIn.resetActiveHand();
 					playerIn.world.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_METAL_PRESSPLATE_CLICK_ON, SoundCategory.PLAYERS, 15, ((float) getBulletSpeed(owner.axle.getMotionData()[0])) % 1F);
@@ -115,15 +115,15 @@ public class PrototypePistol extends BeamUsingItem{
 	@Override
 	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
 		super.onUsingTick(stack, player, count);
-		if(!player.world.isRemote && stack.hasTagCompound() && stack.getTag().hasKey("prot") && player.getActiveHand() == Hand.MAIN_HAND){
-			CompoundNBT prototypeNBT = stack.getTag().getCompoundTag("prot");
+		if(!player.world.isRemote && stack.hasTag() && stack.getTag().contains("prot") && player.getActiveHand() == Hand.MAIN_HAND){
+			CompoundNBT prototypeNBT = stack.getTag().getCompound("prot");
 			int index = prototypeNBT.getInt("index");
 
 			CompoundNBT playerNBT = player.getEntityData();
 			if(getMaxItemUseDuration(stack) == count || playerNBT.getBoolean("wasSneak") != player.isSneaking()){
 				if(pistolMap.containsKey(index)){
 					pistolMap.get(index).mouseActive = true;
-					playerNBT.setBoolean("wasSneak", player.isSneaking());
+					playerNBT.putBoolean("wasSneak", player.isSneaking());
 
 					Direction dir = Direction.SOUTH;
 					PrototypeInfo info = PrototypeWorldSavedData.get(true).prototypes.get(index);
@@ -155,13 +155,13 @@ public class PrototypePistol extends BeamUsingItem{
 
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected){
-		if(isSelected && !worldIn.isRemote && stack.hasTagCompound() && stack.getTag().hasKey("prot")){
-			CompoundNBT prototypeNBT = stack.getTag().getCompoundTag("prot");
+		if(isSelected && !worldIn.isRemote && stack.hasTag() && stack.getTag().contains("prot")){
+			CompoundNBT prototypeNBT = stack.getTag().getCompound("prot");
 			int index = prototypeNBT.getInt("index");
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
 			if(!pistolMap.containsKey(index)){
 				if(data.prototypes.size() <= index || data.prototypes.get(index) == null){
-					stack.getTag().removeTag("prot");
+					stack.getTag().remove("prot");
 					return;
 				}
 				PistolPrototypeOwner owner = new PistolPrototypeOwner(index, entityIn);
@@ -174,7 +174,7 @@ public class PrototypePistol extends BeamUsingItem{
 
 			PrototypeWorldProvider.tickChunk(((index % 100) * 2) - 99, (index / 50) - 99);
 
-			if(entityIn instanceof PlayerEntity && BeamManager.beamStage == 0 && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getItem() == CrossroadsItems.beamCage && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).hasTagCompound()){
+			if(entityIn instanceof PlayerEntity && BeamManager.beamStage == 0 && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getItem() == CrossroadsItems.beamCage && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).hasTag()){
 				CompoundNBT nbt = stack.getTag();
 				PrototypeInfo info = data.prototypes.get(index);
 				BlockPos portPos = info.ports[5] == PrototypePortTypes.MAGIC_IN ? info.portPos[5] : null;
@@ -213,8 +213,8 @@ public class PrototypePistol extends BeamUsingItem{
 
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft){
-		if(!worldIn.isRemote && stack.hasTagCompound() && stack.getTag().hasKey("prot")){
-			CompoundNBT prototypeNBT = stack.getTag().getCompoundTag("prot");
+		if(!worldIn.isRemote && stack.hasTag() && stack.getTag().contains("prot")){
+			CompoundNBT prototypeNBT = stack.getTag().getCompound("prot");
 			int index = prototypeNBT.getInt("index");
 			if(pistolMap.containsKey(index)){
 				pistolMap.get(index).mouseActive = false;

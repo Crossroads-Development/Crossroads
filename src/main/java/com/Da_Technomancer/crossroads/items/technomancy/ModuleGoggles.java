@@ -14,7 +14,10 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,7 +45,7 @@ public class ModuleGoggles extends ArmorItem{
 
 	@Override
 	public void onArmorTick(World world, PlayerEntity player, ItemStack stack){
-		if(!world.isRemote && stack.hasTagCompound()){
+		if(!world.isRemote && stack.hasTag()){
 			ArrayList<String> chat = new ArrayList<>();
 			RayTraceResult ray = MiscUtil.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
@@ -67,9 +70,9 @@ public class ModuleGoggles extends ArmorItem{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("Lenses:");
-		if(stack.hasTagCompound()){
+		if(stack.hasTag()){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(stack.getTag().hasKey(lens.name())){
+				if(stack.getTag().contains(lens.name())){
 					if(lens.shouldShowState()){
 						tooltip.add('-' + lens.name() + "-" + (stack.getTag().getBoolean(lens.name()) ? "ENABLED" : "DISABLED"));
 					}else{
@@ -85,9 +88,9 @@ public class ModuleGoggles extends ArmorItem{
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type){
 		StringBuilder path = new StringBuilder(Crossroads.MODID + ":textures/models/armor/goggles/goggle");
-		if(stack.hasTagCompound()){
+		if(stack.hasTag()){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(stack.getTag().hasKey(lens.name())){
+				if(stack.getTag().contains(lens.name())){
 					path.append(lens.getTexturePath());
 				}
 			}

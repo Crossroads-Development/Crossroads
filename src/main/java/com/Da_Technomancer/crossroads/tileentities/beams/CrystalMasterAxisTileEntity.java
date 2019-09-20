@@ -93,7 +93,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 		super.write(nbt);
 		nbt.putInt("time", time);
 		if(currentElement != null){
-			nbt.setString("elem", currentElement.name());
+			nbt.putString("elem", currentElement.name());
 		}
 		return nbt;
 	}

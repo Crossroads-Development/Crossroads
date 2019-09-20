@@ -1,52 +1,47 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.essentials.packets.Message;
+import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.world.World;
 
-@SuppressWarnings("serial")
-public class SendSpinToClient extends Message<SendSpinToClient>{
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 
-	public SendSpinToClient(){
+public class SendSpinToClient extends ClientPacket{
 
-	}
-
-	public int identifier;
+	public byte identifier;
 	public float clientW;
 	public float angle;
 	public BlockPos pos;
 
-	public SendSpinToClient(int identifier, float clientW, float angle, BlockPos pos){
+	private static final Field[] FIELDS = fetchFields(SendSpinToClient.class, "identifier", "clientW", "angle", "pos");
+
+	@SuppressWarnings("unused")
+	public SendSpinToClient(){
+
+	}
+
+	public SendSpinToClient(byte identifier, float clientW, float angle, BlockPos pos){
 		this.identifier = identifier;
 		this.clientW = clientW;
 		this.angle = angle;
 		this.pos = pos;
 	}
 
+	@Nonnull
 	@Override
-	public IMessage handleMessage(MessageContext context){
-		if(context.side != Side.CLIENT){
-			System.err.println("MessageToClient received on wrong side:" + context.side);
-			return null;
+	protected Field[] getFields(){
+		return FIELDS;
+	}
+
+	@Override
+	protected void run(){
+		World worldClient = Minecraft.getInstance().world;
+		TileEntity te = worldClient.getTileEntity(pos);
+		if(te instanceof ISpinReceiver){
+			((ISpinReceiver) te).receiveSpin(identifier, clientW, angle);
 		}
-
-		Minecraft minecraft = Minecraft.getInstance();
-		ClientWorld worldClient = minecraft.world;
-		minecraft.addScheduledTask(new Runnable(){
-			@Override
-			public void run(){
-				TileEntity te = worldClient.getTileEntity(pos);
-				if(te instanceof ISpinReceiver){
-					((ISpinReceiver) te).receiveSpin(identifier, clientW, angle);
-				}
-			}
-		});
-
-		return null;
 	}
 }

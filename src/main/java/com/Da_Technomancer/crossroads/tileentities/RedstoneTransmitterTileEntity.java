@@ -93,7 +93,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		for(int i = 0; i < linked.size(); i++){
-			nbt.setLong("link" + i, linked.get(i).toLong());
+			nbt.putLong("link" + i, linked.get(i).toLong());
 		}
 		return nbt;
 	}
@@ -114,7 +114,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 		super.write(nbt);
 		nbt.putDouble("out", output);
 		for(int i = 0; i < linked.size(); i++){
-			nbt.setLong("link_" + i, linked.get(i).toLong());
+			nbt.putLong("link_" + i, linked.get(i).toLong());
 		}
 		return nbt;
 	}

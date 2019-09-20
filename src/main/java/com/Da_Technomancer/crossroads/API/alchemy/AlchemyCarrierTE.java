@@ -126,7 +126,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		}
 
 		if(!init && useCableHeat()){
-			cableTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+			cableTemp = HeatUtil.convertBiomeTemp(world, pos);
 		}
 		init = true;
 
@@ -134,7 +134,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			correctReag();
 		}
 
-		if(world.getTotalWorldTime() % AlchemyUtil.ALCHEMY_TIME == 0){
+		if(world.getGameTime() % AlchemyUtil.ALCHEMY_TIME == 0){
 			spawnParticles();
 			performTransfer();
 		}
@@ -272,7 +272,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			IReagent typeProduced = AlchemyCore.ITEM_TO_REAGENT.get(stack);
 			if(typeProduced != null && contents.getTotalQty() < transferCapacity()){
 				double itemTemp;
-				double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+				double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
 				if(biomeTemp < typeProduced.getMeltingPoint()){
 					itemTemp = biomeTemp;
 				}else{
@@ -457,7 +457,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 					if(doFill){
 						int reagToFill = canAccept / AlchemyUtil.MB_PER_REAG;
 						double fluidTemp;
-						double biomeTemp = HeatUtil.convertBiomeTemp(world.getBiomeForCoordsBody(pos).getTemperature(pos));
+						double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
 						if(biomeTemp < typ.getBoilingPoint() && biomeTemp >= typ.getMeltingPoint()){
 							fluidTemp = biomeTemp;
 						}else if(resource.getFluid().getTemperature(resource) < typ.getBoilingPoint() && resource.getFluid().getTemperature(resource) >= typ.getMeltingPoint()){

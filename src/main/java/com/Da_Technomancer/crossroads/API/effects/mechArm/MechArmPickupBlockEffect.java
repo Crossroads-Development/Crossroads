@@ -23,7 +23,7 @@ public class MechArmPickupBlockEffect implements IMechArmEffect{
 			if(ent.getPassengers().size() == 0){
 				ItemEntity heldStackEnt = new ItemEntity(world, posX, posY, posZ, drops.get(0));
 				heldStackEnt.startRiding(ent, true);
-				world.spawnEntity(heldStackEnt);
+				world.addEntity(heldStackEnt);
 				drops.remove(0);
 			}else{
 				if(ent.getPassengers().get(0) instanceof ItemEntity){
