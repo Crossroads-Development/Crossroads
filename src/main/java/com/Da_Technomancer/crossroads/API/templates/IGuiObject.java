@@ -1,32 +1,13 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.IGuiEventListener;
 
-public interface IGuiObject{
-	
-	/**
-	 * @param key The key pressed.
-	 * @param keyCode the Key Code.
-	 * @return Whether it handled the key press.
-	 */
-	public boolean buttonPress(char key, int keyCode);
-	
-	/**
-	 * @param x X coordinate of click.
-	 * @param y Y coordinate of click.
-	 * @param button The mouse button pressed. 0: left, 1: right.
-	 * @return Whether it handled the mouse click.
-	 */
-	public boolean mouseClicked(int x, int y, int button);
+/**
+ * An IGuiEventListener that MachineGuis will automatically render if added as a child
+ */
+public interface IGuiObject extends IGuiEventListener{
 
-	/**
-	 * Must have no side effects
-	 * @param x X coordinate
-	 * @param y Y Coordinate
-	 * @return Whether this position is inside this object
-	 */
-	public boolean mouseOver(int x, int y);
-	
 	/**
 	 * Draws the background layer.
 	 * 

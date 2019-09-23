@@ -43,15 +43,15 @@ public class MathAxisGuiContainer extends ContainerScreen{
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks){
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
+	public void render(int mouseX, int mouseY, float partialTicks){
+		renderBackground();
+		super.render(mouseX, mouseY, partialTicks);
 		renderHoveredToolTip(mouseX, mouseY);
-		if(buttons.mouseOver(mouseX, mouseY)){
+		if(buttons.isMouseOver(mouseX, mouseY)){
 			MathAxisTileEntity.Mode mode = te.getMode();
 
 			for(int i = 0; i < buttonArray.length; i++){
-				if(buttonArray[i].mouseOver(mouseX, mouseY)){
+				if(buttonArray[i].isMouseOver(mouseX, mouseY)){
 					mode = MathAxisTileEntity.Mode.values()[i];
 					break;
 				}
@@ -89,7 +89,7 @@ public class MathAxisGuiContainer extends ContainerScreen{
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(!buttons.buttonPress(key, keyCode)){
+		if(!buttons.charTyped(key, keyCode)){
 			super.keyTyped(key, keyCode);
 		}
 	}

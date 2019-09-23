@@ -12,9 +12,9 @@ public class OreCleanserContainer extends MachineContainer{
 
 	@Override
 	protected void addSlots(){
-		addSlotToContainer(new StrictSlot(te, 0, 26, 53));//Gravel
-		addSlotToContainer(new OutputSlot(te, 1, 44, 53));//Clumps
-		addSlotToContainer(new FluidSlot(this, 98, 18, 98, 53));
+		addSlot(new StrictSlot(te, 0, 26, 53));//Gravel
+		addSlot(new OutputSlot(te, 1, 44, 53));//Clumps
+		addSlot(new FluidSlot(this, 98, 18, 98, 53));
 	}
 
 	@Override

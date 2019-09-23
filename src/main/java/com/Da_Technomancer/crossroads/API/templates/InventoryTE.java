@@ -1,13 +1,14 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -16,16 +17,31 @@ import javax.annotation.Nullable;
 public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 
 	protected final ItemStack[] inventory;
-	/**
-	 * Only used on the render side
-	 */
-	protected final short[][] clientFluids = new short[fluidTanks()][2];
+	public final FluidSlotManager[] fluidManagers = new FluidSlotManager[fluidTanks()];
+	public final IntReferenceHolder rotaryReference;
+	public final IntReferenceHolder heatReference;
+
 
 	public InventoryTE(TileEntityType<? extends InventoryTE> type, int invSize){
 		super(type);
 		inventory = new ItemStack[invSize];
 		for(int i = 0; i < invSize; i++){
 			inventory[i] = ItemStack.EMPTY;
+		}
+		for(int i = 0; i < fluids.length; i++){
+			fluidManagers[i] = new FluidSlotManager(fluids[i], fluidProps[i].capacity);
+		}
+		if(useRotary()){
+			rotaryReference = IntReferenceHolder.single();
+			rotaryReference.set((int) Math.round(motData[0] * 100D));
+		}else{
+			rotaryReference = null;
+		}
+		if(useHeat()){
+			heatReference = IntReferenceHolder.single();
+			heatReference.set((int) temp);
+		}else{
+			heatReference = null;
 		}
 	}
 
@@ -35,7 +51,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 		for(int i = 0; i < inventory.length; i++){
 			if(!inventory[i].isEmpty()){
 				CompoundNBT stackTag = new CompoundNBT();
-				inventory[i].writeToNBT(stackTag);
+				inventory[i].write(stackTag);
 				nbt.put("inv_" + i, stackTag);
 			}
 		}
@@ -43,39 +59,32 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 	}
 
 	@Override
+	public void markDirty(){
+		super.markDirty();
+		for(int i = 0; i < fluidManagers.length; i++){
+			fluidManagers[i].updateState(fluids[i]);
+		}
+		if(useRotary()){
+			rotaryReference.set((int) Math.round(motData[0] * 100D));
+		}
+		if(useHeat()){
+			heatReference.set((int) temp);
+		}
+	}
+
+	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(nbt.contains("inv_" + i)){
-				inventory[i] = new ItemStack(nbt.getCompound("inv_" + i));
+				inventory[i] = ItemStack.read(nbt.getCompound("inv_" + i));
 			}
 		}
 	}
 
 	@Override
-	public boolean hasCustomName(){
-		return false;
-	}
-
-	@Override
-	@Nonnull
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent(getName());
-	}
-
-	@Override
 	public boolean isUsableByPlayer(PlayerEntity player){
-		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
-	}
-
-	@Override
-	public void openInventory(PlayerEntity player){
-
-	}
-
-	@Override
-	public void closeInventory(PlayerEntity player){
-
+		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64;
 	}
 
 	@Override
@@ -127,13 +136,9 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 		markDirty();
 	}
 
-	protected int getSlotLimit(int slot){
-		return 64;
-	}
-
 	@Override
 	public int getInventoryStackLimit(){
-		return inventory.length == 0 ? 0 : getSlotLimit(0);
+		return inventory.length == 0 ? 0 : 64;
 	}
 
 	@Override
@@ -158,56 +163,6 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 			out[i] = i;
 		}
 		return out;
-	}
-
-	@Override
-	public int getField(int id){
-		if(id < 2 * fluidTanks()){
-			if(world.isRemote){
-				return clientFluids[id / 2][id % 2];
-			}
-			return FluidGuiObject.fluidToPacket(fluids[id / 2])[id % 2];
-		}else{
-			id -= 2 * fluidTanks();
-			if(useHeat()){
-				if(id == 0){
-					return (int) temp;
-				}
-				id--;
-			}
-			if(useRotary() && id == 0){
-				return (int) Math.round(motData[0] * 100);
-			}
-		}
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value){
-		if(id < 2 * fluidTanks()){
-			clientFluids[id / 2][id % 2] = (short) value;
-		}else{
-			id -= 2 * fluidTanks();
-			if(useHeat()){
-				if(id == 0){
-					temp = value;
-					return;
-				}
-				id -= 1;
-			}
-			if(useRotary() && id == 0){
-				motData[0] = value / 100D;
-			}
-		}
-	}
-
-	/**
-	 * InventoryTE reserves the first fluidTanks() * 2 fields for fluids, an additional field for temperature if useHeat(), and an additional field for speed if useRotary()
-	 * @return The number of fields to keep synced
-	 */
-	@Override
-	public int getFieldCount(){
-		return 2 * fluidTanks() + (useHeat() ? 1 : 0) + (useRotary() ? 1 : 0);
 	}
 
 	protected class ItemHandler implements IItemHandlerModifiable{
@@ -235,9 +190,9 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 		@Nonnull
 		@Override
 		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate){
-			if(isItemValidForSlot(slot, stack) && (inventory[slot].isEmpty() || ItemStack.areItemsEqual(stack, inventory[slot]) && ItemStack.areItemStackTagsEqual(stack, inventory[slot]))){
+			if(isItemValidForSlot(slot, stack) && (inventory[slot].isEmpty() || BlockUtil.sameItem(stack, inventory[slot]))){
 				int oldCount = inventory[slot].getCount();
-				int moved = Math.min(stack.getCount(), Math.min(stack.getMaxStackSize(), InventoryTE.this.getSlotLimit(slot)) - oldCount);
+				int moved = Math.min(stack.getCount(), stack.getMaxStackSize() - oldCount);
 				ItemStack out = stack.copy();
 				out.setCount(stack.getCount() - moved);
 
@@ -261,7 +216,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 
 			int moved = Math.min(amount, inventory[slot].getCount());
 			if(simulate){
-				return new ItemStack(inventory[slot].getItem(), moved, inventory[slot].getMetadata());
+				return new ItemStack(inventory[slot].getItem(), moved, inventory[slot].hasTag() ? inventory[slot].getTag().copy() : null);
 			}
 			markDirty();
 			return inventory[slot].split(moved);
@@ -269,7 +224,12 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory{
 
 		@Override
 		public int getSlotLimit(int slot){
-			return InventoryTE.this.getSlotLimit(slot);
+			return 64;
+		}
+
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
+			return isItemValidForSlot(slot, stack);
 		}
 
 		@Override

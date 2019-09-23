@@ -35,9 +35,9 @@ public class DetailedCrafterGuiContainer extends ContainerScreen{
 	}
 	
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks){
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
+	public void render(int mouseX, int mouseY, float partialTicks){
+		renderBackground();
+		super.render(mouseX, mouseY, partialTicks);
 		renderHoveredToolTip(mouseX, mouseY);
 	}
 

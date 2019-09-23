@@ -37,9 +37,9 @@ public class PrototypePortGuiContainer extends ContainerScreen{
 	}
 	
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks){
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
+	public void render(int mouseX, int mouseY, float partialTicks){
+		renderBackground();
+		super.render(mouseX, mouseY, partialTicks);
 		renderHoveredToolTip(mouseX, mouseY);
 	}
 
@@ -97,7 +97,7 @@ public class PrototypePortGuiContainer extends ContainerScreen{
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(!descBar.buttonPress(key, keyCode)){
+		if(!descBar.charTyped(key, keyCode)){
 			super.keyTyped(key, keyCode);
 		}
 	}

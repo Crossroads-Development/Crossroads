@@ -1,18 +1,16 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import java.awt.Color;
-import java.util.function.Predicate;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.Crossroads;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
+import java.awt.*;
+import java.util.function.Predicate;
 
 public class TextBarGuiObject implements IGuiObject{
 	
@@ -55,7 +53,7 @@ public class TextBarGuiObject implements IGuiObject{
 	}
 	
 	@Override
-	public boolean buttonPress(char key, int keyCode){
+	public boolean charTyped(char key, int keyCode){
 		if(selected){
 			//Enter & Esc
 			if(key == 13 || key == 27){
@@ -101,8 +99,8 @@ public class TextBarGuiObject implements IGuiObject{
 	}
 
 	@Override
-	public boolean mouseClicked(int x, int y, int button){
-		if(!selected && mouseOver(x, y)){
+	public boolean mouseClicked(double x, double y, int button){
+		if(!selected && isMouseOver(x, y)){
 			selected = !selected;
 			return true;
 		}
@@ -112,7 +110,7 @@ public class TextBarGuiObject implements IGuiObject{
 	}
 
 	@Override
-	public boolean mouseOver(int x, int y){
+	public boolean isMouseOver(double x, double y){
 		return x >= this.x && x <= endX && y >= this.y && y <= endY;
 	}
 
@@ -120,12 +118,12 @@ public class TextBarGuiObject implements IGuiObject{
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
 		Minecraft.getInstance().getTextureManager().bindTexture(BAR);
 		if(selected){
-			GlStateManager.color(1, 1, 0);
+			GlStateManager.color3f(1, 1, 0);
 		}
-		AbstractGui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 2, 20, 300, 20);
-		AbstractGui.drawModalRectWithCustomSizedTexture(x + 2, y, 2, 0, endX - x - 4, 20, 300, 20);
-		AbstractGui.drawModalRectWithCustomSizedTexture(endX - 2, y, 298, 0, 2, 20, 300, 20);
-		GlStateManager.color(1, 1, 1);
+		AbstractGui.blit(x, y, 0, 0, 2, 20, 300, 20);
+		AbstractGui.blit(x + 2, y, 2, 0, endX - x - 4, 20, 300, 20);
+		AbstractGui.blit(endX - 2, y, 298, 0, 2, 20, 300, 20);
+		GlStateManager.color3f(1, 1, 1);
 		
 		return true;
 	}
@@ -137,7 +135,7 @@ public class TextBarGuiObject implements IGuiObject{
 		}
 		char indexChar = index == text.length() ? '_' : '|';
 		fontRenderer.drawStringWithShadow(text.isEmpty() ? emptyText : text.substring(0, index) + indexChar + text.substring(index), 5 + baseX, 7 + baseY, text.isEmpty() ? Color.GRAY.getRGB() : Color.WHITE.getRGB());
-		GlStateManager.color(1, 1, 1);
+		GlStateManager.color3f(1, 1, 1);
 		return true;
 	}
 	

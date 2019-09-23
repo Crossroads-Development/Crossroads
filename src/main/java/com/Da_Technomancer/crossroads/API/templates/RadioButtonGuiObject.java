@@ -38,12 +38,12 @@ public class RadioButtonGuiObject implements IGuiObject{
 	}
 
 	@Override
-	public boolean buttonPress(char key, int keyCode){
+	public boolean charTyped(char key, int keyCode){
 		return false;
 	}
 
 	@Override
-	public boolean mouseClicked(int x, int y, int button){
+	public boolean mouseClicked(double x, double y, int button){
 		if(!locked){
 			for(int i = 0; i < buttons.size(); i++){
 				if(i != pressed){
@@ -75,9 +75,9 @@ public class RadioButtonGuiObject implements IGuiObject{
 	}
 
 	@Override
-	public boolean mouseOver(int x, int y){
+	public boolean isMouseOver(double x, double y){
 		for(ToggleButtonGuiObject button : buttons){
-			if(button.mouseOver(x, y)){
+			if(button.isMouseOver(x, y)){
 				return true;
 			}
 		}

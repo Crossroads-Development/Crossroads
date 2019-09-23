@@ -61,7 +61,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT out = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
-			out.setInteger("mode_" + i, !locked && hasMatch[i] ? connectMode[i] : 0);
+			out.putInt("mode_" + i, !locked && hasMatch[i] ? connectMode[i] : 0);
 		}
 		return out;
 	}

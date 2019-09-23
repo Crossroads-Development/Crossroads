@@ -5,20 +5,20 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class EnergizeEffect implements IEffect{
 
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 		TileEntity te = worldIn.getTileEntity(pos);
-		IHeatHandler heatHandler;
-		if(te != null && (heatHandler = te.getCapability(Capabilities.HEAT_CAPABILITY, dir)) != null){
-			heatHandler.addHeat(mult);
+		LazyOptional<IHeatHandler> heatHandler;
+		if(te != null && (heatHandler = te.getCapability(Capabilities.HEAT_CAPABILITY, dir)).isPresent()){
+			heatHandler.orElseThrow(NullPointerException::new).addHeat(mult);
 			//Effect in crystal master axis
 		}else{
 			BlockState state = worldIn.getBlockState(pos);
@@ -38,9 +38,10 @@ public class EnergizeEffect implements IEffect{
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 			TileEntity te = worldIn.getTileEntity(pos);
-			IHeatHandler heatHandler;
-			if(te != null && (heatHandler = te.getCapability(Capabilities.HEAT_CAPABILITY, dir)) != null){
-				heatHandler.addHeat(-Math.min(mult, heatHandler.getTemp() - HeatUtil.ABSOLUTE_ZERO));
+			LazyOptional<IHeatHandler> heatOpt;
+			if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, dir)).isPresent()){
+				IHeatHandler handler = heatOpt.orElseThrow(NullPointerException::new);
+				handler.addHeat(-Math.min(mult, handler.getTemp() - HeatUtil.ABSOLUTE_ZERO));
 				//Effect in crystal master axis
 			}
 		}

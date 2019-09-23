@@ -12,8 +12,8 @@ public class WaterCentrifugeContainer extends MachineContainer{
 
 	@Override
 	protected void addSlots(){
-		addSlotToContainer(new OutputSlot(te, 0, 40, 54));//Salt
-		addSlotToContainer(new FluidSlot(this, 100, 19, 100, 54));
+		addSlot(new OutputSlot(te, 0, 40, 54));//Salt
+		addSlot(new FluidSlot(this, 100, 19, 100, 54));
 	}
 
 	@Override

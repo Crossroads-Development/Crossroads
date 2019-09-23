@@ -48,23 +48,23 @@ public class DetailedCrafterContainer extends Container{
 		// input 0-8
 		for(int x = 0; x < 3; x++){
 			for(int y = 0; y < 3; y++){
-				addSlotToContainer(new Slot(inInv, (x * 3) + y, 30 + y * 18, 17 + x * 18));
+				addSlot(new Slot(inInv, (x * 3) + y, 30 + y * 18, 17 + x * 18));
 			}
 		}
 
 		// output 9
-		addSlotToContainer(new SlotCraftingFlexible(playerInv.player, inInv, outInv, 0, 124, 35));
+		addSlot(new SlotCraftingFlexible(playerInv.player, inInv, outInv, 0, 124, 35));
 
 		// Player Inventory, Slots 9-35, Slot IDs 10-36
 		for(int y = 0; y < 3; ++y){
 			for(int x = 0; x < 9; ++x){
-				addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
+				addSlot(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
 			}
 		}
 
 		// Player Inventory, Slot 0-8, Slot IDs 37-46
 		for(int x = 0; x < 9; ++x){
-			addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 142));
+			addSlot(new Slot(playerInv, x, 8 + x * 18, 142));
 		}
 	}
 

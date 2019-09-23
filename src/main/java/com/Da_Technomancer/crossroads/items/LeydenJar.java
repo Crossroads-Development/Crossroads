@@ -39,7 +39,7 @@ public class LeydenJar extends Item{
 	
 	public static void setCharge(ItemStack stack, int chargeIn){
 		if(stack.hasTag()){
-			stack.getTag().setInteger("charge", Math.min(chargeIn, MAX_CHARGE));
+			stack.getTag().putInt("charge", Math.min(chargeIn, MAX_CHARGE));
 		}else{
 			CompoundNBT nbt = new CompoundNBT();
 			nbt.putInt("charge", Math.min(chargeIn, MAX_CHARGE));

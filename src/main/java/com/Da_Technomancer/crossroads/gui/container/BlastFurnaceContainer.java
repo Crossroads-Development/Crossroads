@@ -12,10 +12,10 @@ public class BlastFurnaceContainer extends MachineContainer{
 
 	@Override
 	protected void addSlots(){
-		addSlotToContainer(new StrictSlot(te, 0, 8, 35));//Gravel/Clumps
-		addSlotToContainer(new StrictSlot(te, 1, 29, 20));//Carbon
-		addSlotToContainer(new OutputSlot(te, 2, 44, 53));//Slag
-		addSlotToContainer(new FluidSlot(this, 98, 18, 98, 53));
+		addSlot(new StrictSlot(te, 0, 8, 35));//Gravel/Clumps
+		addSlot(new StrictSlot(te, 1, 29, 20));//Carbon
+		addSlot(new OutputSlot(te, 2, 44, 53));//Slag
+		addSlot(new FluidSlot(this, 98, 18, 98, 53));
 	}
 
 	@Override

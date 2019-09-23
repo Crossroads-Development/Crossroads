@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
@@ -35,7 +36,7 @@ public class DirtEffect implements IEffect{
 				break;
 			case 1:
 				worldIn.destroyBlock(pos, false);
-				worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Blocks.OBSIDIAN).setDisplayName(new StringTextComponent("Dirt LvL 3")));
+				worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Blocks.OBSIDIAN).setDisplayName(new StringTextComponent("Dirt LvL 3"))));
 				break;
 			case 2:
 				worldIn.destroyBlock(pos, false);
@@ -64,7 +65,7 @@ public class DirtEffect implements IEffect{
 				break;
 			case 7:
 				worldIn.destroyBlock(pos, false);
-				worldIn.addWeatherEffect(new LightningBoltEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
+				((ServerWorld) worldIn).addLightningBolt(new LightningBoltEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
 				break;
 		}
 

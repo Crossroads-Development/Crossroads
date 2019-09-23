@@ -18,12 +18,12 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -211,6 +211,11 @@ public final class Crossroads{
 		CrossroadsFluids.toRegister.clear();
 	}
 
+	@SubscribeEvent
+	@SuppressWarnings("unused")
+	public void registerWorldgen(RegistryEvent.Register<Feature<?>> e){
+		ModWorldGen.register(e.getRegistry());
+	}
 
 	@SubscribeEvent
 	public void serverLoading(FMLServerStartingEvent e){

@@ -47,9 +47,9 @@ public class ColorChartGuiContainer extends ContainerScreen{
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks){
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
+	public void render(int mouseX, int mouseY, float partialTicks){
+		renderBackground();
+		super.render(mouseX, mouseY, partialTicks);
 		if(Math.pow(xCENTER - mouseX + guiLeft, 2) + Math.pow(yCENTER - mouseY + guiTop, 2) <= RADIUS * RADIUS){
 			Color col = getColor(mouseX - guiLeft, mouseY - guiTop);
 			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
@@ -109,7 +109,7 @@ public class ColorChartGuiContainer extends ContainerScreen{
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(!searchBar.buttonPress(key, keyCode)){
+		if(!searchBar.charTyped(key, keyCode)){
 			super.keyTyped(key, keyCode);
 		}
 	}

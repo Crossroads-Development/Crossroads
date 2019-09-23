@@ -235,9 +235,9 @@ public final class EventHandlerCommon{
 							entityskeletonhorse.setGrowingAge(0);
 							entityskeletonhorse.setPosition(tarX, tarY, tarZ);
 							e.world.addEntity(entityskeletonhorse);
-							e.world.addWeatherEffect(new LightningBoltEntity(e.world, tarX, tarY, tarZ, true));
+							e.world.addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, true));
 						}else{
-							e.world.addWeatherEffect(new LightningBoltEntity(e.world, tarX, tarY, tarZ, false));
+							e.world.addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, false));
 						}
 					}
 				}

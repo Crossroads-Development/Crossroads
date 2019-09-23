@@ -52,11 +52,11 @@ public class GrowEffect implements IEffect{
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 			BlockState state = worldIn.getBlockState(pos);
-			if(state.getBlock() instanceof IGrowable && state.getBlock() != Blocks.DEADBUSH){
+			if(state.getBlock() instanceof IGrowable && state.getBlock() != Blocks.DEAD_BUSH){
 				if(state.getBlock() == Blocks.GRASS){
 					worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
 				}else{
-					worldIn.setBlockState(pos, Blocks.DEADBUSH.getDefaultState());
+					worldIn.setBlockState(pos, Blocks.DEAD_BUSH.getDefaultState());
 				}
 			}
 			double range = Math.sqrt(mult);

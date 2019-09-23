@@ -13,7 +13,7 @@ public class FireboxContainer extends MachineContainer{
 	@Override
 	protected void addSlots(){
 		// Fuel slot, ID 0
-		addSlotToContainer(new StrictSlot(te, 0, 80, 23));
+		addSlot(new StrictSlot(te, 0, 80, 23));
 	}
 
 	@Override

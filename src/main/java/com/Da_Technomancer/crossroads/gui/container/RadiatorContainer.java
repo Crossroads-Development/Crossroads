@@ -12,7 +12,7 @@ public class RadiatorContainer extends MachineContainer{
 
 	@Override
 	protected void addSlots(){
-		addSlotToContainer(new FluidSlot(this, 100, 19, 100, 54));
+		addSlot(new FluidSlot(this, 100, 19, 100, 54));
 	}
 
 	@Override

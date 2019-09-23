@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import java.awt.Color;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.SoundEvents;
+
+import java.awt.*;
 
 public class ToggleButtonGuiObject implements IGuiObject{
 
@@ -41,14 +41,14 @@ public class ToggleButtonGuiObject implements IGuiObject{
 	}
 	
 	@Override
-	public boolean buttonPress(char key, int keyCode){
+	public boolean charTyped(char key, int keyCode){
 		return false;
 	}
 
 	@Override
-	public boolean mouseClicked(int x, int y, int button){
-		if(mouseOver(x, y)){
-			Minecraft.getInstance().getSoundHandler().playSound(SimpleSound.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+	public boolean mouseClicked(double x, double y, int button){
+		if(isMouseOver(x, y)){
+			Minecraft.getInstance().getSoundHandler().playSound(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			depressed = !depressed;
 			return true;
 		}
@@ -56,14 +56,14 @@ public class ToggleButtonGuiObject implements IGuiObject{
 	}
 
 	@Override
-	public boolean mouseOver(int x, int y){
+	public boolean isMouseOver(double x, double y){
 		return x >= this.x && x <= endX && y >= this.y && y <= endY;
 	}
 
 	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
-		AbstractGui.drawRect(x, y, endX, endY, depressed ? Color.DARK_GRAY.getRGB() : Color.GRAY.getRGB());
-		GlStateManager.color(1, 1, 1);
+		AbstractGui.fill(x, y, endX, endY, depressed ? Color.DARK_GRAY.getRGB() : Color.GRAY.getRGB());
+		GlStateManager.color3f(1, 1, 1);
 		return true;
 	}
 

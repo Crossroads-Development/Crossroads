@@ -192,8 +192,8 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 	protected class BeamHandler implements IBeamHandler{
 
 		@Override
-		public void setMagic(BeamUnit mag){
-			if(mag != null){
+		public void setMagic(@Nonnull BeamUnit mag){
+			if(!mag.isEmpty()){
 				queued[BeamManager.cycleNumber == activeCycle ? 0 : 1].addBeam(mag);
 				markDirty();
 			}

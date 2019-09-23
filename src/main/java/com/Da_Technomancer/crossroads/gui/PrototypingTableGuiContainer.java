@@ -87,7 +87,7 @@ public class PrototypingTableGuiContainer extends MachineGUI implements OutputLo
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(!textBar.buttonPress(key, keyCode)){
+		if(!textBar.charTyped(key, keyCode)){
 			super.keyTyped(key, keyCode);
 		}
 	}

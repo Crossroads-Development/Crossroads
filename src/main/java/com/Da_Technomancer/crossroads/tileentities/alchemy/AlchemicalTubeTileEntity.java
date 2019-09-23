@@ -136,7 +136,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT out = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
-			out.setInteger("mode_" + i, hasMatch[i] ? connectMode[i] : 0);
+			out.putInt("mode_" + i, hasMatch[i] ? connectMode[i] : 0);
 		}
 		return out;
 	}

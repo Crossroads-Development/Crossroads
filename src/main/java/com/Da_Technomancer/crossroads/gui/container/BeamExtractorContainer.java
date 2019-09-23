@@ -17,7 +17,7 @@ public class BeamExtractorContainer extends Container{
 		this.te = te;
 
 		// Fuel slot, ID 0
-		addSlotToContainer(new Slot(te, 0, 80, 53){
+		addSlot(new Slot(te, 0, 80, 53){
 			@Override
 			public boolean isItemValid(ItemStack stack){
 				return inventory.isItemValidForSlot(getSlotIndex(), stack);
@@ -26,13 +26,13 @@ public class BeamExtractorContainer extends Container{
 
 		//Hotbar
 		for(int x = 0; x < 9; ++x){
-			addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 84 + 58));
+			addSlot(new Slot(playerInv, x, 8 + x * 18, 84 + 58));
 		}
 
 		//Crossroads player inv
 		for(int y = 0; y < 3; ++y){
 			for(int x = 0; x < 9; ++x){
-				addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
+				addSlot(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
 			}
 		}
 	}

@@ -59,7 +59,8 @@ public final class MiscUtil{
 			tag.put(Crossroads.MODID, new CompoundNBT());
 		}
 		CompoundNBT out = tag.getCompound(Crossroads.MODID);
-		out.putBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the render side is to get it on server side and send it via packet. Feel free to replace this with a better way.
+		//TODO encode multiplayer
+		// out.putBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the render side is to get it on server side and send it via packet. Feel free to replace this with a better way.
 		return out;
 	}
 

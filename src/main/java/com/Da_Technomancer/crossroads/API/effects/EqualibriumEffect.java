@@ -13,7 +13,7 @@ public class EqualibriumEffect implements IEffect{
 		EntityGhostMarker marker = new EntityGhostMarker(worldIn, EntityGhostMarker.EnumMarkerType.EQUALIBRIUM);
 		marker.setPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 		CompoundNBT rangeData = new CompoundNBT();
-		rangeData.setInteger("range", (int) mult);
+		rangeData.putInt("range", mult);
 		marker.data = rangeData;
 		worldIn.addEntity(marker);
 
@@ -27,7 +27,7 @@ public class EqualibriumEffect implements IEffect{
 			EntityGhostMarker marker = new EntityGhostMarker(worldIn, EntityGhostMarker.EnumMarkerType.VOID_EQUALIBRIUM);
 			marker.setPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 			CompoundNBT rangeData = new CompoundNBT();
-			rangeData.setInteger("range", (int) mult);
+			rangeData.putInt("range", mult);
 			marker.data = rangeData;
 			worldIn.addEntity(marker);
 

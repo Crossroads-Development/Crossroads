@@ -51,30 +51,30 @@ public class ButtonGuiObject implements IGuiObject{
 		this.endY = height + this.y;
 		this.text = text;
 	}
-	
+
 	@Override
-	public boolean buttonPress(char key, int keyCode){
+	public boolean charTyped(char key, int keyCode){
 		return false;
 	}
 
 	@Override
-	public boolean mouseClicked(int x, int y, int button){
-		if(mouseOver(x, y)){
-			Minecraft.getInstance().getSoundHandler().playSound(SimpleSound.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+	public boolean mouseClicked(double x, double y, int button){
+		if(isMouseOver(x, y)){
+			Minecraft.getInstance().getSoundHandler().playSound(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean mouseOver(int x, int y){
+	public boolean isMouseOver(double x, double y){
 		return x >= this.x && x <= endX && y >= this.y && y <= endY;
 	}
 
 	@Override
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
-		AbstractGui.drawRect(x, y, endX, endY, mouseX >= x && mouseX <= endX && mouseY >= y && mouseY <= endY ? Color.DARK_GRAY.getRGB() : Color.GRAY.getRGB());
-		GlStateManager.color(1, 1, 1);
+		AbstractGui.fill(x, y, endX, endY, mouseX >= x && mouseX <= endX && mouseY >= y && mouseY <= endY ? Color.DARK_GRAY.getRGB() : Color.GRAY.getRGB());
+		GlStateManager.color3f(1, 1, 1);
 		return true;
 	}
 

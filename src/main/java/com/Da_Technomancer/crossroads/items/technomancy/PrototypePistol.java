@@ -86,7 +86,7 @@ public class PrototypePistol extends BeamUsingItem{
 				if(nbt.getInt("ammo") < MAG_SIZE){
 					for(int i = 0; i < playerIn.inventory.getSizeInventory(); i++){
 						if(playerIn.inventory.getStackInSlot(i).getItem() == Items.IRON_NUGGET){
-							playerIn.getHeldItem(hand).getTag().setInteger("ammo", 1 + playerIn.getHeldItem(hand).getTag().getInt("ammo"));
+							playerIn.getHeldItem(hand).getTag().putInt("ammo", 1 + playerIn.getHeldItem(hand).getTag().getInt("ammo"));
 							playerIn.inventory.decrStackSize(i, 1);
 							worldIn.playSound(null, playerIn.getPosition(), SoundEvents.ITEM_ARMOR_EQUIP_IRON, SoundCategory.PLAYERS, 5, 1F);
 							return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));

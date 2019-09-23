@@ -95,7 +95,7 @@ public interface ILinkTE extends ILongReceiver{
 		if(player.isSneaking()){
 			player.sendMessage(new StringTextComponent("Clearing links"));
 			clearLinks();
-		}else if(wrench.hasTag() && wrench.getTag().contains(POS_NBT) && wrench.getTag().getInt(DIM_NBT) == player.world.provider.getDimension()){
+		}else if(wrench.hasTag() && wrench.getTag().contains(POS_NBT) && wrench.getTag().getString(DIM_NBT).equals(player.world.getDimension().getType().getRegistryName().toString())){
 			BlockPos prev = BlockPos.fromLong(wrench.getTag().getLong(POS_NBT));
 
 			TileEntity te = player.world.getTileEntity(prev);
@@ -114,7 +114,7 @@ public interface ILinkTE extends ILongReceiver{
 			}
 
 			wrench.getTag().putLong(POS_NBT, getTE().getPos().toLong());
-			wrench.getTag().putInt(DIM_NBT, getTE().getWorld().provider.getDimension());
+			wrench.getTag().putString(DIM_NBT, getTE().getWorld().getDimension().getType().getRegistryName().toString());
 			player.sendMessage(new StringTextComponent("Beginning linking"));
 			return wrench;
 		}

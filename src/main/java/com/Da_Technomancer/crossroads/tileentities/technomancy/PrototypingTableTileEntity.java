@@ -207,7 +207,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 				}
 				inventory[0].shrink(3);
 				inventory[2] = inventory[1].copy();
-				inventory[2].getTag().setInteger("index", newChunk);
+				inventory[2].getTag().putInt("index", newChunk);
 				inventory[2].getTag().putString("name", message);
 				markDirty();
 				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototype copied." , Color.WHITE, false), player);
@@ -309,7 +309,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 				inventory[0].shrink(3);
 				inventory[2] = new ItemStack(CrossroadsBlocks.prototype, 1);
 				inventory[2].put(new CompoundNBT());
-				inventory[2].getTag().setInteger("index", newChunk);
+				inventory[2].getTag().putInt("index", newChunk);
 				inventory[2].getTag().putString("name", message);
 				for(int i = 0; i < 6; i++){
 					if(descArray[i] != null && !descArray[i].isEmpty()){

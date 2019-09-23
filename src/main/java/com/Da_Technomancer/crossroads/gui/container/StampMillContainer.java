@@ -12,7 +12,7 @@ public class StampMillContainer extends MachineContainer{
 
 	@Override
 	protected void addSlots(){
-		addSlotToContainer(new StrictSlot(te, 0, 25, 36));
-		addSlotToContainer(new OutputSlot(te, 1, 125, 36));
+		addSlot(new StrictSlot(te, 0, 25, 36));
+		addSlot(new OutputSlot(te, 1, 125, 36));
 	}
 }

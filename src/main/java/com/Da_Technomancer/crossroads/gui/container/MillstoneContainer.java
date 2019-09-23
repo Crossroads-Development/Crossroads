@@ -13,11 +13,11 @@ public class MillstoneContainer extends MachineContainer{
 	@Override
 	protected void addSlots(){
 		// input 0
-		addSlotToContainer(new StrictSlot(te, 0, 80, 17));
+		addSlot(new StrictSlot(te, 0, 80, 17));
 
 		// output 1-3
 		for(int x = 0; x < 3; x++){
-			addSlotToContainer(new OutputSlot(te, 1 + x, 62 + (x * 18), 53));
+			addSlot(new OutputSlot(te, 1 + x, 62 + (x * 18), 53));
 		}
 	}
 }

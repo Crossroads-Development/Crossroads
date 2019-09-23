@@ -10,6 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -18,14 +20,14 @@ public class ChargeEffect implements IEffect{
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 		TileEntity te = worldIn.getTileEntity(pos);
-		IEnergyStorage energy;
-		if(te != null && (energy = te.getCapability(CapabilityEnergy.ENERGY, dir)) != null){
-			energy.receiveEnergy(CrossroadsConfig.fePerCharge.get(), false);
+		LazyOptional<IEnergyStorage> opt;
+		if(te != null && (opt = te.getCapability(CapabilityEnergy.ENERGY, dir)).isPresent()){
+			opt.orElseThrow(NullPointerException::new).receiveEnergy(CrossroadsConfig.fePerCharge.get(), false);
 			return;
 		}
 
 		if(mult >= 16){
-			worldIn.addWeatherEffect(new LightningBoltEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
+			((ServerWorld) worldIn).addLightningBolt(new LightningBoltEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
 		}
 
 		BlockState state = worldIn.getBlockState(pos);
@@ -39,9 +41,9 @@ public class ChargeEffect implements IEffect{
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 			TileEntity te = worldIn.getTileEntity(pos);
-			IEnergyStorage energy;
-			if(te != null && (energy = te.getCapability(CapabilityEnergy.ENERGY, dir)) != null){
-				energy.extractEnergy(CrossroadsConfig.fePerCharge.get(), false);
+			LazyOptional<IEnergyStorage> energy;
+			if(te != null && (energy = te.getCapability(CapabilityEnergy.ENERGY, dir)).isPresent()){
+				energy.orElseThrow(NullPointerException::new).extractEnergy(CrossroadsConfig.fePerCharge.get(), false);
 				return;
 			}
 

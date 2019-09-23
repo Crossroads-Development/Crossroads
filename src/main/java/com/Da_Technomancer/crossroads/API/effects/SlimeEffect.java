@@ -15,7 +15,7 @@ public class SlimeEffect implements IEffect{
 		}
 		worldIn.destroyBlock(pos, false);
 
-		SlimeEntity slime = new SlimeEntity(EntityType.SLIME, worldIn);
+		SlimeEntity slime = EntityType.SLIME.create(worldIn);
 		slime.setPosition(pos.getX(), pos.getY(), pos.getZ());
 		worldIn.addEntity(slime);
 	}

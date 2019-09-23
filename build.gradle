@@ -14,7 +14,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 version = "$mc_version-$mod_version"
-group = "mod.technomancer.crossroads"
+group = "com.technomancer.crossroads"
 archivesBaseName = "crossroads"
 
 sourceCompatibility = 1.8

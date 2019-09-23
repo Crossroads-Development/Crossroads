@@ -46,9 +46,9 @@ public class RedstoneKeyboardGuiContainer extends ContainerScreen{
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks){
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
+	public void render(int mouseX, int mouseY, float partialTicks){
+		renderBackground();
+		super.render(mouseX, mouseY, partialTicks);
 		renderHoveredToolTip(mouseX, mouseY);
 	}
 
@@ -219,7 +219,7 @@ public class RedstoneKeyboardGuiContainer extends ContainerScreen{
 
 	@Override
 	protected void keyTyped(char key, int keyCode) throws IOException{
-		if(!textBar.buttonPress(key, keyCode) && !clearButton.buttonPress(key, keyCode) && !multButton.buttonPress(key, keyCode) && !divButton.buttonPress(key, keyCode) && !piButton.buttonPress(key, keyCode) && !eulerButton.buttonPress(key, keyCode)){
+		if(!textBar.charTyped(key, keyCode) && !clearButton.charTyped(key, keyCode) && !multButton.charTyped(key, keyCode) && !divButton.charTyped(key, keyCode) && !piButton.charTyped(key, keyCode) && !eulerButton.charTyped(key, keyCode)){
 			super.keyTyped(key, keyCode);
 		}
 	}

@@ -17,16 +17,16 @@ public class PrototypingTableContainer extends MachineContainer{
 	@Override
 	protected void addSlots(){
 		//Copshowium ID 0
-		addSlotToContainer(new StrictSlot(te, 0, 134, 78));
+		addSlot(new StrictSlot(te, 0, 134, 78));
 
 		//Template ID 1
-		addSlotToContainer(new StrictSlot(te, 1, 152, 78));
+		addSlot(new StrictSlot(te, 1, 152, 78));
 
 		//Output ID 2
-		addSlotToContainer(new OutputSlot(te, 2, 152, 108));
+		addSlot(new OutputSlot(te, 2, 152, 108));
 
 		//Trash ID 3
-		addSlotToContainer(new StrictSlot(te, 3, 134, 108));
+		addSlot(new StrictSlot(te, 3, 134, 108));
 	}
 
 	@Override

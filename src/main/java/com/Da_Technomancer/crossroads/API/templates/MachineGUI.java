@@ -1,91 +1,71 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
+import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-public abstract class MachineGUI extends ContainerScreen{
+public abstract class MachineGUI extends ContainerScreen<MachineContainer>{
 
 	protected InventoryTE te;
-	protected IInventory playerInv;
+	protected PlayerInventory playerInv;
 	protected ArrayList<String> tooltip = new ArrayList<>();
-	protected IGuiObject[] guiObjects = new IGuiObject[0];
 
-	protected MachineGUI(MachineContainer container){
-		super(container);
+	protected MachineGUI(MachineContainer container, PlayerInventory playerInventory, ITextComponent text){
+		super(container, playerInventory, text);
 		this.te = container.te;
-		this.playerInv = container.playerInv;
+		this.playerInv = playerInventory;
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks){
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
+	public void render(int mouseX, int mouseY, float partialTicks){
+		renderBackground();
+		super.render(mouseX, mouseY, partialTicks);
 		renderHoveredToolTip(mouseX, mouseY);
 		if(getSlotUnderMouse() == null){
-			drawHoveringText(tooltip, mouseX, mouseY);
+			renderTooltip(tooltip, mouseX, mouseY);
 		}
 		tooltip.clear();
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		for(IGuiObject gui : guiObjects){
-			if(gui == null){
-				continue;
+		for(IGuiEventListener gui : children){
+			if(gui instanceof IGuiObject){
+				((IGuiObject) gui).drawBack(partialTicks, mouseX, mouseY, font);
 			}
-			gui.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		}
+		for(FluidSlotManager manager : te.fluidManagers){
+			manager.renderBack(partialTicks, mouseX, mouseY, font);
 		}
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		for(IGuiObject gui : guiObjects){
-			if(gui == null){
-				continue;
-			}
-			gui.drawFore(mouseX, mouseY, fontRenderer);
-		}
-
-		fontRenderer.drawString(te.getDisplayName().getUnformattedText(), 8, 6, 0x404040);
-		fontRenderer.drawString(playerInv.getDisplayName().getUnformattedText(), ((MachineContainer) inventorySlots).getInvStart()[0], ((MachineContainer) inventorySlots).getInvStart()[1] - 12, 4210752);
-
-
-		if(te.useHeat()){
-			String s = te.getField(2 * te.fluidTanks()) + "°C";
-			fontRenderer.drawString(s, xSize - 8 - fontRenderer.getStringWidth(s), 6, 0x404040);
-		}
-		if(te.useRotary()){
-			String s = te.getField(2 * te.fluidTanks() + (te.useHeat() ? 1 : 0)) / 100D + " rad/s";
-			fontRenderer.drawString(s, xSize - 8 - fontRenderer.getStringWidth(s), te.useHeat() ? 16 : 6, 0x404040);
-		}
-	}
-
-	@Override
-	protected void keyTyped(char key, int keyCode) throws IOException{
-		for(IGuiObject gui : guiObjects){
-			if(gui != null && gui.buttonPress(key, keyCode)){
-				return;
+		for(IGuiEventListener gui : children){
+			if(gui instanceof IGuiObject){
+				((IGuiObject) gui).drawFore(mouseX, mouseY, font);
 			}
 		}
 
-		super.keyTyped(key, keyCode);
-	}
+		font.drawString(title.getFormattedText(), 8, 6, 0x404040);
+		font.drawString(playerInv.getDisplayName().getFormattedText(), container.getInvStart()[0], container.getInvStart()[1] - 12, 4210752);
 
-	@Override
-	protected void mouseClicked(int x, int y, int button) throws IOException{
-		super.mouseClicked(x, y, button);
-		for(IGuiObject gui : guiObjects){
-			if(gui != null && gui.mouseClicked(x, y, button)){
-				trigger(gui);
-				return;
-			}
+
+		if(te.heatReference != null){
+			String s = te.heatReference.get() + "°C";
+			font.drawString(s, xSize - 8 - font.getStringWidth(s), 6, 0x404040);
 		}
-	}
+		if(te.rotaryReference != null){
+			String s = te.rotaryReference.get() / 100D + " rad/s";
+			font.drawString(s, xSize - 8 - font.getStringWidth(s), te.useHeat() ? 16 : 6, 0x404040);
+		}
 
-	protected void trigger(IGuiObject clickedObject){
-
+		for(FluidSlotManager manager : te.fluidManagers){
+			manager.renderFore(mouseX, mouseY, font, tooltip);
+		}
 	}
 }

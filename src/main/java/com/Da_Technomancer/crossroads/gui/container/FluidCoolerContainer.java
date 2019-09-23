@@ -12,8 +12,8 @@ public class FluidCoolerContainer extends MachineContainer{
 
 	@Override
 	protected void addSlots(){
-		addSlotToContainer(new OutputSlot(te, 0, 71, 32));
-		addSlotToContainer(new FluidSlot(this, 100, 19, 100, 54));
+		addSlot(new OutputSlot(te, 0, 71, 32));
+		addSlot(new FluidSlot(this, 100, 19, 100, 54));
 	}
 
 	@Override

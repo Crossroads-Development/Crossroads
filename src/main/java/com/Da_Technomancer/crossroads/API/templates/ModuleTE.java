@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
@@ -100,6 +99,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		/* TODO localize
 		if(useHeat()){
 			chat.add("Temp: " + MiscUtil.betterRound(temp, 3) + "°C");
 			chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world, pos) + "°C");
@@ -110,6 +110,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 			chat.add("Power: " + MiscUtil.betterRound(motData[2], 3));
 			chat.add("I: " + getMoInertia() + ", Rotation Ratio: " + axleHandler.getRotationRatio());
 		}
+		*/
 	}
 
 	/**

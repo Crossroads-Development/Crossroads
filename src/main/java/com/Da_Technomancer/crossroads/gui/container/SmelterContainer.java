@@ -13,9 +13,9 @@ public class SmelterContainer extends MachineContainer{
 	@Override
 	protected void addSlots(){
 		// Input slot, ID 0
-		addSlotToContainer(new StrictSlot(te, 0, 56, 35));
+		addSlot(new StrictSlot(te, 0, 56, 35));
 
 		// Output slot, ID 1
-		addSlotToContainer(new OutputSlot(te, 1, 116, 35));
+		addSlot(new OutputSlot(te, 1, 116, 35));
 	}
 }

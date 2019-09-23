@@ -3,12 +3,12 @@ package com.Da_Technomancer.crossroads.API.effects;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EntityPredicates;
+import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -29,21 +29,21 @@ public class EnchantEffect implements IEffect{
 			for(ItemEntity ent : items){
 				ItemStack stack = ent.getItem();
 
-				if(stack.isItemEnchanted()){
+				if(stack.isEnchanted()){
 					continue;
 				}
 
 				for(int i = 0; i < stack.getCount(); i++){
 					ItemStack created;
 
-					List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(RAND, stack, (int) Math.min(mult, 45), mult >= 64);
+					List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(RAND, stack, Math.min(mult, 45), mult >= 64);
 
 					if(ench.isEmpty()){
 						break;//Non-enchantable items shouldn't have their stacks recreated
 					}
 
 					if(stack.getItem() == Items.BOOK){
-						created = new ItemStack(Items.ENCHANTED_BOOK, 1, 0);
+						created = new ItemStack(Items.ENCHANTED_BOOK, 1);
 					}else{
 						created = stack.copy();
 						created.setCount(1);
