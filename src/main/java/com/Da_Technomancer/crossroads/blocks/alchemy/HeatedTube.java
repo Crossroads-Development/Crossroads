@@ -125,7 +125,7 @@ public class HeatedTube extends ContainerBlock{
 		
 		PlayerEntity play = Minecraft.getInstance().player;
 		float reDist = Minecraft.getInstance().playerController.getBlockReachDistance();
-		Vec3d start = play.getPositionEyes(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
+		Vec3d start = play.getEyePosition(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 		Vec3d end = start.add(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
 		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
 		return (out == null ? BB_VERT : out).offset(pos);

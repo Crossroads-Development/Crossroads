@@ -292,7 +292,13 @@
 	
 	"tt.crossroads.salt_block": "Kills plants and slimes around it",
 	"tt.crossroads.salt_block.quip": "Because who needs plants?",
-	
+	"tt.crossroads.meter.fluid_tank.single": "1 internal tank",
+	"tt.crossroads.meter.fluid_tank.plural": "%1$d internal tanks",
+	"tt.crossroads.meter.fluid_tank.info": "%2$s, %3$d/%1$s",
+	"tt.crossroads.meter.axis": "Total Energy: %1$f",
+	"tt.crossroads.meter.fe": "Charge: %1$d/%2$d",
+	"tt.crossroads.meter.beam": "%1$s: %2$s",
+
 	"alignment.energy": "Energy",
 	"alignment.potential": "Potential",
 	"alignment.stability": "Stability",

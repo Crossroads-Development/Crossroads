@@ -9,7 +9,9 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -58,7 +60,7 @@ public enum EnumGoggleLenses{
 	/**
 	 * Call on the server side ONLY.
 	 */
-	public void doEffect(World world, PlayerEntity player, ArrayList<String> chat, RayTraceResult ray){
+	public void doEffect(World world, PlayerEntity player, ArrayList<ITextComponent> chat, BlockRayTraceResult ray){
 		effect.armorTick(world, player, chat, ray);
 	}
 	

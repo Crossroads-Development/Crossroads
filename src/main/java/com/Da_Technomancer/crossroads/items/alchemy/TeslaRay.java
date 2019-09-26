@@ -70,7 +70,7 @@ public class TeslaRay extends Item{
 
 			//Removes entities from the list if they aren't in the conical region in the direction the player is looking, and checks PVP rules
 			Vec3d look = playerIn.getLookVec();
-			Vec3d playPos = playerIn.getPositionEyes(0);
+			Vec3d playPos = playerIn.getEyePosition(0);
 			entities.removeIf((LivingEntity e) -> {Vec3d ePos = e.getPositionVector().subtract(playPos); return ePos.crossProduct(look).lengthSquared() > RADIUS * RADIUS || ePos.dotProduct(look) > RANGE || ePos.dotProduct(look) < 0 || cannotTarget.test(e);});
 
 			double minDist = Integer.MAX_VALUE;
@@ -116,7 +116,7 @@ public class TeslaRay extends Item{
 					double angleOffset = 30D * (playerIn.getPrimaryHand() == HandSide.LEFT ? -1D : 1D);
 					start = start.add(-Math.sin(Math.toRadians(playerIn.rotationYaw + angleOffset)) * 0.4F, 0.8D, Math.cos(Math.toRadians(playerIn.rotationYaw + angleOffset)) * 0.4F);
 				}
-				Vec3d end = targets.get(i + 1).getPositionEyes(0);
+				Vec3d end = targets.get(i + 1).getEyePosition(0);
 
 				RenderUtil.addArc(playerIn.world.provider.getDimension(), start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
 			}

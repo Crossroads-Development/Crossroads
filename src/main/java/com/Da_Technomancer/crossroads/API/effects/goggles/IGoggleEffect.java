@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects.goggles;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -15,6 +16,6 @@ public interface IGoggleEffect{
 	 * Instead of printing chat directly (except in special cases like element discovery),
 	 * each line of chat should be added to the List separately. 
 	 */
-	public void armorTick(World world, PlayerEntity player, ArrayList<ITextComponent> chat, @Nullable RayTraceResult ray);
+	public void armorTick(World world, PlayerEntity player, ArrayList<ITextComponent> chat, @Nullable BlockRayTraceResult ray);
 	
 }

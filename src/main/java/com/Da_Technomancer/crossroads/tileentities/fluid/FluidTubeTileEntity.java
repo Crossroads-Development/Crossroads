@@ -279,7 +279,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		if(connectMode != null){
 			for(int i = 0; i < 6; i++){
 				nbt.putInt("mode_" + i, connectMode[i]);
-				nbt.setByte("match_" + i, hasMatch[i] == null ? 0 : hasMatch[i] ? (byte) 2 : (byte) 1);
+				nbt.putByte("match_" + i, hasMatch[i] == null ? 0 : hasMatch[i] ? (byte) 2 : (byte) 1);
 			}
 		}
 

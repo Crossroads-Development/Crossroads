@@ -35,7 +35,7 @@ public class PlaceEffect implements IEffect{
 			for(ItemEntity ent : items){
 				ItemStack stack = ent.getItem();
 				if(!stack.isEmpty() && stack.getItem() instanceof BlockItem){
-					BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(placer, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(0, 0, 0), Direction.DOWN, ent.getPosition(), false)));
+					BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(placer, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(ent.posX, ent.posY, ent.posZ), Direction.DOWN, ent.getPosition(), false)));
 					BlockState state = ((BlockItem) stack.getItem()).getBlock().getStateForPlacement(context);
 					if(state.getBlock().isValidPosition(state, worldIn, ent.getPosition())){
 						worldIn.setBlockState(ent.getPosition(), state);

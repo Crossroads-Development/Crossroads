@@ -82,7 +82,7 @@ public class Mechanism extends ContainerBlock{
 		MechanismTileEntity mte = (MechanismTileEntity) te;
 		PlayerEntity play = Minecraft.getInstance().player;
 		float reDist = Minecraft.getInstance().playerController.getBlockReachDistance();
-		Vec3d start = play.getPositionEyes(0F).subtract((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
+		Vec3d start = play.getEyePosition(0F).subtract((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
 		Vec3d end = start.add(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
 		int out = getAimedSide(mte, start, end, true);
 		return (out == -1 || out == 7 ? BREAK_ALL_BB : mte.boundingBoxes[out]).offset(pos);

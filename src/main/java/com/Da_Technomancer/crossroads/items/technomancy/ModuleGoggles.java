@@ -13,10 +13,12 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -44,10 +46,10 @@ public class ModuleGoggles extends ArmorItem{
 	private static final int CHAT_ID = 718749;
 
 	@Override
-	public void onArmorTick(World world, PlayerEntity player, ItemStack stack){
+	public void onArmorTick(ItemStack stack, World world, PlayerEntity player){
 		if(!world.isRemote && stack.hasTag()){
-			ArrayList<String> chat = new ArrayList<>();
-			RayTraceResult ray = MiscUtil.rayTrace(player, 8);
+			ArrayList<ITextComponent> chat = new ArrayList<>();
+			BlockRayTraceResult ray = MiscUtil.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(stack.getTag().getBoolean(lens.name())){
 					lens.doEffect(world, player, chat, ray);
@@ -55,11 +57,11 @@ public class ModuleGoggles extends ArmorItem{
 			}
 			if(!chat.isEmpty()){
 				StringBuilder out = new StringBuilder();
-				for(String line : chat){
+				for(ITextComponent line : chat){
 					if(out.length() != 0){
 						out.append("\n");
 					}
-					out.append(line);
+					out.append(line.getFormattedText());//TODO Serialize, send serialized text component to client, deserialize on client and only on client get formatted text
 				}
 				CrossroadsPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (ServerPlayerEntity) player);
 			}

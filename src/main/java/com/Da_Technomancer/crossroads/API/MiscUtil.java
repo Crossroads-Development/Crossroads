@@ -7,13 +7,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.Tag;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.loading.FMLCommonLaunchHandler;
-import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.LogMarkers;
 
 import javax.annotation.Nonnull;
@@ -67,7 +65,7 @@ public final class MiscUtil{
 	/**
 	 * A server-side friendly version of Entity.class' raytrace (currently called Entity#func_213324_a(double, float, boolean))
 	 */
-	public static RayTraceResult rayTrace(Entity ent, double blockReachDistance){
+	public static BlockRayTraceResult rayTrace(Entity ent, double blockReachDistance){
 		Vec3d vec3d = ent.getPositionVector().add(0, ent.getEyeHeight(), 0);
 		Vec3d vec3d2 = vec3d.add(ent.getLook(1F).scale(blockReachDistance));
 		return ent.world.rayTraceBlocks(new RayTraceContext(vec3d, vec3d2, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, ent));

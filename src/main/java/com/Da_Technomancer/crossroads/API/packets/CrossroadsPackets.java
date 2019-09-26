@@ -5,6 +5,7 @@ import com.Da_Technomancer.essentials.packets.ClientPacket;
 import com.Da_Technomancer.essentials.packets.Packet;
 import com.Da_Technomancer.essentials.packets.PacketManager;
 import com.Da_Technomancer.essentials.packets.ServerPacket;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -51,6 +52,10 @@ public class CrossroadsPackets{
 
 	public static void sendPacketAround(World world, BlockPos pos, ClientPacket packet){
 		channel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 512.0D, world.dimension.getType())), packet);
+	}
+
+	public static void sendPacketToPlayer(ServerPlayerEntity player, ClientPacket packet){
+		channel.send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
 
 	public static void sendPacketToServer(ServerPacket packet){

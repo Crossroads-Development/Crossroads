@@ -45,12 +45,12 @@ public class RainIdol extends Item{
 		if(isSelected && entityIn instanceof PlayerEntity){
 			PlayerEntity play = (PlayerEntity) entityIn;
 			if(!play.getEntityData().contains(NBT_KEY)){
-				play.getEntityData().setByte(NBT_KEY, (byte) 0);
+				play.getEntityData().putByte(NBT_KEY, (byte) 0);
 				play.getEntityData().putLong(NBT_KEY_TIME, System.currentTimeMillis());
 			}
 
 			if(System.currentTimeMillis() - play.getEntityData().getLong(NBT_KEY_TIME) > 2_000){
-				play.getEntityData().setByte(NBT_KEY, (byte) 0);
+				play.getEntityData().putByte(NBT_KEY, (byte) 0);
 				play.getEntityData().putLong(NBT_KEY_TIME, System.currentTimeMillis());
 			}
 			byte count = play.getEntityData().getByte(NBT_KEY);
@@ -58,7 +58,7 @@ public class RainIdol extends Item{
 			if(!play.isSneaking() && play.motionY <= 0){
 				if(Math.abs(count) % 2 == 1){
 					count += count > 0 ? 1 : -1;
-					play.getEntityData().setByte(NBT_KEY, count);
+					play.getEntityData().putByte(NBT_KEY, count);
 				}
 				return;
 			}
@@ -79,7 +79,7 @@ public class RainIdol extends Item{
 					}else{
 						play.getEntityData().putLong(NBT_KEY_TIME, System.currentTimeMillis());
 					}
-					play.getEntityData().setByte(NBT_KEY, count);
+					play.getEntityData().putByte(NBT_KEY, count);
 				}
 			}else{
 				if(count > 0){
@@ -96,7 +96,7 @@ public class RainIdol extends Item{
 					}else{
 						play.getEntityData().putLong(NBT_KEY_TIME, System.currentTimeMillis());
 					}
-					play.getEntityData().setByte(NBT_KEY, count);
+					play.getEntityData().putByte(NBT_KEY, count);
 				}
 			}	
 		}
