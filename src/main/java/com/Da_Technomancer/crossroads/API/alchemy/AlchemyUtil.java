@@ -9,7 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -50,7 +50,7 @@ public class AlchemyUtil{
 			int qty;
 			if((qty = reags.getQty(flameReag.getKey())) != 0){
 				hasFire = true;
-				flameRange = Math.max(flameRange, flameReag.get().apply(qty));
+				flameRange = Math.max(flameRange, flameReag.getValue().apply(qty));
 			}
 		}
 
@@ -75,7 +75,7 @@ public class AlchemyUtil{
 			int maxRange = 0;
 
 			for(Map.Entry<IReagent, Integer> reag : reags.entrySet()){
-				int qty = reag.get();
+				int qty = reag.getValue();
 				if(qty > 0){
 					IReagent type = reag.getKey();
 					EnumMatterPhase phase = type.getPhase(reags.getTempC());

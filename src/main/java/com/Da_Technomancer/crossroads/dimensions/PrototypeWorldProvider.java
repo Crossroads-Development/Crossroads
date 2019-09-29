@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickableTileEntity;

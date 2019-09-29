@@ -1,21 +1,19 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.*;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
-import com.Da_Technomancer.crossroads.fluids.*;
+import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.crafting.PredicateMap;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Items;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.Tags;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -24,15 +22,14 @@ import java.util.function.Function;
 
 import static com.Da_Technomancer.crossroads.API.alchemy.EnumReagents.*;
 
-@SuppressWarnings("unchecked")
 public final class AlchemyCore{
 
-	//A non-binding reagent count to optimize around
+	//A non-binding reagent count to optimize around; Addons don't need to change this value if they add new reagents
 	protected static final int REAGENT_COUNT = EnumReagents.values().length;
 
 	public static final ArrayList<IReaction> REACTIONS = new ArrayList<>();
 
-	public static final PredicateMap<ItemStack, IReagent> ITEM_TO_REAGENT = new PredicateMap<>();
+	public static final PredicateMap<Item, IReagent> ITEM_TO_REAGENT = new PredicateMap<>();
 	public static final BiMap<Fluid, IReagent> FLUID_TO_LIQREAGENT = HashBiMap.create(5); // For liquid phase.
 
 	public static final HashMap<String, IReagent> REAGENTS = new HashMap<>(REAGENT_COUNT);
@@ -60,47 +57,48 @@ public final class AlchemyCore{
 		AcidAlchemyEffect ACID_EFFECT = new AcidAlchemyEffect();
 
 		// Reagents
+		//TODO chlorine and sulfur dioxide item forms
 		IReagent phel;
-		REAGENTS.put(PHELOSTOGEN.id(), phel = new StaticReagent(PHELOSTOGEN.id(), -275D, -274D, (EnumMatterPhase phase) -> PHELOSTIGEN_COLOR, null, null, 2, null){
+		REAGENTS.put(PHELOSTOGEN.id(), phel = new StaticReagent(PHELOSTOGEN.id(), -275D, -274D, (EnumMatterPhase phase) -> PHELOSTIGEN_COLOR, null, 2, null){
 			@Override
 			public boolean isLockedFlame(){
 				return true;
 			}
 		});
 		FLAME_RANGES.put(phel, (Integer amount) -> (int) Math.min(8, Math.round(amount / 2D)));
-		REAGENTS.put(AETHER.id(), new StaticReagent(AETHER.id(), -275D, -274D, (EnumMatterPhase phase) -> FAINT_GREEN_COLOR, null, null, 1, new AetherEffect()));
-		REAGENTS.put(ADAMANT.id(), new StaticReagent(ADAMANT.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> DARK_BLUE_COLOR, (stack) -> stack.getItem() == CrossroadsItems.adamant, () -> new ItemStack(CrossroadsItems.adamant, 1), 0, null));
-		REAGENTS.put(SULFUR.id(), new StaticReagent(SULFUR.id(), 115D, 445D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_YELLOW_COLOR : phase == EnumMatterPhase.LIQUID ? Color.RED : Color.YELLOW, MiscUtil.oreDictPred("dustSulfur"), () -> MiscUtil.getOredictStack("dustSulfur", 1), 0, null));
-		REAGENTS.put(WATER.id(), new StaticReagent(WATER.id(), 0D, 100D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_WHITE_COLOR : TRANSLUCENT_BLUE_COLOR, (stack) -> stack.getItem() == Item.getItemFromBlock(Blocks.PACKED_ICE), () -> new ItemStack(Blocks.PACKED_ICE), 0, null));
-		REAGENTS.put(NITRIC_ACID.id(), new StaticReagent(NITRIC_ACID.id(), -40D, 80D, (EnumMatterPhase phase) -> Color.YELLOW, (stack) -> stack.getItem() == CrossroadsItems.solidFortis, () -> new ItemStack(CrossroadsItems.solidFortis), 0, ACID_EFFECT));// Salt that forms nitric acid, AKA aqua fortis, in water.
-		REAGENTS.put(SALT.id(), new StaticReagent(SALT.id(), 800D, 1400D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.LIQUID ? Color.ORANGE : Color.WHITE, MiscUtil.oreDictPred("dustSalt"), () -> MiscUtil.getOredictStack("dustSalt", 1), 0, new SaltAlchemyEffect()));// AKA table salt (sodium chloride).
-		REAGENTS.put(VANADIUM.id(), new StaticReagent(VANADIUM.id(), 690D, 1750D, (EnumMatterPhase phase) -> Color.YELLOW, (stack) -> stack.getItem() == CrossroadsItems.vanadiumOxide, () -> new ItemStack(CrossroadsItems.vanadiumOxide), 0, null));// Vanadium (V) oxide. This should decompose at the specified boiling point, but there isn't any real point to adding that.
+		REAGENTS.put(AETHER.id(), new StaticReagent(AETHER.id(), -275D, -274D, (EnumMatterPhase phase) -> FAINT_GREEN_COLOR, null, 1, new AetherEffect()));
+		REAGENTS.put(ADAMANT.id(), new StaticReagent(ADAMANT.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> DARK_BLUE_COLOR, CRItemTags.DUSTS_ADAMANT, 0, null));
+		REAGENTS.put(SULFUR.id(), new StaticReagent(SULFUR.id(), 115D, 445D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_YELLOW_COLOR : phase == EnumMatterPhase.LIQUID ? Color.RED : Color.YELLOW, CRItemTags.SULFUR, 0, null));
+		REAGENTS.put(QUICKSILVER.id(), new StaticReagent(QUICKSILVER.id(), -40D, 560D, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, CRItemTags.MERCURY, 0, null));// AKA murcury
+		REAGENTS.put(ALCHEMICAL_SALT.id(), new StaticReagent(ALCHEMICAL_SALT.id(), 900D, 1400D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, CRItemTags.ALC_SALT, 0, new AlcSaltAlchemyEffect()));//Any salt byproduct that is too boring to bother adding separately.
+		REAGENTS.put(WATER.id(), new StaticReagent(WATER.id(), 0D, 100D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.GAS ? TRANSLUCENT_WHITE_COLOR : TRANSLUCENT_BLUE_COLOR, CRItemTags.PURE_ICE, 0, null));
+		REAGENTS.put(SALT.id(), new StaticReagent(SALT.id(), 800D, 1400D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.LIQUID ? Color.ORANGE : Color.WHITE, CRItemTags.SALT, 0, new SaltAlchemyEffect()));// AKA table salt (sodium chloride).
+		REAGENTS.put(BEDROCK.id(), new StaticReagent(BEDROCK.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.GRAY, CRItemTags.DUSTS_BEDROCK, 0, null));
 		REAGENTS.put(SULFUR_DIOXIDE.id(), new StaticReagent(SULFUR_DIOXIDE.id(), -72D, -10D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, null, 0, new DisinfectAlchemyEffect()));
 		//REAGENTS.put(SULFUR_TRIOXIDE.id(), new StaticReagent(SULFUR_TRIOXIDE.id(), 20D, 40D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, null, null, 0, null));
-		REAGENTS.put(SULFURIC_ACID.id(), new StaticReagent(SULFURIC_ACID.id(), 10D, 340D, (EnumMatterPhase phase) -> BROWN_COLOR, (stack) -> stack.getItem() == CrossroadsItems.solidVitriol, () -> new ItemStack(CrossroadsItems.solidVitriol, 1), 0, ACID_EFFECT));// Hydrogen Sulfate, salt that forms sulfuric acid, AKA Oil of Vitriol, in water.
-		REAGENTS.put(AQUA_REGIA.id(), new StaticReagent(AQUA_REGIA.id(), -40D, 200D, (EnumMatterPhase phase) -> Color.ORANGE, (stack) -> stack.getItem() == CrossroadsItems.solidRegia, () -> new ItemStack(CrossroadsItems.solidRegia), 0, new AquaRegiaAlchemyEffect()));// Shouldn't really be its own substance (actually a mixture of nitric and hydrochloric acid), but the code is greatly simplified by making it a separate substance.
-		REAGENTS.put(REDSTONE.id(), new StaticReagent(REDSTONE.id(), 580D, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.RED, MiscUtil.oreDictPred("dustRedstone"), () -> MiscUtil.getOredictStack("dustRedstone", 1), 0, null));// Mercury (II) sulfide.
-		REAGENTS.put(QUICKSILVER.id(), new StaticReagent(QUICKSILVER.id(), -40D, 560D, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, (stack) -> stack.getItem() == CrossroadsItems.solidQuicksilver, () -> new ItemStack(CrossroadsItems.solidQuicksilver), 0, null));// AKA murcury
-		REAGENTS.put(GOLD.id(), new StaticReagent(GOLD.id(), 1100D, 3000D, (EnumMatterPhase phase) -> Color.YELLOW, MiscUtil.oreDictPred("nuggetGold"), () -> MiscUtil.getOredictStack("nuggetGold", 1), 0, null));
-		REAGENTS.put(HYDROCHLORIC_ACID.id(), new StaticReagent(HYDROCHLORIC_ACID.id(), -110D, 90D, (EnumMatterPhase phase) -> CLEAR_COLOR, (ItemStack stack) -> stack.getItem() == CrossroadsItems.solidMuriatic, () -> new ItemStack(CrossroadsItems.solidMuriatic), 0, ACID_EFFECT));// Hydrogen Chloride, salt that forms hydrochloric acid, AKA muriatic acid, in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve.
-		REAGENTS.put(ALCHEMICAL_SALT.id(), new StaticReagent(ALCHEMICAL_SALT.id(), 900D, 1400D, (EnumMatterPhase phase) -> TRANSLUCENT_WHITE_COLOR, MiscUtil.oreDictPred("dustAlcSalt"), () -> MiscUtil.getOredictStack("dustAlcSalt", 1), 0, new AlcSaltAlchemyEffect()));//Any salt byproduct that is too boring to bother adding separately.
-		REAGENTS.put(SLAG.id(), new StaticReagent(SLAG.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.DARK_GRAY, MiscUtil.oreDictPred("itemSlag"), () -> MiscUtil.getOredictStack("itemSlag", 1), 0, null));
-		REAGENTS.put(PHILOSOPHER.id(), new StaticReagent(PHILOSOPHER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (stack) -> stack.getItem() == CrossroadsItems.philosopherStone, () -> new ItemStack(CrossroadsItems.philosopherStone), 2, new SpawnItemAlchemyEffect(CrossroadsItems.philosopherStone)));
-		REAGENTS.put(PRACTITIONER.id(), new StaticReagent(PRACTITIONER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_RED_COLOR, (stack) -> stack.getItem() == CrossroadsItems.practitionerStone, () -> new ItemStack(CrossroadsItems.practitionerStone), 2, new SpawnItemAlchemyEffect(CrossroadsItems.practitionerStone)));
-		REAGENTS.put(BEDROCK.id(), new StaticReagent(BEDROCK.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.GRAY, (stack) -> stack.getItem() == Item.getItemFromBlock(Blocks.BEDROCK) || MiscUtil.hasOreDict(stack, "dustBedrock"), () -> (boolean) CrossroadsConfig.bedrockDust.get() ? MiscUtil.getOredictStack("dustBedrock", 1) : new ItemStack(Blocks.BEDROCK), 0, null));
+		REAGENTS.put(SULFURIC_ACID.id(), new StaticReagent(SULFURIC_ACID.id(), 10D, 340D, (EnumMatterPhase phase) -> BROWN_COLOR, CRItemTags.DUSTS_SULFURIC, 0, ACID_EFFECT));// Hydrogen Sulfate, salt that forms sulfuric acid, AKA Oil of Vitriol, in water.
+		REAGENTS.put(NITRIC_ACID.id(), new StaticReagent(NITRIC_ACID.id(), -40D, 80D, (EnumMatterPhase phase) -> Color.YELLOW, CRItemTags.DUSTS_NITRIC, 0, ACID_EFFECT));// Salt that forms nitric acid, AKA aqua fortis, in water.
+		REAGENTS.put(HYDROCHLORIC_ACID.id(), new StaticReagent(HYDROCHLORIC_ACID.id(), -110D, 90D, (EnumMatterPhase phase) -> CLEAR_COLOR, CRItemTags.DUSTS_HYDROCHLORIC, 0, ACID_EFFECT));// Hydrogen Chloride, salt that forms hydrochloric acid, AKA muriatic acid, in water. Boiling point should be -90, set to 90 due to the alchemy system not allowing gasses to dissolve.
+		REAGENTS.put(AQUA_REGIA.id(), new StaticReagent(AQUA_REGIA.id(), -40D, 200D, (EnumMatterPhase phase) -> Color.ORANGE, CRItemTags.DUSTS_REGIA, 0, new AquaRegiaAlchemyEffect()));// Shouldn't really be its own substance (actually a mixture of nitric and hydrochloric acid), but the code is greatly simplified by making it a separate substance.
+		REAGENTS.put(VANADIUM.id(), new StaticReagent(VANADIUM.id(), 690D, 1750D, (EnumMatterPhase phase) -> Color.YELLOW, CRItemTags.VANADIUM, 0, null));// Vanadium (V) oxide. This should decompose at the specified boiling point, but there isn't any real point to adding that.
+		REAGENTS.put(REDSTONE.id(), new StaticReagent(REDSTONE.id(), 580D, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.RED, Tags.Items.DUSTS_REDSTONE, 0, null));// Mercury (II) sulfide.
+		REAGENTS.put(SLAG.id(), new StaticReagent(SLAG.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.DARK_GRAY, CRItemTags.SLAG, 0, null));
+		REAGENTS.put(PHILOSOPHER.id(), new StaticReagent(PHILOSOPHER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (item) -> item == CrossroadsItems.philosopherStone, () -> CrossroadsItems.philosopherStone, 2, new SpawnItemAlchemyEffect(CrossroadsItems.philosopherStone)));
+		REAGENTS.put(PRACTITIONER.id(), new StaticReagent(PRACTITIONER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_RED_COLOR, (item) -> item == CrossroadsItems.practitionerStone, () -> CrossroadsItems.practitionerStone, 2, new SpawnItemAlchemyEffect(CrossroadsItems.practitionerStone)));
 		REAGENTS.put(CHLORINE.id(), new StaticReagent(CHLORINE.id(), -100D, -35D, (EnumMatterPhase phase) -> TRANSLUCENT_LIME_COLOR, null, null, 0, new ChlorineAlchemyEffect()));
-		REAGENTS.put(CRYSTAL.id(), new StaticReagent(CRYSTAL.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (stack) -> stack.getItem() == CrossroadsItems.alchCrystal, () -> new ItemStack(CrossroadsItems.alchCrystal), 0, null));
-		REAGENTS.put(COPPER.id(), new StaticReagent(COPPER.id(), 1000D, 2560D, (EnumMatterPhase phase) -> Color.ORANGE, MiscUtil.oreDictPred("nuggetCopper"), () -> MiscUtil.getOredictStack("nuggetCopper", 1), 0, null));
-		REAGENTS.put(IRON.id(), new StaticReagent(IRON.id(), 1500D, 2560D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.SOLID ? Color.GRAY : Color.RED, MiscUtil.oreDictPred("nuggetIron"), () -> MiscUtil.getOredictStack("nuggetIron", 1), 0, null));
-		REAGENTS.put(TIN.id(), new StaticReagent(TIN.id(), 230D, 2560D, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, MiscUtil.oreDictPred("nuggetTin"), () -> MiscUtil.getOredictStack("nuggetTin", 1), 0, null));
-		REAGENTS.put(GUNPOWDER.id(), new StaticReagent(GUNPOWDER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.GRAY, MiscUtil.oreDictPred("gunpowder"), () -> MiscUtil.getOredictStack("gunpowder", 1), 0, null));
-		REAGENTS.put(RUBY.id(), new StaticReagent(RUBY.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.RED, MiscUtil.oreDictPred("gemRuby"), () -> MiscUtil.getOredictStack("gemRuby", 1), 0, null));
-		REAGENTS.put(EMERALD.id(), new StaticReagent(EMERALD.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.GREEN, MiscUtil.oreDictPred("gemEmerald"), () -> MiscUtil.getOredictStack("gemEmerald", 1), 0, null));//Couldn't find actual figures on melting/boiling points of emerald/diamond, perhaps due to large variance.
-		REAGENTS.put(DIAMOND.id(), new StaticReagent(DIAMOND.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.CYAN, MiscUtil.oreDictPred("gemDiamond"), () -> MiscUtil.getOredictStack("gemDiamond", 1), 0, null));
-		REAGENTS.put(QUARTZ.id(), new StaticReagent(QUARTZ.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.WHITE, (stack) -> stack.getItem() == Items.QUARTZ, () -> new ItemStack(Items.QUARTZ), 0, null));
-		REAGENTS.put(DENSUS.id(), new StaticReagent(DENSUS.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.BLUE, MiscUtil.oreDictPred("gemDensus"), () -> MiscUtil.getOredictStack("gemDensus", 1), 0, null));
-		REAGENTS.put(ANTI_DENSUS.id(), new StaticReagent(ANTI_DENSUS.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.ORANGE, MiscUtil.oreDictPred("gemAntiDensus"), () -> MiscUtil.getOredictStack("gemAntiDensus", 1), 0, null));
-		REAGENTS.put(CAVORITE.id(), new StaticReagent(CAVORITE.id(), 1000D, 1001D, (EnumMatterPhase phase) -> Color.YELLOW, MiscUtil.oreDictPred("gemCavorite"), () -> MiscUtil.getOredictStack("gemCavorite", 1), 0, null));
+		REAGENTS.put(CRYSTAL.id(), new StaticReagent(CRYSTAL.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, CRItemTags.ALCH_CRYSTAL, 0, null));
+		REAGENTS.put(IRON.id(), new StaticReagent(IRON.id(), 1500D, 2560D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.SOLID ? Color.GRAY : Color.RED, Tags.Items.NUGGETS_IRON, 0, null));
+		REAGENTS.put(GOLD.id(), new StaticReagent(GOLD.id(), 1100D, 3000D, (EnumMatterPhase phase) -> Color.YELLOW, Tags.Items.NUGGETS_GOLD, 0, null));
+		REAGENTS.put(COPPER.id(), new StaticReagent(COPPER.id(), 1000D, 2560D, (EnumMatterPhase phase) -> Color.ORANGE, CRItemTags.NUGGETS_COPPER, 0, null));
+		REAGENTS.put(TIN.id(), new StaticReagent(TIN.id(), 230D, 2560D, (EnumMatterPhase phase) -> Color.LIGHT_GRAY, CRItemTags.NUGGETS_TIN, 0, null));
+		REAGENTS.put(GUNPOWDER.id(), new StaticReagent(GUNPOWDER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.GRAY, Tags.Items.GUNPOWDER, 0, null));
+		REAGENTS.put(RUBY.id(), new StaticReagent(RUBY.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.RED, CRItemTags.GEMS_RUBY, 0, null));
+		REAGENTS.put(EMERALD.id(), new StaticReagent(EMERALD.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.GREEN, Tags.Items.GEMS_EMERALD, 0, null));//Couldn't find actual figures on melting/boiling points of emerald/diamond, perhaps due to large variance.
+		REAGENTS.put(DIAMOND.id(), new StaticReagent(DIAMOND.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.CYAN, Tags.Items.GEMS_DIAMOND, 0, null));
+		REAGENTS.put(QUARTZ.id(), new StaticReagent(QUARTZ.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.WHITE, Tags.Items.GEMS_QUARTZ, 0, null));
+		REAGENTS.put(DENSUS.id(), new StaticReagent(DENSUS.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.BLUE, CRItemTags.DENSUS, 0, null));
+		REAGENTS.put(ANTI_DENSUS.id(), new StaticReagent(ANTI_DENSUS.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.ORANGE, CRItemTags.ANTI_DENSUS, 0, null));
+		REAGENTS.put(CAVORITE.id(), new StaticReagent(CAVORITE.id(), 1000D, 1001D, (EnumMatterPhase phase) -> Color.YELLOW, CRItemTags.CAVORITE, 0, null));
 
 		//Dynamic reagents
 		REAGENTS.put(ELEM_LIGHT.id(), new ElementalReagent(ELEM_LIGHT.id(), -275, -274, new LumenEffect(), false, EnumBeamAlignments.LIGHT, new Color(200, 255, 255), null));
@@ -110,7 +108,7 @@ public final class AlchemyCore{
 		REAGENTS.put(ELEM_CHARGE.id(), new ElementalReagent(ELEM_CHARGE.id(), -275, -274, new VoltusEffect(), true, EnumBeamAlignments.CHARGE, new Color(255, 255, 64, 255), null));
 		REAGENTS.put(ELEM_TIME.id(), new ElementalReagent(ELEM_TIME.id(), 2000, Short.MAX_VALUE, null, false, EnumBeamAlignments.TIME, new Color(255, 130, 0, 255), OreSetup.nuggetCopshowium));
 		IReagent hellfire;
-		REAGENTS.put(HELLFIRE.id(), hellfire = new StaticReagent(HELLFIRE.id(), -275D, -274D, (EnumMatterPhase phase) -> Color.RED, null, null, 2, null){
+		REAGENTS.put(HELLFIRE.id(), hellfire = new StaticReagent(HELLFIRE.id(), -275D, -274D, (EnumMatterPhase phase) -> Color.RED, null, 2, null){
 			@Override
 			public boolean isLockedFlame(){
 				return true;
@@ -118,11 +116,11 @@ public final class AlchemyCore{
 		});
 		FLAME_RANGES.put(hellfire, (Integer amount) -> (int) Math.min(64, amount * 2D));
 
-		FLUID_TO_LIQREAGENT.put(BlockDistilledWater.getDistilledWater(), REAGENTS.get(WATER.id()));
-		FLUID_TO_LIQREAGENT.put(BlockMoltenCopper.getMoltenCopper(), REAGENTS.get(COPPER.id()));
-		FLUID_TO_LIQREAGENT.put(BlockMoltenIron.getMoltenIron(), REAGENTS.get(IRON.id()));
-		FLUID_TO_LIQREAGENT.put(BlockMoltenTin.getMoltenTin(), REAGENTS.get(TIN.id()));
-		FLUID_TO_LIQREAGENT.put(BlockMoltenGold.getMoltenGold(), REAGENTS.get(GOLD.id()));
+		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.distilledWater.still, REAGENTS.get(WATER.id()));
+		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.moltenIron.still, REAGENTS.get(IRON.id()));
+		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.moltenGold.still, REAGENTS.get(GOLD.id()));
+		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.moltenCopper.still, REAGENTS.get(COPPER.id()));
+		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.moltenTin.still, REAGENTS.get(TIN.id()));
 
 		// Reactions
 		// Sulfur combustion.

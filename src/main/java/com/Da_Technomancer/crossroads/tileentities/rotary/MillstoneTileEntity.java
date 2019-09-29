@@ -106,8 +106,8 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 		if(!world.isRemote){
 			if(!inventory[0].isEmpty()){
 				ItemStack[] output = RecipeHolder.millRecipes.get(inventory[0]);//A null result means no recipe exists

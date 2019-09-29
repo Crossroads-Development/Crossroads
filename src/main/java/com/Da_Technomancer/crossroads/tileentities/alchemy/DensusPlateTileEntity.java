@@ -46,7 +46,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 	}
 	
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.isRemote){
 			return;
 		}

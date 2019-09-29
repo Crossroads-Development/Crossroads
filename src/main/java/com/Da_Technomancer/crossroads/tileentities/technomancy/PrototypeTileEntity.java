@@ -26,7 +26,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
@@ -71,7 +71,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.isRemote){
 			return;
 		}
@@ -204,7 +204,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	public boolean hasCapability(Capability<?> cap, Direction side){
 		//No capabilities are found on the render side because that would require the prototype dimension to be loaded on the render side, which it almost certainly won't be.
 		if(side != null && index != -1 && !world.isRemote){
-			ServerWorld worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			if(worldDim == null){
 				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 				worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
@@ -228,7 +228,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	public <T> T getCapability(Capability<T> cap, Direction side){
 		//No capabilities are found on the render side because that would require the prototype dimension to be loaded on the render side, which it almost certainly won't be.
 		if(side != null && index != -1 && !world.isRemote){
-			ServerWorld worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			if(worldDim == null){
 				DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
 				worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);

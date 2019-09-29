@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.bakedModel;
 
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.*;
@@ -39,7 +39,7 @@ public class AdvConduitBakedModel implements IBakedModel{
 
 		List<BakedQuad> quads = new ArrayList<>();
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
-		Integer[] connectMode = extendedBlockState.get(Properties.CONNECT_MODE);
+		Integer[] connectMode = extendedBlockState.get(CrossroadsProperties.CONNECT_MODE);
 
 		if(connectMode == null){
 			return Collections.emptyList();

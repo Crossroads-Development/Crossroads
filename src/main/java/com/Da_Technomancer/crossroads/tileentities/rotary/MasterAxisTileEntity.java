@@ -195,7 +195,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		ticksExisted++;
 		markDirty();
 

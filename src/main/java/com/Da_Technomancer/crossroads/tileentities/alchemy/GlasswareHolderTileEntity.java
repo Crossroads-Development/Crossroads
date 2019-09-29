@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
@@ -62,7 +62,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Override
 	public void destroyChamber(float strength){
 		BlockState state = world.getBlockState(pos);
-		world.setBlockState(pos, state.with(Properties.ACTIVE, false).with(Properties.CRYSTAL, false).with(Properties.CONTAINER_TYPE, false));
+		world.setBlockState(pos, state.with(CrossroadsProperties.ACTIVE, false).with(CrossroadsProperties.CRYSTAL, false).with(CrossroadsProperties.CONTAINER_TYPE, false));
 		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
 		occupied = false;
 		florence = false;
@@ -100,7 +100,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		if(occupied){
 			if(stack.isEmpty() && sneaking){
 				ItemStack flask = getStoredItem();
-				world.setBlockState(pos, state.with(Properties.ACTIVE, false).with(Properties.CRYSTAL, false).with(Properties.CONTAINER_TYPE, false));
+				world.setBlockState(pos, state.with(CrossroadsProperties.ACTIVE, false).with(CrossroadsProperties.CRYSTAL, false).with(CrossroadsProperties.CONTAINER_TYPE, false));
 				occupied = false;
 				this.contents.clear();
 				dirtyReag = true;
@@ -118,7 +118,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			if(florence && contents.getTotalQty() != 0){
 				cableTemp = contents.getTempC();
 			}
-			world.setBlockState(pos, state.with(Properties.ACTIVE, true).with(Properties.CRYSTAL, !glass).with(Properties.CONTAINER_TYPE, florence));
+			world.setBlockState(pos, state.with(CrossroadsProperties.ACTIVE, true).with(CrossroadsProperties.CRYSTAL, !glass).with(CrossroadsProperties.CONTAINER_TYPE, florence));
 			return ItemStack.EMPTY;
 		}
 
@@ -141,7 +141,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Override
 	protected void performTransfer(){
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() == CrossroadsBlocks.glasswareHolder && state.get(Properties.ACTIVE)){
+		if(state.getBlock() == CrossroadsBlocks.glasswareHolder && state.get(CrossroadsProperties.ACTIVE)){
 			Direction side = Direction.UP;
 			TileEntity te = world.getTileEntity(pos.offset(side));
 			if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
@@ -195,7 +195,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		}
 		if((side == null || side == Direction.DOWN) && cap == Capabilities.HEAT_CAPABILITY){
 			BlockState state = world.getBlockState(pos);
-			if(state.get(Properties.CONTAINER_TYPE)){
+			if(state.get(CrossroadsProperties.CONTAINER_TYPE)){
 				return (T) heatHandler;
 			}
 		}

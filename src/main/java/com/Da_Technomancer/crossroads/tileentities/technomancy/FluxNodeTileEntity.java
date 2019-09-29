@@ -45,7 +45,7 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.isRemote){
 			angle += clientEntropy * 3.6D / 20F;
 		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){

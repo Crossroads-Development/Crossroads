@@ -1,23 +1,18 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentFilter;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 
@@ -46,7 +41,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 			if(!(state.getBlock() instanceof ReagentFilter)){
 				return Direction.NORTH;
 			}
-			facing = state.get(Properties.HORIZ_FACING);
+			facing = state.get(CrossroadsProperties.HORIZ_FACING);
 		}
 		return facing;
 	}

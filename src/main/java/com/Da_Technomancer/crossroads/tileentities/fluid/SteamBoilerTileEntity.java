@@ -4,8 +4,6 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
-import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -47,8 +45,8 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 		if(world.isRemote){
 			return;
 		}

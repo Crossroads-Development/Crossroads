@@ -54,7 +54,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.getGameTime() % 2 == 0){
 			System.arraycopy(angle, 0, angleRecord, 0, 3);
 

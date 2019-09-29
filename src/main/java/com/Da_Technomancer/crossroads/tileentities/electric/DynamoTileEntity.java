@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.electric;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import net.minecraft.nbt.CompoundNBT;
@@ -29,8 +29,8 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 
 		if(efficiency < 0){
 			efficiency = CrossroadsConfig.electPerJoule.get();
@@ -43,7 +43,7 @@ public class DynamoTileEntity extends ModuleTE{
 			markDirty();
 		}
 
-		Direction facing = world.getBlockState(pos).get(Properties.HORIZ_FACING);
+		Direction facing = world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING);
 		TileEntity neighbor = world.getTileEntity(pos.offset(facing.getOpposite()));
 		IEnergyStorage handler;
 		if(neighbor != null && (handler = neighbor.getCapability(CapabilityEnergy.ENERGY, facing)) != null){
@@ -76,10 +76,10 @@ public class DynamoTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == world.getBlockState(pos).get(Properties.HORIZ_FACING))){
+		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING))){
 			return (T) axleHandler;
 		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).get(Properties.HORIZ_FACING).getOpposite())){
+		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING).getOpposite())){
 			return (T) energyHandler;
 		}
 		return super.getCapability(cap, side);

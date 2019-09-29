@@ -26,9 +26,9 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL)){
-			super.update();
+			super.tick();
 		}
 	}
 

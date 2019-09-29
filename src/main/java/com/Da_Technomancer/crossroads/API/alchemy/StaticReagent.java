@@ -2,9 +2,11 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
+import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.Tag;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -12,17 +14,46 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class StaticReagent implements IReagent{
 
 	private final double melting;
 	private final double boiling;
-	private final Predicate<ItemStack> isSolid;
-	private final Supplier<ItemStack> solid;
 	private final int containType;
 	private final IAlchEffect effect;
 	private final String name;
 	private final Function<EnumMatterPhase, Color> color;
+	private final Tag<Item> itemTag;
+//	private final Predicate<Item> isSolid;
+	private final Supplier<Item> solid;
+
+	/**
+	 * @param name Material id
+	 * @param meltingPoint Melting temperature. Must be lower than boilingPoint.
+	 * @param boilingPoint Boiling temperature. Must be higher than meltingPoint.
+	 * @param color A function giving the color of this reagent based on phase.
+	 * @param tag An item tag defining all items considered this reagent in solid form.
+	 * @param containType 0: Normal; 1: Vanishes in glass; 2: Destroys glass.
+	 * @param effect The effect this has when released. Null for none.
+	 */
+	public StaticReagent(String name, double meltingPoint, double boilingPoint, Function<EnumMatterPhase, Color> color, @Nullable Tag<Item> tag, int containType, @Nullable IAlchEffect effect){
+		this.name = name;
+		if(boilingPoint <= meltingPoint){
+			throw Crossroads.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));
+		}
+		melting = meltingPoint;
+		boiling = boilingPoint;
+//		this.isSolid = tag == null ? null : tag::contains;
+		this.solid = null;
+		if(tag != null){
+			AlchemyCore.ITEM_TO_REAGENT.put(tag::contains, this);
+		}
+		this.containType = containType;
+		this.effect = effect;
+		this.color = color;
+		this.itemTag = tag;
+	}
 
 	/**
 	 * @param name Material id
@@ -34,14 +65,15 @@ public class StaticReagent implements IReagent{
 	 * @param containType 0: Normal; 1: Vanishes in glass; 2: Destroys glass.
 	 * @param effect The effect this has when released. Null for none. 
 	 */
-	public StaticReagent(String name, double meltingPoint, double boilingPoint, Function<EnumMatterPhase, Color> color, @Nullable Predicate<ItemStack> isSolid, @Nullable Supplier<ItemStack> solid, int containType, @Nullable IAlchEffect effect){
+	@Deprecated
+	public StaticReagent(String name, double meltingPoint, double boilingPoint, Function<EnumMatterPhase, Color> color, @Nullable Predicate<Item> isSolid, @Nullable Supplier<Item> solid, int containType, @Nullable IAlchEffect effect){
 		this.name = name;
 		if(boilingPoint <= meltingPoint){
 			throw Crossroads.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));
 		}
 		melting = meltingPoint;
 		boiling = boilingPoint;
-		this.isSolid = isSolid;
+//		this.isSolid = isSolid;
 		this.solid = solid;
 		if(isSolid != null){
 			AlchemyCore.ITEM_TO_REAGENT.put(isSolid, this);
@@ -49,6 +81,7 @@ public class StaticReagent implements IReagent{
 		this.containType = containType;
 		this.effect = effect;
 		this.color = color;
+		this.itemTag = null;
 	}
 
 	@Override
@@ -72,17 +105,23 @@ public class StaticReagent implements IReagent{
 	 */
 	@Override
 	public ItemStack getStackFromReagent(ReagentStack reag){
-		ItemStack out = !reag.isEmpty() && solid != null && reag.getType() == this ? solid.get() : ItemStack.EMPTY;
-		out.setCount(reag.getAmount());
-		return out;
+		if(itemTag == null){
+			ItemStack out = !reag.isEmpty() && solid != null && reag.getType() == this ? new ItemStack(solid.get(), 1) : ItemStack.EMPTY;
+			out.setCount(reag.getAmount());
+			return out;
+		}else{
+			ItemStack out = !reag.isEmpty() && reag.getType() == this ? new ItemStack(CRItemTags.getTagEntry(itemTag), 1) : ItemStack.EMPTY;
+			out.setCount(reag.getAmount());
+			return out;
+		}
 	}
 
 	@Override
 	public List<ItemStack> getJEISolids(){
-		if(isSolid instanceof RecipePredicate){
-			return ((RecipePredicate<ItemStack>) isSolid).getMatchingList();
+		if(itemTag != null){
+			return itemTag.getAllElements().stream().map(item -> new ItemStack(item, 1)).collect(Collectors.toList());
 		}
-		return solid == null ? ImmutableList.of() : ImmutableList.of(solid.get());
+		return solid == null ? ImmutableList.of() : ImmutableList.of(new ItemStack(solid.get(), 1));
 	}
 
 	@Override

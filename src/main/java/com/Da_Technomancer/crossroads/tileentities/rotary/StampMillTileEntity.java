@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
@@ -55,8 +55,8 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 		if(!world.isRemote){
 			BlockState state = world.getBlockState(pos);
 
@@ -120,7 +120,7 @@ public class StampMillTileEntity extends InventoryTE{
 		}
 
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() == CrossroadsBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.get(Properties.HORIZ_AXIS))){
+		if(state.getBlock() == CrossroadsBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.get(CrossroadsProperties.HORIZ_AXIS))){
 			return (T) axleHandler;
 		}
 
@@ -144,7 +144,7 @@ public class StampMillTileEntity extends InventoryTE{
 			if(state.getBlock() != CrossroadsBlocks.stampMill){
 				return;
 			}
-			Direction.Axis ax = state.get(Properties.HORIZ_AXIS);
+			Direction.Axis ax = state.get(CrossroadsProperties.HORIZ_AXIS);
 			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
 				Direction side = Direction.getFacingFromAxis(dir, ax);
 				TileEntity te = world.getTileEntity(pos.offset(side));

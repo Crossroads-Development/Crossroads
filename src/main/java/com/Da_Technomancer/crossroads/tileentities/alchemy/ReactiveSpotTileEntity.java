@@ -18,7 +18,7 @@ public class ReactiveSpotTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(target == null){
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 		}else{

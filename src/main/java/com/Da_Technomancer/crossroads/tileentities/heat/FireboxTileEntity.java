@@ -1,24 +1,43 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.FurnaceTileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nullable;
+
+@ObjectHolder(Crossroads.MODID)
 public class FireboxTileEntity extends InventoryTE{
+
+	@ObjectHolder("firebox")
+	private static TileEntityType<FireboxTileEntity> TYPE = null;
+
+	public IntReferenceHolder burnProg = IntReferenceHolder.single();
 
 	private int burnTime;
 	private int maxBurnTime = 0;
 
 	public FireboxTileEntity(){
-		super(1);
+		super(TYPE, 1);
 	}
 
 	@Override
@@ -27,8 +46,8 @@ public class FireboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 		if(world.isRemote){
 			return;
 		}
@@ -36,20 +55,23 @@ public class FireboxTileEntity extends InventoryTE{
 		if(burnTime != 0){
 			temp += 10D;
 			if(--burnTime == 0){
-				world.setBlockState(pos, CrossroadsBlocks.firebox.getDefaultState().with(Properties.ACTIVE, false), 18);
+				world.setBlockState(pos, CrossroadsBlocks.firebox.getDefaultState(), 18);
 			}
+			burnProg.set(maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime);
 			markDirty();
 		}
 
-		if(burnTime == 0 && FurnaceTileEntity.isItemFuel(inventory[0])){
-			burnTime = FurnaceTileEntity.getItemBurnTime(inventory[0]);
+		int fuelBurn;
+		if(burnTime == 0 && (fuelBurn = ForgeHooks.getBurnTime(inventory[0])) != 0){
+			burnTime = fuelBurn;
 			maxBurnTime = burnTime;
+			burnProg.set(100 * burnTime / maxBurnTime);
 			Item item = inventory[0].getItem();
 			inventory[0].shrink(1);
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
 				inventory[0] = item.getContainerItem(inventory[0]);
 			}
-			world.setBlockState(pos, CrossroadsBlocks.firebox.getDefaultState().with(Properties.ACTIVE, true), 18);
+			world.setBlockState(pos, CrossroadsBlocks.firebox.getDefaultState().with(CrossroadsProperties.ACTIVE, true), 18);
 			markDirty();
 		}
 	}
@@ -59,6 +81,7 @@ public class FireboxTileEntity extends InventoryTE{
 		super.read(nbt);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
+		burnProg.set(maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime);
 	}
 
 	@Override
@@ -69,46 +92,29 @@ public class FireboxTileEntity extends InventoryTE{
 		return nbt;
 	}
 
-	private ItemHandler itemHandler = new ItemHandler(null);
+	private LazyOptional<ItemHandler> itemOpt = LazyOptional.of(() -> new ItemHandler(null));
+
+	@Override
+	public void remove(){
+		super.remove();
+		itemOpt.invalidate();
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.UP || facing == null)){
-			return (T) heatHandler;
+			return (LazyOptional<T>) heatOpt;
 		}
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) itemHandler;
+			return (LazyOptional<T>) itemOpt;
 		}
 		return super.getCapability(capability, facing);
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && FurnaceTileEntity.isItemFuel(stack);
-	}
-
-	@Override
-	public int getField(int id){
-		if(id == getFieldCount() - 1){
-			return world.isRemote || maxBurnTime == 0 ? burnTime : burnTime * 100 / maxBurnTime;
-		}else{
-			return super.getField(id);
-		}
-	}
-
-	@Override
-	public void setField(int id, int value){
-		super.setField(id, value);
-
-		if(id == getFieldCount() - 1){
-			burnTime = value;
-		}
-	}
-
-	@Override
-	public int getFieldCount(){
-		return super.getFieldCount() + 1;
+		return index == 0 && ForgeHooks.getBurnTime(stack) != 0;
 	}
 
 	@Override
@@ -117,7 +123,13 @@ public class FireboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public String getName(){
-		return "container.firebox";
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.firebox");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return null;//TODO
 	}
 }

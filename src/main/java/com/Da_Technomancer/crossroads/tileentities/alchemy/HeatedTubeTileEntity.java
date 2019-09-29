@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
@@ -35,7 +35,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		Direction outSide = world.getBlockState(pos).get(Properties.HORIZ_FACING);
+		Direction outSide = world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING);
 		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
 		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
 		return output;
@@ -44,7 +44,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(Properties.HORIZ_FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING).getAxis())){
 			return (T) handler;
 		}
 		if(cap == Capabilities.HEAT_CAPABILITY && (side == null || side.getAxis() == Direction.Axis.Y)){

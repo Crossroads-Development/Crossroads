@@ -55,7 +55,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.isRemote){
 			return;
 		}
@@ -67,7 +67,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			}
 		}
 
-		super.update();
+		super.tick();
 	}
 
 	@Override

@@ -31,7 +31,7 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.isRemote){
 			return;
 		}

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
@@ -26,7 +26,7 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 		if(!world.isBlockLoaded(pos, false) || world.getBlockState(pos).getBlock() != CrossroadsBlocks.hamsterWheel){
 			return;
 		}
-		Direction facing = world.getBlockState(pos).get(Properties.HORIZ_FACING);
+		Direction facing = world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();

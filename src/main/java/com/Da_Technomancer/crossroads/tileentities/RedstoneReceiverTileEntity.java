@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.CrossroadsConfig;
@@ -57,8 +57,8 @@ public class RedstoneReceiverTileEntity extends TileEntity implements IInfoTE, I
 	}
 
 	public void dye(DyeColor color){
-		if(world.getBlockState(pos).get(Properties.COLOR) != color){
-			world.setBlockState(pos, world.getBlockState(pos).with(Properties.COLOR, color));
+		if(world.getBlockState(pos).get(CrossroadsProperties.COLOR) != color){
+			world.setBlockState(pos, world.getBlockState(pos).with(CrossroadsProperties.COLOR, color));
 			if(src != null){
 				BlockPos worldSrc = pos.add(src);
 				TileEntity srcTE = world.getTileEntity(worldSrc);

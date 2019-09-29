@@ -11,21 +11,28 @@ import java.util.ArrayList;
 
 public final class CrossroadsFluids{
 
-	protected static final Block.Properties BLOCK_PROP = Block.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops();
-	protected static final Item.Properties BUCKET_PROP = new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC);
-
 	public static CrossroadsFluid distilledWater;
 	public static CrossroadsFluid dirtyWater;
 	public static CrossroadsFluid steam;
 	public static CrossroadsFluid liquidFat;
-	//TODO molten metals
+	public static CrossroadsFluid moltenIron;
+	public static CrossroadsFluid moltenGold;
+	public static CrossroadsFluid moltenCopper;
+	public static CrossroadsFluid moltenTin;
+	public static CrossroadsFluid moltenCopshowium;
 
 	public static ArrayList<Fluid> toRegister = new ArrayList<>();
 
 	public static void init(){
-		distilledWater = new CrossroadsFluid("distilled_water");
-		dirtyWater = new CrossroadsFluid("dirty_water");
-		steam = new CrossroadsFluid("steam");
-		liquidFat = new CrossroadsFluid("liquid_fat");
+		distilledWater = new CrossroadsFluid("distilled_water", false);
+		dirtyWater = new CrossroadsFluid("dirty_water", false);
+		steam = new CrossroadsFluid("steam", false);
+		liquidFat = new CrossroadsFluid("liquid_fat", false);
+		//TODO surely there must be a way to make molten metals dense and hot?
+		moltenIron = new CrossroadsFluid("molten_iron", true);
+		moltenGold = new CrossroadsFluid("molten_gold", true);
+		moltenCopper = new CrossroadsFluid("molten_copper", true);
+		moltenTin = new CrossroadsFluid("molten_tin", true);
+		moltenCopshowium = new CrossroadsFluid("molten_copshowium", true);
 	}
 }

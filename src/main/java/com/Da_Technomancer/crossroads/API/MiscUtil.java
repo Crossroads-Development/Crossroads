@@ -47,7 +47,7 @@ public final class MiscUtil{
 	 * @return The player's persistent NBT tag. Also sets a boolean for if this is multiplayer.
 	 */
 	public static CompoundNBT getPlayerTag(PlayerEntity playerIn){
-		CompoundNBT tag = playerIn.getPersistantData();
+		CompoundNBT tag = playerIn.getPersistentData();
 		if(!tag.contains(PlayerEntity.PERSISTED_NBT_TAG)){
 			tag.put(PlayerEntity.PERSISTED_NBT_TAG, new CompoundNBT());
 		}
@@ -81,16 +81,6 @@ public final class MiscUtil{
 	 */
 	public static long getLongFromChunkPos(@Nonnull ChunkPos pos){
 		return (((long) pos.x << 32) | (pos.z & 0xffffffffL));
-	}
-
-	/**
-	 * Returns an entry from the Tag
-	 * @param tag The Tag to return an entry from
-	 * @param <T> The type of the tag. Normally Block or Item
-	 * @return An entry in the tag. If the Tag is set to preserve order, it will reliably return the first entry. Otherwise, any item could be returned.
-	 */
-	public static <T> T getTagEntry(Tag<T> tag){
-		return tag.getAllElements().iterator().next();
 	}
 
 	/**

@@ -26,7 +26,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
@@ -74,7 +74,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(!world.isRemote){
 			if(BeamManager.beamStage == 1){
 				if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){
@@ -130,7 +130,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 											if(ent instanceof ServerPlayerEntity){
 												playerList.transferPlayerToDimension((ServerPlayerEntity) ent, dim, porter);
 											}else{
-												playerList.transferEntityToWorld(ent, currentDim, (ServerWorld) world, DimensionManager.getWorld(dim), porter);
+												playerList.transferEntityToWorld(ent, currentDim, (WorldServer) world, DimensionManager.getWorld(dim), porter);
 											}
 										}
 									}else{
@@ -257,7 +257,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		private final double coordY;
 		private final double coordZ;
 
-		public GatewayTeleporter(ServerWorld worldIn, double coordXIn, double coordYIn, double coordZIn){
+		public GatewayTeleporter(WorldServer worldIn, double coordXIn, double coordYIn, double coordZIn){
 			coordX = coordXIn;
 			coordY = coordYIn;
 			coordZ = coordZIn;

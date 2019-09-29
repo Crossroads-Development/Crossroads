@@ -15,10 +15,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
@@ -66,7 +68,7 @@ public class CrossroadsBlocks{
 	public static ColorChart colorChart;
 	public static LightCluster lightCluster;
 	public static CrystalMasterAxis crystalMasterAxis;
-	public static Ratiator ratiator;
+//	public static Ratiator ratiator;
 	public static BeaconHarness beaconHarness;
 	public static FatFeeder fatFeeder;
 	public static RedstoneAxis redstoneAxis;
@@ -77,7 +79,7 @@ public class CrossroadsBlocks{
 	public static CopshowiumCreationChamber copshowiumCreationChamber;
 	public static MathAxis mathAxis;
 	public static GatewayFrame gatewayFrame;
-	public static RedstoneKeyboard redstoneKeyboard;
+//	public static RedstoneKeyboard redstoneKeyboard;
 	public static DetailedCrafter detailedCrafter;
 	public static PrototypingTable prototypingTable;
 	public static Prototype prototype;
@@ -220,14 +222,14 @@ public class CrossroadsBlocks{
 		crystallinePrism = new CrystallinePrism();
 		beamReflector = new BeamReflector();
 		lensFrame = new LensFrame();
-		blockPureQuartz = new BasicBlock("block_pure_quartz", Material.ROCK, 4, "blockQuartz");
-		blockLuminescentQuartz = (BasicBlock) new BasicBlock("block_luminescent_quartz", Material.ROCK, 4, "blockQuartz").setLightLevel(1F);
+		blockPureQuartz = new BasicBlock("block_pure_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4));
+		blockLuminescentQuartz = (BasicBlock) new BasicBlock("block_luminescent_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4).lightValue(15));
 		beamSiphon = new BeamSiphon();
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
 		lightCluster = new LightCluster();
 		crystalMasterAxis = new CrystalMasterAxis();
-		ratiator = new Ratiator();
+//		ratiator = new Ratiator();
 		beaconHarness = new BeaconHarness();
 		fatFeeder = new FatFeeder();
 		redstoneAxis = new RedstoneAxis();
@@ -238,7 +240,7 @@ public class CrossroadsBlocks{
 		copshowiumCreationChamber = new CopshowiumCreationChamber();
 		mathAxis = new MathAxis();
 		gatewayFrame = new GatewayFrame();
-		redstoneKeyboard = new RedstoneKeyboard();
+//		redstoneKeyboard = new RedstoneKeyboard();
 		detailedCrafter = new DetailedCrafter();
 		prototypingTable = new PrototypingTable();
 		prototype = new Prototype();
@@ -281,12 +283,11 @@ public class CrossroadsBlocks{
 		alembic = new Alembic();
 		densusPlate = new DensusPlate(false);
 		antiDensusPlate = new DensusPlate(true);
-		cavorite = new BasicBlock("block_cavorite", Material.ROCK, 3){
-
+		cavorite = new BasicBlock("block_cavorite", Block.Properties.create(Material.ROCK).hardnessAndResistance(3)){
 			@Override
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-				tooltip.add("Blocks gravity from gravity plates");
-				tooltip.add("Safe for decoration");
+			public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+				tooltip.add(new TranslationTextComponent("tt.crossroads.cavorite"));
+				tooltip.add(new TranslationTextComponent("tt.crossroads.decoration"));
 			}
 		};
 		chargingStand = new ChargingStand();

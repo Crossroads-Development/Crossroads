@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
@@ -126,7 +126,7 @@ public class ModDimensions{
 			int z = (used / 50) - 99;
 
 			//TODO This part will redundantly block already blocked chunks. This is a possible optimization point if it ends up mattering.
-			ServerWorld worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
+			WorldServer worldDim = DimensionManager.getWorld(PROTOTYPE_DIM_ID);
 
 			blockChunk(new ChunkPos(x - 1, z - 1), worldDim);
 			blockChunk(new ChunkPos(x - 1, z), worldDim);
@@ -141,7 +141,7 @@ public class ModDimensions{
 		}
 	}
 
-	private static void blockChunk(ChunkPos pos, ServerWorld dimWorld){
+	private static void blockChunk(ChunkPos pos, WorldServer dimWorld){
 		for(int x = pos.getXStart(); x <= pos.getXEnd(); x++){
 			for(int z = pos.getZStart(); z <= pos.getZEnd(); z++){
 				for(int y = 0; y < 256; y++){

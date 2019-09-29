@@ -3,18 +3,15 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -60,7 +57,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.isRemote){
 			return;
 		}
@@ -70,7 +67,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		}
 
 		double goalTemp = HeatUtil.toCelcius(getSetting());
-		boolean blueMode = world.getBlockState(pos).get(Properties.ACTIVE);
+		boolean blueMode = world.getBlockState(pos).get(CrossroadsProperties.ACTIVE);
 
 		if(blueMode){
 			heatIn = -heatIn;

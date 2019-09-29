@@ -8,11 +8,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
-public class FireboxGuiContainer extends MachineGUI{
+public class FireboxScreen extends MachineGUI{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID + ":textures/gui/container/firebox_gui.png");
 
-	public FireboxGuiContainer(IInventory playerInv, FireboxTileEntity te){
+	public FireboxScreen(IInventory playerInv, FireboxTileEntity te){
 		super(new FireboxContainer(playerInv, te));
 
 		xSize = 176;

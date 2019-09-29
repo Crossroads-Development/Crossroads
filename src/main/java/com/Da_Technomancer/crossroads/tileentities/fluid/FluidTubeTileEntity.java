@@ -68,7 +68,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		init();
 
 		if(world.isRemote){

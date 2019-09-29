@@ -55,8 +55,8 @@ public class ChronoHarnessTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 
 		if(!world.isRemote){
 			if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){

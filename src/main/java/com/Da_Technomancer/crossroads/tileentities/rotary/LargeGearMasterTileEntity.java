@@ -102,7 +102,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.isRemote){
 			angleW[0] += angleW[1] * 9D / Math.PI;
 		}

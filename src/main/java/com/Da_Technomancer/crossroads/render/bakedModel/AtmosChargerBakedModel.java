@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.bakedModel;
 
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
@@ -102,7 +102,7 @@ public class AtmosChargerBakedModel implements IBakedModel{
 		if(state == null){
 			return Collections.emptyList();
 		}
-		return side == null ? quads : state.get(Properties.ACTIVE) ? activeBase.get(side) : inactiveBase.get(side);
+		return side == null ? quads : state.get(CrossroadsProperties.ACTIVE) ? activeBase.get(side) : inactiveBase.get(side);
 	}
 
 	@Override

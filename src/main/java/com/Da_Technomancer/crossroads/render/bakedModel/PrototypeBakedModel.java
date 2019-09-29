@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.bakedModel;
 
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.BlockState;
@@ -42,13 +42,13 @@ public class PrototypeBakedModel implements IBakedModel{
 		List<BakedQuad> quads = new ArrayList<>();
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 
-		if(extendedBlockState.get(Properties.PORT_TYPE) == null){
+		if(extendedBlockState.get(CrossroadsProperties.PORT_TYPE) == null){
 			return Collections.emptyList();
 		}
 
 		TextureAtlasSprite[] sprite = new TextureAtlasSprite[6];
 		for(int i = 0; i < 6; i++){
-			sprite[i] = extendedBlockState.get(Properties.PORT_TYPE)[i] == null ? bakedTextureGetter.apply(new ResourceLocation(Crossroads.MODID, "blocks/prototype/blank")) : bakedTextureGetter.apply(PrototypePortTypes.values()[extendedBlockState.get(Properties.PORT_TYPE)[i]].getTexture());
+			sprite[i] = extendedBlockState.get(CrossroadsProperties.PORT_TYPE)[i] == null ? bakedTextureGetter.apply(new ResourceLocation(Crossroads.MODID, "blocks/prototype/blank")) : bakedTextureGetter.apply(PrototypePortTypes.values()[extendedBlockState.get(CrossroadsProperties.PORT_TYPE)[i]].getTexture());
 		}
 
 		quads.add(ModelUtil.createQuad(new Vec3d(0, 1, 1), new Vec3d(1, 1, 1), new Vec3d(1, 1, 0), new Vec3d(0, 1, 0), Direction.UP, sprite[1], format));

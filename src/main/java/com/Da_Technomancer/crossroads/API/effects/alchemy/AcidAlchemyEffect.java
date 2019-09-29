@@ -1,20 +1,22 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
-import com.Da_Technomancer.crossroads.API.alchemy.*;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class AcidAlchemyEffect implements IAlchEffect{
@@ -37,7 +39,7 @@ public class AcidAlchemyEffect implements IAlchEffect{
 
 		BlockState state = world.getBlockState(pos);
 		if(state.getBlock() == Blocks.BEDROCK && isRegia()){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), CrossroadsConfig.bedrockDust.get() ? new ItemStack(CrossroadsItems.bedrockDust, 1) : new ItemStack(Blocks.BEDROCK, 1));
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CrossroadsItems.bedrockDust, 1));
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			return;
 		}
@@ -46,14 +48,26 @@ public class AcidAlchemyEffect implements IAlchEffect{
 		if(itemForm.isEmpty()){
 			return;
 		}
+
+		Block block = state.getBlock();
+		if(Tags.Blocks.STORAGE_BLOCKS_IRON.contains(block)){
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.IRON_INGOT, world.rand.nextInt(9) + 1));
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			return;
+		}
+		if(Tags.Blocks.STORAGE_BLOCKS_GOLD.contains(block)){
+			if(isRegia()){
+				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.GOLD_INGOT, world.rand.nextInt(9) + 1));
+				world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			}
+			return;
+		}
+		//TODO cases for tin, copper, bronze
+
 		int[] oreDict = OreDictionary.getOreIDs(new ItemStack(state.getBlock()));
 		for(int id : oreDict){
 			String name = OreDictionary.getOreName(id);
 			switch(name){
-				case "blockIron":
-					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.IRON_INGOT, world.rand.nextInt(9) + 1));
-					world.setBlockState(pos, Blocks.AIR.getDefaultState());
-					return;
 				case "blockCopper":
 					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotCopper, world.rand.nextInt(9) + 1));
 					world.setBlockState(pos, Blocks.AIR.getDefaultState());
@@ -65,12 +79,6 @@ public class AcidAlchemyEffect implements IAlchEffect{
 				case "blockBronze":
 					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotBronze, world.rand.nextInt(9) + 1));
 					world.setBlockState(pos, Blocks.AIR.getDefaultState());
-					return;
-				case "blockGold":
-					if(isRegia()){
-						InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.GOLD_INGOT, world.rand.nextInt(9) + 1));
-						world.setBlockState(pos, Blocks.AIR.getDefaultState());
-					}
 					return;
 				default:
 					break;

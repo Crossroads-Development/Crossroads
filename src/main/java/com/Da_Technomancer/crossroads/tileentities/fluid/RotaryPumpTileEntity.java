@@ -49,8 +49,8 @@ public class RotaryPumpTileEntity extends ModuleTE{
 
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 
 		if(world.isRemote){
 			return;

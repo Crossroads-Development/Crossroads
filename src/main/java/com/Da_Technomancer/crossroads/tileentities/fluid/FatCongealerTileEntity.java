@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -33,8 +32,8 @@ public class FatCongealerTileEntity extends InventoryTE{
 	public static final double SAT_PER_SPD = 4D;
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 		if(world.isRemote){
 			return;
 		}

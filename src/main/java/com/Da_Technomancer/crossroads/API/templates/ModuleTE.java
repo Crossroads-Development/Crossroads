@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -42,22 +43,32 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	/**
 	 * @return Whether to enable the default heat helpers. Should not change at runtime
 	 */
-	protected abstract boolean useHeat();
+	protected boolean useHeat(){
+		return false;
+	}
 
 	/**
 	 * @return Whether to enable the default rotary helpers. Should not change at runtime
 	 */
-	protected abstract boolean useRotary();
+	protected boolean useRotary(){
+		return false;
+	}
 
 	/**
+	 * Must be overriden if createFluidTanks() is overriden
 	 * @return How many fluid tanks this machine has. Should not change at runtime, cannot be negative
 	 */
-	protected abstract int fluidTanks();
+	protected int fluidTanks(){
+		return 0;
+	}
 
 	/**
+	 * Must be overriden if fluidTanks() is overriden
 	 * @return An array of length fluidTanks() defining properties for each tank
 	 */
-	protected abstract TankProperty[] createFluidTanks();
+	protected TankProperty[] createFluidTanks(){
+		return new TankProperty[0];
+	}
 
 	protected AxleHandler createAxleHandler(){
 		return new AxleHandler();
@@ -71,11 +82,13 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		super(type);
 		if(useHeat()){
 			heatHandler = createHeatHandler();
+			heatOpt = LazyOptional.of(() -> heatHandler);
 		}else{
 			heatHandler = null;
 		}
 		if(useRotary()){
 			axleHandler = createAxleHandler();
+			axleOpt = LazyOptional.of(() -> axleHandler);
 		}else{
 			axleHandler = null;
 		}
@@ -177,6 +190,17 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
+	public void remove(){
+		super.remove();
+		if(heatOpt != null){
+			heatOpt.invalidate();
+		}
+		if(axleOpt != null){
+			axleOpt.invalidate();
+		}
+	}
+
+	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == 0 && angleW != null){
 			float angle = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
@@ -185,8 +209,10 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		}
 	}
 
-	protected final HeatHandler heatHandler;
-	protected final AxleHandler axleHandler;
+	protected HeatHandler heatHandler;
+	protected LazyOptional<IHeatHandler> heatOpt;
+	protected AxleHandler axleHandler;
+	protected LazyOptional<IAxleHandler> axleOpt;
 
 	protected class FluidHandler implements IFluidHandler{
 

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLogToClient;
@@ -26,7 +26,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
@@ -125,7 +125,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
 			ArrayList<PrototypeInfo> infoList = data.prototypes;
-			ServerWorld dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 			int index = inventory[1].getTag().getInt("index");
 			//Sanity check
 			if(infoList.size() < index + 1){
@@ -225,7 +225,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			int startY = pos.getY() + 1;
 			int startZ = pos.getZ();
 
-			switch(world.getBlockState(pos).get(Properties.HORIZ_FACING)){
+			switch(world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING)){
 				case NORTH:
 					startX -= 16;
 					startZ -= 16;
@@ -295,7 +295,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 
 			PrototypeWorldSavedData data = PrototypeWorldSavedData.get(true);
 			ArrayList<PrototypeInfo> infoList = data.prototypes;
-			ServerWorld dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
+			WorldServer dimWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 
 			int newChunk = ModDimensions.nextFreePrototypeChunk(portArray, posArray);
 			if(newChunk != -1){

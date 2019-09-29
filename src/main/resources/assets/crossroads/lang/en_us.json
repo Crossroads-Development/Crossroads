@@ -298,6 +298,9 @@
 	"tt.crossroads.meter.axis": "Total Energy: %1$f",
 	"tt.crossroads.meter.fe": "Charge: %1$d/%2$d",
 	"tt.crossroads.meter.beam": "%1$s: %2$s",
+	"tt.crossroads.decoration": "Safe for decoration",
+	"tt.crossroads.cavorite": "Blocks gravity from gravity plates",
+	"tt.crossroads.firebox": "Adds: %1$d°C/t while burning fuel",
 
 	"alignment.energy": "Energy",
 	"alignment.potential": "Potential",

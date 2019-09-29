@@ -17,7 +17,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -33,7 +33,7 @@ public class MechArmUseEffect implements IMechArmEffect{
 			ItemStack heldStack = itemEnt.getItem();
 			int oldSize = heldStack.getCount();
 			boolean itemBlock = heldStack.getItem() instanceof BlockItem;
-			FakePlayer user = FakePlayerFactory.get((ServerWorld) world, new GameProfile(new UUID(ID_GEN.nextLong(), ID_GEN.nextLong()), Crossroads.MODID + "-arm_use_effect-" + world.provider.getDimension()));
+			FakePlayer user = FakePlayerFactory.get((WorldServer) world, new GameProfile(new UUID(ID_GEN.nextLong(), ID_GEN.nextLong()), Crossroads.MODID + "-arm_use_effect-" + world.provider.getDimension()));
 			user.setHeldItem(Hand.MAIN_HAND, heldStack);
 			user.setPositionAndRotation(posX, posY, posZ, side.getHorizontalAngle(), 0);
 			user.eyeHeight = 0;

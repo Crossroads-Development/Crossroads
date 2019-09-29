@@ -30,7 +30,7 @@ public class DetailedCrafter extends Block{
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
-			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerIn, false);
+			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerIn);
 			playerIn.openGui(Crossroads.instance, GuiHandler.CRAFTER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;

@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
+@Deprecated
 public class GuiHandler implements IGuiHandler{
 
 	public static final int MILLSTONE_GUI = 0;
@@ -116,7 +117,7 @@ public class GuiHandler implements IGuiHandler{
 			case MILLSTONE_GUI:
 				return new MillstoneGuiContainer(player.inventory, ((MillstoneTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case FIREBOX_GUI:
-				return new FireboxGuiContainer(player.inventory, ((FireboxTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+				return new FireboxScreen(player.inventory, ((FireboxTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case SMELTER_GUI:
 				return new SmelterGuiContainer(player.inventory, ((SmelterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case STEAM_BOILER_GUI:
@@ -124,7 +125,7 @@ public class GuiHandler implements IGuiHandler{
 			case COLOR_CHART_GUI:
 				return new ColorChartGuiContainer(player, world, new BlockPos(x, y, z));
 			case REDSTONE_KEYBOARD_GUI:
-				return new RedstoneKeyboardGuiContainer(((RedstoneKeyboardTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+//				return new RedstoneKeyboardGuiContainer(((RedstoneKeyboardTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case WATER_CENTRIFUGE_GUI:
 				return new WaterCentrifugeGuiContainer(player.inventory, (WaterCentrifugeTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
 			case HEAT_LIMITER_BASIC_GUI:

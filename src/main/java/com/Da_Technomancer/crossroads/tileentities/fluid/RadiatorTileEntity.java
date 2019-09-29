@@ -3,8 +3,6 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
-import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -31,8 +29,8 @@ public class RadiatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 
 		if(!world.isRemote && fluids[0] != null && fluids[0].amount >= 100 && (fluids[1] == null || fluidProps[1].getCapacity() - fluids[1].amount >= 100)){
 			temp += .1D * EnergyConverters.degPerSteamBucket(false);

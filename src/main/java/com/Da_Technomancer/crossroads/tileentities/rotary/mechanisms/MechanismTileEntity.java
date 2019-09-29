@@ -216,7 +216,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 //		if(world.isRemote){
 //			for(int i = 0; i < 7; i++){
 //				// it's 9 / PI instead of 180 / PI because 20 ticks/second

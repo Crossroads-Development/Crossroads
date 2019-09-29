@@ -3,21 +3,18 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -49,13 +46,13 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		BlockState state = world.getBlockState(pos);
 		if(world.isRemote || !(state.getBlock() instanceof AtmosCharger)){
 			return;
 		}
 		renderTimer--;
-		extractMode = state.get(Properties.ACTIVE);
+		extractMode = state.get(CrossroadsProperties.ACTIVE);
 
 		double newReds = (double) AtmosChargeSavedData.getCharge(world) / (double) AtmosChargeSavedData.getCapacity();
 		if(Math.abs(lastRedstone - newReds) >= 0.05D){

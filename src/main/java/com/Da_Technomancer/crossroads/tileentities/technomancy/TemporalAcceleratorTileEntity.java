@@ -106,7 +106,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(!world.isRemote && world.getGameTime() != lastRunTick){
 			if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){
 				FluxUtil.overloadFlux(world, pos);

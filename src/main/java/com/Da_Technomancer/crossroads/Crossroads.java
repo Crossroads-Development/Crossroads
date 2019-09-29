@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.entity.ModEntities;
 import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
@@ -35,6 +36,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -110,7 +112,12 @@ public final class Crossroads{
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 
-	//TODO BELOW
+	public static void dataGenerate(GatherDataEvent e){
+		if(e.includeServer()){
+			e.getGenerator().addProvider(new CRItemTags(e.getGenerator()));
+		}
+	}
+
 	@SuppressWarnings("unused")
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> e){

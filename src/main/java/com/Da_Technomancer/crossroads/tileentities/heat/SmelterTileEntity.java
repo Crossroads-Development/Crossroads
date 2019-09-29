@@ -29,8 +29,8 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 		if(world.isRemote){
 			return;
 		}

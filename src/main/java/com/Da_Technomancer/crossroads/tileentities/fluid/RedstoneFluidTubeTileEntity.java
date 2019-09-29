@@ -26,9 +26,9 @@ public class RedstoneFluidTubeTileEntity extends FluidTubeTileEntity{
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(!world.isRemote && world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL)){
-			super.update();
+			super.tick();
 		}
 	}
 

@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.fluids.BlockLiquidFat;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -40,8 +39,8 @@ public class FatCollectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 
 		int tier = HeatUtil.getHeatTier(temp, TIERS);
 

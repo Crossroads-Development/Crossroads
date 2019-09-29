@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
@@ -27,8 +27,8 @@ public class IceboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 		if(world.isRemote){
 			return;
 		}
@@ -36,7 +36,7 @@ public class IceboxTileEntity extends InventoryTE{
 		if(burnTime != 0 && temp > -20){
 			temp = Math.max(-20, temp - 10);
 			if(--burnTime == 0){
-				world.setBlockState(pos, CrossroadsBlocks.icebox.getDefaultState().with(Properties.ACTIVE, false), 18);
+				world.setBlockState(pos, CrossroadsBlocks.icebox.getDefaultState().with(CrossroadsProperties.ACTIVE, false), 18);
 			}
 			markDirty();
 		}
@@ -49,7 +49,7 @@ public class IceboxTileEntity extends InventoryTE{
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
 				inventory[0] = item.getContainerItem(inventory[0]);
 			}
-			world.setBlockState(pos, CrossroadsBlocks.icebox.getDefaultState().with(Properties.ACTIVE, true), 18);
+			world.setBlockState(pos, CrossroadsBlocks.icebox.getDefaultState().with(CrossroadsProperties.ACTIVE, true), 18);
 			markDirty();
 		}
 	}

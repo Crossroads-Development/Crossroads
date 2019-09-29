@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.electric;
 
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
@@ -74,13 +74,13 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 				invalidate();
 				return false;
 			}
-			hasJar = world.getBlockState(pos).get(Properties.ACTIVE);
+			hasJar = world.getBlockState(pos).get(CrossroadsProperties.ACTIVE);
 		}
 		return hasJar;
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(!redstone && world.getGameTime() % 10 == 0 && stored > 0){
 			TileEntity topTE = world.getTileEntity(pos.up());
 			if(topTE instanceof TeslaCoilTopTileEntity){
@@ -93,7 +93,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 		}
 
 		if(!redstone && stored > 0){
-			Direction facing = world.getBlockState(pos).get(Properties.HORIZ_FACING);
+			Direction facing = world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING);
 			TileEntity te = world.getTileEntity(pos.offset(facing));
 			if(te != null && te.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())){
 				IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
@@ -158,7 +158,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY){
-			return (T) (side == world.getBlockState(pos).get(Properties.HORIZ_FACING) ? handlerOut : handlerIn);
+			return (T) (side == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING) ? handlerOut : handlerIn);
 		}
 		return super.getCapability(cap, side);
 	}

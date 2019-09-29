@@ -29,7 +29,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		if(world.isRemote){
 			return;
 		}

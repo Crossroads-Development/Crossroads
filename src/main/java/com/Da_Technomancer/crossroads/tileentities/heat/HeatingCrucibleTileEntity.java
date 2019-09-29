@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
@@ -75,8 +75,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 
 		if(world.isRemote){
 			return;
@@ -90,8 +90,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 				return;
 			}
 
-			if(state.get(Properties.FULLNESS) != fullness){
-				world.setBlockState(pos, state.with(Properties.FULLNESS, fullness), 18);
+			if(state.get(CrossroadsProperties.FULLNESS) != fullness){
+				world.setBlockState(pos, state.with(CrossroadsProperties.FULLNESS, fullness), 18);
 			}
 
 			if(fullness != 0 && fluids[0] != null && fluids[0].getFluid().getStill() != null){

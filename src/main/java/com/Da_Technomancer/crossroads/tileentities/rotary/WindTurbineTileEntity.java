@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import net.minecraft.block.BlockState;
@@ -36,7 +36,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 				invalidate();
 				return Direction.NORTH;
 			}
-			facing = state.get(Properties.HORIZ_FACING);
+			facing = state.get(CrossroadsProperties.HORIZ_FACING);
 		}
 
 		return facing;
@@ -72,8 +72,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 
 		if(!world.isRemote){
 			//Every 30 seconds check whether the placement requirements are valid, and cache the result
@@ -148,7 +148,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == world.getBlockState(pos).get(Properties.HORIZ_FACING).getOpposite())){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING).getOpposite())){
 			return (T) axleHandler;
 		}
 		return super.getCapability(capability, facing);

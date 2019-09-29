@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
@@ -49,14 +49,14 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 	}
 
 	public void dye(DyeColor color){
-		if(world.getBlockState(pos).get(Properties.COLOR) != color){
-			world.setBlockState(pos, world.getBlockState(pos).with(Properties.COLOR, color));
+		if(world.getBlockState(pos).get(CrossroadsProperties.COLOR) != color){
+			world.setBlockState(pos, world.getBlockState(pos).with(CrossroadsProperties.COLOR, color));
 
 			for(BlockPos link : linked){
 				BlockPos worldLink = pos.add(link);
 				BlockState linkState = world.getBlockState(worldLink);
 				if(linkState.getBlock() == CrossroadsBlocks.redstoneReceiver){
-					world.setBlockState(worldLink, linkState.with(Properties.COLOR, color));
+					world.setBlockState(worldLink, linkState.with(CrossroadsProperties.COLOR, color));
 				}
 			}
 		}
@@ -154,7 +154,7 @@ public class RedstoneTransmitterTileEntity extends TileEntity implements IInfoTE
 			CrossroadsPackets.network.sendToAllAround(new SendLongToClient(LINK_PACKET_ID, linkPos.toLong(), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 			getTE().markDirty();
 			((RedstoneReceiverTileEntity) endpoint).setSrc(pos.subtract(((RedstoneReceiverTileEntity) endpoint).getPos()));
-			((RedstoneReceiverTileEntity) endpoint).dye(world.getBlockState(pos).get(Properties.COLOR));
+			((RedstoneReceiverTileEntity) endpoint).dye(world.getBlockState(pos).get(CrossroadsProperties.COLOR));
 
 			world.neighborChanged(linkPos, CrossroadsBlocks.redstoneTransmitter, linkPos);
 			player.sendMessage(new StringTextComponent("Linked device at " + getTE().getPos() + " to send to " + endpoint.getTE().getPos()));

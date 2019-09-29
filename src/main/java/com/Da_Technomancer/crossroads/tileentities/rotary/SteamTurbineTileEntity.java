@@ -3,8 +3,6 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.fluids.BlockDistilledWater;
-import com.Da_Technomancer.crossroads.fluids.BlockSteam;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -44,8 +42,8 @@ public class SteamTurbineTileEntity extends ModuleTE{
 	public static final int LIMIT = 5;
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 		
 		if(world.isRemote){
 			IAxleHandler gear = null;

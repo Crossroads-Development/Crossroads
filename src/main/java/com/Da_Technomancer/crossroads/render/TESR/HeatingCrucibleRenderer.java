@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import org.lwjgl.opengl.GL11;
 
-import com.Da_Technomancer.crossroads.API.Properties;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 
 import net.minecraft.client.Minecraft;
@@ -23,7 +23,7 @@ public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleT
 		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false) || te.getActiveTexture().isEmpty()){
 			return;
 		}
-		int fullness = te.getWorld().getBlockState(te.getPos()).get(Properties.FULLNESS);
+		int fullness = te.getWorld().getBlockState(te.getPos()).get(CrossroadsProperties.FULLNESS);
 		if(fullness == 0){
 			return;
 		}

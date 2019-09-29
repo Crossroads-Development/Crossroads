@@ -106,8 +106,8 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public void update(){
-		super.update();
+	public void tick(){
+		super.tick();
 
 		if(!world.isRemote && currentElement != null && time-- <= 0){
 			currentElement = null;

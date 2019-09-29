@@ -156,7 +156,7 @@ public class CrossroadsConfig{
 		atmosCap = serverBuilder.comment("Maximum charge for the atmosphere").defineInRange("charge_limit", 1_000_000_000L, 0L, 2_000_000_000L);
 		voltusUsage = serverBuilder.comment("Voltus used to produce 1000FE of charge in the atmosphere").defineInRange("voltus_power", 0.1D, 0, Integer.MAX_VALUE);
 		stampMillDamping = serverBuilder.comment("Percentage of Stamp Mill progress to be lost on failure", "Effectively nerfs ore-tripling").defineInRange("mill_damping", 0, 0, 100);
-		bedrockDust = serverBuilder.comment("Harvest Bedrock Dust instead of Bedrock", "Replaces all recipes involving bedrock with unplacable bedrock dust").define("bedrock_dust", false);
+		bedrockDust = serverBuilder.comment("Bedrock craftability", "Can bedrock be crafted from bedrock dust?").define("bedrock_dust", true);
 		phelEffect = serverBuilder.comment("Allow the full effect of phelostogen?", "If disabled phelostogen lights a single fire instead").define("phel_effect", true);
 		gravRange = serverBuilder.comment("Range of Density Plates").defineInRange("grav_range", 64, 0, 128);
 		serverBuilder.pop();

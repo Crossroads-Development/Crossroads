@@ -69,9 +69,9 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 	}
 
 	@Override
-	public void update(){
+	public void tick(){
 		init();
-		super.update();
+		super.tick();
 	}
 
 	protected boolean isCompatible(EnumContainerType otherType){
