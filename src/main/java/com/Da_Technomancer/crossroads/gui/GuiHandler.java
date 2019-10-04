@@ -149,11 +149,11 @@ public class GuiHandler implements IGuiHandler{
 			case RADIATOR_GUI:
 				return new RadiatorGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case CRUCIBLE_GUI:
-				return new CrucibleGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+				return new CrucibleScreen(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case ICEBOX_GUI:
 				return new IceboxGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case FLUID_COOLER_GUI:
-				return new FluidCoolerGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+				return new FluidCoolerScreen(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case COPSHOWIUM_CHAMBER_GUI:
 				return new CopshowiumCreationChamberGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case ORE_CLEANSER_GUI:

@@ -1,26 +1,32 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,30 +34,17 @@ import java.util.List;
 public class HeatingCrucible extends ContainerBlock{
 
 	public HeatingCrucible(){
-		super(Material.ROCK);
+		super(Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
 		String name = "heating_crucible";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(Properties.FULLNESS, 0));
+		setDefaultState(getDefaultState().with(CrossroadsProperties.FULLNESS, 0));
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.FULLNESS);
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(Properties.FULLNESS, meta);
-	}
-
-	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(Properties.FULLNESS);
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> container){
+		container.add(CrossroadsProperties.FULLNESS);
 	}
 
 	@Override
@@ -67,33 +60,24 @@ public class HeatingCrucible extends ContainerBlock{
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
-		super.breakBlock(world, pos, blockstate);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
-			playerIn.openGui(Crossroads.instance, GuiHandler.CRUCIBLE_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		TileEntity te;
+		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return true;
 	}
 
 	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("Melts down items. Uses 1000°C per item");
+		tooltip.add(new TranslationTextComponent("tt.crossroads.crucible.info", HeatingCrucibleTileEntity.REQUIRED));
 		for(int i = 0; i < HeatingCrucibleTileEntity.TEMP_TIERS.length; i++){
-			tooltip.add((i + 1) + "x speed: -" + HeatingCrucibleTileEntity.USAGE * (i + 1) + "°C/t when above " + HeatingCrucibleTileEntity.TEMP_TIERS[i] + "°C");
+			tooltip.add(new TranslationTextComponent("tt.crossroads.crucible.tier", i + 1, HeatingCrucibleTileEntity.USAGE * (i + 1), HeatingCrucibleTileEntity.TEMP_TIERS[i]));
 		}
 	}
 }

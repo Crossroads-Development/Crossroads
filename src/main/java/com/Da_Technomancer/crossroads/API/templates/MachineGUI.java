@@ -8,13 +8,13 @@ import net.minecraft.util.text.ITextComponent;
 
 import java.util.ArrayList;
 
-public abstract class MachineGUI extends ContainerScreen<MachineContainer>{
+public abstract class MachineGUI<T extends MachineContainer<U>, U extends InventoryTE> extends ContainerScreen<T>{
 
-	protected InventoryTE te;
+	protected U te;
 	protected PlayerInventory playerInv;
 	protected ArrayList<String> tooltip = new ArrayList<>();
 
-	protected MachineGUI(MachineContainer container, PlayerInventory playerInventory, ITextComponent text){
+	protected MachineGUI(T container, PlayerInventory playerInventory, ITextComponent text){
 		super(container, playerInventory, text);
 		this.te = container.te;
 		this.playerInv = playerInventory;

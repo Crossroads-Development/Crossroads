@@ -4,9 +4,12 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.essentials.items.CircuitWrench;
+import com.Da_Technomancer.essentials.tileentities.CircuitTileEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class HeatReservoirTileEntity extends ModuleTE{
 
@@ -31,10 +34,11 @@ public class HeatReservoirTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
-			return (T) heatHandler;
+			return (LazyOptional<T>) heatOpt;
 		}
+
 		if(capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redstoneHandler;
 		}

@@ -44,7 +44,7 @@ public class RedstoneAxis extends ContainerBlock{
 		if(te instanceof RedstoneAxisTileEntity){
 			((RedstoneAxisTileEntity) te).disconnect();
 		}
-		super.breakBlock(world, pos, blockstate);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 	
 	@Override

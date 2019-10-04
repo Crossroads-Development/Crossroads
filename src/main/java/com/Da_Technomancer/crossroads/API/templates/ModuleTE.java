@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
@@ -13,10 +15,14 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
@@ -25,7 +31,9 @@ import java.util.ArrayList;
 import java.util.function.Predicate;
 
 /**
- * Most Crossroads machines extend this class, which provides boilerplate for simple rotary, heat, and fluid support that can be enabled via overriding a few methods and setting a few fields
+ * Most Crossroads machines extend this class, which provides the ability to enable highly configurable support for most things (fluids, heat, rotary) with only a few overrides
+ * Machines that also use ItemStacks or UIs override the subclass, InventoryTE
+ * I'd call this class boilerplate, except its 500+ lines
  */
 public abstract class ModuleTE extends TileEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
 
@@ -62,20 +70,21 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		return 0;
 	}
 
-	/**
-	 * Must be overriden if fluidTanks() is overriden
-	 * @return An array of length fluidTanks() defining properties for each tank
-	 */
-	protected TankProperty[] createFluidTanks(){
-		return new TankProperty[0];
-	}
-
 	protected AxleHandler createAxleHandler(){
 		return new AxleHandler();
 	}
 
 	protected HeatHandler createHeatHandler(){
 		return new HeatHandler();
+	}
+
+	/**
+	 * Creates a new fluid handler that can traverse all fluid inventories.
+	 * Used for null-side fluid capability return and fluid slots in UIs
+	 * @return A new fluid handler that can traverse all externally visible fluids in this block
+	 */
+	protected FluidHandler createGlobalFluidHandler(){
+		return new FluidHandler(-1);
 	}
 
 	public ModuleTE(TileEntityType<? extends ModuleTE> type){
@@ -92,6 +101,13 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		}else{
 			axleHandler = null;
 		}
+		if(fluids.length != 0){
+			globalFluidHandler = createGlobalFluidHandler();
+			globalFluidOpt = LazyOptional.of(() -> globalFluidHandler);
+		}else{
+			globalFluidHandler = null;
+		}
+
 		for(int i = 0; i < fluids.length; i++){
 			fluids[i] = FluidStack.EMPTY;
 		}
@@ -112,18 +128,16 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		/* TODO localize
 		if(useHeat()){
-			chat.add("Temp: " + MiscUtil.betterRound(temp, 3) + "°C");
-			chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world, pos) + "°C");
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp", MiscUtil.betterRound(temp, 3)));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", MiscUtil.betterRound(temp, 3)));
 		}
 		if(useRotary()){
-			chat.add("Speed: " + MiscUtil.betterRound(motData[0], 3));
-			chat.add("Energy: " + MiscUtil.betterRound(motData[1], 3));
-			chat.add("Power: " + MiscUtil.betterRound(motData[2], 3));
-			chat.add("I: " + getMoInertia() + ", Rotation Ratio: " + axleHandler.getRotationRatio());
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", MiscUtil.betterRound(motData[0], 3)));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.energy", MiscUtil.betterRound(motData[1], 3)));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.power", MiscUtil.betterRound(motData[2], 3)));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.setup", axleHandler.getMoInertia(), axleHandler.getRotationRatio()));
 		}
-		*/
 	}
 
 	/**
@@ -198,6 +212,9 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		if(axleOpt != null){
 			axleOpt.invalidate();
 		}
+		if(globalFluidOpt != null){
+			globalFluidOpt.invalidate();
+		}
 	}
 
 	@Override
@@ -209,10 +226,26 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		}
 	}
 
+	@Nonnull
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
+		//Return the global optional for internal-side (null) checks
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side == null && globalFluidOpt != null){
+			return (LazyOptional<T>) globalFluidOpt;
+		}
+		if(cap == Capabilities.HEAT_CAPABILITY && side == null){
+			return (LazyOptional<T>) heatOpt;
+		}
+		return super.getCapability(cap, side);
+	}
+
 	protected HeatHandler heatHandler;
 	protected LazyOptional<IHeatHandler> heatOpt;
 	protected AxleHandler axleHandler;
 	protected LazyOptional<IAxleHandler> axleOpt;
+	protected FluidHandler globalFluidHandler;
+	protected LazyOptional<IFluidHandler> globalFluidOpt;
 
 	protected class FluidHandler implements IFluidHandler{
 
@@ -361,10 +394,10 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 	protected static class TankProperty{
 
-		protected final int capacity;
-		protected final boolean canFill;
-		protected final boolean canDrain;
-		protected final Predicate<Fluid> canAccept;
+		public final int capacity;
+		public final boolean canFill;
+		public final boolean canDrain;
+		public final Predicate<Fluid> canAccept;
 
 		/**
 		 * @param capacity The capacity of this tank

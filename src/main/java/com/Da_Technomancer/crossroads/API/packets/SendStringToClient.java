@@ -22,6 +22,10 @@ public class SendStringToClient extends ClientPacket{
 
 	}
 
+	public SendStringToClient(int context, String message, BlockPos pos){
+		this((byte) context, message, pos);
+	}
+
 	public SendStringToClient(byte context, String message, BlockPos pos){
 		this.sContext = context;
 		this.message = message;

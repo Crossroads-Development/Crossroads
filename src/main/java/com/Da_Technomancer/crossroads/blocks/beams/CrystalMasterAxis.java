@@ -48,7 +48,7 @@ public class CrystalMasterAxis extends ContainerBlock{
 		if(te instanceof CrystalMasterAxisTileEntity){
 			((CrystalMasterAxisTileEntity) te).disconnect();
 		}
-		super.breakBlock(world, pos, blockstate);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 	
 	@Override

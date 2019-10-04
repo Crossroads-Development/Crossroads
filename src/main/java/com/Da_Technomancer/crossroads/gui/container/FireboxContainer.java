@@ -1,13 +1,22 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.registries.ObjectHolder;
 
-public class FireboxContainer extends MachineContainer{
+@ObjectHolder(Crossroads.MODID)
+public class FireboxContainer extends MachineContainer<FireboxTileEntity>{
 
-	public FireboxContainer(IInventory playerInv, FireboxTileEntity te){
-		super(playerInv, te);
+	@ObjectHolder("firebox")
+	private static ContainerType<FireboxContainer> type = null;
+
+	public FireboxContainer(int id, PlayerInventory playerInv, PacketBuffer data){
+		super(type, id, playerInv, data);
+		trackInt(te.burnProg);
 	}
 
 	@Override

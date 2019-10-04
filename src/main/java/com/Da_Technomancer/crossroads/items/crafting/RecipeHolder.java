@@ -5,14 +5,19 @@ import com.Da_Technomancer.crossroads.API.alchemy.IReaction;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ITransparentReaction;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.integration.JEI.*;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -22,35 +27,32 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
-;
-
+@ObjectHolder(Crossroads.MODID)
 public final class RecipeHolder{
 
-	/**
-	 * CraftingStack is input, the array is the outputs. HAVE NO MORE THAN 3 ITEMSTACKS IN THE ARRAY.
-	 */
-	public static final PredicateMap<ItemStack, ItemStack[]> millRecipes = new PredicateMap<>();
+	@ObjectHolder("stamp_mill")
+	public static IRecipeSerializer<StampMillRec> STAMP_MILL_SERIAL = null;
+	@ObjectHolder("mill")
+	public static IRecipeSerializer<MillRec> MILL_SERIAL = null;
+	@ObjectHolder("ore_cleanser")
+	public static IRecipeSerializer<OreCleanserRec> ORE_CLEANSER_SERIAL = null;
+	@ObjectHolder("beam_extract")
+	public static IRecipeSerializer<BeamExtractRec> BEAM_EXTRACT_SERIAL = null;
+	@ObjectHolder("cooling")
+	public static IRecipeSerializer<IceboxRec> COOLING_SERIAL = null;
+	@ObjectHolder("dirty_water")
+	public static IRecipeSerializer<DirtyWaterRec> DIRTY_WATER_SERIAL = null;
 
-	/**
-	 * The possible outputs and weights of centrifuging dirty water
-	 */
-	public static final ArrayList<Pair<Integer, ItemStack>> dirtyWaterRecipes = new ArrayList<>();
+	//Forge hasn't replaced the IRecipeType registry (yet). We use the vanilla registry as a result.
+	public static IRecipeType<MillRec> MILL_TYPE = IRecipeType.register(Crossroads.MODID + ":mill");
+	public static IRecipeType<StampMillRec> STAMP_MILL_TYPE = IRecipeType.register(Crossroads.MODID + ":stamp_mill");
+	public static IRecipeType<OreCleanserRec> ORE_CLEANSER_TYPE = IRecipeType.register(Crossroads.MODID + ":ore_cleanser");
+	public static IRecipeType<BeamExtractRec> BEAM_EXTRACT_TYPE = IRecipeType.register(Crossroads.MODID + ":beam_extract");
+	public static IRecipeType<IceboxRec> COOLING_TYPE = IRecipeType.register(Crossroads.MODID + ":cooling");
+	public static IRecipeType<DirtyWaterRec> DIRTY_WATER_TYPE = IRecipeType.register(Crossroads.MODID + ":dirty_water");
 
-	/**
-	 * The sum of the weights in dirtyWaterRecipes
-	 */
-	public static int dirtyWaterWeights;
 
-	/**
-	 * CraftingStack is input, the ItemStack is the output
-	 */
-	public static final PredicateMap<ItemStack, ItemStack> stampMillRecipes = new PredicateMap<>(ItemStack.EMPTY);
-
-	/**
-	 * CraftingStack is input, the ItemStack is the output
-	 */
-	public static final PredicateMap<ItemStack, ItemStack> oreCleanserRecipes = new PredicateMap<>(ItemStack.EMPTY);
-
+	//TODO all recipes below this line need to be replaced with JSON
 	/**
 	 * CraftingStack is input, the FluidStack is the output, and the Integer is the amount of slag created
 	 */
@@ -67,16 +69,6 @@ public final class RecipeHolder{
 	 * Stores the heating crucible recipes. BE CAREFUL, the contained FluidStack is mutable. The ItemStack is the ingredient, FluidStack is output
 	 */
 	public static final PredicateMap<ItemStack, FluidStack> crucibleRecipes = new PredicateMap<>();
-
-	/**
-	 * ItemStack is input, Integer is the number of ticks the item lasts
-	 */
-	public static final PredicateMap<ItemStack, Integer> coolingRecipes = new PredicateMap<>(0);
-
-	/**
-	 * Item is input, beams unit is the beams extracted. For the Beam Extractor
-	 */
-	public static final HashMap<Item, BeamUnit> beamExtractRecipes = new HashMap<>();
 
 	/**
 	 * Stores the fusion beam conversion recipes. 
@@ -104,6 +96,8 @@ public final class RecipeHolder{
 
 	public static final HashMap<ResourceLocation, ArrayList<Object>> JEIWrappers = new HashMap<>();
 
+
+	//TODO load the JSON recipes into JEI, and make something call this method
 	/**
 	 * Converts the versions of the recipes used internally into fake recipes
 	 * for JEI. Not called unless JEI is installed.

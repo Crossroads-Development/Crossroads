@@ -12,52 +12,44 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 
-public abstract class MachineContainer extends Container{
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+
+public abstract class MachineContainer<U extends InventoryTE> extends Container{
 
 	protected final IInventory playerInv;
-	protected final InventoryTE te;
+	protected final U te;
 
 	//The passed PacketBuffer must have the blockpos as the first encoded datum
+	@SuppressWarnings("unchecked")
 	public MachineContainer(ContainerType<? extends MachineContainer> type, int windowId, PlayerInventory playerInv, PacketBuffer data){
 		super(type, windowId);
 		this.playerInv = playerInv;
-		TileEntity rawTE = playerInv.player.world.getTileEntity(data.readBlockPos());
+		BlockPos pos = data.readBlockPos();
+		TileEntity rawTE = playerInv.player.world.getTileEntity(pos);
+		U worldTe = null;
 		if(rawTE instanceof InventoryTE){
-			this.te = (InventoryTE) rawTE;
-		}else{
-			//Create a generic empty TE to avoid crashing and log an error.
-			//Possible "legitimate" causes include network weirdness
-			this.te = new InventoryTE(null, 0){
-				@Override
-				protected boolean useHeat(){
-					return false;
-				}
-
-				@Override
-				protected boolean useRotary(){
-					return false;
-				}
-
-				@Override
-				protected int fluidTanks(){
-					return 0;
-				}
-
-				@Override
-				protected TankProperty[] createFluidTanks(){
-					return new TankProperty[0];
-				}
-
-				@Override
-				public boolean canExtractItem(int index, ItemStack stack, Direction direction){
-					return false;
-				}
+			try{
+				//Java doesn't let us do an instanceof check with a type parameter, so we check against InventoryTE and catch any exception
+				worldTe = (U) rawTE;
+			}catch(ClassCastException e){
+				//Should never happen
+				Crossroads.logger.warn("UI opened without TE in world!");
 			};
-			te.setWorld(playerInv.player.world);
-			Crossroads.logger.warn("Null InventoryTE passed to gui!");
+		}else{
+			//Should never happen
+			Crossroads.logger.warn("Null TileEntity passed to MachineContainer!");
 		}
+		if(worldTe == null){
+			//Just in case one of the two things that should never happen happens, we create a fake instance of type U
+			//The UI will be basically non-functional, but we prevent a hard crash
+			worldTe = generateEmptyTE();
+			worldTe.setWorld(playerInv.player.world);
+			worldTe.setPos(pos);
+		}
+		this.te = worldTe;
 
 		if(te.useRotary()){
 			trackInt(te.rotaryReference);
@@ -84,6 +76,20 @@ public abstract class MachineContainer extends Container{
 				addSlot(new Slot(playerInv, x + y * 9 + 9, invStart[0] + x * 18, invStart[1] + y * 18));
 			}
 		}
+	}
+
+	protected U generateEmptyTE(){
+		//Uses reflection to get the class for type U (illegal in normal Java due to type scrubbing).
+		//Uses reflection to instantiate a new instance of type U with a no-args constructor
+		//If no no-args constructor exists, we hard crash because either Crossroads or an addon added a subclass without a default constructor and didn't override this method in its MachineContainer subclass
+		U created;
+		try{
+			Class<U> clazz = (Class<U>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+			created = clazz.getConstructor().newInstance();
+		}catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e){
+			throw new NullPointerException("Could not instantiate fake TileEntity for MachineContainer! Report to mod author!");
+		}
+		return created;
 	}
 
 	protected abstract void addSlots();

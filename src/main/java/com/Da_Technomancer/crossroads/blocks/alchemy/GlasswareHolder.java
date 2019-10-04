@@ -81,7 +81,7 @@ public class GlasswareHolder extends ContainerBlock{
 		if(te instanceof GlasswareHolderTileEntity){
 			((GlasswareHolderTileEntity) te).onBlockDestroyed(blockstate);
 		}
-		super.breakBlock(world, pos, blockstate);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override

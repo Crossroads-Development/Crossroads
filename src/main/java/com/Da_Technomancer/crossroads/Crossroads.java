@@ -6,8 +6,16 @@ import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.entity.ModEntities;
 import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.gui.CrucibleScreen;
+import com.Da_Technomancer.crossroads.gui.FireboxScreen;
+import com.Da_Technomancer.crossroads.gui.FluidCoolerScreen;
+import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
+import com.Da_Technomancer.crossroads.gui.container.FireboxContainer;
+import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
 import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipeGenerator;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
 import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
@@ -17,11 +25,13 @@ import com.Da_Technomancer.crossroads.world.ModWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.Feature;
@@ -61,6 +71,7 @@ public final class Crossroads{
 		final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		bus.addListener(this::commonInit);
 		bus.addListener(this::clientInit);
+		bus.addListener(this::gatherData);
 
 		CrossroadsConfig.init();
 
@@ -112,9 +123,11 @@ public final class Crossroads{
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 
-	public static void dataGenerate(GatherDataEvent e){
+	private void gatherData(GatherDataEvent e){
 		if(e.includeServer()){
-			e.getGenerator().addProvider(new CRItemTags(e.getGenerator()));
+			DataGenerator gen = e.getGenerator();
+			gen.addProvider(new CRItemTags(gen));
+			gen.addProvider(new CRRecipeGenerator(gen));
 		}
 	}
 
@@ -144,6 +157,18 @@ public final class Crossroads{
 
 	@SuppressWarnings("unused")
 	@SubscribeEvent
+	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> e){
+		IForgeRegistry<IRecipeSerializer<?>> reg = e.getRegistry();
+		reg.register(new SingleRecipeSerializer<>(StampMillRec::new).setRegistryName("stamp_mill"));
+		reg.register(new MillRec.Serializer().setRegistryName("mill"));
+		reg.register(new SingleRecipeSerializer<>(OreCleanserRec::new).setRegistryName("ore_cleanser"));
+		reg.register(new BeamExtractRec.Serializer().setRegistryName("beam_extract"));
+		reg.register(new IceboxRec.Serializer().setRegistryName("cooling"));
+		reg.register(new DirtyWaterRec.Serializer().setRegistryName("dirty_water"));
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
 	public static void registerEnts(RegistryEvent.Register<EntityType<?>> e){
 		IForgeRegistry<EntityType<?>> registry = e.getRegistry();
 		//TODO register entities
@@ -154,9 +179,9 @@ public final class Crossroads{
 	public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> e){
 		IForgeRegistry<TileEntityType<?>> reg = e.getRegistry();
 		CrossroadsTileEntity.init(reg);
-		//TODO register TEs
 	}
 
+	@SuppressWarnings("unused")
 	@SubscribeEvent
 	private static void registerModels(ModelRegistryEvent e){
 		CrossroadsBlocks.initModels();
@@ -169,6 +194,9 @@ public final class Crossroads{
 	@SuppressWarnings("unused")
 	@OnlyIn(Dist.CLIENT)
 	public static void registerContainers(RegistryEvent.Register<ContainerType<?>> e){
+		registerCon(FireboxContainer::new, FireboxScreen::new, "firebox", e);
+		registerCon(FluidCoolerContainer::new, FluidCoolerScreen::new, "fluid_cooler", e);
+		registerCon(CrucibleContainer::new, CrucibleScreen::new, "crucible", e);
 		//TODO register containers
 	}
 
@@ -176,6 +204,9 @@ public final class Crossroads{
 	@SuppressWarnings("unused")
 	@OnlyIn(Dist.DEDICATED_SERVER)
 	public static void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> e){
+		registerConType(FireboxContainer::new, "firebox", e);
+		registerConType(FluidCoolerContainer::new, "fluid_cooler", e);
+		registerConType(CrucibleContainer::new, "crucible", e);
 		//TODO register container types
 	}
 

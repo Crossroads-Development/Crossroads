@@ -75,6 +75,6 @@ public class Firebox extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.firebox", 10));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.firebox", FireboxTileEntity.POWER));
 	}
 }

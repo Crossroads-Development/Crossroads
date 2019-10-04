@@ -57,7 +57,7 @@ public class OreCleanser extends ContainerBlock{
 		if(te instanceof InventoryTE){
 			InventoryHelper.dropInventoryItems(world, pos, (InventoryTE) te);
 		}
-		super.breakBlock(world, pos, blockstate);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override

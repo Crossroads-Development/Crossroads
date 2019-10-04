@@ -4,12 +4,12 @@ import com.Da_Technomancer.crossroads.API.heat.CableThemes;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.ConduitBakedModel;
 import com.Da_Technomancer.crossroads.render.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -18,8 +18,8 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -29,18 +29,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
@@ -50,7 +49,7 @@ import java.util.List;
 
 public class HeatCable extends ContainerBlock implements IConduitModel{
 
-	public static final HashMap<String, CableThemes> OREDICT_TO_THEME = new HashMap<String, CableThemes>();
+	public static final HashMap<String, CableThemes> OREDICT_TO_THEME = new HashMap<>();
 
 	private final HeatInsulators insulator;
 	private static final double SIZE = .2D;
@@ -63,13 +62,10 @@ public class HeatCable extends ContainerBlock implements IConduitModel{
 	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
 
 	public HeatCable(HeatInsulators insulator){
-		super(Material.IRON);
+		super(Block.Properties.create(Material.IRON).hardnessAndResistance(1));
 		this.insulator = insulator;
 		String name = "heat_cable_" + insulator.toString().toLowerCase();
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(1);
-		setCreativeTab(CrossroadsItems.TAB_HEAT_CABLE);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this, false);
 	}
@@ -175,16 +171,6 @@ public class HeatCable extends ContainerBlock implements IConduitModel{
 	@Override
 	public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, BlockRayTraceResult hit, int meta, LivingEntity placer, Hand hand){
 		return getDefaultState().with(Properties.TEXTURE_4, 0);
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(Properties.TEXTURE_4, meta);
-	}
-
-	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(Properties.TEXTURE_4);
 	}
 
 	@Override

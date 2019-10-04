@@ -54,7 +54,7 @@ public class MathAxis extends ContainerBlock{
 		if(te instanceof MathAxisTileEntity){
 			((MathAxisTileEntity) te).disconnect();
 		}
-		super.breakBlock(world, pos, blockstate);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 	
 	@Override

@@ -76,7 +76,7 @@ public class ChargingStand extends ContainerBlock{
 		if(te instanceof ChargingStandTileEntity){
 			((ChargingStandTileEntity) te).onBlockDestroyed(blockstate);
 		}
-		super.breakBlock(world, pos, blockstate);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override

@@ -2,26 +2,38 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class FluidCoolingChamberTileEntity extends InventoryTE{
+
+	@ObjectHolder("fluid_cooling_chamber")
+	private static TileEntityType<FluidCoolingChamberTileEntity> type = null;
 
 	public static final int HEATING_RATE = 40;
 	private double storedHeat = 0;
 
 	public FluidCoolingChamberTileEntity(){
-		super(1);
-		fluidProps[0] = new TankProperty(0, 4_000, true, false, RecipeHolder.fluidCoolingRecipes::containsKey);
+		super(type, 1);
+		fluidProps[0] = new TankProperty(4_000, true, false, RecipeHolder.fluidCoolingRecipes::containsKey);
 	}
 
 	@Override
@@ -49,6 +61,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 			markDirty();
 		}
 
+		//TODO Migrate to non-null fluidstacks and JSON recipes
 		Pair<Integer, Triple<ItemStack, Double, Double>> craft = fluids[0] == null ? null : RecipeHolder.fluidCoolingRecipes.get(fluids[0].getFluid());
 
 		if(craft != null && fluids[0].amount >= craft.getLeft()){
@@ -80,25 +93,26 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 		return nbt;
 	}
 
-	private final FluidHandler fluidHandler = new FluidHandler(0);
-	private final ItemHandler itemHandler = new ItemHandler(null);
+	private final LazyOptional<ItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return (T) fluidHandler;
+	public void remove(){
+		super.remove();
+		itemOpt.invalidate();
+	}
+
+	@Nonnull
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction dir){
+		if(cap == Capabilities.HEAT_CAPABILITY && dir == Direction.UP){
+			return (LazyOptional<T>) heatOpt;
+		}
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+			return (LazyOptional<T>) itemOpt;
 		}
 
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.UP || facing == null)){
-			return (T) heatHandler;
-		}
-
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) itemHandler;
-		}
-
-		return super.getCapability(capability, facing);
+		return super.getCapability(cap, dir);
 	}
 
 	@Override
@@ -112,7 +126,13 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public String getName(){
-		return "container.fluid_cooler";
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.fluid_cooler");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity){
+		return new FluidCoolerContainer(id, playerInventory, createContainerBuf());
 	}
 }

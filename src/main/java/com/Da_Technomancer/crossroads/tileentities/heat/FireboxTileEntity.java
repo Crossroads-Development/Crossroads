@@ -5,13 +5,13 @@ import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.gui.container.FireboxContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IntReferenceHolder;
@@ -30,6 +30,8 @@ public class FireboxTileEntity extends InventoryTE{
 
 	@ObjectHolder("firebox")
 	private static TileEntityType<FireboxTileEntity> TYPE = null;
+
+	public static final int POWER = 10;
 
 	public IntReferenceHolder burnProg = IntReferenceHolder.single();
 
@@ -53,7 +55,7 @@ public class FireboxTileEntity extends InventoryTE{
 		}
 
 		if(burnTime != 0){
-			temp += 10D;
+			temp += POWER;
 			if(--burnTime == 0){
 				world.setBlockState(pos, CrossroadsBlocks.firebox.getDefaultState(), 18);
 			}
@@ -130,6 +132,6 @@ public class FireboxTileEntity extends InventoryTE{
 	@Nullable
 	@Override
 	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
-		return null;//TODO
+		return new FireboxContainer(id, playerInv, createContainerBuf());
 	}
 }

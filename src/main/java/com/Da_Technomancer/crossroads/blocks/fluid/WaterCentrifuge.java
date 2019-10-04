@@ -89,7 +89,7 @@ public class WaterCentrifuge extends ContainerBlock{
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
-		super.breakBlock(world, pos, blockstate);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override

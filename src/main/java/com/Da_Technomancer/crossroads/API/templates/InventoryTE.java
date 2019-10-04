@@ -2,20 +2,24 @@ package com.Da_Technomancer.crossroads.API.templates;
 
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
+import com.Da_Technomancer.essentials.gui.container.IFluidSlotTE;
+import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IntReferenceHolder;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class InventoryTE extends ModuleTE implements ISidedInventory, INamedContainerProvider{
+public abstract class InventoryTE extends ModuleTE implements ISidedInventory, INamedContainerProvider, IFluidSlotTE{
 
 	protected final ItemStack[] inventory;
 	public final FluidSlotManager[] fluidManagers = new FluidSlotManager[fluidTanks()];
@@ -166,12 +170,33 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 		return out;
 	}
 
+	/**
+	 * Makes the Essentials based fluid slots work
+	 * @return The active fluid handler
+	 */
+	@Override
+	public IFluidHandler getFluidHandler(){
+		return globalFluidHandler;
+	}
+
+	/**
+	 * Purely a convenience method
+	 * @return A new PacketBuffer pre-formatted with standard InventoryContainer info
+	 */
+	protected PacketBuffer createContainerBuf(){
+		return new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos);
+	}
+
 	protected class ItemHandler implements IItemHandlerModifiable{
 
 		/**
 		 * A direction that this should act as internally. Does not need to match the side passed to the getCapability call
 		 */
 		private final Direction dir;
+
+		public ItemHandler(){
+			this(null);
+		}
 
 		public ItemHandler(@Nullable Direction dir){
 			this.dir = dir;

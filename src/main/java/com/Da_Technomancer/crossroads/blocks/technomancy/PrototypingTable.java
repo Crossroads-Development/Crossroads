@@ -72,7 +72,7 @@ public class PrototypingTable extends ContainerBlock{
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getTileEntity(pos);
 		InventoryHelper.dropInventoryItems(world, pos, (InventoryTE) te);
-		super.breakBlock(world, pos, blockstate);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 	
 	@Override

@@ -3,36 +3,53 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 
+@ObjectHolder(Crossroads.MODID)
 public class HeatingCrucibleTileEntity extends InventoryTE implements IStringReceiver{
+
+	@ObjectHolder("crucible")
+	private static TileEntityType<HeatingCrucibleTileEntity> type = null;
 
 	public static final int[] TEMP_TIERS = {1000, 1500, 2500};
 	public static final int USAGE = 20;
 	public static final int REQUIRED = 1000;
 	private int progress = 0;
+	public IntReferenceHolder progressRef = IntReferenceHolder.single();
 
 	public HeatingCrucibleTileEntity(){
-		super(1);
-		fluidProps[0] = new TankProperty(0, 4_000, false, true);
+		super(type, 1);
+		fluidProps[0] = new TankProperty(4_000, false, true);
 	}
 
 	@Override
@@ -46,11 +63,11 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public void receiveString(String context, String message, ServerPlayerEntity sender){
+	public void receiveString(byte context, String message, @Nullable ServerPlayerEntity sender){
 		if(world.isRemote){
-			if(context.equals("text")){
+			if(context == 0){
 				activeText = message;
-			}else if(context.equals("col")){
+			}else if(context == 1){
 				try{
 					col = Integer.valueOf(message);
 				}catch(NumberFormatException e){
@@ -83,10 +100,10 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		}
 
 		if(world.getGameTime() % 2 == 0){
-			int fullness = Math.min(3, (int) Math.ceil(fluids[0] == null ? 0F : (float) fluids[0].amount * 3F / (float) fluidProps[0].getCapacity()));
+			int fullness = Math.min(3, (int) Math.ceil((float) fluids[0].getAmount() * 3F / (float) fluidProps[0].capacity));
 			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() != CrossroadsBlocks.heatingCrucible){
-				invalidate();
+				remove();
 				return;
 			}
 
@@ -94,17 +111,17 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 				world.setBlockState(pos, state.with(CrossroadsProperties.FULLNESS, fullness), 18);
 			}
 
-			if(fullness != 0 && fluids[0] != null && fluids[0].getFluid().getStill() != null){
-				String goal = fluids[0].getFluid().getStill().toString();
+			if(fullness != 0 && !fluids[0].isEmpty()){
+				String goal = fluids[0].getFluid().getAttributes().getStillTexture().toString();
 				if(!goal.equals(activeText)){
 					activeText = goal;
-					col = fluids[0].getFluid().getColor(fluids[0]);
-					CrossroadsPackets.network.sendToAllAround(new SendStringToClient("text", activeText, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-					CrossroadsPackets.network.sendToAllAround(new SendStringToClient("col", Integer.toString(col), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+					col = fluids[0].getFluid().getAttributes().getColor(fluids[0]);
+					CrossroadsPackets.sendPacketAround(world, pos, new SendStringToClient(0, activeText, pos));
+					CrossroadsPackets.sendPacketAround(world, pos, new SendStringToClient(1, Integer.toString(col), pos));
 				}
 			}else if(!activeText.isEmpty()){
 				activeText = "";
-				CrossroadsPackets.network.sendToAllAround(new SendStringToClient("text", activeText, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.sendPacketAround(world, pos, new SendStringToClient(0, activeText, pos));
 			}
 		}
 
@@ -114,23 +131,25 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 			temp -= USAGE * (tier + 1);
 			if(inventory[0].isEmpty()){
 				progress = 0;
+				progressRef.set(progress);
 			}else{
 				progress = Math.min(REQUIRED, progress + USAGE * (tier + 1));
 				if(progress >= REQUIRED){
 					FluidStack created = RecipeHolder.crucibleRecipes.get(inventory[0]);
 
-					if(created == null){
+					if(created.isEmpty()){
 						inventory[0] = ItemStack.EMPTY;
-					}else if(fluids[0] == null || (fluidProps[0].getCapacity() - fluids[0].amount >= created.amount && fluids[0].getFluid() == created.getFluid())){
+					}else if(fluidProps[0].capacity - fluids[0].getAmount() >= created.getAmount() && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], created))){
 						progress = 0;
-						if(fluids[0] == null){
+						if(fluids[0].isEmpty()){
 							fluids[0] = created.copy();
 						}else{
-							fluids[0].amount += created.amount;
+							fluids[0].grow(created.getAmount());
 						}
 						inventory[0].shrink(1);
 					}
 				}
+				progressRef.set(progress);
 			}
 
 			markDirty();
@@ -143,6 +162,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		activeText = nbt.getString("act");
 		col = nbt.contains("col") ? nbt.getInt("col") : null;
 		progress = nbt.getInt("prog");
+		progressRef.set(progress);
 	}
 
 	@Override
@@ -171,22 +191,27 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		return nbt;
 	}
 
-	private final FluidHandler fluidHandler = new FluidHandler(0);
-	private final ItemHandler itemHandler = new ItemHandler(null);
+	@Override
+	public void remove(){
+		super.remove();
+		itemOpt.invalidate();
+	}
+
+	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.UP){
-			return (T) fluidHandler;
+			return (LazyOptional<T>) globalFluidOpt;
 		}
 
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.DOWN || facing == null)){
-			return (T) heatHandler;
+		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
+			return (LazyOptional<T>) heatOpt;
 		}
 
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) itemHandler;
+			return (LazyOptional<T>) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);
@@ -203,26 +228,13 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public String getName(){
-		return "container.crucible";
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.crucible");
 	}
 
+	@Nullable
 	@Override
-	public int getField(int id){
-		return id == getFieldCount() - 1 ? progress : super.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value){
-		if(id == getFieldCount() - 1){
-			progress = value;
-		}else{
-			super.setField(id, value);
-		}
-	}
-
-	@Override
-	public int getFieldCount(){
-		return super.getFieldCount() + 1;
+	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity){
+		return new CrucibleContainer(id, playerInventory, createContainerBuf());
 	}
 }
